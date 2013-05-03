@@ -1,0 +1,75 @@
+<!-- ===========================================================================
+ = MCOL Project
+ =
+ = Name:        build-set-classpath.xml
+ = Description: Build file to set classpath containing 3rd party and application libraries. 
+ =
+ = $Revision: $
+ = $Author: $
+ = $Date: $
+ = $URL: $
+ =
+ = Copyright Logica UK Ltd. 2012
+ =========================================================================== -->
+
+<project name="build-set-classpath" basedir=".">
+
+	<!-- Add directory containing all 3rd party jars to classpath -->
+	<path id="3rd-party.dir">
+		<fileset dir="${3rd-party.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<path id="3rd-party.spring3.dir">
+		<fileset dir="${3rd-party.spring3.dir}">
+			<include name="*.jar" />			
+		</fileset>		
+	</path>
+	
+    <!-- Add jars from directory to which all mcol application jars are written -->
+    <path id="lib.app.dir">
+        <fileset dir="${lib.app.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Add jars from directory to which all mcol test jars are written -->
+    <path id="lib.test.dir">
+        <fileset dir="${lib.test.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Add emma jars which are needed by junit when executing tests -->
+    <path id="emma.dir">
+        <fileset dir="${ant.runtime.dir}/lib">
+            <include name="emma*.jar" />
+        </fileset>
+    </path>
+
+	<!-- Set 3rd party and mcol application jars to classpath for building 'src' code in all projects -->
+	<path id="build.src.classpath">
+		<path refid="3rd-party.dir" />
+		<path refid="3rd-party.spring3.dir" />
+		<path refid="lib.app.dir" />
+	</path>
+
+    <!-- Set classpath for unit tests -->
+    <path id="build.unit.test.classpath">
+        <path refid="emma.dir" />
+        <path refid="3rd-party.dir" />
+    	<path refid="3rd-party.spring3.dir" />    	
+        <path refid="lib.app.dir" />
+        <path refid="lib.test.dir" />
+    </path>
+
+    <!-- Set classpath for integration tests -->
+    <path id="build.integ.test.classpath">
+        <path refid="emma.dir" />
+        <path refid="3rd-party.dir" />
+    	<path refid="3rd-party.spring3.dir" /> 
+        <path refid="lib.app.dir" />
+        <path refid="lib.test.dir" />
+    </path>
+
+</project>

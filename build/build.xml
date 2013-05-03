@@ -1,0 +1,291 @@
+<!-- ===========================================================================
+ = MCOL
+ =
+ = Name:        build-app.xml
+ = Description: Top level build file for mcol workspace 
+ =
+ = $Revision: $
+ = $Author: $
+ = $Date: $
+ = $URL: $
+ =
+ = Copyright Logica UK Ltd. 2012
+ =========================================================================== -->
+
+<project name="top-level" basedir=".">
+
+    <!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
+    <import file="../build/build-setup-env.xml" />
+
+    <!-- List of all projects in order - note dirset cannot control order of execution -->
+    <filelist id="all-project-list" dir=".">
+        <file name="../test-utils/build.xml" />
+        <file name="../utils/build.xml" />
+        <file name="../domain/build.xml" />
+        <file name="../dao/build.xml" />
+        <file name="../daotests/build.xml" />
+        <file name="../action-service/build.xml" />
+        <file name="../address-service/build.xml" />
+        <file name="../court-service/build.xml" />
+        <file name="../pdf-service/build.xml" />
+        <file name="../data-generation/build.xml" />
+        <file name="../web-utils/build.xml" />
+        <file name="../gateway-ws-client/build.xml" />
+        <file name="../gateway-auth/build.xml" />
+        <file name="../jwebunittests/build.xml" />
+        <!-- <file name="../gateway-xmlbeans/build.xml" /> -->
+        <file name="../payment-gateway/build.xml" />
+        <file name="../submission-service/build.xml" />
+        <file name="../web-framework/build.xml" />
+        <file name="../web-pdf/build.xml" />
+        <file name="../test-harness/build.xml" />
+        <file name="../web/build.xml" />
+        <file name="../database/build.xml" />
+        <file name="../batch/build.xml" />
+        <file name="../test-tools/build.xml" />
+    </filelist>
+
+    <!-- List of projects (excluing Batch related) in order - note dirset cannot control order of execution -->
+    <filelist id="all-but-batch-project-list" dir=".">
+        <file name="../test-utils/build.xml" />
+        <file name="../utils/build.xml" />
+        <file name="../domain/build.xml" />
+        <file name="../dao/build.xml" />
+        <file name="../daotests/build.xml" />
+        <file name="../action-service/build.xml" />
+        <file name="../address-service/build.xml" />
+        <file name="../court-service/build.xml" />
+        <file name="../pdf-service/build.xml" />
+        <file name="../data-generation/build.xml" />
+        <file name="../web-utils/build.xml" />
+        <file name="../gateway-ws-client/build.xml" />
+        <file name="../gateway-auth/build.xml" />
+        <file name="../jwebunittests/build.xml" />
+        <!-- <file name="../gateway-xmlbeans/build.xml" /> -->
+        <file name="../payment-gateway/build.xml" />
+        <file name="../submission-service/build.xml" />
+        <file name="../web-framework/build.xml" />
+        <file name="../web-pdf/build.xml" />
+        <file name="../test-harness/build.xml" />
+        <file name="../web/build.xml" />
+        <file name="../database/build.xml" />
+    </filelist>
+
+    <!-- List of projects for which deploy is needed in order - note dirset cannot control order of execution -->
+    <filelist id="deploy-project-list" dir=".">
+        <file name="../web/build.xml" />
+        <file name="../test-harness/build.xml" />
+        <file name="../batch/build.xml" />
+        <file name="../test-tools/build.xml" />
+        <file name="../sups/build.xml" />
+    </filelist>
+
+    <!-- TARGETS -->
+
+    <!-- General initialisation - ensure build directory (for classes) and dist directory (for jar) are present -->
+    <target name="init" description="Initialise">
+    </target>
+
+    <!-- Delete all build artefacts -->
+    <target name="clean-application" description="Cleanup build and distribution folders for all projects">
+        <subant antfile="build.xml" target="clean" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-project-list" />
+        </subant>
+        <delete dir="${lib.app.dir}" />
+        <delete dir="${lib.test.dir}" />
+        <delete dir="${junit.unit.test-reports.dir}" />
+        <delete dir="${junit.integ.test-reports.dir}" />
+        <delete file="../${logs.dir}/mcol*.*" />
+    </target>
+
+    <!-- Delete deployed war in tc-server -->
+    <target name="clean-tc-server" description="Cleanup tc-server exploded war directories, cache and war files.">
+        <delete file="${app.server.webapps.dir}/web.war" />
+        <delete file="${app.server.webapps.dir}/test-harness.war" />
+        <delete file="${app.server.webapps.dir}/sups.war" />
+        <delete file="${app.server.webapps.dir}/test.war" />
+        <delete dir="${app.server.webapps.dir}/web" />
+        <delete dir="${app.server.webapps.dir}/test-harness" />
+        <delete dir="${app.server.webapps.dir}/sups" />
+        <delete dir="${app.server.webapps.dir}/test" />
+
+        <!-- Delete cached servlets generated from jsps, even for insight application -->
+        <delete dir="${app.server.webapps.dir}/../work/Catalina/localhost/_" />
+        <delete dir="${app.server.webapps.dir}/../work/Catalina/localhost/insight" />
+        <delete>
+            <dirset dir="${app.server.webapps.dir}/../work/Catalina/localhost" erroronmissingdir="false">
+                <include name="**" />
+            </dirset>
+        </delete>
+    </target>
+
+    <!-- Start disc-tc-server instance. This should only be run on Hudson box or it interferes with Eclipse 
+         tc-server integration. -->
+    <target name="-start-tc-server" if="isUnix" description="Start the disc-tc-server instance of tc-server">
+        <exec executable="${app.server.dir}/tcruntime-ctl.sh" failonerror="true" dir="${app.server.dir}" >
+            <arg value="disc-tc-server" />
+            <arg value="start" />
+        </exec>
+    </target>
+
+    <!-- Stop disc-tc-server instance. This should only be run on Hudson box or it interferes with Eclipse 
+         tc-server integration. -->
+    <target name="-stop-tc-server" if="isUnix" description="Stop the disc-tc-server instance of tc-server">
+        <exec executable="${app.server.dir}/tcruntime-ctl.sh" failonerror="false" dir="${app.server.dir}" >
+            <arg value="disc-tc-server" />
+            <arg value="stop" />
+            <arg value="--force" />
+        </exec>
+    </target>
+
+    <!-- Create mcol schema and objects -->
+    <target name="build-db" depends="init" description="Builds the DB by creating schema and schema objects">
+        <ant antfile="build.xml" dir="${database.dir}" target="build-all-databases" inheritrefs="true" inheritAll="false" />
+    </target>
+
+    <!-- Configures all template files required for build -->
+    <target name="configure-all-prop-files" depends="init" description="Build all properties files from templates">
+        <subant antfile="build.xml" target="configure-property-files" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-project-list" />
+            <filelist>
+                <file name="../Servers/build.xml" />
+            </filelist>
+        </subant>
+    </target>
+
+    <!-- Compile and create distribution jar for all source code once to prove all compiles. -->
+    <target name="dist-all" depends="configure-all-prop-files" description="Compile and create distribution jar for all source code once ">
+        <subant antfile="build.xml" target="dist" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-project-list" />
+        </subant>
+    </target>
+
+    <!-- Compile and create distribution jar for all test source code once to prove all compiles. -->
+    <target name="dist-all-tests" depends="configure-all-prop-files" description="Compile and create distribution jar for all test source code once ">
+        <subant antfile="build.xml" target="dist-tests" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-project-list" />
+        </subant>
+    </target>
+
+    <!-- Compile and create distribution jar for all test source code once to prove all compiles. -->
+    <target name="deploy-all" depends="init, dist-all" description="Deploy all artefacts to application server ">
+        <subant antfile="build.xml" target="deploy" inheritrefs="true" inheritAll="false">
+            <filelist refid="deploy-project-list" />
+        </subant>
+
+		<!-- Copy log4j.xml file into the tc-server area if this is tc-server -->
+		<copy todir="${app.server.dir}/disc-tc-server/conf" overwrite="true">
+			<fileset dir="${utils.dir}/${src.dir}">
+				<include name="log4j.xml" />
+			</fileset>
+		</copy>
+    </target>
+	
+	 <!-- Run integration tests in all modules Local machine -->
+    <target name="run-all-local-integration-tests" depends="dist-all-tests" description="Run all integration tests">
+        <subant antfile="build.xml" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-but-batch-project-list" />
+            <target name="run-integration-tests"/> 
+        </subant>
+        
+        <antcall target="generate-all-integ-test-reports" />
+    </target>
+
+    <!-- Compile and create distribution jar for all test source code once to prove all compiles. -->
+    <target name="deploy-all-but-batch" depends="init, dist-all" description="Deploy all (but batch related) artefacts to application server ">
+        <subant antfile="build.xml" target="deploy" inheritrefs="true" inheritAll="false">
+            <filelist id="deploy-project-list-for-tests" dir=".">
+                <file name="../web/build.xml" />
+                <file name="../test-harness/build.xml" />
+            </filelist>
+        </subant>
+
+		<!-- Copy log4j.xml file into the tc-server area if this is tc-server -->
+		<copy todir="${app.server.dir}/disc-tc-server/conf" overwrite="true">
+			<fileset dir="${utils.dir}/${src.dir}">
+				<include name="log4j.xml" />
+			</fileset>
+		</copy>
+    </target>
+
+	<!-- Run unit tests in all modules -->
+    <target name="run-all-unit-tests" depends="dist-all,dist-all-tests" description="Run all unit tests">
+		<subant genericantfile="build.xml" inheritrefs="true" inheritAll="false">
+		    <filelist refid="all-project-list" />
+			<target name="run-unit-tests" />
+		</subant>
+
+        <antcall target="generate-all-unit-test-reports" />
+    </target>
+	
+    <!-- Run integration tests in all modules -->
+    <target name="run-all-integration-tests" depends="-stop-tc-server, deploy-all-but-batch, dist-all-tests, -start-tc-server" description="Run all integration tests">
+        <subant antfile="build.xml" inheritrefs="true" inheritAll="false">
+        	<filelist refid="all-but-batch-project-list" />
+        	<target name="run-integration-tests"/> 
+        </subant>
+        
+        <antcall target="generate-all-integ-test-reports" />
+    </target>
+
+    <!-- Run integration tests for Batch module -->
+    <target name="run-batch-integration-tests" depends="dist-all, dist-all-tests" description="Run all Batch related integration tests">
+        <subant antfile="build.xml" inheritrefs="true" inheritAll="false">
+            <filelist dir=".">
+                <file name="../batch/build.xml" />
+            </filelist>
+        	<target name="run-integration-tests"/> 
+        </subant>
+        
+        <antcall target="generate-all-integ-test-reports" />
+    </target>
+
+    <!-- Run end to end tests in all modules -->
+    <target name="run-all-end-to-end-tests" depends="deploy-all-but-batch, dist-all-tests" description="Run all end-to-end tests">
+        <subant antfile="build.xml" target="run-unit-tests" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-but-batch-project-list" />
+        </subant>
+
+        <antcall target="generate-all-unit-test-reports" />
+    </target>
+
+    <target name="generate-all-unit-test-reports" description="Generates the unit test reports once all unit tests have been run">
+        <mkdir dir="${junit.unit.test-reports.dir}" />
+        <junitreport todir="${junit.unit.test-reports.dir}">
+            <fileset dir="../">
+                <include name="**/${junit.unit.output.dir}/TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="${junit.unit.test-reports.dir}" />
+        </junitreport>
+    </target>
+
+    <target name="generate-all-integ-test-reports" description="Generates the integration test reports once all integration tests have been run">
+        <mkdir dir="${junit.integ.test-reports.dir}" />
+        <junitreport todir="${junit.integ.test-reports.dir}">
+            <fileset dir="../">
+                <include name="**/${junit.integ.output.dir}/TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="${junit.integ.test-reports.dir}" />
+        </junitreport>
+    </target>
+
+	<!-- Generate Javadoc for all modules -->
+    <target name="generate-all-javadocs" depends="init" description="Generate code documentation for all modules">
+        <delete dir="${javadoc.dir}" />
+        <mkdir dir="${javadoc.dir}" />
+
+        <subant antfile="build.xml" target="generate_javadoc" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-project-list" />
+        </subant>
+    </target>
+
+    <!-- Run diagnostics report -->
+    <target name="diagnostics" depends="init" description="Output diagnostics of ANT">
+        <diagnostics />
+    </target>
+
+    <!-- Echo properties used by ANT -->
+    <target name="echoproperties" depends="init" description="List ANT properties">
+        <echoproperties />
+    </target>
+</project>
