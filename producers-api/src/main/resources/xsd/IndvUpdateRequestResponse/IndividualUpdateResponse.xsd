@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:tns="http://ws.sdt.moj.gov.uk/individualUpdateResponse" 
+			targetNamespace="http://ws.sdt.moj.gov.uk/individualUpdateResponse" elementFormDefault="qualified">
 	<xs:element name="getIndvUpdateResponse" type="tns:getIndvUpdateResponse"/>
 	<xs:complexType name="getIndvUpdateResponse">
 		<xs:sequence>

@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
-
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:tns="http://ws.sdt.moj.gov.uk/defenceFeedbackRequest"  
+			targetNamespace="http://ws.sdt.moj.gov.uk/defenceFeedbackRequest" xmlns:common="http://ws.sdt.moj.gov.uk/common" 
+			elementFormDefault="qualified">
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>
 	<xs:element name="sendDefenceRequest" type="tns:sendDefenceRequest"/>
 	<xs:complexType name="sendDefenceRequest">
 		<xs:sequence>
-			<xs:element name="defence_request" minOccurs="1"/>
+			<xs:element name="defenceRequest" minOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="defence_request">
+	<xs:element name="defenceRequest">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="tns:customer_code"/>
-				<xs:element ref="tns:from_date" minOccurs="0"/>
-				<xs:element ref="tns:to_date" minOccurs="0"/>
+				<xs:element ref="common:customerCode"/>
+				<xs:element ref="tns:fromDate" minOccurs="0"/>
+				<xs:element ref="tns:toDate" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="from_date" type="xs:date"/>
-	<xs:element name="to_date" type="xs:date"/>
+	<xs:element name="fromDate" type="xs:date"/>
+	<xs:element name="toDate" type="xs:date"/>
 </xs:schema>

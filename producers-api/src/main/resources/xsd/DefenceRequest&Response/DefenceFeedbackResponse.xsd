@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+				xmlns:tns="http://ws.sdt.moj.gov.uk/defenceFeedbackResponse" 
+				targetNamespace="http://ws.sdt.moj.gov.uk/defenceFeedbackResponse" 
+				xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>
 	<xs:element name="sendDefenceFeedback" type="tns:sendDefenceFeedback"/>
 	<xs:complexType name="sendDefenceFeedback">
 		<xs:sequence>
-			<xs:element name="defence_feedback" minOccurs="1"/>
+			<xs:element name="defenceFeedback" minOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 	
-	<xs:element name="defence_feedback">
+	<xs:element name="defenceFeedback">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="tns:customer_code"/>
+				<xs:element ref="common:customerCode"/>
 				<xs:element ref="tns:defences" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -19,17 +22,16 @@
 	<xs:element name="defences">
 		<xs:complexType>
 			<xs:all>
-				<xs:element ref="tns:case_number"/>
-				<xs:element ref="tns:defendant_id" minOccurs="0"/>
-				<xs:element ref="tns:date_defence_filed" minOccurs="0"/>
-				<xs:element ref="tns:response_type" minOccurs="0"/>
+				<xs:element ref="common:caseNumber"/>
+				<xs:element ref="common:defendantId" minOccurs="0"/>
+				<xs:element ref="tns:dateDefenceFiled" minOccurs="0"/>
+				<xs:element ref="tns:responseType" minOccurs="0"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
-
-	<xs:element name="date_defence_filed" type="xs:dateTime"/>
+	<xs:element name="dateDefenceFiled" type="xs:dateTime"/>
 	<!-- Response Type is DE, DC or PA -->
-	<xs:element name="response_type">
+	<xs:element name="responseType">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="DE|DC|PA"/>

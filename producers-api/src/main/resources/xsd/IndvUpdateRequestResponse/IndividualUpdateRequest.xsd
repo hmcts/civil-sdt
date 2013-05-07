@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
-		
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:tns="http://ws.sdt.moj.gov.uk/individualUpdateRequest" 
+			targetNamespace="http://ws.sdt.moj.gov.uk/individualUpdateRequest" 
+			xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>
 	<xs:element name="sendIndividualUpdate" type="tns:sendIndividualUpdate"/>
 	<xs:complexType name="sendIndividualUpdate">
 		<xs:sequence>
@@ -11,7 +13,7 @@
 	<xs:element name="individual_update">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="tns:sdt_reference"/>
+				<xs:element ref="common:sdtReference"/>
 				<xs:element ref="tns:updates" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -19,14 +21,14 @@
 	<xs:element name="updates">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="tns:request_id"/>
-				<xs:element ref="tns:request_type"/>
-				<xs:element ref="tns:status"/>
-				<xs:element ref="tns:case_number" minOccurs="0"/>
-				<xs:element ref="tns:date_of_issue" minOccurs="0"/>
-				<xs:element ref="tns:date_of_service" minOccurs="0"/>
-				<xs:element ref="tns:rejection_reason_code" minOccurs="0"/>
-				<xs:element ref="tns:rejection_reason_description" minOccurs="0"/>
+				<xs:element ref="common:requestId"/>
+				<xs:element ref="common:requestType"/>
+				<xs:element ref="common:status"/>
+				<xs:element ref="common:caseNumber" minOccurs="0"/>
+				<xs:element ref="common:dateOfIssue" minOccurs="0"/>
+				<xs:element ref="common:dateOfService" minOccurs="0"/>
+				<xs:element ref="common:rejectionReasonCode" minOccurs="0"/>
+				<xs:element ref="common:rejectionReasonDescription" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
