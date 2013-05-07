@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sendDefenceFeedback xmlns="http://commissioning-ws.sdt.moj.gov.uk/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://commissioning-ws.sdt.moj.gov.uk/ ../DefenceRequest&amp;Response/DefenceFeedbackResponse.xsd ">
+	<defence_feedback>
+		<customer_code>9999</customer_code>
+		<defences>
+		  <case_number>12345678</case_number>
+		  <defendant_id>1</defendant_id>
+		  <date_defence_filed>2001-12-31T12:00:00</date_defence_filed>
+		  <response_type>PA</response_type>
+		</defences>
+	</defence_feedback>
+</sendDefenceFeedback>

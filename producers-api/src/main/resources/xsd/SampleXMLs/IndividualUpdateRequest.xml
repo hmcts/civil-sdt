@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sendIndividualUpdate xmlns="http://commissioning-ws.sdt.moj.gov.uk/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://commissioning-ws.sdt.moj.gov.uk/IndividualUpdateRequest.xsd ">
+		<individual_update>
+			<sdt_reference>sdt_reference</sdt_reference>
+			<updates>
+			  <request_id>request_id</request_id>
+			  <request_type>CLAIM</request_type>
+			  <status>ACCEPTED</status>
+			  <case_number>12345678</case_number>
+			  <date_of_issue>2001-01-01</date_of_issue>
+			  <date_of_service>2001-01-01</date_of_service>
+			  <rejection_reason_code>1234</rejection_reason_code>
+			  <rejection_reason_description>rejection_reason_description</rejection_reason_description>
+			</updates>
+		</individual_update>
+</sendIndividualUpdate>
+

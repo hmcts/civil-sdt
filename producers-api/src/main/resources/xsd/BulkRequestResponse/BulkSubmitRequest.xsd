@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+	<xs:include schemaLocation="..\RootXSDs\Claim.xsd"/>
+	<xs:include schemaLocation="..\RootXSDs\Judgment.xsd"/>
+	<xs:include schemaLocation="..\RootXSDs\Paid.xsd"/>
+	<xs:include schemaLocation="..\RootXSDs\Warrant.xsd"/>
+	<xs:include schemaLocation="..\RootXSDs\JudgmentForthwith.xsd"/>
+
+	<xs:element name="sendBulkData" type="tns:sendBulkData"/>
+	<xs:complexType name="sendBulkData">
+		<xs:sequence>
+			<xs:element name="bulk_data" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="bulk_data">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tns:customer_code"/>
+				<xs:element ref="tns:reference"/>
+				<xs:element ref="tns:number_of_requests"/>
+				<xs:element ref="tns:SOT_facts_are_true_declaration"/>
+				<xs:element ref="tns:SOT_name_on_particulars"/>
+				<xs:element ref="tns:requests" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="requests">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="tns:sendNewClaims" minOccurs="0"/>
+				<xs:element ref="tns:sendNewJudgements" minOccurs="0"/>
+				<xs:element ref="tns:sendNewPaid" minOccurs="0"/>
+				<xs:element ref="tns:sendNewWarrants" minOccurs="0"/>
+				<xs:element ref="tns:sendNewJudgmentForthwiths" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

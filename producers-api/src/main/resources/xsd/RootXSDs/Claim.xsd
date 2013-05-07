@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+	<xs:include schemaLocation="Base.xsd"/>
+	<xs:element name="sendNewClaims" type="tns:sendNewClaims"/>
+	<xs:complexType name="sendNewClaims">
+		<xs:sequence>
+			<xs:element ref="tns:claim" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="claim">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="tns:request_id"/>
+				<xs:element ref="tns:claimant_reference" minOccurs="0"/>
+				<xs:element ref="tns:claimant_name_line_1"/>
+				<xs:element ref="tns:claimant_name_line_2" minOccurs="0"/>
+				<xs:element ref="tns:claimant_address_line_1"/>
+				<xs:element ref="tns:claimant_address_line_2"/>
+				<xs:element ref="tns:claimant_address_line_3" minOccurs="0"/>
+				<xs:element ref="tns:claimant_address_line_4" minOccurs="0"/>
+				<xs:element ref="tns:claimant_address_line_5" minOccurs="0"/>
+				<xs:element ref="tns:claimant_postcode"/>
+				<xs:element ref="tns:defendant_1_name_line_1"/>
+				<xs:element ref="tns:defendant_1_name_line_2" minOccurs="0"/>
+				<xs:element ref="tns:defendant_1_address_line_1"/>
+				<xs:element ref="tns:defendant_1_address_line_2"/>
+				<xs:element ref="tns:defendant_1_address_line_3" minOccurs="0"/>
+				<xs:element ref="tns:defendant_1_address_line_4" minOccurs="0"/>
+				<xs:element ref="tns:defendant_1_address_line_5" minOccurs="0"/>
+				<xs:element ref="tns:defendant_1_postcode"/>
+				<xs:element ref="tns:defendant_2_name_line_1"/>
+				<xs:element ref="tns:defendant_2_name_line_2" minOccurs="0"/>
+				<xs:element ref="tns:defendant_2_address_line_1"/>
+				<xs:element ref="tns:defendant_2_address_line_2"/>
+				<xs:element ref="tns:defendant_2_address_line_3" minOccurs="0"/>
+				<xs:element ref="tns:defendant_2_address_line_4" minOccurs="0"/>
+				<xs:element ref="tns:defendant_2_address_line_5" minOccurs="0"/>
+				<xs:element ref="tns:defendant_2_postcode"/>
+				<xs:element ref="tns:claim_interest"/>
+				<xs:element ref="tns:claim_amount"/>
+				<xs:element ref="tns:claim_solicitors_costs" minOccurs="0"/>
+				<xs:element ref="tns:claim_particulars_line_1"/>
+				<xs:element ref="tns:claim_particulars_line_2"/>
+				<xs:element ref="tns:claim_particulars_line_3"/>
+				<xs:element ref="tns:claim_particulars_line_4"/>
+				<xs:element ref="tns:claim_particulars_line_5"/>
+				<xs:element ref="tns:claim_particulars_line_6"/>
+				<xs:element ref="tns:claim_particulars_line_7"/>
+				<xs:element ref="tns:claim_particulars_line_8"/>
+				<xs:element ref="tns:claim_particulars_line_9"/>
+				<xs:element ref="tns:claim_particulars_line_10"/>
+				<xs:element ref="tns:claim_particulars_line_11"/>
+				<xs:element ref="tns:claim_particulars_line_12"/>
+				<xs:element ref="tns:claim_particulars_line_13"/>
+				<xs:element ref="tns:claim_particulars_line_14"/>
+				<xs:element ref="tns:claim_particulars_line_15"/>
+				<xs:element ref="tns:claim_particulars_line_16"/>
+				<xs:element ref="tns:claim_particulars_line_17"/>
+				<xs:element ref="tns:claim_particulars_line_18"/>
+				<xs:element ref="tns:claim_particulars_line_19"/>
+				<xs:element ref="tns:claim_particulars_line_20"/>
+				<xs:element ref="tns:claim_particulars_line_21"/>
+				<xs:element ref="tns:claim_particulars_line_22"/>
+				<xs:element ref="tns:claim_particulars_line_23"/>
+				<xs:element ref="tns:claim_particulars_line_24"/>
+				<xs:element ref="tns:date_owed_from" minOccurs="0"/>
+				<xs:element ref="tns:daily_interest_amount" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="claimant_name_line_1" type="tns:name_line"/>
+	<xs:element name="claimant_name_line_2" type="tns:name_line"/>
+	<xs:element name="claimant_address_line_1" type="tns:address_line"/>
+	<xs:element name="claimant_address_line_2" type="tns:address_line"/>
+	<xs:element name="claimant_address_line_3" type="tns:address_line"/>
+	<xs:element name="claimant_address_line_4" type="tns:address_line"/>
+	<xs:element name="claimant_address_line_5" type="tns:address_line"/>
+	<xs:element name="claimant_postcode" type="tns:postcode"/>
+	<xs:element name="defendant_1_name_line_1" type="tns:name_line"/>
+	<xs:element name="defendant_1_name_line_2" type="tns:name_line"/>
+	<xs:element name="defendant_1_address_line_1" type="tns:address_line"/>
+	<xs:element name="defendant_1_address_line_2" type="tns:address_line"/>
+	<xs:element name="defendant_1_address_line_3" type="tns:address_line"/>
+	<xs:element name="defendant_1_address_line_4" type="tns:address_line"/>
+	<xs:element name="defendant_1_address_line_5" type="tns:address_line"/>
+	<xs:element name="defendant_1_postcode" type="tns:postcode"/>
+	<xs:element name="defendant_2_name_line_1" type="tns:name_line"/>
+	<xs:element name="defendant_2_name_line_2" type="tns:name_line"/>
+	<xs:element name="defendant_2_address_line_1" type="tns:address_line"/>
+	<xs:element name="defendant_2_address_line_2" type="tns:address_line"/>
+	<xs:element name="defendant_2_address_line_3" type="tns:address_line"/>
+	<xs:element name="defendant_2_address_line_4" type="tns:address_line"/>
+	<xs:element name="defendant_2_address_line_5" type="tns:address_line"/>
+	<xs:element name="defendant_2_postcode" type="tns:postcode"/>
+	<!-- Claim Interest is Y or N -->
+	<xs:element name="claim_interest">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[yY]|[nN]"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="claim_amount">
+		<xs:simpleType>
+			<xs:restriction base="tns:currency">
+				<xs:maxInclusive value="99999.99"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="claim_solicitors_costs">
+		<xs:simpleType>
+			<xs:restriction base="tns:currency">
+				<xs:maxInclusive value="999.99"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="claim_particulars_line_1" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_2" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_3" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_4" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_5" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_6" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_7" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_8" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_9" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_10" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_11" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_12" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_13" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_14" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_15" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_16" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_17" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_18" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_19" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_20" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_21" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_22" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_23" type="tns:claim_particulars"/>
+	<xs:element name="claim_particulars_line_24" type="tns:claim_particulars"/>
+	<!-- Custom types -->
+	<xs:simpleType name="name_line">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="claim_particulars">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="45"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="date_owed_from" type="xs:date"/>
+	<xs:element name="daily_interest_amount">
+		<xs:simpleType>
+			<xs:restriction base="tns:currency">
+				<xs:maxInclusive value="9999.99"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+</xs:schema>

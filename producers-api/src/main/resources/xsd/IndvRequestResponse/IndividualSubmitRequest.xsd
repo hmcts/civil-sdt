@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+	<xs:include schemaLocation="..\BulkRequestResponse\BulkSubmitRequest.xsd"/>
+
+	<xs:element name="sendIndividualData">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="tns:sendBulkData"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>	
+</xs:schema>

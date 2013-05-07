@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+	<xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
+		
+	<xs:element name="getBulkFeedback" type="tns:getBulkFeedback"/>
+	<xs:complexType name="getBulkFeedback">
+		<xs:sequence>
+			<xs:element name="bulk_feedback" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="bulk_feedback">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tns:customer_code"/>
+				<xs:element ref="tns:reference" minOccurs="0"/>
+				<xs:element ref="tns:sdt_reference" minOccurs="0"/>
+				<xs:element ref="tns:date_submitted" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="date_submitted" type="xs:dateTime"/>
+</xs:schema>

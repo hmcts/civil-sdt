@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sendDefenceRequest xmlns="http://commissioning-ws.sdt.moj.gov.uk/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://commissioning-ws.sdt.moj.gov.uk/ ../DefenceRequest&amp;Response/DefenceFeedbackRequest.xsd ">
+	<defence_request>
+	  <customer_code>9999</customer_code>
+	  <from_date>2001-01-01</from_date>
+	  <to_date>2001-01-01</to_date>
+	</defence_request>
+</sendDefenceRequest>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<getFeedbackResponse xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://commissioning-ws.sdt.moj.gov.uk/ BulkSubmitResponse.xsd ">
+	<feedback_response>
+	  <customer_code>9999</customer_code>
+	  <reference>reference</reference>
+	  <sdt_reference>sdt_reference</sdt_reference>
+	  <date_submitted>2001-12-31T12:00:00</date_submitted>
+	  <number_of_requests>0</number_of_requests>
+	</feedback_response>
+</getFeedbackResponse>

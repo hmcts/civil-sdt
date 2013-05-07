@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+	<xs:include schemaLocation="Base.xsd"/>
+	<xs:element name="sendNewWarrants" type="tns:sendNewWarrants"/>
+	<xs:complexType name="sendNewWarrants">
+		<xs:sequence>
+			<xs:element ref="tns:warrant" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="warrant">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="tns:request_id"/>
+				<xs:element ref="tns:case_number"/>
+				<xs:element ref="tns:claimant_reference" minOccurs="0"/>
+				<xs:element ref="tns:defendant_id"/>
+				<xs:element ref="tns:defendant_address_line_1"/>
+				<xs:element ref="tns:defendant_address_line_2"/>
+				<xs:element ref="tns:defendant_address_line_3" minOccurs="0"/>
+				<xs:element ref="tns:defendant_address_line_4" minOccurs="0"/>
+				<xs:element ref="tns:defendant_address_line_5" minOccurs="0"/>
+				<xs:element ref="tns:defendant_postcode"/>
+				<xs:element ref="tns:balance_of_debt"/>
+				<xs:element ref="tns:amount_of_warrant"/>
+				<xs:element ref="tns:solicitors_costs" minOccurs="0"/>
+				<xs:element ref="tns:additional_notes" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="balance_of_debt">
+		<xs:simpleType>
+			<xs:restriction base="tns:currency">
+				<xs:maxInclusive value="99999.99"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="amount_of_warrant">
+		<xs:simpleType>
+			<xs:restriction base="tns:currency">
+				<xs:maxInclusive value="99999.99"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="solicitors_costs">
+		<xs:simpleType>
+			<xs:restriction base="tns:currency">
+				<xs:maxInclusive value="999.99"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="additional_notes">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="0"/>
+				<xs:maxLength value="120"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+</xs:schema>

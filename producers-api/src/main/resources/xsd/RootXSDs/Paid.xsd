@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+	<xs:include schemaLocation="Base.xsd"/>
+	<xs:element name="sendNewPaid" type="tns:sendNewPaid"/>
+	<xs:complexType name="sendNewPaid">
+		<xs:sequence>
+			<xs:element ref="tns:paid" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="paid">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="tns:case_number"/>
+				<xs:element ref="tns:notification_type"/>
+				<xs:element ref="tns:defendant_id" minOccurs="0"/>
+				<xs:element ref="tns:date_of_last_payment" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="notification_type">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[pP]|[oO]|[wW]|[dD]"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="date_of_last_payment" type="xs:date"/>
+</xs:schema>
