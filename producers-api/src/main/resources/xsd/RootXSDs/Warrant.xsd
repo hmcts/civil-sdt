@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="Base.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/warrant" 
+			targetNamespace="http://ws.sdt.moj.gov.uk/warrant" xmlns:common="http://ws.sdt.moj.gov.uk/common" 
+			elementFormDefault="qualified">
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
 	<xs:element name="sendNewWarrants" type="tns:sendNewWarrants"/>
 	<xs:complexType name="sendNewWarrants">
 		<xs:sequence>
 			<xs:element ref="tns:warrant" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
+	<!-- Warrant Details -->
 	<xs:element name="warrant">
 		<xs:complexType>
 			<xs:all>
-				<xs:element ref="tns:request_id"/>
-				<xs:element ref="tns:case_number"/>
-				<xs:element ref="tns:claimant_reference" minOccurs="0"/>
-				<xs:element ref="tns:defendant_id"/>
-				<xs:element ref="tns:defendant_address_line_1"/>
-				<xs:element ref="tns:defendant_address_line_2"/>
-				<xs:element ref="tns:defendant_address_line_3" minOccurs="0"/>
-				<xs:element ref="tns:defendant_address_line_4" minOccurs="0"/>
-				<xs:element ref="tns:defendant_address_line_5" minOccurs="0"/>
-				<xs:element ref="tns:defendant_postcode"/>
-				<xs:element ref="tns:balance_of_debt"/>
-				<xs:element ref="tns:amount_of_warrant"/>
-				<xs:element ref="tns:solicitors_costs" minOccurs="0"/>
-				<xs:element ref="tns:additional_notes" minOccurs="0"/>
+				<xs:element ref="common:requestId"/>
+				<xs:element ref="common:caseNumber"/>
+				<xs:element ref="common:claimantReference" minOccurs="0"/>
+				<xs:element ref="common:defendantId"/>
+				<xs:element ref="common:defendantAddressLine1"/>
+				<xs:element ref="common:defendantAddressLine2"/>
+				<xs:element ref="common:defendantAddressLine3" minOccurs="0"/>
+				<xs:element ref="common:defendantAddressLine4" minOccurs="0"/>
+				<xs:element ref="common:defendantAddressLine5" minOccurs="0"/>
+				<xs:element ref="common:defendantPostcode"/>
+				<xs:element ref="tns:balanceOfDebt"/>
+				<xs:element ref="tns:amountOfWarrant"/>
+				<xs:element ref="tns:solicitorsCosts" minOccurs="0"/>
+				<xs:element ref="tns:additionalNotes" minOccurs="0"/>
+				
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="balance_of_debt">
+	<!-- The balance of debt must be less than or equal to 99999.99 -->
+	<xs:element name="balanceOfDebt">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="99999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="amount_of_warrant">
+		<!-- The amount of the warrant must be less than or equal to 99999.99 -->
+	<xs:element name="amountOfWarrant">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="99999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="solicitors_costs">
+	<!-- The Solicitor costs must be less than or equal to 999.99 -->
+	<xs:element name="solicitorsCosts">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="additional_notes">
+	<!-- The number of characters in Additional notes must be between 0 and 120. -->
+	<xs:element name="additionalNotes">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>

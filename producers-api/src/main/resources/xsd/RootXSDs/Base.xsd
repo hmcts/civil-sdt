@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/common" 
+	targetNamespace="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
 	<!-- Customer code is a 4 digit number -->
-	<xs:element name="customer_code">
+	<xs:element name="customerCode">
 		<xs:simpleType>
 			<xs:restriction base="xs:integer">
 				<xs:minInclusive value="1000"/>
@@ -10,7 +11,7 @@
 		</xs:simpleType>
 	</xs:element>
 	<!-- Request reference -->
-	<xs:element name="request_id">
+	<xs:element name="requestId">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -19,7 +20,7 @@
 		</xs:simpleType>
 	</xs:element>
 	<!-- Case number is now an 8 digit number -->
-	<xs:element name="case_number">
+	<xs:element name="caseNumber">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="[0-9A-Za-z]{8}"/>
@@ -27,7 +28,7 @@
 		</xs:simpleType>
 	</xs:element>
 	<!-- Warrant number is now an 8 digit number -->
-	<xs:element name="warrant_number">
+	<xs:element name="warrantNumber">
 		<xs:simpleType>
 			<xs:restriction base="xs:integer">
 				<xs:pattern value="[0-9A-Za-z]{8}"/>
@@ -35,19 +36,19 @@
 		</xs:simpleType>
 	</xs:element>
 	<!-- Defendant ID is Blank (all defendants), 1 or 2 -->
-	<xs:element name="defendant_id">
+	<xs:element name="defendantId">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value=" |1|2"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="defendant_address_line_1" type="tns:address_line"/>
-	<xs:element name="defendant_address_line_2" type="tns:address_line"/>
-	<xs:element name="defendant_address_line_3" type="tns:address_line"/>
-	<xs:element name="defendant_address_line_4" type="tns:address_line"/>
-	<xs:element name="defendant_address_line_5" type="tns:address_line"/>
-	<xs:element name="defendant_postcode" type="tns:postcode"/>
+	<xs:element name="defendantAddressLine1" type="tns:addressLine"/>
+	<xs:element name="defendantAddressLine2" type="tns:addressLine"/>
+	<xs:element name="defendantAddressLine3" type="tns:addressLine"/>
+	<xs:element name="defendantAddressLine4" type="tns:addressLine"/>
+	<xs:element name="defendantAddressLine5" type="tns:addressLine"/>
+	<xs:element name="defendantPostcode" type="tns:postcode"/>
 	<!-- Custom types -->
 	<xs:element name="reference">
 		<xs:simpleType>
@@ -57,7 +58,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-		<xs:element name="claimant_reference">
+		<xs:element name="claimantReference">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -65,14 +66,14 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="number_of_requests">
+	<xs:element name="numberOfRequests">
 		<xs:simpleType>
 			<xs:restriction base="xs:integer">
 				<xs:maxInclusive value="99999"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="sdt_reference">
+	<xs:element name="sdtReference">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -80,7 +81,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-		<xs:element name="bulk_customer_id">
+		<xs:element name="bulkCustomerId">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -88,14 +89,14 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="SOT_facts_are_true_declaration">
+	<xs:element name="SotFactsAreTrueDeclaration">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="[yY]|[nN]"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="SOT_name_on_particulars">
+	<xs:element name="SotNameOnParticulars">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -103,7 +104,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:simpleType name="address_line">
+	<xs:simpleType name="addressLine">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="0"/>
 			<xs:maxLength value="35"/>
@@ -121,13 +122,13 @@
 			<xs:pattern value=".*\.[0-9][0-9]"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="court_code">
+	<xs:simpleType name="courtCode">
 		<xs:restriction base="xs:integer">
 			<xs:pattern value="[0-9]{3}"/>
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:element name="request_type">
+	<xs:element name="requestType">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:enumeration value="CLAIM"/>
@@ -146,16 +147,16 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="date_of_issue" type="xs:date"/>
-	<xs:element name="date_of_service" type="xs:date"/>
-	<xs:element name="enforcing_court_code">
+	<xs:element name="dateOfIssue" type="xs:date"/>
+	<xs:element name="dateOfService" type="xs:date"/>
+	<xs:element name="enforcingCourtCode">
 		<xs:simpleType>
 			<xs:restriction base="xs:integer">
 				<xs:pattern value="[0-9]{3}"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="enforcing_court_name">
+	<xs:element name="enforcingCourtName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -170,14 +171,14 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="rejection_reason_code">
+	<xs:element name="rejectionReasonCode">
 		<xs:simpleType>
 			<xs:restriction base="xs:integer">
 				<xs:pattern value="[0-9]{4}"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="rejection_reason_description">
+	<xs:element name="rejectionReasonDescription">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
