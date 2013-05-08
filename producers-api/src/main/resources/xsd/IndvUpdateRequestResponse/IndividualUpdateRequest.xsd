@@ -7,14 +7,14 @@
 	<xs:element name="sendIndividualUpdate" type="tns:sendIndividualUpdate"/>
 	<xs:complexType name="sendIndividualUpdate">
 		<xs:sequence>
-			<xs:element name="individual_update" minOccurs="1"/>
+			<xs:element ref="tns:individualUpdate" minOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="individual_update">
+	<xs:element name="individualUpdate">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="common:sdtReference"/>
-				<xs:element ref="tns:updates" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element ref="common:sdtReference"/>
+					<xs:element ref="tns:updates" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

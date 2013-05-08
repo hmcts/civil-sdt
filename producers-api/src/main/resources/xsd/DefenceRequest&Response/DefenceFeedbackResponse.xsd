@@ -7,14 +7,16 @@
 	<xs:element name="sendDefenceFeedback" type="tns:sendDefenceFeedback"/>
 	<xs:complexType name="sendDefenceFeedback">
 		<xs:sequence>
-			<xs:element name="defenceFeedback" minOccurs="1"/>
+			<xs:element ref="tns:defenceFeedback" minOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
-	
 	<xs:element name="defenceFeedback">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="common:customerCode"/>
+				<xs:element ref="common:fromDate" minOccurs="0"/>
+				<xs:element ref="common:toDate" minOccurs="0"/>
+				<xs:element name="numberOfDefencesFound" type="xs:integer"/>
 				<xs:element ref="tns:defences" minOccurs="1" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>

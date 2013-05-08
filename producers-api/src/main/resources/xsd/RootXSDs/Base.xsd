@@ -186,4 +186,6 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
+	<xs:element name="fromDate" type="xs:date"/>
+	<xs:element name="toDate" type="xs:date"/>
 </xs:schema>

@@ -5,10 +5,10 @@
 	<xs:element name="getIndvUpdateResponse" type="tns:getIndvUpdateResponse"/>
 	<xs:complexType name="getIndvUpdateResponse">
 		<xs:sequence>
-			<xs:element name="update_status" minOccurs="1"/>
+			<xs:element ref="tns:updateStatus" minOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="update_status">
+	<xs:element name="updateStatus">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:enumeration value="SUCCESSFUL"/>
