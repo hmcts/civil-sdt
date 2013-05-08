@@ -1,62 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Judgment.xsd"/>
-	<xs:include schemaLocation="..\RootXSDs\Warrant.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk/judgmentForthwith" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/judgmentForthwith" 
+    xmlns:common="http://ws.sdt.moj.gov.uk/common"
+    xmlns:warrant="http://ws.sdt.moj.gov.uk/warrant"
+    xmlns:judgment="http://ws.sdt.moj.gov.uk/judgment" 
+    elementFormDefault="qualified">
+
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/judgment" schemaLocation="..\RootXSDs\Judgment.xsd"/>
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/warrant" schemaLocation="..\RootXSDs\Warrant.xsd"/>
 	
-	<xs:element name="sendNewJudgmentForthwiths" type="tns:sendNewJudgmentForthwiths" />
-	<xs:complexType name="sendNewJudgmentForthwiths">
+	<xs:element name="judgmentForthwiths" type="tns:judgmentForthwiths" />
+	<xs:complexType name="judgmentForthwiths">
 		<xs:sequence>
-			<xs:element ref="tns:judgment_forthwith" minOccurs="1" />
+			<xs:element ref="tns:judgmentForthwith" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="judgment_forthwith">
+	<xs:element name="judgmentForthwith">
 		<xs:complexType>
 			<xs:all>
-				<xs:element ref="tns:request_id"/>
-				<xs:element ref="tns:case_number"/>
-				<xs:element ref="tns:claimant_reference" minOccurs="0"/>
-				<xs:element ref="tns:defendant_id"/>
-				<xs:element ref="tns:defendant_address_line_1"/>
-				<xs:element ref="tns:defendant_address_line_2"/>
-				<xs:element ref="tns:defendant_address_line_3" minOccurs="0"/>
-				<xs:element ref="tns:defendant_address_line_4" minOccurs="0"/>
-				<xs:element ref="tns:defendant_address_line_5" minOccurs="0"/>
-				<xs:element ref="tns:defendant_postcode"/>
-				<xs:element ref="tns:defendant_date_of_birth" minOccurs="0"/>
-				<xs:element ref="tns:judgment_type"/>
-				<xs:element ref="tns:joint_judgment" minOccurs="0"/>
-				<xs:element ref="tns:judgment_amount"/>
-				<xs:element ref="tns:interest" minOccurs="0"/>
-				<xs:element ref="tns:total_costs" minOccurs="0"/>
-				<xs:element ref="tns:paid_before_judgment" minOccurs="0"/>
-				<xs:element ref="tns:judgment_total"/>
-				<xs:element ref="tns:instalment_amount" minOccurs="0"/>
-				<xs:element ref="tns:instalment_frequency" minOccurs="0"/>
-				<xs:element ref="tns:date_of_first_payment" minOccurs="0"/>
-				<xs:element ref="tns:payee_name"/>
-				<xs:element ref="tns:payee_address_line_1"/>
-				<xs:element ref="tns:payee_address_line_2"/>
-				<xs:element ref="tns:payee_address_line_3" minOccurs="0"/>
-				<xs:element ref="tns:payee_address_line_4" minOccurs="0"/>
-				<xs:element ref="tns:payee_address_line_5" minOccurs="0"/>
-				<xs:element ref="tns:payee_postcode"/>
-				<xs:element ref="tns:payee_telephone" minOccurs="0"/>
-				<xs:element ref="tns:payee_reference" minOccurs="0"/>
-				<xs:element ref="tns:payee_sort_code" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_account_number" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_name" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_info_1" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_info_2" minOccurs="0"/>
-				<xs:element ref="tns:payee_girobank_account_number" minOccurs="0"/>
-				<xs:element ref="tns:payment_slip_codeline_1" minOccurs="0"/>
-				<xs:element ref="tns:payment_slip_codeline_2" minOccurs="0"/>
-				<xs:element ref="tns:payee_girobank_transaction_code_1" minOccurs="0"/>
-				<xs:element ref="tns:payee_girobank_transaction_code_2" minOccurs="0"/>
-				<xs:element ref="tns:payee_apacs_code" minOccurs="0"/>
-				<xs:element ref="tns:balance_of_debt"/>
-				<xs:element ref="tns:amount_of_warrant"/>
-				<xs:element ref="tns:solicitors_costs" minOccurs="0"/>
-				<xs:element ref="tns:additional_notes" minOccurs="0"/>
+                <xs:element ref="judgment:judgment"/>
+                <xs:element ref="warrant:warrant"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>

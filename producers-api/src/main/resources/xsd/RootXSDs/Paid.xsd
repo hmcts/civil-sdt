@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/paid" 
-	 		targetNamespace="http://ws.sdt.moj.gov.uk/paid" xmlns:common="http://ws.sdt.moj.gov.uk/common"
-	  		elementFormDefault="qualified">
-		<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
-	<xs:element name="sendNewPaid" type="tns:sendNewPaid"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk/paid"
+    targetNamespace="http://ws.sdt.moj.gov.uk/paid" 
+    xmlns:common="http://ws.sdt.moj.gov.uk/common"
+    elementFormDefault="qualified">
+    
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
+	
+    <xs:element name="sendNewPaid" type="tns:sendNewPaid"/>
 	<xs:complexType name="sendNewPaid">
 		<xs:sequence>
 			<xs:element ref="tns:paid" minOccurs="1" maxOccurs="unbounded"/>

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/warrant" 
-			targetNamespace="http://ws.sdt.moj.gov.uk/warrant" xmlns:common="http://ws.sdt.moj.gov.uk/common" 
-			elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk/warrant" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/warrant" 
+    xmlns:common="http://ws.sdt.moj.gov.uk/common" 
+	elementFormDefault="qualified">
+    
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
-	<xs:element name="sendNewWarrants" type="tns:sendNewWarrants"/>
+	
+    <xs:element name="sendNewWarrants" type="tns:sendNewWarrants"/>
 	<xs:complexType name="sendNewWarrants">
 		<xs:sequence>
 			<xs:element ref="tns:warrant" minOccurs="1" maxOccurs="unbounded"/>

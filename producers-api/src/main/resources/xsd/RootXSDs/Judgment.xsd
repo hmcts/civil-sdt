@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="Base.xsd"/>
-	<xs:element name="sendNewJudgements" type="tns:sendNewJudgements"/>
-	<xs:complexType name="sendNewJudgements">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/judgment"
+    xmlns:tns="http://ws.sdt.moj.gov.uk/judgment" 
+    xmlns:common="http://ws.sdt.moj.gov.uk/common"
+    elementFormDefault="qualified">
+
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
+
+	<xs:element name="judgments" type="tns:judgments"/>
+	<xs:complexType name="judgments">
 		<xs:sequence>
-			<xs:element ref="tns:judgement" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element ref="tns:judgment" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="judgement">
+	<xs:element name="judgment">
 		<xs:complexType>
 			<xs:all>
-				<xs:element ref="tns:case_number"/>
-				<xs:element ref="tns:defendant_id"/>
-				<xs:element ref="tns:defendant_address_line_1"/>
-				<xs:element ref="tns:defendant_address_line_2"/>
-				<xs:element ref="tns:defendant_address_line_3" minOccurs="0"/>
-				<xs:element ref="tns:defendant_address_line_4" minOccurs="0"/>
-				<xs:element ref="tns:defendant_address_line_5" minOccurs="0"/>
-				<xs:element ref="tns:defendant_postcode"/>
-				<xs:element ref="tns:defendant_date_of_birth" minOccurs="0"/>
-				<xs:element ref="tns:judgment_type"/>
-				<xs:element ref="tns:joint_judgment" minOccurs="0"/>
-				<xs:element ref="tns:judgment_amount"/>
+                <xs:element ref="common:requestId"/>
+				<xs:element ref="common:caseNumber"/>
+				<xs:element ref="common:defendantId"/>
+				<xs:element ref="common:defendantAddressLine1"/>
+                <xs:element ref="common:defendantAddressLine2"/>
+                <xs:element ref="common:defendantAddressLine3" minOccurs="0"/>
+                <xs:element ref="common:defendantAddressLine4" minOccurs="0"/>
+                <xs:element ref="common:defendantAddressLine5" minOccurs="0"/>
+				<xs:element ref="common:defendantPostcode"/>
+                <!-- I think we should upgrade to 4 digit years -->
+                <xs:element name="defendantDateOfBirth" type="xs:date"/>
+				<xs:element ref="tns:judgmentType"/>
+				<xs:element ref="tns:jointJudgment" minOccurs="0"/>
+				<xs:element ref="tns:judgmentAmount"/>
 				<xs:element ref="tns:interest" minOccurs="0"/>
-				<xs:element ref="tns:total_costs" minOccurs="0"/>
-				<xs:element ref="tns:paid_before_judgment" minOccurs="0"/>
-				<xs:element ref="tns:judgment_total"/>
-				<xs:element ref="tns:instalment_amount" minOccurs="0"/>
-				<xs:element ref="tns:instalment_frequency" minOccurs="0"/>
-				<xs:element ref="tns:date_of_first_payment" minOccurs="0"/>
-				<xs:element ref="tns:payee_name"/>
-				<xs:element ref="tns:payee_address_line_1"/>
-				<xs:element ref="tns:payee_address_line_2"/>
-				<xs:element ref="tns:payee_address_line_3" minOccurs="0"/>
-				<xs:element ref="tns:payee_address_line_4" minOccurs="0"/>
-				<xs:element ref="tns:payee_address_line_5" minOccurs="0"/>
-				<xs:element ref="tns:payee_postcode"/>
-				<xs:element ref="tns:payee_telephone" minOccurs="0"/>
-				<xs:element ref="tns:payee_reference" minOccurs="0"/>
-				<xs:element ref="tns:payee_sort_code" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_account_number" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_name" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_info_1" minOccurs="0"/>
-				<xs:element ref="tns:payee_bank_info_2" minOccurs="0"/>
-				<xs:element ref="tns:payee_girobank_account_number" minOccurs="0"/>
-				<xs:element ref="tns:payment_slip_codeline_1" minOccurs="0"/>
-				<xs:element ref="tns:payment_slip_codeline_2" minOccurs="0"/>
-				<xs:element ref="tns:payee_girobank_transaction_code_1" minOccurs="0"/>
-				<xs:element ref="tns:payee_girobank_transaction_code_2" minOccurs="0"/>
-				<xs:element ref="tns:payee_apacs_code" minOccurs="0"/>
+				<xs:element ref="tns:totalCosts" minOccurs="0"/>
+				<xs:element ref="tns:paidBeforeJudgment" minOccurs="0"/>
+				<xs:element ref="tns:judgmentTotal"/>
+				<xs:element ref="tns:instalmentAmount" minOccurs="0"/>
+				<xs:element ref="tns:instalmentFrequency" minOccurs="0"/>
+				<xs:element ref="tns:dateOfFirstPayment" minOccurs="0"/>
+				<xs:element ref="tns:payeeName"/>
+				<xs:element ref="tns:payeeAddressLine1"/>
+                <xs:element ref="tns:payeeAddressLine2"/>
+                <xs:element ref="tns:payeeAddressLine3"  minOccurs="0"/>
+                <xs:element ref="tns:payeeAddressLine4"  minOccurs="0"/>
+                <xs:element ref="tns:payeeAddressLine5"  minOccurs="0"/>
+				<xs:element ref="tns:payeePostcode"/>
+ 				<xs:element ref="tns:payeeTelephone" minOccurs="0"/>
+				<xs:element ref="tns:payeeReference" minOccurs="0"/>
+				<xs:element ref="tns:payeeSortCode" minOccurs="0"/>
+				<xs:element ref="tns:payeeBankAccountNumber" minOccurs="0"/>
+				<xs:element ref="tns:payeeBankName" minOccurs="0"/>
+				<xs:element ref="tns:payeeBankInfo1" minOccurs="0"/>
+				<xs:element ref="tns:payeeBankInfo2" minOccurs="0"/>
+				<xs:element ref="tns:payeeGirobankAccountNumber" minOccurs="0"/>
+				<xs:element ref="tns:paymentSlipCodeline1" minOccurs="0"/>
+				<xs:element ref="tns:paymentSlipCodeline2" minOccurs="0"/>
+				<xs:element ref="tns:payeeGirobankTransactionCode1" minOccurs="0"/>
+				<xs:element ref="tns:payeeGirobankTransactionCode2" minOccurs="0"/>
+				<xs:element ref="tns:payeeApacsCode" minOccurs="0"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
-	<!-- I think we should upgrade to 4 digit years -->
-	<xs:element name="defendant_date_of_birth" type="xs:date"/>
 	<!-- This is a yes or no field, and we should be case insensitive -->
-	<xs:element name="registered_office">
+	<xs:element name="registeredOffice">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="[yY]|[nN]"/>
@@ -63,7 +69,7 @@
 		</xs:simpleType>
 	</xs:element>
 	<!-- Values here should be A or D only -->
-	<xs:element name="judgment_type">
+	<xs:element name="judgmentType">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="[aA]|[dD]"/>
@@ -72,7 +78,7 @@
 	</xs:element>
 	<!-- Values here should be Y or N or space only. I think we can update this 
 		to be Y or N with space becoming no node -->
-	<xs:element name="joint_judgment">
+	<xs:element name="jointJudgment">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="[yY]|[nN]| "/>
@@ -80,57 +86,57 @@
 		</xs:simpleType>
 	</xs:element>
 	<!-- Currency data types, xs:maxInclusive is the only way to get length checks to work -->
-	<xs:element name="judgment_amount">
+	<xs:element name="judgmentAmount">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="999999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="interest">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="99999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="total_costs">
+	<xs:element name="totalCosts">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="paid_before_judgment">
+	<xs:element name="paidBeforeJudgment">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="999999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="judgment_total">
+	<xs:element name="judgmentTotal">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="999999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="instalment_amount">
+	<xs:element name="instalmentAmount">
 		<xs:simpleType>
-			<xs:restriction base="tns:currency">
+			<xs:restriction base="common:currency">
 				<xs:maxInclusive value="999999.99"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="instalment_frequency">
+	<xs:element name="instalmentFrequency">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="[mM]|[fF]|[wW] "/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="date_of_first_payment" type="xs:date"/>
-	<xs:element name="payee_name">
+	<xs:element name="dateOfFirstPayment" type="xs:date"/>
+	<xs:element name="payeeName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -138,20 +144,20 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_address_line_1" type="tns:address_line"/>
-	<xs:element name="payee_address_line_2" type="tns:address_line"/>
-	<xs:element name="payee_address_line_3" type="tns:address_line"/>
-	<xs:element name="payee_address_line_4" type="tns:address_line"/>
-	<xs:element name="payee_address_line_5" type="tns:address_line"/>
-	<xs:element name="payee_postcode" type="tns:postcode"/>
-	<xs:element name="payee_telephone">
+	<xs:element name="payeeAddressLine1" type="common:addressLine"/>
+	<xs:element name="payeeAddressLine2" type="common:addressLine"/>
+	<xs:element name="payeeAddressLine3" type="common:addressLine"/>
+	<xs:element name="payeeAddressLine4" type="common:addressLine"/>
+	<xs:element name="payeeAddressLine5" type="common:addressLine"/>
+	<xs:element name="payeePostcode" type="common:postcode"/>
+	<xs:element name="payeeTelephone">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern value="[0-9]{11}"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_reference">
+	<xs:element name="payeeReference">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -159,7 +165,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payment_slip_codeline_1">
+	<xs:element name="paymentSlipCodeline1">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -167,7 +173,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payment_slip_codeline_2">
+	<xs:element name="paymentSlipCodeline2">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -175,7 +181,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_sort_code">
+	<xs:element name="payeeSortCode">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -183,7 +189,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_bank_account_holder">
+	<xs:element name="payeeBankAccountHolder">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -191,7 +197,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_bank_name">
+	<xs:element name="payeeBankName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -199,7 +205,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_bank_info_1">
+	<xs:element name="payeeBankInfo1">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -207,7 +213,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_bank_info_2">
+	<xs:element name="payeeBankInfo2">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -215,7 +221,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_girobank_account_number">
+	<xs:element name="payeeGirobankAccountNumber">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -223,7 +229,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_bank_account_number">
+	<xs:element name="payeeBankAccountNumber">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -231,7 +237,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_girobank_transaction_code_1">
+	<xs:element name="payeeGirobankTransactionCode1">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -239,7 +245,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_girobank_transaction_code_2">
+	<xs:element name="payeeGirobankTransactionCode2">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -247,7 +253,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payee_apacs_code">
+	<xs:element name="payeeApacsCode">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:minLength value="0"/>
@@ -255,4 +261,5 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
+
 </xs:schema>
