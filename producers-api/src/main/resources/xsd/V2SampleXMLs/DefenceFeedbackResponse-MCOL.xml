@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defenceResponse>
+	<defenceDetails>
+		<claim>
+		  <claimNumber>12345678</claimNumber>
+          <defendants>
+            <defendant id="1">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+            <defendant id="2">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+          </defendants>
+		</claim>
+        <claim>
+          <claimNumber>22345678</claimNumber>
+          <defendants>
+            <defendant id="1">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+          </defendants>
+        </claim>
+	</defenceDetails>
+    <status>OK/Error</status>
+    <error>
+        <code>code</code>
+        <description>description</description>
+    </error>
+</defenceResponse>

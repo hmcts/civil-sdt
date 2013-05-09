@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Message from SDT to MCOL -->
+<createClaimRequest>
+    <header>
+        <sdtRequestId>xyz123</sdtRequestId>
+        <ncpId>NCP_ID</ncpId>
+    </header>
+    <mcolClaim>
+        <field1>claim</field1>
+        <!-- Rename case_number to claim_number -->
+    </mcolClaim>
+</createClaimRequest>

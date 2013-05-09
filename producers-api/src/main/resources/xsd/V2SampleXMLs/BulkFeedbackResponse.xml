@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bulkFeedbackResponse>
+    <bulkRequestStatus>
+        <sdtBulkReference>std_reference</sdtBulkReference>
+        <requestCount>20</requestCount>
+    </bulkRequestStatus>
+    <responses> 
+        <choice>
+            <!-- Either PCOL or MCOL requests will be allowed -->
+            <mcolResponses>
+                <response type="claim" id="request identifier">
+                     <status></status>
+                     <claimNumber></claimNumber>
+                     <issueDate></issueDate>
+                     <!-- TODO Add more fields -->
+                     <error>
+                        <code></code>
+                        <description></description>
+                     </error>
+                </response>
+            </mcolResponses>
+            <pcolResponses>
+                <response type="abc" id="request identifier">
+                </response>
+            </pcolResponses>
+        </choice>
+    </responses>
+</bulkFeedbackResponse>
+

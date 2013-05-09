@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Message from external system to SDT Gateway -->
+<bulkRequest>
+    <header>
+        <sdtCustomerId>SDT_Customer_id</sdtCustomerId> <!-- Confirm that Gateway can validate the id -->
+        <targetSystemId>mcol</targetSystemId>
+        <requestCount>2</requestCount>
+        <customerReference>customer_external_reference</customerReference>
+    </header>
+	<requests>
+        <choice>
+            <!-- Either PCOL or MCOL requests will be allowed -->
+            <!-- Customer code is CPC Number -->
+            <mcolRequests customerCode="xxxx">
+                <request type="claim" id="request identifier"> <!-- 0..* -->
+                    <choice>
+                        <mcolClaim></mcolClaim>
+                        <mcolJudgment></mcolJudgment>
+                        <mcolJudgmentForthwith></mcolJudgmentForthwith>
+                        <mcolWarrant></mcolWarrant>
+                        <mcolPaid></mcolPaid>
+                    </choice>
+                </request>
+            </mcolRequests>
+            <pcolRequests customerId="1234">
+                <pcolReq1><!-- 0..* --></pcolReq1>
+                <pcolReq2><!-- 0..* --></pcolReq2>
+            </pcolRequests>
+        </choice>
+	</requests>
+</bulkRequest>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updateResponse>
+    <status>OK/Error</status>
+    <error>
+        <code>code</code>
+        <description>description</description>
+    </error>
+</updateResponse>
+

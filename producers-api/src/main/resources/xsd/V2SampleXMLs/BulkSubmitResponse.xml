@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bulkResponse>
+    <customerReference>customer_external_reference</customerReference>
+    <sdtBulkReference>sdt_reference</sdtBulkReference>
+    <submittedDate>2001-12-31T12:00:00</submittedDate>
+    <requestCount>10</requestCount>
+    <status>OK/Error</status>
+    <error> <!-- only if errors found -->
+       <code>AUTH_FAILED</code>
+       <description>Failed authorisation</description>
+    </error>
+</bulkResponse>

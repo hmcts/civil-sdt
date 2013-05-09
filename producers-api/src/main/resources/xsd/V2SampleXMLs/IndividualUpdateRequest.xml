@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MCOL to SDT -->
+<updateRequest>
+    <sdtRequestId>xyz123</sdtRequestId>
+    <claimNumber>12345678</claimNumber>
+    <issueDate>2001-01-01</issueDate>
+    <serviceDate>2001-01-01</serviceDate>
+    <warrantNumber>12345678</warrantNumber>
+    <enforcingCourtCode>123</enforcingCourtCode>
+    <enforcingCourtName>enforcing_court_name</enforcingCourtName>
+    <fee>9999</fee>
+    <status>ACCEPTED/INITIALLY_ACCEPTED/REJECTED</status>
+    <error>
+        <code>1234</code>
+        <description>description</description>
+    </error>
+</updateRequest>
+
