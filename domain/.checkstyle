@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fileset-config file-format-version="1.2.0" simple-config="false" sync-formatter="false">
+  <fileset name="non test files" enabled="true" check-config-name="disc_checkstyle" local="false">
+    <file-match-pattern match-pattern="src/main/java" include-pattern="true"/>
+  </fileset>
+  <fileset name="test files" enabled="true" check-config-name="disc_test_checkstyle" local="false">
+    <file-match-pattern match-pattern="src/unit-test/src" include-pattern="true"/>
+    <file-match-pattern match-pattern="src/integ-test/java" include-pattern="true"/>
+  </fileset>
+</fileset-config>
