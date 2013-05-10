@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/claim"
-    xmlns:tns="http://ws.sdt.moj.gov.uk/claim" 
-    xmlns:common="http://ws.sdt.moj.gov.uk/common"
+    targetNamespace="http://ws.sdt.moj.gov.uk"
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
     elementFormDefault="qualified">
 
-    <xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
+    <xs:include schemaLocation="Base.xsd"/>
     
     <xs:element name="mcolClaim" type="tns:claimType"/>
 
 	<xs:complexType name="claimType">
         <xs:sequence>
-			<xs:element name="claimantReference" type="common:stringMaxLength24" minOccurs="0"/>
-			<xs:element name="claimant" type="common:person" />
-			<xs:element name="defendant1" type="common:person"/>
-            <xs:element name="defendant2" type="common:person" minOccurs="0"/>
+			<xs:element name="claimantReference" type="tns:stringMaxLength24" minOccurs="0"/>
+			<xs:element name="claimant" type="tns:person" />
+			<xs:element name="defendant1" type="tns:person"/>
+            <xs:element name="defendant2" type="tns:person" minOccurs="0"/>
             <xs:element name="interest" type="tns:interestType" minOccurs="0"/>
 			<xs:element name="claimAmount" type="tns:amountType"/>
 			<xs:element name="solicitorCost" type="tns:solicitorCostType" minOccurs="0" />

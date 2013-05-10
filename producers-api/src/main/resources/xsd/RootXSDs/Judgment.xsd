@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/judgment"
-    xmlns:tns="http://ws.sdt.moj.gov.uk/judgment" 
-    xmlns:common="http://ws.sdt.moj.gov.uk/common"
+    targetNamespace="http://ws.sdt.moj.gov.uk"
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
     elementFormDefault="qualified">
 
-    <xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
+    <xs:include schemaLocation="Base.xsd"/>
 
     <xs:element name="mcoljudgment" type="tns:judgment"/>
     
     <xs:complexType name="judgment">
         <xs:all>
-            <xs:element name="claimNumber" type="common:documentNumber"/>
-            <xs:element name="defendantId" type="common:defendantIdType"/>
-            <xs:element name="defendantAddress" type="common:address"/>
+            <xs:element name="claimNumber" type="tns:documentNumber"/>
+            <xs:element name="defendantId" type="tns:defendantIdType"/>
+            <xs:element name="defendantAddress" type="tns:address"/>
             <!-- I think we should upgrade to 4 digit years -->
             <xs:element name="defendantDateOfBirth" type="xs:date"/>
             <xs:element ref="tns:judgmentType"/>
@@ -27,7 +26,7 @@
             <xs:element ref="tns:instalmentFrequency" minOccurs="0"/>
             <xs:element ref="tns:dateOfFirstPayment" minOccurs="0"/>
             <xs:element ref="tns:payeeName"/>
-            <xs:element name="payeeAddress" type="common:address"/>
+            <xs:element name="payeeAddress" type="tns:address"/>
             <xs:element ref="tns:payeeTelephone" minOccurs="0"/>
             <xs:element ref="tns:payeeReference" minOccurs="0"/>
             <xs:element ref="tns:payeeSortCode" minOccurs="0"/>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk/common" targetNamespace="http://ws.sdt.moj.gov.uk/common"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk"
 	elementFormDefault="qualified">
 
 	<xs:element name="customerCode">

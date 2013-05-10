@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk/judgmentForthwith" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/judgmentForthwith" 
-    xmlns:common="http://ws.sdt.moj.gov.uk/common"
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk" 
     xmlns:warrant="http://ws.sdt.moj.gov.uk/warrant"
-    xmlns:judgment="http://ws.sdt.moj.gov.uk/judgment" 
     elementFormDefault="qualified">
 
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/judgment" schemaLocation="..\RootXSDs\Judgment.xsd"/>
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/warrant" schemaLocation="..\RootXSDs\Warrant.xsd"/>
+	<xs:include schemaLocation="Judgment.xsd"/>
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/warrant" schemaLocation="Warrant.xsd"/>
 	
 	<xs:element name="mcoljudgmentForthwith" type="tns:judgmentForthwithType"/>
 
     <xs:complexType name="judgmentForthwithType">
 		<xs:all>
-            <xs:element name="mcoljudgment" type="judgment:judgment" minOccurs="1"/>
+            <xs:element name="mcoljudgment" type="tns:judgment" minOccurs="1"/>
+            <!-- TODO Tidy up Warrant namespace -->
             <xs:element name="mcolwarrant" type="warrant:warrantType" minOccurs="1"/>
 		</xs:all>
 	</xs:complexType>
