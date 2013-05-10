@@ -11,9 +11,9 @@
         </layout>
     </appender>
 
-    <!-- Define appender (log file) to which all MCOL messages are written -->
+    <!-- Define appender (log file) to which all SDT messages are written -->
     <appender name="rolling" class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="../logs/mcol.log" />
+        <param name="file" value="../logs/sdt.log" />
         <param name="MaxFileSize" value="300MB" />
         <!-- Keep one backup file -->
         <param name="MaxBackupIndex" value="4" />
@@ -22,24 +22,11 @@
         </layout>
     </appender>
 
-    <!-- Logger for MCOL application code -->
+    <!-- Logger for SDT application code -->
     <!-- N.B. additivity=true will cause this logger to log message and then 
         pass message to root logger -->
-    <logger name="uk.gov.moj" additivity="true">
+    <logger name="uk.gov.moj.sdt" additivity="true">
         <level value="debug" />
-        <appender-ref ref="rolling" />
-    </logger>
-
-    <!-- Logger for payment gateway code -->
-    <logger name="uk.gov.gateway.payment" additivity="true">
-        <level value="info" />
-        <appender-ref ref="rolling" />
-    </logger>
-
-    <!-- Ensure Log message doesn't lazy initialise objects. If this is set 
-        to debug tests may not be accurate -->
-    <logger name="uk.gov.moj.mcol.util.log.LogMessage" additivity="true">
-        <level value="fatal" />
         <appender-ref ref="rolling" />
     </logger>
 
