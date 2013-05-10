@@ -10,18 +10,12 @@
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/judgment" schemaLocation="..\RootXSDs\Judgment.xsd"/>
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/warrant" schemaLocation="..\RootXSDs\Warrant.xsd"/>
 	
-	<xs:element name="judgmentForthwiths" type="tns:judgmentForthwiths" />
-	<xs:complexType name="judgmentForthwiths">
-		<xs:sequence>
-			<xs:element ref="tns:judgmentForthwith" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
+	<xs:element name="mcoljudgmentForthwith" type="tns:judgmentForthwithType"/>
+
+    <xs:complexType name="judgmentForthwithType">
+		<xs:all>
+            <xs:element name="mcoljudgment" type="judgment:judgment" minOccurs="1"/>
+            <xs:element name="mcolwarrant" type="warrant:warrantType" minOccurs="1"/>
+		</xs:all>
 	</xs:complexType>
-	<xs:element name="judgmentForthwith">
-		<xs:complexType>
-			<xs:all>
-                <xs:element ref="judgment:judgment"/>
-                <xs:element ref="warrant:warrant"/>
-			</xs:all>
-		</xs:complexType>
-	</xs:element>
 </xs:schema>

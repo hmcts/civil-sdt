@@ -14,27 +14,28 @@
 		</xs:sequence>
 	</xs:complexType>
 	<!-- Warrant Details -->
-	<xs:element name="warrant">
-		<xs:complexType>
-			<xs:all>
-				<xs:element ref="common:requestId"/>
-				<xs:element ref="common:caseNumber"/>
-				<xs:element ref="common:claimantReference" minOccurs="0"/>
-				<xs:element ref="common:defendantId"/>
-				<xs:element ref="common:defendantAddressLine1"/>
-				<xs:element ref="common:defendantAddressLine2"/>
-				<xs:element ref="common:defendantAddressLine3" minOccurs="0"/>
-				<xs:element ref="common:defendantAddressLine4" minOccurs="0"/>
-				<xs:element ref="common:defendantAddressLine5" minOccurs="0"/>
-				<xs:element ref="common:defendantPostcode"/>
-				<xs:element ref="tns:balanceOfDebt"/>
-				<xs:element ref="tns:amountOfWarrant"/>
-				<xs:element ref="tns:solicitorsCosts" minOccurs="0"/>
-				<xs:element ref="tns:additionalNotes" minOccurs="0"/>
-				
-			</xs:all>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="mcolwarrant" type="tns:warrantType"/>
+	
+    <xs:complexType name="warrantType">
+		<xs:all>
+			<xs:element ref="common:requestId"/>
+			<xs:element ref="common:caseNumber"/>
+			<xs:element ref="common:claimantReference" minOccurs="0"/>
+			<xs:element ref="common:defendantId"/>
+			<xs:element ref="common:defendantAddressLine1"/>
+			<xs:element ref="common:defendantAddressLine2"/>
+			<xs:element ref="common:defendantAddressLine3" minOccurs="0"/>
+			<xs:element ref="common:defendantAddressLine4" minOccurs="0"/>
+			<xs:element ref="common:defendantAddressLine5" minOccurs="0"/>
+			<xs:element ref="common:defendantPostcode"/>
+			<xs:element ref="tns:balanceOfDebt"/>
+			<xs:element ref="tns:amountOfWarrant"/>
+			<xs:element ref="tns:solicitorsCosts" minOccurs="0"/>
+			<xs:element ref="tns:additionalNotes" minOccurs="0"/>
+			
+		</xs:all>
+	</xs:complexType>
+
 	<!-- The balance of debt must be less than or equal to 99999.99 -->
 	<xs:element name="balanceOfDebt">
 		<xs:simpleType>

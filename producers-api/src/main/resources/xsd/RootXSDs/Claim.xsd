@@ -6,33 +6,26 @@
     elementFormDefault="qualified">
 
     <xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
+    
+    <xs:element name="mcolClaim" type="tns:claimType"/>
 
-    <xs:element name="claims" type="tns:claims"/>
-    <xs:complexType name="claims">
+	<xs:complexType name="claimType">
         <xs:sequence>
-            <xs:element ref="tns:claim" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="claimantReference" type="common:stringMaxLength24" minOccurs="0"/>
+			<xs:element name="claimant" type="common:person" />
+			<xs:element name="defendant1" type="common:person"/>
+            <xs:element name="defendant2" type="common:person" minOccurs="0"/>
+            <xs:element name="interest" type="tns:interestType" minOccurs="0"/>
+			<xs:element name="claimAmount" type="tns:amountType"/>
+			<xs:element name="solicitorCost" type="tns:solicitorCostType" minOccurs="0" />
+            <!-- TODO Confirm the significance of 24 lines -->
+            <xs:element name="particulars" type="tns:particularsType" minOccurs="0" maxOccurs="24">
+                <xs:annotation>
+                    <xs:documentation>Details about the claim</xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
-    </xs:complexType>
-	<xs:element name="claim">
-		<xs:complexType>
-            <xs:sequence>
-    			<xs:element ref="common:requestId"/>
-    			<xs:element ref="common:claimantReference" minOccurs="0"/>
-    			<xs:element name="claimant" type="common:person" />
-    			<xs:element name="defendant1" type="common:person"/>
-                <xs:element name="defendant2" type="common:person" minOccurs="0"/>
-                <xs:element name="interest" type="tns:interestType" minOccurs="0"/>
-    			<xs:element name="claimAmount" type="tns:amountType"/>
-    			<xs:element name="solicitorCost" type="tns:solicitorCostType" minOccurs="0" />
-                <!-- TODO Confirm the significance of 24 lines -->
-                <xs:element name="particulars" type="tns:particularsType" minOccurs="0" maxOccurs="24">
-                    <xs:annotation>
-                        <xs:documentation>Details about the claim</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:sequence>
-		</xs:complexType>
-	</xs:element>
+	</xs:complexType>
     
     <xs:simpleType name="particularsType">
         <xs:restriction base="xs:string">

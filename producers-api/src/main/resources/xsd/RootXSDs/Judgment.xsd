@@ -7,59 +7,43 @@
 
     <xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
 
-	<xs:element name="judgments" type="tns:judgments"/>
-	<xs:complexType name="judgments">
-		<xs:sequence>
-			<xs:element ref="tns:judgment" minOccurs="1" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:element name="judgment">
-		<xs:complexType>
-			<xs:all>
-                <xs:element ref="common:requestId"/>
-				<xs:element ref="common:caseNumber"/>
-				<xs:element ref="common:defendantId"/>
-				<xs:element ref="common:defendantAddressLine1"/>
-                <xs:element ref="common:defendantAddressLine2"/>
-                <xs:element ref="common:defendantAddressLine3" minOccurs="0"/>
-                <xs:element ref="common:defendantAddressLine4" minOccurs="0"/>
-                <xs:element ref="common:defendantAddressLine5" minOccurs="0"/>
-				<xs:element ref="common:defendantPostcode"/>
-                <!-- I think we should upgrade to 4 digit years -->
-                <xs:element name="defendantDateOfBirth" type="xs:date"/>
-				<xs:element ref="tns:judgmentType"/>
-				<xs:element ref="tns:jointJudgment" minOccurs="0"/>
-				<xs:element ref="tns:judgmentAmount"/>
-				<xs:element ref="tns:interest" minOccurs="0"/>
-				<xs:element ref="tns:totalCosts" minOccurs="0"/>
-				<xs:element ref="tns:paidBeforeJudgment" minOccurs="0"/>
-				<xs:element ref="tns:judgmentTotal"/>
-				<xs:element ref="tns:instalmentAmount" minOccurs="0"/>
-				<xs:element ref="tns:instalmentFrequency" minOccurs="0"/>
-				<xs:element ref="tns:dateOfFirstPayment" minOccurs="0"/>
-				<xs:element ref="tns:payeeName"/>
-				<xs:element ref="tns:payeeAddressLine1"/>
-                <xs:element ref="tns:payeeAddressLine2"/>
-                <xs:element ref="tns:payeeAddressLine3"  minOccurs="0"/>
-                <xs:element ref="tns:payeeAddressLine4"  minOccurs="0"/>
-                <xs:element ref="tns:payeeAddressLine5"  minOccurs="0"/>
-				<xs:element ref="tns:payeePostcode"/>
- 				<xs:element ref="tns:payeeTelephone" minOccurs="0"/>
-				<xs:element ref="tns:payeeReference" minOccurs="0"/>
-				<xs:element ref="tns:payeeSortCode" minOccurs="0"/>
-				<xs:element ref="tns:payeeBankAccountNumber" minOccurs="0"/>
-				<xs:element ref="tns:payeeBankName" minOccurs="0"/>
-				<xs:element ref="tns:payeeBankInfo1" minOccurs="0"/>
-				<xs:element ref="tns:payeeBankInfo2" minOccurs="0"/>
-				<xs:element ref="tns:payeeGirobankAccountNumber" minOccurs="0"/>
-				<xs:element ref="tns:paymentSlipCodeline1" minOccurs="0"/>
-				<xs:element ref="tns:paymentSlipCodeline2" minOccurs="0"/>
-				<xs:element ref="tns:payeeGirobankTransactionCode1" minOccurs="0"/>
-				<xs:element ref="tns:payeeGirobankTransactionCode2" minOccurs="0"/>
-				<xs:element ref="tns:payeeApacsCode" minOccurs="0"/>
-			</xs:all>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="mcoljudgment" type="tns:judgment"/>
+    
+    <xs:complexType name="judgment">
+        <xs:all>
+            <xs:element name="claimNumber" type="common:documentNumber"/>
+            <xs:element name="defendantId" type="common:defendantIdType"/>
+            <xs:element name="defendantAddress" type="common:address"/>
+            <!-- I think we should upgrade to 4 digit years -->
+            <xs:element name="defendantDateOfBirth" type="xs:date"/>
+            <xs:element ref="tns:judgmentType"/>
+            <xs:element ref="tns:jointJudgment" minOccurs="0"/>
+            <xs:element ref="tns:judgmentAmount"/>
+            <xs:element name="intereset" type="tns:interestAmount" minOccurs="0"/>
+            <xs:element ref="tns:totalCosts" minOccurs="0"/>
+            <xs:element ref="tns:paidBeforeJudgment" minOccurs="0"/>
+            <xs:element ref="tns:judgmentTotal"/>
+            <xs:element ref="tns:instalmentAmount" minOccurs="0"/>
+            <xs:element ref="tns:instalmentFrequency" minOccurs="0"/>
+            <xs:element ref="tns:dateOfFirstPayment" minOccurs="0"/>
+            <xs:element ref="tns:payeeName"/>
+            <xs:element name="payeeAddress" type="common:address"/>
+            <xs:element ref="tns:payeeTelephone" minOccurs="0"/>
+            <xs:element ref="tns:payeeReference" minOccurs="0"/>
+            <xs:element ref="tns:payeeSortCode" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankAccountNumber" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankName" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankInfo1" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankInfo2" minOccurs="0"/>
+            <xs:element ref="tns:payeeGirobankAccountNumber" minOccurs="0"/>
+            <xs:element ref="tns:paymentSlipCodeline1" minOccurs="0"/>
+            <xs:element ref="tns:paymentSlipCodeline2" minOccurs="0"/>
+            <xs:element ref="tns:payeeGirobankTransactionCode1" minOccurs="0"/>
+            <xs:element ref="tns:payeeGirobankTransactionCode2" minOccurs="0"/>
+            <xs:element ref="tns:payeeApacsCode" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
 	<!-- This is a yes or no field, and we should be case insensitive -->
 	<xs:element name="registeredOffice">
 		<xs:simpleType>
@@ -88,43 +72,43 @@
 	<!-- Currency data types, xs:maxInclusive is the only way to get length checks to work -->
 	<xs:element name="judgmentAmount">
 		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="999999.99"/>
+			<xs:restriction base="xs:integer">
+				<xs:maxInclusive value="99999999"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="interest">
-		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="99999.99"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
+
+	<xs:simpleType name="interestAmount">
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value="9999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:element name="totalCosts">
 		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="999.99"/>
+			<xs:restriction base="xs:integer">
+				<xs:maxInclusive value="99999"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="paidBeforeJudgment">
 		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="999999.99"/>
+			<xs:restriction base="xs:integer">
+				<xs:maxInclusive value="99999999"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="judgmentTotal">
 		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="999999.99"/>
+			<xs:restriction base="xs:integer">
+				<xs:maxInclusive value="99999999"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="instalmentAmount">
 		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="999999.99"/>
+			<xs:restriction base="xs:integer">
+				<xs:maxInclusive value="99999999"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -144,12 +128,6 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="payeeAddressLine1" type="common:addressLine"/>
-	<xs:element name="payeeAddressLine2" type="common:addressLine"/>
-	<xs:element name="payeeAddressLine3" type="common:addressLine"/>
-	<xs:element name="payeeAddressLine4" type="common:addressLine"/>
-	<xs:element name="payeeAddressLine5" type="common:addressLine"/>
-	<xs:element name="payeePostcode" type="common:postcode"/>
 	<xs:element name="payeeTelephone">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
