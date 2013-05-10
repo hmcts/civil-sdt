@@ -6,24 +6,32 @@
     </bulkRequestStatus>
     <responses> 
         <choice>
-            <!-- Either PCOL or MCOL requests will be allowed -->
+            <!-- Either PCOL or MCOL responses will be allowed -->
             <mcolResponses>
                 <response type="claim" id="request identifier">
-                     <status></status>
-                     <claimNumber></claimNumber>
-                     <issueDate></issueDate>
-                     <!-- TODO Add more fields -->
-                     <error>
-                        <code></code>
-                        <description></description>
-                     </error>
+                    <claimNumber>12345678</claimNumber>
+                    <issueDate>2012-11-11</issueDate>
+                    <serviceDate>2012-11-11</serviceDate>
+                    <warrantNumber>12345678</warrantNumber>
+                    <enforcingCourtCode>123</enforcingCourtCode>
+                    <enforcingCourtName>enforcing_court_name</enforcingCourtName>
+                    <fee>9999</fee>
+                    <status>OK/Error</status>
+                    <error>
+                       <code>code</code>
+                       <description>description</description>
+                    </error>
                 </response>
             </mcolResponses>
             <pcolResponses>
                 <response type="abc" id="request identifier">
+                    <status>OK/Error</status>
+                    <error>
+                       <code>code</code>
+                       <description>description</description>
+                    </error>
                 </response>
             </pcolResponses>
         </choice>
     </responses>
 </bulkFeedbackResponse>
-

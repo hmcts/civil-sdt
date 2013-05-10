@@ -6,7 +6,6 @@
         <ncpId>NCP_ID</ncpId>
     </header>
     <mcolClaim>
-        <field1>claim</field1>
-        <!-- Rename case_number to claim_number -->
+        <claimNumber>claim</claimNumber>
     </mcolClaim>
 </createClaimRequest>
