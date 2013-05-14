@@ -1,45 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk" 
-    targetNamespace="http://ws.sdt.moj.gov.uk"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/common" targetNamespace="http://ws.sdt.moj.gov.uk/common"
 	elementFormDefault="qualified">
 
-	<xs:element name="customerCode">
-		<xs:annotation>
-			<xs:documentation>Customer code is a 4 digit number
-			</xs:documentation>
-		</xs:annotation>
-		<xs:simpleType>
-			<xs:restriction base="xs:integer">
-				<xs:minInclusive value="1000" />
-				<xs:maxInclusive value="9999" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="systemId">
-		<xs:annotation>
-			<xs:documentation>
-                <![CDATA[
-                    System Identifier - MCOL for now. More systems could be made available in future.
-                ]]>
-			</xs:documentation>
-		</xs:annotation>
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="MCOL" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<!-- TODO:SA Check length of field and data type. This is a new field. -->
-
-	<!-- Document number is now an 8 digit number -->
 	<xs:simpleType name="documentNumber">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[0-9A-Za-z]{8}" />
 		</xs:restriction>
 	</xs:simpleType>
-	<!-- Defendant ID is Blank (all defendants), 1 or 2 -->
 
+	<!-- Defendant ID is Blank (all defendants), 1 or 2 -->
 	<xs:simpleType name="defendantIdType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value=" |1|2" />
@@ -82,6 +52,13 @@
 			<xs:maxLength value="40" />
 		</xs:restriction>
 	</xs:simpleType>
+		<!-- A String with a max length of 120 -->
+	<xs:simpleType name="stringMaxLength120">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0" />
+			<xs:maxLength value="120" />
+		</xs:restriction>
+	</xs:simpleType>
 	<!-- A String with a max length of 255 -->
 	<xs:simpleType name="stringMaxLength255">
 		<xs:restriction base="xs:string">
@@ -95,16 +72,11 @@
 			<xs:maxInclusive value="99999" />
 		</xs:restriction>
 	</xs:simpleType>
-
-	<xs:element name="sotFactsAreTrueDeclarationType">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[yY]|[nN]" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<!-- TODO:SA Confirm length. MCOL schema supports 64 characters -->
-	<!-- TODO Remove postcode and use postcodeType -->
+	<xs:simpleType name="sotFactsAreTrueDeclarationType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[yY]|[nN]" />
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="currencyType">
 		<xs:restriction base="xs:decimal">
 			<xs:fractionDigits value="2" />
@@ -120,9 +92,12 @@
 		<xs:sequence>
 			<xs:element name="line1" type="tns:stringMaxLength30" />
 			<xs:element name="line2" type="tns:stringMaxLength30" />
-			<xs:element name="line3" type="tns:stringMaxLength30" minOccurs="0" />
-			<xs:element name="line4" type="tns:stringMaxLength30" minOccurs="0" />
-			<xs:element name="line5" type="tns:stringMaxLength30" minOccurs="0" />
+			<xs:element name="line3" type="tns:stringMaxLength30"
+				minOccurs="0" />
+			<xs:element name="line4" type="tns:stringMaxLength30"
+				minOccurs="0" />
+			<xs:element name="line5" type="tns:stringMaxLength30"
+				minOccurs="0" />
 			<xs:element name="postcode" type="tns:stringMaxLength8" />
 		</xs:sequence>
 	</xs:complexType>
@@ -139,7 +114,6 @@
 			<xs:element name="address" type="tns:address" />
 		</xs:sequence>
 	</xs:complexType>
-
 	<xs:simpleType name="requestType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="CLAIM" />
@@ -155,6 +129,16 @@
 			<xs:enumeration value="REJECTED" />
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="currenyTypeMaxValue999p99">
+		<xs:restriction base="tns:currencyType">
+			<xs:maxInclusive value="999.99" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="currenyTypeMaxValue99999p99">
+		<xs:restriction base="tns:currencyType">
+			<xs:maxInclusive value="99999.99" />
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="currenyTypeMaxValue999999p99">
 		<xs:restriction base="tns:currencyType">
 			<xs:maxInclusive value="9999999.99" />
@@ -165,4 +149,17 @@
 			<xs:pattern value="[0-9]{4}" />
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="errorDetails">
+		<xs:sequence>
+			<xs:element name="code" type="tns:stringMaxLength8" />
+			<xs:element name="description" type="tns:stringMaxLength255" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="statusResponse">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OK" />
+			<xs:enumeration value="ERROR" />
+		</xs:restriction>
+	</xs:simpleType>
+
 </xs:schema>

@@ -7,66 +7,23 @@
     
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
 	
-    <xs:element name="sendNewWarrants" type="tns:sendNewWarrants"/>
-	<xs:complexType name="sendNewWarrants">
+    <xs:element name="warrants" type="tns:warrants"/>
+	<xs:complexType name="warrants">
 		<xs:sequence>
-			<xs:element ref="tns:warrant" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="warrant" type="tns:warrant" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	<!-- Warrant Details -->
-	<xs:element name="mcolwarrant" type="tns:warrantType"/>
-	
-    <xs:complexType name="warrantType">
+    <xs:complexType name="warrant">
 		<xs:all>
-			<xs:element ref="common:requestId"/>
-			<xs:element ref="common:caseNumber"/>
-			<xs:element ref="common:claimantReference" minOccurs="0"/>
-			<xs:element ref="common:defendantId"/>
-			<xs:element ref="common:defendantAddressLine1"/>
-			<xs:element ref="common:defendantAddressLine2"/>
-			<xs:element ref="common:defendantAddressLine3" minOccurs="0"/>
-			<xs:element ref="common:defendantAddressLine4" minOccurs="0"/>
-			<xs:element ref="common:defendantAddressLine5" minOccurs="0"/>
-			<xs:element ref="common:defendantPostcode"/>
-			<xs:element ref="tns:balanceOfDebt"/>
-			<xs:element ref="tns:amountOfWarrant"/>
-			<xs:element ref="tns:solicitorsCosts" minOccurs="0"/>
-			<xs:element ref="tns:additionalNotes" minOccurs="0"/>
-			
+			<xs:element name="requestId" type="common:stringMaxLength8"/>
+			<xs:element name="caseNumber" type="common:stringMaxLength8"/>
+			<xs:element name="claimantReference" type="common:stringMaxLength8" minOccurs="0"/>
+			<xs:element name="defendantId" type="common:stringMaxLength8"/>
+			<xs:element name="defendantAddress" type="common:address"/>
+			<xs:element name="balanceOfDebt" type="common:currenyTypeMaxValue99999p99"/>
+			<xs:element name="amountOfWarrant" type="common:currenyTypeMaxValue99999p99"/>
+			<xs:element name="solicitorsCosts" type="common:currenyTypeMaxValue999p99" minOccurs="0"/>
+			<xs:element name="additionalNotes" type="common:stringMaxLength120" minOccurs="0"/>
 		</xs:all>
 	</xs:complexType>
-
-	<!-- The balance of debt must be less than or equal to 99999.99 -->
-	<xs:element name="balanceOfDebt">
-		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="99999.99"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-		<!-- The amount of the warrant must be less than or equal to 99999.99 -->
-	<xs:element name="amountOfWarrant">
-		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="99999.99"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<!-- The Solicitor costs must be less than or equal to 999.99 -->
-	<xs:element name="solicitorsCosts">
-		<xs:simpleType>
-			<xs:restriction base="common:currency">
-				<xs:maxInclusive value="999.99"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<!-- The number of characters in Additional notes must be between 0 and 120. -->
-	<xs:element name="additionalNotes">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:minLength value="0"/>
-				<xs:maxLength value="120"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
 </xs:schema>
