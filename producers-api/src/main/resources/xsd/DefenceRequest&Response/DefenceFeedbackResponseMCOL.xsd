@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk/" targetNamespace="http://ws.sdt.moj.gov.uk/"
-	xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/common"
-		schemaLocation="..\RootXSDs\Base.xsd" />
+	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
 	<xs:element name="defenceResponse" type="tns:defenceResponse" />
 	<xs:complexType name="defenceResponse">
 		<xs:sequence>
 			<xs:element name="defenceDetails" type="tns:defenceDetails" />
-			<xs:element name="status" type="common:statusResponse" />
-			<xs:element name="error" type="common:errorDetails" />
+			<xs:element name="status" type="tns:statusResponse" />
+			<xs:element name="error" type="tns:errorDetails" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="defenceDetails">
@@ -19,13 +18,14 @@
 	</xs:complexType>
 	<xs:complexType name="claim">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="common:stringMaxLength8" />
+			<xs:element name="claimNumber" type="tns:stringMaxLength8" />
 			<xs:element name="defendants">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="defendant" type="tns:defendant" maxOccurs="2" />
+						<xs:element name="defendant" type="tns:defendant"
+							maxOccurs="2" />
 					</xs:sequence>
-					<xs:attribute name="id" type="common:defendantIdType" />
+					<xs:attribute name="id" type="tns:defendantIdType" />
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
@@ -37,7 +37,7 @@
 			<xs:element name="responseType" type="tns:responseType" />
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<!-- Response Type is DE, DC or PA -->
 	<xs:simpleType name="responseType">
 		<xs:restriction base="xs:string">

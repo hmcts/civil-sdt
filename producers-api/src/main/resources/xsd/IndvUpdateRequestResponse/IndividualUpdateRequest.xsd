@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-			xmlns:tns="http://ws.sdt.moj.gov.uk/" targetNamespace="http://ws.sdt.moj.gov.uk/"
-			xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>
-	<xs:element name="updateRequest" type="tns:updateRequest"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
+	<xs:element name="updateRequest" type="tns:updateRequest" />
 	<xs:complexType name="updateRequest">
 		<xs:sequence>
-			<xs:element name="sdtRequestId" type="common:stringMaxLength8"/>
-				<xs:element name="claimNumer" type="common:stringMaxLength8"/>
-				<xs:element name="issueDate" type="xs:date"/>
-				<xs:element name="serviceDate" type="xs:date"/>
-				<xs:element name="warrantNumber" type="common:stringMaxLength8"/>
-				<xs:element name="enforcingCourtCode" type="common:stringMaxLength8"/>
-				<xs:element name="fee" type="common:currenyTypeMaxValue999999p99"/>
-				<xs:element name="status" type="common:stringMaxLength8"/>
-				<xs:element name="error" type="common:errorDetails"/>
+			<xs:element name="sdtRequestId" type="tns:stringMaxLength8" />
+			<xs:element name="claimNumer" type="tns:stringMaxLength8" />
+			<xs:element name="issueDate" type="xs:date" />
+			<xs:element name="serviceDate" type="xs:date" />
+			<xs:element name="warrantNumber" type="tns:stringMaxLength8" />
+			<xs:element name="enforcingCourtCode" type="tns:stringMaxLength8" />
+			<xs:element name="fee" type="tns:currenyTypeMaxValue999999p99" />
+			<xs:element name="status" type="tns:stringMaxLength8" />
+			<xs:element name="error" type="tns:errorDetails" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

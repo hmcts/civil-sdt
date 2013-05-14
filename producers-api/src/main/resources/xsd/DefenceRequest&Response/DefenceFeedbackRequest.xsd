@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-			xmlns:tns="http://ws.sdt.moj.gov.uk/"  
-			targetNamespace="http://ws.sdt.moj.gov.uk/" xmlns:common="http://ws.sdt.moj.gov.uk/common" 
-			elementFormDefault="qualified">
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>	
-	<xs:element name="defenceRequest" type="tns:defenceRequest"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
+	<xs:element name="defenceRequest" type="tns:defenceRequest" />
 	<xs:complexType name="defenceRequest">
 		<xs:sequence>
 			<xs:element name="header" type="tns:header" />
 			<xs:element name="criteria" type="tns:criteria" />
-		</xs:sequence>	
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="header">
 		<xs:sequence>
-			<xs:element name="sdtCustomerId" type="common:stringMaxLength8" />
-			<xs:element name="targetSystemId "type="common:stringMaxLength8" />
+			<xs:element name="sdtCustomerId" type="tns:stringMaxLength8" />
+			<xs:element name="targetSystemId" type="tns:stringMaxLength8" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="criteria">

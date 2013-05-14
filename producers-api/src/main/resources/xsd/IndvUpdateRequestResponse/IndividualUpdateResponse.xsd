@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-			xmlns:tns="http://ws.sdt.moj.gov.uk/" targetNamespace="http://ws.sdt.moj.gov.uk/"
-			xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>
-	<xs:element name="updateResponse" type="tns:updateResponse"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
+	<xs:element name="updateResponse" type="tns:updateResponse" />
 	<xs:complexType name="updateResponse">
 		<xs:sequence>
-			<xs:element name="error" type="common:errorDetails" minOccurs="1"/>
+			<xs:element name="error" type="tns:errorDetails"
+				minOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
