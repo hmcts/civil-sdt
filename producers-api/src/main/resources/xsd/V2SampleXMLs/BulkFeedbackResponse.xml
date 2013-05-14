@@ -8,7 +8,7 @@
         <choice>
             <!-- Either PCOL or MCOL responses will be allowed -->
             <mcolResponses>
-                <response requestType="claim" requestId="request identifier">
+                <mcolResponse requestType="claim" requestId="request identifier">
                     <claimNumber>12345678</claimNumber>
                     <issueDate>2012-11-11</issueDate>
                     <serviceDate>2012-11-11</serviceDate>
@@ -22,17 +22,17 @@
                             <description>description</description>
                         </error>
                     </status>
-                </response>
+                </mcolResponse>
             </mcolResponses>
             <pcolResponses>
-                <response requestType="abc" requestId="request identifier">
+                <pcolResponse requestType="abc" requestId="request identifier">
                     <status code="OK|ERROR">
                         <error>
                             <code>1234</code>
                             <description>description</description>
                         </error>
                     </status>
-                </response>
+                </pcolResponse>
             </pcolResponses>
         </choice>
     </responses>

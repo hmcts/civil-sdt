@@ -2,7 +2,8 @@
 <!-- Message from external system to SDT Gateway -->
 <bulkRequest>
     <header>
-        <sdtCustomerId>SDT_Customer_id</sdtCustomerId> <!-- TBC Gateway can validate the id -->
+        <!-- TODO TBC Gateway can validate the id -->
+        <sdtCustomerId>SDT_Customer_id</sdtCustomerId> 
         <targetSystemId>mcol</targetSystemId>
         <requestCount>2</requestCount>
         <customerReference>customer_external_reference</customerReference>
@@ -12,23 +13,24 @@
             <!-- Either PCOL or MCOL requests will be allowed -->
             <!-- Customer code is CPC Number -->
             <mcolRequests customerCode="xxxx">
-                <request requestType="claim" requestId="request identifier">
+            <!-- TODO Adjust element names -->
+                <mcolRequest requestType="claim" requestId="request identifier">
                     <choice>
                         <mcolClaim></mcolClaim>
-                        <mcolJudgment></mcolJudgment>
-                        <mcolJudgmentForthwith></mcolJudgmentForthwith>
-                        <mcolWarrant></mcolWarrant>
                         <mcolPaid></mcolPaid>
+                        <mcolJudgment></mcolJudgment>
+                        <mcolWarrant></mcolWarrant>
+                        <mcolJudgmentForthwith></mcolJudgmentForthwith>
                     </choice>
-                </request>
+                </mcolRequest>
             </mcolRequests>
             <pcolRequests customerId="1234">
-                <request requestType="abc" requestId="request identifier">
+                <pcolRequest requestType="abc" requestId="request identifier">
                     <choice>
                         <req1></req1>
                         <req2></req2>
                     </choice>
-                </request>
+                </pcolRequest>
             </pcolRequests>
         </choice>
 	</requests>

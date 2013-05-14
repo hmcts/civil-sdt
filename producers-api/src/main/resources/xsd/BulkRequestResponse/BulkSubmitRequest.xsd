@@ -4,12 +4,12 @@
     targetNamespace="http://ws.sdt.moj.gov.uk" 
     elementFormDefault="qualified">
 	
-    <xs:include schemaLocation="..\RootXSDs\Claim.xsd"/>
-	<xs:include schemaLocation="..\RootXSDs\Judgment.xsd"/>
-	<xs:include schemaLocation="..\RootXSDs\Paid.xsd"/>
-	<xs:include schemaLocation="..\RootXSDs\Warrant.xsd"/>
-	<xs:include schemaLocation="..\RootXSDs\JudgmentForthwith.xsd"/>
-
+    <xs:include schemaLocation="../RootXSDs/Claim.xsd"/>
+	<xs:include schemaLocation="../RootXSDs/Judgment.xsd"/>
+	<xs:include schemaLocation="../RootXSDs/Paid.xsd"/>
+	<xs:include schemaLocation="../RootXSDs/Warrant.xsd"/>
+	<xs:include schemaLocation="../RootXSDs/JudgmentForthwith.xsd"/>
+    
     <xs:complexType name="header">
         <xs:sequence>
             <xs:element name="sdtCustomerId" type="tns:sdtCustomerId"/>
@@ -21,28 +21,36 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="requests">
-        <xs:choice>
-            <xs:element name="mcolRequests" type="tns:mcolRequests"/>
-        </xs:choice>
+    <xs:complexType name="request" abstract="true">
+        <xs:attribute name="requestType" type="tns:requestType" use="required"/>
+        <xs:attribute name="requestId" type="tns:requestId" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="mcolRequest">
+        <xs:complexContent>
+            <xs:extension base="tns:request">
+                <xs:choice>
+                    <xs:element name="mcolClaim" type="tns:claimType"/>
+                    <xs:element name="mcolJudgment" type="tns:judgmentType"/>
+                    <xs:element name="mcolPaid" type="tns:paidType"/>
+                    <xs:element name="mcolWarrant" type="tns:warrantType"/>
+                    <xs:element name="mcolJudgmentForthwith" type="tns:judgmentForthwithType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="mcolRequests">
         <xs:sequence>
-            <xs:element name="request" type="tns:mcolRequest" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="mcolRequest" type="tns:mcolRequest" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="customerCode" type="tns:customerCode" use="required"/>
     </xs:complexType>
 
-    <!-- TODO Single request can't be generic because it would have to accept PCOL request type too. -->
-    <xs:complexType name="mcolRequest">
+    <xs:complexType name="requests">
         <xs:choice>
-            <!-- TODO Add more elements for Warrant/Paid etc -->
-            <xs:element name="mcolClaim" type="tns:claimType"/>
-            <xs:element name="mcolJudgment" type="tns:judgment"/>
+            <xs:element name="mcolRequests" type="tns:mcolRequests"/>
         </xs:choice>
-        <xs:attribute name="requestType" type="tns:requestType" use="required"/>
-        <xs:attribute name="requestId" type="tns:requestId" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="bulkRequest">

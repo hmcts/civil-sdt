@@ -6,6 +6,6 @@
         <ncpId>NCP_ID</ncpId>
     </header>
     <mcolClaim>
-        <claimNumber>claim</claimNumber>
+        <claimantReference>damaged_wall</claimantReference>
     </mcolClaim>
 </createClaimRequest>

@@ -4,12 +4,12 @@
     targetNamespace="http://ws.sdt.moj.gov.uk" 
     elementFormDefault="qualified">
 	
-    <xs:include schemaLocation="..\RootXSDs\Claim.xsd"/>
+    <xs:include schemaLocation="../RootXSDs/Claim.xsd"/>
     <!-- 
-    <xs:include schemaLocation="..\RootXSDs\Judgment.xsd"/>
-    <xs:include schemaLocation="..\RootXSDs\Paid.xsd"/>
-    <xs:include schemaLocation="..\RootXSDs\Warrant.xsd"/>
-    <xs:include schemaLocation="..\RootXSDs\JudgmentForthwith.xsd"/>
+    <xs:include schemaLocation="../RootXSDs/Judgment.xsd"/>
+    <xs:include schemaLocation="../RootXSDs/Paid.xsd"/>
+    <xs:include schemaLocation="../RootXSDs/Warrant.xsd"/>
+    <xs:include schemaLocation="../RootXSDs/JudgmentForthwith.xsd"/>
      -->
      
     <xs:complexType name="header">
