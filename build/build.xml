@@ -19,7 +19,6 @@
 
     <!-- List of all projects in order - note dirset cannot control order of execution -->
     <filelist id="all-project-list" dir=".">
-        <file name="../test-utils/build.xml" />
         <file name="../utils/build.xml" />
         <file name="../domain/build.xml" />
         <file name="../dao/build.xml" />
