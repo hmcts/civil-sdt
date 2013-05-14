@@ -2,19 +2,17 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     xmlns:tns="http://ws.sdt.moj.gov.uk" 
     targetNamespace="http://ws.sdt.moj.gov.uk" 
-    xmlns:warrant="http://ws.sdt.moj.gov.uk/warrant"
     elementFormDefault="qualified">
 
 	<xs:include schemaLocation="Judgment.xsd"/>
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/warrant" schemaLocation="Warrant.xsd"/>
+	<xs:include schemaLocation="Warrant.xsd"/>
 	
 	<xs:element name="mcoljudgmentForthwith" type="tns:judgmentForthwithType"/>
 
     <xs:complexType name="judgmentForthwithType">
-		<xs:all>
-            <xs:element name="mcoljudgment" type="tns:judgment" minOccurs="1"/>
-            <!-- TODO Tidy up Warrant namespace -->
-            <xs:element name="mcolwarrant" type="warrant:warrantType" minOccurs="1"/>
-		</xs:all>
+		<xs:sequence>
+            <xs:element name="mcolJudgment" type="tns:judgmentType"/>
+            <xs:element name="mcolWarrant" type="tns:warrantType"/>
+		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

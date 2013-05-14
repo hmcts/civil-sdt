@@ -6,25 +6,30 @@
 
     <xs:include schemaLocation="Base.xsd"/>
 
-    <xs:element name="mcoljudgment" type="tns:judgment"/>
+    <xs:element name="mcoljudgment" type="tns:judgmentType"/>
     
-    <xs:complexType name="judgment">
-        <xs:all>
+    <xs:complexType name="judgmentType">
+        <xs:sequence>
             <xs:element name="claimNumber" type="tns:documentNumber"/>
+            <xs:element name="jointJudgment" type="xs:boolean"/>
+            <!-- TODO Rename field in EIS -->
+            <xs:element name="judgmentOption" type="tns:judgmentOption"/>
+            <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
             <xs:element name="defendantId" type="tns:defendantIdType"/>
-            <xs:element name="defendantAddress" type="tns:address"/>
-            <!-- I think we should upgrade to 4 digit years -->
-            <xs:element name="defendantDateOfBirth" type="xs:date"/>
-            <xs:element ref="tns:judgmentType"/>
-            <xs:element ref="tns:jointJudgment" minOccurs="0"/>
-            <xs:element ref="tns:judgmentAmount"/>
-            <xs:element name="intereset" type="tns:interestAmount" minOccurs="0"/>
-            <xs:element ref="tns:totalCosts" minOccurs="0"/>
-            <xs:element ref="tns:paidBeforeJudgment" minOccurs="0"/>
-            <xs:element ref="tns:judgmentTotal"/>
-            <xs:element ref="tns:instalmentAmount" minOccurs="0"/>
-            <xs:element ref="tns:instalmentFrequency" minOccurs="0"/>
-            <xs:element ref="tns:dateOfFirstPayment" minOccurs="0"/>
+            <xs:element name="defendant1Address" type="tns:address" minOccurs="0"/>
+            <xs:element name="defendant1DateOfBirth" type="xs:date"/>
+            <!-- TODO More info needed to determine if structure could be simplified -->
+            <xs:element name="defendant2Address" type="tns:address" minOccurs="0"/>
+            <xs:element name="defendant2DateOfBirth" type="xs:date"/>
+            <xs:element name="paymentSchedule" type="tns:paymentSchedule"/>
+            <xs:element name="interest" type="tns:amountType9999999" minOccurs="0"/>
+            <xs:element name="solicitorCost" type="tns:amountType999999" minOccurs="0"/>
+            <xs:element name="deductedAmount" type="tns:amountType99999999" minOccurs="0"/>
+            <!-- TODO Hillary to confirm if this is required. -->
+            <xs:element name="guidanceRead" type="xs:boolean"/>
+            <xs:element name="sotSignature" type="tns:sotSignature"/>
+            <!-- TODO Hillary to confirm if payee details should be present -->
+            <!--             
             <xs:element ref="tns:payeeName"/>
             <xs:element name="payeeAddress" type="tns:address"/>
             <xs:element ref="tns:payeeTelephone" minOccurs="0"/>
@@ -40,85 +45,53 @@
             <xs:element ref="tns:payeeGirobankTransactionCode1" minOccurs="0"/>
             <xs:element ref="tns:payeeGirobankTransactionCode2" minOccurs="0"/>
             <xs:element ref="tns:payeeApacsCode" minOccurs="0"/>
-        </xs:all>
+             -->
+        </xs:sequence>
     </xs:complexType>
 
-	<!-- This is a yes or no field, and we should be case insensitive -->
-	<xs:element name="registeredOffice">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[yY]|[nN]"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<!-- Values here should be A or D only -->
-	<xs:element name="judgmentType">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[aA]|[dD]"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<!-- Values here should be Y or N or space only. I think we can update this 
-		to be Y or N with space becoming no node -->
-	<xs:element name="jointJudgment">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[yY]|[nN]| "/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<!-- Currency data types, xs:maxInclusive is the only way to get length checks to work -->
-	<xs:element name="judgmentAmount">
-		<xs:simpleType>
-			<xs:restriction base="xs:integer">
-				<xs:maxInclusive value="99999999"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-
-	<xs:simpleType name="interestAmount">
-		<xs:restriction base="xs:integer">
-			<xs:maxInclusive value="9999999"/>
+    <!-- TODO Why not be case sensitive? -->
+	<xs:simpleType name="judgmentOption">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[aA]|[dD]"/>
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:element name="totalCosts">
-		<xs:simpleType>
-			<xs:restriction base="xs:integer">
-				<xs:maxInclusive value="99999"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="paidBeforeJudgment">
-		<xs:simpleType>
-			<xs:restriction base="xs:integer">
-				<xs:maxInclusive value="99999999"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="judgmentTotal">
-		<xs:simpleType>
-			<xs:restriction base="xs:integer">
-				<xs:maxInclusive value="99999999"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="instalmentAmount">
-		<xs:simpleType>
-			<xs:restriction base="xs:integer">
-				<xs:maxInclusive value="99999999"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="instalmentFrequency">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[mM]|[fF]|[wW] "/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="dateOfFirstPayment" type="xs:date"/>
+    <!-- TODO Determine meaning of values for frequency -->
+    <xs:simpleType name="instalmentFrequency">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="W"/>
+            <xs:enumeration value="F"/>
+            <xs:enumeration value="M"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="instalment">
+        <xs:annotation>
+            <xs:documentation>Instalment information consisting of frequency and amount. The amount cannot be greater than claim amount.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="amount" type="tns:amountType9999999"/>
+            <xs:element name="frequency" type="tns:instalmentFrequency"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="paymentSchedule">
+        <xs:choice>
+            <xs:element name="fullByDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>The date by which defendant should pay the full amount. Should be in future and not tomorrow.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="instalment" type="tns:instalment"/>
+            <xs:element name="immediately" type="xs:boolean" fixed="true">
+                <xs:annotation>
+                    <xs:documentation>The defendant will be ordered to pay the full amount immediately.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+    <!-- 
 	<xs:element name="payeeName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -238,5 +211,6 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-
+    -->
+    
 </xs:schema>
