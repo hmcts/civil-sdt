@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk/paid" targetNamespace="http://ws.sdt.moj.gov.uk/paid"
-	xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
-
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/common"
-		schemaLocation="Base.xsd" />
-
+	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="Base.xsd" />
 	<xs:element name="paids" type="tns:paids" />
 	<xs:complexType name="paids">
 		<xs:sequence>
@@ -15,10 +12,12 @@
 	<xs:element name="paid">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="caseNumber" type="common:stringMaxLength8" />
-				<xs:element name="defendantId" type="common:stringMaxLength8" minOccurs="0" />
+				<xs:element name="caseNumber" type="tns:stringMaxLength8" />
+				<xs:element name="defendantId" type="tns:stringMaxLength8"
+					minOccurs="0" />
 				<xs:element name="notificationType" type="tns:notificationType" />
-				<xs:element name="dateOfLastPayment" type="xs:date" minOccurs="0" />
+				<xs:element name="dateOfLastPayment" type="xs:date"
+					minOccurs="0" />
 			</xs:all>
 		</xs:complexType>
 	</xs:element>

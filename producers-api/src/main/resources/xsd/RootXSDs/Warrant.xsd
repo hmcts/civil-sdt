@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk/warrant" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/warrant" 
-    xmlns:common="http://ws.sdt.moj.gov.uk/common" 
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
 	elementFormDefault="qualified">
-    
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="Base.xsd"/>
-	
-    <xs:element name="warrants" type="tns:warrants"/>
+	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
+	<xs:element name="warrants" type="tns:warrants" />
 	<xs:complexType name="warrants">
 		<xs:sequence>
-			<xs:element name="warrant" type="tns:warrant" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="warrant" type="tns:warrant" minOccurs="1"
+				maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-    <xs:complexType name="warrant">
+	<xs:complexType name="warrant">
 		<xs:all>
-			<xs:element name="requestId" type="common:stringMaxLength8"/>
-			<xs:element name="caseNumber" type="common:stringMaxLength8"/>
-			<xs:element name="claimantReference" type="common:stringMaxLength8" minOccurs="0"/>
-			<xs:element name="defendantId" type="common:stringMaxLength8"/>
-			<xs:element name="defendantAddress" type="common:address"/>
-			<xs:element name="balanceOfDebt" type="common:currenyTypeMaxValue99999p99"/>
-			<xs:element name="amountOfWarrant" type="common:currenyTypeMaxValue99999p99"/>
-			<xs:element name="solicitorsCosts" type="common:currenyTypeMaxValue999p99" minOccurs="0"/>
-			<xs:element name="additionalNotes" type="common:stringMaxLength120" minOccurs="0"/>
+			<xs:element name="requestId" type="tns:stringMaxLength8" />
+			<xs:element name="caseNumber" type="tns:stringMaxLength8" />
+			<xs:element name="claimantReference" type="tns:stringMaxLength8"
+				minOccurs="0" />
+			<xs:element name="defendantId" type="tns:stringMaxLength8" />
+			<xs:element name="defendantAddress" type="tns:address" />
+			<xs:element name="balanceOfDebt" type="tns:currenyTypeMaxValue99999p99" />
+			<xs:element name="amountOfWarrant" type="tns:currenyTypeMaxValue99999p99" />
+			<xs:element name="solicitorsCosts" type="tns:currenyTypeMaxValue999p99"
+				minOccurs="0" />
+			<xs:element name="additionalNotes" type="tns:stringMaxLength120"
+				minOccurs="0" />
 		</xs:all>
 	</xs:complexType>
 </xs:schema>
