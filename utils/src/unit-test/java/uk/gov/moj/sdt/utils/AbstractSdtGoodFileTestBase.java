@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This class is a base class to verify the result of a testcase by comparing the output files.
  * 
- * @author Sathish Kumar Rathinam
+ * @author Robin Compston
  */
 public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
 {
