@@ -1,8 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk"
 	elementFormDefault="qualified">
 
+    <!-- TODO Confirm data type -->
+    <xs:simpleType name="sdtCustomerId">
+        <xs:restriction base="tns:stringMaxLength24"/>
+    </xs:simpleType>
+
+    <!-- TODO Confirm data type -->
+    <xs:simpleType name="sdtBulkReference">
+        <xs:restriction base="tns:stringMaxLength24"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="targetSystemId">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="mcol" />
+        </xs:restriction>
+    </xs:simpleType>
+
+<!-- TODO Confirm data type and is it needed? Or NCP ID sufficient? -->
+	<xs:simpleType name="customerCode">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1000" />
+			<xs:maxInclusive value="9999" />
+		</xs:restriction>
+	</xs:simpleType>
+
+    <!-- TODO Confirm data type -->
+    <xs:simpleType name="ncpId">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+	<!-- Document number is now an 8 digit number -->
 	<xs:simpleType name="documentNumber">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[0-9A-Za-z]{8}" />
@@ -16,7 +49,6 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<!-- Custom types -->
 	<!-- A String with a max length of 8 -->
 	<xs:simpleType name="stringMaxLength8">
 		<xs:restriction base="xs:string">
@@ -66,12 +98,6 @@
 			<xs:maxLength value="255" />
 		</xs:restriction>
 	</xs:simpleType>
-	<!-- An integer with a max size of 99999 -->
-	<xs:simpleType name="ingegerMaxSize99999">
-		<xs:restriction base="xs:integer">
-			<xs:maxInclusive value="99999" />
-		</xs:restriction>
-	</xs:simpleType>
 	<xs:simpleType name="sotFactsAreTrueDeclarationType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[yY]|[nN]" />
@@ -92,12 +118,9 @@
 		<xs:sequence>
 			<xs:element name="line1" type="tns:stringMaxLength30" />
 			<xs:element name="line2" type="tns:stringMaxLength30" />
-			<xs:element name="line3" type="tns:stringMaxLength30"
-				minOccurs="0" />
-			<xs:element name="line4" type="tns:stringMaxLength30"
-				minOccurs="0" />
-			<xs:element name="line5" type="tns:stringMaxLength30"
-				minOccurs="0" />
+			<xs:element name="line3" type="tns:stringMaxLength30" minOccurs="0" />
+			<xs:element name="line4" type="tns:stringMaxLength30" minOccurs="0" />
+			<xs:element name="line5" type="tns:stringMaxLength30" minOccurs="0" />
 			<xs:element name="postcode" type="tns:stringMaxLength8" />
 		</xs:sequence>
 	</xs:complexType>
@@ -114,21 +137,31 @@
 			<xs:element name="address" type="tns:address" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:simpleType name="requestType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="CLAIM" />
-			<xs:enumeration value="JUDGMENT" />
-			<xs:enumeration value="PAID" />
-			<xs:enumeration value="WARRANT" />
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="statusType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="ACCEPTED" />
-			<xs:enumeration value="PENDING" />
-			<xs:enumeration value="REJECTED" />
-		</xs:restriction>
-	</xs:simpleType>
+
+    <!-- TODO Confirm request id type -->
+    <xs:simpleType name="requestId">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="24"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- TODO Confirm data type -->
+    <xs:simpleType name="sdtRequestId">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="24"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="requestType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="mcolClaim"/>
+            <xs:enumeration value="mcolJudgment"/>
+            <xs:enumeration value="mcolJudgmentForthwith"/>
+            <xs:enumeration value="mcolWarrant"/>
+            <xs:enumeration value="mcolPaid"/>
+        </xs:restriction>
+    </xs:simpleType>
+
 	<xs:simpleType name="currenyTypeMaxValue999p99">
 		<xs:restriction base="tns:currencyType">
 			<xs:maxInclusive value="999.99" />
@@ -149,17 +182,43 @@
 			<xs:pattern value="[0-9]{4}" />
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="errorDetails">
-		<xs:sequence>
+    
+    <xs:simpleType name="statusCode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="OK"/>
+            <xs:enumeration value="ERROR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="createStatusCode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACCEPTED"/>
+            <xs:enumeration value="INITIALLY_ACCEPTED"/>
+            <xs:enumeration value="REJECTED"/>
+            <xs:enumeration value="ERROR"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="error">
+        <xs:sequence>
+            <!-- TODO Agree on type -->
 			<xs:element name="code" type="tns:stringMaxLength8" />
 			<xs:element name="description" type="tns:stringMaxLength255" />
-		</xs:sequence>
-	</xs:complexType>
-	<xs:simpleType name="statusResponse">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="OK" />
-			<xs:enumeration value="ERROR" />
-		</xs:restriction>
-	</xs:simpleType>
+        </xs:sequence>
+    </xs:complexType>
 
+    <xs:complexType name="status">
+        <xs:sequence>
+            <xs:element name="error" type="tns:error" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="code" type="tns:statusCode"></xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="createStatus">
+        <xs:sequence>
+            <xs:element name="error" type="tns:error" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="code" type="tns:createStatusCode"></xs:attribute>
+    </xs:complexType>
+    
 </xs:schema>

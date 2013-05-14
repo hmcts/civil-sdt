@@ -8,9 +8,10 @@
     <enforcingCourtCode>123</enforcingCourtCode>
     <enforcingCourtName>enforcing_court_name</enforcingCourtName>
     <fee>9999</fee>
-    <status>ACCEPTED/INITIALLY_ACCEPTED/REJECTED/ERROR</status>
-    <error>
-        <code>1234</code>
-        <description>description</description>
-    </error>
+    <status code="ACCEPTED/INITIALLY_ACCEPTED/REJECTED/ERROR>
+        <error>
+            <code>1234</code>
+            <description>description</description>
+        </error>
+    </status>
 </createResponse>

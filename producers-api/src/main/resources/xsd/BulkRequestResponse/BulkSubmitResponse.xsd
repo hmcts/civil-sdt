@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk" 
+    elementFormDefault="qualified">
+    
 	<xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
-	<xs:element name="getFeedbackResponse" type="tns:getFeedbackResponse"/>
-	<xs:complexType name="getFeedbackResponse">
-		<xs:sequence>
-			<xs:element name="feedback_response" minOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:element name="feedback_response">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="tns:customer_code"/>
-				<xs:element ref="tns:reference"/>
-				<xs:element ref="tns:sdt_reference"/>
-				<xs:element ref="tns:date_submitted"/>
-				<xs:element ref="tns:number_of_requests"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="date_submitted" type="xs:dateTime"/>
+    
+    <xs:complexType name="bulkResponse">
+        <xs:sequence>
+            <xs:element name="customerReference" type="tns:stringMaxLength24"/>
+            <!-- TODO Confirm data type of bulk reference -->
+            <xs:element name="sdtBulkReference" type="tns:sdtBulkReference"/>
+            <xs:element name="submittedDate" type="xs:dateTime"/>
+            <xs:element name="requestCount" type="xs:integer"/>
+            <xs:element name="status" type="tns:status"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="bulkRequest" type="tns:bulkResponse"/>
+    
 </xs:schema>

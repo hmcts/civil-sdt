@@ -13,7 +13,7 @@
 	</xs:complexType>
 	<xs:complexType name="header">
 		<xs:sequence>
-			<xs:element name="ncpId" type="tns:stringMaxLength8" />
+			<xs:element name="ncpId" type="tns:ncpId" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="criteria">

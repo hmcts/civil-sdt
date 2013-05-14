@@ -12,8 +12,8 @@
 	</xs:complexType>
 	<xs:complexType name="header">
 		<xs:sequence>
-			<xs:element name="sdtCustomerId" type="tns:stringMaxLength8" />
-			<xs:element name="targetSystemId" type="tns:stringMaxLength8" />
+			<xs:element name="sdtCustomerId" type="tns:sdtCustomerId" />
+			<xs:element name="targetSystemId" type="tns:targetSystemId" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="criteria">

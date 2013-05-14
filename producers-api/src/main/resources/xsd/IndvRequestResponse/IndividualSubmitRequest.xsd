@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\BulkRequestResponse\BulkSubmitRequest.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk" 
+    elementFormDefault="qualified">
+	
+    <xs:include schemaLocation="..\RootXSDs\Claim.xsd"/>
+    <!-- 
+    <xs:include schemaLocation="..\RootXSDs\Judgment.xsd"/>
+    <xs:include schemaLocation="..\RootXSDs\Paid.xsd"/>
+    <xs:include schemaLocation="..\RootXSDs\Warrant.xsd"/>
+    <xs:include schemaLocation="..\RootXSDs\JudgmentForthwith.xsd"/>
+     -->
+     
+    <xs:complexType name="header">
+        <xs:sequence>
+            <!-- TODO should the field be renamed to hide the fact that it originates from SDT? -->
+            <xs:element name="sdtRequestId" type="tns:sdtRequestId"/>
+            <xs:element name="ncpId" type="tns:ncpId"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="createClaimRequest">
+        <xs:sequence>
+            <!-- TODO Maybe need to create different types of Header ! -->
+            <xs:element name="header" type="tns:header"/>
+            <xs:element name="mcolClaim" type="tns:claimType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- TODO Add Warrant and other domain types -->
+    <xs:element name="createClaimRequest" type="tns:createClaimRequest"/>
 
-	<xs:element name="sendIndividualData">
-		<xs:complexType>
-			<xs:all>
-				<xs:element ref="tns:sendBulkData"/>
-			</xs:all>
-		</xs:complexType>
-	</xs:element>	
 </xs:schema>

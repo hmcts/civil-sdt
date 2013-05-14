@@ -7,8 +7,7 @@
 	<xs:complexType name="defenceResponse">
 		<xs:sequence>
 			<xs:element name="defenceDetails" type="tns:defenceDetails" />
-			<xs:element name="status" type="tns:statusResponse" />
-			<xs:element name="error" type="tns:errorDetails" />
+			<xs:element name="status" type="tns:status" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="defenceDetails">
@@ -18,14 +17,12 @@
 	</xs:complexType>
 	<xs:complexType name="claim">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="tns:stringMaxLength8" />
+			<xs:element name="claimNumber" type="tns:documentNumber" />
 			<xs:element name="defendants">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="defendant" type="tns:defendant"
-							maxOccurs="2" />
+						<xs:element name="defendant" type="tns:defendant" maxOccurs="2" />
 					</xs:sequence>
-					<xs:attribute name="id" type="tns:defendantIdType" />
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
@@ -36,6 +33,7 @@
 			<xs:element name="filedDate" type="xs:dateTime" />
 			<xs:element name="responseType" type="tns:responseType" />
 		</xs:sequence>
+        <xs:attribute name="defendantId" type="tns:defendantIdType" />
 	</xs:complexType>
 
 	<!-- Response Type is DE, DC or PA -->

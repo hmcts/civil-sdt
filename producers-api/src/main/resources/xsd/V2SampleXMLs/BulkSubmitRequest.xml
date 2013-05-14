@@ -12,7 +12,7 @@
             <!-- Either PCOL or MCOL requests will be allowed -->
             <!-- Customer code is CPC Number -->
             <mcolRequests customerCode="xxxx">
-                <request type="claim" id="request identifier">
+                <request requestType="claim" requestId="request identifier">
                     <choice>
                         <mcolClaim></mcolClaim>
                         <mcolJudgment></mcolJudgment>
@@ -23,7 +23,7 @@
                 </request>
             </mcolRequests>
             <pcolRequests customerId="1234">
-                <request type="abc" id="request identifier">
+                <request requestType="abc" requestId="request identifier">
                     <choice>
                         <req1></req1>
                         <req2></req2>

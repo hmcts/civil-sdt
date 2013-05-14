@@ -8,7 +8,7 @@
         <choice>
             <!-- Either PCOL or MCOL responses will be allowed -->
             <mcolResponses>
-                <response type="claim" id="request identifier">
+                <response requestType="claim" requestId="request identifier">
                     <claimNumber>12345678</claimNumber>
                     <issueDate>2012-11-11</issueDate>
                     <serviceDate>2012-11-11</serviceDate>
@@ -16,20 +16,22 @@
                     <enforcingCourtCode>123</enforcingCourtCode>
                     <enforcingCourtName>enforcing_court_name</enforcingCourtName>
                     <fee>9999</fee>
-                    <status>OK/Error</status>
-                    <error>
-                       <code>code</code>
-                       <description>description</description>
-                    </error>
+                    <status code="OK|ERROR">
+                        <error>
+                            <code>1234</code>
+                            <description>description</description>
+                        </error>
+                    </status>
                 </response>
             </mcolResponses>
             <pcolResponses>
-                <response type="abc" id="request identifier">
-                    <status>OK/Error</status>
-                    <error>
-                       <code>code</code>
-                       <description>description</description>
-                    </error>
+                <response requestType="abc" requestId="request identifier">
+                    <status code="OK|ERROR">
+                        <error>
+                            <code>1234</code>
+                            <description>description</description>
+                        </error>
+                    </status>
                 </response>
             </pcolResponses>
         </choice>

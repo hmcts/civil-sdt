@@ -4,11 +4,11 @@
 		<claim>
 		  <claimNumber>12345678</claimNumber>
           <defendants>
-            <defendant id="1">
+            <defendant defendantId="1">
               <filedDate>2001-12-31T12:00:00</filedDate>
               <responseType>PA</responseType>
             </defendant>
-            <defendant id="2">
+            <defendant defendantId="2">
               <filedDate>2001-12-31T12:00:00</filedDate>
               <responseType>PA</responseType>
             </defendant>
@@ -17,16 +17,17 @@
         <claim>
           <claimNumber>22345678</claimNumber>
           <defendants>
-            <defendant id="1">
+            <defendant defendantId="1">
               <filedDate>2001-12-31T12:00:00</filedDate>
               <responseType>PA</responseType>
             </defendant>
           </defendants>
         </claim>
 	</defenceDetails>
-    <status>OK/Error</status>
-    <error>
-        <code>code</code>
-        <description>description</description>
-    </error>
+    <status code="OK/Error">
+        <error>
+            <code>code</code>
+            <description>description</description>
+        </error>
+    </status>
 </defenceResponse>

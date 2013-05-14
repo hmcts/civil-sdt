@@ -1,38 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Claim.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk" 
+    elementFormDefault="qualified">
+	
+    <xs:include schemaLocation="..\RootXSDs\Claim.xsd"/>
 	<xs:include schemaLocation="..\RootXSDs\Judgment.xsd"/>
 	<xs:include schemaLocation="..\RootXSDs\Paid.xsd"/>
 	<xs:include schemaLocation="..\RootXSDs\Warrant.xsd"/>
 	<xs:include schemaLocation="..\RootXSDs\JudgmentForthwith.xsd"/>
 
-	<xs:element name="sendBulkData" type="tns:sendBulkData"/>
-	<xs:complexType name="sendBulkData">
-		<xs:sequence>
-			<xs:element name="bulk_data" minOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:element name="bulk_data">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="tns:customer_code"/>
-				<xs:element ref="tns:reference"/>
-				<xs:element ref="tns:number_of_requests"/>
-				<xs:element ref="tns:SOT_facts_are_true_declaration"/>
-				<xs:element ref="tns:SOT_name_on_particulars"/>
-				<xs:element ref="tns:requests" minOccurs="1" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="requests">
-		<xs:complexType>
-			<xs:all>
-				<xs:element ref="tns:sendNewClaims" minOccurs="0"/>
-				<xs:element ref="tns:sendNewJudgements" minOccurs="0"/>
-				<xs:element ref="tns:sendNewPaid" minOccurs="0"/>
-				<xs:element ref="tns:sendNewWarrants" minOccurs="0"/>
-				<xs:element ref="tns:sendNewJudgmentForthwiths" minOccurs="0"/>
-			</xs:all>
-		</xs:complexType>
-	</xs:element>
+    <xs:complexType name="header">
+        <xs:sequence>
+            <xs:element name="sdtCustomerId" type="tns:sdtCustomerId"/>
+            <xs:element name="targetSystemId" type="tns:targetSystemId"/>
+            <!-- TODO Add restriction -->
+            <xs:element name="requestCount" type="xs:integer"/>
+            <!-- TODO Add restriction -->
+            <xs:element name="customerReference" type="tns:stringMaxLength24"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="requests">
+        <xs:choice>
+            <xs:element name="mcolRequests" type="tns:mcolRequests"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="mcolRequests">
+        <xs:sequence>
+            <xs:element name="request" type="tns:mcolRequest" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="customerCode" type="tns:customerCode" use="required"/>
+    </xs:complexType>
+
+    <!-- TODO Single request can't be generic because it would have to accept PCOL request type too. -->
+    <xs:complexType name="mcolRequest">
+        <xs:choice>
+            <!-- TODO Add more elements for Warrant/Paid etc -->
+            <xs:element name="mcolClaim" type="tns:claimType"/>
+            <xs:element name="mcolJudgment" type="tns:judgment"/>
+        </xs:choice>
+        <xs:attribute name="requestType" type="tns:requestType" use="required"/>
+        <xs:attribute name="requestId" type="tns:requestId" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="bulkRequest">
+        <xs:sequence>
+            <xs:element name="header" type="tns:header"/>
+            <xs:element name="requests" type="tns:requests"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="bulkRequest" type="tns:bulkRequest"/>
+
 </xs:schema>

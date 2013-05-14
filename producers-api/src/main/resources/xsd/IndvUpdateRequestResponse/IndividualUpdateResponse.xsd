@@ -6,8 +6,7 @@
 	<xs:element name="updateResponse" type="tns:updateResponse" />
 	<xs:complexType name="updateResponse">
 		<xs:sequence>
-			<xs:element name="error" type="tns:errorDetails"
-				minOccurs="1" />
+			<xs:element name="status" type="tns:status"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

@@ -1,11 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\IndvRequestResponse\IndividualSubmitResponse.xsd"/>
-	<xs:element name="bulkFeedbackResponse">
-		<xs:complexType>
-			<xs:all>
-				<xs:element ref="tns:getIndividualResponse"/>
-			</xs:all>
-		</xs:complexType>
-	</xs:element>		
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk" 
+    elementFormDefault="qualified">
+	
+    <xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
+    
+    <xs:complexType name="bulkFeedbackResponse">
+        <xs:sequence>
+            <xs:element name="bulkRequestStatus" type="tns:bulkRequestStatus"/>
+            <xs:element name="responses" type="tns:responses"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="bulkRequestStatus">
+        <xs:sequence>
+            <xs:element name="sdtBulkReference" type="tns:sdtBulkReference"/>
+            <!-- TODO Add restriction -->
+            <xs:element name="requestCount" type="xs:integer"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="responses">
+        <xs:choice>
+            <xs:element name="mcolResponses" type="tns:mcolResponses"/>
+        </xs:choice>
+    </xs:complexType>
+    
+    <xs:complexType name="mcolResponses">
+        <xs:sequence>
+            <xs:element name="response" type="tns:mcolResponse" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- TODO Single response can't be generic because it would have to return PCOL response type too. -->
+    <xs:complexType name="mcolResponse">
+        <xs:sequence>
+            <xs:element name="claimNumber" type="tns:documentNumber"  minOccurs="0"/>
+            <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="warrantNumber" type="tns:documentNumber"  minOccurs="0"/>
+            <!-- TODO confirm data type -->
+            <xs:element name="enforcingCourtCode" type="xs:string"  minOccurs="0"/>
+            <!-- TODO confirm data type -->
+            <xs:element name="enforcingCourtName" type="xs:string"  minOccurs="0"/>
+            <!-- TODO confirm data type -->
+            <xs:element name="fee" type="xs:integer"  minOccurs="0"/>
+            <!-- TODO confirm status code values...are they same as Create or different? -->
+            <xs:element name="status" type="tns:createStatus"/>
+        </xs:sequence>
+        <xs:attribute name="requestType" type="tns:requestType" use="required"/>
+        <xs:attribute name="requestId" type="tns:requestId" use="required"/>
+    </xs:complexType>
+    
+	<xs:element name="bulkFeedbackResponse" type="tns:bulkFeedbackResponse"/>
+
 </xs:schema>

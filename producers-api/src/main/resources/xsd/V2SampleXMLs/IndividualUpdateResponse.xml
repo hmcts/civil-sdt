@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updateResponse>
-    <status>OK/Error</status>
-    <error>
-        <code>code</code>
-        <description>description</description>
-    </error>
+    <status code="OK|ERROR">
+        <error>
+            <code>1234</code>
+            <description>description</description>
+        </error>
+    </status>
 </updateResponse>
 

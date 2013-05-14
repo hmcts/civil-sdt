@@ -1,36 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://commissioning-ws.sdt.moj.gov.uk/" targetNamespace="http://commissioning-ws.sdt.moj.gov.uk/" elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
-	<xs:element name="getIndividualResponse" type="tns:getIndividualResponse"/>
-	<xs:complexType name="getIndividualResponse">
-		<xs:sequence>
-			<xs:element name="individual_response" minOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:element name="individual_response">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="tns:sdt_reference"/>
-				<xs:element ref="tns:request" minOccurs="1" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="request">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="tns:request_id"/>
-				<xs:element ref="tns:request_type"/>
-				<xs:element ref="tns:status"/>
-				<xs:element ref="tns:case_number" minOccurs="0"/>
-				<xs:element ref="tns:date_of_issue" minOccurs="0"/>
-				<xs:element ref="tns:date_of_service" minOccurs="0"/>
-				<xs:element ref="tns:warrant_number" minOccurs="0"/>
-				<xs:element ref="tns:enforcing_court_code" minOccurs="0"/>
-				<xs:element ref="tns:enforcing_court_name" minOccurs="0"/>
-				<xs:element ref="tns:fee" minOccurs="0"/>
-				<xs:element ref="tns:rejection_reason_code" minOccurs="0"/>
-				<xs:element ref="tns:rejection_reason_description" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-</xs:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk" 
+    elementFormDefault="qualified">
+	
+    <xs:include schemaLocation="..\RootXSDs\Base.xsd"/>
+
+    <xs:complexType name="createResponse">
+        <xs:sequence>
+            <xs:element name="sdtRequestId" type="tns:sdtRequestId"/>
+            <xs:element name="claimNumber" type="tns:documentNumber"  minOccurs="0"/>
+            <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="warrantNumber" type="tns:documentNumber"  minOccurs="0"/>
+            <!-- TODO confirm data type -->
+            <xs:element name="enforcingCourtCode" type="xs:string"  minOccurs="0"/>
+            <!-- TODO confirm data type -->
+            <xs:element name="enforcingCourtName" type="xs:string"  minOccurs="0"/>
+            <!-- TODO confirm data type -->
+            <xs:element name="fee" type="xs:integer"  minOccurs="0"/>
+            <xs:element name="status" type="tns:createStatus"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="createResponse" type="tns:createResponse"/>
+    
+ </xs:schema>

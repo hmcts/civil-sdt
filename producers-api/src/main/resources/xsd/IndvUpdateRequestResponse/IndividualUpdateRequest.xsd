@@ -13,8 +13,7 @@
 			<xs:element name="warrantNumber" type="tns:stringMaxLength8" />
 			<xs:element name="enforcingCourtCode" type="tns:stringMaxLength8" />
 			<xs:element name="fee" type="tns:currenyTypeMaxValue999999p99" />
-			<xs:element name="status" type="tns:stringMaxLength8" />
-			<xs:element name="error" type="tns:errorDetails" />
+			<xs:element name="status" type="tns:createStatus" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

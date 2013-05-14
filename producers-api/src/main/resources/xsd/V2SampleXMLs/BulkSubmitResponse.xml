@@ -4,9 +4,18 @@
     <sdtBulkReference>sdt_reference</sdtBulkReference>
     <submittedDate>2001-12-31T12:00:00</submittedDate>
     <requestCount>10</requestCount>
+    <status code="OK/Error">
+        <error> <!-- only if error found -->
+            <code>code</code>
+            <description>description</description>
+        </error>
+    </status>
+    
+    <!-- 
     <status>OK/Error</status>
-    <error> <!-- only if errors found -->
+    <error> 
        <code>AUTH_FAILED</code>
        <description>Failed authorisation</description>
     </error>
+     -->
 </bulkResponse>
