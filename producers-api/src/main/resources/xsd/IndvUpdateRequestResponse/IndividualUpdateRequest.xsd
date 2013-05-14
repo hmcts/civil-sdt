@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-			xmlns:tns="http://ws.sdt.moj.gov.uk/individualUpdateRequest" 
-			targetNamespace="http://ws.sdt.moj.gov.uk/individualUpdateRequest" 
+			xmlns:tns="http://ws.sdt.moj.gov.uk/" targetNamespace="http://ws.sdt.moj.gov.uk/"
 			xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>
-	<xs:element name="sendIndividualUpdate" type="tns:sendIndividualUpdate"/>
-	<xs:complexType name="sendIndividualUpdate">
+	<xs:element name="updateRequest" type="tns:updateRequest"/>
+	<xs:complexType name="updateRequest">
 		<xs:sequence>
-			<xs:element ref="tns:individualUpdate" minOccurs="1"/>
+			<xs:element name="sdtRequestId" type="common:stringMaxLength8"/>
+				<xs:element name="claimNumer" type="common:stringMaxLength8"/>
+				<xs:element name="issueDate" type="xs:date"/>
+				<xs:element name="serviceDate" type="xs:date"/>
+				<xs:element name="warrantNumber" type="common:stringMaxLength8"/>
+				<xs:element name="enforcingCourtCode" type="common:stringMaxLength8"/>
+				<xs:element name="fee" type="common:currenyTypeMaxValue999999p99"/>
+				<xs:element name="status" type="common:stringMaxLength8"/>
+				<xs:element name="error" type="common:errorDetails"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="individualUpdate">
-		<xs:complexType>
-			<xs:sequence>
-					<xs:element ref="common:sdtReference"/>
-					<xs:element ref="tns:updates" minOccurs="1" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="updates">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="common:requestId"/>
-				<xs:element ref="common:requestType"/>
-				<xs:element ref="common:status"/>
-				<xs:element ref="common:caseNumber" minOccurs="0"/>
-				<xs:element ref="common:dateOfIssue" minOccurs="0"/>
-				<xs:element ref="common:dateOfService" minOccurs="0"/>
-				<xs:element ref="common:rejectionReasonCode" minOccurs="0"/>
-				<xs:element ref="common:rejectionReasonDescription" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
 </xs:schema>

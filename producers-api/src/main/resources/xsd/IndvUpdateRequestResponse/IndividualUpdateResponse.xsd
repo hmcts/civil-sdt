@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-			xmlns:tns="http://ws.sdt.moj.gov.uk/individualUpdateResponse" 
-			targetNamespace="http://ws.sdt.moj.gov.uk/individualUpdateResponse" elementFormDefault="qualified">
-	<xs:element name="getIndvUpdateResponse" type="tns:getIndvUpdateResponse"/>
-	<xs:complexType name="getIndvUpdateResponse">
+			xmlns:tns="http://ws.sdt.moj.gov.uk/" targetNamespace="http://ws.sdt.moj.gov.uk/"
+			xmlns:common="http://ws.sdt.moj.gov.uk/common" elementFormDefault="qualified">
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/common" schemaLocation="..\RootXSDs\Base.xsd"/>
+	<xs:element name="updateResponse" type="tns:updateResponse"/>
+	<xs:complexType name="updateResponse">
 		<xs:sequence>
-			<xs:element ref="tns:updateStatus" minOccurs="1"/>
+			<xs:element name="error" type="common:errorDetails" minOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="updateStatus">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="SUCCESSFUL"/>
-				<xs:enumeration value="FAILED"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
 </xs:schema>

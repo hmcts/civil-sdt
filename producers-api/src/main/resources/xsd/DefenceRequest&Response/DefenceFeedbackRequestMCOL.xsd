@@ -13,8 +13,7 @@
 	</xs:complexType>
 	<xs:complexType name="header">
 		<xs:sequence>
-			<xs:element name="sdtCustomerId" type="common:stringMaxLength8" />
-			<xs:element name="targetSystemId "type="common:stringMaxLength8" />
+			<xs:element name="ncpId" type="common:stringMaxLength8" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="criteria">
