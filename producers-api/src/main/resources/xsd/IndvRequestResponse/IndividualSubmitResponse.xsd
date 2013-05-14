@@ -13,8 +13,7 @@
             <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
             <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
             <xs:element name="warrantNumber" type="tns:documentNumber"  minOccurs="0"/>
-            <!-- TODO confirm data type -->
-            <xs:element name="enforcingCourtCode" type="xs:string"  minOccurs="0"/>
+            <xs:element name="enforcingCourtCode" type="tns:courtCodeType"  minOccurs="0"/>
             <!-- TODO confirm data type -->
             <xs:element name="enforcingCourtName" type="xs:string"  minOccurs="0"/>
             <!-- TODO confirm data type -->

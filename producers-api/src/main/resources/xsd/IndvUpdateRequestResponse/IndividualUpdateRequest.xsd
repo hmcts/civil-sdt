@@ -6,12 +6,14 @@
 	<xs:element name="updateRequest" type="tns:updateRequest" />
 	<xs:complexType name="updateRequest">
 		<xs:sequence>
-			<xs:element name="sdtRequestId" type="tns:stringMaxLength8" />
-			<xs:element name="claimNumer" type="tns:stringMaxLength8" />
+			<xs:element name="sdtRequestId" type="tns:sdtRequestId" />
+			<xs:element name="claimNumer" type="tns:documentNumber" />
 			<xs:element name="issueDate" type="xs:date" />
 			<xs:element name="serviceDate" type="xs:date" />
-			<xs:element name="warrantNumber" type="tns:stringMaxLength8" />
-			<xs:element name="enforcingCourtCode" type="tns:stringMaxLength8" />
+			<xs:element name="warrantNumber" type="tns:documentNumber" />
+            <xs:element name="enforcingCourtCode" type="tns:courtCodeType"  minOccurs="0"/>
+            <!-- TODO confirm data type -->
+            <xs:element name="enforcingCourtName" type="xs:string"  minOccurs="0"/>
 			<xs:element name="fee" type="tns:currenyTypeMaxValue999999p99" />
 			<xs:element name="status" type="tns:createStatus" />
 		</xs:sequence>
