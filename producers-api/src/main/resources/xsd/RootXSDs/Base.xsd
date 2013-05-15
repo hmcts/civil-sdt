@@ -188,12 +188,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="currency">
-        <xs:restriction base="xs:decimal">
-            <xs:fractionDigits value="2" />
-            <xs:pattern value=".*\.[0-9][0-9]" />
-        </xs:restriction>
-    </xs:simpleType>
     <xs:simpleType name="amountType999999999">
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
@@ -216,6 +210,18 @@
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="0" />
             <xs:maxInclusive value="999999" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="amountType99999">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0" />
+            <xs:maxInclusive value="99999" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="currency">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="2" />
+            <xs:pattern value=".*\.[0-9][0-9]" />
         </xs:restriction>
     </xs:simpleType>
 	<xs:simpleType name="currenyTypeMaxValue999p99">
