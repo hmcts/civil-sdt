@@ -9,7 +9,7 @@
 	<xs:complexType name="warrantType">
 		<xs:sequence>
 			<xs:element name="claimNumber" type="tns:documentNumber" />
-			<xs:element name="claimantReference" type="tns:stringMaxLength24" minOccurs="0" />
+			<xs:element name="claimantReference" type="tns:claimantReference" minOccurs="0" />
 			<xs:element name="defendantId" type="tns:defendantIdType" />
 			<xs:element name="defendantAddress" type="tns:address" />
 			<xs:element name="balanceOfDebt" type="tns:currenyTypeMaxValue99999p99" />

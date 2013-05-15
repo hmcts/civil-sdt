@@ -18,7 +18,7 @@
 			<xs:element name="claimNumber" type="tns:documentNumber" />
 			<xs:element name="defendantId" type="tns:defendantIdType" minOccurs="0" />
 			<xs:element name="notificationType" type="tns:notificationType" />
-			<xs:element name="dateOfLastPayment" type="xs:date"	minOccurs="0" />
+			<xs:element name="lastPaymentDate" type="xs:date"	minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 
