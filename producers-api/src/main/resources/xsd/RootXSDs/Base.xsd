@@ -24,7 +24,6 @@
         <xs:restriction base="tns:stringMaxLength32"/>
     </xs:simpleType>
 
-    <!-- TODO Confirm data type and is it needed? Or NCP ID sufficient? -->
 	<xs:simpleType name="customerCode">
 		<xs:restriction base="xs:integer">
 			<xs:minInclusive value="1000" />
@@ -166,16 +165,14 @@
 		</xs:sequence>
 	</xs:complexType>
 
-    <!-- TODO Confirm request id type ...could be similar to bulk reference-->
+    <!-- TODO Confirm request id type-->
     <xs:simpleType name="requestId">
-        <xs:restriction base="tns:stringMaxLength32"/>
+        <xs:restriction base="tns:stringMaxLength24"/>
     </xs:simpleType>
 
-    <!-- TODO Confirm data type -->
+    <!-- TODO Confirm request id type ...could be similar to bulk reference-->
     <xs:simpleType name="sdtRequestId">
-        <xs:restriction base="xs:string">
-            <xs:maxLength value="24"/>
-        </xs:restriction>
+        <xs:restriction base="tns:stringMaxLength40"/>
     </xs:simpleType>
 
     <xs:simpleType name="requestType">
@@ -238,7 +235,7 @@
     <xs:complexType name="errorType">
         <xs:sequence>
             <!-- TODO Agree on type -->
-			<xs:element name="code" type="tns:stringMaxLength8" />
+			<xs:element name="code" type="tns:stringMaxLength32" />
 			<xs:element name="description" type="tns:stringMaxLength255" />
         </xs:sequence>
     </xs:complexType>
