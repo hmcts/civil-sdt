@@ -5,14 +5,11 @@
     elementFormDefault="qualified">
 	
     <xs:include schemaLocation="../RootXSDs/Claim.xsd"/>
-    <!-- 
     <xs:include schemaLocation="../RootXSDs/Judgment.xsd"/>
     <xs:include schemaLocation="../RootXSDs/Paid.xsd"/>
     <xs:include schemaLocation="../RootXSDs/Warrant.xsd"/>
     <xs:include schemaLocation="../RootXSDs/JudgmentForthwith.xsd"/>
-     -->
      
-     <!-- TODO Resume from here to create more individual requests -->
     <xs:complexType name="headerType">
         <xs:sequence>
             <xs:element name="sdtRequestId" type="tns:sdtRequestId"/>
@@ -27,7 +24,38 @@
         </xs:sequence>
     </xs:complexType>
     
-    <!-- TODO Add Warrant and other domain types -->
+    <xs:complexType name="createJudgmentRequestType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:element name="mcolJudgment" type="tns:judgmentType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="createJudgmentForthwithRequestType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:element name="mcolJudgmentForthwith" type="tns:judgmentForthwithType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="createPaidRequestType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:element name="mcolPaid" type="tns:paidType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="createWarrantRequestType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:element name="mcolWarrant" type="tns:warrantType"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="createClaimRequest" type="tns:createClaimRequestType"/>
+    <xs:element name="createJudgmentRequest" type="tns:createClaimRequestType"/>
+    <xs:element name="createJudgmentForthwithRequest" type="tns:createJudgmentForthwithRequestType"/>
+    <xs:element name="createWarrantRequest" type="tns:createWarrantRequestType"/>
+    <xs:element name="createPaidRequest" type="tns:createPaidRequestType"/>
 
 </xs:schema>
