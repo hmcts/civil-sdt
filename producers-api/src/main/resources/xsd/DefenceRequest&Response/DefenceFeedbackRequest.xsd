@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
 	elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
+	<xs:include schemaLocation="../RootXSDs/Base.xsd" />
 	<xs:element name="defenceRequest" type="tns:defenceRequest" />
 	<xs:complexType name="defenceRequest">
 		<xs:sequence>
@@ -16,7 +16,14 @@
 			<xs:element name="targetSystemId" type="tns:targetSystemId" />
 		</xs:sequence>
 	</xs:complexType>
+	
 	<xs:complexType name="criteria">
+		<xs:sequence>
+			<xs:element name="mcolDefence" type="tns:mcolDefence" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="mcolDefence">
 		<xs:sequence>
 			<xs:element name="fromDate" type="xs:date" />
 			<xs:element name="toDate" type="xs:date" />

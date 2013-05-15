@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
 	elementFormDefault="qualified">
-	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
+	<xs:include schemaLocation="../RootXSDs/Base.xsd" />
 	<xs:element name="defenceResponse" type="tns:defenceResponse" />
 	<xs:complexType name="defenceResponse">
 		<xs:sequence>
@@ -27,7 +27,6 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-
 	<xs:complexType name="defendant">
 		<xs:sequence>
 			<xs:element name="filedDate" type="xs:dateTime" />
@@ -35,7 +34,6 @@
 		</xs:sequence>
         <xs:attribute name="defendantId" type="tns:defendantIdType" />
 	</xs:complexType>
-
 	<!-- Response Type is DE, DC or PA -->
 	<xs:simpleType name="responseType">
 		<xs:restriction base="xs:string">
