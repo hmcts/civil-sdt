@@ -65,9 +65,9 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="instalmentType">
+    <xs:complexType name="instalmentPaymentType">
         <xs:annotation>
-            <xs:documentation>Instalment information consisting of frequency and amount. The amount cannot be greater than claim amount.</xs:documentation>
+            <xs:documentation>Details when payment is to be paid in instalments. The amount cannot be greater than claim amount.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element name="amount" type="tns:amountType9999999"/>
@@ -75,23 +75,39 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="paymentScheduleType">
-        <xs:choice>
+    <xs:complexType name="fullPaymentType">
+        <xs:annotation>
+            <xs:documentation>Details when payment is to be paid in full</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
             <xs:element name="fullByDate" type="xs:date">
                 <xs:annotation>
                     <xs:documentation>The date by which defendant should pay the full amount. Should be in future and not tomorrow.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="instalment" type="tns:instalmentType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="immediatePaymentType">
+        <xs:annotation>
+            <xs:documentation>Details when payment is to be paid immediately</xs:documentation>
+        </xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="paymentScheduleType">
+        <xs:choice>
+            <xs:element name="fullPayment" type="tns:fullPaymentType"/>
+            <xs:element name="instalment" type="tns:instalmentPaymentType"/>
+            <xs:element name="immediatePayment" type="tns:immediatePaymentType"/>
+        </xs:choice>
+    </xs:complexType>
+ 
+    <!-- 
             <xs:element name="immediately" type="xs:boolean" fixed="true">
                 <xs:annotation>
                     <xs:documentation>The defendant will be ordered to pay the full amount immediately.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-        </xs:choice>
-    </xs:complexType>
-
-    <!-- 
 	<xs:element name="payeeName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
