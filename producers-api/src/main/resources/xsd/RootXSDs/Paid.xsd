@@ -7,9 +7,25 @@
 	<xs:include schemaLocation="Base.xsd" />
     
     <!-- Paid, Written off, Withdrawn or Discontinued. -->
+    <!-- TODO check about using Event codes like MP, WD, WO, DI instead-->
     <xs:simpleType name="notification">
         <xs:restriction base="xs:string">
-            <xs:pattern value="[pP]|[oO]|[wW]|[dD]" />
+            <xs:enumeration value="P">
+                <xs:annotation>
+                    <xs:documentation>Paid</xs:documentation>
+                </xs:annotation></xs:enumeration>
+            <xs:enumeration value="O">
+                <xs:annotation>
+                    <xs:documentation>Written Off</xs:documentation>
+                </xs:annotation></xs:enumeration>
+            <xs:enumeration value="W">
+                <xs:annotation>
+                    <xs:documentation>Withdrawn</xs:documentation>
+                </xs:annotation></xs:enumeration>
+            <xs:enumeration value="D">
+                <xs:annotation>
+                    <xs:documentation>Discontinued</xs:documentation>
+                </xs:annotation></xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
 
