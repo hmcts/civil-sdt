@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defenceResponse xmlns="http://ws.sdt.moj.gov.uk"
+          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
+         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
+	<defenceDetails>
+		<defenceDetail>
+		  <claimNumber>1234567890</claimNumber> <!-- 10 characters max 8 -->
+          <defendants>
+            <defendant defendantId="3"> <!-- Max number of defendants is 2-->
+              <filedDate>2001-12-31T12:00:001</filedDate> <!-- Invalid timestamp -->
+              <responseType>YZ</responseType> <!-- Response Type jas to be DE, DC or PA -->
+            </defendant>
+            <defendant defendantId="2">
+              <filedDate>2001-12-31T12:00:00</filedDate> 
+              <responseType>PA</responseType> 
+            </defendant>
+          </defendants>
+		</defenceDetail>
+        <defenceDetail>
+          <claimNumber>22345678</claimNumber>
+          <defendants>
+            <defendant defendantId="1">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+          </defendants>
+        </defenceDetail>
+	</defenceDetails>
+    <status code="INCORRECT"> <!-- Has to be OK or ERROR -->
+        <error>
+            <code>abcdefghij</code> <!-- Max length 8-->
+            <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet dui. Donec neque purus, rutrum sit amet iaculis nec, faucibus porttitor velit. Integer vel pulvinar nunc aenean suscipit.</description> <!-- Max length 255 - contains 256-->
+        </error>
+    </status>
+</defenceResponse>

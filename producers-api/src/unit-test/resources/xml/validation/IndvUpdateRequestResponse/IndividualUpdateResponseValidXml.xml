@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updateResponse xmlns="http://ws.sdt.moj.gov.uk"
+          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
+         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
+    <status code="ERROR">
+        <error>
+            <code>1234</code>
+            <description>description</description>
+        </error>
+    </status>
+</updateResponse>
+

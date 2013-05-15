@@ -31,6 +31,9 @@
 
 package uk.gov.moj.sdt.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
 /**
@@ -55,7 +58,7 @@ public class SampleXsdTest extends SdtXmlTestBase
      */
     public void testSampleValidXml ()
     {
-        this.prooveXsd ("SampleValidXml.xml", "Sample.xsd", null);
+        this.proveXsd ("SampleValidXml.xml", "Sample.xsd", null);
     }
 
     /**
@@ -63,8 +66,9 @@ public class SampleXsdTest extends SdtXmlTestBase
      */
     public void testSampleInvalidXml ()
     {
-        this.prooveXsd ("SampleInvalidXml.xml", "Sample.xsd",
-                "cvc-complex-type.2.4.a: Invalid content was found starting with element 'address'."
-                        + " One of '{name}' is expected.");
+    	final List<String> expectedMessages = new ArrayList<String>();
+    	expectedMessages.add("cvc-complex-type.2.4.a: Invalid content was found starting with element 'address'."
+                + " One of '{name}' is expected.");
+        this.proveXsd ("SampleInvalidXml.xml", "Sample.xsd", expectedMessages);
     }
 }

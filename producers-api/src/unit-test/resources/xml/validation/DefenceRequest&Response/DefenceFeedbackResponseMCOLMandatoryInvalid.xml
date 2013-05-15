@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defenceResponse xmlns="http://ws.sdt.moj.gov.uk"
+          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
+         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
+	<defenceDetails>
+		<claim>
+		  <claimNumber>12345678</claimNumber> <!-- -->
+          <defendants>
+            <defendant defendantId="1"> <!-- -->
+              <filedDate>2001-12-31T12:00:001</filedDate> <!-- -->
+              <responseType>YZ</responseType> <!-- -->
+            </defendant>
+            <defendant defendantId="2">
+              <filedDate>2001-12-31T12:00:00</filedDate> 
+              <responseType>PA</responseType> 
+            </defendant>
+          </defendants>
+		</claim>
+        <claim>
+          <claimNumber>22345678</claimNumber>
+          <defendants>
+            <defendant defendantId="1">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+          </defendants>
+        </claim>
+	</defenceDetails>
+    <status code="ERROR"> <!-- -->
+        <error>
+            <code>code</code> <!-- -->
+            <description>description</description> <!-- -->
+        </error>
+    </status>
+</defenceResponse>
