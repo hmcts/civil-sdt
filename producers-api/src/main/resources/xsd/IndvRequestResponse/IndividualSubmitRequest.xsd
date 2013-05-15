@@ -12,23 +12,22 @@
     <xs:include schemaLocation="../RootXSDs/JudgmentForthwith.xsd"/>
      -->
      
-    <xs:complexType name="header">
+     <!-- TODO Resume from here to create more individual requests -->
+    <xs:complexType name="headerType">
         <xs:sequence>
-            <!-- TODO should the field be renamed to hide the fact that it originates from SDT? -->
             <xs:element name="sdtRequestId" type="tns:sdtRequestId"/>
             <xs:element name="ncpId" type="tns:ncpId"/>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="createClaimRequest">
+    <xs:complexType name="createClaimRequestType">
         <xs:sequence>
-            <!-- TODO Maybe need to create different types of Header ! -->
-            <xs:element name="header" type="tns:header"/>
+            <xs:element name="header" type="tns:headerType"/>
             <xs:element name="mcolClaim" type="tns:claimType"/>
         </xs:sequence>
     </xs:complexType>
     
     <!-- TODO Add Warrant and other domain types -->
-    <xs:element name="createClaimRequest" type="tns:createClaimRequest"/>
+    <xs:element name="createClaimRequest" type="tns:createClaimRequestType"/>
 
 </xs:schema>

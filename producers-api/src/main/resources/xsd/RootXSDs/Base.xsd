@@ -9,15 +9,19 @@
         <xs:restriction base="tns:stringMaxLength24"/>
     </xs:simpleType>
 
-    <!-- TODO Confirm data type -->
+    <!-- TODO Confirm data type ... could be AA-TTTT-YYMMSDDHHMISS-999999999-->
     <xs:simpleType name="sdtBulkReference">
-        <xs:restriction base="tns:stringMaxLength24"/>
+        <xs:restriction base="tns:stringMaxLength32"/>
     </xs:simpleType>
 
     <xs:simpleType name="targetSystemId">
         <xs:restriction base="xs:string">
             <xs:enumeration value="mcol" />
         </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="customerReference">
+        <xs:restriction base="tns:stringMaxLength32"/>
     </xs:simpleType>
 
     <!-- TODO Confirm data type and is it needed? Or NCP ID sufficient? -->
@@ -27,6 +31,12 @@
 			<xs:maxInclusive value="9999" />
 		</xs:restriction>
 	</xs:simpleType>
+    
+    <xs:simpleType name="requestCount">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value="99999"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <!-- TODO Confirm data type -->
     <xs:simpleType name="ncpId">
@@ -47,7 +57,7 @@
     </xs:simpleType>
 
 	<!-- Defendant ID is Blank (all defendants), 1 or 2 -->
-	<xs:simpleType name="defendantIdType">
+	<xs:simpleType name="defendantId">
 		<xs:restriction base="xs:string">
 			<xs:pattern value=" |1|2" />
 		</xs:restriction>
@@ -102,29 +112,27 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-    <xs:complexType name="sotSignature">
+    <xs:complexType name="sotSignatureType">
         <xs:sequence>
             <xs:element name="name" type="tns:stringMaxLength60"/>
         </xs:sequence>
     </xs:complexType>
 
-	<xs:simpleType name="currencyType">
-		<xs:restriction base="xs:decimal">
-			<xs:fractionDigits value="2" />
-			<xs:pattern value=".*\.[0-9][0-9]" />
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="courtCodeType">
+	<xs:simpleType name="courtCode">
 		<xs:restriction base="xs:integer">
 			<xs:pattern value="[0-9]{3}" />
 		</xs:restriction>
 	</xs:simpleType>
-    <xs:simpleType name="postcodeType">
+    <xs:simpleType name="courtName">
+        <xs:restriction base="tns:stringMaxLength40"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="postcode">
         <xs:restriction base="xs:string">
             <xs:pattern value="[0-9A-Za-z]{8}" />
         </xs:restriction>
     </xs:simpleType>
-	<xs:complexType name="address">
+	<xs:complexType name="addressType">
 		<xs:sequence>
             <!-- TODO EIS mentions length as 35 but db only supports 30 -->
 			<xs:element name="line1" type="tns:stringMaxLength30" />
@@ -132,10 +140,21 @@
 			<xs:element name="line3" type="tns:stringMaxLength30" minOccurs="0" />
 			<xs:element name="line4" type="tns:stringMaxLength30" minOccurs="0" />
 			<xs:element name="line5" type="tns:stringMaxLength30" minOccurs="0" />
-			<xs:element name="postcode" type="tns:postcodeType" />
+			<xs:element name="postcode" type="tns:postcode" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="person">
+    <xs:complexType name="correspondenceDetailType">
+        <xs:annotation>
+            <xs:documentation>
+                Describes correspondence details.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="name" type="tns:stringMaxLength30" />
+            <xs:element name="address" type="tns:addressType" />
+        </xs:sequence>
+    </xs:complexType>
+	<xs:complexType name="personType">
 		<xs:annotation>
 			<xs:documentation>
 				Describes a person
@@ -143,15 +162,13 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="name" type="tns:stringMaxLength60" />
-			<xs:element name="address" type="tns:address" />
+			<xs:element name="address" type="tns:addressType" />
 		</xs:sequence>
 	</xs:complexType>
 
-    <!-- TODO Confirm request id type -->
+    <!-- TODO Confirm request id type ...could be similar to bulk reference-->
     <xs:simpleType name="requestId">
-        <xs:restriction base="xs:string">
-            <xs:maxLength value="24"/>
-        </xs:restriction>
+        <xs:restriction base="tns:stringMaxLength32"/>
     </xs:simpleType>
 
     <!-- TODO Confirm data type -->
@@ -171,6 +188,18 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="currency">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="2" />
+            <xs:pattern value=".*\.[0-9][0-9]" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="amountType999999999">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="999999999"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="amountType99999999">
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
@@ -190,28 +219,23 @@
         </xs:restriction>
     </xs:simpleType>
 	<xs:simpleType name="currenyTypeMaxValue999p99">
-		<xs:restriction base="tns:currencyType">
+		<xs:restriction base="tns:currency">
 			<xs:maxInclusive value="999.99" />
 		</xs:restriction>
 	</xs:simpleType>
     <xs:simpleType name="currenyTypeMaxValue9999p99">
-        <xs:restriction base="tns:currencyType">
+        <xs:restriction base="tns:currency">
             <xs:maxInclusive value="9999.99" />
         </xs:restriction>
     </xs:simpleType>
 	<xs:simpleType name="currenyTypeMaxValue99999p99">
-		<xs:restriction base="tns:currencyType">
+		<xs:restriction base="tns:currency">
 			<xs:maxInclusive value="99999.99" />
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="currenyTypeMaxValue999999p99">
-		<xs:restriction base="tns:currencyType">
+		<xs:restriction base="tns:currency">
 			<xs:maxInclusive value="9999999.99" />
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="rejectionReasonCodeType">
-		<xs:restriction base="xs:integer">
-			<xs:pattern value="[0-9]{4}" />
 		</xs:restriction>
 	</xs:simpleType>
     
@@ -231,7 +255,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="error">
+    <xs:complexType name="errorType">
         <xs:sequence>
             <!-- TODO Agree on type -->
 			<xs:element name="code" type="tns:stringMaxLength8" />
@@ -239,16 +263,16 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="status">
+    <xs:complexType name="statusType">
         <xs:sequence>
-            <xs:element name="error" type="tns:error" minOccurs="0"/>
+            <xs:element name="error" type="tns:errorType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="code" type="tns:statusCode"></xs:attribute>
     </xs:complexType>
     
-    <xs:complexType name="createStatus">
+    <xs:complexType name="createStatusType">
         <xs:sequence>
-            <xs:element name="error" type="tns:error" minOccurs="0"/>
+            <xs:element name="error" type="tns:errorType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="code" type="tns:createStatusCode"></xs:attribute>
     </xs:complexType>

@@ -7,7 +7,7 @@
 	<xs:include schemaLocation="Base.xsd" />
     
     <!-- Paid, Written off, Withdrawn or Discontinued. -->
-    <xs:simpleType name="notificationType">
+    <xs:simpleType name="notification">
         <xs:restriction base="xs:string">
             <xs:pattern value="[pP]|[oO]|[wW]|[dD]" />
         </xs:restriction>
@@ -16,8 +16,8 @@
 	<xs:complexType name="paidType">
 		<xs:sequence>
 			<xs:element name="claimNumber" type="tns:documentNumber" />
-			<xs:element name="defendantId" type="tns:defendantIdType" minOccurs="0" />
-			<xs:element name="notificationType" type="tns:notificationType" />
+			<xs:element name="defendantId" type="tns:defendantId" minOccurs="0" />
+			<xs:element name="notificationType" type="tns:notification" />
 			<xs:element name="lastPaymentDate" type="xs:date"	minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>

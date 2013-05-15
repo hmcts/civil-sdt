@@ -13,7 +13,6 @@
             <!-- Either PCOL or MCOL requests will be allowed -->
             <!-- Customer code is CPC Number -->
             <mcolRequests customerCode="xxxx">
-            <!-- TODO Adjust element names -->
                 <mcolRequest requestType="claim" requestId="request identifier">
                     <choice>
                         <mcolClaim></mcolClaim>

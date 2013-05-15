@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk"
 	elementFormDefault="qualified">
+    
 	<xs:include schemaLocation="..\RootXSDs\Base.xsd" />
-	<xs:element name="updateRequest" type="tns:updateRequest" />
-	<xs:complexType name="updateRequest">
+	
+    <xs:element name="updateRequest" type="tns:updateRequestType" />
+	
+    <xs:complexType name="updateRequestType">
 		<xs:sequence>
 			<xs:element name="sdtRequestId" type="tns:sdtRequestId" />
 			<xs:element name="claimNumer" type="tns:documentNumber" />
 			<xs:element name="issueDate" type="xs:date" />
 			<xs:element name="serviceDate" type="xs:date" />
 			<xs:element name="warrantNumber" type="tns:documentNumber" />
-            <xs:element name="enforcingCourtCode" type="tns:courtCodeType"  minOccurs="0"/>
-            <!-- TODO confirm data type -->
-            <xs:element name="enforcingCourtName" type="xs:string"  minOccurs="0"/>
-			<xs:element name="fee" type="tns:currenyTypeMaxValue999999p99" />
-			<xs:element name="status" type="tns:createStatus" />
+            <xs:element name="enforcingCourtCode" type="tns:courtCode"  minOccurs="0"/>
+            <xs:element name="enforcingCourtName" type="tns:courtName"  minOccurs="0"/>
+			<xs:element name="fee" type="tns:amountType999999999" />
+			<xs:element name="status" type="tns:createStatusType" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

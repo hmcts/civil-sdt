@@ -10,14 +10,12 @@
 	<xs:include schemaLocation="../RootXSDs/Warrant.xsd"/>
 	<xs:include schemaLocation="../RootXSDs/JudgmentForthwith.xsd"/>
     
-    <xs:complexType name="header">
+    <xs:complexType name="headerType">
         <xs:sequence>
             <xs:element name="sdtCustomerId" type="tns:sdtCustomerId"/>
             <xs:element name="targetSystemId" type="tns:targetSystemId"/>
-            <!-- TODO Add restriction -->
-            <xs:element name="requestCount" type="xs:integer"/>
-            <!-- TODO Add restriction -->
-            <xs:element name="customerReference" type="tns:stringMaxLength24"/>
+            <xs:element name="requestCount" type="tns:requestCount"/>
+            <xs:element name="customerReference" type="tns:customerReference"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -26,7 +24,7 @@
         <xs:attribute name="requestId" type="tns:requestId" use="required"/>
     </xs:complexType>
     
-    <xs:complexType name="mcolRequest">
+    <xs:complexType name="mcolRequestType">
         <xs:complexContent>
             <xs:extension base="tns:request">
                 <xs:choice>
@@ -40,26 +38,26 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="mcolRequests">
+    <xs:complexType name="mcolRequestsType">
         <xs:sequence>
-            <xs:element name="mcolRequest" type="tns:mcolRequest" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="mcolRequest" type="tns:mcolRequestType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="customerCode" type="tns:customerCode" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="requests">
+    <xs:complexType name="requestsType">
         <xs:choice>
-            <xs:element name="mcolRequests" type="tns:mcolRequests"/>
+            <xs:element name="mcolRequests" type="tns:mcolRequestsType"/>
         </xs:choice>
     </xs:complexType>
 
-    <xs:complexType name="bulkRequest">
+    <xs:complexType name="bulkRequestType">
         <xs:sequence>
-            <xs:element name="header" type="tns:header"/>
-            <xs:element name="requests" type="tns:requests"/>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:element name="requests" type="tns:requestsType"/>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:element name="bulkRequest" type="tns:bulkRequest"/>
+    <xs:element name="bulkRequest" type="tns:bulkRequestType"/>
 
 </xs:schema>

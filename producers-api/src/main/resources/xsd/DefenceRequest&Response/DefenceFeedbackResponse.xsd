@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk" targetNamespace="http://ws.sdt.moj.gov.uk"
+	xmlns:tns="http://ws.sdt.moj.gov.uk" 
+    targetNamespace="http://ws.sdt.moj.gov.uk"
 	elementFormDefault="qualified">
+    
 	<xs:include schemaLocation="../RootXSDs/Base.xsd" />
-	<xs:element name="defenceResponse" type="tns:defenceResponse" />
-	<xs:complexType name="defenceResponse">
+    
+	<xs:element name="defenceResponse" type="tns:defenceResponseType" />
+	<xs:complexType name="defenceResponseType">
 		<xs:sequence>
-			<xs:element name="defenceDetails" type="tns:defenceDetails" />
-            <xs:element name="status" type="tns:status" />
+			<xs:element name="defenceDetails" type="tns:defenceDetailsType" />
+            <xs:element name="status" type="tns:statusType" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="defenceDetails">
+	<xs:complexType name="defenceDetailsType">
 		<xs:sequence>
-			<xs:element name="claim" type="tns:claim" maxOccurs="unbounded" />
+			<xs:element name="defenceDetail" type="tns:defenceDetailType" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="claim">
+	<xs:complexType name="defenceDetailType">
 		<xs:sequence>
 			<xs:element name="claimNumber" type="tns:documentNumber" />
 			<xs:element name="defendants">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="defendant" type="tns:defendant" maxOccurs="2" />
+						<xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="defendant">
+	<xs:complexType name="defendantType">
 		<xs:sequence>
 			<xs:element name="filedDate" type="xs:dateTime" />
 			<xs:element name="responseType" type="tns:responseType" />
 		</xs:sequence>
-        <xs:attribute name="defendantId" type="tns:defendantIdType" />
+        <xs:attribute name="defendantId" type="tns:defendantId" />
 	</xs:complexType>
 
-	<!-- Response Type is DE, DC or PA -->
 	<xs:simpleType name="responseType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="DE|DC|PA" />
+            <xs:enumeration value="DE"/>
+            <xs:enumeration value="DC"/>
+            <xs:enumeration value="PA"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

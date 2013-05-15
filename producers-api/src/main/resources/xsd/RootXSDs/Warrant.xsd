@@ -10,8 +10,8 @@
 		<xs:sequence>
 			<xs:element name="claimNumber" type="tns:documentNumber" />
 			<xs:element name="claimantReference" type="tns:claimantReference" minOccurs="0" />
-			<xs:element name="defendantId" type="tns:defendantIdType" />
-			<xs:element name="defendantAddress" type="tns:address" />
+			<xs:element name="defendantId" type="tns:defendantId" />
+			<xs:element name="defendantAddress" type="tns:addressType" />
 			<xs:element name="balanceOfDebt" type="tns:currenyTypeMaxValue99999p99" />
 			<xs:element name="amountOfWarrant" type="tns:currenyTypeMaxValue99999p99" />
 			<xs:element name="solicitorCost" type="tns:currenyTypeMaxValue999p99" minOccurs="0" />

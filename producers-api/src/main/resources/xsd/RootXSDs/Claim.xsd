@@ -6,7 +6,7 @@
 
     <xs:include schemaLocation="Base.xsd"/>
     
-    <xs:simpleType name="particularsType">
+    <xs:simpleType name="particulars">
         <xs:restriction base="xs:string">
             <xs:minLength value="0"/>
             <xs:maxLength value="45"/>
@@ -32,18 +32,17 @@
         </xs:annotation>
         <xs:sequence>
 			<xs:element name="claimantReference" type="tns:claimantReference" minOccurs="0"/>
-			<xs:element name="claimant" type="tns:person" minOccurs="0">
+			<xs:element name="claimant" type="tns:personType" minOccurs="0">
 			    <xs:annotation>
 			        <xs:documentation>Should be populated if customer is a solicitor.</xs:documentation>
 			    </xs:annotation></xs:element>
-            <!-- TODO Confirm why name is only 30 char long and address lines 3-5 not required -->
-            <xs:element name="claimantCorrespondence" type="tns:person" minOccurs="0">
+            <xs:element name="claimantCorrespondence" type="tns:correspondenceDetailType" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>Should be populated if customer is not a solicitor.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-			<xs:element name="defendant1" type="tns:person"/>
-            <xs:element name="defendant2" type="tns:person" minOccurs="0"/>
+			<xs:element name="defendant1" type="tns:personType"/>
+            <xs:element name="defendant2" type="tns:personType" minOccurs="0"/>
             <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
             <xs:element name="interest" type="tns:interestType" minOccurs="0"/>
 			<xs:element name="claimAmount" type="tns:amountType9999999"/>
@@ -52,14 +51,14 @@
 			        <xs:documentation>Should be populated only if customer is solicitor.</xs:documentation>
 			    </xs:annotation>
             </xs:element>
-            <xs:element name="particulars" type="tns:particularsType" minOccurs="1" maxOccurs="24">
+            <xs:element name="particulars" type="tns:particulars" minOccurs="1" maxOccurs="24">
                 <xs:annotation>
                     <xs:documentation>Details about the claim</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <!-- TODO Hillary to confirm if this is required. -->
             <xs:element name="guidanceRead" type="xs:boolean"/>
-            <xs:element name="sotSignature" type="tns:sotSignature"/>
+            <xs:element name="sotSignature" type="tns:sotSignatureType"/>
         </xs:sequence>
 	</xs:complexType>
     

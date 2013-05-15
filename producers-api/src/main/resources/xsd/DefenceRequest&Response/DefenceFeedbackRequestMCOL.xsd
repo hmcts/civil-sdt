@@ -3,20 +3,22 @@
 			xmlns:tns="http://ws.sdt.moj.gov.uk"  
 			targetNamespace="http://ws.sdt.moj.gov.uk"
 			elementFormDefault="qualified">
+            
 	<xs:include schemaLocation="../RootXSDs/Base.xsd" />
-	<xs:element name="defenceRequest" type="tns:defenceRequest"/>
-	<xs:complexType name="defenceRequest">
+	
+    <xs:element name="defenceRequest" type="tns:defenceRequestType"/>
+	<xs:complexType name="defenceRequestType">
 		<xs:sequence>
-			<xs:element name="header" type="tns:header" />
-			<xs:element name="mcolDefence" type="tns:mcolDefence" />
+			<xs:element name="header" type="tns:headerType" />
+			<xs:element name="mcolDefence" type="tns:mcolDefenceType" />
 		</xs:sequence>	
 	</xs:complexType>
-	<xs:complexType name="header">
+	<xs:complexType name="headerType">
 		<xs:sequence>
 			<xs:element name="ncpId" type="tns:ncpId" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="mcolDefence">
+	<xs:complexType name="mcolDefenceType">
 		<xs:sequence>
 			<xs:element name="fromDate" type="xs:date" />
 			<xs:element name="toDate" type="xs:date" />

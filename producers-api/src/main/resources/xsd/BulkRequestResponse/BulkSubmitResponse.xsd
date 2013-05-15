@@ -6,17 +6,16 @@
     
 	<xs:include schemaLocation="../RootXSDs/Base.xsd"/>
     
-    <xs:complexType name="bulkResponse">
+    <xs:complexType name="bulkResponseType">
         <xs:sequence>
-            <xs:element name="customerReference" type="tns:stringMaxLength24"/>
-            <!-- TODO Confirm data type of bulk reference -->
+            <xs:element name="customerReference" type="tns:customerReference"/>
             <xs:element name="sdtBulkReference" type="tns:sdtBulkReference"/>
             <xs:element name="submittedDate" type="xs:dateTime"/>
-            <xs:element name="requestCount" type="xs:integer"/>
-            <xs:element name="status" type="tns:status"/>
+            <xs:element name="requestCount" type="tns:requestCount"/>
+            <xs:element name="status" type="tns:statusType"/>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:element name="bulkRequest" type="tns:bulkResponse"/>
+    <xs:element name="bulkRequest" type="tns:bulkResponseType"/>
     
 </xs:schema>

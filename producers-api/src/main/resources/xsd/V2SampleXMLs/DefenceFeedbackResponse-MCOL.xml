@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <defenceResponse>
 	<defenceDetails>
-		<claim>
+		<defenceDetail>
 		  <claimNumber>12345678</claimNumber>
           <defendants>
             <defendant defendantId="1">
@@ -13,8 +13,8 @@
               <responseType>PA</responseType>
             </defendant>
           </defendants>
-		</claim>
-        <claim>
+		</defenceDetail>
+        <defenceDetail>
           <claimNumber>22345678</claimNumber>
           <defendants>
             <defendant defendantId="1">
@@ -22,7 +22,7 @@
               <responseType>PA</responseType>
             </defendant>
           </defendants>
-        </claim>
+        </defenceDetail>
 	</defenceDetails>
     <status code="OK/Error">
         <error>

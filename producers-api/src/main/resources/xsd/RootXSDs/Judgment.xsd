@@ -15,23 +15,23 @@
             <!-- TODO Rename field in EIS -->
             <xs:element name="judgmentOption" type="tns:judgmentOption"/>
             <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
-            <xs:element name="defendantId" type="tns:defendantIdType"/>
-            <xs:element name="defendant1Address" type="tns:address" minOccurs="0"/>
+            <xs:element name="defendantId" type="tns:defendantId"/>
+            <xs:element name="defendant1Address" type="tns:addressType" minOccurs="0"/>
             <xs:element name="defendant1DateOfBirth" type="xs:date"/>
             <!-- TODO More info needed to determine if structure could be simplified -->
-            <xs:element name="defendant2Address" type="tns:address" minOccurs="0"/>
+            <xs:element name="defendant2Address" type="tns:addressType" minOccurs="0"/>
             <xs:element name="defendant2DateOfBirth" type="xs:date"/>
-            <xs:element name="paymentSchedule" type="tns:paymentSchedule"/>
+            <xs:element name="paymentSchedule" type="tns:paymentScheduleType"/>
             <xs:element name="interest" type="tns:amountType9999999" minOccurs="0"/>
             <xs:element name="solicitorCost" type="tns:amountType999999" minOccurs="0"/>
             <xs:element name="deductedAmount" type="tns:amountType99999999" minOccurs="0"/>
             <!-- TODO Hillary to confirm if this is required. -->
             <xs:element name="guidanceRead" type="xs:boolean"/>
-            <xs:element name="sotSignature" type="tns:sotSignature"/>
+            <xs:element name="sotSignature" type="tns:sotSignatureType"/>
             <!-- TODO Hillary to confirm if payee details should be present -->
             <!--             
             <xs:element ref="tns:payeeName"/>
-            <xs:element name="payeeAddress" type="tns:address"/>
+            <xs:element name="payeeAddress" type="tns:addressType"/>
             <xs:element ref="tns:payeeTelephone" minOccurs="0"/>
             <xs:element ref="tns:payeeReference" minOccurs="0"/>
             <xs:element ref="tns:payeeSortCode" minOccurs="0"/>
@@ -65,7 +65,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="instalment">
+    <xs:complexType name="instalmentType">
         <xs:annotation>
             <xs:documentation>Instalment information consisting of frequency and amount. The amount cannot be greater than claim amount.</xs:documentation>
         </xs:annotation>
@@ -75,14 +75,14 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="paymentSchedule">
+    <xs:complexType name="paymentScheduleType">
         <xs:choice>
             <xs:element name="fullByDate" type="xs:date">
                 <xs:annotation>
                     <xs:documentation>The date by which defendant should pay the full amount. Should be in future and not tomorrow.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="instalment" type="tns:instalment"/>
+            <xs:element name="instalment" type="tns:instalmentType"/>
             <xs:element name="immediately" type="xs:boolean" fixed="true">
                 <xs:annotation>
                     <xs:documentation>The defendant will be ordered to pay the full amount immediately.</xs:documentation>
