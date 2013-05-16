@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.validation;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
 import uk.gov.moj.sdt.utils.SdtXmlConstants;
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
@@ -97,13 +98,27 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
 
         final List<String> expectedMessages = new ArrayList<String> ();
         expectedMessages.add (SdtXmlConstants.CLAIM_NUMBER_PATTERN_INVALID);
+        expectedMessages.add (SdtXmlConstants.CLAIM_NUMBER_PATTERN_INVALID_GENERIC);
+
         expectedMessages.add (SdtXmlConstants.DEFENDANT_ID_VALUE_INVALID);
+        expectedMessages.add (SdtXmlConstants.DEFENDANT_ID_VALUE_INVALID_GENERIC);
+
         expectedMessages.add (SdtXmlConstants.DATE_TIME_INVALID_FORMAT);
-        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_NOT_VALID);
+        expectedMessages.add (SdtXmlConstants.DATE_TIME_INVALID_FORMAT_GENERIC);
+
+        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_INVALID_GENERIC);
+        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_INVALID);
+
+        expectedMessages.add (SdtXmlConstants.STATUS_CODE_INVALID_GENERIC);
         expectedMessages.add (SdtXmlConstants.STATUS_CODE_INVALID);
+
+        expectedMessages.add (SdtXmlConstants.ERROR_CODE_INVALID_GENERIC);
         expectedMessages.add (SdtXmlConstants.ERROR_CODE_INVALID);
+
+        expectedMessages.add (SdtXmlConstants.ERROR_DESCRIPTION_INVALID_GENERIC);
         expectedMessages.add (SdtXmlConstants.ERROR_DESCRIPTION_INVALID);
 
-        this.proveXsd (xmlPath, xsdPath, expectedMessages);
+        final int numberOfUnfoundErrors = this.proveXsd (xmlPath, xsdPath, expectedMessages);
+        Assert.assertEquals ("Not all the error messages were found in the xml file.", numberOfUnfoundErrors, 0);
     }
 }

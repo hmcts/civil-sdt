@@ -40,43 +40,87 @@ public interface SdtXmlConstants
 {
 
     /**
+     * The claim number fails validation.
+     */
+    String CLAIM_NUMBER_PATTERN_INVALID_GENERIC = "cvc-type.3.1.3: The value '1234567890' "
+            + "of element 'claimNumber' is not valid.";
+
+    /**
      * The claim number does not match the expected pattern.
      */
     String CLAIM_NUMBER_PATTERN_INVALID = "cvc-pattern-valid: Value '1234567890' "
-            + "is not facet-valid with respect to pattern '[0-9A-Za-z]{8}' " + "for type 'documentNumber'."
-            + "cvc-type.3.1.3: The value '1234567890' " + "of element 'claimNumber' is not valid.";
+            + "is not facet-valid with respect to pattern '[0-9A-Za-z]{8}' " + "for type 'documentNumber'.";
+
     /**
      * The defendantId is greater than 2, there can only be 2 defendants on a case.
      */
     String DEFENDANT_ID_VALUE_INVALID = "cvc-pattern-valid: Value '3' is not "
-            + "facet-valid with respect to pattern ' |1|2' for type 'defendantId'. "
-            + "cvc-attribute.3: The value '3' of " + "attribute 'defendantId' on element 'defendant' is not "
+            + "facet-valid with respect to pattern ' |1|2' for type 'defendantId'.";
+
+    /**
+     * DefendantId fails validation.
+     */
+    String DEFENDANT_ID_VALUE_INVALID_GENERIC = "cvc-attribute.3: The value '3' of "
+            + "attribute 'defendantId' on element 'defendant' is not "
             + "valid with respect to its type, 'defendantId'.";
+
+    /**
+     * Timestamp fails validation.
+     */
+    String DATE_TIME_INVALID_FORMAT_GENERIC = "cvc-type.3.1.3: The value '2001-12-31T12:00:001' "
+            + "of element 'filedDate' is not valid.";
+
     /**
      * The time stamp is in an invalid format.
      */
     String DATE_TIME_INVALID_FORMAT = "cvc-datatype-valid.1.2.1: '2001-12-31T12:00:001' "
-            + "is not a valid value for 'dateTime'. " + "cvc-type.3.1.3: The value '2001-12-31T12:00:001' "
-            + "of element 'filedDate' is not valid.";;
+            + "is not a valid value for 'dateTime'.";
+
+    /**
+     * The response type fails validation.
+     */
+    String RESPONSE_TYPE_INVALID_GENERIC = "cvc-type.3.1.3:"
+            + " The value 'YZ' of element 'responseType' is not valid.";
+
     /**
      * The response type does not match an enum.
      */
-    String RESPONSE_TYPE_NOT_VALID = "cvc-type.3.1.3:" + " The value 'YZ' of element 'responseType' is not valid.  "
-            + "cvc-enumeration-valid: Value 'YZ' is not facet-valid with " + "respect to enumeration '[DE, DC, PA]'."
-            + " It must be a value from the enumeration.";
+    String RESPONSE_TYPE_INVALID = "cvc-enumeration-valid: Value 'YZ' is not facet-valid with "
+            + "respect to enumeration '[DE, DC, PA]'." + " It must be a value from the enumeration.";
+
+    /**
+     * StatusCode fails validation.
+     */
+    String STATUS_CODE_INVALID_GENERIC = "cvc-attribute.3: The value 'INCORRECT'"
+            + " of attribute 'code' on element 'status' is not " + "valid with respect to its type, 'statusCode'.";
+
     /**
      * The status code does not match an enum.
      */
     String STATUS_CODE_INVALID = "cvc-enumeration-valid: Value 'INCORRECT' " + "is not facet-valid with respect to "
-            + "enumeration '[OK, ERROR]'. It must be a value from the enumeration.  "
-            + "cvc-attribute.3: The value 'INCORRECT'" + " of attribute 'code' on element 'status' is not "
-            + "valid with respect to its type, 'statusCode'.";
+            + "enumeration '[OK, ERROR]'. It must be a value from the enumeration.";
+
+    /**
+     * Error code fails validation.
+     */
+    String ERROR_CODE_INVALID_GENERIC =
+            "cvc-type.3.1.3: The value 'abcdefghijklmnopqrstuvwxyz123456789' of element 'code' is not valid.";
+
     /**
      * The error code is in an invalid format.
      */
-    String ERROR_CODE_INVALID = "cvc-maxLength-valid: Value " + "'abcdefghij' with length = '10' is not facet-valid "
-            + "with respect to maxLength '8' for type 'stringMaxLength8'.  "
-            + "cvc-type.3.1.3: The value 'abcdefghij' " + "of element 'code' is not valid.";
+    String ERROR_CODE_INVALID = "cvc-maxLength-valid: Value "
+            + "'abcdefghijklmnopqrstuvwxyz123456789' with length = '35' " + "is not facet-valid "
+            + "with respect to maxLength '32' for type 'stringMaxLength32'.";
+
+    /**
+     * Description fails validation.
+     */
+    String ERROR_DESCRIPTION_INVALID_GENERIC = "cvc-type.3.1.3: The value 'Lorem ipsum dolor sit amet, "
+            + "consectetur adipiscing elit. Quisque vel est lacus." + " Integer ut mi facilisis nisi varius "
+            + "mattis eu sit amet dui. Donec neque purus, rutrum sit " + "amet iaculis nec, faucibus porttitor velit."
+            + " Integer vel pulvinar nunc aenean suscipit.' of element 'description' is not valid.";
+
     /**
      * The description given does not match the expected pattern.
      */
@@ -84,9 +128,5 @@ public interface SdtXmlConstants
             + "adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis"
             + " nisi varius mattis eu sit amet dui. " + "Donec neque purus, rutrum sit amet iaculis nec, faucibus "
             + "porttitor velit. Integer vel pulvinar nunc " + "aenean suscipit.' with length = '256' is not"
-            + " facet-valid with respect to maxLength '255' " + "for type 'stringMaxLength255'. "
-            + "cvc-type.3.1.3: The value 'Lorem ipsum dolor sit amet, "
-            + "consectetur adipiscing elit. Quisque vel est lacus." + " Integer ut mi facilisis nisi varius "
-            + "mattis eu sit amet dui. Donec neque purus, rutrum sit " + "amet iaculis nec, faucibus porttitor velit."
-            + " Integer vel pulvinar nunc aenean suscipit.' of element 'description' is not valid.";
+            + " facet-valid with respect to maxLength '255' " + "for type 'stringMaxLength255'.";
 }

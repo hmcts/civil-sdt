@@ -239,18 +239,17 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
             {
                 // Record that we hit an error during parsing.
                 SdtXmlTestBase.this.errorEncountered = true;
-                final StringBuffer buf = new StringBuffer ();
-                for (String expectedMessage : expectedMessages)
-                {
-                    buf.append (expectedMessage);
-                }
-                final String extendedErrorMessages = buf.toString ();
+
                 // Was it the wrong error?
-                if (extendedErrorMessages != null && !extendedErrorMessages.contains (e.getMessage ()))
+                if (expectedMessages.contains (e.getMessage ()))
                 {
-                    LOG.error ("Parser encountered unexpected error - expected message: [" + extendedErrorMessages +
+                    expectedMessages.remove (e.getMessage ());
+                }
+                else
+                {
+                    LOG.error ("Parser encountered unexpected error - expected message: [" + e.getMessage () +
                             "], actual message: [" + e.getMessage () + "]");
-                    SdtXmlTestBase.fail ("Parser encountered unexpected error: expected [" + extendedErrorMessages +
+                    SdtXmlTestBase.fail ("Parser encountered unexpected error: expected [" + e.getMessage () +
                             "], actual [" + e.getMessage () + "]");
                 }
                 return;
@@ -269,12 +268,14 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
      *            path name of XSD file to be checked.
      * @param expectedMessages
      *            expected exception message during parsing.
+     * @return if the list is empty, all the messages have been caught.
      */
-    protected void proveXsd (final String xmlPathname, final String xsdPathname, final List<String> expectedMessages)
+    protected int proveXsd (final String xmlPathname, final String xsdPathname, final List<String> expectedMessages)
     {
         try
         {
             evaluateXsd (xmlPathname, xsdPathname, expectedMessages);
+            return expectedMessages != null ? expectedMessages.size () : 0;
         }
         catch (final IOException e)
         {
@@ -303,5 +304,6 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 }
             }
         }
+        return 0;
     }
 }
