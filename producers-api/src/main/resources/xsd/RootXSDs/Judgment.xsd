@@ -8,55 +8,13 @@
 
     <xs:element name="mcoljudgment" type="tns:judgmentType"/>
     
-    <xs:complexType name="judgmentType">
-        <xs:sequence>
-            <xs:element name="claimNumber" type="tns:documentNumber"/>
-            <xs:element name="jointJudgment" type="xs:boolean"/>
-            <!-- TODO Rename field in EIS -->
-            <xs:element name="judgmentOption" type="tns:judgmentOption"/>
-            <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
-            <xs:element name="defendantId" type="tns:defendantId"/>
-            <xs:element name="defendant1Address" type="tns:addressType" minOccurs="0"/>
-            <xs:element name="defendant1DateOfBirth" type="xs:date"/>
-            <!-- TODO More info needed to determine if structure could be simplified -->
-            <xs:element name="defendant2Address" type="tns:addressType" minOccurs="0"/>
-            <xs:element name="defendant2DateOfBirth" type="xs:date"/>
-            <xs:element name="paymentSchedule" type="tns:paymentScheduleType"/>
-            <xs:element name="interest" type="tns:amountType9999999" minOccurs="0"/>
-            <xs:element name="solicitorCost" type="tns:amountType999999" minOccurs="0"/>
-            <xs:element name="deductedAmount" type="tns:amountType99999999" minOccurs="0"/>
-            <!-- TODO Hillary to confirm if this is required. -->
-            <xs:element name="guidanceRead" type="xs:boolean"/>
-            <xs:element name="sotSignature" type="tns:sotSignatureType"/>
-            <!-- TODO Hillary to confirm if payee details should be present -->
-            <!--             
-            <xs:element ref="tns:payeeName"/>
-            <xs:element name="payeeAddress" type="tns:addressType"/>
-            <xs:element ref="tns:payeeTelephone" minOccurs="0"/>
-            <xs:element ref="tns:payeeReference" minOccurs="0"/>
-            <xs:element ref="tns:payeeSortCode" minOccurs="0"/>
-            <xs:element ref="tns:payeeBankAccountNumber" minOccurs="0"/>
-            <xs:element ref="tns:payeeBankName" minOccurs="0"/>
-            <xs:element ref="tns:payeeBankInfo1" minOccurs="0"/>
-            <xs:element ref="tns:payeeBankInfo2" minOccurs="0"/>
-            <xs:element ref="tns:payeeGirobankAccountNumber" minOccurs="0"/>
-            <xs:element ref="tns:paymentSlipCodeline1" minOccurs="0"/>
-            <xs:element ref="tns:paymentSlipCodeline2" minOccurs="0"/>
-            <xs:element ref="tns:payeeGirobankTransactionCode1" minOccurs="0"/>
-            <xs:element ref="tns:payeeGirobankTransactionCode2" minOccurs="0"/>
-            <xs:element ref="tns:payeeApacsCode" minOccurs="0"/>
-             -->
-        </xs:sequence>
-    </xs:complexType>
+    <xs:simpleType name="judgmentOption">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="A"/>
+            <xs:enumeration value="D"/>
+        </xs:restriction>
+    </xs:simpleType>
 
-    <!-- TODO Why not be case sensitive? -->
-	<xs:simpleType name="judgmentOption">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="[aA]|[dD]"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-    <!-- TODO Determine meaning of values for frequency -->
     <xs:simpleType name="instalmentFrequency">
         <xs:restriction base="xs:string">
             <xs:enumeration value="W"/>
@@ -102,6 +60,47 @@
         </xs:choice>
     </xs:complexType>
  
+    <xs:complexType name="judgmentType">
+        <xs:sequence>
+            <xs:element name="claimNumber" type="tns:documentNumber"/>
+            <xs:element name="jointJudgment" type="xs:boolean"/>
+            <!-- TODO Rename field in EIS -->
+            <xs:element name="judgmentOption" type="tns:judgmentOption"/>
+            <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
+            <xs:element name="defendantId" type="tns:defendantId"/>
+            <xs:element name="defendant1Address" type="tns:addressType" minOccurs="0"/>
+            <xs:element name="defendant1DateOfBirth" type="xs:date"/>
+            <!-- TODO More info needed to determine if structure could be simplified -->
+            <xs:element name="defendant2Address" type="tns:addressType" minOccurs="0"/>
+            <xs:element name="defendant2DateOfBirth" type="xs:date"/>
+            <xs:element name="paymentSchedule" type="tns:paymentScheduleType"/>
+            <xs:element name="interest" type="tns:amountType9999999" minOccurs="0"/>
+            <xs:element name="solicitorCost" type="tns:amountType999999" minOccurs="0"/>
+            <xs:element name="deductedAmount" type="tns:amountType99999999" minOccurs="0"/>
+            <!-- TODO Hillary to confirm if this is required. -->
+            <xs:element name="guidanceRead" type="xs:boolean"/>
+            <xs:element name="sotSignature" type="tns:sotSignatureType"/>
+            <!-- TODO Hillary to confirm if payee details should be present -->
+            <!--             
+            <xs:element ref="tns:payeeName"/>
+            <xs:element name="payeeAddress" type="tns:addressType"/>
+            <xs:element ref="tns:payeeTelephone" minOccurs="0"/>
+            <xs:element ref="tns:payeeReference" minOccurs="0"/>
+            <xs:element ref="tns:payeeSortCode" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankAccountNumber" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankName" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankInfo1" minOccurs="0"/>
+            <xs:element ref="tns:payeeBankInfo2" minOccurs="0"/>
+            <xs:element ref="tns:payeeGirobankAccountNumber" minOccurs="0"/>
+            <xs:element ref="tns:paymentSlipCodeline1" minOccurs="0"/>
+            <xs:element ref="tns:paymentSlipCodeline2" minOccurs="0"/>
+            <xs:element ref="tns:payeeGirobankTransactionCode1" minOccurs="0"/>
+            <xs:element ref="tns:payeeGirobankTransactionCode2" minOccurs="0"/>
+            <xs:element ref="tns:payeeApacsCode" minOccurs="0"/>
+             -->
+        </xs:sequence>
+    </xs:complexType>
+
     <!-- 
             <xs:element name="immediately" type="xs:boolean" fixed="true">
                 <xs:annotation>
