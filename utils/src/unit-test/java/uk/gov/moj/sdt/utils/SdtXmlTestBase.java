@@ -291,14 +291,16 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
             LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
             SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
-
-        for (String expectedMessage : expectedMessages)
+        if (expectedMessages != null)
         {
-            // Has no error been reported and yet we expected one?
-            if ( !this.errorEncountered && expectedMessage != null && !("".equals (expectedMessage)))
+            for (String expectedMessage : expectedMessages)
             {
-                LOG.error ("Parser failed to encountered expected error [" + expectedMessage + "]");
-                SdtXmlTestBase.fail ("Parser failed to encountered expected error [" + expectedMessage + "]");
+                // Has no error been reported and yet we expected one?
+                if ( !this.errorEncountered && expectedMessage != null && !("".equals (expectedMessage)))
+                {
+                    LOG.error ("Parser failed to encountered expected error [" + expectedMessage + "]");
+                    SdtXmlTestBase.fail ("Parser failed to encountered expected error [" + expectedMessage + "]");
+                }
             }
         }
     }

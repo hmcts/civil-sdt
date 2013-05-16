@@ -66,8 +66,8 @@ public class SampleXsdTest extends SdtXmlTestBase
      */
     public void testSampleInvalidXml ()
     {
-    	final List<String> expectedMessages = new ArrayList<String>();
-    	expectedMessages.add("cvc-complex-type.2.4.a: Invalid content was found starting with element 'address'."
+        final List<String> expectedMessages = new ArrayList<String> ();
+        expectedMessages.add ("cvc-complex-type.2.4.a: Invalid content was found starting with element 'address'."
                 + " One of '{name}' is expected.");
         this.proveXsd ("SampleInvalidXml.xml", "Sample.xsd", expectedMessages);
     }

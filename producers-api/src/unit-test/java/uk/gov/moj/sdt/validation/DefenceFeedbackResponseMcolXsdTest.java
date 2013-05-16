@@ -33,37 +33,34 @@ package uk.gov.moj.sdt.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.gov.moj.sdt.utils.SdtXmlTest;
+import uk.gov.moj.sdt.utils.SdtXmlConstants;
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
 /**
  * Test case for IndividualUpdateRequestXsdTest.
+ * 
  * @author Simon Holmes
- *
+ * 
  */
-public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase {
+public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
+{
 
-	/**
-	 * The name of the service.
-	 */
-	private String xsdName = "DefenceFeedbackResponseMCOL";
-	
-	/**
-	 * The name of the folder where all valid/invalid XML is stored.
-	 */
-	private String xmlFolderName = "DefenceRequest&Response" + "/";
-	
-	/**
-	 * The path of the xsd file.
-	 */
-	private String xsdPath = xmlFolderName + xsdName + ".xsd";
-	
-	/**
-	 * List of expected messages.
-	 */
-	private List<String> expectedMessages = new ArrayList<String>();
-	
-	/**
+    /**
+     * The name of the service.
+     */
+    private String xsdName = "DefenceFeedbackResponseMCOL";
+
+    /**
+     * The name of the folder where all valid/invalid XML is stored.
+     */
+    private String xmlFolderName = "DefenceRequest&Response" + "/";
+
+    /**
+     * The path of the xsd file.
+     */
+    private String xsdPath = xmlFolderName + xsdName + ".xsd";
+
+    /**
      * Constructs a new {@link DefenceFeedbackResponseMcolXsdTest}.
      * 
      * @param testName Name of this test.
@@ -76,33 +73,37 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase {
     /**
      * {@inheritDoc}
      */
-	public void testValidXml() {
-		final String xmlPath = xmlFolderName + xsdName + "Valid.xml";
-		this.proveXsd (xmlPath, xsdPath, expectedMessages);
-	}
+    public void testValidXml ()
+    {
+        final String xmlPath = xmlFolderName + xsdName + "Valid.xml";
+        this.proveXsd (xmlPath, xsdPath, null);
+    }
 
-	/**
+    /**
      * {@inheritDoc}
      */
-	public void testInvalidXmlMandatory() {
-		
-	}
+    public void testInvalidXmlMandatory ()
+    {
 
-	/**
+    }
+
+    /**
      * {@inheritDoc}
      */
-	public void testInvalidRange() {
-		final String errorDetails = "Range";
-		final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
-		
-		expectedMessages.add(SdtXmlTest.CLAIM_NUMBER_PATTERN_INVALID);
-		expectedMessages.add(SdtXmlTest.DEFENDANT_ID_VALUE_INVALID);
-		expectedMessages.add(SdtXmlTest.DATE_TIME_INVALID_FORMAT);
-		expectedMessages.add(SdtXmlTest.RESPONSE_TYPE_NOT_VALID);
-		expectedMessages.add(SdtXmlTest.STATUS_CODE_INVALID);
-		expectedMessages.add(SdtXmlTest.ERROR_CODE_INVALID);
-		expectedMessages.add(SdtXmlTest.ERROR_DESCRIPTION_INVALID);		
-		
-		this.proveXsd (xmlPath, xsdPath, expectedMessages); 
-	}
+    public void testInvalidRange ()
+    {
+        final String errorDetails = "Range";
+        final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
+
+        final List<String> expectedMessages = new ArrayList<String> ();
+        expectedMessages.add (SdtXmlConstants.CLAIM_NUMBER_PATTERN_INVALID);
+        expectedMessages.add (SdtXmlConstants.DEFENDANT_ID_VALUE_INVALID);
+        expectedMessages.add (SdtXmlConstants.DATE_TIME_INVALID_FORMAT);
+        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_NOT_VALID);
+        expectedMessages.add (SdtXmlConstants.STATUS_CODE_INVALID);
+        expectedMessages.add (SdtXmlConstants.ERROR_CODE_INVALID);
+        expectedMessages.add (SdtXmlConstants.ERROR_DESCRIPTION_INVALID);
+
+        this.proveXsd (xmlPath, xsdPath, expectedMessages);
+    }
 }
