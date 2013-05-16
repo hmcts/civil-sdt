@@ -59,6 +59,11 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase {
 	private String xsdPath = xmlFolderName + xsdName + ".xsd";
 	
 	/**
+	 * List of expected messages.
+	 */
+	private List<String> expectedMessages = new ArrayList<String>();
+	
+	/**
      * Constructs a new {@link DefenceFeedbackResponseMcolXsdTest}.
      * 
      * @param testName Name of this test.
@@ -73,7 +78,7 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase {
      */
 	public void testValidXml() {
 		final String xmlPath = xmlFolderName + xsdName + "Valid.xml";
-		this.proveXsd (xmlPath, xsdPath, null);
+		this.proveXsd (xmlPath, xsdPath, expectedMessages);
 	}
 
 	/**
@@ -89,7 +94,6 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase {
 	public void testInvalidRange() {
 		final String errorDetails = "Range";
 		final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
-		final List<String> expectedMessages = new ArrayList<String>();
 		
 		expectedMessages.add(SdtXmlTest.CLAIM_NUMBER_PATTERN_INVALID);
 		expectedMessages.add(SdtXmlTest.DEFENDANT_ID_VALUE_INVALID);
