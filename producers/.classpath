@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="src/unit-test/java"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/producers-api"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

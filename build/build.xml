@@ -31,6 +31,7 @@
     <!-- List of projects for which deploy is needed in order - note dirset cannot control order of execution -->
     <filelist id="deploy-project-list" dir=".">
         <file name="../producers/build.xml" />
+        <file name="../consumers/build.xml" />
     </filelist>
 
     <!-- TARGETS -->
@@ -53,7 +54,13 @@
 
     <!-- Delete deployed war in tc-server -->
     <target name="clean-tc-server" description="Cleanup tc-server exploded war directories, cache and war files.">
-        <delete file="${app.server.webapps.dir}/sdt.war" />
+        <!-- consumer and producer are part of prototype -->
+    	<delete file="${app.server.webapps.dir}/consumer.war" />
+        <delete file="${app.server.webapps.dir}/producer.war" />
+        <delete dir="${app.server.webapps.dir}/consumer" />
+        <delete dir="${app.server.webapps.dir}/producer" />
+
+        <delete file="${c}/sdt.war" />
         <delete dir="${app.server.webapps.dir}/sdt" />
 
         <!-- Delete cached servlets generated from jsps, even for insight application -->

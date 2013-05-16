@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions name="GreetingEndpoint"
+	targetNamespace="http://prototype.producers.sdt.moj.gov.uk/GreetingEndpoint" xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://prototype.producers.sdt.moj.gov.uk/GreetingEndpoint"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:disc_types="http://common.prototype.producers.sdt.moj.gov.uk/disc_types.xml"
+	xmlns:soapjms="http://www.w3.org/2010/soapjms/">
+
+	<types>
+		<xsd:schema>
+			<xsd:import namespace="http://common.prototype.producers.sdt.moj.gov.uk/disc_types.xml"
+				schemaLocation="disc_types.xml" />
+		</xsd:schema>
+	</types>
+
+	<message name="getGreetingRequest">
+		<part name="parameters" element="disc_types:getGreetingRequestElement" />
+	</message>
+	<message name="getGreetingResponse">
+		<part name="parameters" element="disc_types:getGreetingResponseElement" />
+	</message>
+
+	<!-- Defines the remote Java classes that can be called -->
+	<portType name="IGreetingEndpointPortType">
+		<!-- Operations are 'one-way', 'request-response', 'solicit-response', 
+			and 'notification' expressed by the presence or absence of a combination 
+			of input and output tags in a specified order -->
+		<!-- The portType operation name must match the operationName published 
+			by the WebMethod annotation -->
+		<operation name="getGreeting">
+			<input message="tns:getGreetingRequest" />
+			<output message="tns:getGreetingResponse" />
+		</operation>
+	</portType>
+
+	<binding name="GreetingEndpointHttpPortBinding" type="tns:IGreetingEndpointPortType">
+		<!-- Style can be 'rpc' or 'document' -->
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+			style="document" />
+
+		<!-- The binding operation name must match the operationName published 
+			by the WebMethod annotation -->
+		<operation name="getGreeting">
+			<soap:operation soapAction="" />
+			<input>
+				<soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					use="literal" />
+			</input>
+			<output>
+				<soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					use="literal" />
+			</output>
+		</operation>
+	</binding>
+
+	<!-- Defines the ports used by the web service - one per supported protocol. 
+		Each port associates the address of the service with a binding element defined 
+		in the Web service -->
+	<service name="GreetingEndpoint">
+		<documentation>WSDL File for GreetingEndpoint</documentation>
+		<port name="GreetingEndpointPort" binding="tns:GreetingEndpointHttpPortBinding">
+			<!-- Send directly to the producers application within Tomcat (tc-server) 
+				which is configured to listen on port 8888. 'producers' is the webapp 
+				and 'hullo' is the path defined in web.xml -->
+			<soap:address location="http://localhost:8888/producers/hullo"/>
+		</port>
+	</service>
+
+</definitions>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<!-- Note all ids should be based on fully qualified interface name and 
+		all classes should have an interface. -->
+
+	<!-- Endpoint definition for request with injected property for example business object. -->
+	<bean id="uk.gov.moj.sdt.producer.prototype.greetingendpoint.IGreetingEndpointPortType"
+		class="uk.gov.moj.sdt.producer.prototype.GreetingEndpointPortType">
+		<property name="discZoneBusinessObject"
+			ref="uk.gov.moj.sdt.producer.prototype.api.IDiscZoneBusinessObject" />
+	</bean>
+
+	<!-- Business object definition. -->
+	<bean id="uk.gov.moj.sdt.producer.prototype.api.IDiscZoneBusinessObject"
+		class="uk.gov.moj.sdt.producer.prototype.DiscZoneBusinessObject">
+	</bean>
+
+	<!-- Publish the service endpoints. How does it know what these are? -->
+	<bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
+		<!-- Not sure what this port is really used for as changing it has no effect 
+			(as long as it does not clash with another open port) -->
+		<property name="baseAddress" value="http://localhost:8080/" />
+	</bean>
+
+</beans>

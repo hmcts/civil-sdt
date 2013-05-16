@@ -48,7 +48,7 @@
 	</target>
 
 	<!-- Delete the build and distribution folders -->
-	<target name="clean" description="Cleanup the distribution dirs">
+	<target name="clean" depends="clean-src-gen" description="Cleanup the distribution dirs">
 		<delete dir="${classes.dir}" />
 		<delete dir="${target.dir}" />
 		<delete dir="${test-results.dir}" />
@@ -60,6 +60,11 @@
 				</delete>
 			</then>
 		</if>
+	</target>
+
+	<!-- Delete the build and distribution folders -->
+	<target name="clean-src-gen" description="Cleanup the src-gen dirs">
+		<delete dir="${src-gen.dir}/uk" />
 	</target>
 
 	<!-- Copies <any name>.template files to <any name> substituting any matching properties in memory -->
@@ -95,6 +100,16 @@
 			<arg value="-frontend" />
 			<arg value="jaxws21" />
 			<arg value="${resources.dir}/wsdl/submitBulkRequest.wsdl" />
+			<classpath>
+				<path refid="cxf.classpath" />
+			</classpath>
+		</java>
+		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+			<arg value="-d" />
+			<arg value="${src-gen.dir}" />
+			<arg value="-frontend" />
+			<arg value="jaxws21" />
+			<arg value="${resources.dir}/wsdl/GreetingEndpoint.wsdl" />
 			<classpath>
 				<path refid="cxf.classpath" />
 			</classpath>
