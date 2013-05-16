@@ -14,8 +14,12 @@
 
 <project name="build-standard-targets" basedir=".">
 
+	<!-- Check if wsdl directory exists and set indicator property -->
+	<available filepath="." file="${resources.dir}/wsdl" type="dir" property="wsdl.exists" />
 	<!-- Check if src directory exists and set indicator property -->
 	<available filepath="." file="${src.dir}" type="dir" property="src.exists" />
+	<!-- Check if src-gen directory exists and set indicator property -->
+	<available filepath="." file="${src-gen.dir}" type="dir" property="src-gen.exists" />
 	<!-- Check if resources directory exists and set indicator property -->
 	<available filepath="." file="${resources.dir}" type="dir" property="resources.exists" />
 	<!-- Check if resources directory exists and set indicator property -->
@@ -83,6 +87,28 @@
 		</if>
 	</target>
 
+	<target name="generate-from-wsdl" if="wsdl.exists" depends="init" description="Generate CXF files from wsdl">
+		<!-- TODO - find way of collecting up all wsdl files using wild card -->
+		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+			<arg value="-d" />
+			<arg value="${src-gen.dir}" />
+			<arg value="-frontend" />
+			<arg value="jaxws21" />
+			<arg value="${resources.dir}/wsdl/submitBulkRequest.wsdl" />
+			<classpath>
+				<path refid="cxf.classpath" />
+			</classpath>
+		</java>
+	</target>
+
+
+	<!-- Compile all src/main/java source -->
+	<target name="-compile-src-gen" if="src-gen.exists" depends="init" description="Compile src directories">
+		<javac debug="${javac.debug}" srcdir="${src-gen.dir}" destdir="${classes.dir}" classpathref="build.src-gen.classpath" includeAntRuntime="false">
+			<compilerarg line="-encoding ISO-8859-1" />
+		</javac>
+	</target>
+
 	<!-- Compile all src/main/java source -->
 	<target name="-compile-src" depends="init" description="Compile src directories">
 		<if>
@@ -101,7 +127,7 @@
 	</target>
 
 	<!-- Compile all src/main/java source -->
-	<target name="compile" depends="-compile-src, -compile-grails" description="Compile all directories">
+	<target name="compile" depends="generate-from-wsdl, -compile-src-gen, -compile-src, -compile-grails" description="Compile all directories">
 		<if>
 			<available file="${src.dir}" type="dir" />
 			<then>

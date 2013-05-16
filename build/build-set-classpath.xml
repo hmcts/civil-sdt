@@ -54,6 +54,13 @@
 		<path refid="lib.app.dir" />
 	</path>
 
+	<!-- Set 3rd party and mcol application jars to classpath for building 'src' code in all projects -->
+	<path id="build.src-gen.classpath">
+		<path refid="3rd-party.dir" />
+		<path refid="3rd-party.spring3.dir" />
+		<path refid="lib.app.dir" />
+	</path>
+
     <!-- Set classpath for unit tests -->
     <path id="build.unit.test.classpath">
         <path refid="emma.dir" />
@@ -71,5 +78,12 @@
         <path refid="lib.app.dir" />
         <path refid="lib.test.dir" />
     </path>
+
+	<!-- Apache CXF classpath to generate endpoint from WSDL -->
+	<path id="cxf.classpath">
+		<fileset dir="${wsdl2java.dir}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
 
 </project>
