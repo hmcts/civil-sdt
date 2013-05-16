@@ -11,7 +11,7 @@
     <xs:complexType name="updateRequestType">
 		<xs:sequence>
 			<xs:element name="sdtRequestId" type="tns:sdtRequestId" />
-			<xs:element name="claimNumer" type="tns:documentNumber" />
+			<xs:element name="claimNumber" type="tns:documentNumber" />
 			<xs:element name="issueDate" type="xs:date" />
 			<xs:element name="serviceDate" type="xs:date" />
 			<xs:element name="warrantNumber" type="tns:documentNumber" />

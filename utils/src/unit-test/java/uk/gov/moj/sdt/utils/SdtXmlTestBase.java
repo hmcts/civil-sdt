@@ -241,7 +241,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 SdtXmlTestBase.this.errorEncountered = true;
 
                 // Was it the wrong error?
-                if (expectedMessages.contains (e.getMessage ()))
+                if (expectedMessages != null && expectedMessages.contains (e.getMessage ()))
                 {
                     expectedMessages.remove (e.getMessage ());
                 }

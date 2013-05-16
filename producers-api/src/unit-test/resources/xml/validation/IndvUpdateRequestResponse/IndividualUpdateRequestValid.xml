@@ -4,13 +4,13 @@
           xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
          tns:schemaLocation="http://ws.sdt.moj.gov.uk">
     <sdtRequestId>xyz123</sdtRequestId>
-    <claimNumber>1235678</claimNumber>
+    <claimNumber>12345678</claimNumber>
     <issueDate>2001-01-01</issueDate>
     <serviceDate>2001-01-01</serviceDate>
     <warrantNumber>12345678</warrantNumber>
     <enforcingCourtCode>123</enforcingCourtCode>
     <enforcingCourtName>enforc</enforcingCourtName>
-    <fee>999.99</fee>
+    <fee>99999999</fee>
     <status code="REJECTED">
         <error>
             <code>1234</code>

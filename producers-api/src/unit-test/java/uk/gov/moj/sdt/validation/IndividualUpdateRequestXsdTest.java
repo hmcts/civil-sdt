@@ -43,18 +43,18 @@ import uk.gov.moj.sdt.utils.SdtXmlTestBase;
  * @author Simon Holmes
  * 
  */
-public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
+public class IndividualUpdateRequestXsdTest extends SdtXmlTestBase
 {
 
     /**
      * The name of the service.
      */
-    private String xsdName = "DefenceFeedbackResponseMCOL";
+    private String xsdName = "IndividualUpdateRequest";
 
     /**
      * The name of the folder where all valid/invalid XML is stored.
      */
-    private String xmlFolderName = "DefenceRequest&Response" + "/";
+    private String xmlFolderName = "IndvUpdateRequestResponse" + "/";
 
     /**
      * The path of the xsd file.
@@ -66,7 +66,7 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
      * 
      * @param testName Name of this test.
      */
-    public DefenceFeedbackResponseMcolXsdTest (final String testName)
+    public IndividualUpdateRequestXsdTest (final String testName)
     {
         super (testName);
     }
@@ -85,14 +85,14 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
      */
     public void testInvalidXmlMandatory ()
     {
-        final String errorDetails = "Mandatory";
-        final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
-
-        final List<String> expectedMessages = new ArrayList<String> ();
-        expectedMessages.add (SdtXmlConstants.DEFENDANTS_NUMBER_GREATER_THAN_2);
-
-        final int numberOfUnfoundErrors = this.proveXsd (xmlPath, xsdPath, expectedMessages);
-        Assert.assertEquals ("Not all the error messages were found in the xml file.", numberOfUnfoundErrors, 0);
+        // final String errorDetails = "Mandatory";
+        // final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
+        //
+        // final List<String> expectedMessages = new ArrayList<String> ();
+        // expectedMessages.add (SdtXmlConstants.DEFENDANTS_NUMBER_GREATER_THAN_2);
+        //
+        // final int numberOfUnfoundErrors = this.proveXsd (xmlPath, xsdPath, expectedMessages);
+        // Assert.assertEquals ("Not all the error messages were found in the xml file.", numberOfUnfoundErrors, 0);
     }
 
     /**
@@ -104,24 +104,27 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
         final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
 
         final List<String> expectedMessages = new ArrayList<String> ();
-        expectedMessages.add (SdtXmlConstants.DOCUMENT_NUMBER_INVALID_PATTERN_1);
+
+        expectedMessages.add (SdtXmlConstants.SDT_REQUEST_ID_INVALID_GENERIC);
+        expectedMessages.add (SdtXmlConstants.SDT_REQUEST_ID_INVALID_MAX_LENGTH_EXCEEDED);
         expectedMessages.add (SdtXmlConstants.CLAIM_NUMBER_INVALID_GENERIC);
-
-        expectedMessages.add (SdtXmlConstants.DEFENDANT_ID_INVALID_PATTERN);
-        expectedMessages.add (SdtXmlConstants.DEFENDANT_ID_VALUE_INVALID_GENERIC);
-
-        expectedMessages.add (SdtXmlConstants.DATE_TIME_INVALID_DATE_TIME_FORMAT);
-        expectedMessages.add (SdtXmlConstants.DATE_TIME_INVALID_FORMAT_GENERIC);
-
-        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_INVALID_GENERIC);
-        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_INVALID_ENUM);
-
-        expectedMessages.add (SdtXmlConstants.STATUS_CODE_INVALID_GENERIC);
-        expectedMessages.add (SdtXmlConstants.STATUS_CODE_INVALID_ENUM);
-
+        expectedMessages.add (SdtXmlConstants.DOCUMENT_NUMBER_INVALID_PATTERN_1);
+        expectedMessages.add (SdtXmlConstants.INVALID_DATE_GENERIC_1);
+        expectedMessages.add (SdtXmlConstants.ISSUE_DATE_INVALID_FORMAT_1);
+        expectedMessages.add (SdtXmlConstants.INVALID_DATE_GENERIC_2);
+        expectedMessages.add (SdtXmlConstants.SERVICE_DATE_INVALID_FORMAT_1);
+        expectedMessages.add (SdtXmlConstants.WARRANT_NUMBER_INVALID_GENERIC);
+        expectedMessages.add (SdtXmlConstants.DOCUMENT_NUMBER_INVALID_PATTERN_2);
+        expectedMessages.add (SdtXmlConstants.COURT_CODE_INVALID_PATTERN);
+        expectedMessages.add (SdtXmlConstants.ENFORCING_COURT_INVALID_GENERIC);
+        expectedMessages.add (SdtXmlConstants.COURT_NAME_INVALID_MAX_LENGTH_EXCEEDED);
+        expectedMessages.add (SdtXmlConstants.ENFORCING_COURT_NAME_INVALID_GENERIC);
+        expectedMessages.add (SdtXmlConstants.FEE_INVALID_GENERIC);
+        expectedMessages.add (SdtXmlConstants.FEE_INVALID_MAX_INCLUSIVE_EXCEEDED);
+        expectedMessages.add (SdtXmlConstants.CREATE_STATUS_CODE_INVALID_GENERIC);
+        expectedMessages.add (SdtXmlConstants.CREATE_STATUS_CODE_INVALID_ENUM);
         expectedMessages.add (SdtXmlConstants.ERROR_CODE_INVALID_GENERIC);
         expectedMessages.add (SdtXmlConstants.ERROR_CODE_INVALID_MAX_LENGHT_EXCEEDED);
-
         expectedMessages.add (SdtXmlConstants.ERROR_DESCRIPTION_INVALID_GENERIC);
         expectedMessages.add (SdtXmlConstants.ERROR_DESCRIPTION_INVALID_MAX_LENGHT_EXCEEDED);
 

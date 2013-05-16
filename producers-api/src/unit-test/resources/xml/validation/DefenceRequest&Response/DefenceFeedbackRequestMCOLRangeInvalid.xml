@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SDT to MCOL -->
+<defenceRequest xmlns="http://ws.sdt.moj.gov.uk"
+          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
+         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
+    <header>
+        <ncpId>ABCDEF</ncpId>	<!-- Max 4 chars, 6 here -->
+    </header>
+    <mcolDefence maxResults="2000">	
+            <fromDate>2012-01-011</fromDate>	<!-- Invalid date, appeneded '1' -->
+            <toDate>2012-01-012</toDate>	<!-- Invalid date, appeneded '2' -->
+    </mcolDefence>
+</defenceRequest>

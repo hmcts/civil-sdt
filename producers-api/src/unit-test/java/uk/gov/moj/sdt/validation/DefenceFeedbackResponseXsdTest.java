@@ -43,13 +43,13 @@ import uk.gov.moj.sdt.utils.SdtXmlTestBase;
  * @author Simon Holmes
  * 
  */
-public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
+public class DefenceFeedbackResponseXsdTest extends SdtXmlTestBase
 {
 
     /**
      * The name of the service.
      */
-    private String xsdName = "DefenceFeedbackResponseMCOL";
+    private String xsdName = "DefenceFeedbackResponse";
 
     /**
      * The name of the folder where all valid/invalid XML is stored.
@@ -62,11 +62,11 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
     private String xsdPath = xmlFolderName + xsdName + ".xsd";
 
     /**
-     * Constructs a new {@link DefenceFeedbackResponseMcolXsdTest}.
+     * Constructs a new {@link DefenceFeedbackResponseXsdTest}.
      * 
      * @param testName Name of this test.
      */
-    public DefenceFeedbackResponseMcolXsdTest (final String testName)
+    public DefenceFeedbackResponseXsdTest (final String testName)
     {
         super (testName);
     }

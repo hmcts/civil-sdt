@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updateResponse xmlns="http://ws.sdt.moj.gov.uk"
+          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
+         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
+    <status code="NOTENUM1"> <!-- Invalid enum -->
+        <error>
+            <code>abcdefghijklmnopqrstuvwxyz123456789</code>	<!-- Max length 8-->
+            <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet dui. Donec neque purus, rutrum sit amet iaculis nec, faucibus porttitor velit. Integer vel pulvinar nunc aenean suscipit.</description> <!-- Max length 255 - contains 256-->
+        </error>
+    </status>
+</updateResponse>
+
