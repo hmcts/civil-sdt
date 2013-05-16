@@ -299,8 +299,8 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 // Has no error been reported and yet we expected one?
                 if ( !this.errorEncountered && expectedMessage != null && !("".equals (expectedMessage)))
                 {
-                    LOG.error ("Parser failed to encountered expected error [" + expectedMessage + "]");
-                    SdtXmlTestBase.fail ("Parser failed to encountered expected error [" + expectedMessage + "]");
+                    LOG.error ("Parser failed to encounter expected error [" + expectedMessage + "]");
+                    SdtXmlTestBase.fail ("Parser failed to encounter expected error [" + expectedMessage + "]");
                 }
             }
         }
