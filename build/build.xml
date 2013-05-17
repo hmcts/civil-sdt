@@ -54,11 +54,11 @@
 
     <!-- Delete deployed war in tc-server -->
     <target name="clean-tc-server" description="Cleanup tc-server exploded war directories, cache and war files.">
-        <!-- consumer and producer are part of prototype -->
-    	<delete file="${app.server.webapps.dir}/consumer.war" />
-        <delete file="${app.server.webapps.dir}/producer.war" />
-        <delete dir="${app.server.webapps.dir}/consumer" />
-        <delete dir="${app.server.webapps.dir}/producer" />
+        <!-- consumers and producers are part of prototype -->
+    	<delete file="${app.server.webapps.dir}/consumers.war" />
+        <delete file="${app.server.webapps.dir}/producers.war" />
+        <delete dir="${app.server.webapps.dir}/consumers" />
+        <delete dir="${app.server.webapps.dir}/producers" />
 
         <delete file="${c}/sdt.war" />
         <delete dir="${app.server.webapps.dir}/sdt" />

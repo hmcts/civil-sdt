@@ -18,7 +18,7 @@
 		<wss:service>
 			<!-- The # prefix indicates bean of type ... The name of the interface which this endpoint must implement -->
 			<ws:service
-				bean="#uk.gov.moj.sdt.producer.prototype.greetingendpoint.IGreetingEndpointPortType" />
+				bean="#uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType" />
 		</wss:service>
 	</wss:binding>
 

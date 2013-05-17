@@ -14,7 +14,7 @@
 		<!-- 'serviceInterface' should name the interface which the service implementation 
 			class implements -->
 		<property name="serviceInterface"
-			value="uk.gov.moj.sdt.producer.prototype.greetingendpoint.IGreetingEndpointPortType" />
+			value="uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType" />
 
 		<!-- 'wsdlDocumentUrl' should find a WSDL relative to the webapp WEB-INF/classes 
 			directory -->
@@ -45,12 +45,6 @@
 		<!-- Not sure what this port is really used for as changing it has no effect 
 			(as long as it does not clash with another open port) -->
 		<property name="baseAddress" value="http://localhost:8887/" />
-	</bean>
-
-	<!-- Endpoint definition for response. -->
-	<bean
-		id="uk.gov.moj.sdt.consumers.prototype.greetingresponseendpoint.IGreetingResponseEndpointPortType"
-		class="uk.gov.moj.sdt.consumers.prototype.GreetingResponseEndpointPortType">
 	</bean>
 
 </beans>

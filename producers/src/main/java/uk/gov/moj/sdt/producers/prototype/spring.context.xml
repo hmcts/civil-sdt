@@ -11,15 +11,15 @@
 		all classes should have an interface. -->
 
 	<!-- Endpoint definition for request with injected property for example business object. -->
-	<bean id="uk.gov.moj.sdt.producer.prototype.greetingendpoint.IGreetingEndpointPortType"
-		class="uk.gov.moj.sdt.producer.prototype.GreetingEndpointPortType">
+	<bean id="uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType"
+		class="uk.gov.moj.sdt.producers.prototype.GreetingEndpointPortType">
 		<property name="discZoneBusinessObject"
-			ref="uk.gov.moj.sdt.producer.prototype.api.IDiscZoneBusinessObject" />
+			ref="uk.gov.moj.sdt.producers.prototype.api.IDiscZoneBusinessObject" />
 	</bean>
 
 	<!-- Business object definition. -->
-	<bean id="uk.gov.moj.sdt.producer.prototype.api.IDiscZoneBusinessObject"
-		class="uk.gov.moj.sdt.producer.prototype.DiscZoneBusinessObject">
+	<bean id="uk.gov.moj.sdt.producers.prototype.api.IDiscZoneBusinessObject"
+		class="uk.gov.moj.sdt.producers.prototype.DiscZoneBusinessObject">
 	</bean>
 
 	<!-- Publish the service endpoints. How does it know what these are? -->

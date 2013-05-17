@@ -48,9 +48,9 @@ import uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPort
  */
 
 @WebService (serviceName = "GreetingEndpoint", portName = "GreetingEndpointPort", 
-targetNamespace = "http://prototype.producer.sdt.moj.gov.uk/GreetingEndpoint", 
+targetNamespace = "http://prototype.producers.sdt.moj.gov.uk/GreetingEndpoint", 
 wsdlLocation = "wsdl/GreetingEndpoint.wsdl", 
-endpointInterface = "uk.gov.moj.sdt.producer.prototype.greetingendpoint.IGreetingEndpointPortType")
+endpointInterface = "uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType")
 public class GreetingEndpointPortType implements IGreetingEndpointPortType
 {
     /**

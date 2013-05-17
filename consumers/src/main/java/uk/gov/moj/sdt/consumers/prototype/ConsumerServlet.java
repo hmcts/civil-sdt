@@ -84,7 +84,8 @@ public class ConsumerServlet extends HttpServlet
         // Get consumer bean which we want to test.
         final Consumer consumer =
                 (Consumer) WebApplicationContextUtils.getWebApplicationContext (
-                        request.getSession ().getServletContext ()).getBean ("uk.gov.moj.prototype.consumer.Consumer");
+                        request.getSession ().getServletContext ()).getBean (
+                        "uk.gov.moj.sdt.consumers.prototype.Consumer");
 
         String message = "";
 
@@ -128,8 +129,7 @@ public class ConsumerServlet extends HttpServlet
         else
         {
             // Output the message returned by the remote endpoint.
-            out.print ("Path not recognised. Must be of form 'http://localhost:8888/consumer/test/local?message=...'"
-                    + " or 'http://localhost:8888/consumer/test/mule?message=...'");
+            out.print ("Path not recognised. Must be of form 'http://localhost:8888/consumers/test/local?message=...'");
         }
     }
 }
