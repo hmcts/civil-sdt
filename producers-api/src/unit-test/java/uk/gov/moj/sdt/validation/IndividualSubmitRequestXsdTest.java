@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.validation;
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
 /**
- * Test case for IndividualSubmitRequest type.
+ * Tests for individual submission requests for claim, judgment etc.
  * 
  * @author Saurabh Agarwal
  * 

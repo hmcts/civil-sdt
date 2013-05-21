@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.validation;
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
 /**
- * Test case for BulkFeedbackRequest type.
+ * Test case for BulkFeedbackResponse type.
  * 
  * @author Saurabh Agarwal
  * 
