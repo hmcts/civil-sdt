@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    targetNamespace="http://ws.sdt.moj.gov.uk"
-    xmlns:tns="http://ws.sdt.moj.gov.uk" 
-    elementFormDefault="qualified">
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" 
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+    xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
+    elementFormDefault="qualified"
+    version="1.0">
 
-    <xs:include schemaLocation="Base.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="Warrant.xsd"/>
+    
+    <xs:element name="mcoljudgmentForthwith" type="tns:judgmentForthwithType"/>
+
+    <xs:complexType name="judgmentForthwithType">
+        <xs:sequence>
+            <xs:element name="mcolJudgment" type="tns:judgmentType"/>
+            <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:element name="mcoljudgment" type="tns:judgmentType"/>
     
@@ -28,7 +41,7 @@
             <xs:documentation>Details when payment is to be paid in instalments. The amount cannot be greater than claim amount.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="amount" type="tns:amountType9999999"/>
+            <xs:element name="amount" type="base:amountType9999999"/>
             <xs:element name="frequency" type="tns:instalmentFrequency"></xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -62,24 +75,24 @@
  
     <xs:complexType name="judgmentType">
         <xs:sequence>
-            <xs:element name="claimNumber" type="tns:documentNumber"/>
+            <xs:element name="claimNumber" type="base:documentNumber"/>
             <xs:element name="jointJudgment" type="xs:boolean"/>
             <!-- TODO Rename field in EIS -->
             <xs:element name="judgmentOption" type="tns:judgmentOption"/>
             <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
-            <xs:element name="defendantId" type="tns:defendantId"/>
-            <xs:element name="defendant1Address" type="tns:addressType" minOccurs="0"/>
+            <xs:element name="defendantId" type="base:defendantId"/>
+            <xs:element name="defendant1Address" type="base:addressType" minOccurs="0"/>
             <xs:element name="defendant1DateOfBirth" type="xs:date"/>
             <!-- TODO More info needed to determine if structure could be simplified -->
-            <xs:element name="defendant2Address" type="tns:addressType" minOccurs="0"/>
+            <xs:element name="defendant2Address" type="base:addressType" minOccurs="0"/>
             <xs:element name="defendant2DateOfBirth" type="xs:date"/>
             <xs:element name="paymentSchedule" type="tns:paymentScheduleType"/>
-            <xs:element name="interest" type="tns:amountType9999999" minOccurs="0"/>
-            <xs:element name="solicitorCost" type="tns:amountType999999" minOccurs="0"/>
-            <xs:element name="deductedAmount" type="tns:amountType99999999" minOccurs="0"/>
+            <xs:element name="interest" type="base:amountType9999999" minOccurs="0"/>
+            <xs:element name="solicitorCost" type="base:amountType999999" minOccurs="0"/>
+            <xs:element name="deductedAmount" type="base:amountType99999999" minOccurs="0"/>
             <!-- TODO Hillary to confirm if this is required. -->
             <xs:element name="guidanceRead" type="xs:boolean"/>
-            <xs:element name="sotSignature" type="tns:sotSignatureType"/>
+            <xs:element name="sotSignature" type="base:sotSignatureType"/>
             <!-- TODO Hillary to confirm if payee details should be present -->
             <!--             
             <xs:element ref="tns:payeeName"/>

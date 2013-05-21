@@ -1,0 +1,42 @@
+cvc-maxLength-valid: Value 'claimantReference12345678' with length = '25' is not facet-valid with respect to maxLength '24' for type 'claimantReference'.
+cvc-type.3.1.3: The value 'claimantReference12345678' of element 'tns:claimantReference' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901234567890123456789012345678901' with length = '61' is not facet-valid with respect to maxLength '60' for type 'stringMaxLength60'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901234567890123456789012345678901' of element 'base:name' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:line1' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:line2' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:line3' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:line4' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:line5' is not valid.
+cvc-pattern-valid: Value 'ABCD12341' is not facet-valid with respect to pattern '[0-9A-Za-z]{8}' for type 'postcode'.
+cvc-type.3.1.3: The value 'ABCD12341' of element 'base:postcode' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:name' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:line1' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901' with length = '31' is not facet-valid with respect to maxLength '30' for type 'stringMaxLength30'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901' of element 'base:line2' is not valid.
+cvc-datatype-valid.1.2.1: 'true1' is not a valid value for 'boolean'.
+cvc-type.3.1.3: The value 'true1' of element 'tns:sendParticularsSeparately' is not valid.
+cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'amountType999999'.
+cvc-type.3.1.3: The value '-1' of element 'tns:dailyAmount' is not valid.
+cvc-datatype-valid.1.2.1: '2001-01-010' is not a valid value for 'date'.
+cvc-type.3.1.3: The value '2001-01-010' of element 'tns:owedDate' is not valid.
+cvc-datatype-valid.1.2.1: '2001-01-010' is not a valid value for 'date'.
+cvc-type.3.1.3: The value '2001-01-010' of element 'tns:claimDate' is not valid.
+cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'amountType9999999'.
+cvc-type.3.1.3: The value '-1' of element 'tns:claimAmount' is not valid.
+cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'amountType9999999'.
+cvc-type.3.1.3: The value '-1' of element 'tns:claimAmount' is not valid.
+cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'amountType999999'.
+cvc-type.3.1.3: The value '-1' of element 'tns:solicitorCost' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901234567890123456' with length = '46' is not facet-valid with respect to maxLength '45' for type 'particulars'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901234567890123456' of element 'tns:particulars' is not valid.
+cvc-datatype-valid.1.2.1: 'true1' is not a valid value for 'boolean'.
+cvc-type.3.1.3: The value 'true1' of element 'tns:guidanceRead' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345678901234567890123456789012345678901' with length = '61' is not facet-valid with respect to maxLength '60' for type 'stringMaxLength60'.
+cvc-type.3.1.3: The value '1234567890123456789012345678901234567890123456789012345678901' of element 'base:name' is not valid.

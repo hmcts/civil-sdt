@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk" 
-    targetNamespace="http://ws.sdt.moj.gov.uk"
-	elementFormDefault="qualified">
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+	elementFormDefault="qualified"
+    version="1.0">
     
-	<xs:include schemaLocation="Base.xsd" />
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd" />
     
 	<xs:complexType name="warrantType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="tns:documentNumber" />
-			<xs:element name="claimantReference" type="tns:claimantReference" minOccurs="0" />
-			<xs:element name="defendantId" type="tns:defendantId" />
-			<xs:element name="defendantAddress" type="tns:addressType" />
-			<xs:element name="balanceOfDebt" type="tns:amountType9999999" />
-			<xs:element name="warrantAmount" type="tns:amountType9999999" />
-			<xs:element name="solicitorCost" type="tns:amountType99999" minOccurs="0" />
-			<xs:element name="additionalNotes" type="tns:stringMaxLength120" minOccurs="0" />
+			<xs:element name="claimNumber" type="base:documentNumber" />
+			<xs:element name="claimantReference" type="base:claimantReference" minOccurs="0" />
+			<xs:element name="defendantId" type="base:defendantId" />
+			<xs:element name="defendantAddress" type="base:addressType" />
+			<xs:element name="balanceOfDebt" type="base:amountType9999999" />
+			<xs:element name="warrantAmount" type="base:amountType9999999" />
+			<xs:element name="solicitorCost" type="base:amountType99999" minOccurs="0" />
+			<xs:element name="additionalNotes" type="base:stringMaxLength120" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 

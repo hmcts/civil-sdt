@@ -4,6 +4,9 @@
     targetNamespace="http://ws.sdt.moj.gov.uk" 
     elementFormDefault="qualified">
 
+<!-- TODO Remove the file as no longer needed  -->
+
+<!-- 
 	<xs:include schemaLocation="Judgment.xsd"/>
 	<xs:include schemaLocation="Warrant.xsd"/>
 	
@@ -15,4 +18,6 @@
             <xs:element name="mcolWarrant" type="tns:warrantType"/>
 		</xs:sequence>
 	</xs:complexType>
+    
+     -->
 </xs:schema>

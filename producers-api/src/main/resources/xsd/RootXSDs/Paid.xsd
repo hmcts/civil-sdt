@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk" 
-    targetNamespace="http://ws.sdt.moj.gov.uk"
-	elementFormDefault="qualified">
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema"
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+	elementFormDefault="qualified"
+    version="1.0">
     
-	<xs:include schemaLocation="Base.xsd" />
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd" />
     
     <xs:simpleType name="notification">
         <xs:restriction base="xs:string">
@@ -29,8 +31,8 @@
 
 	<xs:complexType name="paidType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="tns:documentNumber" />
-			<xs:element name="defendantId" type="tns:defendantId" minOccurs="0" />
+			<xs:element name="claimNumber" type="base:documentNumber" />
+			<xs:element name="defendantId" type="base:defendantId" minOccurs="0" />
 			<xs:element name="notificationType" type="tns:notification" />
 			<xs:element name="lastPaymentDate" type="xs:date"	minOccurs="0" />
 		</xs:sequence>
