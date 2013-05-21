@@ -82,10 +82,10 @@
             <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
             <xs:element name="defendantId" type="base:defendantId"/>
             <xs:element name="defendant1Address" type="base:addressType" minOccurs="0"/>
-            <xs:element name="defendant1DateOfBirth" type="xs:date"/>
+            <xs:element name="defendant1DateOfBirth" type="xs:date" minOccurs="0"/>
             <!-- TODO More info needed to determine if structure could be simplified -->
             <xs:element name="defendant2Address" type="base:addressType" minOccurs="0"/>
-            <xs:element name="defendant2DateOfBirth" type="xs:date"/>
+            <xs:element name="defendant2DateOfBirth" type="xs:date" minOccurs="0"/>
             <xs:element name="paymentSchedule" type="tns:paymentScheduleType"/>
             <xs:element name="interest" type="base:amountType9999999" minOccurs="0"/>
             <xs:element name="solicitorCost" type="base:amountType999999" minOccurs="0"/>
