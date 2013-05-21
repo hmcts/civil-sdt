@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk" 
-    targetNamespace="http://ws.sdt.moj.gov.uk" 
-    elementFormDefault="qualified">
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+    elementFormDefault="qualified"
+    version="1.0">
 	
-    <xs:include schemaLocation="../RootXSDs/Base.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
 
     <xs:complexType name="createResponseType">
         <xs:sequence>
-            <xs:element name="sdtRequestId" type="tns:sdtRequestId"/>
-            <xs:element name="claimNumber" type="tns:documentNumber"  minOccurs="0"/>
+            <xs:element name="sdtRequestId" type="base:sdtRequestId"/>
+            <xs:element name="claimNumber" type="base:documentNumber"  minOccurs="0"/>
             <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
             <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
-            <xs:element name="warrantNumber" type="tns:documentNumber"  minOccurs="0"/>
-            <xs:element name="enforcingCourtCode" type="tns:courtCode"  minOccurs="0"/>
-            <xs:element name="enforcingCourtName" type="tns:courtName"  minOccurs="0"/>
-            <xs:element name="fee" type="tns:amountType999999999"  minOccurs="0"/>
-            <xs:element name="status" type="tns:createStatusType"/>
+            <xs:element name="warrantNumber" type="base:documentNumber"  minOccurs="0"/>
+            <xs:element name="enforcingCourtCode" type="base:courtCode"  minOccurs="0"/>
+            <xs:element name="enforcingCourtName" type="base:courtName"  minOccurs="0"/>
+            <xs:element name="fee" type="base:amountType999999999"  minOccurs="0"/>
+            <xs:element name="status" type="base:createStatusType"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -1,0 +1,24 @@
+cvc-length-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to length '32' for type 'sdtBulkReference'.
+cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'tns:sdtBulkReference' is not valid.
+cvc-maxLength-valid: Value '1234567890123456789012345' with length = '25' is not facet-valid with respect to maxLength '24' for type 'requestId'.
+cvc-attribute.3: The value '1234567890123456789012345' of attribute 'requestId' on element 'tns:mcolResponse' is not valid with respect to its type, 'requestId'.
+cvc-enumeration-valid: Value 'unknown' is not facet-valid with respect to enumeration '[mcolClaim, mcolJudgment, mcolJudgmentForthwith, mcolWarrant, mcolPaid]'. It must be a value from the enumeration.
+cvc-attribute.3: The value 'unknown' of attribute 'requestType' on element 'tns:mcolResponse' is not valid with respect to its type, 'requestType'.
+cvc-pattern-valid: Value '1234567890' is not facet-valid with respect to pattern '[0-9A-Za-z]{8}' for type 'documentNumber'.
+cvc-type.3.1.3: The value '1234567890' of element 'tns:claimNumber' is not valid.
+cvc-datatype-valid.1.2.1: '2001-01-010' is not a valid value for 'date'.
+cvc-type.3.1.3: The value '2001-01-010' of element 'tns:issueDate' is not valid.
+cvc-datatype-valid.1.2.1: '2001-01-010' is not a valid value for 'date'.
+cvc-type.3.1.3: The value '2001-01-010' of element 'tns:serviceDate' is not valid.
+cvc-pattern-valid: Value '1234567890' is not facet-valid with respect to pattern '[0-9A-Za-z]{8}' for type 'documentNumber'.
+cvc-type.3.1.3: The value '1234567890' of element 'tns:warrantNumber' is not valid.
+cvc-pattern-valid: Value '1234' is not facet-valid with respect to pattern '[0-9]{3}' for type 'courtCode'.
+cvc-type.3.1.3: The value '1234' of element 'tns:enforcingCourtCode' is not valid.
+cvc-maxLength-valid: Value '12345678901234567890123456789012345678901' with length = '41' is not facet-valid with respect to maxLength '40' for type 'courtName'.
+cvc-type.3.1.3: The value '12345678901234567890123456789012345678901' of element 'tns:enforcingCourtName' is not valid.
+cvc-enumeration-valid: Value 'UNKNOWN' is not facet-valid with respect to enumeration '[ACCEPTED, INITIALLY_ACCEPTED, REJECTED, ERROR]'. It must be a value from the enumeration.
+cvc-attribute.3: The value 'UNKNOWN' of attribute 'code' on element 'tns:status' is not valid with respect to its type, 'createStatusCode'.
+cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to maxLength '32' for type 'stringMaxLength32'.
+cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'base:code' is not valid.
+cvc-maxLength-valid: Value '123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' with length = '270' is not facet-valid with respect to maxLength '255' for type 'stringMaxLength255'.
+cvc-type.3.1.3: The value '123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' of element 'base:description' is not valid.
