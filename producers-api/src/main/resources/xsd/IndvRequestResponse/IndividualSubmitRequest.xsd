@@ -59,7 +59,7 @@
     </xs:complexType>
 
     <xs:element name="createClaimRequest" type="tns:createClaimRequestType"/>
-    <xs:element name="createJudgmentRequest" type="tns:createClaimRequestType"/>
+    <xs:element name="createJudgmentRequest" type="tns:createJudgmentRequestType"/>
     <xs:element name="createJudgmentForthwithRequest" type="tns:createJudgmentForthwithRequestType"/>
     <xs:element name="createWarrantRequest" type="tns:createWarrantRequestType"/>
     <xs:element name="createPaidRequest" type="tns:createPaidRequestType"/>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:createResponse xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitResponse.xsd ">
+  <tns:claimNumber>12345678</tns:claimNumber>
+  <tns:issueDate>2001-01-01</tns:issueDate>
+  <tns:serviceDate>2001-01-01</tns:serviceDate>
+  <tns:warrantNumber>12345678</tns:warrantNumber>
+  <tns:enforcingCourtCode>123</tns:enforcingCourtCode>
+  <tns:enforcingCourtName>1234567890123456789012345678901234567890</tns:enforcingCourtName>
+  <tns:fee>0</tns:fee>
+</tns:createResponse>

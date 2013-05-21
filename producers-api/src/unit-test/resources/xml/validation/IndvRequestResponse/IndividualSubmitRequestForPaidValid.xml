@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:createPaidRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns2="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:tns3="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:tns4="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" xmlns:tns5="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitRequest.xsd ">
+  <tns:header>
+    <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
+    <tns:ncpId>9999</tns:ncpId>
+  </tns:header>
+  <tns:mcolPaid>
+    <tns5:claimNumber>12345678</tns5:claimNumber>
+    <tns5:defendantId>1</tns5:defendantId>
+    <tns5:notificationType>MP</tns5:notificationType>
+    <tns5:lastPaymentDate>2001-01-01</tns5:lastPaymentDate>
+  </tns:mcolPaid>
+</tns:createPaidRequest>

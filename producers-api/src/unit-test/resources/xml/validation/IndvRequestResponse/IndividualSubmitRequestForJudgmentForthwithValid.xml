@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:createJudgmentForthwithRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns2="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:tns3="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:tns4="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" xmlns:tns5="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitRequest.xsd ">
+  <tns:header>
+    <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
+    <tns:ncpId>9999</tns:ncpId>
+  </tns:header>
+  <tns:mcolJudgmentForthwith>
+    <tns3:mcolJudgment>
+      <tns3:claimNumber>12345678</tns3:claimNumber>
+      <tns3:jointJudgment>true</tns3:jointJudgment>
+      <tns3:judgmentOption>A</tns3:judgmentOption>
+      <tns3:sendParticularsSeparately>true</tns3:sendParticularsSeparately>
+      <tns3:defendantId>1</tns3:defendantId>
+      <tns3:defendant1DateOfBirth>2001-01-01</tns3:defendant1DateOfBirth>
+      <tns3:defendant2DateOfBirth>2001-01-01</tns3:defendant2DateOfBirth>
+      <tns3:paymentSchedule>
+        <tns3:fullPayment>
+          <tns3:fullByDate>2001-01-01</tns3:fullByDate>
+        </tns3:fullPayment>
+      </tns3:paymentSchedule>
+      <tns3:guidanceRead>true</tns3:guidanceRead>
+      <tns3:sotSignature>
+        <tns1:name>tns1:name</tns1:name>
+      </tns3:sotSignature>
+    </tns3:mcolJudgment>
+    <tns3:mcolWarrant>
+      <tns4:claimNumber>12345678</tns4:claimNumber>
+      <tns4:defendantId>1</tns4:defendantId>
+      <tns4:defendantAddress>
+        <tns1:line1>tns1:line1</tns1:line1>
+        <tns1:line2>tns1:line2</tns1:line2>
+        <tns1:postcode>abcd1234</tns1:postcode>
+      </tns4:defendantAddress>
+      <tns4:balanceOfDebt>0</tns4:balanceOfDebt>
+      <tns4:warrantAmount>0</tns4:warrantAmount>
+    </tns3:mcolWarrant>
+  </tns:mcolJudgmentForthwith>
+</tns:createJudgmentForthwithRequest>
