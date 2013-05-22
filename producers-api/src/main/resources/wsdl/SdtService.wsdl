@@ -696,6 +696,10 @@
         
         </xs:schema>
         
+        <!-- DefenceFeedbackRequest.xsd -->
+
+        <!-- DefenceFeedbackResponse.xsd -->
+
     </types>
     
     <message name="submitBulkRequest">
