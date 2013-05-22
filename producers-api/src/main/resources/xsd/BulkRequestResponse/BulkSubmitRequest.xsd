@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk" 
-    targetNamespace="http://ws.sdt.moj.gov.uk" 
-    elementFormDefault="qualified">
-	
-    <xs:include schemaLocation="../RootXSDs/Claim.xsd"/>
-	<xs:include schemaLocation="../RootXSDs/Judgment.xsd"/>
-	<xs:include schemaLocation="../RootXSDs/Paid.xsd"/>
-	<xs:include schemaLocation="../RootXSDs/Warrant.xsd"/>
-	<xs:include schemaLocation="../RootXSDs/JudgmentForthwith.xsd"/>
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" 
+    elementFormDefault="qualified"
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+    xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" 
+    xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" 
+    xmlns:pd="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema"
+    xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
+    version="1.0">
+    
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" schemaLocation="../RootXSDs/Claim.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" schemaLocation="../RootXSDs/Judgment.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" schemaLocation="../RootXSDs/Paid.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="../RootXSDs/Warrant.xsd"/>
     
     <xs:complexType name="headerType">
         <xs:sequence>
-            <xs:element name="sdtCustomerId" type="tns:sdtCustomerId"/>
-            <xs:element name="targetSystemId" type="tns:targetSystemId"/>
-            <xs:element name="requestCount" type="tns:requestCount"/>
-            <xs:element name="customerReference" type="tns:customerReference"/>
+            <xs:element name="sdtCustomerId" type="base:sdtCustomerId"/>
+            <xs:element name="targetSystemId" type="base:targetSystemId"/>
+            <xs:element name="requestCount" type="base:requestCount"/>
+            <xs:element name="customerReference" type="base:customerReference"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="request" abstract="true">
-        <xs:attribute name="requestType" type="tns:requestType" use="required"/>
-        <xs:attribute name="requestId" type="tns:requestId" use="required"/>
+        <xs:attribute name="requestType" type="base:requestType" use="required"/>
+        <xs:attribute name="requestId" type="base:requestId" use="required"/>
     </xs:complexType>
     
     <xs:complexType name="mcolRequestType">
         <xs:complexContent>
             <xs:extension base="tns:request">
                 <xs:choice>
-                    <xs:element name="mcolClaim" type="tns:claimType"/>
-                    <xs:element name="mcolJudgment" type="tns:judgmentType"/>
-                    <xs:element name="mcolPaid" type="tns:paidType"/>
-                    <xs:element name="mcolWarrant" type="tns:warrantType"/>
-                    <xs:element name="mcolJudgmentForthwith" type="tns:judgmentForthwithType"/>
+                    <xs:element name="mcolClaim" type="clm:claimType"/>
+                    <xs:element name="mcolJudgment" type="jud:judgmentType"/>
+                    <xs:element name="mcolPaid" type="pd:paidType"/>
+                    <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+                    <xs:element name="mcolJudgmentForthwith" type="jud:judgmentForthwithType"/>
                 </xs:choice>
             </xs:extension>
         </xs:complexContent>
@@ -42,7 +48,7 @@
         <xs:sequence>
             <xs:element name="mcolRequest" type="tns:mcolRequestType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute name="customerCode" type="tns:customerCode" use="required"/>
+        <xs:attribute name="customerCode" type="base:customerCode" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="requestsType">

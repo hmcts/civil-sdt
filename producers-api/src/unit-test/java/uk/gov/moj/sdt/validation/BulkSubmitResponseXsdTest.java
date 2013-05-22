@@ -33,28 +33,28 @@ package uk.gov.moj.sdt.validation;
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
 /**
- * Test case for Judgment type.
+ * Test case for BulkSubmitResponse type.
  * 
  * @author Saurabh Agarwal
  * 
  */
-public class JudgmentXsdTest extends SdtXmlTestBase
+public class BulkSubmitResponseXsdTest extends SdtXmlTestBase
 {
 
     /**
      * The name of the xsd.
      */
-    private static final String XSD_NAME = "Judgment";
+    private static final String XSD_NAME = "BulkSubmitResponse";
 
     /**
      * The name of the folder where XSD is stored.
      */
-    private static final String XSD_DIR = "RootXSDs/";
+    private static final String XSD_DIR = "BulkRequestResponse/";
 
     /**
      * The name of the folder where all valid/invalid XML is stored.
      */
-    private static final String XML_DIR = "mcolType/";
+    private static final String XML_DIR = "BulkRequestResponse/";
 
     /**
      * The path of the xsd file.
@@ -62,11 +62,11 @@ public class JudgmentXsdTest extends SdtXmlTestBase
     private static final String XSD_PATH = XSD_DIR + XSD_NAME + ".xsd";
 
     /**
-     * Constructs a new {@link JudgmentXsdTest}.
+     * Constructs a new {@link BulkSubmitResponseXsdTest}.
      * 
      * @param testName Name of this test.
      */
-    public JudgmentXsdTest (final String testName)
+    public BulkSubmitResponseXsdTest (final String testName)
     {
         super (testName);
     }
@@ -94,7 +94,7 @@ public class JudgmentXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for incorrect format of fields.
      */
     public void testInvalidXmlIncorrectFormat ()
     {

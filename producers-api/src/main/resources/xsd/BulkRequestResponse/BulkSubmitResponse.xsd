@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk" 
-    targetNamespace="http://ws.sdt.moj.gov.uk" 
-    elementFormDefault="qualified">
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" 
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+    elementFormDefault="qualified"
+    version="1.0">
     
-	<xs:include schemaLocation="../RootXSDs/Base.xsd"/>
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
     
     <xs:complexType name="bulkResponseType">
         <xs:sequence>
-            <xs:element name="customerReference" type="tns:customerReference"/>
-            <xs:element name="sdtBulkReference" type="tns:sdtBulkReference"/>
+            <xs:element name="customerReference" type="base:customerReference"/>
+            <xs:element name="sdtBulkReference" type="base:sdtBulkReference"/>
             <xs:element name="submittedDate" type="xs:dateTime"/>
-            <xs:element name="requestCount" type="tns:requestCount"/>
-            <xs:element name="status" type="tns:statusType"/>
+            <xs:element name="requestCount" type="base:requestCount"/>
+            <xs:element name="status" type="base:statusType"/>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:element name="bulkRequest" type="tns:bulkResponseType"/>
+    <xs:element name="bulkResponse" type="tns:bulkResponseType"/>
     
 </xs:schema>

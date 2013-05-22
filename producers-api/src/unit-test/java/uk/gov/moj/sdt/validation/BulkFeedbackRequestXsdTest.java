@@ -72,7 +72,7 @@ public class BulkFeedbackRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidXml ()
     {
@@ -82,7 +82,7 @@ public class BulkFeedbackRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlMandatoryMissing ()
     {
@@ -94,7 +94,7 @@ public class BulkFeedbackRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvXmlMandatoryMissing2 ()
     {
@@ -104,8 +104,9 @@ public class BulkFeedbackRequestXsdTest extends SdtXmlTestBase
 
         this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
     }
+    
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for incorrect format of fields.
      */
     public void testInvalidXmlIncorrectFormat ()
     {

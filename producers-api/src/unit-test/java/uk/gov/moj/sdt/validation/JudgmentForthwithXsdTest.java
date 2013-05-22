@@ -72,7 +72,7 @@ public class JudgmentForthwithXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidXml ()
     {
@@ -82,7 +82,7 @@ public class JudgmentForthwithXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlMandatoryMissing ()
     {

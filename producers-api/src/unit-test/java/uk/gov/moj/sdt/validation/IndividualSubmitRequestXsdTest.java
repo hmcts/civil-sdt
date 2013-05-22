@@ -72,7 +72,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidForClaimXml ()
     {
@@ -82,7 +82,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlForClaimMandatoryMissing ()
     {
@@ -94,7 +94,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidForJudgmentXml ()
     {
@@ -104,7 +104,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlForJudgmentMandatoryMissing ()
     {
@@ -116,7 +116,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidForJudgmentForthwithXml ()
     {
@@ -126,7 +126,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlForJudgmentForthwithMandatoryMissing ()
     {
@@ -138,7 +138,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidForWarrantXml ()
     {
@@ -148,7 +148,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlForWarrantMandatoryMissing ()
     {
@@ -160,7 +160,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidForPaidXml ()
     {
@@ -170,7 +170,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlForPaidMandatoryMissing ()
     {
@@ -182,7 +182,7 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for incorrect format of fields.
      */
     public void testInvalidXmlIncorrectFormat ()
     {

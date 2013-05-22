@@ -72,7 +72,7 @@ public class ClaimXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidXml ()
     {
@@ -82,7 +82,7 @@ public class ClaimXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
     public void testInvalidXmlMandatoryMissing ()
     {
@@ -95,7 +95,7 @@ public class ClaimXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for incorrect format of fields.
      */
     public void testInvalidXmlIncorrectFormat ()
     {
