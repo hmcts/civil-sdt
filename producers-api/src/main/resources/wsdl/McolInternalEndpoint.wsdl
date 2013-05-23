@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TODO Add Defence Request/Response namespace and xsds -->
 <definitions 
-    name="McolInternalService" 
+    name="McolInternalEndpoint" 
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
     xmlns="http://schemas.xmlsoap.org/wsdl/" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalService" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalEndpoint" 
     xmlns:req="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" 
     xmlns:resp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalService">
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalEndpoint">
     
     <types>
     
@@ -613,31 +613,33 @@
     </types>
     
     <message name="createClaimRequest">
-        <part name="parameters" type="req:createClaimRequestType"/>
+        <part name="createClaimRequest" type="req:createClaimRequestType"/>
     </message>
     <message name="createJudgmentRequest">
-        <part name="parameters" type="req:createJudgmentRequestType"/>
+        <part name="createJudgmentRequest" type="req:createJudgmentRequestType"/>
     </message>
     <message name="createJudgmentForthwithRequest">
-        <part name="parameters" type="req:createJudgmentForthwithRequestType"/>
+        <part name="createJudgmentForthwithRequest" type="req:createJudgmentForthwithRequestType"/>
     </message>
     <message name="createWarrantRequest">
-        <part name="parameters" type="req:createWarrantRequestType"/>
+        <part name="createWarrantRequest" type="req:createWarrantRequestType"/>
     </message>
     <message name="createPaidRequest">
-        <part name="parameters" type="req:createPaidRequestType"/>
+        <part name="createPaidRequest" type="req:createPaidRequestType"/>
     </message>
     <message name="createResponse">
-        <part name="parameters" type="resp:createResponseType"/>
+        <part name="createResponse" type="resp:createResponseType"/>
     </message>
+    <!-- TODO Waiting for Defence Request/Response xsd finalisation
     <message name="defenceRequest">
         <part name="parameters" type="dreq:defenceRequestType"/>
     </message>
     <message name="defenceResponse">
         <part name="parameters" type="dresp:defenceResponseType"/>
     </message>
+     -->
     
-    <portType name="IMcolInternalServicePortType">
+    <portType name="IMcolInternalEndpointPortType">
         <operation name="createClaim">
             <input message="tns:createClaimRequest"/>
             <output message="tns:createResponse"/>
@@ -658,13 +660,15 @@
             <input message="tns:createPaidRequest"/>
             <output message="tns:createResponse"/>
         </operation>
+        <!-- TODO Waiting for Defence Request/Response xsd finalisation
         <operation name="getDefenceDetails">
             <input message="tns:defenceRequest"/>
             <output message="tns:defenceResponse"/>
         </operation>
+        -->
     </portType>
     
-    <binding name="McolInternalServiceHttpPortBinding" type="tns:IMcolInternalServicePortType">
+    <binding name="McolInternalEndpointHttpPortBinding" type="tns:IMcolInternalEndpointPortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="createClaim">
             <soap:operation soapAction=""/>
@@ -711,6 +715,7 @@
                 <soap:body use="literal"/>
             </output>
         </operation>
+        <!-- TODO Waiting for Defence Request/Response xsd finalisation
         <operation name="getDefenceDetails">
             <soap:operation soapAction=""/>
             <input>
@@ -720,10 +725,11 @@
                 <soap:body use="literal"/>
             </output>
         </operation>
+        -->
     </binding>
     
-    <service name="McolInternalService">
-        <port name="McolInternalServicePort" binding="tns:McolInternalServiceHttpPortBinding">
+    <service name="McolInternalEndpoint">
+        <port name="McolInternalEndpointPort" binding="tns:McolInternalEndpointHttpPortBinding">
             <soap:address location="http://ws.mcol.moj.gov.uk/mcol/internalService"/>
         </port>
     </service>

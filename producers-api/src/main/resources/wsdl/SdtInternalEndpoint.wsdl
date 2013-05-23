@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TODO Add Indiv Update Request/Response namespace and xsds -->
 <definitions 
-    name="SdtInternalService" 
+    name="SdtInternalEndpoint" 
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
     xmlns="http://schemas.xmlsoap.org/wsdl/" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalService" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalService">
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint">
     <documentation>Internal API to be use</documentation>
 
     <types>
@@ -275,20 +275,20 @@
     </types>
     
     <message name="updateRequest">
-        <part name="parameters" type="ureq:updateRequestType"/>
+        <part name="updateRequest" type="ureq:updateRequestType"/>
     </message>
     <message name="updateResponse">
-        <part name="parameters" type="uresp:updateResponseType"/>
+        <part name="updateResponse" type="uresp:updateResponseType"/>
     </message>
     
-    <portType name="ISdtInternalServicePortType">
+    <portType name="ISdtInternalEndpointPortType">
         <operation name="updateItem">
             <input message="tns:updateRequest"/>
             <output message="tns:updateResponse"/>
         </operation>
     </portType>
     
-    <binding name="SdtInternalServiceHttpPortBinding" type="tns:ISdtInternalServicePortType">
+    <binding name="SdtInternalEndpointHttpPortBinding" type="tns:ISdtInternalEndpointPortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="updateItem">
             <soap:operation soapAction=""/>
@@ -301,9 +301,9 @@
         </operation>
     </binding>
     
-    <service name="SdtInternalService">
+    <service name="SdtInternalEndpoint">
         <documentation>Internal API to be used by other HOLI applications, for example MCOL</documentation>
-        <port name="SdtInternalServicePort" binding="tns:SdtInternalServiceHttpPortBinding">
+        <port name="SdtInternalEndpointPort" binding="tns:SdtInternalEndpointHttpPortBinding">
             <soap:address location="http://ws.sdt.moj.gov.uk/sdt/internalService"/>
         </port>
     </service>
