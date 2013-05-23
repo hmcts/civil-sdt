@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TODO Add Defence Request/Response namespace and xsds -->
 <definitions 
-    name="SdtService" 
+    name="SdtEndpoint" 
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
     xmlns="http://schemas.xmlsoap.org/wsdl/" 
-    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtService" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" 
     xmlns:breq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" 
     xmlns:bresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" 
     xmlns:bfreq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" 
     xmlns:bfresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtService">
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint">
     
     <types>
     
@@ -614,7 +614,7 @@
             elementFormDefault="qualified"
             version="1.0">
         
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
             
             <xs:complexType name="bulkFeedbackRequestType">
                 <xs:sequence>
@@ -641,7 +641,7 @@
             elementFormDefault="qualified"
             version="1.0">
             
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
             
             <xs:complexType name="bulkRequestStatusType">
                 <xs:sequence>
@@ -703,25 +703,27 @@
     </types>
     
     <message name="submitBulkRequest">
-        <part name="parameters" type="breq:bulkRequestType"/>
+        <part name="bulkRequest" type="breq:bulkRequestType"/>
     </message>
     <message name="submitBulkResponse">
-        <part name="parameters" type="bresp:bulkResponseType"/>
+        <part name="bulkResponse" type="bresp:bulkResponseType"/>
     </message>
     <message name="bulkFeedbackRequest">
-        <part name="parameters" type="bfreq:bulkFeedbackRequestType"/>
+        <part name="bulkFeedbackRequest" type="bfreq:bulkFeedbackRequestType"/>
     </message>
     <message name="bulkFeedbackResponse">
-        <part name="parameters" type="bfresp:bulkFeedbackResponseType"/>
+        <part name="bulkFeedbackResponse" type="bfresp:bulkFeedbackResponseType"/>
     </message>
+    <!-- TODO Waiting for Defence Request/Response xsd finalisation
     <message name="defenceRequest">
-        <part name="parameters" type="dreq:defenceRequestType"/>
+        <part name="defenceRequest" type="dreq:defenceRequestType"/>
     </message>
     <message name="defenceResponse">
-        <part name="parameters" type="dresp:defenceResponseType"/>
+        <part name="defenceResponse" type="dresp:defenceResponseType"/>
     </message>
-    
-    <portType name="ISdtServicePortType">
+     -->
+     
+    <portType name="ISdtEndpointPortType">
         <operation name="submitBulk">
             <input message="tns:submitBulkRequest"/>
             <output message="tns:submitBulkResponse"/>
@@ -730,13 +732,15 @@
             <input message="tns:bulkFeedbackRequest"/>
             <output message="tns:bulkFeedbackResponse"/>
         </operation>
+        <!-- TODO Waiting for Defence Request/Response xsd finalisation
         <operation name="getDefenceDetails">
             <input message="tns:defenceRequest"/>
             <output message="tns:defenceResponse"/>
         </operation>
+         -->
     </portType>
     
-    <binding name="SdtServiceHttpPortBinding" type="tns:ISdtServicePortType">
+    <binding name="SdtEndpointHttpPortBinding" type="tns:ISdtEndpointPortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="submitBulk">
             <soap:operation soapAction=""/>
@@ -756,6 +760,7 @@
                 <soap:body use="literal"/>
             </output>
         </operation>
+        <!-- TODO Waiting for Defence Request/Response xsd finalisation
         <operation name="getDefenceDetails">
             <soap:operation soapAction=""/>
             <input>
@@ -765,10 +770,11 @@
                 <soap:body use="literal"/>
             </output>
         </operation>
+         -->
     </binding>
     
-    <service name="SdtService">
-        <port name="SdtServicePort" binding="tns:SdtServiceHttpPortBinding">
+    <service name="SdtEndpoint">
+        <port name="SdtEndpointPort" binding="tns:SdtEndpointHttpPortBinding">
             <soap:address location="http://ws.sdt.moj.gov.uk/sdt/service"/>
         </port>
     </service>
