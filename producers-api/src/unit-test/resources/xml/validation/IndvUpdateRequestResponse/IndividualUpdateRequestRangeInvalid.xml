@@ -5,7 +5,7 @@
          tns:schemaLocation="http://ws.sdt.moj.gov.uk">
     <sdtRequestId>abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz</sdtRequestId>	<!-- Max 24 chars, 26 chars here-->
     <claimNumber>1234567890</claimNumber>	<!-- 10 characters - max 8 -->
-		<issueDate>2012-01-011</issueDate>	<!-- Invalid date format -->
+	<issueDate>2012-01-011</issueDate>	<!-- Invalid date format -->
     <serviceDate>2012-01-012</serviceDate>	<!-- Invalid date format -->
     <warrantNumber>0987654321</warrantNumber>	<!-- 10 characters - max 8 -->
     <enforcingCourtCode>1234</enforcingCourtCode>	<!-- 4 characters - max 3 -->

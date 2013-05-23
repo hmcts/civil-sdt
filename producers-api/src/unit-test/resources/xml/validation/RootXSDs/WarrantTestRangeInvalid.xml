@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mcolWarrant xmlns="http://ws.sdt.moj.gov.uk"
+          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
+         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
+  
+    <claimNumber>1234567890</claimNumber>	<!-- 10 characters - max 8 -->
+	<claimantReference>abcdefghijklmnopqrstuvwxyz</claimantReference> <!-- 26 characters - max 24 -->
+	<defendantId>3</defendantId> <!-- Max number of defendants is 2-->
+	<defendantAddress>
+		<line1>abcdefghijklmnopqrstuvwxyzabcde</line1>  <!-- 31 characters - max 30 -->
+		<line2>abcdefghijklmnopqrstuvwxyzabcde</line2>	<!-- 31 characters - max 30 -->
+		<line3>abcdefghijklmnopqrstuvwxyzabcde</line3>	<!-- 31 characters - max 30 -->
+		<line4>abcdefghijklmnopqrstuvwxyzabcde</line4>	<!-- 31 characters - max 30 -->
+		<line5>abcdefghijklmnopqrstuvwxyzabcde</line5>	<!-- 31 characters - max 30 -->
+		<postcode>45FCVC</postcode>	<!-- Incorrect postcode format -->
+	</defendantAddress>
+	<balanceOfDebt>999999999</balanceOfDebt>	<!-- max value 9999999 -->
+	<warrantAmount>999999999</warrantAmount>	<!-- max value 9999999 -->
+	<solicitorCost>999999</solicitorCost>		<!-- max value 99999 -->
+	<additionalNotes>Lorem ipsum dolor sit amet, consectetur 
+	adipiscing elit. Pellentesque vitae elit nisi, mattis scelerisque lorem volutpat.</additionalNotes> <!-- 121 characters - max 120 -->
+</mcolWarrant>
