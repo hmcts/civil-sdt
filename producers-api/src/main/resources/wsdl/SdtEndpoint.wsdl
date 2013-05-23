@@ -703,23 +703,23 @@
     </types>
     
     <message name="submitBulkRequest">
-        <part name="bulkRequest" type="breq:bulkRequestType"/>
+        <part name="bulkRequest"  element="breq:bulkRequest"/>
     </message>
     <message name="submitBulkResponse">
-        <part name="bulkResponse" type="bresp:bulkResponseType"/>
+        <part name="bulkResponse" element="bresp:bulkResponse"/>
     </message>
     <message name="bulkFeedbackRequest">
-        <part name="bulkFeedbackRequest" type="bfreq:bulkFeedbackRequestType"/>
+        <part name="bulkFeedbackRequest" element="bfreq:bulkFeedbackRequest"/>
     </message>
     <message name="bulkFeedbackResponse">
-        <part name="bulkFeedbackResponse" type="bfresp:bulkFeedbackResponseType"/>
+        <part name="bulkFeedbackResponse" element="bfresp:bulkFeedbackResponse"/>
     </message>
     <!-- TODO Waiting for Defence Request/Response xsd finalisation
     <message name="defenceRequest">
-        <part name="defenceRequest" type="dreq:defenceRequestType"/>
+        <part name="defenceRequest" element="dreq:defenceRequest"/>
     </message>
     <message name="defenceResponse">
-        <part name="defenceResponse" type="dresp:defenceResponseType"/>
+        <part name="defenceResponse" element="dresp:defenceResponse"/>
     </message>
      -->
      
