@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mcolWarrant xmlns="http://ws.sdt.moj.gov.uk"
+          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
+         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
+  
+	<claimNumber>12345678</claimNumber>
+	<claimantReference>claimantReferenceString</claimantReference>
+	<defendantId>1</defendantId>
+	<defendantAddress>
+		<line1>addressLine1</line1>
+		<line2>addressLine2</line2>
+		<line3>addressLine3</line3>
+		<line4>addressLine4</line4>
+		<line5>addressLine5</line5>
+		<postcode>FL23 2SD</postcode>
+	</defendantAddress>
+	<balanceOfDebt>999</balanceOfDebt>
+	<warrantAmount>9999</warrantAmount>
+	<solicitorCost>99999</solicitorCost>
+	<additionalNotes>Test notes</additionalNotes>
+</mcolWarrant>
