@@ -275,10 +275,10 @@
     </types>
     
     <message name="updateRequest">
-        <part name="updateRequest" type="ureq:updateRequestType"/>
+        <part name="updateRequest" element="ureq:updateRequest"/>
     </message>
     <message name="updateResponse">
-        <part name="updateResponse" type="uresp:updateResponseType"/>
+        <part name="updateResponse" element="uresp:updateResponse"/>
     </message>
     
     <portType name="ISdtInternalEndpointPortType">

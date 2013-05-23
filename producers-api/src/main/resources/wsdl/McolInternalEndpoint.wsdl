@@ -613,29 +613,29 @@
     </types>
     
     <message name="createClaimRequest">
-        <part name="createClaimRequest" type="req:createClaimRequestType"/>
+        <part name="createClaimRequest" element="req:createClaimRequest"/>
     </message>
     <message name="createJudgmentRequest">
-        <part name="createJudgmentRequest" type="req:createJudgmentRequestType"/>
+        <part name="createJudgmentRequest" element="req:createJudgmentRequest"/>
     </message>
     <message name="createJudgmentForthwithRequest">
-        <part name="createJudgmentForthwithRequest" type="req:createJudgmentForthwithRequestType"/>
+        <part name="createJudgmentForthwithRequest" element="req:createJudgmentForthwithRequest"/>
     </message>
     <message name="createWarrantRequest">
-        <part name="createWarrantRequest" type="req:createWarrantRequestType"/>
+        <part name="createWarrantRequest" element="req:createWarrantRequest"/>
     </message>
     <message name="createPaidRequest">
-        <part name="createPaidRequest" type="req:createPaidRequestType"/>
+        <part name="createPaidRequest" element="req:createPaidRequest"/>
     </message>
     <message name="createResponse">
-        <part name="createResponse" type="resp:createResponseType"/>
+        <part name="createResponse" element="resp:createResponse"/>
     </message>
     <!-- TODO Waiting for Defence Request/Response xsd finalisation
     <message name="defenceRequest">
-        <part name="parameters" type="dreq:defenceRequestType"/>
+        <part name="parameters" element="dreq:defenceRequest"/>
     </message>
     <message name="defenceResponse">
-        <part name="parameters" type="dresp:defenceResponseType"/>
+        <part name="parameters" element="dresp:defenceResponse"/>
     </message>
      -->
     
