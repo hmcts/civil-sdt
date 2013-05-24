@@ -17,7 +17,7 @@
     <base:address>
       <base:line1>1234567890123456789012345678901</base:line1>
       <base:line2>1234567890123456789012345678901</base:line2>
-      <base:postcode>ABCD1234</base:postcode>
+      <base:postcode>FL23 2SD</base:postcode>
     </base:address>
   </tns:claimantCorrespondence>
   <tns:defendant1>
