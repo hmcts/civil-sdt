@@ -13,13 +13,13 @@
     <tns3:defendant1Address>
       <tns1:line1>tns1:line1</tns1:line1>
       <tns1:line2>tns1:line2</tns1:line2>
-      <tns1:postcode>abcd1234</tns1:postcode>
+      <tns1:postcode>FL23 2SD</tns1:postcode>
     </tns3:defendant1Address>
     <tns3:defendant1DateOfBirth>2001-01-01</tns3:defendant1DateOfBirth>
     <tns3:defendant2Address>
       <tns1:line1>tns1:line1</tns1:line1>
       <tns1:line2>tns1:line2</tns1:line2>
-      <tns1:postcode>abcd1234</tns1:postcode>
+      <tns1:postcode>FL23 2SD</tns1:postcode>
     </tns3:defendant2Address>
     <tns3:defendant2DateOfBirth>2001-01-01</tns3:defendant2DateOfBirth>
     <tns3:paymentSchedule>

@@ -28,7 +28,7 @@
       <base:line3>base:line3</base:line3>
       <base:line4>base:line4</base:line4>
       <base:line5>base:line5</base:line5>
-      <base:postcode>ABCD1234</base:postcode>
+      <base:postcode>FL23 2SD</base:postcode>
     </base:address>
   </tns:defendant1>
   <tns:defendant2>
@@ -39,7 +39,7 @@
       <base:line3>base:line3</base:line3>
       <base:line4>base:line4</base:line4>
       <base:line5>base:line5</base:line5>
-      <base:postcode>ABCD1234</base:postcode>
+      <base:postcode>FL23 2SD</base:postcode>
     </base:address>
   </tns:defendant2>
   <tns:sendParticularsSeparately>true1</tns:sendParticularsSeparately>

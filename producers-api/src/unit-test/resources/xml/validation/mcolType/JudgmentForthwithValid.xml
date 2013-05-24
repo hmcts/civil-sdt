@@ -12,7 +12,7 @@
       <tns2:line3>tns2:line3</tns2:line3>
       <tns2:line4>tns2:line4</tns2:line4>
       <tns2:line5>tns2:line5</tns2:line5>
-      <tns2:postcode>abcd1234</tns2:postcode>
+      <tns2:postcode>FL23 2SD</tns2:postcode>
     </tns:defendant1Address>
     <tns:defendant1DateOfBirth>2001-01-01</tns:defendant1DateOfBirth>
     <tns:defendant2Address>
@@ -21,7 +21,7 @@
       <tns2:line3>tns2:line3</tns2:line3>
       <tns2:line4>tns2:line4</tns2:line4>
       <tns2:line5>tns2:line5</tns2:line5>
-      <tns2:postcode>abcd1234</tns2:postcode>
+      <tns2:postcode>FL23 2SD</tns2:postcode>
     </tns:defendant2Address>
     <tns:defendant2DateOfBirth>2001-01-01</tns:defendant2DateOfBirth>
     <tns:paymentSchedule>
@@ -47,7 +47,7 @@
       <tns2:line3>tns2:line3</tns2:line3>
       <tns2:line4>tns2:line4</tns2:line4>
       <tns2:line5>tns2:line5</tns2:line5>
-      <tns2:postcode>abcd1234</tns2:postcode>
+      <tns2:postcode>FL23 2SD</tns2:postcode>
     </tns1:defendantAddress>
     <tns1:balanceOfDebt>0</tns1:balanceOfDebt>
     <tns1:warrantAmount>0</tns1:warrantAmount>

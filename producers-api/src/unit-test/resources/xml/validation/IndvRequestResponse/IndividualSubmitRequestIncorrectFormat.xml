@@ -14,7 +14,7 @@
         <tns1:line3>tns1:line3</tns1:line3>
         <tns1:line4>tns1:line4</tns1:line4>
         <tns1:line5>tns1:line5</tns1:line5>
-        <tns1:postcode>ABCD1234</tns1:postcode>
+        <tns1:postcode>FL23 2SD</tns1:postcode>
       </tns1:address>
     </tns2:claimant>
     <tns2:claimantCorrespondence>
@@ -25,7 +25,7 @@
         <tns1:line3>tns1:line3</tns1:line3>
         <tns1:line4>tns1:line4</tns1:line4>
         <tns1:line5>tns1:line5</tns1:line5>
-        <tns1:postcode>ABCD1234</tns1:postcode>
+        <tns1:postcode>FL23 2SD</tns1:postcode>
       </tns1:address>
     </tns2:claimantCorrespondence>
     <tns2:defendant1>
@@ -36,7 +36,7 @@
         <tns1:line3>tns1:line3</tns1:line3>
         <tns1:line4>tns1:line4</tns1:line4>
         <tns1:line5>tns1:line5</tns1:line5>
-        <tns1:postcode>ABCD1234</tns1:postcode>
+        <tns1:postcode>FL23 2SD</tns1:postcode>
       </tns1:address>
     </tns2:defendant1>
     <tns2:defendant2>
@@ -47,7 +47,7 @@
         <tns1:line3>tns1:line3</tns1:line3>
         <tns1:line4>tns1:line4</tns1:line4>
         <tns1:line5>tns1:line5</tns1:line5>
-        <tns1:postcode>ABCD1234</tns1:postcode>
+        <tns1:postcode>FL23 2SD</tns1:postcode>
       </tns1:address>
     </tns2:defendant2>
     <tns2:sendParticularsSeparately>true</tns2:sendParticularsSeparately>
