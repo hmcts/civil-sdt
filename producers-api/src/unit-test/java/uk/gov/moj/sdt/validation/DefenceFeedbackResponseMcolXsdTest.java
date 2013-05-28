@@ -30,11 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.Assert;
-import uk.gov.moj.sdt.utils.SdtXmlConstants;
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
 /**
@@ -47,19 +42,24 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
 {
 
     /**
-     * The name of the service.
+     * The name of the xsd.
      */
-    private String xsdName = "DefenceFeedbackResponseMCOL";
+    private static final String XSD_NAME = "DefenceFeedbackResponseMCOL";
+
+    /**
+     * The name of the folder where XSD is stored.
+     */
+    private static final String XSD_DIR = "DefenceRequestResponse/";
 
     /**
      * The name of the folder where all valid/invalid XML is stored.
      */
-    private String xmlFolderName = "DefenceRequest&Response" + "/";
+    private static final String XML_DIR = "DefenceRequestResponse/";
 
     /**
      * The path of the xsd file.
      */
-    private String xsdPath = xmlFolderName + xsdName + ".xsd";
+    private static final String XSD_PATH = XSD_DIR + XSD_NAME + ".xsd";
 
     /**
      * Constructs a new {@link DefenceFeedbackResponseMcolXsdTest}.
@@ -72,60 +72,36 @@ public class DefenceFeedbackResponseMcolXsdTest extends SdtXmlTestBase
     }
 
     /**
-     * {@inheritDoc}
+     * Tests XML file is valid.
      */
     public void testValidXml ()
     {
-        final String xmlPath = xmlFolderName + xsdName + "Valid.xml";
-        this.proveXsd (xmlPath, xsdPath, null);
+        final String condition = "Valid";
+        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
+        this.validateXsd (xmlPath, XSD_PATH, null);
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for missing mandatory fields.
      */
-    public void testInvalidXmlMandatory ()
+    public void testInvalidXmlMandatoryMissing ()
     {
-        final String errorDetails = "Mandatory";
-        final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
+        final String condition = "MandatoryMissing";
+        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
+        final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
 
-        final List<String> expectedMessages = new ArrayList<String> ();
-        expectedMessages.add (SdtXmlConstants.DEFENDANTS_NUMBER_GREATER_THAN_2);
-
-        final int numberOfUnfoundErrors = this.proveXsd (xmlPath, xsdPath, expectedMessages);
-        Assert.assertEquals ("Not all the error messages were found in the xml file.", numberOfUnfoundErrors, 0);
+        this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
     }
 
     /**
-     * {@inheritDoc}
+     * Tests that expected errors are reported for incorrect format of fields.
      */
-    public void testInvalidRange ()
+    public void testInvalidXmlIncorrectFormat ()
     {
-        final String errorDetails = "Range";
-        final String xmlPath = xmlFolderName + xsdName + errorDetails + "Invalid.xml";
+        final String condition = "IncorrectFormat";
+        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
+        final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
 
-        final List<String> expectedMessages = new ArrayList<String> ();
-        expectedMessages.add (SdtXmlConstants.DOCUMENT_NUMBER_INVALID_PATTERN_1);
-        expectedMessages.add (SdtXmlConstants.CLAIM_NUMBER_INVALID_GENERIC);
-
-        expectedMessages.add (SdtXmlConstants.DEFENDANT_ID_INVALID_PATTERN);
-        expectedMessages.add (SdtXmlConstants.DEFENDANT_ID_VALUE_INVALID_GENERIC);
-
-        expectedMessages.add (SdtXmlConstants.DATE_TIME_INVALID_DATE_TIME_FORMAT);
-        expectedMessages.add (SdtXmlConstants.DATE_TIME_INVALID_FORMAT_GENERIC);
-
-        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_INVALID_GENERIC);
-        expectedMessages.add (SdtXmlConstants.RESPONSE_TYPE_INVALID_ENUM);
-
-        expectedMessages.add (SdtXmlConstants.STATUS_CODE_INVALID_GENERIC);
-        expectedMessages.add (SdtXmlConstants.STATUS_CODE_INVALID_ENUM);
-
-        expectedMessages.add (SdtXmlConstants.ERROR_CODE_INVALID_GENERIC);
-        expectedMessages.add (SdtXmlConstants.ERROR_CODE_INVALID_MAX_LENGHT_EXCEEDED);
-
-        expectedMessages.add (SdtXmlConstants.ERROR_DESCRIPTION_INVALID_GENERIC);
-        expectedMessages.add (SdtXmlConstants.ERROR_DESCRIPTION_INVALID_MAX_LENGHT_EXCEEDED);
-
-        final int numberOfUnfoundErrors = this.proveXsd (xmlPath, xsdPath, expectedMessages);
-        Assert.assertEquals ("Not all the error messages were found in the xml file.", numberOfUnfoundErrors, 0);
+        this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
     }
 }
