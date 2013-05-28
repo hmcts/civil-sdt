@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- MCOL to SDT -->
-<updateRequest xmlns="http://ws.sdt.moj.gov.uk"
-          xmlns:tns="http://www.w3.org/2001/XMLSchema-instance"
-         tns:schemaLocation="http://ws.sdt.moj.gov.uk">
-    <sdtRequestId>xyz123</sdtRequestId>
-    <claimNumber>12345678</claimNumber>
-    <issueDate>2001-01-01</issueDate>
-    <serviceDate>2001-01-01</serviceDate>
-    <warrantNumber>12345678</warrantNumber>
-    <enforcingCourtCode>123</enforcingCourtCode>
-    <enforcingCourtName>enforc</enforcingCourtName>
-    <fee>99999999</fee>
-    <status code="REJECTED">
-        <error>
-            <code>1234</code>
-            <description>description</description>
-        </error>
-    </status>
-</updateRequest>
+<tns:updateRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema ../../../../../main/resources/xsd/IndvUpdateRequestResponse/IndividualUpdateRequest.xsd ">
+  <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
+  <tns:claimNumber>12345678</tns:claimNumber>
+  <tns:issueDate>2001-01-01</tns:issueDate>
+  <tns:serviceDate>2001-01-01</tns:serviceDate>
+  <tns:warrantNumber>12345678</tns:warrantNumber>
+  <tns:enforcingCourtCode>123</tns:enforcingCourtCode>
+  <tns:enforcingCourtName>tns:enforcingCourtName</tns:enforcingCourtName>
+  <tns:fee>0</tns:fee>
+  <tns:status code="ACCEPTED">
+    <tns1:error>
+      <tns1:code>tns1:code</tns1:code>
+      <tns1:description>tns1:description</tns1:description>
+    </tns1:error>
+  </tns:status>
+</tns:updateRequest>
