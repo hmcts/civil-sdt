@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:mcolWarrant xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema ../../../../../main/resources/xsd/RootXSDs/Warrant.xsd ">
+  <tns:claimNumber>01234567</tns:claimNumber>
+  <tns:claimantReference>01234567</tns:claimantReference>
+  <tns:defendantAddress>
+    <base:line1>tns1:line1</base:line1>
+    <base:line2>tns1:line2</base:line2>
+    <base:line3>tns1:line3</base:line3>
+  </tns:defendantAddress>
+  <tns:balanceOfDebt>0</tns:balanceOfDebt>
+  <tns:additionalNotes>tns:additionalNotes</tns:additionalNotes>
+</tns:mcolWarrant>

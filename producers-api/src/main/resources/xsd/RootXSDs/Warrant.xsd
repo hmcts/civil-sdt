@@ -20,4 +20,7 @@
 			<xs:element name="additionalNotes" type="base:stringMaxLength120" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
+	
+	<xs:element name="mcolWarrant" type="tns:warrantType"/>
+	
 </xs:schema>
