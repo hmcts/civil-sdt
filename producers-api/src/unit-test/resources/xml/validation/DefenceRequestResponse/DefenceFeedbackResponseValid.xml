@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:defenceResponse xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema ../../../../../main/resources/xsd/DefenceRequestResponse/DefenceFeedbackResponse.xsd ">
+  <tns:defenceDetails>
+    <tns:defenceDetail>
+      <tns:claimNumber>12345678</tns:claimNumber>
+      <tns:defendants>
+        <tns:defendant defendantId="1">
+          <tns:filedDate>2001-12-31T12:00:00</tns:filedDate>
+          <tns:responseType>DE</tns:responseType>
+        </tns:defendant>
+      </tns:defendants>
+    </tns:defenceDetail>
+  </tns:defenceDetails>
+  <tns:status code="OK">
+    <tns1:error>
+      <tns1:code>tns1:code</tns1:code>
+      <tns1:description>tns1:description</tns1:description>
+    </tns1:error>
+  </tns:status>
+</tns:defenceResponse>
