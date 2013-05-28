@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:defenceRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestMCOLSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestMCOLSchema ../../../../../main/resources/xsd/DefenceRequestResponse/DefenceFeedbackRequestMCOL.xsd ">
+<tns:defenceRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema ../../../../../main/resources/xsd/DefenceRequestResponse/DefenceFeedbackRequestsd ">
   <tns:header>
     <tns:ncpId>1001</tns:ncpId>
   </tns:header>

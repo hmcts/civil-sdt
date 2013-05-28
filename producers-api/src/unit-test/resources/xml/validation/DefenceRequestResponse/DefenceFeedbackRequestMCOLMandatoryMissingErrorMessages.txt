@@ -1,2 +1,2 @@
-cvc-complex-type.2.4.b: The content of element 'tns:header' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestMCOLSchema":ncpId}' is expected.
-cvc-complex-type.2.4.b: The content of element 'tns:mcolDefence' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestMCOLSchema":fromDate}' is expected.
+cvc-complex-type.2.4.b: The content of element 'tns:header' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema":ncpId}' is expected.
+cvc-complex-type.2.4.b: The content of element 'tns:mcolDefence' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema":fromDate}' is expected.
