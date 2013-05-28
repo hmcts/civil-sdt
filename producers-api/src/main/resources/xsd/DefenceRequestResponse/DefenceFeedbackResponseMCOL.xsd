@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseMCOLSchema" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseMCOLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema"
     xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
 	elementFormDefault="qualified"
     version="1.0">
