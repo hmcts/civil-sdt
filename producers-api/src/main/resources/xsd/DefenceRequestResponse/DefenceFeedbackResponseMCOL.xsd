@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseMCOLSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseMCOLSchema"
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+	elementFormDefault="qualified"
+    version="1.0">
+    
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+	
+    <xs:element name="defenceResponse" type="tns:defenceResponseType" />
+	<xs:complexType name="defenceResponseType">
+		<xs:sequence>
+			<xs:element name="defenceDetails" type="tns:defenceDetailsType" />
+			<xs:element name="status" type="base:statusType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="defenceDetailsType">
+		<xs:sequence>
+			<xs:element name="defenceDetail" type="tns:defenceDetailType" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="defenceDetailType">
+		<xs:sequence>
+			<xs:element name="claimNumber" type="base:documentNumber" />
+			<xs:element name="defendants">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="defendantType">
+		<xs:sequence>
+			<xs:element name="filedDate" type="xs:dateTime" />
+			<xs:element name="responseType" type="tns:responseType" />
+		</xs:sequence>
+        <xs:attribute name="defendantId" type="base:defendantId" />
+	</xs:complexType>
+
+	<!-- Response Type is DE, DC or PA -->
+	<xs:simpleType name="responseType">
+		<xs:restriction base="xs:string">
+            <xs:enumeration value="DE"/>
+            <xs:enumeration value="DC"/>
+            <xs:enumeration value="PA"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
