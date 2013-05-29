@@ -91,7 +91,6 @@ public class ClaimXsdTest extends SdtXmlTestBase
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
 
         this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
-        // TODO Unable to check for missing 'Particulars'
     }
 
     /**

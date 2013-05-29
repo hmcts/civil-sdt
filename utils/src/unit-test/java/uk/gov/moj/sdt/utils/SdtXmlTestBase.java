@@ -390,56 +390,6 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
      *            path name of XML file to be used to check veracity of XSD.
      * @param xsdPathname
      *            path name of XSD file to be checked.
-     * @param expectedMessages
-     *            expected exception message during parsing.
-     * @return if the list is empty, all the messages have been caught.
-     * @deprecated TODO remove this method and replace usage with validateXsd(String, String, String)
-     */
-    protected int proveXsd (final String xmlPathname, final String xsdPathname, final List<String> expectedMessages)
-    {
-        try
-        {
-            evaluateXsd (xmlPathname, xsdPathname, expectedMessages);
-            return expectedMessages != null ? expectedMessages.size () : 0;
-        }
-        catch (final IOException e)
-        {
-            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
-            SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
-        }
-        catch (final SAXException e)
-        {
-            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
-            SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
-        }
-        catch (final ParserConfigurationException e)
-        {
-            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
-            SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
-        }
-        if (expectedMessages != null)
-        {
-            for (String expectedMessage : expectedMessages)
-            {
-                // Has no error been reported and yet we expected one?
-                if ( !this.errorEncountered && expectedMessage != null && !("".equals (expectedMessage)))
-                {
-                    LOG.error ("Parser failed to encounter expected error [" + expectedMessage + "]");
-                    SdtXmlTestBase.fail ("Parser failed to encounter expected error [" + expectedMessage + "]");
-                }
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Use known XML files (with and without faults) to prove that XSD file
-     * implements the correct validation.
-     * 
-     * @param xmlPathname
-     *            path name of XML file to be used to check veracity of XSD.
-     * @param xsdPathname
-     *            path name of XSD file to be checked.
      * @param errorFilePathname
      *            path name of error message file (optional).
      */
