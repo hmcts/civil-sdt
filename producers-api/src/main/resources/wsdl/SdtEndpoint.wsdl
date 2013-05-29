@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO Add Defence Request/Response namespace and xsds -->
 <definitions 
     name="SdtEndpoint" 
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
@@ -449,7 +448,6 @@
                 <xs:sequence>
                     <xs:element name="claimNumber" type="base:documentNumber"/>
                     <xs:element name="jointJudgment" type="xs:boolean"/>
-                    <!-- TODO Rename field in EIS -->
                     <xs:element name="judgmentOption" type="tns:judgmentOption"/>
                     <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
                     <xs:element name="defendantId" type="base:defendantId"/>
