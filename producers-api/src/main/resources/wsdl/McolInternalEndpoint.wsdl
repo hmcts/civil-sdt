@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO Add Defence Request/Response namespace and xsds -->
 <definitions 
     name="McolInternalEndpoint" 
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
@@ -8,6 +7,8 @@
     xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalEndpoint" 
     xmlns:req="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" 
     xmlns:resp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
+    xmlns:dreq="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema" 
+    xmlns:dresp="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema" 
     targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalEndpoint">
     
     <types>
@@ -145,9 +146,10 @@
             
             <xs:simpleType name="postcode">
                 <xs:restriction base="xs:string">
-                    <xs:pattern value="[0-9A-Za-z]{8}" />
+                    <xs:pattern  value="[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z-[CIKMOV]]{2}" />
                 </xs:restriction>
             </xs:simpleType>
+
             <xs:complexType name="addressType">
                 <xs:sequence>
                     <xs:element name="line1" type="tns:stringMaxLength30" />
@@ -444,7 +446,6 @@
                 <xs:sequence>
                     <xs:element name="claimNumber" type="base:documentNumber"/>
                     <xs:element name="jointJudgment" type="xs:boolean"/>
-                    <!-- TODO Rename field in EIS -->
                     <xs:element name="judgmentOption" type="tns:judgmentOption"/>
                     <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
                     <xs:element name="defendantId" type="base:defendantId"/>
@@ -607,8 +608,88 @@
          </xs:schema>
     
         <!-- DefenceFeedbackRequest.xsd -->
-        
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:element name="defenceRequest" type="tns:defenceRequestType"/>
+            <xs:complexType name="defenceRequestType">
+                <xs:sequence>
+                    <xs:element name="header" type="tns:headerType" />
+                    <xs:element name="mcolDefence" type="tns:mcolDefenceType" />
+                </xs:sequence>  
+            </xs:complexType>
+            <xs:complexType name="headerType">
+                <xs:sequence>
+                    <xs:element name="ncpId" type="base:ncpId" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="mcolDefenceType">
+                <xs:sequence>
+                    <xs:element name="fromDate" type="xs:date" />
+                    <xs:element name="toDate" type="xs:date" />
+                </xs:sequence>
+                <xs:attribute name="maxResults" type="xs:integer" />
+            </xs:complexType>
+        </xs:schema>        
+
         <!-- DefenceFeedbackResponse.xsd -->
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:element name="defenceResponse" type="tns:defenceResponseType" />
+            <xs:complexType name="defenceResponseType">
+                <xs:sequence>
+                    <xs:element name="defenceDetails" type="tns:defenceDetailsType" />
+                    <xs:element name="status" type="base:statusType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="defenceDetailsType">
+                <xs:sequence>
+                    <xs:element name="defenceDetail" type="tns:defenceDetailType" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="defenceDetailType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:documentNumber" />
+                    <xs:element name="defendants">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="defendantType">
+                <xs:sequence>
+                    <xs:element name="filedDate" type="xs:dateTime" />
+                    <xs:element name="responseType" type="tns:responseType" />
+                </xs:sequence>
+                <xs:attribute name="defendantId" type="base:defendantId" />
+            </xs:complexType>
+        
+            <!-- Response Type is DE, DC or PA -->
+            <xs:simpleType name="responseType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="DE"/>
+                    <xs:enumeration value="DC"/>
+                    <xs:enumeration value="PA"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
         
     </types>
     
@@ -630,14 +711,12 @@
     <message name="createResponse">
         <part name="createResponse" element="resp:createResponse"/>
     </message>
-    <!-- TODO Waiting for Defence Request/Response xsd finalisation
     <message name="defenceRequest">
         <part name="parameters" element="dreq:defenceRequest"/>
     </message>
     <message name="defenceResponse">
         <part name="parameters" element="dresp:defenceResponse"/>
     </message>
-     -->
     
     <portType name="IMcolInternalEndpointPortType">
         <operation name="createClaim">
@@ -660,12 +739,10 @@
             <input message="tns:createPaidRequest"/>
             <output message="tns:createResponse"/>
         </operation>
-        <!-- TODO Waiting for Defence Request/Response xsd finalisation
         <operation name="getDefenceDetails">
             <input message="tns:defenceRequest"/>
             <output message="tns:defenceResponse"/>
         </operation>
-        -->
     </portType>
     
     <binding name="McolInternalEndpointHttpPortBinding" type="tns:IMcolInternalEndpointPortType">
@@ -715,7 +792,6 @@
                 <soap:body use="literal"/>
             </output>
         </operation>
-        <!-- TODO Waiting for Defence Request/Response xsd finalisation
         <operation name="getDefenceDetails">
             <soap:operation soapAction=""/>
             <input>
@@ -725,7 +801,6 @@
                 <soap:body use="literal"/>
             </output>
         </operation>
-        -->
     </binding>
     
     <service name="McolInternalEndpoint">

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO Add Indiv Update Request/Response namespace and xsds -->
 <definitions 
     name="SdtInternalEndpoint" 
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
     xmlns="http://schemas.xmlsoap.org/wsdl/" 
     xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint" 
+    xmlns:ureq="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" 
+    xmlns:uresp="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateResponseSchema" 
     targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint">
-    <documentation>Internal API to be use</documentation>
+    
+    <documentation>Internal API to be used by HOLI apps</documentation>
 
     <types>
     
@@ -144,9 +146,10 @@
             
             <xs:simpleType name="postcode">
                 <xs:restriction base="xs:string">
-                    <xs:pattern value="[0-9A-Za-z]{8}" />
+                    <xs:pattern  value="[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z-[CIKMOV]]{2}" />
                 </xs:restriction>
             </xs:simpleType>
+
             <xs:complexType name="addressType">
                 <xs:sequence>
                     <xs:element name="line1" type="tns:stringMaxLength30" />
@@ -269,9 +272,51 @@
         </xs:schema>
 
         <!-- IndividualUpdateRequest.xsd -->
-        
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:element name="updateRequest" type="tns:updateRequestType" />
+            
+            <xs:complexType name="updateRequestType">
+                <xs:sequence>
+                    <xs:element name="sdtRequestId" type="base:sdtRequestId" />
+                    <xs:element name="claimNumber" type="base:documentNumber" />
+                    <xs:element name="issueDate" type="xs:date" />
+                    <xs:element name="serviceDate" type="xs:date" />
+                    <xs:element name="warrantNumber" type="base:documentNumber" />
+                    <xs:element name="enforcingCourtCode" type="base:courtCode"  minOccurs="0"/>
+                    <xs:element name="enforcingCourtName" type="base:courtName"  minOccurs="0"/>
+                    <xs:element name="fee" type="base:amountType999999999" />       
+                    <xs:element name="status" type="base:createStatusType" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>        
+
         <!-- IndividualUpdateResponse.xsd -->
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateResponseSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateResponseSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:element name="updateResponse" type="tns:updateResponseType" />
+            <xs:complexType name="updateResponseType">
+                <xs:sequence>
+                    <xs:element name="status" type="base:statusType"/>
+                </xs:sequence>
+            </xs:complexType>
         
+        </xs:schema>
+
     </types>
     
     <message name="updateRequest">
