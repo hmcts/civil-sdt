@@ -99,21 +99,41 @@
 			<arg value="${src-gen.dir}" />
 			<arg value="-frontend" />
 			<arg value="jaxws21" />
-			<arg value="${resources.dir}/wsdl/submitBulkRequest.wsdl" />
-			<classpath>
-				<path refid="cxf.classpath" />
-			</classpath>
-		</java>
-		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
-			<arg value="-d" />
-			<arg value="${src-gen.dir}" />
-			<arg value="-frontend" />
-			<arg value="jaxws21" />
 			<arg value="${resources.dir}/wsdl/GreetingEndpoint.wsdl" />
 			<classpath>
 				<path refid="cxf.classpath" />
 			</classpath>
 		</java>
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+            <arg value="-d" />
+            <arg value="${src-gen.dir}" />
+            <arg value="-frontend" />
+            <arg value="jaxws21" />
+            <arg value="${resources.dir}/wsdl/SdtEndpoint.wsdl" />
+            <classpath>
+                <path refid="cxf.classpath" />
+            </classpath>
+        </java>
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+            <arg value="-d" />
+            <arg value="${src-gen.dir}" />
+            <arg value="-frontend" />
+            <arg value="jaxws21" />
+            <arg value="${resources.dir}/wsdl/SdtInternalEndpoint.wsdl" />
+            <classpath>
+                <path refid="cxf.classpath" />
+            </classpath>
+        </java>
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+            <arg value="-d" />
+            <arg value="${src-gen.dir}" />
+            <arg value="-frontend" />
+            <arg value="jaxws21" />
+            <arg value="${resources.dir}/wsdl/McolInternalEndpoint.wsdl" />
+            <classpath>
+                <path refid="cxf.classpath" />
+            </classpath>
+        </java>
 	</target>
 
 
