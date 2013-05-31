@@ -22,11 +22,4 @@
 		class="uk.gov.moj.sdt.producers.prototype.DiscZoneBusinessObject">
 	</bean>
 
-	<!-- Publish the service endpoints. How does it know what these are? -->
-	<bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
-		<!-- Not sure what this port is really used for as changing it has no effect 
-			(as long as it does not clash with another open port) -->
-		<property name="baseAddress" value="http://localhost:8080/" />
-	</bean>
-
 </beans>

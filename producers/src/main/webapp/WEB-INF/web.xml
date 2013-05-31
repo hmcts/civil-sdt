@@ -11,9 +11,17 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
 			/WEB-INF/applicationContext.xml,
-            classpath*:uk/gov/moj/**/spring.context.xml,
+            classpath*:uk/gov/moj/**/spring.context.xml
         </param-value>
     </context-param>
+
+    <!-- Listener to initialise Log4J. This is defined prior to the Spring context loader to ensure that logging starts
+up as early as possible to ease diagnosis of Spring context initialisation issues. -->
+    <listener>
+        <listener-class>
+            org.springframework.web.util.Log4jConfigListener
+        </listener-class>
+    </listener>
 
     <!-- Listener to initialise the Spring context - reads config from 'contextConfigLocation'. -->
     <listener>
@@ -24,14 +32,14 @@
     
 	<!-- Servlet to handle Spring Web Services  - necessary in all application exposing web service endpoints -->
 	<servlet>
-    	<servlet-name>jaxws-servlet</servlet-name>
-    	<servlet-class>com.sun.xml.ws.transport.http.servlet.WSSpringServlet</servlet-class>
+    	<servlet-name>cxfServlet</servlet-name>
+    	<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
   	</servlet>
  
 	<!-- Pattern to reach web service endpoint -->
 	<servlet-mapping>
-        <servlet-name>jaxws-servlet</servlet-name>
-        <url-pattern>/hullo</url-pattern>
+        <servlet-name>cxfServlet</servlet-name>
+        <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
  
 </web-app>

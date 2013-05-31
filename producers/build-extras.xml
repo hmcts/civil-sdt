@@ -197,6 +197,7 @@
                 <include name="${commons-lang.jar}" />
                 <include name="${commons-logging-api.jar}" />
                 <include name="${commons-logging.jar}" />
+                <include name="${cxf.jar}" />
                 <include name="${dom4j.jar}" />
                 <include name="${ehcache.jar}" />
                 <include name="${gateway-xmlbeans.jar}" />
@@ -204,7 +205,10 @@
                 <include name="${hibernate-commons-annotations.jar}" />
                 <include name="${hibernate.jar}" />
                 <include name="${htmlparser.jar}" />
+                <include name="${httpasyncclient.jar}" />
+                <include name="${httpclient.jar}" />
                 <include name="${httpcore.jar}" />
+                <include name="${httpcore-nio.jar}" />
                 <include name="${itext.jar}" />
                 <include name="${jaxb-impl.jar}" />
                 <include name="${jaxen.jar}" />
@@ -237,11 +241,13 @@
                 <include name="${standard.jar}" />
                 <include name="${stax-api.jar}" />
                 <include name="${stax-ex.jar}" />
+                <include name="${stax2-api.jar}" />
                 <include name="${streambuffer.jar}" />
                 <include name="${string.jar}" />
                 <include name="${velocity.jar}" />
                 <include name="${woden-api.jar}" />
                 <include name="${woden-impl-dom.jar}" />
+                <include name="${woodstox-core-asl.jar}" />
                 <include name="${wsdl4j.jar}" />
                 <include name="${wss4j.jar}" />
                 <include name="${wstx-asl.jar}" />
@@ -252,6 +258,7 @@
                 <include name="${xmlbeans.jar}" />
                 <include name="${xmlParserAPIs.jar}" />
                 <include name="${XmlSchema.jar}" />
+                <include name="${xmlschema-core.jar}" />
                 <include name="${xmlsec.jar}" />
                 <include name="${xmltooling.jar}" />
             </fileset>

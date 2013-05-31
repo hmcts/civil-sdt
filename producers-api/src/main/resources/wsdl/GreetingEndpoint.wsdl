@@ -59,9 +59,9 @@
 		<documentation>WSDL File for GreetingEndpoint</documentation>
 		<port name="GreetingEndpointPort" binding="tns:GreetingEndpointHttpPortBinding">
 			<!-- Send directly to the producers application within Tomcat (tc-server) 
-				which is configured to listen on port 8888. 'producers' is the webapp 
-				and 'hullo' is the path defined in web.xml -->
-			<soap:address location="http://localhost:8888/producers/hullo"/>
+				which is configured to listen on port 8888. 'producers' is the webapp, 
+				'service' is servlet path and 'hullo' is the path defined in applicationContext.xml -->
+			<soap:address location="http://localhost:8888/producers/service/hullo"/>
 		</port>
 	</service>
 
