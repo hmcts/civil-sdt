@@ -13,13 +13,13 @@ VALUES (5,'PAID/WRITTEN OFF/DISCONTINUED/WITHDRAWN REQUESTS');
 
 
 
-INSERT INTO valid_services ( valid_service_id,valid_service_name) 
-VALUES ('MCOL','mcol live service');
-INSERT INTO valid_services ( valid_service_id,valid_service_name) 
-VALUES ('PCOL','pcol live service');
-INSERT INTO valid_services ( valid_service_id,valid_service_name) 
-VALUES ('C_MC','mcol commissioning service');
-INSERT INTO valid_services ( valid_service_id,valid_service_name) 
-VALUES ('C_PC','pcol commissioning service');
+INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
+VALUES (1,'MCOL','mcol live service');
+INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
+VALUES (2,'PCOL','pcol live service');
+INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
+VALUES (3,'C_MC','mcol commissioning service');
+INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
+VALUES (4,'C_PC','pcol commissioning service');
 
 COMMIT;
