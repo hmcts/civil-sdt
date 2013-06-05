@@ -1,23 +1,23 @@
 connect sdt_owner/sdt_owner
 
-ALTER TABLE bulk_customer_services
-ADD CONSTRAINT bcs_valid_service_fk
-FOREIGN KEY (valid_service_id)
-REFERENCES valid_services(valid_service_id)
+ALTER TABLE bulk_customer_applications
+ADD CONSTRAINT bca_target_application_fk
+FOREIGN KEY (target_application_id)
+REFERENCES target_applications(target_application_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
-ALTER TABLE bulk_customer_services
-ADD CONSTRAINT bcs_customer_id_fk
+ALTER TABLE bulk_customer_applications
+ADD CONSTRAINT bca_bulk_customer_fk
 FOREIGN KEY (bulk_customer_id)
 REFERENCES bulk_customers(bulk_customer_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
 ALTER TABLE bulk_submissions
-ADD CONSTRAINT bs_valid_service_fk
-FOREIGN KEY (valid_service_id)
-REFERENCES valid_services(valid_service_id)
+ADD CONSTRAINT bs_target_application_fk
+FOREIGN KEY (target_application_id)
+REFERENCES target_applications(target_application_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
@@ -36,9 +36,9 @@ NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
 ALTER TABLE error_log
-ADD CONSTRAINT el_error_code_fk
-FOREIGN KEY (error_code)
-REFERENCES error_messages(error_code)
+ADD CONSTRAINT el_error_message_fk
+FOREIGN KEY (error_message_id)
+REFERENCES error_messages(error_message_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
@@ -57,15 +57,15 @@ NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
 
-ALTER TABLE routing_table
-ADD CONSTRAINT rt_valid_service_fk
-FOREIGN KEY (valid_service_id)
-REFERENCES valid_services(valid_service_id)
+ALTER TABLE request_routings
+ADD CONSTRAINT rr_target_application_fk
+FOREIGN KEY (target_application_id)
+REFERENCES target_applications(target_application_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
-ALTER TABLE routing_table
-ADD CONSTRAINT rt_request_type_fk
+ALTER TABLE request_routings
+ADD CONSTRAINT rr_request_type_fk
 FOREIGN KEY (request_type_id)
 REFERENCES request_types(request_type_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
