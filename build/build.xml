@@ -25,12 +25,14 @@
         <file name="../services/build.xml" />
         <file name="../producers-api/build.xml" />
         <file name="../producers/build.xml" />
+        <file name="../producer-commissioning/build.xml" />
         <file name="../consumers/build.xml" />
     </filelist>
 
     <!-- List of projects for which deploy is needed in order - note dirset cannot control order of execution -->
     <filelist id="deploy-project-list" dir=".">
         <file name="../producers/build.xml" />
+        <file name="../producer-commissioning/build.xml" />
         <file name="../consumers/build.xml" />
     </filelist>
 
@@ -57,8 +59,10 @@
         <!-- consumers and producers are part of prototype -->
     	<delete file="${app.server.webapps.dir}/consumers.war" />
         <delete file="${app.server.webapps.dir}/producers.war" />
+        <delete file="${app.server.webapps.dir}/producer-comx.war" />
         <delete dir="${app.server.webapps.dir}/consumers" />
         <delete dir="${app.server.webapps.dir}/producers" />
+        <delete dir="${app.server.webapps.dir}/producer-comx" />
 
         <delete file="${c}/sdt.war" />
         <delete dir="${app.server.webapps.dir}/sdt" />

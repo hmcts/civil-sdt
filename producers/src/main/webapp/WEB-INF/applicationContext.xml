@@ -16,7 +16,18 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
     <!-- The # prefix, in implementor attribute, indicates bean of type ... The name of the interface which this endpoint must implement -->
-    <jaxws:endpoint id="hullo" implementor="#uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType" address="/hullo"/>
-    <jaxws:endpoint id="sdtapi" implementor="#uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType" address="/sdtapi"/>
+    <jaxws:endpoint id="hullo" implementor="#uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType" address="/hullo">
+        <jaxws:properties>
+            <entry key="schema-validation-enabled" value="false"/>
+        </jaxws:properties>
+    </jaxws:endpoint>
+    
+    <jaxws:endpoint id="sdtapi" 
+                implementor="#uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType" 
+                address="/sdtapi">
+        <jaxws:properties>
+            <entry key="schema-validation-enabled" value="false"/>
+        </jaxws:properties>
+    </jaxws:endpoint>
 
 </beans>
