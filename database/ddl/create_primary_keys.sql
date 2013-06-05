@@ -1,16 +1,16 @@
 connect sdt_owner/sdt_owner
 
 
-define bulk_customers_pk          = 'TABLESPACE users'
-define bulk_customer_services_pk  = 'TABLESPACE users'
-define bulk_submissions_pk        = 'TABLESPACE users'
-define error_log_pk               = 'TABLESPACE users'
-define error_messages_pk          = 'TABLESPACE users'
-define global_parameters_pk       = 'TABLESPACE users'
-define individual_requests_pk     = 'TABLESPACE users'
-define request_types_pk           = 'TABLESPACE users'
-define routing_table_pk           = 'TABLESPACE users'
-define valid_services_pk          = 'TABLESPACE users'
+define bulk_customers_pk              = 'TABLESPACE users'
+define bulk_customer_applications_pk  = 'TABLESPACE users'
+define bulk_submissions_pk            = 'TABLESPACE users'
+define error_log_pk                   = 'TABLESPACE users'
+define error_messages_pk              = 'TABLESPACE users'
+define global_parameters_pk           = 'TABLESPACE users'
+define individual_requests_pk         = 'TABLESPACE users'
+define request_types_pk               = 'TABLESPACE users'
+define request_routings_pk             = 'TABLESPACE users'
+define target_applications_pk         = 'TABLESPACE users'
 
 --
 -- bulk_customers     
@@ -29,19 +29,19 @@ USING INDEX bulk_customers_pk
 ;
 
 --
--- bulk_customer_services    
+-- bulk_customer_applications
 --
 
-CREATE INDEX bulk_customer_services_pk
-ON bulk_customer_services
-(bulk_customer_id ,valid_service_id ) 
-&bulk_customer_services_pk
+CREATE INDEX bulk_customer_applications_pk
+ON bulk_customer_applications
+(bulk_customer_id ,target_application_id ) 
+&bulk_customer_applications_pk
 ;
 
-ALTER TABLE bulk_customer_services
-ADD CONSTRAINT bulk_customer_services_pk
-PRIMARY KEY (bulk_customer_id ,valid_service_id )
-USING INDEX bulk_customer_services_pk
+ALTER TABLE bulk_customer_applications
+ADD CONSTRAINT bulk_customer_applications_pk
+PRIMARY KEY (bulk_customer_id ,target_application_id )
+USING INDEX bulk_customer_applications_pk
 ;
 
 --
@@ -77,18 +77,18 @@ USING INDEX  error_log_pk
 ;
 
 --
--- error _messages
+-- error_messages
 --
 
 CREATE INDEX error_messages_pk
 ON error_messages    
-( error_code ) 
+( error_message_id ) 
 &error_messages_pk
 ;
 
 ALTER TABLE error_messages
 ADD CONSTRAINT error_messages_pk
-PRIMARY KEY ( error_code )
+PRIMARY KEY ( error_message_id )
 USING INDEX error_messages_pk
 ;
 
@@ -98,13 +98,13 @@ USING INDEX error_messages_pk
 --
 CREATE INDEX global_parameters_pk
 ON global_parameters 
-(parameter_id)
+(global_parameter_id)
 &global_parameters_pk
 ;
 
 ALTER TABLE global_parameters
 ADD CONSTRAINT global_parameters_pk
-PRIMARY KEY (parameter_id)
+PRIMARY KEY (global_parameter_id)
 USING INDEX global_parameters_pk
 ;
 
@@ -141,34 +141,34 @@ USING INDEX request_types_pk
 ;
 
 --
--- routing_table
+-- request_routings
 --
 
-CREATE INDEX routing_table_pk
-ON routing_table
-( request_type_id, valid_service_id ) 
-&routing_table_pk
+CREATE INDEX request_routings_pk
+ON request_routings
+( request_type_id, target_application_id ) 
+&request_routings_pk
 ;
 
-ALTER TABLE routing_table
-ADD CONSTRAINT routing_table_pk
-PRIMARY KEY ( request_type_id, valid_service_id )
-USING INDEX routing_table_pk
+ALTER TABLE request_routings
+ADD CONSTRAINT request_routings_pk
+PRIMARY KEY ( request_type_id, target_application_id )
+USING INDEX request_routings_pk
 ;
 
 
 --
--- valid_services
+-- target_applications     
 --
 
-CREATE INDEX valid_services_pk
-ON valid_services
-( valid_service_id) 
-&valid_services_pk
+CREATE INDEX target_applications_pk
+ON target_applications
+( target_application_id) 
+&target_applications_pk
 ;
 
-ALTER TABLE valid_services
-ADD CONSTRAINT valid_services_pk
-PRIMARY KEY ( valid_service_id)
-USING INDEX valid_services_pk;
+ALTER TABLE target_applications
+ADD CONSTRAINT target_applications_pk
+PRIMARY KEY ( target_application_id)
+USING INDEX target_applications_pk;
 
