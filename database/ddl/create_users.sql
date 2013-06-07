@@ -1,5 +1,3 @@
-connect / as sysdba
-
 CREATE USER sdt_owner
 IDENTIFIED BY sdt_owner
 DEFAULT TABLESPACE users
