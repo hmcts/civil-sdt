@@ -38,10 +38,9 @@ import javax.jws.WebService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCode;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCode;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusType;
@@ -66,10 +65,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
 public class SdtEndpointPortType implements ISdtEndpointPortType
 {
+
     /**
-     * Logger for this class.
+     * Logger instance.
      */
     private static final Log LOGGER = LogFactory.getLog (SdtEndpointPortType.class);
+
+    /**
+     * Handles bulk submission request.
+     */
+    private IWsCreateBulkRequestHandler wsCreateBulkRequestHandler;
+
 
     @Override
     public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
@@ -112,13 +118,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         LOGGER.debug (this.getClass ().getName () + " endpoint called, submitBulk=" +
                 bulkRequest.getHeader ().getSdtCustomerId ());
 
-        final BulkResponseType response = new BulkResponseType ();
-        response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
-        response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
-        response.setSdtBulkReference ("sdtreference");
-        final StatusType status = new StatusType ();
-        status.setCode (StatusCode.OK);
-        response.setStatus (status);
+        final BulkResponseType response = wsCreateBulkRequestHandler.submitBulk (bulkRequest);
         return response;
     }
 
@@ -130,5 +130,13 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
 
         // TODO Auto-generated method stub
         return null;
+    }
+
+    /**
+     * @param wsCreateBulkRequestHandler the wsCreateBulkRequestHandler to set
+     */
+    public void setWsCreateBulkRequestHandler (final IWsCreateBulkRequestHandler wsCreateBulkRequestHandler)
+    {
+        this.wsCreateBulkRequestHandler = wsCreateBulkRequestHandler;
     }
 }
