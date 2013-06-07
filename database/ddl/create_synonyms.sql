@@ -1,4 +1,4 @@
-connect sdt_user/sdt_user
+alter session set current_schema=sdt_user;
 
 CREATE SYNONYM bulk_customers             FOR sdt_owner.bulk_customers;       
 CREATE SYNONYM bulk_customer_applications FOR sdt_owner.bulk_customer_applications;
