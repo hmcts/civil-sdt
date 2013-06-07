@@ -1,5 +1,4 @@
-connect sdt_owner/sdt_owner
-
+alter session set current_schema=sdt_owner;
 
 DROP TABLE bulk_customers;         
 DROP TABLE bulk_customer_services ;
