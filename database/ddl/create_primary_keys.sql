@@ -1,4 +1,4 @@
-connect sdt_owner/sdt_owner
+alter session set current_schema=sdt_owner;
 
 
 define bulk_customers_pk              = 'TABLESPACE users'
