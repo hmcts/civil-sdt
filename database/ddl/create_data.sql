@@ -1,4 +1,4 @@
-connect sdt_user/sdt_user
+alter session set current_schema=sdt_user;
 
 INSERT INTO request_types (request_type_id,request_type_name)
 VALUES (1,'NEW CLAIM');
