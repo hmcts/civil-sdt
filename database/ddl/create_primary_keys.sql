@@ -4,12 +4,13 @@ alter session set current_schema=sdt_owner;
 define bulk_customers_pk              = 'TABLESPACE users'
 define bulk_customer_applications_pk  = 'TABLESPACE users'
 define bulk_submissions_pk            = 'TABLESPACE users'
-define error_log_pk                   = 'TABLESPACE users'
+define error_logs_pk                  = 'TABLESPACE users'
 define error_messages_pk              = 'TABLESPACE users'
 define global_parameters_pk           = 'TABLESPACE users'
 define individual_requests_pk         = 'TABLESPACE users'
+define message_logs_pk                = 'TABLESPACE users'
 define request_types_pk               = 'TABLESPACE users'
-define request_routings_pk             = 'TABLESPACE users'
+define request_routings_pk            = 'TABLESPACE users'
 define target_applications_pk         = 'TABLESPACE users'
 
 --
@@ -61,19 +62,19 @@ USING INDEX bulk_submissions_pk
 ;
 
 --
--- error_log
+-- error_logs
 --
 
-CREATE INDEX error_log_pk
-ON error_log
+CREATE INDEX error_logs_pk
+ON error_logs
 ( error_log_id ) 
-&error_log_pk
+&error_logs_pk
 ;
 
-ALTER TABLE error_log
-ADD CONSTRAINT error_log_pk
+ALTER TABLE error_logs
+ADD CONSTRAINT error_logs_pk
 PRIMARY KEY ( error_log_id )
-USING INDEX  error_log_pk
+USING INDEX  error_logs_pk
 ;
 
 --
@@ -122,6 +123,23 @@ ALTER TABLE individual_requests
 ADD CONSTRAINT individual_requests_pk
 PRIMARY KEY ( individual_request_id )
 USING INDEX individual_requests_pk
+;
+
+
+--
+-- message_logs
+--
+
+CREATE INDEX message_logs_pk
+ON message_logs
+(message_log_id)
+&message_logs_pk
+;
+
+ALTER TABLE message_logs
+ADD CONSTRAINT message_logs_pk
+PRIMARY KEY ( message_log_id )
+USING INDEX message_logs_pk
 ;
 
 --
