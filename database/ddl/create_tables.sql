@@ -19,7 +19,6 @@ CREATE TABLE bulk_customers
 (bulk_customer_id         INTEGER         -- synthetic pk
 ,bulk_customer_case_code  CHAR(2)      
 ,sdt_customer_id          NUMBER(4,0)
-,customer_identifier      NUMBER(4,0)     -- between 1000 and 9999
 ,version_number           INTEGER         -- hiberate versioning column
 ) &bulk_customers
 ;
