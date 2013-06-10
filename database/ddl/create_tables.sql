@@ -54,7 +54,7 @@ CREATE TABLE error_logs
 (error_log_id             INTEGER         -- pk, synthetic
 ,bulk_submission_id       INTEGER         -- fk from bulk_submissions
 ,individual_request_id    INTEGER         -- fk from individual_requests, null for error raised on bulk file 
-,error_message_id         INTEGER         -- fk from error_messages
+,error_code               INTEGER         -- unimplemented fk from error_messages
 ,created_date             TIMESTAMP       -- date/time of record created
 ,updated_date             TIMESTAMP       -- date/time of last change to record
 ,version_number           INTEGER         -- hiberate versioning column
