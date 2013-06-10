@@ -10,6 +10,7 @@ define error_messages              = 'TABLESPACE users'
 define global_parameters           = 'TABLESPACE users'
 define individual_requests         = 'TABLESPACE users'
 define individual_requests_lob     = 'LOB (individual_payload) STORE AS is_lob(TABLESPACE users)'
+define message_logs                = 'TABLESPACE users'
 define request_types               = 'TABLESPACE users'
 define request_routings            = 'TABLESPACE users'
 define target_applications         = 'TABLESPACE users'
@@ -101,6 +102,22 @@ CREATE TABLE individual_requests
 ,individual_payload       BLOB
 ) &individual_requests_lob 
 &individual_requests 
+;
+
+CREATE TABLE message_logs
+(message_log_id           INTEGER         -- pk
+,logged_event             VARCHAR2(3)     -- one of SBR, RBF, RDF
+,direction                CHAR(1)         -- one of I or O
+,bulk_submission_id       INTEGER         -- fk from bulk_submissions
+,sdt_bulk_reference       VARCHAR2(32)    -- effectively another FK from bulk_submissions
+,customer_reference       VARCHAR2(32)    -- external reference supplied by the submitting system
+,number_of_requests       NUMBER(5,0)     -- number of component requests in the bulk submission
+,created_date             TIMESTAMP
+,updated_date             TIMESTAMP
+,user_investigation       CHAR(1)         -- Y to indicate the record should be excluded from any purges
+,payload                  BLOB
+,version_number           INTEGER         -- hiberate versioning column
+) &message_log
 ;
 
 CREATE TABLE request_types
