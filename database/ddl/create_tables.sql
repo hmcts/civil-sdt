@@ -5,7 +5,7 @@ define bulk_customers              = 'TABLESPACE users'
 define bulk_customer_applications  = 'TABLESPACE users'
 define bulk_submissions            = 'TABLESPACE users'
 define bulk_submissions_lob        = 'LOB (bulk_payload) STORE AS bs_lob(TABLESPACE users)'
-define error_log                   = 'TABLESPACE users'
+define error_logs                  = 'TABLESPACE users'
 define error_messages              = 'TABLESPACE users'
 define global_parameters           = 'TABLESPACE users'
 define individual_requests         = 'TABLESPACE users'
@@ -50,7 +50,7 @@ CREATE TABLE bulk_submissions
 &bulk_submissions
 ;
 
-CREATE TABLE error_log
+CREATE TABLE error_logs
 (error_log_id             INTEGER         -- pk, synthetic
 ,bulk_submission_id       INTEGER         -- fk from bulk_submissions
 ,individual_request_id    INTEGER         -- fk from individual_requests, null for error raised on bulk file 
@@ -59,7 +59,7 @@ CREATE TABLE error_log
 ,updated_date             TIMESTAMP       -- date/time of last change to record
 ,version_number           INTEGER         -- hiberate versioning column
 ,error_text               VARCHAR2(1000)  -- detailed error mesg
-) &error_log
+) &error_logs
 ;
 
 CREATE TABLE error_messages
