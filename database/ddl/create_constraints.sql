@@ -24,7 +24,7 @@ ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_sbr_nn CHECK (sdt_bu
 ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_nor_nn CHECK (number_of_requests IS NOT NULL);
 ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_bss_nn CHECK (bulk_submission_status IS NOT NULL);
 ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_cd_nn  CHECK (created_date IS NOT NULL);
-ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_p_nn   CHECK (payload IS NOT NULL);
+ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_bp_nn  CHECK (bulk_payload IS NOT NULL);
 
 ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_sbr_uni UNIQUE (sdt_bulk_reference );
 
