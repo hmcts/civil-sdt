@@ -117,7 +117,7 @@ CREATE TABLE message_logs
 ,user_investigation       CHAR(1)         -- Y to indicate the record should be excluded from any purges
 ,payload                  BLOB
 ,version_number           INTEGER         -- hiberate versioning column
-) &message_log
+) &message_logs
 ;
 
 CREATE TABLE request_types
