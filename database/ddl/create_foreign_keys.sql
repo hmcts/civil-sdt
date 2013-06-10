@@ -35,12 +35,6 @@ REFERENCES individual_requests(individual_request_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
-ALTER TABLE error_logs
-ADD CONSTRAINT el_error_message_fk
-FOREIGN KEY (error_message_id)
-REFERENCES error_messages(error_message_id)
-NOT DEFERRABLE INITIALLY IMMEDIATE
-;
 
 ALTER TABLE individual_requests
 ADD CONSTRAINT ir_request_type_fk
