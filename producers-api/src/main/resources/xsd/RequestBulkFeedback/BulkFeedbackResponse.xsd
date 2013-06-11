@@ -43,7 +43,7 @@
                     <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
                     <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
                     <!-- TODO TBC with Hillary whether fee could be greater than max claim amount -->
-                    <xs:element name="fee" type="base:amountType999999999"  minOccurs="0"/>
+                    <xs:element name="fee" type="base:feeType"  minOccurs="0"/>
                     <xs:element name="status" type="base:createStatusType"/>
                 </xs:sequence>
             </xs:extension>

@@ -12,11 +12,11 @@ cvc-datatype-valid.1.2.1: '2001-01-010' is not a valid value for 'date'.
 cvc-type.3.1.3: The value '2001-01-010' of element 'tns:defendant2DateOfBirth' is not valid.
 cvc-datatype-valid.1.2.1: '2001-01-010' is not a valid value for 'date'.
 cvc-type.3.1.3: The value '2001-01-010' of element 'tns:fullByDate' is not valid.
-cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'amountType9999999'.
+cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'interestType'.
 cvc-type.3.1.3: The value '-1' of element 'tns:interest' is not valid.
-cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'amountType999999'.
+cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'solicitorCostType'.
 cvc-type.3.1.3: The value '-1' of element 'tns:solicitorCost' is not valid.
-cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'amountType99999999'.
+cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusive '0' for type 'deductedAmountType'.
 cvc-type.3.1.3: The value '-1' of element 'tns:deductedAmount' is not valid.
 cvc-datatype-valid.1.2.1: 'true1' is not a valid value for 'boolean'.
 cvc-type.3.1.3: The value 'true1' of element 'tns:guidanceRead' is not valid.

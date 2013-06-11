@@ -41,7 +41,7 @@
             <xs:documentation>Details when payment is to be paid in instalments. The amount cannot be greater than claim amount.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="amount" type="base:amountType9999999"/>
+            <xs:element name="amount" type="base:amountType"/>
             <xs:element name="frequency" type="tns:instalmentFrequency"></xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -87,9 +87,9 @@
             <xs:element name="defendant2Address" type="base:addressType" minOccurs="0"/>
             <xs:element name="defendant2DateOfBirth" type="xs:date" minOccurs="0"/>
             <xs:element name="paymentSchedule" type="tns:paymentScheduleType"/>
-            <xs:element name="interest" type="base:amountType9999999" minOccurs="0"/>
-            <xs:element name="solicitorCost" type="base:amountType999999" minOccurs="0"/>
-            <xs:element name="deductedAmount" type="base:amountType99999999" minOccurs="0"/>
+            <xs:element name="interest" type="base:interestType" minOccurs="0"/>
+            <xs:element name="solicitorCost" type="base:solicitorCostType" minOccurs="0"/>
+            <xs:element name="deductedAmount" type="base:deductedAmountType" minOccurs="0"/>
             <!-- TODO Hillary to confirm if this is required. -->
             <xs:element name="guidanceRead" type="xs:boolean"/>
             <xs:element name="sotSignature" type="base:sotSignatureType"/>

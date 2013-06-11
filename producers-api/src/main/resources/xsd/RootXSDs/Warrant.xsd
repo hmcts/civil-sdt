@@ -14,10 +14,10 @@
 			<xs:element name="claimantReference" type="base:claimantReferenceType" minOccurs="0" />
 			<xs:element name="defendantId" type="base:defendantIdType" />
 			<xs:element name="defendantAddress" type="base:addressType" />
-			<xs:element name="balanceOfDebt" type="base:amountType9999999" />
-			<xs:element name="warrantAmount" type="base:amountType9999999" />
-			<xs:element name="solicitorCost" type="base:amountType99999" minOccurs="0" />
-			<xs:element name="additionalNotes" type="base:stringMaxLength120" minOccurs="0" />
+			<xs:element name="balanceOfDebt" type="base:balanceOfDebtType" />
+			<xs:element name="warrantAmount" type="base:warrantAmountType" />
+			<xs:element name="solicitorCost" type="base:solicitorCostType" minOccurs="0" />
+			<xs:element name="additionalNotes" type="base:additionalNotesType" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 

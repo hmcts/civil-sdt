@@ -17,10 +17,10 @@
 
     <xs:complexType name="interestType">
         <xs:sequence>
-            <xs:element name="dailyAmount" type="base:amountType999999"/>
+            <xs:element name="dailyAmount" type="base:dailyAmountType"/>
             <xs:element name="owedDate" type="xs:date"/>
             <xs:element name="claimDate" type="xs:date"/>
-            <xs:element name="claimAmount" type="base:amountType9999999">
+            <xs:element name="claimAmount" type="base:claimAmountType">
                 <xs:annotation>
                     <xs:documentation>Amount on which interest should be calculated.</xs:documentation>
                 </xs:annotation>
@@ -47,8 +47,8 @@
             <xs:element name="defendant2" type="base:personType" minOccurs="0"/>
             <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
             <xs:element name="interest" type="tns:interestType" minOccurs="0"/>
-			<xs:element name="claimAmount" type="base:amountType9999999"/>
-			<xs:element name="solicitorCost" type="base:amountType999999" minOccurs="0" >
+			<xs:element name="claimAmount" type="base:claimAmountType"/>
+			<xs:element name="solicitorCost" type="base:solicitorCostType" minOccurs="0" >
 			    <xs:annotation>
 			        <xs:documentation>Should be populated only if customer is solicitor.</xs:documentation>
 			    </xs:annotation>
