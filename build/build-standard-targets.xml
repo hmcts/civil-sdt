@@ -109,6 +109,8 @@
             <arg value="${src-gen.dir}" />
             <arg value="-frontend" />
             <arg value="jaxws21" />
+            <arg value="-b" />
+            <arg value="${resources.dir}/jaxb-bindings.xml" />
             <arg value="${resources.dir}/wsdl/SdtEndpoint.wsdl" />
             <classpath>
                 <path refid="cxf.classpath" />
@@ -119,6 +121,8 @@
             <arg value="${src-gen.dir}" />
             <arg value="-frontend" />
             <arg value="jaxws21" />
+            <arg value="-b" />
+            <arg value="${resources.dir}/jaxb-bindings.xml" />
             <arg value="${resources.dir}/wsdl/SdtInternalEndpoint.wsdl" />
             <classpath>
                 <path refid="cxf.classpath" />
@@ -129,6 +133,8 @@
             <arg value="${src-gen.dir}" />
             <arg value="-frontend" />
             <arg value="jaxws21" />
+            <arg value="-b" />
+            <arg value="${resources.dir}/jaxb-bindings.xml" />
             <arg value="${resources.dir}/wsdl/McolInternalEndpoint.wsdl" />
             <classpath>
                 <path refid="cxf.classpath" />
