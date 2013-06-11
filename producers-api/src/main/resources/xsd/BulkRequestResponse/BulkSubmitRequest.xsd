@@ -18,16 +18,16 @@
     
     <xs:complexType name="headerType">
         <xs:sequence>
-            <xs:element name="sdtCustomerId" type="base:sdtCustomerId"/>
-            <xs:element name="targetSystemId" type="base:targetSystemId"/>
-            <xs:element name="requestCount" type="base:requestCount"/>
-            <xs:element name="customerReference" type="base:customerReference"/>
+            <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
+            <xs:element name="targetSystemId" type="base:targetSystemIdType"/>
+            <xs:element name="requestCount" type="base:requestCountType"/>
+            <xs:element name="customerReference" type="base:customerReferenceType"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="request" abstract="true">
-        <xs:attribute name="requestType" type="base:requestType" use="required"/>
-        <xs:attribute name="requestId" type="base:requestId" use="required"/>
+        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
+        <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
     </xs:complexType>
     
     <xs:complexType name="mcolRequestType">
@@ -48,7 +48,7 @@
         <xs:sequence>
             <xs:element name="mcolRequest" type="tns:mcolRequestType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:attribute name="customerCode" type="base:customerCode" use="required"/>
+        <xs:attribute name="customerCode" type="base:customerCodeType" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="requestsType">

@@ -23,12 +23,12 @@
             version="1.0">
         
             <!-- TODO Data type to be confirmed  -->
-            <xs:simpleType name="sdtCustomerId">
+            <xs:simpleType name="sdtCustomerIdType">
                 <xs:restriction base="tns:stringMaxLength24"/>
             </xs:simpleType>
         
             <!-- Proposed data format AA-TTTT-YYMMSDDHHMISS-999999999-->
-            <xs:simpleType name="sdtBulkReference">
+            <xs:simpleType name="sdtBulkReferenceType">
                 <xs:restriction base="xs:string">
                     <xs:length value="32"/>
                 </xs:restriction>
@@ -40,24 +40,24 @@
                 </xs:restriction>
             </xs:simpleType>
         
-            <xs:simpleType name="customerReference">
+            <xs:simpleType name="customerReferenceType">
                 <xs:restriction base="tns:stringMaxLength32"/>
             </xs:simpleType>
         
-            <xs:simpleType name="customerCode">
+            <xs:simpleType name="customerCodeType">
                 <xs:restriction base="xs:integer">
                     <xs:minInclusive value="1000" />
                     <xs:maxInclusive value="9999" />
                 </xs:restriction>
             </xs:simpleType>
             
-            <xs:simpleType name="requestCount">
+            <xs:simpleType name="requestCountType">
                 <xs:restriction base="xs:integer">
                     <xs:maxInclusive value="99999"/>
                 </xs:restriction>
             </xs:simpleType>
         
-            <xs:simpleType name="ncpId">
+            <xs:simpleType name="ncpIdType">
                 <xs:restriction base="xs:integer">
                     <xs:minInclusive value="1000" />
                     <xs:maxInclusive value="9999" />
@@ -65,18 +65,18 @@
             </xs:simpleType>
         
             <!-- Document number is now an 8 digit number -->
-            <xs:simpleType name="documentNumber">
+            <xs:simpleType name="documentNumberType">
                 <xs:restriction base="xs:string">
                     <xs:pattern value="[0-9A-Za-z]{8}" />
                 </xs:restriction>
             </xs:simpleType>
         
-            <xs:simpleType name="claimantReference">
+            <xs:simpleType name="claimantReferenceType">
                 <xs:restriction base="tns:stringMaxLength24"/>
             </xs:simpleType>
         
             <!-- Defendant ID is Blank (all defendants), 1 or 2 -->
-            <xs:simpleType name="defendantId">
+            <xs:simpleType name="defendantIdType">
                 <xs:restriction base="xs:string">
                     <xs:pattern value=" |1|2" />
                 </xs:restriction>
@@ -137,16 +137,16 @@
                 </xs:sequence>
             </xs:complexType>
         
-            <xs:simpleType name="courtCode">
+            <xs:simpleType name="courtCodeType">
                 <xs:restriction base="xs:integer">
                     <xs:pattern value="[0-9]{3}" />
                 </xs:restriction>
             </xs:simpleType>
-            <xs:simpleType name="courtName">
+            <xs:simpleType name="courtNameType">
                 <xs:restriction base="tns:stringMaxLength40"/>
             </xs:simpleType>
             
-            <xs:simpleType name="postcode">
+            <xs:simpleType name="postcodeType">
                 <xs:restriction base="xs:string">
                     <xs:pattern  value="[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z-[CIKMOV]]{2}" />
                 </xs:restriction>
@@ -159,7 +159,7 @@
                     <xs:element name="line3" type="tns:stringMaxLength30" minOccurs="0" />
                     <xs:element name="line4" type="tns:stringMaxLength30" minOccurs="0" />
                     <xs:element name="line5" type="tns:stringMaxLength30" minOccurs="0" />
-                    <xs:element name="postcode" type="tns:postcode" />
+                    <xs:element name="postcode" type="tns:postcodeType" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="correspondenceDetailType">
@@ -185,15 +185,15 @@
                 </xs:sequence>
             </xs:complexType>
         
-            <xs:simpleType name="requestId">
+            <xs:simpleType name="requestIdType">
                 <xs:restriction base="tns:stringMaxLength24"/>
             </xs:simpleType>
         
-            <xs:simpleType name="sdtRequestId">
+            <xs:simpleType name="sdtRequestIdType">
                 <xs:restriction base="tns:stringMaxLength40"/>
             </xs:simpleType>
         
-            <xs:simpleType name="requestType">
+            <xs:simpleType name="requestTypeType">
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="mcolClaim"/>
                     <xs:enumeration value="mcolJudgment"/>
@@ -234,14 +234,14 @@
                 </xs:restriction>
             </xs:simpleType>
             
-            <xs:simpleType name="statusCode">
+            <xs:simpleType name="statusCodeType">
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="OK"/>
                     <xs:enumeration value="ERROR"/>
                 </xs:restriction>
             </xs:simpleType>
             
-            <xs:simpleType name="createStatusCode">
+            <xs:simpleType name="createStatusCodeType">
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="ACCEPTED"/>
                     <xs:enumeration value="INITIALLY_ACCEPTED"/>
@@ -261,14 +261,14 @@
                 <xs:sequence>
                     <xs:element name="error" type="tns:errorType" minOccurs="0"/>
                 </xs:sequence>
-                <xs:attribute name="code" type="tns:statusCode"></xs:attribute>
+                <xs:attribute name="code" type="tns:statusCodeType"></xs:attribute>
             </xs:complexType>
             
             <xs:complexType name="createStatusType">
                 <xs:sequence>
                     <xs:element name="error" type="tns:errorType" minOccurs="0"/>
                 </xs:sequence>
-                <xs:attribute name="code" type="tns:createStatusCode"></xs:attribute>
+                <xs:attribute name="code" type="tns:createStatusCodeType"></xs:attribute>
             </xs:complexType>
             
         </xs:schema>
@@ -307,7 +307,7 @@
                     <xs:documentation>Represents Claim document.</xs:documentation>
                 </xs:annotation>
                 <xs:sequence>
-                    <xs:element name="claimantReference" type="base:claimantReference" minOccurs="0"/>
+                    <xs:element name="claimantReference" type="base:claimantReferenceType" minOccurs="0"/>
                     <xs:element name="claimant" type="base:personType" minOccurs="0">
                         <xs:annotation>
                             <xs:documentation>Should be populated if customer is a solicitor.</xs:documentation>
@@ -354,9 +354,9 @@
             
             <xs:complexType name="warrantType">
                 <xs:sequence>
-                    <xs:element name="claimNumber" type="base:documentNumber" />
-                    <xs:element name="claimantReference" type="base:claimantReference" minOccurs="0" />
-                    <xs:element name="defendantId" type="base:defendantId" />
+                    <xs:element name="claimNumber" type="base:documentNumberType" />
+                    <xs:element name="claimantReference" type="base:claimantReferenceType" minOccurs="0" />
+                    <xs:element name="defendantId" type="base:defendantIdType" />
                     <xs:element name="defendantAddress" type="base:addressType" />
                     <xs:element name="balanceOfDebt" type="base:amountType9999999" />
                     <xs:element name="warrantAmount" type="base:amountType9999999" />
@@ -446,11 +446,11 @@
          
             <xs:complexType name="judgmentType">
                 <xs:sequence>
-                    <xs:element name="claimNumber" type="base:documentNumber"/>
+                    <xs:element name="claimNumber" type="base:documentNumberType"/>
                     <xs:element name="jointJudgment" type="xs:boolean"/>
                     <xs:element name="judgmentOption" type="tns:judgmentOption"/>
                     <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
-                    <xs:element name="defendantId" type="base:defendantId"/>
+                    <xs:element name="defendantId" type="base:defendantIdType"/>
                     <xs:element name="defendant1Address" type="base:addressType" minOccurs="0"/>
                     <xs:element name="defendant1DateOfBirth" type="xs:date" minOccurs="0"/>
                     <!-- TODO More info needed to determine if structure could be simplified -->
@@ -502,8 +502,8 @@
         
             <xs:complexType name="paidType">
                 <xs:sequence>
-                    <xs:element name="claimNumber" type="base:documentNumber" />
-                    <xs:element name="defendantId" type="base:defendantId" minOccurs="0" />
+                    <xs:element name="claimNumber" type="base:documentNumberType" />
+                    <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
                     <xs:element name="notificationType" type="tns:notification" />
                     <xs:element name="lastPaymentDate" type="xs:date"   minOccurs="0" />
                 </xs:sequence>
@@ -533,16 +533,16 @@
             
             <xs:complexType name="headerType">
                 <xs:sequence>
-                    <xs:element name="sdtCustomerId" type="base:sdtCustomerId"/>
+                    <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
                     <xs:element name="targetSystemId" type="base:targetSystemId"/>
-                    <xs:element name="requestCount" type="base:requestCount"/>
-                    <xs:element name="customerReference" type="base:customerReference"/>
+                    <xs:element name="requestCount" type="base:requestCountType"/>
+                    <xs:element name="customerReference" type="base:customerReferenceType"/>
                 </xs:sequence>
             </xs:complexType>
         
             <xs:complexType name="request" abstract="true">
-                <xs:attribute name="requestType" type="base:requestType" use="required"/>
-                <xs:attribute name="requestId" type="base:requestId" use="required"/>
+                <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
+                <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
             </xs:complexType>
             
             <xs:complexType name="mcolRequestType">
@@ -563,7 +563,7 @@
                 <xs:sequence>
                     <xs:element name="mcolRequest" type="tns:mcolRequestType" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
-                <xs:attribute name="customerCode" type="base:customerCode" use="required"/>
+                <xs:attribute name="customerCode" type="base:customerCodeType" use="required"/>
             </xs:complexType>
         
             <xs:complexType name="requestsType">
@@ -595,10 +595,10 @@
             
             <xs:complexType name="bulkResponseType">
                 <xs:sequence>
-                    <xs:element name="customerReference" type="base:customerReference"/>
-                    <xs:element name="sdtBulkReference" type="base:sdtBulkReference"/>
+                    <xs:element name="customerReference" type="base:customerReferenceType"/>
+                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
                     <xs:element name="submittedDate" type="xs:dateTime"/>
-                    <xs:element name="requestCount" type="base:requestCount"/>
+                    <xs:element name="requestCount" type="base:requestCountType"/>
                     <xs:element name="status" type="base:statusType"/>
                 </xs:sequence>
             </xs:complexType>
@@ -625,8 +625,8 @@
         
             <xs:complexType name="headerType">
                 <xs:sequence>
-                    <xs:element name="sdtCustomerId" type="base:sdtCustomerId"/>
-                    <xs:element name="sdtBulkReference" type="base:sdtBulkReference"/>
+                    <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
+                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
                 </xs:sequence>
             </xs:complexType>
             
@@ -646,8 +646,8 @@
             
             <xs:complexType name="bulkRequestStatusType">
                 <xs:sequence>
-                    <xs:element name="sdtBulkReference" type="base:sdtBulkReference"/>
-                    <xs:element name="requestCount" type="base:requestCount"/>
+                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+                    <xs:element name="requestCount" type="base:requestCountType"/>
                 </xs:sequence>
             </xs:complexType>
             
@@ -664,20 +664,20 @@
             </xs:complexType>
         
             <xs:complexType name="responseType" abstract="true">
-                <xs:attribute name="requestType" type="base:requestType" use="required"/>
-                <xs:attribute name="requestId" type="base:requestId" use="required"/>
+                <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
+                <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
             </xs:complexType>
         
             <xs:complexType name="mcolResponseType">
                 <xs:complexContent>
                     <xs:extension base="tns:responseType">
                         <xs:sequence>
-                            <xs:element name="claimNumber" type="base:documentNumber"  minOccurs="0"/>
+                            <xs:element name="claimNumber" type="base:documentNumberType"  minOccurs="0"/>
                             <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
                             <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
-                            <xs:element name="warrantNumber" type="base:documentNumber"  minOccurs="0"/>
-                            <xs:element name="enforcingCourtCode" type="base:courtCode"  minOccurs="0"/>
-                            <xs:element name="enforcingCourtName" type="base:courtName"  minOccurs="0"/>
+                            <xs:element name="warrantNumber" type="base:documentNumberType"  minOccurs="0"/>
+                            <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
+                            <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
                             <!-- TODO TBC with Hillary whether fee could be greater than max claim amount -->
                             <xs:element name="fee" type="base:amountType999999999"  minOccurs="0"/>
                             <xs:element name="status" type="base:createStatusType"/>
@@ -717,7 +717,7 @@
             </xs:complexType>
             <xs:complexType name="headerType">
                 <xs:sequence>
-                    <xs:element name="sdtCustomerId" type="base:sdtCustomerId" />
+                    <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
                     <xs:element name="targetSystemId" type="base:targetSystemId" />
                 </xs:sequence>
             </xs:complexType>
@@ -760,7 +760,7 @@
             </xs:complexType>
             <xs:complexType name="defenceDetailType">
                 <xs:sequence>
-                    <xs:element name="claimNumber" type="base:documentNumber" />
+                    <xs:element name="claimNumber" type="base:documentNumberType" />
                     <xs:element name="defendants">
                         <xs:complexType>
                             <xs:sequence>
@@ -776,7 +776,7 @@
                     <xs:element name="filedDate" type="xs:dateTime" />
                     <xs:element name="responseType" type="tns:responseType" />
                 </xs:sequence>
-                <xs:attribute name="defendantId" type="base:defendantId" />
+                <xs:attribute name="defendantId" type="base:defendantIdType" />
             </xs:complexType>
         
             <xs:simpleType name="responseType">

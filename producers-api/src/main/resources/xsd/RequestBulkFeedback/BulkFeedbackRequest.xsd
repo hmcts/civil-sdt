@@ -16,8 +16,8 @@
 
     <xs:complexType name="headerType">
         <xs:sequence>
-            <xs:element name="sdtCustomerId" type="base:sdtCustomerId"/>
-            <xs:element name="sdtBulkReference" type="base:sdtBulkReference"/>
+            <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
+            <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
         </xs:sequence>
     </xs:complexType>
     

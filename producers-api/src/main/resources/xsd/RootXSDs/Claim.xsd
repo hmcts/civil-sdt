@@ -33,7 +33,7 @@
             <xs:documentation>Represents Claim document.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-			<xs:element name="claimantReference" type="base:claimantReference" minOccurs="0"/>
+			<xs:element name="claimantReference" type="base:claimantReferenceType" minOccurs="0"/>
 			<xs:element name="claimant" type="base:personType" minOccurs="0">
 			    <xs:annotation>
 			        <xs:documentation>Should be populated if customer is a solicitor.</xs:documentation>

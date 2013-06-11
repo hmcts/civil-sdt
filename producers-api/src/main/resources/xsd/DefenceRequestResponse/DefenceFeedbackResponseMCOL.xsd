@@ -22,7 +22,7 @@
 	</xs:complexType>
 	<xs:complexType name="defenceDetailType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="base:documentNumber" />
+			<xs:element name="claimNumber" type="base:documentNumberType" />
 			<xs:element name="defendants">
 				<xs:complexType>
 					<xs:sequence>
@@ -38,7 +38,7 @@
 			<xs:element name="filedDate" type="xs:dateTime" />
 			<xs:element name="responseType" type="tns:responseType" />
 		</xs:sequence>
-        <xs:attribute name="defendantId" type="base:defendantId" />
+        <xs:attribute name="defendantId" type="base:defendantIdType" />
 	</xs:complexType>
 
 	<!-- Response Type is DE, DC or PA -->

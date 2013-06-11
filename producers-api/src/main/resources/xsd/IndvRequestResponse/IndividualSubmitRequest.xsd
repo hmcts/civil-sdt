@@ -18,8 +18,8 @@
      
     <xs:complexType name="headerType">
         <xs:sequence>
-            <xs:element name="sdtRequestId" type="base:sdtRequestId"/>
-            <xs:element name="ncpId" type="base:ncpId"/>
+            <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
+            <xs:element name="ncpId" type="base:ncpIdType"/>
         </xs:sequence>
     </xs:complexType>
     

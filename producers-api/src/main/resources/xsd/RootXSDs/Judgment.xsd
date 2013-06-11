@@ -75,12 +75,12 @@
  
     <xs:complexType name="judgmentType">
         <xs:sequence>
-            <xs:element name="claimNumber" type="base:documentNumber"/>
+            <xs:element name="claimNumber" type="base:documentNumberType"/>
             <xs:element name="jointJudgment" type="xs:boolean"/>
             <!-- TODO Rename field in EIS -->
             <xs:element name="judgmentOption" type="tns:judgmentOption"/>
             <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
-            <xs:element name="defendantId" type="base:defendantId"/>
+            <xs:element name="defendantId" type="base:defendantIdType"/>
             <xs:element name="defendant1Address" type="base:addressType" minOccurs="0"/>
             <xs:element name="defendant1DateOfBirth" type="xs:date" minOccurs="0"/>
             <!-- TODO More info needed to determine if structure could be simplified -->

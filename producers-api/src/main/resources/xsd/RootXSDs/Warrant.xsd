@@ -10,9 +10,9 @@
     
 	<xs:complexType name="warrantType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="base:documentNumber" />
-			<xs:element name="claimantReference" type="base:claimantReference" minOccurs="0" />
-			<xs:element name="defendantId" type="base:defendantId" />
+			<xs:element name="claimNumber" type="base:documentNumberType" />
+			<xs:element name="claimantReference" type="base:claimantReferenceType" minOccurs="0" />
+			<xs:element name="defendantId" type="base:defendantIdType" />
 			<xs:element name="defendantAddress" type="base:addressType" />
 			<xs:element name="balanceOfDebt" type="base:amountType9999999" />
 			<xs:element name="warrantAmount" type="base:amountType9999999" />
