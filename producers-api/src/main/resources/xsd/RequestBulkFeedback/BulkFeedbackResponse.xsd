@@ -10,7 +10,7 @@
     
     <xs:complexType name="bulkRequestStatusType">
         <xs:sequence>
-            <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType/>
+            <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
             <xs:element name="requestCount" type="base:requestCountType"/>
         </xs:sequence>
     </xs:complexType>

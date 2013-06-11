@@ -39,7 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCode;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
@@ -104,7 +104,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         final McolResponseType r1 = new McolResponseType ();
         r1.setClaimNumber ("claim123");
         final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCode.ACCEPTED);
+        status.setCode (CreateStatusCodeType.ACCEPTED);
         r1.setStatus (status);
         mcolResponses.getMcolResponse ().add (r1);
         responses.setMcolResponses (mcolResponses);

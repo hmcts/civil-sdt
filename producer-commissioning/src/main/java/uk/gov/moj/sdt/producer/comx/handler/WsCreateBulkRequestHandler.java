@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCode;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
@@ -66,7 +66,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         response.setSdtBulkReference ("sdtreference");
         final StatusType status = new StatusType ();
         response.setStatus (status);
-        status.setCode (StatusCode.OK);
+        status.setCode (StatusCodeType.OK);
 
         transformToDomainType (bulkRequest);
 
@@ -74,7 +74,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
 
         if (error != null)
         {
-            status.setCode (StatusCode.OK);
+            status.setCode (StatusCodeType.OK);
             status.setError (error);
         }
 

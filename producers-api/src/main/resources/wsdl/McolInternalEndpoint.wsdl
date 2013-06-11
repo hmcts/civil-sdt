@@ -133,7 +133,7 @@
 				</xs:sequence>
 			</xs:complexType>
 
-			<xs:simpleType name="courtCode">
+			<xs:simpleType name="courtCodeType">
 				<xs:restriction base="xs:integer">
 					<xs:pattern value="[0-9]{3}" />
 				</xs:restriction>
@@ -414,7 +414,7 @@
 						minOccurs="0" />
 					<xs:element name="defendantId" type="base:defendantIdType" />
 					<xs:element name="defendantAddress" type="base:addressType" />
-					<xs:element name="balanceOfDebt" type="balanceOfDebtType" />
+					<xs:element name="balanceOfDebt" type="base:balanceOfDebtType" />
 					<xs:element name="warrantAmount" type="base:warrantAmountType" />
 					<xs:element name="solicitorCost" type="base:solicitorCostType"
 						minOccurs="0" />

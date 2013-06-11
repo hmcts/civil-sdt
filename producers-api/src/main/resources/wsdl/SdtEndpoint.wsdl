@@ -228,7 +228,7 @@
 				</xs:restriction>
 			</xs:simpleType>
 
-			<xs:simpleType name="claimantAmountType">
+			<xs:simpleType name="claimAmountType">
 				<xs:restriction base="xs:integer">
 					<xs:minInclusive value="0" />
 					<xs:maxInclusive value="9999999" />

@@ -129,7 +129,7 @@ public class XmlValidatorTest extends TestCase
 
         Assert.assertEquals (XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult ());
         Assert.assertEquals ("schema_reference.4: Failed to read schema document "
-                + "'file:/C:/disc/workspaces/sdt/app/producers/invalidDir/FileDoesNotExist.xsd',"
+                + "'file:/C:/disc/workspaces/sdt/trunk/app/producers/invalidDir/FileDoesNotExist.xsd',"
                 + " because 1) could not find the document; 2) the document could not be read; 3) "
                 + "the root element of the document is not <xsd:schema>.", xmlValidationDetails.getResultMessages ()
                 .get (0));

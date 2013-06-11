@@ -1,4 +1,4 @@
-cvc-complex-type.2.4.b: The content of element 'tns:header' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema":sdtCustomerIdType}' is expected.
+cvc-complex-type.2.4.b: The content of element 'tns:header' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema":sdtCustomerId}' is expected.
 cvc-complex-type.4: Attribute 'requestType' must appear on element 'tns:mcolRequest'.
 cvc-complex-type.4: Attribute 'requestId' must appear on element 'tns:mcolRequest'.
 cvc-complex-type.2.4.b: The content of element 'tns:mcolRequest' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema":mcolClaim, "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema":mcolJudgment, "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema":mcolPaid, "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema":mcolWarrant, "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema":mcolJudgmentForthwith}' is expected.

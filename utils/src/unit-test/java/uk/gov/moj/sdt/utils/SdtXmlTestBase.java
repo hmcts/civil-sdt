@@ -410,7 +410,8 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         }
         catch (final SAXException e)
         {
-            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
+            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "] on line " +
+                    ((SAXParseException) e).getLineNumber (), e);
             SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
         catch (final ParserConfigurationException e)
