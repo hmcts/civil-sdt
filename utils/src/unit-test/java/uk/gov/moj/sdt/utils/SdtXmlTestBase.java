@@ -55,6 +55,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import uk.gov.moj.sdt.utilities.Utilities;
+
 /**
  * A base test class that compares XML file output.
  * 
@@ -166,7 +168,8 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         try
         {
             // Make sure the expected XML output file exists.
-            final String xmlOutPath = this.checkFileExists (SdtXmlTestBase.XML_OUTPUT_DIR, xmlFileName + ".out", true);
+            final String xmlOutPath =
+                    Utilities.checkFileExists (SdtXmlTestBase.XML_OUTPUT_DIR, xmlFileName + ".out", true);
 
             // Create Writer for the formatter to use.
             SdtXmlTestBase.LOG.debug ("File to write is: " + xmlOutPath);
@@ -179,7 +182,8 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
 
             // Check good file also exists.
             SdtXmlTestBase.LOG.debug ("Written file: " + xmlOutPath);
-            final String xmlGoodPath = this.checkFileExists (SdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
+            final String xmlGoodPath =
+                    Utilities.checkFileExists (SdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
 
             // compare the output and the good file.
             SdtXmlTestBase.LOG.info ("Comparing XML file " + xmlOutPath + " against good file " + xmlGoodPath);
@@ -208,10 +212,10 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         errorEncountered = false;
 
         // Make sure the XML file to be validated exists.
-        final String xmlPath = this.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, xmlPathname, false);
+        final String xmlPath = Utilities.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, xmlPathname, false);
 
         // Make sure the XSD file that is to be checked exists.
-        final String xsdPath = this.checkFileExists (SdtXmlTestBase.XSD_DIR, xsdPathname, false);
+        final String xsdPath = Utilities.checkFileExists (SdtXmlTestBase.XSD_DIR, xsdPathname, false);
 
         // Create schema factory amd set XSD file as the schema for factory to
         // create.
@@ -247,10 +251,10 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         errorEncountered = false;
 
         // Make sure the XML file to be validated exists.
-        final String xmlPath = this.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, xmlPathname, false);
+        final String xmlPath = Utilities.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, xmlPathname, false);
 
         // Make sure the XSD file that is to be checked exists.
-        final String xsdPath = this.checkFileExists (SdtXmlTestBase.XSD_DIR, xsdPathname, false);
+        final String xsdPath = Utilities.checkFileExists (SdtXmlTestBase.XSD_DIR, xsdPathname, false);
 
         final String expectedErrorMessages = getExpectedErrorMessages (errorFilePathname);
 
@@ -362,7 +366,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
 
         if (errorFilePathname != null)
         {
-            errorFilePath = this.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
+            errorFilePath = Utilities.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
             LOG.debug ("Error message file - " + errorFilePath);
         }
         else
