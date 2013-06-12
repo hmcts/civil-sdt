@@ -51,7 +51,7 @@ public class XmlValidatorTest extends TestCase
     /**
      * Path of the xsd.
      */
-    private final String xsdPath = "src\\unit-test\\resources\\validation\\xsd\\testXSD.xsd";
+    private final String xsdPath = "src/unit-test/resources/validation/xsd/testXSD.xsd";
 
     /**
      * Test validateXML method with valid XML.
@@ -67,8 +67,8 @@ public class XmlValidatorTest extends TestCase
         String theXmlToValidate = "";
 
         myFile =
-                new File (Utilities.checkFileExists ("src\\unit-test\\resources\\validation\\xml\\",
-                        "testXMLValid.xml", false));
+                new File (Utilities.checkFileExists ("src/unit-test/resources/validation/xml/", "testXMLValid.xml",
+                        false));
 
         theXmlToValidate = FileUtils.readFileToString (myFile);
 
@@ -92,8 +92,8 @@ public class XmlValidatorTest extends TestCase
         String theXmlToValidate = "";
 
         myFile =
-                new File (Utilities.checkFileExists ("src\\unit-test\\resources\\validation\\xml\\",
-                        "testXMLInvalid.xml", false));
+                new File (Utilities.checkFileExists ("src/unit-test/resources/validation/xml/", "testXMLInvalid.xml",
+                        false));
 
         theXmlToValidate = FileUtils.readFileToString (myFile);
 
@@ -113,14 +113,14 @@ public class XmlValidatorTest extends TestCase
      */
     public void testValidateXmlNoXsd () throws IOException
     {
-        final String xsdPath = "invalidDir\\FileDoesNotExist.xsd";
+        final String xsdPath = "invalidDir/FileDoesNotExist.xsd";
 
         File myFile;
         String theXmlToValidate = "";
 
         myFile =
-                new File (Utilities.checkFileExists ("src\\unit-test\\resources\\validation\\xml\\",
-                        "testXMLInvalid.xml", false));
+                new File (Utilities.checkFileExists ("src/unit-test/resources/validation/xml/", "testXMLInvalid.xml",
+                        false));
 
         theXmlToValidate = FileUtils.readFileToString (myFile);
 
@@ -128,8 +128,12 @@ public class XmlValidatorTest extends TestCase
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml ();
 
         Assert.assertEquals (XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult ());
-        Assert.assertEquals ("** ERROR - Unable to find the "
-                + "file [C:\\disc\\workspaces\\sdt\\app\\producers\\invalidDir\\FileDoesNotExist.xsd]",
-                xmlValidationDetails.getResultMessages ().get (0));
+
+        String errorMessage =
+                "** ERROR - Unable to find the "
+                        + "file [C:/disc/workspaces/sdt/app/producers/invalidDir/FileDoesNotExist.xsd]";
+        errorMessage = errorMessage.replace ('/', File.separatorChar);
+
+        Assert.assertEquals (errorMessage, xmlValidationDetails.getResultMessages ().get (0));
     }
 }
