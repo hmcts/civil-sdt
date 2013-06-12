@@ -88,6 +88,7 @@ CREATE TABLE individual_requests
 ,request_status           VARCHAR2(32)
 ,issued_date              TIMESTAMP
 ,sdt_bulk_reference       VARCHAR2(32)
+,request_retry_count      INTEGER        -- number of attempts made to submit request
 ,line_number              INTEGER
 ,sdt_request_reference    VARCHAR2(38)   -- fixed format
 ,created_date             TIMESTAMP      -- date/time of record created
