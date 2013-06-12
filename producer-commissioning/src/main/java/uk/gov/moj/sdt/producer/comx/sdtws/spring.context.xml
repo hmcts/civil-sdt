@@ -9,8 +9,13 @@
 
     <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler" 
         class="uk.gov.moj.sdt.producer.comx.handler.WsCreateBulkRequestHandler">
+        <property name="responseFactory" ref="uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory"/>
     </bean>
     
+    <bean id="uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory" 
+        class="uk.gov.moj.sdt.producer.comx.sdtws.ResponseFactory">
+    </bean>
+
     <bean id="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler" 
         class="uk.gov.moj.sdt.producer.comx.handler.WsReadBulkFeedbackRequestHandler">
     </bean>

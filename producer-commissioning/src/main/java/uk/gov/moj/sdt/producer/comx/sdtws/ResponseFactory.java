@@ -75,6 +75,7 @@ public class ResponseFactory implements IResponseFactory {
 		successResponse.setRequestCount(header.getRequestCount());
 		successResponse.setStatus(status);
 		successResponse.setSubmittedDate(Calendar.getInstance());	
+        successResponse.setSdtBulkReference ("COMMISSIONING-12345678");
 		
 		return successResponse;
 		
@@ -95,7 +96,6 @@ public class ResponseFactory implements IResponseFactory {
 		
 		errorType.setCode(f.getErrorCode());
 		errorType.setDescription(f.getErrorDescription());
-		LOGGER.debug("Returning failure response code: "+f.getErrorCode());		
 		status.setCode(StatusCodeType.ERROR);
 		status.setError(errorType);
 		
@@ -103,9 +103,10 @@ public class ResponseFactory implements IResponseFactory {
 		failureResponse.setRequestCount(header.getRequestCount());
 		failureResponse.setStatus(status);
 		failureResponse.setSubmittedDate(Calendar.getInstance());	
+        failureResponse.setSdtBulkReference ("COMMISSIONING-12345678");
 
-		LOGGER.debug("Returning failure response code: " + f.getErrorCode());
-		LOGGER.debug("Returning failure response message: " + f.getErrorDescription());
+        LOGGER.debug ("Returning failure response code[" + f.getErrorCode () 
+                + "] message[" + f.getErrorDescription () +  "]");
 		return failureResponse;
 		
 	}

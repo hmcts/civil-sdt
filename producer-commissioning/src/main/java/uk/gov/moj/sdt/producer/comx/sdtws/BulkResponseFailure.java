@@ -39,30 +39,40 @@ package uk.gov.moj.sdt.producer.comx.sdtws;
  */
 public enum BulkResponseFailure {
 
-	/**
-	 * Request count mismatch failure response.
-	 */
-	REQUEST_COUNT_MISMATCH("100", "The request count does not match."),
-	
-	/**
-	 * Customer reference not unique.
-	 */
-	CUSTOMER_REFERENCE_NOT_UNIQUE("200", "The customer reference is not unique"),
+    /**
+     * SDT Customer Id not recognised.
+     */
+    SDT_CUSTOMER_NOT_FOUND ("100", "The SDT Customer Id is not recognized."),
+
+    /**
+     * Customer reference for bulk request not unique.
+     */
+    BULK_CUSTOMER_REFERENCE_NOT_UNIQUE ("200", "The customer reference for bulk request is not unique"),
 	
 	/**
 	 * Invalid target application.
 	 */
 	INVALID_TARGET_APPLICATION("300", "Invalid target application."),
 
+    /**
+     * Request count mismatch failure response.
+     */
+    REQUEST_COUNT_MISMATCH ("400", "The request count does not match."),
+
 	/**
 	 * Invalid request type.
 	 */
-	INVALID_REQUEST_TYPE("400", "Invalid request type."),
+    INVALID_REQUEST_TYPE ("500", "Invalid request type."),
 	
-	/**
-	 * Invalid bulk submission.
-	 */
-	INVALID_BULK_SUBMISSION("999", "Unexpected error.");
+    /**
+     * Customer reference for individual request not unique.
+     */
+    IND_REQUEST_CUSTOMER_REFERENCE_NOT_UNIQUE ("600", "The customer reference for individual request is not unique"),
+
+    /**
+     * Unexpected system error.
+     */
+    SYSTEM_ERROR ("999", "System error.");
 	
 	/**
 	 * Error code.
