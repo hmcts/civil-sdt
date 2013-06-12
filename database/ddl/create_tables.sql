@@ -75,6 +75,7 @@ CREATE TABLE global_parameters
 (global_parameter_id      INTEGER
 ,parameter_name           VARCHAR2(32)
 ,parameter_value          VARCHAR2(32)
+,parameter_description    VARCHAR2(2000)
 ,version_number           INTEGER         -- hiberate versioning column
 ) &global_parameters
 ;
