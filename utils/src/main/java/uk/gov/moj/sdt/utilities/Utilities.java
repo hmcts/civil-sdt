@@ -144,8 +144,8 @@ public final class Utilities
         // If the file exists.
         if ( !targetFile.exists ())
         {
-            Utilities.LOG.error ("** ERROR - Unable to find the file [" + targetFile + "]");
-            throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getAbsolutePath () + "]");
+            Utilities.LOG.error ("** ERROR - Unable to find the file [" + targetFile.getName () + "]");
+            throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getName () + "]");
         }
         return targetFile;
     }

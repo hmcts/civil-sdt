@@ -129,10 +129,7 @@ public class XmlValidatorTest extends TestCase
 
         Assert.assertEquals (XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult ());
 
-        String errorMessage =
-                "** ERROR - Unable to find the "
-                        + "file [C:/disc/workspaces/sdt/app/producers/invalidDir/FileDoesNotExist.xsd]";
-        errorMessage = errorMessage.replace ('/', File.separatorChar);
+        final String errorMessage = "** ERROR - Unable to find the " + "file [FileDoesNotExist.xsd]";
 
         Assert.assertEquals (errorMessage, xmlValidationDetails.getResultMessages ().get (0));
     }
