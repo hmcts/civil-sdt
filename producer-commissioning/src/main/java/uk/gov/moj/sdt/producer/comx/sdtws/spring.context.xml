@@ -11,9 +11,14 @@
         class="uk.gov.moj.sdt.producer.comx.handler.WsCreateBulkRequestHandler">
     </bean>
     
+    <bean id="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler" 
+        class="uk.gov.moj.sdt.producer.comx.handler.WsReadBulkFeedbackRequestHandler">
+    </bean>
+    
 	<bean id="uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType"
 		class="uk.gov.moj.sdt.producer.comx.sdtws.SdtEndpointPortType">
         <property name="wsCreateBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler"/>
+        <property name="wsReadBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler"/>
 	</bean>
 
 </beans>

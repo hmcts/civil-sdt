@@ -31,26 +31,15 @@
 
 package uk.gov.moj.sdt.producer.comx.sdtws;
 
-import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import javax.jws.WebService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
+import uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.McolResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.McolResponsesType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.DefenceRequestType;
@@ -79,410 +68,10 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
      */
     private IWsCreateBulkRequestHandler wsCreateBulkRequestHandler;
 
-    @Override
-    public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
-    {
-        LOGGER.debug (this.getClass ().getName () + " endpoint called, getBulkFeedback=" +
-                bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
-
-        final BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
-        final BulkRequestStatusType bulkStatus = new BulkRequestStatusType ();
-
-        final Integer requestCount = 12;
-        bulkStatus.setRequestCount (BigInteger.valueOf (requestCount));
-        bulkStatus.setSdtBulkReference ("sdtreference");
-        response.setBulkRequestStatus (bulkStatus);
-        response.setResponses (getResponses ());
-        return response;
-    }
-
     /**
-     * Dummy impl.
-     * 
-     * @return responses
+     * Handles bulk feedback submission request.
      */
-    private ResponsesType getResponses ()
-    {
-        final ResponsesType responses = new ResponsesType ();
-        final McolResponsesType mcolResponses = new McolResponsesType ();
-
-        mcolResponses.getMcolResponse ().add (getResponseAcceptedClaim ());
-        mcolResponses.getMcolResponse ().add (getResponseAcceptedJudgment ());
-        mcolResponses.getMcolResponse ().add (getResponseAcceptJudgmentForth ());
-        mcolResponses.getMcolResponse ().add (getResponseAcceptedWarrant ());
-        mcolResponses.getMcolResponse ().add (getResponseAcceptedPaid ());
-
-        mcolResponses.getMcolResponse ().add (getResponseInitAcceptedClaim ());
-        mcolResponses.getMcolResponse ().add (getResponseInitAcceptedJudgm ());
-        mcolResponses.getMcolResponse ().add (getResponseInitAcceptJudgForth ());
-        mcolResponses.getMcolResponse ().add (getResponseInitAcceptedWarrant ());
-        mcolResponses.getMcolResponse ().add (getResponseInitAcceptedPaid ());
-        mcolResponses.getMcolResponse ().add (getResponseRejectedClaim ());
-        mcolResponses.getMcolResponse ().add (getResponseErrorClaim ());
-
-        responses.setMcolResponses (mcolResponses);
-
-        return responses;
-    }
-
-    /**
-     * Method to generate the response for an Erroneous claim.
-     * 
-     * @return the Erroneous claim.
-     */
-    private McolResponseType getResponseErrorClaim ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("12");
-        response.setRequestType (RequestTypeType.MCOL_CLAIM);
-        response.setClaimNumber ("11111112");
-
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ERROR);
-        response.setStatus (status);
-
-        // Required for erroneous cases
-        final ErrorType errorType = new ErrorType ();
-
-        errorType.setCode ("The ERROR CODE");
-        errorType.setDescription ("The description of the error.");
-        status.setError (errorType);
-
-        return response;
-    }
-
-    /**
-     * Method to generate the response for a Reject Claim.
-     * 
-     * @return the Reject Claim.
-     */
-    private McolResponseType getResponseRejectedClaim ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("11");
-        response.setRequestType (RequestTypeType.MCOL_CLAIM);
-        response.setClaimNumber ("11111111");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.REJECTED);
-        response.setStatus (status);
-
-        // Required for rejected cases
-        final ErrorType errorType = new ErrorType ();
-
-        errorType.setCode ("Rejected CODE");
-        errorType.setDescription ("The reason why the claim was rejected.");
-        status.setError (errorType);
-
-        return response;
-
-    }
-
-    /* Initially Accepted */
-    /**
-     * Method to generate the response for an Initially Accepted Paid.
-     * 
-     * @return the Accepted Paid.
-     */
-    private McolResponseType getResponseInitAcceptedPaid ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("10");
-        response.setRequestType (RequestTypeType.MCOL_PAID);
-        response.setClaimNumber ("11111110");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Initially Accepted Warrant.
-     * 
-     * @return the Accepted Warrant.
-     */
-    private McolResponseType getResponseInitAcceptedWarrant ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("9");
-        response.setRequestType (RequestTypeType.MCOL_WARRANT);
-        response.setClaimNumber ("11111109");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-
-        // Required for accepted Warrants
-        response.setWarrantNumber ("22222202");
-        final Integer courtCode = 942;
-        response.setEnforcingCourtCode (BigInteger.valueOf (courtCode));
-        response.setEnforcingCourtName ("CourtNameB");
-        final Integer fee = 258;
-        response.setFee (fee);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Initially Accepted JudgmentForthwith.
-     * 
-     * @return the Accepted JudgmentForthwith.
-     */
-    private McolResponseType getResponseInitAcceptJudgForth ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("8");
-        response.setRequestType (RequestTypeType.MCOL_JUDGMENT_FORTHWITH);
-        response.setClaimNumber ("11111108");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Initially Accepted Judgment.
-     * 
-     * @return the Accepted Judgment.
-     */
-    private McolResponseType getResponseInitAcceptedJudgm ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("7");
-        response.setRequestType (RequestTypeType.MCOL_JUDGMENT);
-        response.setClaimNumber ("11111107");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Initially Accepted Claim.
-     * 
-     * @return the Accepted Claim.
-     */
-    private McolResponseType getResponseInitAcceptedClaim ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("6");
-        response.setRequestType (RequestTypeType.MCOL_CLAIM);
-        response.setClaimNumber ("11111106");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-
-        // Required for Claims
-        final Integer fee = 500;
-        response.setFee (fee);
-        return response;
-    }
-
-    /* Accepted */
-
-    /**
-     * Method to generate the response for an Accepted Paid.
-     * 
-     * @return the Accepted Paid.
-     */
-    private McolResponseType getResponseAcceptedPaid ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("5");
-        response.setRequestType (RequestTypeType.MCOL_PAID);
-        response.setClaimNumber ("11111105");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Accepted Warrant.
-     * 
-     * @return the Accepted Warrant.
-     */
-    private McolResponseType getResponseAcceptedWarrant ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("4");
-        response.setRequestType (RequestTypeType.MCOL_WARRANT);
-        response.setClaimNumber ("11111104");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-
-        // Required for accepted Warrants
-        response.setWarrantNumber ("22222201");
-        final Integer couretCode = 517;
-        response.setEnforcingCourtCode (BigInteger.valueOf (couretCode));
-        response.setEnforcingCourtName ("CourtNameA");
-        final Integer fee = 258;
-        response.setFee (fee);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Accepted JudgmentForthwith.
-     * 
-     * @return the Accepted JudgmentForthwith.
-     */
-    private McolResponseType getResponseAcceptJudgmentForth ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("3");
-        response.setRequestType (RequestTypeType.MCOL_JUDGMENT_FORTHWITH);
-        response.setClaimNumber ("11111103");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Accepted Judgment.
-     * 
-     * @return the Accepted Judgment.
-     */
-    private McolResponseType getResponseAcceptedJudgment ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("2");
-        response.setRequestType (RequestTypeType.MCOL_JUDGMENT);
-        response.setClaimNumber ("11111102");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-        return response;
-
-    }
-
-    /**
-     * Method to generate the response for an Accepted Claim.
-     * 
-     * @return the Accepted Claim.
-     */
-    private McolResponseType getResponseAcceptedClaim ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("1");
-        response.setRequestType (RequestTypeType.MCOL_CLAIM);
-        response.setClaimNumber ("11111101");
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
-        response.setStatus (status);
-
-        // Required for accepted cases
-        response.setServiceDate (cal);
-
-        // Required for Claims
-        final Integer fee = 500;
-        response.setFee (fee);
-        return response;
-    }
+    private IWsReadBulkRequestHandler wsReadBulkRequestHandler;
 
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequest)
@@ -491,6 +80,16 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
                 bulkRequest.getHeader ().getSdtCustomerId ());
 
         final BulkResponseType response = wsCreateBulkRequestHandler.submitBulk (bulkRequest);
+        return response;
+    }
+
+    @Override
+    public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
+    {
+        LOGGER.debug (this.getClass ().getName () + " endpoint called, getBulkFeedback=" +
+                bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+
+        final BulkFeedbackResponseType response = wsReadBulkRequestHandler.getBulkFeedback (bulkFeedbackRequest);
         return response;
     }
 
@@ -510,5 +109,13 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     public void setWsCreateBulkRequestHandler (final IWsCreateBulkRequestHandler wsCreateBulkRequestHandler)
     {
         this.wsCreateBulkRequestHandler = wsCreateBulkRequestHandler;
+    }
+
+    /**
+     * @param wsReadBulkRequestHandler the wsReadBulkRequestHandler to set
+     */
+    public void setWsReadBulkRequestHandler (final IWsReadBulkRequestHandler wsReadBulkRequestHandler)
+    {
+        this.wsReadBulkRequestHandler = wsReadBulkRequestHandler;
     }
 }
