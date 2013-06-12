@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.XMLConstants;
@@ -201,52 +202,15 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
      * 
      * @param xmlPathname the path of the xml.
      * @param xsdPathname the path of the xsd.
-     * @param expectedMessages the expected error message(s).
-     * @throws IOException IOException.
-     * @throws SAXException SAXException.
-     * @throws ParserConfigurationException ParserConfigurationException.
-     */
-    private void evaluateXsd (final String xmlPathname, final String xsdPathname, final List<String> expectedMessages)
-        throws IOException, SAXException, ParserConfigurationException
-    {
-        errorEncountered = false;
-
-        // Make sure the XML file to be validated exists.
-        final String xmlPath = Utilities.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, xmlPathname, false);
-
-        // Make sure the XSD file that is to be checked exists.
-        final String xsdPath = Utilities.checkFileExists (SdtXmlTestBase.XSD_DIR, xsdPathname, false);
-
-        // Create schema factory amd set XSD file as the schema for factory to
-        // create.
-        final SchemaFactory schemaFactory = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        final Schema schema = schemaFactory.newSchema (new File (xsdPath));
-
-        // Create SAX parser factory; turn on validation and check all name
-        // spaces; use given schema for validation.
-        final SAXParserFactory saxFactory = SAXParserFactory.newInstance ();
-        // saxFactory.setValidating (true);
-        saxFactory.setNamespaceAware (true);
-        saxFactory.setSchema (schema);
-
-        // Create SAX parser to do validation (not DOM as we do not need to
-        // create a document).
-        final SAXParser parser = saxFactory.newSAXParser ();
-        parseXml (parser, xmlPath, expectedMessages);
-    }
-
-    /**
-     * Finds xml and xsd and creates the parser to validate xml.
-     * 
-     * @param xmlPathname the path of the xml.
-     * @param xsdPathname the path of the xsd.
      * @param errorFilePathname the path of the file containing expected error message(s).
      * @throws IOException IOException.
      * @throws SAXException SAXException.
      * @throws ParserConfigurationException ParserConfigurationException.
+     * @return The list of error messages that haven't been found.
      */
-    private void evaluateXsd (final String xmlPathname, final String xsdPathname, final String errorFilePathname)
-        throws IOException, SAXException, ParserConfigurationException
+    private List<String>
+            evaluateXsd (final String xmlPathname, final String xsdPathname, final String errorFilePathname)
+                throws IOException, SAXException, ParserConfigurationException
     {
         errorEncountered = false;
 
@@ -256,7 +220,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         // Make sure the XSD file that is to be checked exists.
         final String xsdPath = Utilities.checkFileExists (SdtXmlTestBase.XSD_DIR, xsdPathname, false);
 
-        final String expectedErrorMessages = getExpectedErrorMessages (errorFilePathname);
+        final List<String> expectedErrorMessages = getExpectedErrorMessages (errorFilePathname);
 
         // Create schema factory amd set XSD file as the schema for factory to
         // create.
@@ -273,19 +237,21 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         // Create SAX parser to do validation (not DOM as we do not need to
         // create a document).
         final SAXParser parser = saxFactory.newSAXParser ();
-        parseXml (parser, xmlPath, expectedErrorMessages);
+        return parseXml (parser, xmlPath, expectedErrorMessages);
     }
 
     /**
-     * The actually reads the xml against the xsd.
+     * Checks the XML against the XSD. Checks all outputed errors against a predefined list of error messages.
+     * It removes the errors from the ArrayList as it finds them.
      * 
      * @param parser the parser.
      * @param xmlPath The location of the xml.
      * @param expectedMessages the expected error message(s).
      * @throws IOException IOException.
      * @throws SAXException SAXException.
+     * @return the number of messages that have not been found in the XML but that were expected to be there.
      */
-    private void parseXml (final SAXParser parser, final String xmlPath, final List<String> expectedMessages)
+    private List<String> parseXml (final SAXParser parser, final String xmlPath, final List<String> expectedMessages)
         throws IOException, SAXException
     {
         // Use the XSD file to validate the proof XML.
@@ -297,9 +263,12 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 // Record that we hit an error during parsing.
                 SdtXmlTestBase.this.errorEncountered = true;
 
+                LOG.debug (e.getMessage ());
+
                 // Was it the wrong error?
                 if (expectedMessages != null && expectedMessages.contains (e.getMessage ()))
                 {
+                    LOG.debug ("Found expected error and removing it from list - " + e.getMessage ());
                     expectedMessages.remove (e.getMessage ());
                 }
                 else
@@ -309,47 +278,12 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                     SdtXmlTestBase.fail ("Parser encountered unexpected error: expected [" + e.getMessage () +
                             "], actual [" + e.getMessage () + "]");
                 }
-                return;
+
             }
         });
-
-    }
-
-    /**
-     * The actually reads the xml against the xsd.
-     * 
-     * @param parser the parser.
-     * @param xmlPath The location of the xml.
-     * @param expectedMessages the expected error message(s).
-     * @throws IOException IOException.
-     * @throws SAXException SAXException.
-     */
-    private void parseXml (final SAXParser parser, final String xmlPath, final String expectedMessages)
-        throws IOException, SAXException
-    {
-        // Use the XSD file to validate the proof XML.
-        parser.parse (xmlPath, new DefaultHandler ()
-        {
-            // Anonymous Default Handler to implement required error logic.
-            public void error (final SAXParseException e) throws SAXException
-            {
-                // Record that we hit an error during parsing.
-                SdtXmlTestBase.this.errorEncountered = true;
-
-                if (expectedMessages != null && expectedMessages.contains (e.getMessage ()))
-                {
-                    LOG.debug ("Found expected error - " + e.getMessage ());
-                }
-                else
-                {
-                    LOG.error ("Parser encountered unexpected error - " + e.getMessage ());
-                    SdtXmlTestBase.fail ("Parser encountered unexpected error: expected [" + e.getMessage () +
-                            "], actual [" + e.getMessage () + "]");
-                }
-                return;
-            }
-        });
-
+        // Return the number of items that are left in the list.
+        // If there are 1 or more items, an error has not been found.
+        return expectedMessages;
     }
 
     /**
@@ -359,9 +293,11 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
      * @return String representing error messages
      * @throws IOException in case of any errors related with error file.
      */
-    private String getExpectedErrorMessages (final String errorFilePathname) throws IOException
+    private List<String> getExpectedErrorMessages (final String errorFilePathname) throws IOException
     {
-        final StringBuilder sb = new StringBuilder ();
+        // final StringBuilder sb = new StringBuilder ();
+        final List<String> expectedErrorMessages = new ArrayList<String> ();
+
         String errorFilePath = null;
 
         if (errorFilePathname != null)
@@ -380,9 +316,9 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
 
         while ((sCurrentLine = br.readLine ()) != null)
         {
-            sb.append (sCurrentLine);
+            expectedErrorMessages.add (sCurrentLine);
         }
-        return sb.toString ();
+        return expectedErrorMessages;
 
     }
 
@@ -399,9 +335,10 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
      */
     protected void validateXsd (final String xmlPathname, final String xsdPathname, final String errorFilePathname)
     {
+        List<String> remainingExpectedErrors = null;
         try
         {
-            evaluateXsd (xmlPathname, xsdPathname, errorFilePathname);
+            remainingExpectedErrors = evaluateXsd (xmlPathname, xsdPathname, errorFilePathname);
         }
         catch (final IOException e)
         {
@@ -423,9 +360,21 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         // Has no error been reported and yet we expected one?
         if ( !this.errorEncountered && errorFilePathname != null)
         {
-            LOG.error ("Parser failed to encountered expected error(s)");
-            SdtXmlTestBase.fail ("Parser failed to encountered expected error(s)");
+            LOG.error ("Parser failed to encounter all expected error(s).  The following errors were not found:");
+            SdtXmlTestBase.fail ("Parser failed to encounter all expected error(s)");
         }
 
+        // If there was not an exception thrown (so remainingExpectedErrors is not null) and there are errors still in
+        // the list of expected error messages.
+        if (remainingExpectedErrors != null && !remainingExpectedErrors.isEmpty ())
+        {
+            LOG.error ("The parser failed to encounter all expected error messages that are in the error messages file."
+                    + "  The following errors were not found:");
+            for (String remainingError : remainingExpectedErrors)
+            {
+                LOG.error (remainingError);
+            }
+            SdtXmlTestBase.fail ("Parser failed to encounter all expected error(s)");
+        }
     }
 }
