@@ -51,6 +51,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import uk.gov.moj.sdt.producers.validation.XmlValidationDetails.Result;
+import uk.gov.moj.sdt.utilities.Utilities;
 
 /**
  * {@inheritDoc}.
@@ -141,7 +142,9 @@ public class XmlValidator implements IXmlValidator
         // create.
         final SchemaFactory schemaFactory = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-        final Schema schema = schemaFactory.newSchema (new File (xsdFilePath).getAbsoluteFile ());
+        final File xsdFile = Utilities.retrieveFile (xsdFilePath);
+
+        final Schema schema = schemaFactory.newSchema (xsdFile);
 
         // Create SAX parser factory; turn on validation and check all name
         // spaces; use given schema for validation.

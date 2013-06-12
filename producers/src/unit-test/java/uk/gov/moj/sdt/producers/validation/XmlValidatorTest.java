@@ -120,7 +120,7 @@ public class XmlValidatorTest extends TestCase
 
         myFile =
                 new File (Utilities.checkFileExists ("src\\unit-test\\resources\\validation\\xml\\",
-                        "testXMLValid.xml", false));
+                        "testXMLInvalid.xml", false));
 
         theXmlToValidate = FileUtils.readFileToString (myFile);
 
@@ -128,10 +128,8 @@ public class XmlValidatorTest extends TestCase
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml ();
 
         Assert.assertEquals (XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult ());
-        Assert.assertEquals ("schema_reference.4: Failed to read schema document "
-                + "'file:/C:/disc/workspaces/sdt/trunk/app/producers/invalidDir/FileDoesNotExist.xsd',"
-                + " because 1) could not find the document; 2) the document could not be read; 3) "
-                + "the root element of the document is not <xsd:schema>.", xmlValidationDetails.getResultMessages ()
-                .get (0));
+        Assert.assertEquals ("** ERROR - Unable to find the "
+                + "file [C:\\disc\\workspaces\\sdt\\app\\producers\\invalidDir\\FileDoesNotExist.xsd]",
+                xmlValidationDetails.getResultMessages ().get (0));
     }
 }

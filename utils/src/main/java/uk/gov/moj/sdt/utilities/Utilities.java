@@ -130,4 +130,24 @@ public final class Utilities
         return targetFile.getAbsolutePath ();
     }
 
+    /**
+     * Look for the given file on disk and return it if it is found. Return an error if it is not.
+     * 
+     * @param filePath the file to check.
+     * @return File - returns the found file.
+     * @throws IOException If file not found.
+     */
+    public static File retrieveFile (final String filePath) throws IOException
+    {
+        // Set the file path.
+        final File targetFile = new File (filePath).getAbsoluteFile ();
+        // If the file exists.
+        if ( !targetFile.exists ())
+        {
+            Utilities.LOG.error ("** ERROR - Unable to find the file [" + targetFile + "]");
+            throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getAbsolutePath () + "]");
+        }
+        return targetFile;
+    }
+
 }
