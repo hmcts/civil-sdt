@@ -19,7 +19,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="targetSystemIdType">
+	<xs:simpleType name="targetApplicationIdType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="mcol" />
 		</xs:restriction>
@@ -274,6 +274,13 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+    <xs:simpleType name="updateStatusCodeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACCEPTED" />
+            <xs:enumeration value="REJECTED" />
+        </xs:restriction>
+    </xs:simpleType>
+
 	<xs:complexType name="errorType">
 		<xs:sequence>
 			<xs:element name="code" type="tns:codeType" />
@@ -294,5 +301,29 @@
 		</xs:sequence>
 		<xs:attribute name="code" type="tns:createStatusCodeType"></xs:attribute>
 	</xs:complexType>
+
+    <xs:complexType name="updateStatusType">
+        <xs:sequence>
+            <xs:element name="error" type="tns:errorType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="code" type="tns:updateStatusCodeType"></xs:attribute>
+    </xs:complexType>
+
+    <xs:simpleType name="bulkStatusCodeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UPLOADED" />
+            <xs:enumeration value="FAILED" />
+            <xs:enumeration value="VALIDATED" />
+            <xs:enumeration value="PROCESSING" />
+            <xs:enumeration value="COMPLETED" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="bulkStatusType">
+        <xs:sequence>
+            <xs:element name="error" type="tns:errorType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="code" type="tns:bulkStatusCodeType"></xs:attribute>
+    </xs:complexType>
 
 </xs:schema>

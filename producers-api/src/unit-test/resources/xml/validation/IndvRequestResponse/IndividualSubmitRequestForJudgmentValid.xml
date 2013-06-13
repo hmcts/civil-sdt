@@ -30,7 +30,6 @@
     <tns3:interest>0</tns3:interest>
     <tns3:solicitorCost>0</tns3:solicitorCost>
     <tns3:deductedAmount>0</tns3:deductedAmount>
-    <tns3:guidanceRead>true</tns3:guidanceRead>
     <tns3:sotSignature>
       <tns1:name>tns1:name</tns1:name>
     </tns3:sotSignature>

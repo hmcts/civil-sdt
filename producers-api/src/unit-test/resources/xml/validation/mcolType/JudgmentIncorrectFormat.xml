@@ -31,7 +31,6 @@
   <tns:interest>-1</tns:interest>
   <tns:solicitorCost>-1</tns:solicitorCost>
   <tns:deductedAmount>-1</tns:deductedAmount>
-  <tns:guidanceRead>true1</tns:guidanceRead>
   <tns:sotSignature>
     <tns2:name>tns2:name</tns2:name>
   </tns:sotSignature>

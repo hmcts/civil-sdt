@@ -2,7 +2,7 @@
 <tns:defenceRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackRequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackRequestSchema ../../../../../main/resources/xsd/DefenceRequestResponse/DefenceFeedbackRequest.xsd ">
   <tns:header>
     <tns:sdtCustomerId>12345678</tns:sdtCustomerId>
-    <tns:targetSystemId>mcol</tns:targetSystemId>
+    <tns:targetApplicationId>mcol</tns:targetApplicationId>
   </tns:header>
   <tns:criteria>
     <tns:mcolDefence>

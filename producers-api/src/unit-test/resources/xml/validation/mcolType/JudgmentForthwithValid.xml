@@ -32,7 +32,6 @@
     <tns:interest>0</tns:interest>
     <tns:solicitorCost>0</tns:solicitorCost>
     <tns:deductedAmount>0</tns:deductedAmount>
-    <tns:guidanceRead>true</tns:guidanceRead>
     <tns:sotSignature>
       <tns2:name>tns2:name</tns2:name>
     </tns:sotSignature>

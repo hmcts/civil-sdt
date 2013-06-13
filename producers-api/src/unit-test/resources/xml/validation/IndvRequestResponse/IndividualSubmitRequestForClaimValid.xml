@@ -60,7 +60,6 @@
     <tns2:claimAmount>0</tns2:claimAmount>
     <tns2:solicitorCost>0</tns2:solicitorCost>
     <tns2:particulars>tns2:particulars</tns2:particulars>
-    <tns2:guidanceRead>true</tns2:guidanceRead>
     <tns2:sotSignature>
       <tns1:name>tns1:name</tns1:name>
     </tns2:sotSignature>

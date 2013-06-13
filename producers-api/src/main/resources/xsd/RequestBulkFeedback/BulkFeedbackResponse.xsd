@@ -10,8 +10,11 @@
     
     <xs:complexType name="bulkRequestStatusType">
         <xs:sequence>
+            <xs:element name="customerReference" type="base:customerReferenceType"/>
             <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+            <xs:element name="submittedDate" type="xs:dateTime"/>
             <xs:element name="requestCount" type="base:requestCountType"/>
+            <xs:element name="bulkStatus" type="base:bulkStatusType"/>
         </xs:sequence>
     </xs:complexType>
     

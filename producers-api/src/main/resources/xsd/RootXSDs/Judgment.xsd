@@ -90,8 +90,6 @@
             <xs:element name="interest" type="base:interestType" minOccurs="0"/>
             <xs:element name="solicitorCost" type="base:solicitorCostType" minOccurs="0"/>
             <xs:element name="deductedAmount" type="base:deductedAmountType" minOccurs="0"/>
-            <!-- TODO Hillary to confirm if this is required. -->
-            <xs:element name="guidanceRead" type="xs:boolean"/>
             <xs:element name="sotSignature" type="base:sotSignatureType"/>
             <!-- TODO Hillary to confirm if payee details should be present -->
             <!--             

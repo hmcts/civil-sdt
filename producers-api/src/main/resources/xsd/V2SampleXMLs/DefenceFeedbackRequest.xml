@@ -3,7 +3,7 @@
 <defenceRequest>
     <header>
         <sdtCustomerId>SDT_Customer_id</sdtCustomerId>
-        <targetSystemId>mcol</targetSystemId>
+        <targetApplicationId>mcol</targetApplicationId>
     </header>
     <criteria>
         <mcolDefence>

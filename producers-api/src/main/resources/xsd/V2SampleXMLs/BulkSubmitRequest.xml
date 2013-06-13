@@ -4,7 +4,7 @@
     <header>
         <!-- TODO TBC Gateway can validate the id -->
         <sdtCustomerId>SDT_Customer_id</sdtCustomerId> 
-        <targetSystemId>mcol</targetSystemId>
+        <targetApplicationId>mcol</targetApplicationId>
         <requestCount>2</requestCount>
         <customerReference>customer_external_reference</customerReference>
     </header>

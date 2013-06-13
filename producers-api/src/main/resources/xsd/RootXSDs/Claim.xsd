@@ -58,8 +58,6 @@
                     <xs:documentation>Details about the claim</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <!-- TODO Hillary to confirm if this is required. -->
-            <xs:element name="guidanceRead" type="xs:boolean"/>
             <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
 	</xs:complexType>

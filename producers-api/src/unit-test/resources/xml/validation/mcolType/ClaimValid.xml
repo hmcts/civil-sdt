@@ -55,7 +55,6 @@
   <tns:claimAmount>0</tns:claimAmount>
   <tns:solicitorCost>0</tns:solicitorCost>
   <tns:particulars>tns:particulars</tns:particulars>
-  <tns:guidanceRead>true</tns:guidanceRead>
   <tns:sotSignature>
     <base:name>base:name</base:name>
   </tns:sotSignature>

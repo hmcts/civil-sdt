@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:bulkFeedbackResponse xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema ../../../../../main/resources/xsd/RequestBulkFeedback/BulkFeedbackResponse.xsd ">
   <tns:bulkRequestStatus>
-    <tns:sdtBulkReference>12345678901234567890123456789012</tns:sdtBulkReference>
-    <tns:requestCount>0</tns:requestCount>
+      <tns:customerReference>tns:customerReference</tns:customerReference>
+      <tns:sdtBulkReference>12345678901234567890123456789012</tns:sdtBulkReference>
+      <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
+      <tns:requestCount>0</tns:requestCount>
+      <tns:bulkStatus code="FAILED">
+          <base:error>
+            <base:code>base:code</base:code>
+            <base:description>base:description</base:description>
+          </base:error>
+      </tns:bulkStatus>
   </tns:bulkRequestStatus>
   <tns:responses>
     <tns:mcolResponses>

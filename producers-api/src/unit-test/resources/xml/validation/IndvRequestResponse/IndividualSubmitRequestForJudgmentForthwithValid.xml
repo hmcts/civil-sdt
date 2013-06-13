@@ -18,7 +18,6 @@
           <tns3:fullByDate>2001-01-01</tns3:fullByDate>
         </tns3:fullPayment>
       </tns3:paymentSchedule>
-      <tns3:guidanceRead>true</tns3:guidanceRead>
       <tns3:sotSignature>
         <tns1:name>tns1:name</tns1:name>
       </tns3:sotSignature>

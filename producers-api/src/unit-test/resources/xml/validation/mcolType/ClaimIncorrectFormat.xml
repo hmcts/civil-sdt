@@ -52,7 +52,6 @@
   <tns:claimAmount>-1</tns:claimAmount>
   <tns:solicitorCost>-1</tns:solicitorCost>
   <tns:particulars>1234567890123456789012345678901234567890123456</tns:particulars>
-  <tns:guidanceRead>true1</tns:guidanceRead>
   <tns:sotSignature>
     <base:name>1234567890123456789012345678901234567890123456789012345678901</base:name>
   </tns:sotSignature>
