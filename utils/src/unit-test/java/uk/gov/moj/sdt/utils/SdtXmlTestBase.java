@@ -56,8 +56,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import uk.gov.moj.sdt.utils.Utilities;
-
 /**
  * A base test class that compares XML file output.
  * 
