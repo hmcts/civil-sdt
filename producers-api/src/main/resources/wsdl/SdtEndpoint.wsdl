@@ -52,13 +52,6 @@
 				</xs:restriction>
 			</xs:simpleType>
 
-			<xs:simpleType name="customerCodeType">
-				<xs:restriction base="xs:integer">
-					<xs:minInclusive value="1000" />
-					<xs:maxInclusive value="9999" />
-				</xs:restriction>
-			</xs:simpleType>
-
 			<xs:simpleType name="requestCountType">
 				<xs:restriction base="xs:integer">
 					<xs:maxInclusive value="99999" />
@@ -210,7 +203,7 @@
 					<xs:enumeration value="mcolJudgment" />
 					<xs:enumeration value="mcolJudgmentForthwith" />
 					<xs:enumeration value="mcolWarrant" />
-					<xs:enumeration value="mcolPaid" />
+					<xs:enumeration value="mcolClaimUpdate" />
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -538,54 +531,49 @@
 
 		</xs:schema>
 
-		<!-- Paid.xsd -->
-		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema"
-			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema"
-			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-			elementFormDefault="qualified" version="1.0">
-
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
-
-			<xs:simpleType name="notification">
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="MP">
-						<xs:annotation>
-							<xs:documentation>Paid</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-					<xs:enumeration value="WO">
-						<xs:annotation>
-							<xs:documentation>Written Off</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-					<xs:enumeration value="WD">
-						<xs:annotation>
-							<xs:documentation>Withdrawn</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-					<xs:enumeration value="DI">
-						<xs:annotation>
-							<xs:documentation>Discontinued</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<xs:complexType name="paidType">
-				<xs:sequence>
-					<xs:element name="claimNumber" type="base:documentNumberType" />
-					<xs:element name="defendantId" type="base:defendantIdType"
-						minOccurs="0" />
-					<xs:element name="notificationType" type="tns:notification" />
-					<xs:element name="lastPaymentDate" type="xs:date"
-						minOccurs="0" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:element name="mcolPaid" type="tns:paidType" />
-
-		</xs:schema>
+		<!-- ClaimUpdate.xsd -->
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:simpleType name="notification">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MP">
+                        <xs:annotation>
+                            <xs:documentation>Paid</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WO">
+                        <xs:annotation>
+                            <xs:documentation>Written Off</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WD">
+                        <xs:annotation>
+                            <xs:documentation>Withdrawn</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DI">
+                        <xs:annotation>
+                            <xs:documentation>Discontinued</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:complexType name="claimUpdateType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:documentNumberType" />
+                    <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
+                    <xs:element name="notificationType" type="tns:notification" />
+                    <xs:element name="lastPaymentDate" type="xs:date"   minOccurs="0" />
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:element name="mcolClaimUpdate" type="tns:claimUpdateType"/>
+        
+        </xs:schema>
 
 		<!-- BulkSubmitRequest.xsd -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -593,13 +581,13 @@
 			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
 			elementFormDefault="qualified" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
 			xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
-			xmlns:pd="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+			xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
 			version="1.0">
 
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" />
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" />
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" />
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" />
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
 
 			<xs:complexType name="headerType">
@@ -624,7 +612,7 @@
 						<xs:choice>
 							<xs:element name="mcolClaim" type="clm:claimType" />
 							<xs:element name="mcolJudgment" type="jud:judgmentType" />
-							<xs:element name="mcolPaid" type="pd:paidType" />
+							<xs:element name="mcolClaimUpdate" type="clmupd:claimUpdateType" />
 							<xs:element name="mcolWarrant" type="wnt:warrantType" />
 							<xs:element name="mcolJudgmentForthwith" type="jud:judgmentForthwithType" />
 						</xs:choice>
@@ -637,8 +625,6 @@
 					<xs:element name="mcolRequest" type="tns:mcolRequestType"
 						minOccurs="1" maxOccurs="unbounded" />
 				</xs:sequence>
-				<xs:attribute name="customerCode" type="base:customerCodeType"
-					use="required" />
 			</xs:complexType>
 
 			<xs:complexType name="requestsType">

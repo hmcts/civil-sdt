@@ -51,13 +51,6 @@
 				</xs:restriction>
 			</xs:simpleType>
 
-			<xs:simpleType name="customerCodeType">
-				<xs:restriction base="xs:integer">
-					<xs:minInclusive value="1000" />
-					<xs:maxInclusive value="9999" />
-				</xs:restriction>
-			</xs:simpleType>
-
 			<xs:simpleType name="requestCountType">
 				<xs:restriction base="xs:integer">
 					<xs:maxInclusive value="99999" />
@@ -210,7 +203,7 @@
 					<xs:enumeration value="mcolJudgment" />
 					<xs:enumeration value="mcolJudgmentForthwith" />
 					<xs:enumeration value="mcolWarrant" />
-					<xs:enumeration value="mcolPaid" />
+					<xs:enumeration value="mcolClaimUpdate" />
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -538,119 +531,117 @@
 
 		</xs:schema>
 
-		<!-- Paid.xsd -->
-		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema"
-			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema"
-			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-			elementFormDefault="qualified" version="1.0">
-
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
-
-			<xs:simpleType name="notification">
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="MP">
-						<xs:annotation>
-							<xs:documentation>Paid</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-					<xs:enumeration value="WO">
-						<xs:annotation>
-							<xs:documentation>Written Off</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-					<xs:enumeration value="WD">
-						<xs:annotation>
-							<xs:documentation>Withdrawn</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-					<xs:enumeration value="DI">
-						<xs:annotation>
-							<xs:documentation>Discontinued</xs:documentation>
-						</xs:annotation>
-					</xs:enumeration>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<xs:complexType name="paidType">
-				<xs:sequence>
-					<xs:element name="claimNumber" type="base:documentNumberType" />
-					<xs:element name="defendantId" type="base:defendantIdType"
-						minOccurs="0" />
-					<xs:element name="notificationType" type="tns:notification" />
-					<xs:element name="lastPaymentDate" type="xs:date"
-						minOccurs="0" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:element name="mcolPaid" type="tns:paidType" />
-
-		</xs:schema>
+		<!-- ClaimUpdate.xsd -->
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+            
+            <xs:simpleType name="notification">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MP">
+                        <xs:annotation>
+                            <xs:documentation>Paid</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WO">
+                        <xs:annotation>
+                            <xs:documentation>Written Off</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WD">
+                        <xs:annotation>
+                            <xs:documentation>Withdrawn</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DI">
+                        <xs:annotation>
+                            <xs:documentation>Discontinued</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:complexType name="claimUpdateType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:documentNumberType" />
+                    <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
+                    <xs:element name="notificationType" type="tns:notification" />
+                    <xs:element name="lastPaymentDate" type="xs:date"   minOccurs="0" />
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:element name="mcolClaimUpdate" type="tns:claimUpdateType"/>
+        
+        </xs:schema>
 
 		<!-- IndividualSubmitRequest.xsd -->
-		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema"
-			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema"
-			elementFormDefault="qualified" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-			xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
-			xmlns:pd="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
-			version="1.0">
-
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" />
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" />
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" />
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
-
-			<xs:complexType name="headerType">
-				<xs:sequence>
-					<xs:element name="sdtRequestId" type="base:sdtRequestIdType" />
-					<xs:element name="ncpId" type="base:ncpIdType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:complexType name="createClaimRequestType">
-				<xs:sequence>
-					<xs:element name="header" type="tns:headerType" />
-					<xs:element name="mcolClaim" type="clm:claimType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:complexType name="createJudgmentRequestType">
-				<xs:sequence>
-					<xs:element name="header" type="tns:headerType" />
-					<xs:element name="mcolJudgment" type="jud:judgmentType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:complexType name="createJudgmentForthwithRequestType">
-				<xs:sequence>
-					<xs:element name="header" type="tns:headerType" />
-					<xs:element name="mcolJudgmentForthwith" type="jud:judgmentForthwithType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:complexType name="createPaidRequestType">
-				<xs:sequence>
-					<xs:element name="header" type="tns:headerType" />
-					<xs:element name="mcolPaid" type="pd:paidType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:complexType name="createWarrantRequestType">
-				<xs:sequence>
-					<xs:element name="header" type="tns:headerType" />
-					<xs:element name="mcolWarrant" type="wnt:warrantType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:element name="createClaimRequest" type="tns:createClaimRequestType" />
-			<xs:element name="createJudgmentRequest" type="tns:createJudgmentRequestType" />
-			<xs:element name="createJudgmentForthwithRequest" type="tns:createJudgmentForthwithRequestType" />
-			<xs:element name="createWarrantRequest" type="tns:createWarrantRequestType" />
-			<xs:element name="createPaidRequest" type="tns:createPaidRequestType" />
-
-		</xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" 
+            elementFormDefault="qualified"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" 
+            xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" 
+            xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema"
+            xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" />
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" />
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" />
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
+             
+            <xs:complexType name="headerType">
+                <xs:sequence>
+                    <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
+                    <xs:element name="ncpId" type="base:ncpIdType"/>
+                </xs:sequence>
+            </xs:complexType>
+            
+            <xs:complexType name="createClaimRequestType">
+                <xs:sequence>
+                    <xs:element name="header" type="tns:headerType"/>
+                    <xs:element name="mcolClaim" type="clm:claimType"/>
+                </xs:sequence>
+            </xs:complexType>
+            
+            <xs:complexType name="createJudgmentRequestType">
+                <xs:sequence>
+                    <xs:element name="header" type="tns:headerType"/>
+                    <xs:element name="mcolJudgment" type="jud:judgmentType"/>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="createJudgmentForthwithRequestType">
+                <xs:sequence>
+                    <xs:element name="header" type="tns:headerType"/>
+                    <xs:element name="mcolJudgmentForthwith" type="jud:judgmentForthwithType"/>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="updateClaimRequestType">
+                <xs:sequence>
+                    <xs:element name="header" type="tns:headerType"/>
+                    <xs:element name="mcolClaimUpdate" type="clmupd:claimUpdateType"/>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="createWarrantRequestType">
+                <xs:sequence>
+                    <xs:element name="header" type="tns:headerType"/>
+                    <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:element name="createClaimRequest" type="tns:createClaimRequestType"/>
+            <xs:element name="createJudgmentRequest" type="tns:createJudgmentRequestType"/>
+            <xs:element name="createJudgmentForthwithRequest" type="tns:createJudgmentForthwithRequestType"/>
+            <xs:element name="createWarrantRequest" type="tns:createWarrantRequestType"/>
+            <xs:element name="updateClaimRequest" type="tns:updateClaimRequestType"/>
+        
+        </xs:schema>
 
 		<!-- IndividualSubmitResponse.xsd -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -781,8 +772,8 @@
 	<message name="createWarrantRequest">
 		<part name="createWarrantRequest" element="req:createWarrantRequest" />
 	</message>
-	<message name="createPaidRequest">
-		<part name="createPaidRequest" element="req:createPaidRequest" />
+	<message name="updateClaimRequest">
+		<part name="updateClaimRequest" element="req:updateClaimRequest" />
 	</message>
 	<message name="createResponse">
 		<part name="createResponse" element="resp:createResponse" />
@@ -811,8 +802,8 @@
 			<input message="tns:createWarrantRequest" />
 			<output message="tns:createResponse" />
 		</operation>
-		<operation name="createPaid">
-			<input message="tns:createPaidRequest" />
+		<operation name="updateClaim">
+			<input message="tns:updateClaimRequest" />
 			<output message="tns:createResponse" />
 		</operation>
 		<operation name="getDefenceDetails">
@@ -860,7 +851,7 @@
 				<soap:body use="literal" />
 			</output>
 		</operation>
-		<operation name="createPaid">
+		<operation name="updateClaim">
 			<soap:operation soapAction="" />
 			<input>
 				<soap:body use="literal" />

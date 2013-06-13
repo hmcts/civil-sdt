@@ -156,8 +156,8 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
                 valid = (mcolRequestType.getMcolJudgmentForthwith () != null) ? true : false;
                 break;
 
-            case MCOL_PAID:
-                valid = (mcolRequestType.getMcolPaid () != null) ? true : false;
+            case MCOL_CLAIM_UPDATE:
+                valid = (mcolRequestType.getMcolClaimUpdate () != null) ? true : false;
                 break;
 
             default:

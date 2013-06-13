@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<tns:mcolPaid xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema ../../../../../main/resources/xsd/RootXSDs/Paid.xsd ">
-  <tns:claimNumber>123456789</tns:claimNumber>
-  <tns:defendantId>-1</tns:defendantId>
-  <tns:notificationType>UNKNOWN</tns:notificationType>
-  <tns:lastPaymentDate>2001-01-011</tns:lastPaymentDate>
-</tns:mcolPaid>

@@ -162,9 +162,9 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     /**
      * Tests XML file is valid.
      */
-    public void testValidForPaidXml ()
+    public void testValidForClaimUpdateXml ()
     {
-        final String condition = "ForPaidValid";
+        final String condition = "ForClaimUpdateValid";
         final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
         this.validateXsd (xmlPath, XSD_PATH, null);
     }
@@ -172,9 +172,9 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     /**
      * Tests that expected errors are reported for missing mandatory fields.
      */
-    public void testInvalidXmlForPaidMandatoryMissing ()
+    public void testInvalidXmlForClaimUpdateMandatoryMissing ()
     {
-        final String condition = "ForPaidMandatoryMissing";
+        final String condition = "ForClaimUpdateMandatoryMissing";
         final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
 

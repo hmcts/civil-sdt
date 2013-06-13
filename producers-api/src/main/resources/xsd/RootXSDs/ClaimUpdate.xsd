@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema" 
-    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/PaidSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema"
     xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
 	elementFormDefault="qualified"
     version="1.0">
@@ -29,7 +29,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-	<xs:complexType name="paidType">
+	<xs:complexType name="claimUpdateType">
 		<xs:sequence>
 			<xs:element name="claimNumber" type="base:documentNumberType" />
 			<xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
@@ -38,6 +38,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-    <xs:element name="mcolPaid" type="tns:paidType"/>
+    <xs:element name="mcolClaimUpdate" type="tns:claimUpdateType"/>
 
 </xs:schema>

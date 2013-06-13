@@ -38,13 +38,13 @@ import uk.gov.moj.sdt.utils.SdtXmlTestBase;
  * @author Saurabh Agarwal
  * 
  */
-public class PaidXsdTest extends SdtXmlTestBase
+public class ClaimUpdateXsdTest extends SdtXmlTestBase
 {
 
     /**
      * The name of the xsd.
      */
-    private static final String XSD_NAME = "Paid";
+    private static final String XSD_NAME = "ClaimUpdate";
 
     /**
      * The name of the folder where XSD is stored.
@@ -62,11 +62,11 @@ public class PaidXsdTest extends SdtXmlTestBase
     private static final String XSD_PATH = XSD_DIR + XSD_NAME + ".xsd";
 
     /**
-     * Constructs a new {@link PaidXsdTest}.
+     * Constructs a new {@link ClaimUpdateXsdTest}.
      * 
      * @param testName Name of this test.
      */
-    public PaidXsdTest (final String testName)
+    public ClaimUpdateXsdTest (final String testName)
     {
         super (testName);
     }

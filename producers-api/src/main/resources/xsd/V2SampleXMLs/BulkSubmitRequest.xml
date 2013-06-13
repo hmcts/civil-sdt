@@ -11,15 +11,14 @@
 	<requests>
         <choice>
             <!-- Either PCOL or MCOL requests will be allowed -->
-            <!-- Customer code is CPC Number -->
-            <mcolRequests customerCode="xxxx">
+            <mcolRequests>
                 <mcolRequest requestType="claim" requestId="request identifier">
                     <choice>
                         <mcolClaim></mcolClaim>
-                        <mcolPaid></mcolPaid>
                         <mcolJudgment></mcolJudgment>
                         <mcolWarrant></mcolWarrant>
                         <mcolJudgmentForthwith></mcolJudgmentForthwith>
+                        <mcolClaimUpdate></mcolClaimUpdate>
                     </choice>
                 </mcolRequest>
             </mcolRequests>

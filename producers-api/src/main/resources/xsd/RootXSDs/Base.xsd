@@ -39,13 +39,6 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="customerCodeType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="1000" />
-			<xs:maxInclusive value="9999" />
-		</xs:restriction>
-	</xs:simpleType>
-
 	<xs:simpleType name="requestCountType">
 		<xs:restriction base="xs:integer">
 			<xs:maxInclusive value="99999" />
@@ -198,7 +191,7 @@
 			<xs:enumeration value="mcolJudgment" />
 			<xs:enumeration value="mcolJudgmentForthwith" />
 			<xs:enumeration value="mcolWarrant" />
-			<xs:enumeration value="mcolPaid" />
+			<xs:enumeration value="mcolClaimUpdate" />
 		</xs:restriction>
 	</xs:simpleType>
 
