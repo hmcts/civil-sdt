@@ -28,7 +28,7 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.utilities;
+package uk.gov.moj.sdt.utils;
 
 import java.io.File;
 import java.io.IOException;
