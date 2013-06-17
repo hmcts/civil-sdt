@@ -8,7 +8,7 @@
 	<types>
 		<xsd:schema>
 			<xsd:import namespace="http://common.prototype.producers.sdt.moj.gov.uk/disc_types.xml"
-				schemaLocation="disc_types.xml" />
+				schemaLocation="../xsd/disc_types.xsd" />
 		</xsd:schema>
 	</types>
 

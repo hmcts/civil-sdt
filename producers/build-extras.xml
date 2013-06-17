@@ -55,8 +55,8 @@
         </copy>
     </target>
 
-    <!-- Copy wsdl files -->
-    <target name="-copy-wsdl" description="Copy wsdl from all projects">
+    <!-- Copy wsdl and xsd files -->
+    <target name="-copy-wsdl-xsd" description="Copy wsdl and xsd from all projects">
         <copy todir="${producers.target.dir}/WEB-INF/classes/wsdl" overwrite="true">
             <fileset dir="${producers-api.dir}/${src.dir}" casesensitive="false">
                 <include name="**/*.wsdl" />
@@ -65,6 +65,11 @@
         <copy todir="${producers.target.dir}/WEB-INF/classes/wsdl" overwrite="true">
             <fileset dir="${producers-api.dir}/${resources.dir}/wsdl" casesensitive="false">
                 <include name="**/*.wsdl" />
+            </fileset>
+        </copy>
+        <copy todir="${producers.target.dir}/WEB-INF/classes/xsd" overwrite="true">
+            <fileset dir="${producers-api.dir}/${resources.dir}/xsd" casesensitive="false">
+                <include name="**/*.xsd" />
             </fileset>
         </copy>
     </target>
@@ -269,7 +274,7 @@
     <target name="build-war" depends="-copy-resources,
         -copy-classes,
         -copy-web-inf-resources,
-        -copy-app-lib,-copy-3rd-party-lib,-copy-wsdl,
+        -copy-app-lib,-copy-3rd-party-lib,-copy-wsdl-xsd,
         -compress" description="Generate the distribution war file">
         <jar jarfile="${target.dir}/producers.war" basedir="${producers.target.dir}" />
     </target>
