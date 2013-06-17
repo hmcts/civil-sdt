@@ -42,7 +42,18 @@ public class InvalidRequestTypeException extends BusinessException
      * The Constant serialVersionUID.
      */
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * An invalid request type has been sent.
+     * 
+     * @param code error code 
+     * @param description error description
+     */
+    public InvalidRequestTypeException (final String code, final String description)
+    {
+        super (code, description);
+    }
+    
     /**
      * An invalid request type has been sent.
      * 

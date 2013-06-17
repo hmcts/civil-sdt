@@ -46,6 +46,17 @@ public class InvalidTargetApplicationException extends BusinessException
     /**
      * Organisation isn't registered for a target application.
      * 
+     * @param code error code 
+     * @param description error description
+     */
+    public InvalidTargetApplicationException (final String code, final String description)
+    {
+        super (code, description);
+    }
+    
+    /**
+     * Organisation isn't registered for a target application.
+     * 
      * @param s the s
      */
     public InvalidTargetApplicationException (final String s)

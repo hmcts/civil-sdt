@@ -46,6 +46,17 @@ public class DuplicateUserRequestIdentifierException extends BusinessException
     /**
      * Duplicate user request identifier found.
      * 
+     * @param code error code 
+     * @param description error description
+     */
+    public DuplicateUserRequestIdentifierException (final String code, final String description)
+    {
+        super (code, description);
+    }
+    
+    /**
+     * Duplicate user request identifier found.
+     * 
      * @param s the s
      */
     public DuplicateUserRequestIdentifierException (final String s)

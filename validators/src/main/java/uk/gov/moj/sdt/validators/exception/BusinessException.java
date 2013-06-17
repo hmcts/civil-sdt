@@ -25,16 +25,19 @@
  * software, even if advised of the possibility of such damage.
  * 
  * $Id: $
- * $LastChangedRevision: $ 
+ * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Base class for business exceptions.
  * 
  * @author d130680
- *
+ * 
  */
 public class BusinessException extends RuntimeException
 {
@@ -42,6 +45,34 @@ public class BusinessException extends RuntimeException
      * The Constant serialVersionUID.
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Logger instance.
+     */
+    private static final Log LOGGER = LogFactory.getLog (BusinessException.class);
+
+    /**
+     * Error code.
+     */
+    private String errorCode;
+
+    /**
+     * Error description
+     */
+    private String errorDescription;
+
+    /**
+     * Base class for business exceptions.
+     * 
+     * @param code error code
+     * @param description error description
+     */
+    public BusinessException (final String code, final String description)
+    {
+        this.errorCode = code;
+        this.errorDescription = description;
+        logException ();
+    }
 
     /**
      * Base class for business exceptions.
@@ -72,5 +103,32 @@ public class BusinessException extends RuntimeException
     public BusinessException (final String s, final Throwable cause)
     {
         super (s, cause);
+    }
+
+    /**
+     * Get the error code.
+     * 
+     * @return error code
+     */
+    public String getErrorCode ()
+    {
+        return errorCode;
+    }
+
+    /**
+     * Get the error description.
+     * 
+     * @return error description
+     */
+    public String getErrorDescription ()
+    {
+        return errorDescription;
+    }
+
+    private void logException ()
+    {
+        LOGGER.error ("The following exception occured [" + getErrorCode () + "] message[" + getErrorDescription () +
+                "]");
+
     }
 }

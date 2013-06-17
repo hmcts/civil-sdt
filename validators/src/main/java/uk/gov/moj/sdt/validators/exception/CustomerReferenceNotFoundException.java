@@ -46,6 +46,17 @@ public class CustomerReferenceNotFoundException extends BusinessException
     /**
      * Customer reference not found.
      * 
+     * @param code error code 
+     * @param description error description
+     */
+    public CustomerReferenceNotFoundException (final String code, final String description)
+    {
+        super (code, description);
+    }
+    
+    /**
+     * Customer reference not found.
+     * 
      * @param s the s
      */
     public CustomerReferenceNotFoundException (final String s)

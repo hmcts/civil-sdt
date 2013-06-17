@@ -44,6 +44,17 @@ public class RequestCountMismatchException extends BusinessException
     private static final long serialVersionUID = 1L;
 
     /**
+     * Total of individual requests should match the request count.
+     * 
+     * @param code error code 
+     * @param description error description
+     */
+    public RequestCountMismatchException (final String code, final String description)
+    {
+        super (code, description);
+    }
+    
+    /**
      * Total of individual requests should match the request count. 
      * 
      * @param s the s

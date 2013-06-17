@@ -46,6 +46,17 @@ public class DuplicateCustomerReferenceException extends BusinessException
     /**
      * Duplicate customer reference found.
      * 
+     * @param code error code 
+     * @param description error description
+     */
+    public DuplicateCustomerReferenceException (final String code, final String description)
+    {
+        super (code, description);
+    }
+    
+    /**
+     * Duplicate customer reference found.
+     * 
      * @param s the s
      */
     public DuplicateCustomerReferenceException (final String s)
