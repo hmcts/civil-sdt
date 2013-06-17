@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.producers.resolver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -66,14 +67,16 @@ public final class BulkRequestToDomainResolver
     /**
      * Maps the header to a Bulk Submission object.
      * 
-     * @param headerType header type
+     * @param bulkRequestType bulk request type
      * @return bulk submission
      */
-    public static BulkSubmission mapToBulkSubmission (final HeaderType headerType)
+    public static BulkSubmission mapToBulkSubmission (final BulkRequestType bulkRequestType)
     {
+        final HeaderType headerType = bulkRequestType.getHeader ();
         final BulkSubmission bulkSubmission = new BulkSubmission ();
         final TargetApplication targetApplication = new TargetApplication ();
 
+        // Set bulk submission
         bulkSubmission.setCustomerReference (headerType.getCustomerReference ());
         bulkSubmission.setNumberOfRequest (headerType.getRequestCount ().intValue ());
 
@@ -81,6 +84,14 @@ public final class BulkRequestToDomainResolver
 
         bulkSubmission.setTargetApplication (targetApplication);
         bulkSubmission.setSubmissionStatus (BulkRequestStatus.UPLOADED.getStatus ());
+
+        // Set bulk customer
+        final BulkCustomer bulkCustomer = mapToBulkCustomer (headerType);
+        bulkSubmission.setBulkCustomer (bulkCustomer);
+
+        // Set individual requests
+        final List<IndividualRequest> individualRequests = mapToIndividualRequests (bulkRequestType, bulkSubmission);
+        bulkSubmission.setIndividualRequests (individualRequests);
 
         return bulkSubmission;
 
@@ -92,7 +103,7 @@ public final class BulkRequestToDomainResolver
      * @param headerType header type
      * @return bulk customer
      */
-    public static BulkCustomer mapToBulkCustomer (final HeaderType headerType)
+    private static BulkCustomer mapToBulkCustomer (final HeaderType headerType)
     {
         final BulkCustomer bulkCustomer = new BulkCustomer ();
 
@@ -102,34 +113,45 @@ public final class BulkRequestToDomainResolver
     }
 
     /**
-     * Maps the header to a Individual Request object.
+     * Maps the bulk request to a list of Individual Request object.
      * 
      * @param bulkRequestType bulk request
-     * @return individual request
+     * @param bulkSubmission bulk submission
+     * @return list of individual requests
      */
-    public static IndividualRequest mapToIndividualRequest (final BulkRequestType bulkRequestType)
+    private static List<IndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
+                                                                    final BulkSubmission bulkSubmission)
     {
         final IndividualRequest individualRequest = new IndividualRequest ();
         final McolRequestsType mcolRequestsType = bulkRequestType.getRequests ().getMcolRequests ();
 
         final List<McolRequestType> mcolRequestTypeList = mcolRequestsType.getMcolRequest ();
+        final List<IndividualRequest> individualRequestList = new ArrayList<IndividualRequest> ();
 
         // Set the individual requests
         int lineNumber = 0;
         for (McolRequestType mcolRequestType : mcolRequestTypeList)
         {
+            // Set customer reference
             individualRequest.setCustomerRequestReference (mcolRequestType.getRequestId ());
+
+            // Set line number
             individualRequest.setLineNumber (lineNumber++);
+
+            // Set request type
             final RequestTypeType requestTypeType = mcolRequestType.getRequestType ();
-            individualRequest.setRequestType (BulkRequestToDomainResolver.mapToRequesType (requestTypeType));
+            individualRequest.setRequestType (mapToRequesType (requestTypeType));
+
+            // Set the intial status
             individualRequest.setRequestStatus (IndividualRequestStatus.SUBMITTED.getStatus ());
+
+            // Set the bulk submission
+            individualRequest.setBulkSubmission (bulkSubmission);
+
+            individualRequestList.add (individualRequest);
         }
 
-        // Set the bulk submission
-        individualRequest.setBulkSubmission (BulkRequestToDomainResolver.mapToBulkSubmission (bulkRequestType
-                .getHeader ()));
-
-        return individualRequest;
+        return individualRequestList;
     }
 
     /**
@@ -138,7 +160,7 @@ public final class BulkRequestToDomainResolver
      * @param requestTypeType requesttype type
      * @return request type
      */
-    public static RequestType mapToRequesType (final RequestTypeType requestTypeType)
+    private static RequestType mapToRequesType (final RequestTypeType requestTypeType)
     {
 
         final RequestType requestType = new RequestType ();
