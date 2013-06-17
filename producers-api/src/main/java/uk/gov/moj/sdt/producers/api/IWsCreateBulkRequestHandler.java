@@ -34,7 +34,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
- * Interface for handling bulk request submission flow..
+ * Interface for handling bulk request submission flow.
  * 
  * @author d276205
  */
@@ -42,7 +42,7 @@ public interface IWsCreateBulkRequestHandler extends IWsCreateHandler
 {
 
     /**
-     * Processes bulk request submission.
+     * Processes bulk request submission and returns generated response.
      * 
      * @param bulkRequest bulk request
      * @return BulkResponseType response

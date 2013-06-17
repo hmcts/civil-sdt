@@ -8,5 +8,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/producers-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/validators"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/domain"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -35,10 +35,14 @@ import java.math.BigInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.producer.comx.sdtws.BulkResponseFailure;
-import uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
+import uk.gov.moj.sdt.producers.resolver.BulkRequestToDomainResolver;
+import uk.gov.moj.sdt.validators.exception.BusinessException;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.McolRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
@@ -57,75 +61,119 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
      */
     private static final Log LOGGER = LogFactory.getLog (WsCreateBulkRequestHandler.class);
 
-    /**
-     * Factory to produce mock responses.
-     */
-    private IResponseFactory responseFactory;
-
     @Override
-    public BulkResponseType submitBulk (final BulkRequestType bulkRequest)
+    public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
     {
         LOGGER.info ("[submitBulk] started");
 
-        final BulkResponseType response = validate (bulkRequest);
+        // Initialise response;
+        final BulkResponseType bulkResponseType = intialiseResponse (bulkRequestType);
 
-        LOGGER.info ("[submitBulk] completed");
+        try
+        {
+
+            // Log incoming message to database - could be possible to implement in interceptor.
+            logIncomingRequest (bulkRequestType);
+
+            // Validate request to ensure that fields contain correct data. e.g. request count.
+            final ErrorType wsErrorType = validateWsType (bulkRequestType);
+
+            if (wsErrorType != null)
+            {
+                populateError (bulkResponseType.getStatus (), wsErrorType, StatusCodeType.ERROR);
+                return bulkResponseType;
+            }
+
+            // Transform web service object to domain object(s)
+            final BulkSubmission bulkSubmission = transformToDomainType (bulkRequestType);
+
+            // Validate domain
+            validateDomain (bulkSubmission);
+
+            // Process validated request
+            LOGGER.info ("Service called to persist bulk request details");
+
+        }
+        catch (final BusinessException be)
+        {
+            handleBusinessException (be, bulkResponseType.getStatus ());
+
+        }
+        // CHECKSTYLE:OFF
+        catch (final Exception e)
+        // CHECKSTYLE:ON
+        {
+
+            handleException (e, bulkResponseType.getStatus ());
+        }
+        finally
+        {
+            LOGGER.info ("[submitBulk] completed");
+        }
+
+        return bulkResponseType;
+    }
+
+    /**
+     * Log raw request object.
+     * 
+     * @param bulkRequest request instance.
+     */
+    private void logIncomingRequest (final BulkRequestType bulkRequest)
+    {
+        LOGGER.info ("[logIncomingRequest] - " + bulkRequest);
+    }
+
+    /**
+     * Initialise response.
+     * 
+     * @param bulkRequest request instance.
+     * @return created BulkResponse instance.
+     */
+    private BulkResponseType intialiseResponse (final BulkRequestType bulkRequest)
+    {
+
+        LOGGER.debug ("setup initial response");
+        final BulkResponseType response = new BulkResponseType ();
+        response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
+        response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
+        final StatusType status = new StatusType ();
+        response.setStatus (status);
+        status.setCode (StatusCodeType.OK);
 
         return response;
     }
 
+    
     /**
-     * Validate bulk request type.
+     * Validate to ensure integrity of bulk request.
      * 
-     * @param request bulk request
-     * @return {@link BulkResponseType}
+     * @param bulkRequestType bulk request
+     * @return {@link ErrorType}
      */
-    private BulkResponseType validate (final BulkRequestType request)
+    private ErrorType validateWsType (final BulkRequestType bulkRequestType)
     {
-        LOGGER.debug ("[validate] started");
+        LOGGER.debug ("[validateWsType] started");
 
         LOGGER.debug ("validate request count");
-        final BigInteger headerReqCount = request.getHeader ().getRequestCount ();
-        final int actualRequestCount = request.getRequests ().getMcolRequests ().getMcolRequest ().size ();
+        final BigInteger headerReqCount = bulkRequestType.getHeader ().getRequestCount ();
+        final int actualRequestCount = bulkRequestType.getRequests ().getMcolRequests ().getMcolRequest ().size ();
         if (headerReqCount.intValue () != actualRequestCount)
         {
-            return responseFactory.createFailResponse (BulkResponseFailure.REQUEST_COUNT_MISMATCH, request);
-        }
-
-        LOGGER.debug ("validate SDT Customer id");
-        if ("TEST_100".equalsIgnoreCase (request.getHeader ().getCustomerReference ()))
-        {
-            return responseFactory.createFailResponse (BulkResponseFailure.SDT_CUSTOMER_NOT_FOUND, request);
-        }
-
-        LOGGER.debug ("validate Target application id");
-        if ("TEST_300".equalsIgnoreCase (request.getHeader ().getCustomerReference ()))
-        {
-            return responseFactory.createFailResponse (BulkResponseFailure.INVALID_TARGET_APPLICATION, request);
-        }
-
-        LOGGER.debug ("validate customer reference is unique");
-        if ("TEST_200".equalsIgnoreCase (request.getHeader ().getCustomerReference ()))
-        {
-            return responseFactory.createFailResponse (BulkResponseFailure.BULK_CUSTOMER_REFERENCE_NOT_UNIQUE, request);
+            return createErrorType ("REQ_COUNT_MISMATCH", "Number of requests do not match request count in header");
         }
 
         LOGGER.debug ("validate request type matches request content for each request");
-        for(McolRequestType mcolRequest : request.getRequests ().getMcolRequests ().getMcolRequest ()) {
+        for (McolRequestType mcolRequest : bulkRequestType.getRequests ().getMcolRequests ().getMcolRequest ())
+        {
             if ( !isValidRequestType (mcolRequest))
             {
-                return responseFactory.createFailResponse (BulkResponseFailure.INVALID_REQUEST_TYPE, request);
+                return createErrorType ("REQ_TYPE_INCORRECT",
+                        "Request type does not match with specified request details");
             }
         }
 
-        LOGGER.debug ("validate customer reference for each request");
-        if ("TEST_600".equalsIgnoreCase (request.getHeader ().getCustomerReference ()))
-        {
-            return responseFactory.createFailResponse (BulkResponseFailure.IND_REQUEST_CUSTOMER_REFERENCE_NOT_UNIQUE,
-                    request);
-        }
-
-        return responseFactory.createSuccessResponse (request);
+        return null;
 
     }
 
@@ -137,7 +185,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
      */
     private boolean isValidRequestType (final McolRequestType mcolRequestType)
     {
-        boolean valid = false;
+        boolean valid = true;
         switch (mcolRequestType.getRequestType ())
         {
             case MCOL_CLAIM:
@@ -169,10 +217,37 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
     }
 
     /**
-     * @param responseFactory the responseFactory to set
+     * Transform Web service object to Domain object.
+     * 
+     * @param bulkRequestType bulk request
+     * @return {@link BulkSubmission}
      */
-    public void setResponseFactory (final IResponseFactory responseFactory)
+    private BulkSubmission transformToDomainType (final BulkRequestType bulkRequestType)
     {
-        this.responseFactory = responseFactory;
+        LOGGER.debug ("transform to domain type");
+
+        return BulkRequestToDomainResolver.mapToBulkSubmission (bulkRequestType);
+
     }
+
+    /**
+     * Validate domain object - {@link BulkSubmission}.
+     * 
+     * @param bulkSubmission domain instance to validate.
+     * @throws BusinessException in case of any business rule validation failure.
+     */
+    private void validateDomain (final BulkSubmission bulkSubmission) throws BusinessException
+    {
+        LOGGER.debug ("[validateDomain] started");
+
+        LOGGER.debug ("validate SDT Customer id");
+
+        LOGGER.debug ("validate Target application id");
+
+        LOGGER.debug ("validate customer reference is unique across data retention period");
+
+        LOGGER.debug ("validate customer reference for each request is unique across data retention period");
+
+    }
+
 }

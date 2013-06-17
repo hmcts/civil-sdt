@@ -7,15 +7,20 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-    <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler" 
-        class="uk.gov.moj.sdt.producer.comx.handler.WsCreateBulkRequestHandler">
+    <!-- Mock implementation for Bulk Request submission handler -->
+    <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandlerMock" 
+        class="uk.gov.moj.sdt.producer.comx.handler.MockWsCreateBulkRequestHandler">
         <property name="responseFactory" ref="uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory"/>
     </bean>
     
+    <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler" 
+        class="uk.gov.moj.sdt.producer.comx.handler.WsCreateBulkRequestHandler">
+    </bean>
+
     <bean id="uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory" 
         class="uk.gov.moj.sdt.producer.comx.sdtws.ResponseFactory">
     </bean>
-
+    
     <bean id="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler" 
         class="uk.gov.moj.sdt.producer.comx.handler.WsReadBulkFeedbackRequestHandler">
     </bean>

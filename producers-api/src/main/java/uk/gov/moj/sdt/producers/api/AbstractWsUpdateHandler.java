@@ -35,7 +35,7 @@ package uk.gov.moj.sdt.producers.api;
  * 
  * @author d276205
  */
-public abstract class AbstractWsUpdateHandler implements IWsUpdateHandler
+public abstract class AbstractWsUpdateHandler extends AbstractWsHandler implements IWsUpdateHandler
 {
 
 }

@@ -35,7 +35,7 @@ package uk.gov.moj.sdt.producers.api;
  * 
  * @author d276205
  */
-public abstract class AbstractWsReadHandler implements IWsReadHandler
+public abstract class AbstractWsReadHandler extends AbstractWsHandler implements IWsReadHandler
 {
 
 }

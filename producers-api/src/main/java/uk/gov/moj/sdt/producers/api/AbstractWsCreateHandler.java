@@ -35,7 +35,7 @@ package uk.gov.moj.sdt.producers.api;
  * 
  * @author d276205
  */
-public abstract class AbstractWsCreateHandler implements IWsCreateHandler
+public abstract class AbstractWsCreateHandler extends AbstractWsHandler implements IWsCreateHandler
 {
 
 }

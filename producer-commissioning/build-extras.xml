@@ -121,10 +121,9 @@
         <copy todir="${producer-commissioning.target.dir}/WEB-INF/lib" overwrite="true">
             <fileset dir="${lib.app.dir}" casesensitive="false">
                 <include name="**/producers-api.jar" />
-            </fileset>
-            <fileset dir="${lib.app.dir}" casesensitive="false">
                 <include name="**/validators.jar" />
-            </fileset>        	
+                <include name="**/domain.jar" />
+            </fileset>
         </copy>
     </target>
 
