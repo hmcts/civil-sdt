@@ -11,6 +11,9 @@
         <jxb:javaType name="java.util.Calendar" xmlType="xs:date"
                       parseMethod="javax.xml.bind.DatatypeConverter.parseDate"
                       printMethod="javax.xml.bind.DatatypeConverter.printDate"/>
+        <jxb:javaType name="java.lang.Long" xmlType="xs:unsignedLong"
+                      parseMethod="javax.xml.bind.DatatypeConverter.parseLong"
+                      printMethod="javax.xml.bind.DatatypeConverter.printLong"/>
       </jxb:globalBindings>
   </jaxws:bindings>
 </jaxws:bindings>

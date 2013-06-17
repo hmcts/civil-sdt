@@ -64,6 +64,16 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
      */
     private static final Log LOGGER = LogFactory.getLog (WsReadBulkFeedbackRequestHandler.class);
 
+    /**
+     * Constant for fee.
+     */
+    private static final long FEE_500 = 500L;
+
+    /**
+     * Constant for fee.
+     */
+    private static final long FEE_258 = 258L;
+
     @Override
     public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
     {
@@ -264,8 +274,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         response.setWarrantNumber ("22222202");
         response.setEnforcingCourtCode ("942");
         response.setEnforcingCourtName ("CourtNameB");
-        final Integer fee = 258;
-        response.setFee (BigInteger.valueOf (fee));
+        response.setFee (FEE_258);
         return response;
 
     }
@@ -349,8 +358,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         response.setServiceDate (cal);
 
         // Required for Claims
-        final Integer fee = 500;
-        response.setFee (BigInteger.valueOf (fee));
+        response.setFee (FEE_500);
         return response;
     }
 
@@ -411,8 +419,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         response.setWarrantNumber ("22222201");
         response.setEnforcingCourtCode ("517");
         response.setEnforcingCourtName ("CourtNameA");
-        final Integer fee = 258;
-        response.setFee (BigInteger.valueOf (fee));
+        response.setFee (FEE_258);
         return response;
 
     }
@@ -496,8 +503,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         response.setServiceDate (cal);
 
         // Required for Claims
-        final Integer fee = 500;
-        response.setFee (BigInteger.valueOf (fee));
+        response.setFee (FEE_500);
         return response;
     }
 
