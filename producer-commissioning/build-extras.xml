@@ -122,6 +122,9 @@
             <fileset dir="${lib.app.dir}" casesensitive="false">
                 <include name="**/producers-api.jar" />
             </fileset>
+            <fileset dir="${lib.app.dir}" casesensitive="false">
+                <include name="**/validators.jar" />
+            </fileset>        	
         </copy>
     </target>
 
