@@ -38,7 +38,7 @@ import uk.gov.moj.sdt.utils.SdtXmlTestBase;
  * @author Saurabh Agarwal
  * 
  */
-public class JudgmentForthwithXsdTest extends SdtXmlTestBase
+public class JudgmentWarrantXsdTest extends SdtXmlTestBase
 {
 
     /**
@@ -62,11 +62,11 @@ public class JudgmentForthwithXsdTest extends SdtXmlTestBase
     private static final String XSD_PATH = XSD_DIR + XSD_NAME + ".xsd";
 
     /**
-     * Constructs a new {@link JudgmentForthwithXsdTest}.
+     * Constructs a new {@link JudgmentWarrantXsdTest}.
      * 
      * @param testName Name of this test.
      */
-    public JudgmentForthwithXsdTest (final String testName)
+    public JudgmentWarrantXsdTest (final String testName)
     {
         super (testName);
     }
@@ -76,7 +76,7 @@ public class JudgmentForthwithXsdTest extends SdtXmlTestBase
      */
     public void testValidXml ()
     {
-        final String condition = "ForthwithValid";
+        final String condition = "WarrantValid";
         final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
         this.validateXsd (xmlPath, XSD_PATH, null);
     }
@@ -86,7 +86,7 @@ public class JudgmentForthwithXsdTest extends SdtXmlTestBase
      */
     public void testInvalidXmlMandatoryMissing ()
     {
-        final String condition = "ForthwithMandatoryMissing";
+        final String condition = "WarrantMandatoryMissing";
         final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
 

@@ -8,7 +8,7 @@
     
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd" />
     
-    <xs:simpleType name="notification">
+    <xs:simpleType name="notificationType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="MP">
                 <xs:annotation>
@@ -31,10 +31,10 @@
 
 	<xs:complexType name="claimUpdateType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="base:documentNumberType" />
+			<xs:element name="claimNumber" type="base:claimNumberType" />
 			<xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
-			<xs:element name="notificationType" type="tns:notification" />
-			<xs:element name="lastPaymentDate" type="xs:date"	minOccurs="0" />
+			<xs:element name="notificationType" type="tns:notificationType" />
+			<xs:element name="paidInFullDate" type="xs:date"	minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 

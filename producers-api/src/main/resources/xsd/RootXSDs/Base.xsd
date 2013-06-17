@@ -4,12 +4,10 @@
 	targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
 	elementFormDefault="qualified" version="1.0">
 
-	<!-- TODO Data type to be confirmed -->
 	<xs:simpleType name="sdtCustomerIdType">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
-			<xs:maxLength value="24" />
-		</xs:restriction>
+        <xs:restriction base="xs:integer">
+            <xs:pattern value="[1-9][0-9]{7}" />
+        </xs:restriction>
 	</xs:simpleType>
 
 	<!-- Proposed data format AA-TTTT-YYMMSDDHHMISS-999999999 -->
@@ -22,19 +20,13 @@
 	<xs:simpleType name="targetApplicationIdType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="mcol" />
+            <xs:enumeration value="mcol_com" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="customerReferenceType">
 		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
-			<xs:maxLength value="32" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="codeType">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
+			<xs:minLength value="1" />
 			<xs:maxLength value="32" />
 		</xs:restriction>
 	</xs:simpleType>
@@ -45,84 +37,68 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="ncpIdType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="1000" />
-			<xs:maxInclusive value="9999" />
-		</xs:restriction>
+	<xs:simpleType name="mcolCustomerIdType">
+        <xs:restriction base="xs:string">
+            <xs:length value="12"/>
+        </xs:restriction>
 	</xs:simpleType>
 
-	<!-- Document number is now an 8 digit number -->
-	<xs:simpleType name="documentNumberType">
+	<xs:simpleType name="claimNumberType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[0-9A-Za-z]{8}" />
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="claimantReferenceType">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
-			<xs:maxLength value="24" />
-		</xs:restriction>
-	</xs:simpleType>
+    <xs:simpleType name="warrantNumberType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9A-Za-z]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
 
-	<!-- Defendant ID is Blank (all defendants), 1 or 2 -->
 	<xs:simpleType name="defendantIdType">
-		<xs:restriction base="xs:string">
-			<xs:pattern value=" |1|2" />
-		</xs:restriction>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="1|2" />
+        </xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="lineType">
 		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
-			<xs:maxLength value="30" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="correspondenceNameType">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
+			<xs:minLength value="1" />
 			<xs:maxLength value="30" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="nameType">
 		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
+			<xs:minLength value="1" />
 			<xs:maxLength value="60" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="additionalNotesType">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
-			<xs:maxLength value="120" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="descriptionType">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
-			<xs:maxLength value="255" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:complexType name="sotSignatureType">
 		<xs:sequence>
-			<xs:element name="name" type="tns:nameType" />
+            <xs:element name="flag" type="xs:boolean" fixed="true"/>
+			<xs:element name="name">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1" />
+                        <xs:maxLength value="30" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 		</xs:sequence>
 	</xs:complexType>
 
 	<xs:simpleType name="courtCodeType">
-		<xs:restriction base="xs:integer">
-			<xs:pattern value="[0-9]{3}" />
+		<xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="3" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="courtNameType">
 		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
+			<xs:minLength value="1" />
 			<xs:maxLength value="40" />
 		</xs:restriction>
 	</xs:simpleType>
@@ -147,18 +123,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="correspondenceDetailType">
-		<xs:annotation>
-			<xs:documentation>
-				Describes correspondence details.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="name" type="tns:correspondenceNameType" />
-			<xs:element name="address" type="tns:addressType" />
-		</xs:sequence>
-	</xs:complexType>
-
 	<xs:complexType name="personType">
 		<xs:annotation>
 			<xs:documentation>
@@ -173,14 +137,14 @@
 
 	<xs:simpleType name="requestIdType">
 		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
+			<xs:minLength value="1" />
 			<xs:maxLength value="24" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="sdtRequestIdType">
 		<xs:restriction base="xs:string">
-			<xs:minLength value="0" />
+			<xs:minLength value="1" />
 			<xs:maxLength value="40" />
 		</xs:restriction>
 	</xs:simpleType>
@@ -189,72 +153,9 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="mcolClaim" />
 			<xs:enumeration value="mcolJudgment" />
-			<xs:enumeration value="mcolJudgmentForthwith" />
+			<xs:enumeration value="mcolJudgmentWarrant" />
 			<xs:enumeration value="mcolWarrant" />
 			<xs:enumeration value="mcolClaimUpdate" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="feeType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="999999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="deductedAmountType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="99999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="claimAmountType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="9999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="balanceOfDebtType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="9999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="warrantAmountType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="9999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="amountType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="9999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="interestType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="9999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="dailyAmountType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="999999" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="solicitorCostType">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="999999" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -283,8 +184,22 @@
 
 	<xs:complexType name="errorType">
 		<xs:sequence>
-			<xs:element name="code" type="tns:codeType" />
-			<xs:element name="description" type="tns:descriptionType" />
+            <xs:element name="code">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1" />
+                        <xs:maxLength value="32" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+			<xs:element name="description">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1" />
+                        <xs:maxLength value="255" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 		</xs:sequence>
 	</xs:complexType>
 

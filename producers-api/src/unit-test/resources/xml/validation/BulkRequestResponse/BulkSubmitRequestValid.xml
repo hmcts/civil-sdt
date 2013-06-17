@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:bulkRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns2="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:tns3="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:tns4="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" xmlns:tns5="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema ../../../../../main/resources/xsd/BulkRequestResponse/BulkSubmitRequest.xsd ">
   <tns:header>
-    <tns:sdtCustomerId>tns:sdtCustomerId</tns:sdtCustomerId>
+    <tns:sdtCustomerId>12345678</tns:sdtCustomerId>
     <tns:targetApplicationId>mcol</tns:targetApplicationId>
     <tns:requestCount>0</tns:requestCount>
     <tns:customerReference>tns:customerReference</tns:customerReference>
+    <tns:sotSignature>
+      <tns1:flag>true</tns1:flag>
+      <tns1:name>tns2:name</tns1:name>
+    </tns:sotSignature>
   </tns:header>
   <tns:requests>
     <tns:mcolRequests>
-      <tns:mcolRequest requestId="" requestType="mcolClaim">
+      <tns:mcolRequest requestId="1" requestType="mcolClaim">
         <tns:mcolClaim>
           <tns2:defendant1>
             <tns1:name>tns1:name</tns1:name>
@@ -21,9 +25,6 @@
           <tns2:sendParticularsSeparately>true</tns2:sendParticularsSeparately>
           <tns2:claimAmount>0</tns2:claimAmount>
           <tns2:particulars>tns2:particulars</tns2:particulars>
-          <tns2:sotSignature>
-            <tns1:name>tns1:name</tns1:name>
-          </tns2:sotSignature>
         </tns:mcolClaim>
       </tns:mcolRequest>
     </tns:mcolRequests>

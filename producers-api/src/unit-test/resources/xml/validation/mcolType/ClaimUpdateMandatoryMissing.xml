@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:mcolClaimUpdate xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema ../../../../../main/resources/xsd/RootXSDs/ClaimUpdate.xsd ">
   <tns:defendantId>1</tns:defendantId>
-  <tns:lastPaymentDate>2001-01-01</tns:lastPaymentDate>
+  <tns:paidInFullDate>2001-01-01</tns:paidInFullDate>
 </tns:mcolClaimUpdate>

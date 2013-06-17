@@ -17,7 +17,7 @@
 	</xs:complexType>
 	<xs:complexType name="headerType">
 		<xs:sequence>
-			<xs:element name="ncpId" type="base:ncpIdType" />
+			<xs:element name="mcolCustomerId" type="base:mcolCustomerIdType" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="mcolDefenceType">

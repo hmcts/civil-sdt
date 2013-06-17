@@ -22,7 +22,7 @@
 	</xs:complexType>
 	<xs:complexType name="defenceDetailType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="base:documentNumberType" />
+			<xs:element name="claimNumber" type="base:claimNumberType" />
 			<xs:element name="defendants">
 				<xs:complexType>
 					<xs:sequence>

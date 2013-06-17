@@ -1,0 +1,951 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions name="SdtEndpoint" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" xmlns:breq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
+	xmlns:bresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema"
+	xmlns:bfreq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema"
+	xmlns:bfresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"
+	xmlns:dreq="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackRequestSchema"
+	xmlns:dresp="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackResponseSchema"
+	targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint">
+
+	<types>
+
+		<!-- Base.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:simpleType name="sdtCustomerIdType">
+                <xs:restriction base="xs:integer">
+                    <xs:pattern value="[1-9][0-9]{7}" />
+                </xs:restriction>
+			</xs:simpleType>
+
+			<!-- Proposed data format AA-TTTT-YYMMSDDHHMISS-999999999 -->
+			<xs:simpleType name="sdtBulkReferenceType">
+				<xs:restriction base="xs:string">
+					<xs:length value="32" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="targetApplicationIdType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="mcol" />
+                    <xs:enumeration value="mcol_com" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="customerReferenceType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+					<xs:maxLength value="32" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="requestCountType">
+				<xs:restriction base="xs:integer">
+					<xs:maxInclusive value="99999" />
+				</xs:restriction>
+			</xs:simpleType>
+
+            <xs:simpleType name="mcolCustomerIdType">
+                <xs:restriction base="xs:string">
+                    <xs:length value="12"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+			<xs:simpleType name="claimNumberType">
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[0-9A-Za-z]{8}" />
+				</xs:restriction>
+			</xs:simpleType>
+
+            <xs:simpleType name="warrantNumberType">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[0-9A-Za-z]{8}" />
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:simpleType name="defendantIdType">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="1|2" />
+                </xs:restriction>
+            </xs:simpleType>
+        
+			<xs:simpleType name="lineType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+					<xs:maxLength value="30" />
+				</xs:restriction>
+			</xs:simpleType>
+			
+			<xs:simpleType name="nameType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+					<xs:maxLength value="60" />
+				</xs:restriction>
+			</xs:simpleType>
+
+            <xs:complexType name="sotSignatureType">
+                <xs:sequence>
+                    <xs:element name="flag" type="xs:boolean" fixed="true"/>
+                    <xs:element name="name">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1" />
+                                <xs:maxLength value="30" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        
+			<xs:simpleType name="courtCodeType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                    <xs:maxLength value="3" />
+                </xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="courtNameType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+					<xs:maxLength value="40" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="postcodeType">
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z-[CIKMOV]]{2}" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="addressType">
+				<xs:sequence>
+					<xs:element name="line1" type="tns:lineType" />
+					<xs:element name="line2" type="tns:lineType" />
+					<xs:element name="line3" type="tns:lineType"
+						minOccurs="0" />
+					<xs:element name="line4" type="tns:lineType"
+						minOccurs="0" />
+					<xs:element name="line5" type="tns:lineType"
+						minOccurs="0" />
+					<xs:element name="postcode" type="tns:postcodeType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="personType">
+				<xs:annotation>
+					<xs:documentation>
+						Describes a person
+					</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="name" type="tns:nameType" />
+					<xs:element name="address" type="tns:addressType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:simpleType name="requestIdType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+					<xs:maxLength value="24" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="sdtRequestIdType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+					<xs:maxLength value="40" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="requestTypeType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="mcolClaim" />
+					<xs:enumeration value="mcolJudgment" />
+					<xs:enumeration value="mcolJudgmentWarrant" />
+					<xs:enumeration value="mcolWarrant" />
+					<xs:enumeration value="mcolClaimUpdate" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="statusCodeType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="OK" />
+					<xs:enumeration value="ERROR" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="createStatusCodeType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="ACCEPTED" />
+					<xs:enumeration value="INITIALLY_ACCEPTED" />
+					<xs:enumeration value="REJECTED" />
+					<xs:enumeration value="ERROR" />
+				</xs:restriction>
+			</xs:simpleType>
+
+            <xs:simpleType name="updateStatusCodeType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="ACCEPTED" />
+                    <xs:enumeration value="REJECTED" />
+                </xs:restriction>
+            </xs:simpleType>
+        
+			<xs:complexType name="errorType">
+				<xs:sequence>
+					<xs:element name="code">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1" />
+                                <xs:maxLength value="32" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+					<xs:element name="description">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1" />
+                                <xs:maxLength value="255" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="statusType">
+				<xs:sequence>
+					<xs:element name="error" type="tns:errorType" minOccurs="0" />
+				</xs:sequence>
+				<xs:attribute name="code" type="tns:statusCodeType"></xs:attribute>
+			</xs:complexType>
+
+			<xs:complexType name="createStatusType">
+				<xs:sequence>
+					<xs:element name="error" type="tns:errorType" minOccurs="0" />
+				</xs:sequence>
+				<xs:attribute name="code" type="tns:createStatusCodeType"></xs:attribute>
+			</xs:complexType>
+
+            <xs:complexType name="updateStatusType">
+                <xs:sequence>
+                    <xs:element name="error" type="tns:errorType" minOccurs="0" />
+                </xs:sequence>
+                <xs:attribute name="code" type="tns:updateStatusCodeType"></xs:attribute>
+            </xs:complexType>
+
+            <xs:simpleType name="bulkStatusCodeType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="UPLOADED" />
+                    <xs:enumeration value="FAILED" />
+                    <xs:enumeration value="VALIDATED" />
+                    <xs:enumeration value="PROCESSING" />
+                    <xs:enumeration value="COMPLETED" />
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:complexType name="bulkStatusType">
+                <xs:sequence>
+                    <xs:element name="error" type="tns:errorType" minOccurs="0" />
+                </xs:sequence>
+                <xs:attribute name="code" type="tns:bulkStatusCodeType"></xs:attribute>
+            </xs:complexType>
+
+		</xs:schema>
+		<!-- Claim.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+
+			<xs:simpleType name="particularsType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1" />
+					<xs:maxLength value="45" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="interestType">
+				<xs:sequence>
+                    <xs:element name="reserveRightToClaimInterest" type="xs:boolean"/>
+					<xs:element name="dailyAmount" type="xs:unsignedLong" />
+					<xs:element name="owedDate" type="xs:date" />
+					<xs:element name="claimDate" type="xs:date" />
+					<xs:element name="claimAmountInterestBase" type="xs:unsignedLong">
+						<xs:annotation>
+							<xs:documentation>Amount on which interest should be calculated.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+            <xs:simpleType name="claimantReferenceType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                    <xs:maxLength value="24" />
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:complexType name="correspondenceDetailType">
+                <xs:annotation>
+                    <xs:documentation>
+                        Describes correspondence details.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="name">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1" />
+                                <xs:maxLength value="30" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="address"> 
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="line1" type="base:lineType" />
+                                <xs:element name="line2" type="base:lineType" />
+                                <xs:element name="postcode" type="base:postcodeType" />
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element> 
+                </xs:sequence>
+            </xs:complexType>
+
+			<xs:complexType name="claimType">
+				<xs:annotation>
+					<xs:documentation>Represents Claim document.</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="claimantReference" type="tns:claimantReferenceType"
+						minOccurs="0" />
+					<xs:element name="claimant" type="base:personType"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Should be populated if customer is a solicitor.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="claimantCorrespondence" type="tns:correspondenceDetailType"
+						minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Should be populated if customer is not a
+								solicitor.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="defendant1" type="base:personType" />
+					<xs:element name="defendant2" type="base:personType"
+						minOccurs="0" />
+					<xs:element name="sendParticularsSeparately" type="xs:boolean" />
+					<xs:element name="interest" type="tns:interestType"
+						minOccurs="0" />
+					<xs:element name="claimAmount" type="xs:unsignedLong" />
+					<xs:element name="solicitorCost" type="xs:unsignedLong"	minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Should be populated only if customer is
+								solicitor.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="particulars" type="tns:particularsType"
+						minOccurs="1" maxOccurs="24">
+						<xs:annotation>
+							<xs:documentation>Details about the claim</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="mcolClaim" type="tns:claimType" />
+
+		</xs:schema>
+
+		<!-- Warrant.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+
+            <xs:simpleType name="additionalNotesType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                    <xs:maxLength value="120" />
+                </xs:restriction>
+            </xs:simpleType>
+        
+			<xs:complexType name="warrantType">
+				<xs:sequence>
+					<xs:element name="claimNumber" type="base:claimNumberType" />
+					<xs:element name="defendantId" type="base:defendantIdType" />
+					<xs:element name="defendantAddress" type="base:addressType" />
+					<xs:element name="balanceOfDebt" type="xs:unsignedLong" />
+					<xs:element name="warrantAmount" type="xs:unsignedLong" />
+					<xs:element name="solicitorCost" type="xs:unsignedLong"	minOccurs="0" />
+					<xs:element name="additionalNotes" type="tns:additionalNotesType"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="mcolWarrant" type="tns:warrantType" />
+
+		</xs:schema>
+
+		<!-- Judgment.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
+
+			<xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType" />
+
+			<xs:complexType name="judgmentWarrantType">
+				<xs:sequence>
+					<xs:element name="mcolJudgment" type="tns:mcolJudgmentType" />
+					<xs:element name="mcolWarrant" type="wnt:warrantType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="mcoljudgment" type="tns:mcolJudgmentType" />
+
+			<xs:simpleType name="judgmentTypeType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="A" />
+					<xs:enumeration value="D" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:simpleType name="instalmentFrequencyType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="W" />
+					<xs:enumeration value="F" />
+					<xs:enumeration value="M" />
+				</xs:restriction>
+			</xs:simpleType>
+
+			<xs:complexType name="instalmentPaymentType">
+				<xs:annotation>
+					<xs:documentation>Details when payment is to be paid in
+						instalments. The amount cannot be greater than claim amount.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="amount" type="xs:unsignedLong" />
+					<xs:element name="frequency" type="tns:instalmentFrequencyType"></xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="fullPaymentType">
+				<xs:annotation>
+					<xs:documentation>Details when payment is to be paid in full by a specified date (as opposed to immediately)
+					</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="fullByDate" type="xs:date">
+						<xs:annotation>
+							<xs:documentation>The date by which defendant should pay the full
+								amount. Should be in future and not tomorrow.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="immediatePaymentType">
+				<xs:annotation>
+					<xs:documentation>Details when payment is to be paid immediately
+					</xs:documentation>
+				</xs:annotation>
+			</xs:complexType>
+
+			<xs:complexType name="paymentScheduleType">
+				<xs:choice>
+					<xs:element name="inFullByPayment" type="tns:fullPaymentType" />
+					<xs:element name="instalment" type="tns:instalmentPaymentType" />
+					<xs:element name="immediatePayment" type="tns:immediatePaymentType" />
+				</xs:choice>
+			</xs:complexType>
+
+            <xs:simpleType name="payeeLineType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1" />
+                    <xs:maxLength value="35" />
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:complexType name="payeeAddressType">
+                <xs:sequence>
+                    <xs:element name="line1" type="tns:payeeLineType" />
+                    <xs:element name="line2" type="tns:payeeLineType" />
+                    <xs:element name="line3" type="tns:payeeLineType" minOccurs="0" />
+                    <xs:element name="line4" type="tns:payeeLineType" minOccurs="0" />
+                    <xs:element name="line5" type="tns:payeeLineType" minOccurs="0" />
+                    <xs:element name="postcode" type="base:postcodeType" />
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="payeeType">
+                <xs:sequence>
+                    <xs:element name="name">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="70"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="address" type="tns:payeeAddressType"/>
+                    <xs:element name="telephoneNumber" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:pattern value="[0-9][\d-]{0,13}"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        
+			<xs:complexType name="mcolJudgmentType">
+				<xs:sequence>
+					<xs:element name="claimNumber" type="base:claimNumberType" />
+					<xs:element name="jointJudgment" type="xs:boolean" />
+					<xs:element name="judgmentType" type="tns:judgmentTypeType" />
+                    <xs:element name="sentParticularsSeparately" type="xs:boolean" fixed="true" minOccurs="0"/>
+					<xs:element name="defendantId" type="base:defendantIdType" minOccurs="0"/>
+					<xs:element name="defendant1Address" type="base:addressType"
+						minOccurs="0" />
+					<xs:element name="defendant1DateOfBirth" type="xs:date"
+						minOccurs="0" />
+					<xs:element name="defendant2Address" type="base:addressType"
+						minOccurs="0" />
+					<xs:element name="defendant2DateOfBirth" type="xs:date"
+						minOccurs="0" />
+					<xs:element name="paymentSchedule" type="tns:paymentScheduleType" />
+					<xs:element name="interest" type="xs:unsignedLong"	minOccurs="0" />
+					<xs:element name="solicitorCost" type="xs:unsignedLong"	minOccurs="0" />
+					<xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0" />
+                    <xs:element name="payee" type="tns:payeeType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:complexType>
+
+		</xs:schema>
+
+		<!-- ClaimUpdate.xsd -->
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:simpleType name="notificationType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MP">
+                        <xs:annotation>
+                            <xs:documentation>Paid</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WO">
+                        <xs:annotation>
+                            <xs:documentation>Written Off</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="WD">
+                        <xs:annotation>
+                            <xs:documentation>Withdrawn</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                    <xs:enumeration value="DI">
+                        <xs:annotation>
+                            <xs:documentation>Discontinued</xs:documentation>
+                        </xs:annotation></xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:complexType name="claimUpdateType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:claimNumberType" />
+                    <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
+                    <xs:element name="notificationType" type="tns:notificationType" />
+                    <xs:element name="paidInFullDate" type="xs:date"   minOccurs="0" />
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:element name="mcolClaimUpdate" type="tns:claimUpdateType"/>
+        
+        </xs:schema>
+
+		<!-- BulkSubmitRequest.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
+			elementFormDefault="qualified" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
+			xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+			version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" />
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" />
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" />
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
+
+			<xs:complexType name="headerType">
+				<xs:sequence>
+					<xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
+					<xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
+					<xs:element name="requestCount" type="base:requestCountType" />
+					<xs:element name="customerReference" type="base:customerReferenceType" />
+                    <xs:element name="sotSignature" type="base:sotSignatureType"/>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="request" abstract="true">
+				<xs:attribute name="requestType" type="base:requestTypeType"
+					use="required" />
+				<xs:attribute name="requestId" type="base:requestIdType"
+					use="required" />
+			</xs:complexType>
+
+			<xs:complexType name="mcolRequestType">
+				<xs:complexContent>
+					<xs:extension base="tns:request">
+						<xs:choice>
+							<xs:element name="mcolClaim" type="clm:claimType" />
+							<xs:element name="mcolJudgment" type="jud:mcolJudgmentType" />
+							<xs:element name="mcolClaimUpdate" type="clmupd:claimUpdateType" />
+							<xs:element name="mcolWarrant" type="wnt:warrantType" />
+							<xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType" />
+						</xs:choice>
+					</xs:extension>
+				</xs:complexContent>
+			</xs:complexType>
+
+			<xs:complexType name="mcolRequestsType">
+				<xs:sequence>
+					<xs:element name="mcolRequest" type="tns:mcolRequestType"
+						minOccurs="1" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="requestsType">
+				<xs:choice>
+					<xs:element name="mcolRequests" type="tns:mcolRequestsType" />
+				</xs:choice>
+			</xs:complexType>
+
+			<xs:complexType name="bulkRequestType">
+				<xs:sequence>
+					<xs:element name="header" type="tns:headerType" />
+					<xs:element name="requests" type="tns:requestsType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="bulkRequest" type="tns:bulkRequestType" />
+
+		</xs:schema>
+
+		<!-- BulkSubmitResponse.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+
+			<xs:complexType name="bulkResponseType">
+				<xs:sequence>
+					<xs:element name="customerReference" type="base:customerReferenceType" />
+					<xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType" />
+					<xs:element name="submittedDate" type="xs:dateTime" />
+                    <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
+					<xs:element name="requestCount" type="base:requestCountType" />
+					<xs:element name="status" type="base:statusType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="bulkResponse" type="tns:bulkResponseType" />
+
+		</xs:schema>
+
+		<!-- BulkFeedbackRequest.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+
+			<xs:complexType name="bulkFeedbackRequestType">
+				<xs:sequence>
+					<xs:element name="header" type="tns:headerType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="headerType">
+				<xs:sequence>
+					<xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
+					<xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="bulkFeedbackRequest" type="tns:bulkFeedbackRequestType" />
+
+		</xs:schema>
+
+		<!-- BulkFeedbackResponse.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+
+			<xs:complexType name="bulkRequestStatusType">
+                <xs:sequence>
+                    <xs:element name="customerReference" type="base:customerReferenceType"/>
+                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+                    <xs:element name="submittedDate" type="xs:dateTime"/>
+                    <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
+                    <xs:element name="requestCount" type="base:requestCountType"/>
+                    <xs:element name="bulkStatus" type="base:bulkStatusType"/>
+                </xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="responsesType">
+				<xs:choice>
+					<xs:element name="mcolResponses" type="tns:mcolResponsesType" />
+				</xs:choice>
+			</xs:complexType>
+
+			<xs:complexType name="mcolResponsesType">
+				<xs:sequence>
+					<xs:element name="mcolResponse" type="tns:mcolResponseType"
+						minOccurs="1" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="responseType" abstract="true">
+				<xs:attribute name="requestType" type="base:requestTypeType"
+					use="required" />
+				<xs:attribute name="requestId" type="base:requestIdType"
+					use="required" />
+			</xs:complexType>
+
+			<xs:complexType name="mcolResponseType">
+				<xs:complexContent>
+					<xs:extension base="tns:responseType">
+						<xs:sequence>
+							<xs:element name="claimNumber" type="base:claimNumberType"
+								minOccurs="0" />
+							<xs:element name="issueDate" type="xs:date" minOccurs="0" />
+							<xs:element name="serviceDate" type="xs:date"
+								minOccurs="0" />
+							<xs:element name="warrantNumber" type="base:warrantNumberType"
+								minOccurs="0" />
+							<xs:element name="enforcingCourtCode" type="base:courtCodeType"
+								minOccurs="0" />
+							<xs:element name="enforcingCourtName" type="base:courtNameType"
+								minOccurs="0" />
+							<xs:element name="fee" type="xs:unsignedLong" minOccurs="0" />
+							<xs:element name="status" type="base:createStatusType" />
+						</xs:sequence>
+					</xs:extension>
+				</xs:complexContent>
+			</xs:complexType>
+
+			<xs:complexType name="bulkFeedbackResponseType">
+				<xs:sequence>
+					<xs:element name="bulkRequestStatus" type="tns:bulkRequestStatusType" />
+					<xs:element name="responses" type="tns:responsesType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:element name="bulkFeedbackResponse" type="tns:bulkFeedbackResponseType" />
+
+		</xs:schema>
+
+		<!-- DefenceFeedbackRequest.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackRequestSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackRequestSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+
+			<xs:element name="defenceRequest" type="tns:defenceRequestType" />
+
+			<xs:complexType name="defenceRequestType">
+				<xs:sequence>
+					<xs:element name="header" type="tns:headerType" />
+					<xs:element name="criteria" type="tns:criteriaType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="headerType">
+				<xs:sequence>
+					<xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
+					<xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="criteriaType">
+				<xs:sequence>
+					<xs:element name="mcolDefence" type="tns:mcolDefenceType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="mcolDefenceType">
+				<xs:sequence>
+					<xs:element name="fromDate" type="xs:date" />
+					<xs:element name="toDate" type="xs:date" />
+				</xs:sequence>
+			</xs:complexType>
+
+
+		</xs:schema>
+
+		<!-- DefenceFeedbackResponse.xsd -->
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackResponseSchema"
+			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackResponseSchema"
+			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+			elementFormDefault="qualified" version="1.0">
+
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+
+			<xs:element name="defenceResponse" type="tns:defenceResponseType" />
+			<xs:complexType name="defenceResponseType">
+				<xs:sequence>
+                    <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
+					<xs:element name="defenceDetails" type="tns:defenceDetailsType" />
+					<xs:element name="status" type="base:statusType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="defenceDetailsType">
+				<xs:sequence>
+					<xs:element name="defenceDetail" type="tns:defenceDetailType"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="defenceDetailType">
+				<xs:sequence>
+					<xs:element name="claimNumber" type="base:claimNumberType" />
+					<xs:element name="defendants">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="defendant" type="tns:defendantType"
+									maxOccurs="2" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="defendantType">
+				<xs:sequence>
+					<xs:element name="filedDate" type="xs:dateTime" />
+					<xs:element name="responseType" type="tns:responseType" />
+				</xs:sequence>
+				<xs:attribute name="defendantId" type="base:defendantIdType" />
+			</xs:complexType>
+
+			<xs:simpleType name="responseType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="DE" />
+					<xs:enumeration value="DC" />
+					<xs:enumeration value="PA" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:schema>
+
+	</types>
+
+	<message name="submitBulkRequest">
+		<part name="bulkRequest" element="breq:bulkRequest" />
+	</message>
+	<message name="submitBulkResponse">
+		<part name="bulkResponse" element="bresp:bulkResponse" />
+	</message>
+	<message name="bulkFeedbackRequest">
+		<part name="bulkFeedbackRequest" element="bfreq:bulkFeedbackRequest" />
+	</message>
+	<message name="bulkFeedbackResponse">
+		<part name="bulkFeedbackResponse" element="bfresp:bulkFeedbackResponse" />
+	</message>
+	<message name="defenceRequest">
+		<part name="defenceRequest" element="dreq:defenceRequest" />
+	</message>
+	<message name="defenceResponse">
+		<part name="defenceResponse" element="dresp:defenceResponse" />
+	</message>
+
+	<portType name="ISdtEndpointPortType">
+		<operation name="submitBulk">
+			<input message="tns:submitBulkRequest" />
+			<output message="tns:submitBulkResponse" />
+		</operation>
+		<operation name="getBulkFeedback">
+			<input message="tns:bulkFeedbackRequest" />
+			<output message="tns:bulkFeedbackResponse" />
+		</operation>
+		<operation name="getDefenceDetails">
+			<input message="tns:defenceRequest" />
+			<output message="tns:defenceResponse" />
+		</operation>
+	</portType>
+
+	<binding name="SdtEndpointHttpPortBinding" type="tns:ISdtEndpointPortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="submitBulk">
+			<soap:operation soapAction="" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+		<operation name="getBulkFeedback">
+			<soap:operation soapAction="" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+		<operation name="getDefenceDetails">
+			<soap:operation soapAction="" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+
+	<service name="SdtEndpoint">
+		<port name="SdtEndpointPort" binding="tns:SdtEndpointHttpPortBinding">
+			<soap:address location="http://ws.sdt.moj.gov.uk/sdt/service" />
+		</port>
+	</service>
+
+</definitions>

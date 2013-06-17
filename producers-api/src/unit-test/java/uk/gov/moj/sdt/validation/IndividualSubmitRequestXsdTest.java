@@ -118,9 +118,9 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     /**
      * Tests XML file is valid.
      */
-    public void testValidForJudgmentForthwithXml ()
+    public void testValidForJudgmentWarrantXml ()
     {
-        final String condition = "ForJudgmentForthwithValid";
+        final String condition = "ForJudgmentWarrantValid";
         final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
         this.validateXsd (xmlPath, XSD_PATH, null);
     }
@@ -128,9 +128,9 @@ public class IndividualSubmitRequestXsdTest extends SdtXmlTestBase
     /**
      * Tests that expected errors are reported for missing mandatory fields.
      */
-    public void testInvalidXmlForJudgmentForthwithMandatoryMissing ()
+    public void testInvalidXmlForJudgmentWarrantMandatoryMissing ()
     {
-        final String condition = "ForJudgmentForthwithMandatoryMissing";
+        final String condition = "ForJudgmentWarrantMandatoryMissing";
         final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
 

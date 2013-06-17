@@ -2,8 +2,8 @@
 <tns:mcoljudgment xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" xmlns:tns2="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema ../../../../../main/resources/xsd/RootXSDs/Judgment.xsd ">
   <tns:claimNumber>123456789</tns:claimNumber>
   <tns:jointJudgment>true1</tns:jointJudgment>
-  <tns:judgmentOption>AS</tns:judgmentOption>
-  <tns:sendParticularsSeparately>true1</tns:sendParticularsSeparately>
+  <tns:judgmentType>AS</tns:judgmentType>
+  <tns:sentParticularsSeparately>false</tns:sentParticularsSeparately>
   <tns:defendantId>10</tns:defendantId>
   <tns:defendant1Address>
     <tns2:line1>tns2:line1</tns2:line1>
@@ -24,14 +24,11 @@
   </tns:defendant2Address>
   <tns:defendant2DateOfBirth>2001-01-010</tns:defendant2DateOfBirth>
   <tns:paymentSchedule>
-    <tns:fullPayment>
+    <tns:inFullByPayment>
       <tns:fullByDate>2001-01-010</tns:fullByDate>
-    </tns:fullPayment>
+    </tns:inFullByPayment>
   </tns:paymentSchedule>
   <tns:interest>-1</tns:interest>
   <tns:solicitorCost>-1</tns:solicitorCost>
   <tns:deductedAmount>-1</tns:deductedAmount>
-  <tns:sotSignature>
-    <tns2:name>tns2:name</tns2:name>
-  </tns:sotSignature>
 </tns:mcoljudgment>

@@ -17,7 +17,7 @@
                         <mcolClaim></mcolClaim>
                         <mcolJudgment></mcolJudgment>
                         <mcolWarrant></mcolWarrant>
-                        <mcolJudgmentForthwith></mcolJudgmentForthwith>
+                        <mcolJudgmentWarrant></mcolJudgmentWarrant>
                         <mcolClaimUpdate></mcolClaimUpdate>
                     </choice>
                 </mcolRequest>

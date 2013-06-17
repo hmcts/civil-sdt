@@ -53,7 +53,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  */
 
 @WebService (serviceName = "SdtEndpoint", portName = "SdtEndpointPort",
-        targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", wsdlLocation = "wsdl/SdtEndpoint.wsdl",
+ targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", wsdlLocation = "wsdl/SdtGatewayEndpoint.wsdl",
         endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
 public class SdtEndpointPortType implements ISdtEndpointPortType
 {

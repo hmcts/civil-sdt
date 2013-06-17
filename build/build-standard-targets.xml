@@ -65,6 +65,7 @@
 	<!-- Delete the build and distribution folders -->
 	<target name="clean-src-gen" description="Cleanup the src-gen dirs">
 		<delete dir="${src-gen.dir}/uk" />
+        <delete dir="${src-gen.dir}/org" />
 	</target>
 
 	<!-- Copies <any name>.template files to <any name> substituting any matching properties in memory -->
@@ -111,7 +112,7 @@
             <arg value="jaxws21" />
             <arg value="-b" />
             <arg value="${resources.dir}/jaxb-bindings.xml" />
-            <arg value="${resources.dir}/wsdl/SdtEndpoint.wsdl" />
+            <arg value="${resources.dir}/wsdl/SdtGatewayEndpoint.wsdl" />
             <classpath>
                 <path refid="cxf.classpath" />
             </classpath>

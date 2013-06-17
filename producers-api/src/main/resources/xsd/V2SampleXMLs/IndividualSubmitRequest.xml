@@ -3,7 +3,7 @@
 <createClaimRequest>
     <header>
         <sdtRequestId>xyz123</sdtRequestId>
-        <ncpId>NCP_ID</ncpId>
+        <mcolCustomerId>Mcol Customer Id</mcolCustomerId>
     </header>
     <mcolClaim>
         <claimantReference>damaged_wall</claimantReference>

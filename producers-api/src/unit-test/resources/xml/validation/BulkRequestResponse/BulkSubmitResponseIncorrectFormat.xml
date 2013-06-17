@@ -3,6 +3,7 @@
   <tns:customerReference>123456789012345678901234567890123</tns:customerReference>
   <tns:sdtBulkReference>123456789012345678901234567890123</tns:sdtBulkReference>
   <tns:submittedDate>2001-12-31T12:00:001</tns:submittedDate>
+  <tns:targetApplicationId>mcol1</tns:targetApplicationId>
   <tns:requestCount>-1</tns:requestCount>
   <tns:status code="UNKNOWN">
     <tns1:error>

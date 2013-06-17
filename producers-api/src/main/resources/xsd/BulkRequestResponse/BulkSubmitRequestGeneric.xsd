@@ -35,11 +35,7 @@
         <xs:complexContent>
             <xs:extension base="tns:request">
                 <xs:choice>
-                    <xs:element name="mcolClaim" type="clm:claimType"/>
-                    <xs:element name="mcolJudgment" type="jud:mcolJudgmentType"/>
-                    <xs:element name="mcolClaimUpdate" type="clmupd:claimUpdateType"/>
-                    <xs:element name="mcolWarrant" type="wnt:warrantType"/>
-                    <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
+                    <xs:any/>
                 </xs:choice>
             </xs:extension>
         </xs:complexContent>

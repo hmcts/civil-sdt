@@ -3,5 +3,5 @@
   <tns:claimNumber>12345678</tns:claimNumber>
   <tns:defendantId>1</tns:defendantId>
   <tns:notificationType>MP</tns:notificationType>
-  <tns:lastPaymentDate>2001-01-01</tns:lastPaymentDate>
+  <tns:paidInFullDate>2001-01-01</tns:paidInFullDate>
 </tns:mcolClaimUpdate>

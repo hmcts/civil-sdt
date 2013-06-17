@@ -11,13 +11,13 @@
     <xs:complexType name="createResponseType">
         <xs:sequence>
             <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
-            <xs:element name="claimNumber" type="base:documentNumberType"  minOccurs="0"/>
+            <xs:element name="claimNumber" type="base:claimNumberType"  minOccurs="0"/>
             <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
             <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
-            <xs:element name="warrantNumber" type="base:documentNumberType"  minOccurs="0"/>
+            <xs:element name="warrantNumber" type="base:warrantNumberType"  minOccurs="0"/>
             <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
             <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
-            <xs:element name="fee" type="base:feeType"  minOccurs="0"/>
+            <xs:element name="fee" type="xs:unsignedLong"  minOccurs="0"/>
             <xs:element name="status" type="base:createStatusType"/>
         </xs:sequence>
     </xs:complexType>

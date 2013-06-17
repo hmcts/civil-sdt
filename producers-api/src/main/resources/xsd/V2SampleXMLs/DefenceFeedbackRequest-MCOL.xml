@@ -2,7 +2,7 @@
 <!-- SDT to MCOL -->
 <defenceRequest>
     <header>
-        <ncpId>NCP_id</ncpId>
+        <mcolCustomerId>Mcol Customer Id</mcolCustomerId>
     </header>
     <mcolDefence maxResults="2000">
         <fromDate>2001-01-01</fromDate>

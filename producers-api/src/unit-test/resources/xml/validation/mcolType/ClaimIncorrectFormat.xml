@@ -13,12 +13,12 @@
     </base:address>
   </tns:claimant>
   <tns:claimantCorrespondence>
-    <base:name>1234567890123456789012345678901</base:name>
-    <base:address>
-      <base:line1>1234567890123456789012345678901</base:line1>
-      <base:line2>1234567890123456789012345678901</base:line2>
-      <base:postcode>FL23 2SD</base:postcode>
-    </base:address>
+    <tns:name>1234567890123456789012345678901</tns:name>
+    <tns:address>
+      <tns:line1>1234567890123456789012345678901</tns:line1>
+      <tns:line2>1234567890123456789012345678901</tns:line2>
+      <tns:postcode>FL23 2SD</tns:postcode>
+    </tns:address>
   </tns:claimantCorrespondence>
   <tns:defendant1>
     <base:name>base:name</base:name>
@@ -44,10 +44,11 @@
   </tns:defendant2>
   <tns:sendParticularsSeparately>true1</tns:sendParticularsSeparately>
   <tns:interest>
+    <tns:reserveRightToClaimInterest>true</tns:reserveRightToClaimInterest>
     <tns:dailyAmount>-1</tns:dailyAmount>
     <tns:owedDate>2001-01-010</tns:owedDate>
     <tns:claimDate>2001-01-010</tns:claimDate>
-    <tns:claimAmount>-1</tns:claimAmount>
+    <tns:claimAmountInterestBase>-1</tns:claimAmountInterestBase>
   </tns:interest>
   <tns:claimAmount>-1</tns:claimAmount>
   <tns:solicitorCost>-1</tns:solicitorCost>

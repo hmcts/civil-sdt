@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:mcoljudgment xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" xmlns:tns2="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema ../../../../../main/resources/xsd/RootXSDs/Judgment.xsd ">
   <tns:jointJudgment>true</tns:jointJudgment>
-  <tns:sendParticularsSeparately>true</tns:sendParticularsSeparately>
+  <tns:sentParticularsSeparately>true</tns:sentParticularsSeparately>
   <tns:defendant1Address>
     <tns2:line1>tns2:line1</tns2:line1>
     <tns2:line2>tns2:line2</tns2:line2>

@@ -11,6 +11,7 @@
 	<xs:element name="defenceResponse" type="tns:defenceResponseType" />
 	<xs:complexType name="defenceResponseType">
 		<xs:sequence>
+            <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
 			<xs:element name="defenceDetails" type="tns:defenceDetailsType" />
             <xs:element name="status" type="base:statusType" />
 		</xs:sequence>
@@ -22,7 +23,7 @@
 	</xs:complexType>
 	<xs:complexType name="defenceDetailType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="base:documentNumberType" />
+			<xs:element name="claimNumber" type="base:claimNumberType" />
 			<xs:element name="defendants">
 				<xs:complexType>
 					<xs:sequence>

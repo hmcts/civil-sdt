@@ -262,11 +262,10 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required for accepted Warrants
         response.setWarrantNumber ("22222202");
-        final Integer courtCode = 942;
-        response.setEnforcingCourtCode (BigInteger.valueOf (courtCode));
+        response.setEnforcingCourtCode ("942");
         response.setEnforcingCourtName ("CourtNameB");
         final Integer fee = 258;
-        response.setFee (fee);
+        response.setFee (BigInteger.valueOf (fee));
         return response;
 
     }
@@ -283,7 +282,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required Fields.
         response.setRequestId ("8");
-        response.setRequestType (RequestTypeType.MCOL_JUDGMENT_FORTHWITH);
+        response.setRequestType (RequestTypeType.MCOL_JUDGMENT_WARRANT);
         response.setClaimNumber ("11111108");
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
@@ -351,7 +350,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required for Claims
         final Integer fee = 500;
-        response.setFee (fee);
+        response.setFee (BigInteger.valueOf (fee));
         return response;
     }
 
@@ -410,11 +409,10 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required for accepted Warrants
         response.setWarrantNumber ("22222201");
-        final Integer couretCode = 517;
-        response.setEnforcingCourtCode (BigInteger.valueOf (couretCode));
+        response.setEnforcingCourtCode ("517");
         response.setEnforcingCourtName ("CourtNameA");
         final Integer fee = 258;
-        response.setFee (fee);
+        response.setFee (BigInteger.valueOf (fee));
         return response;
 
     }
@@ -431,7 +429,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required Fields.
         response.setRequestId ("3");
-        response.setRequestType (RequestTypeType.MCOL_JUDGMENT_FORTHWITH);
+        response.setRequestType (RequestTypeType.MCOL_JUDGMENT_WARRANT);
         response.setClaimNumber ("11111103");
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
@@ -499,7 +497,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required for Claims
         final Integer fee = 500;
-        response.setFee (fee);
+        response.setFee (BigInteger.valueOf (fee));
         return response;
     }
 

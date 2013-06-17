@@ -8,16 +8,22 @@
     
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd" />
     
+    <xs:simpleType name="additionalNotesType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="120" />
+        </xs:restriction>
+    </xs:simpleType>
+
 	<xs:complexType name="warrantType">
 		<xs:sequence>
-			<xs:element name="claimNumber" type="base:documentNumberType" />
-			<xs:element name="claimantReference" type="base:claimantReferenceType" minOccurs="0" />
+			<xs:element name="claimNumber" type="base:claimNumberType" />
 			<xs:element name="defendantId" type="base:defendantIdType" />
 			<xs:element name="defendantAddress" type="base:addressType" />
-			<xs:element name="balanceOfDebt" type="base:balanceOfDebtType" />
-			<xs:element name="warrantAmount" type="base:warrantAmountType" />
-			<xs:element name="solicitorCost" type="base:solicitorCostType" minOccurs="0" />
-			<xs:element name="additionalNotes" type="base:additionalNotesType" minOccurs="0" />
+			<xs:element name="balanceOfDebt" type="xs:unsignedLong" />
+			<xs:element name="warrantAmount" type="xs:unsignedLong" />
+			<xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0" />
+			<xs:element name="additionalNotes" type="tns:additionalNotesType" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:mcolWarrant xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema ../../../../../main/resources/xsd/RootXSDs/Warrant.xsd ">
   <tns:claimNumber>123456789</tns:claimNumber>
-  <tns:claimantReference>123456789</tns:claimantReference>
   <tns:defendantId>5</tns:defendantId>
   <tns:defendantAddress>
       <base:line1>1234567890123456789012345678901</base:line1>

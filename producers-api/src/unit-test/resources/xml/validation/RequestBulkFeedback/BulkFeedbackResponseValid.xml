@@ -4,6 +4,7 @@
       <tns:customerReference>tns:customerReference</tns:customerReference>
       <tns:sdtBulkReference>12345678901234567890123456789012</tns:sdtBulkReference>
       <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
+      <tns:targetApplicationId>mcol</tns:targetApplicationId>
       <tns:requestCount>0</tns:requestCount>
       <tns:bulkStatus code="FAILED">
           <base:error>

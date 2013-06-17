@@ -5,6 +5,10 @@
     <tns:targetApplicationId>mcol1</tns:targetApplicationId>
     <tns:requestCount>-1</tns:requestCount>
     <tns:customerReference>123456789012345678901234567890123</tns:customerReference>
+    <tns:sotSignature>
+       <tns1:flag>false</tns1:flag>
+       <tns1:name>123456789012345678901234567890123</tns1:name>
+    </tns:sotSignature>
   </tns:header>
   <tns:requests>
     <tns:mcolRequests>
@@ -21,9 +25,6 @@
           <tns2:sendParticularsSeparately>true</tns2:sendParticularsSeparately>
           <tns2:claimAmount>0</tns2:claimAmount>
           <tns2:particulars>tns2:particulars</tns2:particulars>
-          <tns2:sotSignature>
-            <tns1:name>tns1:name</tns1:name>
-          </tns2:sotSignature>
         </tns:mcolClaim>
       </tns:mcolRequest>
     </tns:mcolRequests>

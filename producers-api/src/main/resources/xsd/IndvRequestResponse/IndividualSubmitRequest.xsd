@@ -19,7 +19,8 @@
     <xs:complexType name="headerType">
         <xs:sequence>
             <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
-            <xs:element name="ncpId" type="base:ncpIdType"/>
+            <xs:element name="mcolCustomerId" type="base:mcolCustomerIdType"/>
+            <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -33,14 +34,14 @@
     <xs:complexType name="createJudgmentRequestType">
         <xs:sequence>
             <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="mcolJudgment" type="jud:judgmentType"/>
+            <xs:element name="mcolJudgment" type="jud:mcolJudgmentType"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="createJudgmentForthwithRequestType">
+    <xs:complexType name="createJudgmentWarrantRequestType">
         <xs:sequence>
             <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="mcolJudgmentForthwith" type="jud:judgmentForthwithType"/>
+            <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -60,7 +61,7 @@
 
     <xs:element name="createClaimRequest" type="tns:createClaimRequestType"/>
     <xs:element name="createJudgmentRequest" type="tns:createJudgmentRequestType"/>
-    <xs:element name="createJudgmentForthwithRequest" type="tns:createJudgmentForthwithRequestType"/>
+    <xs:element name="createJudgmentWarrantRequest" type="tns:createJudgmentWarrantRequestType"/>
     <xs:element name="createWarrantRequest" type="tns:createWarrantRequestType"/>
     <xs:element name="updateClaimRequest" type="tns:updateClaimRequestType"/>
 
