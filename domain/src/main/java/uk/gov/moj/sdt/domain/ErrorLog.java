@@ -37,166 +37,158 @@ import org.joda.time.LocalDateTime;
  * Error log.
  * 
  * @author d130680
- *
+ * 
  */
-public class ErrorLog {
-	
-	/**
-	 * Primary key.
-	 */
-	private int id;
-	
-	/**
-	 * Bulk submission. 
-	 */
-	private BulkSubmission bulkSubmission;
-	
-	/**
-	 * Individual request, null for error raised on bulk file.
-	 */
-	private IndividualRequest individualRequest;
-	
-	/**
-	 * Error message.
-	 */
-	private ErrorMessage errorMessage;	
+public class ErrorLog extends AbstractDomainObject
+{
+    /**
+     * Bulk submission.
+     */
+    private BulkSubmission bulkSubmission;
 
-	/**
-	 * Date record was created.
-	 */
-	private LocalDateTime createdDate;
-	
-	/**
-	 * Date record was updated.
-	 */
-	private LocalDateTime updatedDate;
-	
-	/**
-	 * Hibernate version number.
-	 */
-	private int version;
-	
-	/**
-	 * The error text.
-	 */
-	private String errorText;
+    /**
+     * Individual request, null for error raised on bulk file.
+     */
+    private IndividualRequest individualRequest;
 
-	/**
-	 * Get primary key.
-	 * @return primary key
-	 */
-	public int getId() {
-		return id;
-	}
+    /**
+     * Error message.
+     */
+    private ErrorMessage errorMessage;
 
-	/**
-	 * Set primary key.
-	 * 
-	 * @param id primary key
-	 */
-	public void setId(final int id) {
-		this.id = id;
-	}
-	/**
-	 * Get the Bulk Submission.
-	 * @return bulk submission
-	 */
-	public BulkSubmission getBulkSubmission() {
-		return bulkSubmission;
-	}
+    /**
+     * Date record was created.
+     */
+    private LocalDateTime createdDate;
 
-	/**
-	 * Set the Bulk Submission.
-	 * @param bulkSubmission bulk submission
-	 */
-	public void setBulkSubmission(final BulkSubmission bulkSubmission) {
-		this.bulkSubmission = bulkSubmission;
-	}
+    /**
+     * Date record was updated.
+     */
+    private LocalDateTime updatedDate;
 
-	/**
-	 * Get the Individual Request.
-	 * @return individual request
-	 */
-	public IndividualRequest getIndividualRequest() {
-		return individualRequest;
-	}
+    /**
+     * The error text.
+     */
+    private String errorText;
 
-	/**
-	 * Set the Individual Request.
-	 * @param individualRequest individual request
-	 */
-	public void setIndividualRequest(final IndividualRequest individualRequest) {
-		this.individualRequest = individualRequest;
-	}
+    /**
+     * Get the Bulk Submission.
+     * 
+     * @return bulk submission
+     */
+    public BulkSubmission getBulkSubmission ()
+    {
+        return bulkSubmission;
+    }
 
-	/**
-	 * Get the Error Message.
-	 * @return error message
-	 */
-	public ErrorMessage getErrorMessage() {
-		return errorMessage;
-	}
+    /**
+     * Set the Bulk Submission.
+     * 
+     * @param bulkSubmission bulk submission
+     */
+    public void setBulkSubmission (final BulkSubmission bulkSubmission)
+    {
+        this.bulkSubmission = bulkSubmission;
+    }
 
-	/**
-	 * Set the Error Message.
-	 * @param errorMessage error message
-	 */
-	public void setErrorMessage(final ErrorMessage errorMessage) {
-		this.errorMessage = errorMessage;
-	}
+    /**
+     * Get the Individual Request.
+     * 
+     * @return individual request
+     */
+    public IndividualRequest getIndividualRequest ()
+    {
+        return individualRequest;
+    }
 
-	/**
-	 * Get created date.
-	 * @return created date
-	 */
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
-	/**
-	 * Set created date.
-	 * @param createdDate created dated
-	 */
-	public void setCreatedDate(final LocalDateTime createdDate) {
-		this.createdDate = createdDate;
-	}
+    /**
+     * Set the Individual Request.
+     * 
+     * @param individualRequest individual request
+     */
+    public void setIndividualRequest (final IndividualRequest individualRequest)
+    {
+        this.individualRequest = individualRequest;
+    }
 
-	/**
-	 * Get updated date.
-	 * @return updated date
-	 */
-	public LocalDateTime getUpdatedDate() {
-		return updatedDate;
-	}
-	/**
-	 * Set updated date.
-	 * @param updatedDate updated date
-	 */
-	public void setUpdatedDate(final LocalDateTime updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+    /**
+     * Get the Error Message.
+     * 
+     * @return error message
+     */
+    public ErrorMessage getErrorMessage ()
+    {
+        return errorMessage;
+    }
 
-	/**
-	 * Get error Text.
-	 * @return error text
-	 */
-	public String getErrorText() {
-		return errorText;
-	}
+    /**
+     * Set the Error Message.
+     * 
+     * @param errorMessage error message
+     */
+    public void setErrorMessage (final ErrorMessage errorMessage)
+    {
+        this.errorMessage = errorMessage;
+    }
 
-	/**
-	 * Set error Text.
-	 * @param errorText error text
-	 */
-	public void setErrorText(final String errorText) {
-		this.errorText = errorText;
-	}
+    /**
+     * Get created date.
+     * 
+     * @return created date
+     */
+    public LocalDateTime getCreatedDate ()
+    {
+        return createdDate;
+    }
 
-	/**
-	 * Get Hibernate version id.
-	 * @return Hibernate version id
-	 */
-	public int getVersion() {
-		return version;
-	}
+    /**
+     * Set created date.
+     * 
+     * @param createdDate created dated
+     */
+    public void setCreatedDate (final LocalDateTime createdDate)
+    {
+        this.createdDate = createdDate;
+    }
+
+    /**
+     * Get updated date.
+     * 
+     * @return updated date
+     */
+    public LocalDateTime getUpdatedDate ()
+    {
+        return updatedDate;
+    }
+
+    /**
+     * Set updated date.
+     * 
+     * @param updatedDate updated date
+     */
+    public void setUpdatedDate (final LocalDateTime updatedDate)
+    {
+        this.updatedDate = updatedDate;
+    }
+
+    /**
+     * Get error Text.
+     * 
+     * @return error text
+     */
+    public String getErrorText ()
+    {
+        return errorText;
+    }
+
+    /**
+     * Set error Text.
+     * 
+     * @param errorText error text
+     */
+    public void setErrorText (final String errorText)
+    {
+        this.errorText = errorText;
+    }
 
 }

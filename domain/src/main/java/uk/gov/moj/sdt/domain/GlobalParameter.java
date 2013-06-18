@@ -29,90 +29,64 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-
 package uk.gov.moj.sdt.domain;
 
 /**
  * Global parameters.
  * 
  * @author d130680
- *
+ * 
  */
-public class GlobalParameter {
+public class GlobalParameter extends AbstractDomainObject
+{
+    /**
+     * Parameter Name.
+     */
+    private String name;
 
-	/**
-	 * Primary key.
-	 */
-	private int id;
-	
-	/**
-	 * Parameter Name.
-	 */
-	private String name;
-	
-	/**
-	 * Parameter value.
-	 */
-	private String value;
-	
-	/**
-	 * Hibernate version number.
-	 */
-	private int version;
-	/**
-	 * Get primary key.
-	 * @return primary key
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * Set primary key.
-	 * 
-	 * @param id primary key
-	 */
+    /**
+     * Parameter value.
+     */
+    private String value;
 
-	public void setId(final int id) {
-		this.id = id;
-	}
+    /**
+     * Get the parameter name.
+     * 
+     * @return parameter name
+     */
+    public String getName ()
+    {
+        return name;
+    }
 
-	/**
-	 * Get the parameter name.
-	 * @return parameter name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Set the parameter name.
+     * 
+     * @param name parameter name
+     */
+    public void setName (final String name)
+    {
+        this.name = name;
+    }
 
-	/**
-	 * Set the parameter name.
-	 * @param name parameter name
-	 */
-	public void setName(final String name) {
-		this.name = name;
-	}
+    /**
+     * Get the parameter value.
+     * 
+     * @return parameter value
+     */
+    public String getValue ()
+    {
+        return value;
+    }
 
-	/**
-	 * Get the parameter value.
-	 * @return parameter value
-	 */
-	public String getValue() {
-		return value;
-	}
+    /**
+     * Set the parameter value.
+     * 
+     * @param value parameter value
+     */
+    public void setValue (final String value)
+    {
+        this.value = value;
+    }
 
-	/**
-	 * Set the parameter value.
-	 * @param value parameter value
-	 */
-	public void setValue(final String value) {
-		this.value = value;
-	}
-	/**
-	 * Get Hibernate version id.
-	 * @return Hibernate version id
-	 */
-	public int getVersion() {
-		return version;
-	}
-	
 }

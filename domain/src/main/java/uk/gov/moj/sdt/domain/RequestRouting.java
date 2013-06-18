@@ -32,85 +32,87 @@
 package uk.gov.moj.sdt.domain;
 
 /**
- * SDT will maintain routing information for target applications based on the Request Type Tag. 
+ * SDT will maintain routing information for target applications based on the Request Type Tag.
  * 
  * @author d130680
- *
+ * 
  */
-public class RequestRouting {
-	
-	/**
-	 * Target application.
-	 */
-	private TargetApplication targetApplication;
-	/**
-	 * Request type.
-	 */
-	private RequestType requestType;
-	/**
-	 * Web service endpoint.
-	 */
-	private String webServiceEndpoint;
-	/**
-	 * Hibernate version number.
-	 */
-	private int version;
-	
-	/**
-	 * Get the Target Application.
-	 * @return target application
-	 */
-	public TargetApplication getTargetApplication() {
-		return targetApplication;
-	}
-	
-	/**
-	 * Set the Target Application.
-	 * @param targetApplication target application
-	 */
-	public void setTargetApplication(final TargetApplication targetApplication) {
-		this.targetApplication = targetApplication;
-	}
-	
-	/**
-	 * Get the Request Type.
-	 * @return request type
-	 */
-	public RequestType getRequestType() {
-		return requestType;
-	}
-	
-	/**
-	 * Set the Request Type.
-	 * @param requestType request type
-	 */
-	public void setRequestType(final RequestType requestType) {
-		this.requestType = requestType;
-	}
-	
-	/**
-	 * Get web service end point.
-	 * @return web service end point
-	 */
-	public String getWebServiceEndpoint() {
-		return webServiceEndpoint;
-	}
-	
-	/**
-	 * Set web service end point.
-	 * @param webServiceEndpoint web service end point
-	 */
-	public void setWebServiceEndpoint(final String webServiceEndpoint) {
-		this.webServiceEndpoint = webServiceEndpoint;
-	}
-	
-	/**
-	 * Get Hibernate version id.
-	 * @return Hibernate version id
-	 */	
-	public int getVersion() {
-		return version;
-	}
+public class RequestRouting extends AbstractDomainObject
+{
 
+    /**
+     * Target application.
+     */
+    private TargetApplication targetApplication;
+
+    /**
+     * Request type.
+     */
+    private RequestType requestType;
+
+    /**
+     * Web service endpoint.
+     */
+    private String webServiceEndpoint;
+
+    /**
+     * Get the Target Application.
+     * 
+     * @return target application
+     */
+    public TargetApplication getTargetApplication ()
+    {
+        return targetApplication;
+    }
+
+    /**
+     * Set the Target Application.
+     * 
+     * @param targetApplication target application
+     */
+    public void setTargetApplication (final TargetApplication targetApplication)
+    {
+        this.targetApplication = targetApplication;
+    }
+
+    /**
+     * Get the Request Type.
+     * 
+     * @return request type
+     */
+    public RequestType getRequestType ()
+    {
+        return requestType;
+    }
+
+    /**
+     * Set the Request Type.
+     * 
+     * @param requestType request type
+     */
+    public void setRequestType (final RequestType requestType)
+    {
+        this.requestType = requestType;
+    }
+
+    /**
+     * Get web service end point.
+     * 
+     * @return web service end point
+     */
+    public String getWebServiceEndpoint ()
+    {
+        return webServiceEndpoint;
+    }
+
+    /**
+     * Set web service end point.
+     * 
+     * @param webServiceEndpoint web service end point
+     */
+    public void setWebServiceEndpoint (final String webServiceEndpoint)
+    {
+        this.webServiceEndpoint = webServiceEndpoint;
+    }
 
 }

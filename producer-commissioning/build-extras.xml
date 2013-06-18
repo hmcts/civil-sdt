@@ -123,6 +123,7 @@
                 <include name="**/producers-api.jar" />
                 <include name="**/validators.jar" />
                 <include name="**/domain.jar" />
+                <include name="**/utils.jar" />
             </fileset>
         </copy>
     </target>

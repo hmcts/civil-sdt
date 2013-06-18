@@ -31,87 +31,65 @@
 
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+
 /**
- * Bulk customer application.
+ * Abstract class for all domain objects.
  * 
- * @author d130680
+ * @author Robin Compston
  * 
  */
-public class BulkCustomerApplication extends AbstractDomainObject
+public abstract class AbstractDomainObject
 {
-    /**
-     * Bulk customer.
-     */
-    private BulkCustomer bulkCustomer;
 
     /**
-     * Target Application that the Bulk Customer has been set up to submit messages to.
+     * Primary key.
      */
-    private TargetApplication targetApplication;
+    private int id;
 
     /**
-     * Customer application id.
+     * Hibernate version number.
      */
-    private String customerApplicationId;
+    private int version;
 
     /**
-     * Get the Bulk Customer.
-     * 
-     * @return bulk customer
+     * Constructor for {@link AbstractDomainObject}.
      */
-    public BulkCustomer getBulkCustomer ()
+    public AbstractDomainObject ()
     {
-        return bulkCustomer;
+        super ();
+
+        SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
     }
 
     /**
-     * Set the Bulk Customer.
+     * Get primary key.
      * 
-     * @param bulkCustomer bulk customer
+     * @return primary key
      */
-    public void setBulkCustomer (final BulkCustomer bulkCustomer)
+    public int getId ()
     {
-        this.bulkCustomer = bulkCustomer;
+        return id;
     }
 
     /**
-     * Get the Target Application.
+     * Set primary key.
      * 
-     * @return target application
+     * @param id primary key
      */
-    public TargetApplication getTargetApplication ()
+    public void setId (final int id)
     {
-        return targetApplication;
+        this.id = id;
     }
 
     /**
-     * Set the Target Application.
+     * Get Hibernate version id.
      * 
-     * @param targetApplication target application
+     * @return Hibernate version id
      */
-    public void setTargetApplication (final TargetApplication targetApplication)
+    public int getVersion ()
     {
-        this.targetApplication = targetApplication;
-    }
-
-    /**
-     * Get customer application id.
-     * 
-     * @return customer application id
-     */
-    public String getCustomerApplicationId ()
-    {
-        return customerApplicationId;
-    }
-
-    /**
-     * Set customer application id.
-     * 
-     * @param customerApplicationId customer application id
-     */
-    public void setCustomerApplicationId (final String customerApplicationId)
-    {
-        this.customerApplicationId = customerApplicationId;
+        return version;
     }
 
 }

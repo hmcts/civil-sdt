@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<!-- Note all ids should be based on fully qualified interface name and 
+		all classes should have an interface. -->
+
+	<bean id="producers.comx.exporter" class="org.springframework.jmx.export.MBeanExporter">
+		<property name="beans">
+			<map>
+				<entry key="bean:name=producersComxMetrics" value-ref="uk.gov.moj.sdt.utils.mbeans.ISdtMetricsMBean" />
+			</map>
+		</property>
+		<property name="assembler">
+			<bean
+				class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
+				<property name="managedMethods">
+					<value>getBulkSubmitStats, getBulkFeedbackStats,
+						getDefenceFeedbackStats, getStatusStats, getDomainObjectsStats,
+						getDatabaseStats, getActiveCustomersStats, getRequestQueueStats,
+						getCaseMgmtStats, getErrorStats, getLastBulkSubmitRef,
+						getLastBulkRequestRef, reset
+					</value>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+</beans>

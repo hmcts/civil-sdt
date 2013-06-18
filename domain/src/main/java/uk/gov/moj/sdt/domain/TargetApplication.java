@@ -29,91 +29,64 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-
 package uk.gov.moj.sdt.domain;
 
 /**
  * Target Application that the Bulk Customer has been set up to submit messages to.
  * 
  * @author d130680
- *
+ * 
  */
-public class TargetApplication {	 
-	
-	/**
-	 * Primary key.
-	 */
-	private int id;
-	
-	/**
-	 * Target application code.
-	 */
-	private String targetApplicationCode;
-	
-	/**
-	 * Target application name.
-	 */
-	private String targetApplicationName;
-	
-	/**
-	 * Hibernate version number.
-	 */
-	private int version;
+public class TargetApplication extends AbstractDomainObject
+{
+    /**
+     * Target application code.
+     */
+    private String targetApplicationCode;
 
-	/**
-	 * Get primary key.
-	 * @return primary key
-	 */
-	public int getId() {
-		return id;
-	}
+    /**
+     * Target application name.
+     */
+    private String targetApplicationName;
 
-	/**
-	 * Set primary key.
-	 * 
-	 * @param id primary key
-	 */
-	public void setId(final int id) {
-		this.id = id;
-	}
+    /**
+     * Get target application code.
+     * 
+     * @return target application code
+     */
+    public String getTargetApplicationCode ()
+    {
+        return targetApplicationCode;
+    }
 
-	/**
-	 * Get target application code.
-	 * @return target application code
-	 */
-	public String getTargetApplicationCode() {
-		return targetApplicationCode;
-	}
+    /**
+     * Set target application code.
+     * 
+     * @param targetApplicationCode target application code
+     */
+    public void setTargetApplicationCode (final String targetApplicationCode)
+    {
+        this.targetApplicationCode = targetApplicationCode;
+    }
 
-	/**
-	 * Set target application code.
-	 * @param targetApplicationCode target application code
-	 */
-	public void setTargetApplicationCode(final String targetApplicationCode) {
-		this.targetApplicationCode = targetApplicationCode;
-	}
+    /**
+     * Get target application name.
+     * 
+     * @return target application name
+     */
+    public String getTargetApplicationName ()
+    {
+        return targetApplicationName;
+    }
 
-	/**
-	 * Get target application name.
-	 * @return target application name
-	 */
-	public String getTargetApplicationName() {
-		return targetApplicationName;
-	}
+    /**
+     * Set target application name.
+     * 
+     * @param targetApplicationName target application name
+     */
+    public void setTargetApplicationName (final String targetApplicationName)
+    {
+        this.targetApplicationName = targetApplicationName;
+    }
 
-	/**
-	 * Set target application name.
-	 * @param targetApplicationName target application name
-	 */
-	public void setTargetApplicationName(final String targetApplicationName) {
-		this.targetApplicationName = targetApplicationName;
-	}
-	/**
-	 * Get Hibernate version id.
-	 * @return Hibernate version id
-	 */
-	public int getVersion() {
-		return version;
-	}
-	
 }

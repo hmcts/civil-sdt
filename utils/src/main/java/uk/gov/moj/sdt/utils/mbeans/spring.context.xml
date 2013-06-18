@@ -12,27 +12,4 @@
 
 	<bean id="uk.gov.moj.sdt.utils.mbeans.ISdtMetricsMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean" />
 
-	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
-		<property name="beans">
-			<map>
-				<entry key="bean:name=sdtMetrics" value-ref="uk.gov.moj.sdt.utils.mbeans.ISdtMetricsMBean" />
-			</map>
-		</property>
-		<property name="assembler">
-			<bean
-				class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
-				<property name="managedMethods">
-					<value>getBulkSubmitStats, getBulkFeedbackStats,
-						getDefenceFeedbackStats, getStatusStats, getDomainObjectsStats,
-						getDatabaseStats, getActiveCustomersStats, getRequestQueueStats,
-						getCaseMgmtStats, getErrorStats, getLastBulkSubmitRef,
-						getLastBulkRequestRef, reset
-					</value>
-				</property>
-			</bean>
-		</property>
-	</bean>
-
-
-
 </beans>

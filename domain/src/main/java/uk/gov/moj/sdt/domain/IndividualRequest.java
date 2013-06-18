@@ -42,35 +42,36 @@ import org.joda.time.LocalDateTime;
  * @author d130680
  * 
  */
-public class IndividualRequest
+public class IndividualRequest extends AbstractDomainObject
 {
-    /**
-     * Primary Key.
-     */
-    private int id;
     /**
      * Bulk submission.
      */
     private BulkSubmission bulkSubmission;
+
     /**
      * Request type.
      */
     private RequestType requestType;
+
     /**
      * Identifier defined by End User to uniquely (unique for the End User within
      * the SDT Data Retention Period) identify individual requests within a Bulk Request.
      */
     private String customerRequestReference;
+
     /**
      * Case Number associated to Request where available. Case Numbers for new claim requests
      * will be allocated by the online Case Management application (MCOL) and passed back to SDT.
      */
     private String caseNumber;
+
     /**
      * The status of the Individual Request - one of "Submitted", "Held", "Rejected", "Initially Accepted" or
      * "Accepted".
      */
     private String requestStatus;
+
     /**
      * For claim requests this will be the date of issue. For judgment requests this will be the date of judgment.
      * For paid/written-off/discontinued/withdrawn requests this will be the date the relevant action was taken.
@@ -78,88 +79,75 @@ public class IndividualRequest
      * If the request was not successfully processed this field will be blank. Formatted as DDMMYYYY.
      */
     private LocalDateTime issuedDate;
+
     /**
      * SDT bulk reference.
      */
     private String sdtBulkReference;
+
     /**
      * Line number.
      */
     private int lineNumber;
+
     /**
      * SDT request reference.
      */
     private String sdtRequestReference;
+
     /**
      * Date record was created.
      */
     private LocalDateTime createdDate;
+
     /**
      * Date record was updated.
      */
     private LocalDateTime updatedDate;
+
     /**
      * Date/Time the Individual Request processing was completed. This is the Date/Time that the final outcome
      * was received from the Court Case Management system following full processing
      */
     private LocalDateTime completedDate;
+
     /**
      * Where the request type is claim and the request has been successfully processed by
      * the online case management system this field will be populated.
      * In all other instances this field will be blank. Formatted as DDMMYYYY.
      */
     private LocalDateTime serviceDate;
+
     /**
      * Warrant Number associated to Request if applicable. Warrant Numbers for new warrant requests will
      * be allocated by the online Case Management application (MCOL) for Warrant Requests only.
      */
     private int warrantNumber;
+
     /**
      * Where the request type is warrant and the request has been successfully processed by the court case
      * management system this field will be populated. Where a warrant request is rejected the enforcing court
      * code field will be blank.
      */
     private String enforcingCourtCode;
+
     /**
      * Where the request type is warrant and the request has been successfully processed
      * by the court case management system this field will be populated. Where a warrant request is rejected
      * the enforcing court code field will be blank.
      */
     private String enforcingCourtName;
+
     /**
      * Fee associated to Request if applicable. This is calculated by the Online Case Management application
      * (MCOL) and passed back to SDT.
      */
     private BigDecimal fee;
-    /**
-     * Hibernate version number.
-     */
-    private int version;
+
     /**
      * XML payload.
      */
     private String payload;
-
-    /**
-     * Get primary key.
-     * 
-     * @return primary key
-     */
-    public int getId ()
-    {
-        return id;
-    }
-
-    /**
-     * Set primary key.
-     * 
-     * @param id primary key
-     */
-
-    public void setId (final int id)
-    {
-        this.id = id;
-    }
 
     /**
      * Get the Bulk Submission.
@@ -519,16 +507,6 @@ public class IndividualRequest
     public void setPayload (final String payload)
     {
         this.payload = payload;
-    }
-
-    /**
-     * Get Hibernate version id.
-     * 
-     * @return Hibernate version id
-     */
-    public int getVersion ()
-    {
-        return version;
     }
 
 }

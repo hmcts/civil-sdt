@@ -115,7 +115,9 @@
     <target name="-copy-app-lib" description="Copy jars from application library">
         <copy todir="${consumers.target.dir}/WEB-INF/lib" overwrite="true">
             <fileset dir="${lib.app.dir}" casesensitive="false">
-                <include name="**/producers-api.jar" />
+                <include name="**/*.jar" />
+                <exclude name="**/producer-commissioning.jar" />
+                <exclude name="**/producers.jar" />
             </fileset>
         </copy>
     </target>

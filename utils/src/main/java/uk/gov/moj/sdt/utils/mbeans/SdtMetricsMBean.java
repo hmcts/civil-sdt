@@ -85,6 +85,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private static final Logger LOG = LoggerFactory.getLogger (SdtMetricsMBean.class);
 
     /**
+     * The singleton instance of this class created by Spring.
+     */
+    private static SdtMetricsMBean thisBean;
+
+    /**
      * Count of all bulk submits.
      */
     private long bulkSubmitCounts;
@@ -279,13 +284,15 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private String lastBulkRequestRef;
 
+
     /**
      * Constructor for {@link SdtMetricsMBean}.
      */
     private SdtMetricsMBean ()
     {
+        SdtMetricsMBean.thisBean = this;
     }
-
+    
     // BULK SUBMISSION
 
     /**
@@ -1104,5 +1111,17 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
 
     // TODO - add function to reload database global data on demand.
     // TODO - add function to reload log4j config on demand.
+
+
+    /**
+     * Get singleton instance of this bean - used by callers to update statistics.
+     * 
+     * @return singleton instance of this bean.
+     */
+    public static SdtMetricsMBean getSdtMetrics ()
+    {
+        // Get singleton instance of metrics bean.
+        return thisBean;
+    }
 
 }

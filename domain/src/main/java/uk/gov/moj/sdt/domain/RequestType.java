@@ -29,110 +29,90 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-
 package uk.gov.moj.sdt.domain;
 
 /**
- * Each defined target application will have a set of associated Request Types. 
+ * Each defined target application will have a set of associated Request Types.
  * E.g. Claim,, Judgment, Warrant, JudgmentWarrant and ClaimUpate.
  * 
  * @author d130680
- *
+ * 
  */
-public class RequestType {
+public class RequestType extends AbstractDomainObject
+{
+    /**
+     * Request type name.
+     */
+    private String name;
 
-	/**
-	 * Primary key.
-	 */
-	private int id;
-	/**
-	 * Request type name.
-	 */
-	private String name;
-	/**
-	 * Request type status.
-	 */
-	private String status;
-	/**
-	 * Request type description.
-	 */
-	private String description;
-	/**
-	 * Hibernate version number.
-	 */
-	private int version;
-	
-	/**
-	 * Get primary key.
-	 * @return primary key
-	 */
-	public int getId() {
-		return id;
-	}
-	
-	/**
-	 * Set primary key.
-	 * 
-	 * @param id primary key
-	 */
-	public void setId(final int id) {
-		this.id = id;
-	}
-	
-	/**
-	 * Get name.
-	 * @return name
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * Set name.
-	 * @param name name
-	 */
-	public void setName(final String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Get status.
-	 * @return status
-	 */
-	public String getStatus() {
-		return status;
-	}
-	
-	/**
-	 * Set status.
-	 * @param status status
-	 */
-	public void setStatus(final String status) {
-		this.status = status;
-	}
-	
-	/**
-	 * Get description.
-	 * @return description
-	 */
-	public String getDescription() {
-		return description;
-	}
-	
-	/**
-	 * Set description.
-	 * @param description description
-	 */
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-	
-	/**
-	 * Get Hibernate version id.
-	 * @return Hibernate version id
-	 */
-	public int getVersion() {
-		return version;
-	}
-	
+    /**
+     * Request type status.
+     */
+    private String status;
+
+    /**
+     * Request type description.
+     */
+    private String description;
+
+    /**
+     * Get name.
+     * 
+     * @return name
+     */
+    public String getName ()
+    {
+        return name;
+    }
+
+    /**
+     * Set name.
+     * 
+     * @param name name
+     */
+    public void setName (final String name)
+    {
+        this.name = name;
+    }
+
+    /**
+     * Get status.
+     * 
+     * @return status
+     */
+    public String getStatus ()
+    {
+        return status;
+    }
+
+    /**
+     * Set status.
+     * 
+     * @param status status
+     */
+    public void setStatus (final String status)
+    {
+        this.status = status;
+    }
+
+    /**
+     * Get description.
+     * 
+     * @return description
+     */
+    public String getDescription ()
+    {
+        return description;
+    }
+
+    /**
+     * Set description.
+     * 
+     * @param description description
+     */
+    public void setDescription (final String description)
+    {
+        this.description = description;
+    }
+
 }

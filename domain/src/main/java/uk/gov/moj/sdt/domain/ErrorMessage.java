@@ -29,108 +29,89 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-
 package uk.gov.moj.sdt.domain;
 
 /**
  * Error message.
  * 
  * @author d130680
- *
+ * 
  */
-public class ErrorMessage {
+public class ErrorMessage extends AbstractDomainObject
+{
+    /**
+     * The error code.
+     */
+    private String errorCode;
 
-	/**
-	 * Primary key.
-	 */
-	private int id;
-	
-	/**
-	 * The error code.
-	 */
-	private String errorCode;
-	
-	/**
-	 * The error text.
-	 */
-	private String errorText;
+    /**
+     * The error text.
+     */
+    private String errorText;
 
-	/**
-	 * The error description.
-	 */
-	private String errorDescription;
+    /**
+     * The error description.
+     */
+    private String errorDescription;
 
-	/**
-	 * Hibernate version number.
-	 */
-	private int version;
+    /**
+     * Get error code.
+     * 
+     * @return error code
+     */
+    public String getErrorCode ()
+    {
+        return errorCode;
+    }
 
-	/**
-	 * Get primary key.
-	 * @return primary key
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * Set primary key.
-	 * 
-	 * @param id primary key
-	 */
-	public void setId(final int id) {
-		this.id = id;
-	}
+    /**
+     * Set error code.
+     * 
+     * @param errorCode error code
+     */
+    public void setErrorCode (final String errorCode)
+    {
+        this.errorCode = errorCode;
+    }
 
-	/**
-	 * Get error code.
-	 * @return error code
-	 */
-	public String getErrorCode() {
-		return errorCode;
-	}
+    /**
+     * Get error Text.
+     * 
+     * @return error text
+     */
+    public String getErrorText ()
+    {
+        return errorText;
+    }
 
-	/**
-	 * Set error code.
-	 * @param errorCode error code
-	 */
-	public void setErrorCode(final String errorCode) {
-		this.errorCode = errorCode;
-	}
-	/**
-	 * Get error Text.
-	 * @return error text
-	 */
-	public String getErrorText() {
-		return errorText;
-	}
-	/**
-	 * Set error Text.
-	 * @param errorText error text
-	 */
-	public void setErrorText(final String errorText) {
-		this.errorText = errorText;
-	}
+    /**
+     * Set error Text.
+     * 
+     * @param errorText error text
+     */
+    public void setErrorText (final String errorText)
+    {
+        this.errorText = errorText;
+    }
 
-	/**
-	 * Get error description.
-	 * @return error description
-	 */
-	public String getErrorDescription() {
-		return errorDescription;
-	}
+    /**
+     * Get error description.
+     * 
+     * @return error description
+     */
+    public String getErrorDescription ()
+    {
+        return errorDescription;
+    }
 
-	/**
-	 * Set error description.
-	 * @param errorDescription error description
-	 */
-	public void setErrorDescription(final String errorDescription) {
-		this.errorDescription = errorDescription;
-	}
-	/**
-	 * Get Hibernate version id.
-	 * @return Hibernate version id
-	 */
-	public int getVersion() {
-		return version;
-	}
+    /**
+     * Set error description.
+     * 
+     * @param errorDescription error description
+     */
+    public void setErrorDescription (final String errorDescription)
+    {
+        this.errorDescription = errorDescription;
+    }
+
 }
