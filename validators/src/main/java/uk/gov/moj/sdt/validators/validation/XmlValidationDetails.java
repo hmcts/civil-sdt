@@ -24,58 +24,111 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.producers.validation;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.validators.validation;
 
-import org.joda.time.LocalDateTime;
+import java.util.List;
 
 /**
- * An interface to provide date validation methods.
+ * A class to hold the details of a validation result.
  * 
  * @author Simon Holmes
  * 
  */
-public interface IDateValidator
+public class XmlValidationDetails
 {
 
     /**
-     * Tests if a given date is within two dates, inclusively.
+     * Has the xml been validated?
      * 
-     * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the range.
-     * @param endDate the end date of the range.
-     * @return TRUE if within date, FALSE if not.
+     * @author d301488
+     * 
      */
-    boolean isDateWitinRange (LocalDateTime dateToTest, final LocalDateTime startDate, final LocalDateTime endDate);
+    public enum Result
+    {
+        /**
+         * The xml passed validation.
+         */
+        PASS,
+
+        /**
+         * The xml failed validation.
+         */
+        FAIL
+    };
 
     /**
-     * 
-     * Tests if a date is BEFORE a given date, inclusively.
-     * 
-     * @param dateToTest the date that is to be tested.
-     * @param endDate the end date of the test.
-     * @return TRUE if before the given date, FALSE if not.
+     * The result of validation.
      */
-    boolean isDateBefore (final LocalDateTime dateToTest, final LocalDateTime endDate);
+    private Result result;
 
     /**
-     * Tests if a date is AFTER a given date, inclusively.
-     * 
-     * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the test.
-     * @return TRUE if after the given date, FALSE if not.
+     * If validation failed, error messages will be output.
      */
-    boolean isDateAfter (final LocalDateTime dateToTest, final LocalDateTime startDate);
+    private List<String> resultMessages;
 
     /**
-     * Tests if a date is within a given number of days, inclusive of the Xth day.
-     * 
-     * @param dateToTest the date that is to be tested
-     * @param numberOfDays the number of days the date should be within.
-     * @return TRUE if the date is within the last X days, FALSE if it is not.
+     * No-argument constructor.
      */
-    boolean isDateWitinLastXDays (final LocalDateTime dateToTest, final Integer numberOfDays);
+    public XmlValidationDetails ()
+    {
+    }
+
+    /**
+     * Instantiate a XmlValidationDetails object.
+     * 
+     * @param result the enum of Success/Fail
+     */
+    public XmlValidationDetails (final Result result)
+    {
+        this.result = result;
+    }
+
+    /**
+     * Instantiate a XmlValidationDetails object.
+     * 
+     * @param result the enum of Success/Fail
+     * @param resultMessages If an error has occured, error messages will be passed in via a List.
+     */
+    public XmlValidationDetails (final Result result, final List<String> resultMessages)
+    {
+        this.result = result;
+        this.resultMessages = resultMessages;
+    }
+
+    /**
+     * @return the result
+     */
+    public Result getResult ()
+    {
+        return result;
+    }
+
+    /**
+     * @param result the result to set
+     */
+    public void setResult (final Result result)
+    {
+        this.result = result;
+    }
+
+    /**
+     * @return the resultMessages
+     */
+    public List<String> getResultMessages ()
+    {
+        return resultMessages;
+    }
+
+    /**
+     * @param resultMessages the resultMessages to set
+     */
+    public void setResultMessages (final List<String> resultMessages)
+    {
+        this.resultMessages = resultMessages;
+    }
+
 }

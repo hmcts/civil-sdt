@@ -24,111 +24,58 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-package uk.gov.moj.sdt.producers.validation;
+ * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
+ * $LastChangedRevision: 16414 $
+ * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
+ * $LastChangedBy: holmessm $ */
+package uk.gov.moj.sdt.validators.validation;
 
-import java.util.List;
+import org.joda.time.LocalDateTime;
 
 /**
- * A class to hold the details of a validation result.
+ * An interface to provide date validation methods.
  * 
  * @author Simon Holmes
  * 
  */
-public class XmlValidationDetails
+public interface IDateValidator
 {
 
     /**
-     * Has the xml been validated?
+     * Tests if a given date is within two dates, inclusively.
      * 
-     * @author d301488
+     * @param dateToTest the date that is to be tested.
+     * @param startDate the start date of the range.
+     * @param endDate the end date of the range.
+     * @return TRUE if within date, FALSE if not.
+     */
+    boolean isDateWitinRange (LocalDateTime dateToTest, final LocalDateTime startDate, final LocalDateTime endDate);
+
+    /**
      * 
-     */
-    public enum Result
-    {
-        /**
-         * The xml passed validation.
-         */
-        PASS,
-
-        /**
-         * The xml failed validation.
-         */
-        FAIL
-    };
-
-    /**
-     * The result of validation.
-     */
-    private Result result;
-
-    /**
-     * If validation failed, error messages will be output.
-     */
-    private List<String> resultMessages;
-
-    /**
-     * No-argument constructor.
-     */
-    public XmlValidationDetails ()
-    {
-    }
-
-    /**
-     * Instantiate a XmlValidationDetails object.
+     * Tests if a date is BEFORE a given date, inclusively.
      * 
-     * @param result the enum of Success/Fail
+     * @param dateToTest the date that is to be tested.
+     * @param endDate the end date of the test.
+     * @return TRUE if before the given date, FALSE if not.
      */
-    public XmlValidationDetails (final Result result)
-    {
-        this.result = result;
-    }
+    boolean isDateBefore (final LocalDateTime dateToTest, final LocalDateTime endDate);
 
     /**
-     * Instantiate a XmlValidationDetails object.
+     * Tests if a date is AFTER a given date, inclusively.
      * 
-     * @param result the enum of Success/Fail
-     * @param resultMessages If an error has occured, error messages will be passed in via a List.
+     * @param dateToTest the date that is to be tested.
+     * @param startDate the start date of the test.
+     * @return TRUE if after the given date, FALSE if not.
      */
-    public XmlValidationDetails (final Result result, final List<String> resultMessages)
-    {
-        this.result = result;
-        this.resultMessages = resultMessages;
-    }
+    boolean isDateAfter (final LocalDateTime dateToTest, final LocalDateTime startDate);
 
     /**
-     * @return the result
+     * Tests if a date is within a given number of days, inclusive of the Xth day.
+     * 
+     * @param dateToTest the date that is to be tested
+     * @param numberOfDays the number of days the date should be within.
+     * @return TRUE if the date is within the last X days, FALSE if it is not.
      */
-    public Result getResult ()
-    {
-        return result;
-    }
-
-    /**
-     * @param result the result to set
-     */
-    public void setResult (final Result result)
-    {
-        this.result = result;
-    }
-
-    /**
-     * @return the resultMessages
-     */
-    public List<String> getResultMessages ()
-    {
-        return resultMessages;
-    }
-
-    /**
-     * @param resultMessages the resultMessages to set
-     */
-    public void setResultMessages (final List<String> resultMessages)
-    {
-        this.resultMessages = resultMessages;
-    }
-
+    boolean isDateWitinLastXDays (final LocalDateTime dateToTest, final Integer numberOfDays);
 }

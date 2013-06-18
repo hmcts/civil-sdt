@@ -28,22 +28,34 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.producers.validation;
+package uk.gov.moj.sdt.validators.validation;
+
+import org.joda.time.LocalDate;
 
 /**
- * Interface to XML validation functionality.
+ * Interface to provide the methods to perform reference and ID validation.
  * 
  * @author d301488
  * 
  */
-public interface IXmlValidator
+public interface IIdentifierValidator
 {
 
     /**
-     * Method to validate the xml.
+     * Checks that the User Reference doesn't already exist and is valid.
      * 
-     * @return A XmlValidationDetails object containing SUCCESS/FAIL enum and if fail, error messages.
+     * @param reference the incoming reference number to check.
+     * @param dateTimeSubmitted Check reference is within the retention period.
+     * @return TRUE is not a duplicate, FALSE if a duplicate.
      */
-    XmlValidationDetails validateXml ();
+    boolean isUserReferenceUnique (String reference, LocalDate dateTimeSubmitted);
+
+    /**
+     * Checks that the SDT Customer Id is valid.
+     * 
+     * @param sdtCustomerId the SDT customer Id
+     * @return TRUE if it is a valid Id, FALSE if not.
+     */
+    boolean isSdtCustomerIdValid (String sdtCustomerId);
 
 }

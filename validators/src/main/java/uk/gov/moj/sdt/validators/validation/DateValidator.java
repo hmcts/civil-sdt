@@ -28,7 +28,7 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.producers.validation;
+package uk.gov.moj.sdt.validators.validation;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
