@@ -140,9 +140,9 @@ public final class BulkRequestToDomainResolver
 
             // Set request type
             final RequestTypeType requestTypeType = mcolRequestType.getRequestType ();
-            individualRequest.setRequestType (mapToRequesType (requestTypeType));
+            individualRequest.setRequestType (mapToRequestType (requestTypeType));
 
-            // Set the intial status
+            // Set the initial status
             individualRequest.setRequestStatus (IndividualRequestStatus.SUBMITTED.getStatus ());
 
             // Set the bulk submission
@@ -160,7 +160,7 @@ public final class BulkRequestToDomainResolver
      * @param requestTypeType requesttype type
      * @return request type
      */
-    private static RequestType mapToRequesType (final RequestTypeType requestTypeType)
+    private static RequestType mapToRequestType (final RequestTypeType requestTypeType)
     {
 
         final RequestType requestType = new RequestType ();
