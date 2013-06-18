@@ -24,83 +24,12 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-
-package uk.gov.moj.sdt.domain;
-
-import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+ * $Id: package-info.java 16467 2013-06-07 17:09:50Z agarwals $
+ * $LastChangedRevision: 16467 $
+ * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
+ * $LastChangedBy: agarwals $ */
 
 /**
- * Abstract class for all domain objects.
- * 
- * @author Robin Compston
- * 
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public abstract class AbstractDomainObject implements IDomainObject
-{
-
-    /**
-     * Primary key.
-     */
-    private int id;
-
-    /**
-     * Hibernate version number.
-     */
-    private int version;
-
-    /**
-     * Constructor for {@link AbstractDomainObject}.
-     */
-    public AbstractDomainObject ()
-    {
-        super ();
-
-        SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
-    }
-
-    /**
-     * When garbage collected, decrement count of domain objects in statistics.
-     */
-    // CHECKSTYLE:OFF
-    public void finalize ()
-    // CHECKSTYLE:ON
-    {
-        SdtMetricsMBean.getSdtMetrics ().downDomainObjectsCount ();
-    }
-
-    /**
-     * Get primary key.
-     * 
-     * @return primary key
-     */
-    public int getId ()
-    {
-        return id;
-    }
-
-    /**
-     * Set primary key.
-     * 
-     * @param id primary key
-     */
-    public void setId (final int id)
-    {
-        this.id = id;
-    }
-
-    /**
-     * Get Hibernate version id.
-     * 
-     * @return Hibernate version id
-     */
-    public int getVersion ()
-    {
-        return version;
-    }
-
-}
+package uk.gov.moj.sdt.domain.api;

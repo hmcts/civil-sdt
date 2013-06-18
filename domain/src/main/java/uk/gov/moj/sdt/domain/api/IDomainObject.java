@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,83 +24,18 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
+ * $Id: IWsCreateHandler.java 16467 2013-06-07 17:09:50Z agarwals $
+ * $LastChangedRevision: 16467 $
+ * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
+ * $LastChangedBy: agarwals $ */
 
-package uk.gov.moj.sdt.domain;
-
-import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+package uk.gov.moj.sdt.domain.api;
 
 /**
- * Abstract class for all domain objects.
+ * Marker interface for domain objects.
  * 
- * @author Robin Compston
- * 
+ * @author d276205
  */
-public abstract class AbstractDomainObject implements IDomainObject
+public interface IDomainObject
 {
-
-    /**
-     * Primary key.
-     */
-    private int id;
-
-    /**
-     * Hibernate version number.
-     */
-    private int version;
-
-    /**
-     * Constructor for {@link AbstractDomainObject}.
-     */
-    public AbstractDomainObject ()
-    {
-        super ();
-
-        SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
-    }
-
-    /**
-     * When garbage collected, decrement count of domain objects in statistics.
-     */
-    // CHECKSTYLE:OFF
-    public void finalize ()
-    // CHECKSTYLE:ON
-    {
-        SdtMetricsMBean.getSdtMetrics ().downDomainObjectsCount ();
-    }
-
-    /**
-     * Get primary key.
-     * 
-     * @return primary key
-     */
-    public int getId ()
-    {
-        return id;
-    }
-
-    /**
-     * Set primary key.
-     * 
-     * @param id primary key
-     */
-    public void setId (final int id)
-    {
-        this.id = id;
-    }
-
-    /**
-     * Get Hibernate version id.
-     * 
-     * @return Hibernate version id
-     */
-    public int getVersion ()
-    {
-        return version;
-    }
-
 }
