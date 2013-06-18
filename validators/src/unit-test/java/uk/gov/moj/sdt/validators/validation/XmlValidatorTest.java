@@ -75,7 +75,8 @@ public class XmlValidatorTest extends TestCase
         final XmlValidator xmlValidation = new XmlValidator (theXmlToValidate, xsdPath);
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml ();
 
-        Assert.assertEquals (XmlValidationDetails.Result.PASS, xmlValidationDetails.getResult ());
+        Assert.assertEquals ("The given XML is no longer valid.", XmlValidationDetails.Result.PASS,
+                xmlValidationDetails.getResult ());
     }
 
     /**
@@ -101,7 +102,7 @@ public class XmlValidatorTest extends TestCase
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml ();
 
         Assert.assertEquals (XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult ());
-        Assert.assertEquals (24, xmlValidationDetails.getResultMessages ().size ());
+        Assert.assertEquals ("The given XML is now valid.", 24, xmlValidationDetails.getResultMessages ().size ());
     }
 
     /**
@@ -131,6 +132,7 @@ public class XmlValidatorTest extends TestCase
 
         final String errorMessage = "** ERROR - Unable to find the " + "file [FileDoesNotExist.xsd]";
 
-        Assert.assertEquals (errorMessage, xmlValidationDetails.getResultMessages ().get (0));
+        Assert.assertEquals ("The XML is now considered valid against an XSD.", errorMessage, xmlValidationDetails
+                .getResultMessages ().get (0));
     }
 }
