@@ -9,5 +9,5 @@ cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'tns1:name' is not valid.
 cvc-maxLength-valid: Value '1234567890123456789012345' with length = '25' is not facet-valid with respect to maxLength '24' for type 'requestIdType'.
 cvc-attribute.3: The value '1234567890123456789012345' of attribute 'requestId' on element 'tns:mcolRequest' is not valid with respect to its type, 'requestIdType'.
-cvc-enumeration-valid: Value 'mcolClaim1' is not facet-valid with respect to enumeration '[mcolClaim, mcolJudgment, mcolJudgmentWarrant, mcolWarrant, mcolClaimUpdate]'. It must be a value from the enumeration.
+cvc-enumeration-valid: Value 'mcolClaim1' is not facet-valid with respect to enumeration '[mcolClaim, mcolJudgment, mcolJudgmentWarrant, mcolWarrant, mcolClaimStatusUpdate]'. It must be a value from the enumeration.
 cvc-attribute.3: The value 'mcolClaim1' of attribute 'requestType' on element 'tns:mcolRequest' is not valid with respect to its type, 'requestTypeType'.

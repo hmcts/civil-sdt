@@ -231,7 +231,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required Fields.
         response.setRequestId ("10");
-        response.setRequestType (RequestTypeType.MCOL_CLAIM_UPDATE);
+        response.setRequestType (RequestTypeType.MCOL_CLAIM_STATUS_UPDATE);
         response.setClaimNumber ("11111110");
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
@@ -376,7 +376,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Required Fields.
         response.setRequestId ("5");
-        response.setRequestType (RequestTypeType.MCOL_CLAIM_UPDATE);
+        response.setRequestType (RequestTypeType.MCOL_CLAIM_STATUS_UPDATE);
         response.setClaimNumber ("11111105");
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);

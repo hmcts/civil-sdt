@@ -155,7 +155,7 @@
 			<xs:enumeration value="mcolJudgment" />
 			<xs:enumeration value="mcolJudgmentWarrant" />
 			<xs:enumeration value="mcolWarrant" />
-			<xs:enumeration value="mcolClaimUpdate" />
+			<xs:enumeration value="mcolClaimStatusUpdate" />
 		</xs:restriction>
 	</xs:simpleType>
 

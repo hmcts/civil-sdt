@@ -168,7 +168,7 @@
 					<xs:enumeration value="mcolJudgment" />
 					<xs:enumeration value="mcolJudgmentWarrant" />
 					<xs:enumeration value="mcolWarrant" />
-					<xs:enumeration value="mcolClaimUpdate" />
+					<xs:enumeration value="mcolClaimStatusUpdate" />
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -545,10 +545,10 @@
 
 		</xs:schema>
 
-		<!-- ClaimUpdate.xsd -->
+		<!-- ClaimStatusUpdate.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" 
-            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema"
             xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
             elementFormDefault="qualified"
             version="1.0">
@@ -576,7 +576,7 @@
                 </xs:restriction>
             </xs:simpleType>
         
-            <xs:complexType name="claimUpdateType">
+            <xs:complexType name="claimStatusUpdateType">
                 <xs:sequence>
                     <xs:element name="claimNumber" type="base:claimNumberType" />
                     <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
@@ -585,7 +585,7 @@
                 </xs:sequence>
             </xs:complexType>
         
-            <xs:element name="mcolClaimUpdate" type="tns:claimUpdateType"/>
+            <xs:element name="mcolClaimStatusUpdate" type="tns:claimStatusUpdateType"/>
         
         </xs:schema>
 
@@ -595,13 +595,13 @@
 			targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
 			elementFormDefault="qualified" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
 			xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
-			xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+			xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
 			version="1.0">
 
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" />
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" />
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" />
+			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" />
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
 
 			<xs:complexType name="headerType">
@@ -627,7 +627,7 @@
 						<xs:choice>
 							<xs:element name="mcolClaim" type="clm:claimType" />
 							<xs:element name="mcolJudgment" type="jud:mcolJudgmentType" />
-							<xs:element name="mcolClaimUpdate" type="clmupd:claimUpdateType" />
+							<xs:element name="mcolClaimStatusUpdate" type="clmupd:claimStatusUpdateType" />
 							<xs:element name="mcolWarrant" type="wnt:warrantType" />
 							<xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType" />
 						</xs:choice>

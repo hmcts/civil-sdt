@@ -16,7 +16,7 @@
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" schemaLocation="../xsd/RootXSDs/Claim.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="../xsd/RootXSDs/Warrant.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" schemaLocation="../xsd/RootXSDs/Judgment.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimUpdateSchema" schemaLocation="../xsd/RootXSDs/ClaimUpdate.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" schemaLocation="../xsd/RootXSDs/ClaimStatusUpdate.xsd"/>
 
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" schemaLocation="../xsd/IndvRequestResponse/IndividualSubmitRequest.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" schemaLocation="../xsd/IndvRequestResponse/IndividualSubmitResponse.xsd"/>

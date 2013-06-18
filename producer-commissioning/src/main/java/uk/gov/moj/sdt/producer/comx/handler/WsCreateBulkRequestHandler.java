@@ -144,7 +144,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         return response;
     }
 
-    
     /**
      * Validate to ensure integrity of bulk request.
      * 
@@ -204,8 +203,8 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
                 valid = (mcolRequestType.getMcolJudgmentWarrant () != null) ? true : false;
                 break;
 
-            case MCOL_CLAIM_UPDATE:
-                valid = (mcolRequestType.getMcolClaimUpdate () != null) ? true : false;
+            case MCOL_CLAIM_STATUS_UPDATE:
+                valid = (mcolRequestType.getMcolClaimStatusUpdate () != null) ? true : false;
                 break;
 
             default:

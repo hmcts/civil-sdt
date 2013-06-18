@@ -112,7 +112,8 @@ public class MockWsCreateBulkRequestHandler extends AbstractWsCreateHandler impl
         }
 
         LOGGER.debug ("validate request type matches request content for each request");
-        for(McolRequestType mcolRequest : request.getRequests ().getMcolRequests ().getMcolRequest ()) {
+        for (McolRequestType mcolRequest : request.getRequests ().getMcolRequests ().getMcolRequest ())
+        {
             if ( !isValidRequestType (mcolRequest))
             {
                 return responseFactory.createFailResponse (BulkResponseFailure.INVALID_REQUEST_TYPE, request);
@@ -157,8 +158,8 @@ public class MockWsCreateBulkRequestHandler extends AbstractWsCreateHandler impl
                 valid = (mcolRequestType.getMcolJudgmentWarrant () != null) ? true : false;
                 break;
 
-            case MCOL_CLAIM_UPDATE:
-                valid = (mcolRequestType.getMcolClaimUpdate () != null) ? true : false;
+            case MCOL_CLAIM_STATUS_UPDATE:
+                valid = (mcolRequestType.getMcolClaimStatusUpdate () != null) ? true : false;
                 break;
 
             default:
