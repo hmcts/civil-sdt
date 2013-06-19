@@ -28,7 +28,7 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: agarwals $ */
-package uk.gov.moj.sdt.validators.validation;
+package uk.gov.moj.sdt.validators;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,8 +51,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import uk.gov.moj.sdt.utils.Utilities;
-import uk.gov.moj.sdt.validators.validation.XmlValidationDetails.Result;
-import uk.gov.moj.sdt.validators.validation.api.IXmlValidator;
+import uk.gov.moj.sdt.validators.XmlValidationDetails.Result;
+import uk.gov.moj.sdt.validators.api.IXmlValidator;
 
 /**
  * {@inheritDoc}.

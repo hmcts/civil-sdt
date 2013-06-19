@@ -28,12 +28,13 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation;
+package uk.gov.moj.sdt.validators;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
-import uk.gov.moj.sdt.validators.validation.api.IDateValidator;
+import uk.gov.moj.sdt.validators.api.IDateValidator;
+import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Implementation of DateValidation.
@@ -41,7 +42,7 @@ import uk.gov.moj.sdt.validators.validation.api.IDateValidator;
  * @author Simon Holmes
  * 
  */
-public class DateValidator extends AbstractVisitor implements IDateValidator
+public class DateValidator extends AbstractDomainObjectVisitor implements IDateValidator
 {
 
     /**

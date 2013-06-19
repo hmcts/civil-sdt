@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,59 +24,12 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.validators.validation.api.IDomainObjectVisitor;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
 
 /**
- * Implement visit method, common to all {@link IDomainObjectVisitor}s.
- * 
- * @author Robin Compston
- * 
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public class AbstractVisitor implements IDomainObjectVisitor
-{
-
-    @Override
-    public final void visit (Object object)
-    {
-        // Now we try to invoke the method visit.
-        try
-        {
-            // Get the method appropriate for the {@link IVisitable} being called.
-            Method method = getClass ().getMethod ("visit", new Class[] {object.getClass ()});
-
-            try
-            {
-                // Invoke the appropriate method.
-                method.invoke (this, new Object[] {object});
-            }
-            catch (InvocationTargetException e)
-            {
-                // TODO add error reporting.
-            }
-            catch (IllegalAccessException e)
-            {
-                // TODO add error reporting.
-            }
-        }
-        catch (NoSuchMethodException e)
-        {
-            // TODO add error reporting.
-        }
-    }
-
-    @Override
-    public void visit (BulkCustomer bulkCustomer)
-    {
-        throw new UnsupportedOperationException ("Missing validator implementation - this method should never be called.");
-    }
-}
+package uk.gov.moj.sdt.visitor;

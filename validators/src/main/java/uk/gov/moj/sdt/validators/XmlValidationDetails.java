@@ -28,7 +28,7 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.validators.validation;
+package uk.gov.moj.sdt.validators;
 
 import java.util.List;
 

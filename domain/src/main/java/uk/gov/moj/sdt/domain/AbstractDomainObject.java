@@ -34,7 +34,7 @@ package uk.gov.moj.sdt.domain;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IVisitable;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-import uk.gov.moj.sdt.validators.validation.api.IDomainObjectVisitor;
+import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 
 /**
  * Abstract class for all domain objects.

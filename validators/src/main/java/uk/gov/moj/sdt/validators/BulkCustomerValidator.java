@@ -28,24 +28,34 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation.api;
+package uk.gov.moj.sdt.validators;
 
-import uk.gov.moj.sdt.validators.validation.XmlValidationDetails;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
+import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
- * Interface to XML validation functionality.
+ * Implementation of DateValidation.
  * 
- * @author d301488
+ * @author Simon Holmes
  * 
  */
-public interface IXmlValidator
+public class BulkCustomerValidator extends AbstractDomainObjectVisitor implements IBulkCustomerValidator
 {
 
     /**
-     * Method to validate the xml.
-     * 
-     * @return A XmlValidationDetails object containing SUCCESS/FAIL enum and if fail, error messages.
+     * No-argument Constructor.
      */
-    XmlValidationDetails validateXml ();
+    public BulkCustomerValidator ()
+    {
+    }
+
+    @Override
+    public void visit (BulkCustomer bulkCustomer)
+    {
+        // TODO Do validation of bulk customer.
+        int i = 0;
+        System.out.println (i);
+    }
 
 }

@@ -35,7 +35,8 @@ import junit.framework.TestCase;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 
-import uk.gov.moj.sdt.validators.validation.api.IDateValidator;
+import uk.gov.moj.sdt.validators.DateValidator;
+import uk.gov.moj.sdt.validators.api.IDateValidator;
 
 /**
  * Test class for DateValidation.

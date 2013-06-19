@@ -28,30 +28,15 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation.api;
+package uk.gov.moj.sdt.validators.api;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
 
 /**
- * An interface to implement the visitor pattern.
+ * An interface to provide date validation methods.
  * 
  * @author Simon Holmes
  * 
  */
-public interface IDomainObjectVisitor
+public interface IBulkCustomerValidator
 {
-    /**
-     * Method call by domain object in order to link domain object with {@link IDomainObjectVisitor}.
-     * 
-     * @param object object which visitor is to act upon.
-     */
-    void visit (Object object);
-
-    /**
-     * Visit the domain object.
-     * 
-     * @param bulkCustomer the domain object to be visited.
-     */
-    void visit (BulkCustomer bulkCustomer);
-
 }

@@ -39,6 +39,8 @@ import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
 
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.validators.XmlValidationDetails;
+import uk.gov.moj.sdt.validators.XmlValidator;
 
 /**
  * Unit tests for XmlValidation.

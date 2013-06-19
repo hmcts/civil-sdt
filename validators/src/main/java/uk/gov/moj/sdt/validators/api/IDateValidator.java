@@ -28,33 +28,54 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation;
+package uk.gov.moj.sdt.validators.api;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.validators.validation.api.IBulkCustomerValidator;
+import org.joda.time.LocalDateTime;
 
 /**
- * Implementation of DateValidation.
+ * An interface to provide date validation methods.
  * 
  * @author Simon Holmes
  * 
  */
-public class BulkCustomerValidator extends AbstractVisitor implements IBulkCustomerValidator
+public interface IDateValidator
 {
 
     /**
-     * No-argument Constructor.
+     * Tests if a given date is within two dates, inclusively.
+     * 
+     * @param dateToTest the date that is to be tested.
+     * @param startDate the start date of the range.
+     * @param endDate the end date of the range.
+     * @return TRUE if within date, FALSE if not.
      */
-    public BulkCustomerValidator ()
-    {
-    }
+    boolean isDateWitinRange (LocalDateTime dateToTest, final LocalDateTime startDate, final LocalDateTime endDate);
 
-    @Override
-    public void visit (BulkCustomer bulkCustomer)
-    {
-        // TODO Do validation of bulk customer.
-        int i = 0;
-        System.out.println (i);
-    }
+    /**
+     * 
+     * Tests if a date is BEFORE a given date, inclusively.
+     * 
+     * @param dateToTest the date that is to be tested.
+     * @param endDate the end date of the test.
+     * @return TRUE if before the given date, FALSE if not.
+     */
+    boolean isDateBefore (final LocalDateTime dateToTest, final LocalDateTime endDate);
 
+    /**
+     * Tests if a date is AFTER a given date, inclusively.
+     * 
+     * @param dateToTest the date that is to be tested.
+     * @param startDate the start date of the test.
+     * @return TRUE if after the given date, FALSE if not.
+     */
+    boolean isDateAfter (final LocalDateTime dateToTest, final LocalDateTime startDate);
+
+    /**
+     * Tests if a date is within a given number of days, inclusive of the Xth day.
+     * 
+     * @param dateToTest the date that is to be tested
+     * @param numberOfDays the number of days the date should be within.
+     * @return TRUE if the date is within the last X days, FALSE if it is not.
+     */
+    boolean isDateWitinLastXDays (final LocalDateTime dateToTest, final Integer numberOfDays);
 }
