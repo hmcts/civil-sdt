@@ -52,6 +52,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.validation.XmlValidationDetails.Result;
+import uk.gov.moj.sdt.validators.validation.api.IXmlValidator;
 
 /**
  * {@inheritDoc}.

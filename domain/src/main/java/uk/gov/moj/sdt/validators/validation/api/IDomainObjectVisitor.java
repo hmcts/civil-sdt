@@ -28,34 +28,30 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation;
+package uk.gov.moj.sdt.validators.validation.api;
 
-import org.joda.time.LocalDate;
+import uk.gov.moj.sdt.domain.BulkCustomer;
 
 /**
- * Interface to provide the methods to perform reference and ID validation.
+ * An interface to implement the visitor pattern.
  * 
- * @author d301488
+ * @author Simon Holmes
  * 
  */
-public interface IIdentifierValidator
+public interface IDomainObjectVisitor
 {
+    /**
+     * Method call by domain object in order to link domain object with {@link IDomainObjectVisitor}.
+     * 
+     * @param object object which visitor is to act upon.
+     */
+    void visit (Object object);
 
     /**
-     * Checks that the User Reference doesn't already exist and is valid.
+     * Visit the domain object.
      * 
-     * @param reference the incoming reference number to check.
-     * @param dateTimeSubmitted Check reference is within the retention period.
-     * @return TRUE is not a duplicate, FALSE if a duplicate.
+     * @param bulkCustomer the domain object to be visited.
      */
-    boolean isUserReferenceUnique (String reference, LocalDate dateTimeSubmitted);
-
-    /**
-     * Checks that the SDT Customer Id is valid.
-     * 
-     * @param sdtCustomerId the SDT customer Id
-     * @return TRUE if it is a valid Id, FALSE if not.
-     */
-    boolean isSdtCustomerIdValid (String sdtCustomerId);
+    void visit (BulkCustomer bulkCustomer);
 
 }

@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,95 +24,59 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
+ * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
+ * $LastChangedRevision: 16414 $
+ * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
+ * $LastChangedBy: holmessm $ */
+package uk.gov.moj.sdt.validators.validation;
 
-package uk.gov.moj.sdt.domain;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.domain.api.IVisitable;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.validators.validation.api.IDomainObjectVisitor;
 
 /**
- * Abstract class for all domain objects.
+ * Implement visit method, common to all {@link IDomainObjectVisitor}s.
  * 
  * @author Robin Compston
  * 
  */
-public abstract class AbstractDomainObject implements IDomainObject, IVisitable
+public class AbstractVisitor implements IDomainObjectVisitor
 {
 
-    /**
-     * Primary key.
-     */
-    private int id;
-
-    /**
-     * Hibernate version number.
-     */
-    private int version;
-
-    /**
-     * Constructor for {@link AbstractDomainObject}.
-     */
-    public AbstractDomainObject ()
+    @Override
+    public final void visit (Object object)
     {
-        super ();
+        // Now we try to invoke the method visit.
+        try
+        {
+            // Get the method appropriate for the {@link IVisitable} being called.
+            Method method = getClass ().getMethod ("visit", new Class[] {object.getClass ()});
 
-        // SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
+            try
+            {
+                // Invoke the appropriate method.
+                method.invoke (this, new Object[] {object});
+            }
+            catch (InvocationTargetException e)
+            {
+                // TODO add error reporting.
+            }
+            catch (IllegalAccessException e)
+            {
+                // TODO add error reporting.
+            }
+        }
+        catch (NoSuchMethodException e)
+        {
+            // TODO add error reporting.
+        }
     }
 
-    /**
-     * When garbage collected, decrement count of domain objects in statistics.
-     */
-    // CHECKSTYLE:OFF
-    public void finalize ()
-    // CHECKSTYLE:ON
+    @Override
+    public void visit (BulkCustomer bulkCustomer)
     {
-        SdtMetricsMBean.getSdtMetrics ().downDomainObjectsCount ();
-    }
-
-    /**
-     * Get primary key.
-     * 
-     * @return primary key
-     */
-    public int getId ()
-    {
-        return id;
-    }
-
-    /**
-     * Set primary key.
-     * 
-     * @param id primary key
-     */
-    public void setId (final int id)
-    {
-        this.id = id;
-    }
-
-    /**
-     * Get Hibernate version id.
-     * 
-     * @return Hibernate version id
-     */
-    public int getVersion ()
-    {
-        return version;
-    }
-
-    /**
-     * Allow visitor to act upon this object.
-     * 
-     * @param visitor visitor that is to act on this object.
-     */
-    public void accept (final IDomainObjectVisitor visitor)
-    {
-        // Call any visitor, passing a reference to this class so that it can act on this class.
-        visitor.visit (this);
+        throw new UnsupportedOperationException ("Missing validator implementation - this method should never be called.");
     }
 }

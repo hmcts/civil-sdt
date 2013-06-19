@@ -28,54 +28,34 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation;
+package uk.gov.moj.sdt.validators.validation.api;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.LocalDate;
 
 /**
- * An interface to provide date validation methods.
+ * Interface to provide the methods to perform reference and ID validation.
  * 
- * @author Simon Holmes
+ * @author d301488
  * 
  */
-public interface IDateValidator
+public interface IIdentifierValidator
 {
 
     /**
-     * Tests if a given date is within two dates, inclusively.
+     * Checks that the User Reference doesn't already exist and is valid.
      * 
-     * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the range.
-     * @param endDate the end date of the range.
-     * @return TRUE if within date, FALSE if not.
+     * @param reference the incoming reference number to check.
+     * @param dateTimeSubmitted Check reference is within the retention period.
+     * @return TRUE is not a duplicate, FALSE if a duplicate.
      */
-    boolean isDateWitinRange (LocalDateTime dateToTest, final LocalDateTime startDate, final LocalDateTime endDate);
+    boolean isUserReferenceUnique (String reference, LocalDate dateTimeSubmitted);
 
     /**
+     * Checks that the SDT Customer Id is valid.
      * 
-     * Tests if a date is BEFORE a given date, inclusively.
-     * 
-     * @param dateToTest the date that is to be tested.
-     * @param endDate the end date of the test.
-     * @return TRUE if before the given date, FALSE if not.
+     * @param sdtCustomerId the SDT customer Id
+     * @return TRUE if it is a valid Id, FALSE if not.
      */
-    boolean isDateBefore (final LocalDateTime dateToTest, final LocalDateTime endDate);
+    boolean isSdtCustomerIdValid (String sdtCustomerId);
 
-    /**
-     * Tests if a date is AFTER a given date, inclusively.
-     * 
-     * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the test.
-     * @return TRUE if after the given date, FALSE if not.
-     */
-    boolean isDateAfter (final LocalDateTime dateToTest, final LocalDateTime startDate);
-
-    /**
-     * Tests if a date is within a given number of days, inclusive of the Xth day.
-     * 
-     * @param dateToTest the date that is to be tested
-     * @param numberOfDays the number of days the date should be within.
-     * @return TRUE if the date is within the last X days, FALSE if it is not.
-     */
-    boolean isDateWitinLastXDays (final LocalDateTime dateToTest, final Integer numberOfDays);
 }

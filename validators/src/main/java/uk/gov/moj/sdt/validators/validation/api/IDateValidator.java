@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,95 +24,58 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
+ * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
+ * $LastChangedRevision: 16414 $
+ * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
+ * $LastChangedBy: holmessm $ */
+package uk.gov.moj.sdt.validators.validation.api;
 
-package uk.gov.moj.sdt.domain;
-
-import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.domain.api.IVisitable;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-import uk.gov.moj.sdt.validators.validation.api.IDomainObjectVisitor;
+import org.joda.time.LocalDateTime;
 
 /**
- * Abstract class for all domain objects.
+ * An interface to provide date validation methods.
  * 
- * @author Robin Compston
+ * @author Simon Holmes
  * 
  */
-public abstract class AbstractDomainObject implements IDomainObject, IVisitable
+public interface IDateValidator
 {
 
     /**
-     * Primary key.
-     */
-    private int id;
-
-    /**
-     * Hibernate version number.
-     */
-    private int version;
-
-    /**
-     * Constructor for {@link AbstractDomainObject}.
-     */
-    public AbstractDomainObject ()
-    {
-        super ();
-
-        // SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
-    }
-
-    /**
-     * When garbage collected, decrement count of domain objects in statistics.
-     */
-    // CHECKSTYLE:OFF
-    public void finalize ()
-    // CHECKSTYLE:ON
-    {
-        SdtMetricsMBean.getSdtMetrics ().downDomainObjectsCount ();
-    }
-
-    /**
-     * Get primary key.
+     * Tests if a given date is within two dates, inclusively.
      * 
-     * @return primary key
+     * @param dateToTest the date that is to be tested.
+     * @param startDate the start date of the range.
+     * @param endDate the end date of the range.
+     * @return TRUE if within date, FALSE if not.
      */
-    public int getId ()
-    {
-        return id;
-    }
+    boolean isDateWitinRange (LocalDateTime dateToTest, final LocalDateTime startDate, final LocalDateTime endDate);
 
     /**
-     * Set primary key.
      * 
-     * @param id primary key
+     * Tests if a date is BEFORE a given date, inclusively.
+     * 
+     * @param dateToTest the date that is to be tested.
+     * @param endDate the end date of the test.
+     * @return TRUE if before the given date, FALSE if not.
      */
-    public void setId (final int id)
-    {
-        this.id = id;
-    }
+    boolean isDateBefore (final LocalDateTime dateToTest, final LocalDateTime endDate);
 
     /**
-     * Get Hibernate version id.
+     * Tests if a date is AFTER a given date, inclusively.
      * 
-     * @return Hibernate version id
+     * @param dateToTest the date that is to be tested.
+     * @param startDate the start date of the test.
+     * @return TRUE if after the given date, FALSE if not.
      */
-    public int getVersion ()
-    {
-        return version;
-    }
+    boolean isDateAfter (final LocalDateTime dateToTest, final LocalDateTime startDate);
 
     /**
-     * Allow visitor to act upon this object.
+     * Tests if a date is within a given number of days, inclusive of the Xth day.
      * 
-     * @param visitor visitor that is to act on this object.
+     * @param dateToTest the date that is to be tested
+     * @param numberOfDays the number of days the date should be within.
+     * @return TRUE if the date is within the last X days, FALSE if it is not.
      */
-    public void accept (final IDomainObjectVisitor visitor)
-    {
-        // Call any visitor, passing a reference to this class so that it can act on this class.
-        visitor.visit (this);
-    }
+    boolean isDateWitinLastXDays (final LocalDateTime dateToTest, final Integer numberOfDays);
 }

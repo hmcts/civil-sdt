@@ -30,10 +30,8 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators.validation;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-
-import uk.gov.moj.sdt.validators.validation.api.IDateValidator;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.validators.validation.api.IBulkCustomerValidator;
 
 /**
  * Implementation of DateValidation.
@@ -41,63 +39,22 @@ import uk.gov.moj.sdt.validators.validation.api.IDateValidator;
  * @author Simon Holmes
  * 
  */
-public class DateValidator extends AbstractVisitor implements IDateValidator
+public class BulkCustomerValidator extends AbstractVisitor implements IBulkCustomerValidator
 {
 
     /**
      * No-argument Constructor.
      */
-    public DateValidator ()
+    public BulkCustomerValidator ()
     {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean isDateWitinRange (final LocalDateTime dateToTest, final LocalDateTime startDate,
-                                     final LocalDateTime endDate)
+    public void visit (BulkCustomer bulkCustomer)
     {
-        // If the dateToTest is after the startDate and before the endDate, or on the same date as either, return true.
-        return (dateToTest.toLocalDate ().isAfter (startDate.toLocalDate ()) && dateToTest.toLocalDate ().isBefore (
-                endDate.toLocalDate ())) ||
-                dateToTest.toLocalDate ().isEqual (startDate.toLocalDate ()) ||
-                dateToTest.toLocalDate ().isEqual (endDate.toLocalDate ());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isDateBefore (final LocalDateTime dateToTest, final LocalDateTime endDate)
-    {
-        // If the dateToTest is before or on the same date to the start date, return true.
-        return dateToTest.toLocalDate ().isBefore (endDate.toLocalDate ()) ||
-                dateToTest.toLocalDate ().isEqual (endDate.toLocalDate ());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isDateAfter (final LocalDateTime dateToTest, final LocalDateTime startDate)
-    {
-        // If the dateToTest is after or on the same date, return true.
-        return dateToTest.toLocalDate ().isAfter (startDate.toLocalDate ()) ||
-                dateToTest.toLocalDate ().isEqual (startDate.toLocalDate ());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isDateWitinLastXDays (final LocalDateTime dateToTest, final Integer numberOfDays)
-    {
-        // Take todays date and remove numberOfDays from it.
-        final LocalDate adjustedDate = new LocalDate ().minusDays (numberOfDays);
-
-        // If the adjusted date is before or equal to the dateToTest, it must be within X number of days.
-        return adjustedDate.isBefore (dateToTest.toLocalDate ()) || adjustedDate.isEqual (dateToTest.toLocalDate ());
+        // TODO Do validation of bulk customer.
+        int i = 0;
+        System.out.println (i);
     }
 
 }

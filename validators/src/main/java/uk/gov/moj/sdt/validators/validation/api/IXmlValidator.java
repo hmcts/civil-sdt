@@ -28,7 +28,9 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.validation;
+package uk.gov.moj.sdt.validators.validation.api;
+
+import uk.gov.moj.sdt.validators.validation.XmlValidationDetails;
 
 /**
  * Interface to XML validation functionality.
