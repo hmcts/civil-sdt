@@ -36,6 +36,10 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +65,60 @@ public final class VisitableTreeWalker
      */
     private VisitableTreeWalker ()
     {
+    }
 
+    /**
+     * Walk a list possibly containing objects which implement the {@link IVisitable} interface applying the
+     * corresponding {@link IVisitor} to each of them.
+     * 
+     * @param target the list to walk.
+     * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
+     *            class name of the visitor class.
+     */
+    public static void walkList (final List<?> target, final String visitorSuffix)
+    {
+        // Iterate over list and walk its elements.
+        for (int i = 0; i < target.size (); i++)
+        {
+            walkTree (target.get (i), visitorSuffix);
+        }
+    }
+
+    /**
+     * Walk a map possibly containing objects which implement the {@link IVisitable} interface applying the
+     * corresponding {@link IVisitor} to each of them.
+     * 
+     * @param target the map to walk.
+     * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
+     *            class name of the visitor class.
+     */
+    public static void walkMap (final Map<?, ?> target, final String visitorSuffix)
+    {
+        // Iterate over map and walk its elements.
+        final Set<?> keys = target.keySet ();
+        for (final Iterator<?> iter = keys.iterator (); iter.hasNext ();)
+        {
+            final Object key = iter.next ();
+            walkTree (target.get (key), visitorSuffix);
+        }
+    }
+
+    /**
+     * Walk a set possibly containing objects which implement the {@link IVisitable} interface applying the
+     * corresponding {@link IVisitor} to each of them.
+     * 
+     * @param target the set to walk.
+     * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
+     *            class name of the visitor class.
+     */
+    public static void walkSet (final Set<?> target, final String visitorSuffix)
+    {
+        // Iterate over map and walk its elements.
+        for (final Iterator<?> iter = target.iterator (); iter.hasNext ();)
+        {
+            final Object object = iter.next ();
+            walkTree (object, visitorSuffix);
+        }
     }
 
     /**
@@ -103,7 +160,19 @@ public final class VisitableTreeWalker
             {
                 method = propertyDescriptor.getReadMethod ();
                 final Object nestedObject = method.invoke (target, (Object[]) null);
-                if (nestedObject != null && IVisitable.class.isAssignableFrom (nestedObject.getClass ()))
+                if (target instanceof List<?>)
+                {
+                    walkList ((List<?>) nestedObject, visitorSuffix);
+                }
+                else if (target instanceof Map<?, ?>)
+                {
+                    walkMap ((Map<?, ?>) nestedObject, visitorSuffix);
+                }
+                else if (target instanceof Set<?>)
+                {
+                    walkSet ((Set<?>) nestedObject, visitorSuffix);
+                }
+                else if (nestedObject != null && IVisitable.class.isAssignableFrom (nestedObject.getClass ()))
                 {
                     walkTree (nestedObject, visitorSuffix);
                 }
