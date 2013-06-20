@@ -28,23 +28,21 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor;
-
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
+package uk.gov.moj.sdt.utils.visitor.api;
 
 /**
- * Implement visit method, common to all {@link IDomainObjectVisitor}s.
+ * An interface to implement the visitor pattern.
  * 
- * @author Robin Compston
+ * @author Simon Holmes
  * 
  */
-public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor
+public interface IVisitor
 {
-    @Override
-    public void visit (final BulkCustomer bulkCustomer)
-    {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
-    }
+    /**
+     * Method call to link {@link IVisitable} with {@link IVisitor}.
+     * 
+     * @param object object which visitor is to act upon.
+     */
+    void visit (Object object);
+
 }

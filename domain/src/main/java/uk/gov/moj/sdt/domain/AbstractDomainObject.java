@@ -32,9 +32,9 @@
 package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.domain.api.IVisitable;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
+import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
+import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
  * Abstract class for all domain objects.
@@ -110,7 +110,7 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
      * 
      * @param visitor visitor that is to act on this object.
      */
-    public void accept (final IDomainObjectVisitor visitor)
+    public void accept (final IVisitor visitor)
     {
         // Call any visitor, passing a reference to this class so that it can act on this class.
         visitor.visit (this);

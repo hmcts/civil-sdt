@@ -54,8 +54,7 @@ public class BulkCustomerValidator extends AbstractDomainObjectVisitor implement
     public void visit (BulkCustomer bulkCustomer)
     {
         // TODO Do validation of bulk customer.
-        int i = 0;
-        System.out.println (i);
+        System.out.println ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");
     }
 
 }

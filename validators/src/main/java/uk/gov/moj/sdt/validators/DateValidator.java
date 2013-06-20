@@ -34,7 +34,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.validators.api.IDateValidator;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Implementation of DateValidation.
@@ -42,7 +41,7 @@ import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
  * @author Simon Holmes
  * 
  */
-public class DateValidator extends AbstractDomainObjectVisitor implements IDateValidator
+public class DateValidator implements IDateValidator
 {
 
     /**

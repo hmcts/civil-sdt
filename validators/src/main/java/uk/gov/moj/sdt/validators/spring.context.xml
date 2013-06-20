@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<!-- Load all IValidators to force their constructors to run so that they 
+		register themselves in map. -->
+
+	<bean id="uk.gov.moj.sdt.validators.api.IBulkCustomerValidator"
+		class="uk.gov.moj.sdt.validators.BulkCustomerValidator">
+	</bean>
+
+	<bean id="uk.gov.moj.sdt.validators.api.IDateValidator" class="uk.gov.moj.sdt.validators.DateValidator">
+	</bean>
+
+</beans>

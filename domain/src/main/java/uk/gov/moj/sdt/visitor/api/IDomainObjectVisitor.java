@@ -41,13 +41,6 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 public interface IDomainObjectVisitor
 {
     /**
-     * Method call by domain object in order to link domain object with {@link IDomainObjectVisitor}.
-     * 
-     * @param object object which visitor is to act upon.
-     */
-    void visit (Object object);
-
-    /**
      * Visit the domain object.
      * 
      * @param bulkCustomer the domain object to be visited.

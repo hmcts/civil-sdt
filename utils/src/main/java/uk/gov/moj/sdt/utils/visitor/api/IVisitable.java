@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,27 +24,25 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor;
+ * $Id: IWsCreateHandler.java 16467 2013-06-07 17:09:50Z agarwals $
+ * $LastChangedRevision: 16467 $
+ * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
+ * $LastChangedBy: agarwals $ */
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
+package uk.gov.moj.sdt.utils.visitor.api;
+
 
 /**
- * Implement visit method, common to all {@link IDomainObjectVisitor}s.
+ * Marker interface for domain objects.
  * 
- * @author Robin Compston
- * 
+ * @author Robin Compston.
  */
-public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor
+public interface IVisitable
 {
-    @Override
-    public void visit (final BulkCustomer bulkCustomer)
-    {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
-    }
+    /**
+     * Accept visitor in order to implement visitor pattern.
+     * 
+     * @param visitor the visitor which is going to to act on this {@link IVisitable}.
+     */
+    void accept (IVisitor visitor);
 }

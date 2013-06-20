@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.domain;
 
+
 /**
  * Bulk Customer Information manually set up and maintained
  * for the SDT application for each registered Target Application.
