@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.visitor.api;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
  * An interface to implement the visitor pattern.
@@ -38,7 +39,7 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
  * @author Simon Holmes
  * 
  */
-public interface IDomainObjectVisitor
+public interface IDomainObjectVisitor extends IVisitor
 {
     /**
      * Visit the domain object.
