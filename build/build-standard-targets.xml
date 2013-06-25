@@ -48,7 +48,7 @@
 	</target>
 
 	<!-- Delete the build and distribution folders -->
-	<target name="clean" depends="clean-src-gen" description="Cleanup the distribution dirs">
+	<target name="clean" description="Cleanup the distribution dirs">
 		<delete dir="${classes.dir}" />
 		<delete dir="${target.dir}" />
 		<delete dir="${test-results.dir}" />
@@ -93,7 +93,7 @@
 		</if>
 	</target>
 
-	<target name="generate-from-wsdl" if="wsdl.exists" depends="init" description="Generate CXF files from wsdl">
+	<target name="generate-from-wsdl" if="wsdl.exists" depends="clean-src-gen" description="Generate CXF files from wsdl">
 		<!-- TODO - find way of collecting up all wsdl files using wild card -->
 		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
 			<arg value="-d" />
@@ -169,7 +169,7 @@
 	</target>
 
 	<!-- Compile all src/main/java source -->
-	<target name="compile" depends="generate-from-wsdl, -compile-src-gen, -compile-src, -compile-grails" description="Compile all directories">
+	<target name="compile" depends="-compile-src-gen, -compile-src, -compile-grails" description="Compile all directories">
 		<if>
 			<available file="${src.dir}" type="dir" />
 			<then>

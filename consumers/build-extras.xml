@@ -126,6 +126,7 @@
     <target name="-copy-3rd-party-lib" description="Copy jars from 3rd party library">
         <copy todir="${consumers.target.dir}/WEB-INF/lib" overwrite="true">
 			<fileset dir="${3rd-party.spring3.dir}" casesensitive="false">
+                <include name="${joda-time.jar}" />
 				<include name="${junit.jar}" />
 				<include name="${org.springframework.aop.jar}" />
 				<include name="${org.springframework.asm.jar}" />
@@ -208,7 +209,6 @@
                 <include name="${jms.jar}" />
                 <include name="${jmxtools.jar}" />
                 <include name="${joda-time-hibernate.jar}" />
-                <include name="${joda-time.jar}" />
                 <include name="${jstl.jar}" />
                 <include name="${jta.jar}" />
                 <include name="${jug.jar}" />

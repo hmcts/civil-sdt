@@ -190,6 +190,13 @@
         </subant>
     </target>
 
+    <!-- Generate source code from WSDL -->
+    <target name="generate-from-wsdl" description="Generate code from WSDL for all projects">
+        <subant antfile="build.xml" target="generate-from-wsdl" inheritrefs="true" inheritAll="false">
+            <filelist refid="all-project-list" />
+        </subant>
+    </target>
+
     <!-- Run diagnostics report -->
     <target name="diagnostics" depends="init" description="Output diagnostics of ANT">
         <diagnostics />
