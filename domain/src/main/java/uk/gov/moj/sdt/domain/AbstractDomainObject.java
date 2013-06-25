@@ -105,11 +105,7 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
         return version;
     }
 
-    /**
-     * Allow visitor to act upon this object.
-     * 
-     * @param visitor visitor that is to act on this object.
-     */
+    @Override
     public void accept (final IVisitor visitor)
     {
         // Call any visitor, passing a reference to this class so that it can act on this class.

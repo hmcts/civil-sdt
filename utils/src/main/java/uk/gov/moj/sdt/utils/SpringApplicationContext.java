@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,18 +24,54 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: IWsCreateHandler.java 16467 2013-06-07 17:09:50Z agarwals $
- * $LastChangedRevision: 16467 $
- * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
- * $LastChangedBy: agarwals $ */
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.utils;
 
-package uk.gov.moj.sdt.domain.api;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
- * Marker interface for domain objects.
+ * A utility class to hold give access to the Spring ApplicationContext instance.
  * 
  * @author Robin Compston
+ * 
  */
-public interface IDomainObject
+public class SpringApplicationContext implements ApplicationContextAware
 {
+    /**
+     * Static property to hold application context.
+     */
+    private static ApplicationContext context;
+    
+    /**
+     * This method is called from within the ApplicationContext once it has
+     * finished starting up; it will stick a reference to itself into this bean.
+     * 
+     * @param context a reference to the ApplicationContext.
+     * @throws BeansException trouble with beans
+     */
+    public void setApplicationContext (final ApplicationContext context) throws BeansException
+    {
+        SpringApplicationContext.context = context;
+    }
+
+    /**
+     * This is about the same as context.getBean("beanName"), except it has its
+     * own static handle to the Spring context, so calling this method statically
+     * will give access to the beans by name in the Spring application context.
+     * As in the context.getBean("beanName") call, the caller must cast to the
+     * appropriate target class. If the bean does not exist, then a Runtime error
+     * will be thrown.
+     * 
+     * @param beanName the name of the bean to get.
+     * @return an Object reference to the named bean.
+     */
+    public static Object getBean (final String beanName)
+    {
+        return SpringApplicationContext.context.getBean (beanName);
+    }
 }

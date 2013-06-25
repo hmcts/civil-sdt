@@ -34,9 +34,9 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
- * An interface to implement the visitor pattern.
+ * An interface to implement the visitor pattern for visitor capable of visiting a domain object.
  * 
- * @author Simon Holmes
+ * @author Robin Compston
  * 
  */
 public interface IDomainObjectVisitor extends IVisitor
