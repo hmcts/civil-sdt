@@ -88,39 +88,48 @@ public abstract class AbstractVisitor implements IVisitor
         if (visitor == null)
         {
             LOG.error ("Visitor [" + key +
-                    "] not registered in allVisitors map. Make sure this visitor is created as a Spring bean.");
-            throw new UnsupportedOperationException ("Visitor [" + key + "] not registered in allVisitors map.");
+                    "] not registered in allVisitors map. Make sure this visitor is created as a Spring bean.",
+                    new UnsupportedOperationException (""));
         }
 
         return visitor;
     }
 
     @Override
-    public final void visit (final Object object)
+    public final void visit (final Object visitable)
     {
+        // Class of target bean.
+        Class<?> clazz = null;
+
         // Now we try to invoke the method visit.
         try
         {
-            // Get the method appropriate for the {@link IVisitable} being called.
-            final Method method = getClass ().getMethod ("visit", new Class[] {object.getClass ()});
+            // Get class of visitable in order to find method signature.
+            clazz = visitable.getClass ();
+
+            // Get the method appropriate for the visit method to call which takes a parameter of the target bean type.
+            final Method method = getClass ().getMethod ("visit", new Class[] {clazz});
 
             try
             {
-                // Invoke the appropriate method.
-                method.invoke (this, new Object[] {object});
+                // Invoke the appropriate specific visit method in this IVisitor.
+                method.invoke (this, new Object[] {visitable});
             }
             catch (final InvocationTargetException e)
             {
-                // TODO add error reporting.
+                LOG.error ("Cannot find visit method for target bean [" + clazz.getName () + "].", e);
+                throw new UnsupportedOperationException (e);
             }
             catch (final IllegalAccessException e)
             {
-                // TODO add error reporting.
+                LOG.error ("Cannot find visit method for target bean [" + clazz.getName () + "].", e);
+                throw new UnsupportedOperationException (e);
             }
         }
         catch (final NoSuchMethodException e)
         {
-            // TODO add error reporting.
+            LOG.error ("Cannot find visit method for target bean [" + clazz.getName () + "].", e);
+            throw new UnsupportedOperationException (e);
         }
     }
 }
