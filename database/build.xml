@@ -1,0 +1,140 @@
+<!-- ===========================================================================
+ = SDT
+ =
+ = Name:    	build.xml
+ = Description: Build file for a specific project.
+ =
+ = $Revision: $
+ = $Author: $
+ = $Date: $
+ = $URL: $
+ =
+ = Copyright Logica UK Ltd. 2013
+ =========================================================================== -->
+
+<project name="database" basedir="." default="build-all-databases">
+
+	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
+	<import file="../build/build-setup-env.xml" />
+
+	<!-- General initialisation - ensure build directory (for classes) and dist 
+		directory (for jar) are present if they do not already exist -->
+	<target name="init" description="Create the distribution dirs">
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${lib.app.dir}" />
+		<mkdir dir="${logs.dir}" />
+	</target>
+
+	<!-- Delete the build and distribution folders -->
+	<target name="clean" description="Cleanup the build and distribution dirs">
+		<delete dir="${target.dir}" />
+		<delete dir="${lib.app.dir}" />
+		<delete dir="${logs.dir}" />
+	</target>
+
+	<!-- Copies <any name>.template files to <any name> substituting any matching properties in memory -->
+	<target name="configure-property-files" description="Copies files in the project with the pattern '*.template' to '*', dropping the .template suffix">
+		<echo level="info" message="Templatising all configuration files" />
+		<copy todir="${basedir}" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="**/*.template" />
+			</fileset>
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+			</filterchain>
+			<mapper type="glob" from="*.template" to="*" />
+		</copy>
+	</target>
+
+	<!-- Build zip file -->
+	<target name="dist" description="Generate the distribution">
+	</target>
+
+	<!-- Dummy target - nothing to do but satisfy higher level build file -->
+	<target name="dist-tests" description="Generate the test distribution">
+	</target>
+
+	<!-- Dummy target - nothing to do but satisfy higher level build file -->
+	<target name="run-unit-tests" description="Run unit tests">
+	</target>
+
+	<!-- Dummy target - nothing to do but satisfy higher level build file -->
+	<target name="run-integration-tests" description="Run integration tests">
+	</target>
+
+	<!-- Dummy target - nothing to do but satisfy higher level build file -->
+	<target name="run-end-to-end-tests" description="Run end-to-end tests">
+	</target>
+
+	<!-- Run sqlplus script with optional parameters -->
+	<target name="-run-sql" description="This task runs an sqlplus script">
+		<echo level="info" message="Running: sqlplus -SL ${db.sys.user}/password@${db.sid} as sysdba ${script} ${param1} ${param2} ${param3}" />
+		<exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-name}.log">
+			<arg value="-SL" />
+			<arg value="${db.sys.user}/${db.system.pass}@${db.sid}" />
+			<arg value="as" />
+			<arg value="sysdba" />
+			<arg value="@${script}" />
+			<arg value="${param1}" />
+			<arg value="${param2}" />
+			<arg value="${param3}" />
+		</exec>
+
+		<fail message="An error occurred while running sqlplus script - see logs/${script-type}/${script-name}.log for details.">
+			<condition>
+				<not>
+					<equals arg1="${sql.result}" arg2="0" />
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+	<!-- Run sqlldr script with optional parameters -->
+	<target name="-run-sqlldr" description="This task runs an sqlldr script">
+		<echo level="info" message="Running (from ${script-dir}): sqlldr userid=${db.system.user}/password@${db.sid} bad=${script-name}.bad control=${script-name}.ctl data=${script-name}.csv skip=1 errors=0 log=${orig_working_dir}/logs/${script-type}/${script-name}.log" />
+		<exec executable="sqlldr" resultproperty="sql.result" failonerror="true" dir="${script-dir}" output="logs/${script-name}.log">
+			<arg value="userid=${db.system.user}/${db.system.pass}@${db.sid}" />
+			<arg value="bad=${script-name}.bad" />
+			<arg value="control=${script-name}.ctl" />
+			<arg value="data=${script-name}.csv" />
+			<arg value="skip=1" />
+			<arg value="errors=0" />
+			<arg value="log=${orig_working_dir}/logs/live/mcol.card_scheme.log" />
+		</exec>
+
+		<fail message="An error occurred while running sqlldr - see logs/${script-type}/${script-name}.log for details.">
+			<condition>
+				<not>
+					<equals arg1="${sql.result}" arg2="0" />
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+	<!-- build live database -->
+	<target name="build-database" depends="init" description="This task runs the database build scripts">
+		<delete dir="${logs.dir}" />
+		<mkdir dir="${logs.dir}" />
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="install" />
+			<param name="script" value="ddl/install.sql" />
+			<param name="param1" value="" />
+			<param name="param2" value="" />
+			<param name="param3" value="" />
+		</antcall>
+	</target>
+
+	<target name="upgrade-database" depends="init" description="This task runs the database migration scripts">
+	</target>
+
+	<!-- Build all databases  -->
+	<target name="build-all-databases" depends="build-database, upgrade-database" description="Generate the database schema">
+	</target>
+
+	<!-- Calls extra targets required by this project. -->
+	<target name="extras" depends="" description="Run extra targets for this project">
+		<echo level="info" message="Running extra targets for project: ${ant.project.name}" />
+	</target>
+
+</project>
