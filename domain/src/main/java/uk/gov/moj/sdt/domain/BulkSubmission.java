@@ -35,6 +35,8 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+
 /**
  * For a Submit Bulk Request, the SDT application records the
  * Bulk Submissions detail when processing a Bulk Request.
@@ -48,7 +50,7 @@ public class BulkSubmission extends AbstractDomainObject
     /**
      * Bulk customer.
      */
-    private BulkCustomer bulkCustomer;
+    private IBulkCustomer bulkCustomer;
 
     /**
      * The target application that SDT routes the Bulk Request onto for subsequent processing.
@@ -116,7 +118,7 @@ public class BulkSubmission extends AbstractDomainObject
      * 
      * @return bulk customer
      */
-    public BulkCustomer getBulkCustomer ()
+    public IBulkCustomer getBulkCustomer ()
     {
         return bulkCustomer;
     }
@@ -126,7 +128,7 @@ public class BulkSubmission extends AbstractDomainObject
      * 
      * @param bulkCustomer bulk customer
      */
-    public void setBulkCustomer (final BulkCustomer bulkCustomer)
+    public void setBulkCustomer (final IBulkCustomer bulkCustomer)
     {
         this.bulkCustomer = bulkCustomer;
     }

@@ -38,4 +38,31 @@ package uk.gov.moj.sdt.domain.api;
  */
 public interface IDomainObject
 {
+    /**
+     * Get primary key.
+     * 
+     * @return primary key
+     */
+    int getId ();
+
+    /**
+     * Set primary key.
+     * 
+     * @param id primary key
+     */
+    void setId (final int id);
+
+    /**
+     * Get Hibernate version id.
+     * 
+     * @return Hibernate version id
+     */
+    int getVersion ();
+    
+    /**
+     * Get the business interface of this object.
+     * 
+     * @return business interface of this domain object.
+     */
+    Class<?> getBusinessInterfaceType ();
 }

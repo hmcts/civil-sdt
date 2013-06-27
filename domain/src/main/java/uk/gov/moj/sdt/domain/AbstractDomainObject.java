@@ -75,31 +75,19 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
         SdtMetricsMBean.getSdtMetrics ().downDomainObjectsCount ();
     }
 
-    /**
-     * Get primary key.
-     * 
-     * @return primary key
-     */
+    @Override
     public int getId ()
     {
         return id;
     }
 
-    /**
-     * Set primary key.
-     * 
-     * @param id primary key
-     */
+    @Override
     public void setId (final int id)
     {
         this.id = id;
     }
 
-    /**
-     * Get Hibernate version id.
-     * 
-     * @return Hibernate version id
-     */
+    @Override
     public int getVersion ()
     {
         return version;
@@ -110,5 +98,14 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     {
         // Call any visitor, passing a reference to this class so that it can act on this class.
         visitor.visit (this);
+    }
+    
+    /*
+     * This implementation assumes the business interface is the first declared interface.
+     */
+    @Override
+    public Class<?> getBusinessInterfaceType ()
+    {
+        return this.getClass ().getInterfaces ()[0];
     }
 }

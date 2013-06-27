@@ -30,7 +30,7 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.visitor;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 
 /**
@@ -42,7 +42,7 @@ import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor
 {
     @Override
-    public void visit (final BulkCustomer bulkCustomer)
+    public void visit (final IBulkCustomer bulkCustomer)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");

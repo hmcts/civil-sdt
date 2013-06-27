@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+
 /**
  * Bulk customer application.
  * 
@@ -42,7 +44,7 @@ public class BulkCustomerApplication extends AbstractDomainObject
     /**
      * Bulk customer.
      */
-    private BulkCustomer bulkCustomer;
+    private IBulkCustomer bulkCustomer;
 
     /**
      * Target Application that the Bulk Customer has been set up to submit messages to.
@@ -59,7 +61,7 @@ public class BulkCustomerApplication extends AbstractDomainObject
      * 
      * @return bulk customer
      */
-    public BulkCustomer getBulkCustomer ()
+    public IBulkCustomer getBulkCustomer ()
     {
         return bulkCustomer;
     }
@@ -69,7 +71,7 @@ public class BulkCustomerApplication extends AbstractDomainObject
      * 
      * @param bulkCustomer bulk customer
      */
-    public void setBulkCustomer (final BulkCustomer bulkCustomer)
+    public void setBulkCustomer (final IBulkCustomer bulkCustomer)
     {
         this.bulkCustomer = bulkCustomer;
     }

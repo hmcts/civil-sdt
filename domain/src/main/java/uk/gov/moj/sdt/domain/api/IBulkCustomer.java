@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,28 +24,62 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
 
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
+package uk.gov.moj.sdt.domain.api;
 
 /**
- * An interface to implement the visitor pattern for visitor capable of visiting a domain object.
+ * Interface for all classes implementing {@link IBulkCustomer}.
  * 
- * @author Robin Compston
- * 
+ * @author Robin Compston.
+ *
  */
-public interface IDomainObjectVisitor extends IVisitor
+public interface IBulkCustomer
 {
+
     /**
-     * Visit the domain object.
+     * Get Customer case code.
      * 
-     * @param bulkCustomer the domain object to be visited.
+     * @return customer case code
      */
-    void visit (IBulkCustomer bulkCustomer);
+    String getCustomerCaseCode ();
+
+    /**
+     * Set customer case code.
+     * 
+     * @param customerCaseCode customer case code
+     */
+    void setCustomerCaseCode (final String customerCaseCode);
+
+    /**
+     * Get SDT customer id.
+     * 
+     * @return SDT customer id
+     */
+    int getSdtCustomerId ();
+
+    /**
+     * Set SDT customer id.
+     * 
+     * @param sdtCustomerId SDT customer id
+     */
+    void setSdtCustomerId (final int sdtCustomerId);
+
+    /**
+     * Get customer identifier.
+     * 
+     * @return customer identifier
+     */
+    int getCustomerIdentifier ();
+
+    /**
+     * Set customer identifier.
+     * 
+     * @param customerIdentifier customer identifier
+     */
+    void setCustomerIdentifier (final int customerIdentifier);
 
 }

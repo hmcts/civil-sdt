@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+
 
 /**
  * Bulk Customer Information manually set up and maintained
@@ -39,7 +41,7 @@ package uk.gov.moj.sdt.domain;
  * @author d130680
  * 
  */
-public class BulkCustomer extends AbstractDomainObject
+public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
 {
 
     /**
@@ -57,61 +59,37 @@ public class BulkCustomer extends AbstractDomainObject
      */
     private int customerIdentifier;
 
-    /**
-     * Get Customer case code.
-     * 
-     * @return customer case code
-     */
+    @Override
     public String getCustomerCaseCode ()
     {
         return customerCaseCode;
     }
 
-    /**
-     * Set customer case code.
-     * 
-     * @param customerCaseCode customer case code
-     */
+    @Override
     public void setCustomerCaseCode (final String customerCaseCode)
     {
         this.customerCaseCode = customerCaseCode;
     }
 
-    /**
-     * Get SDT customer id.
-     * 
-     * @return SDT customer id
-     */
+    @Override
     public int getSdtCustomerId ()
     {
         return sdtCustomerId;
     }
 
-    /**
-     * Set SDT customer id.
-     * 
-     * @param sdtCustomerId SDT customer id
-     */
+    @Override
     public void setSdtCustomerId (final int sdtCustomerId)
     {
         this.sdtCustomerId = sdtCustomerId;
     }
 
-    /**
-     * Get customer identifier.
-     * 
-     * @return customer identifier
-     */
+    @Override
     public int getCustomerIdentifier ()
     {
         return customerIdentifier;
     }
 
-    /**
-     * Set customer identifier.
-     * 
-     * @param customerIdentifier customer identifier
-     */
+    @Override
     public void setCustomerIdentifier (final int customerIdentifier)
     {
         this.customerIdentifier = customerIdentifier;
