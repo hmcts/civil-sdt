@@ -25,18 +25,20 @@
  * software, even if advised of the possibility of such damage.
  * 
  * $Id: $
- * $LastChangedRevision: $ 
+ * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
+
+import java.util.Map;
 
 /**
  * Customer reference could not be found.
  * 
  * @author d130680
- *
+ * 
  */
-public class CustomerReferenceNotFoundException extends BusinessException
+public class CustomerReferenceNotFoundException extends AbstractBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,14 +48,27 @@ public class CustomerReferenceNotFoundException extends BusinessException
     /**
      * Customer reference not found.
      * 
-     * @param code error code 
+     * @param code error code
      * @param description error description
      */
     public CustomerReferenceNotFoundException (final String code, final String description)
     {
         super (code, description);
     }
-    
+
+    /**
+     * Customer reference not found.
+     * 
+     * @param code code
+     * @param description description
+     * @param replacements string replacements with tokens
+     */
+    public CustomerReferenceNotFoundException (final String code, final String description,
+            final Map<String, String> replacements)
+    {
+        super (code, description, replacements);
+    }
+
     /**
      * Customer reference not found.
      * 

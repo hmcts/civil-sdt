@@ -25,18 +25,20 @@
  * software, even if advised of the possibility of such damage.
  * 
  * $Id: $
- * $LastChangedRevision: $ 
+ * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
+
+import java.util.Map;
 
 /**
  * Duplicate user request identifier found, it needs to be unique for each individual request.
  * 
  * @author d130680
- *
+ * 
  */
-public class DuplicateUserRequestIdentifierException extends BusinessException
+public class DuplicateUserRequestIdentifierException extends AbstractBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,14 +48,27 @@ public class DuplicateUserRequestIdentifierException extends BusinessException
     /**
      * Duplicate user request identifier found.
      * 
-     * @param code error code 
+     * @param code error code
      * @param description error description
      */
     public DuplicateUserRequestIdentifierException (final String code, final String description)
     {
         super (code, description);
     }
-    
+
+    /**
+     * Duplicate user request identifier found.
+     * 
+     * @param code error code
+     * @param description error description
+     * @param replacements string replacements with tokens
+     */
+    public DuplicateUserRequestIdentifierException (final String code, final String description,
+            final Map<String, String> replacements)
+    {
+        super (code, description);
+    }
+
     /**
      * Duplicate user request identifier found.
      * 

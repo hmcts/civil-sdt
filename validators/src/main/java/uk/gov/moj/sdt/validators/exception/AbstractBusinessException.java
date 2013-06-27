@@ -32,13 +32,16 @@ package uk.gov.moj.sdt.validators.exception;
 
 import java.util.Map;
 
+import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
+
 /**
- * An invalid request type has been sent.
+ * Base class for business exceptions.
  * 
  * @author d130680
  * 
  */
-public class InvalidRequestTypeException extends AbstractBusinessException
+public class AbstractBusinessException extends RuntimeException implements IBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,57 +49,94 @@ public class InvalidRequestTypeException extends AbstractBusinessException
     private static final long serialVersionUID = 1L;
 
     /**
-     * An invalid request type has been sent.
+     * Error code.
+     */
+    private String errorCode;
+
+    /**
+     * Error description
+     */
+    private String errorDescription;
+
+    /**
+     * Constructor for non-tokenised description.
      * 
      * @param code error code
      * @param description error description
      */
-    public InvalidRequestTypeException (final String code, final String description)
+    public AbstractBusinessException (final String code, final String description)
     {
-        super (code, description);
+        super ("The following exception occured [" + code + "] message[" + description + "]");
+        this.errorCode = code;
+        this.errorDescription = description;
     }
 
     /**
-     * An invalid request type has been sent.
+     * Constructor for tokenised description along with token replacements.
      * 
      * @param code error code
      * @param description error description
-     * @param replacements string replacements with tokens
+     * @param replacements list of strings to replace
      */
-    public InvalidRequestTypeException (final String code, final String description,
+    public AbstractBusinessException (final String code, final String description,
             final Map<String, String> replacements)
     {
-        super (code, description);
+        super ("The following exception occured [" + code + "] message[" +
+                Utilities.replaceTokens (description, replacements) + "]");
+        this.errorCode = code;
+        this.errorDescription = Utilities.replaceTokens (description, replacements);
+
     }
 
     /**
-     * An invalid request type has been sent.
+     * Base class for business exceptions.
      * 
      * @param s the s
      */
-    public InvalidRequestTypeException (final String s)
+    public AbstractBusinessException (final String s)
     {
         super (s);
     }
 
     /**
-     * An invalid request type has been sent.
+     * Base class for business exceptions.
      * 
      * @param cause the cause
      */
-    public InvalidRequestTypeException (final Throwable cause)
+    public AbstractBusinessException (final Throwable cause)
     {
         super (cause);
     }
 
     /**
-     * An invalid request type has been sent.
+     * Base class for business exceptions.
      * 
      * @param s the s
      * @param cause the cause
      */
-    public InvalidRequestTypeException (final String s, final Throwable cause)
+    public AbstractBusinessException (final String s, final Throwable cause)
     {
         super (s, cause);
     }
+
+    /**
+     * Get the error code.
+     * 
+     * @return error code
+     */
+    public String getErrorCode ()
+    {
+        return errorCode;
+    }
+
+    /**
+     * Get the error description.
+     * 
+     * @return error description
+     */
+    public String getErrorDescription ()
+    {
+        return errorDescription;
+    }
+
 }

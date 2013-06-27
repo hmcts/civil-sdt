@@ -25,18 +25,20 @@
  * software, even if advised of the possibility of such damage.
  * 
  * $Id: $
- * $LastChangedRevision: $ 
+ * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
+
+import java.util.Map;
 
 /**
  * The total number of individual requests in a bulk submission should match the request count.
  * 
  * @author d130680
- *
+ * 
  */
-public class RequestCountMismatchException extends BusinessException
+public class RequestCountMismatchException extends AbstractBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,16 +48,29 @@ public class RequestCountMismatchException extends BusinessException
     /**
      * Total of individual requests should match the request count.
      * 
-     * @param code error code 
+     * @param code error code
      * @param description error description
      */
     public RequestCountMismatchException (final String code, final String description)
     {
         super (code, description);
     }
-    
+
     /**
-     * Total of individual requests should match the request count. 
+     * Total of individual requests should match the request count.
+     * 
+     * @param code error code
+     * @param description error description
+     * @param replacements string replacements with tokens
+     */
+    public RequestCountMismatchException (final String code, final String description,
+            final Map<String, String> replacements)
+    {
+        super (code, description);
+    }
+
+    /**
+     * Total of individual requests should match the request count.
      * 
      * @param s the s
      */

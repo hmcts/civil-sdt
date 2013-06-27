@@ -25,18 +25,20 @@
  * software, even if advised of the possibility of such damage.
  * 
  * $Id: $
- * $LastChangedRevision: $ 
+ * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
+
+import java.util.Map;
 
 /**
  * Used when a customer is not registered to send a request to a specified target application.
  * 
  * @author d130680
- *
+ * 
  */
-public class InvalidTargetApplicationException extends BusinessException
+public class InvalidTargetApplicationException extends AbstractBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,14 +48,27 @@ public class InvalidTargetApplicationException extends BusinessException
     /**
      * Organisation isn't registered for a target application.
      * 
-     * @param code error code 
+     * @param code error code
      * @param description error description
      */
     public InvalidTargetApplicationException (final String code, final String description)
     {
         super (code, description);
     }
-    
+
+    /**
+     * Organisation isn't registered for a target application.
+     * 
+     * @param code error code
+     * @param description error description
+     * @param replacements string replacements with tokens
+     */
+    public InvalidTargetApplicationException (final String code, final String description,
+            final Map<String, String> replacements)
+    {
+        super (code, description);
+    }
+
     /**
      * Organisation isn't registered for a target application.
      * 
