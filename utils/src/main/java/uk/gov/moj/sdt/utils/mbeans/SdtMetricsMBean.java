@@ -33,6 +33,8 @@ package uk.gov.moj.sdt.utils.mbeans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
+
 /**
  * A class to gather online metrics for SDT. This POJO is configured by Spring to be available as an MBean visible via
  * jconsole in the application server JVM.

@@ -10,6 +10,6 @@
 	<!-- Note all ids should be based on fully qualified interface name and 
 		all classes should have an interface. -->
 
-	<bean id="uk.gov.moj.sdt.utils.mbeans.ISdtMetricsMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean" />
+	<bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean" />
 
 </beans>

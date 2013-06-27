@@ -28,7 +28,7 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.utils.mbeans;
+package uk.gov.moj.sdt.utils.mbeans.api;
 
 /**
  * Interface for all classes implementing {@link CopyOfISdtMetricsMBean}.
