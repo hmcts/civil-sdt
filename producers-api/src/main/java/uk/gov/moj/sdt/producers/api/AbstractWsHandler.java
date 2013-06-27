@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.producers.api;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.validators.exception.BusinessException;
+import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -90,7 +90,7 @@ public abstract class AbstractWsHandler
      * @param businessException business exception
      * @param statusType status
      */
-    public void handleBusinessException (final BusinessException businessException, final StatusType statusType)
+    public void handleBusinessException (final IBusinessException businessException, final StatusType statusType)
     {
         final ErrorType errorType = new ErrorType ();
         errorType.setCode (businessException.getErrorCode ());
