@@ -39,7 +39,7 @@ import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.producers.resolver.BulkRequestToDomainResolver;
-import uk.gov.moj.sdt.validators.exception.BusinessException;
+import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -94,7 +94,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
             LOGGER.info ("Service called to persist bulk request details");
 
         }
-        catch (final BusinessException be)
+        catch (final AbstractBusinessException be)
         {
             handleBusinessException (be, bulkResponseType.getStatus ());
 
@@ -233,9 +233,9 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
      * Validate domain object - {@link BulkSubmission}.
      * 
      * @param bulkSubmission domain instance to validate.
-     * @throws BusinessException in case of any business rule validation failure.
+     * @throws AbstractBusinessException in case of any business rule validation failure.
      */
-    private void validateDomain (final BulkSubmission bulkSubmission) throws BusinessException
+    private void validateDomain (final BulkSubmission bulkSubmission) throws AbstractBusinessException
     {
         LOGGER.debug ("[validateDomain] started");
 
