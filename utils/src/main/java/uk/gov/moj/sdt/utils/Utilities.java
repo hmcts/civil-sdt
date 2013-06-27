@@ -32,6 +32,9 @@ package uk.gov.moj.sdt.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,4 +153,36 @@ public final class Utilities
         return targetFile;
     }
 
+    /**
+     * Replaces tokens with specific string in a piece of text.
+     * 
+     * e.g. The quick {1} jumped {2} the lazy {3}
+     * 
+     * replacements map would consist of:
+     * 
+     * 1, fox
+     * 2, over
+     * 3, dog
+     * 
+     * @param text the text to tokenise
+     * @param replacements map of token and string
+     * @return tokenised text
+     */
+    public static String replaceTokens (final String text, final Map<String, String> replacements)
+    {
+        final Pattern pattern = Pattern.compile ("\\{([^}]*)\\}");
+        final Matcher matcher = pattern.matcher (text);
+        final StringBuffer buffer = new StringBuffer ();
+        while (matcher.find ())
+        {
+            final String replacement = replacements.get (matcher.group (1));
+            if (replacement != null)
+            {
+                matcher.appendReplacement (buffer, "");
+                buffer.append (replacement);
+            }
+        }
+        matcher.appendTail (buffer);
+        return buffer.toString ();
+    }
 }
