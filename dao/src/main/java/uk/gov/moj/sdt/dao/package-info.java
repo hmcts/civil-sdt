@@ -29,57 +29,7 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain.api;
-
 /**
- * Interface for all classes implementing {@link IBulkCustomer}.
- * 
- * @author Robin Compston.
- *
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public interface IBulkCustomer extends IDomainObject
-{
-
-    /**
-     * Get Customer case code.
-     * 
-     * @return customer case code
-     */
-    String getCustomerCaseCode ();
-
-    /**
-     * Set customer case code.
-     * 
-     * @param customerCaseCode customer case code
-     */
-    void setCustomerCaseCode (final String customerCaseCode);
-
-    /**
-     * Get SDT customer id.
-     * 
-     * @return SDT customer id
-     */
-    int getSdtCustomerId ();
-
-    /**
-     * Set SDT customer id.
-     * 
-     * @param sdtCustomerId SDT customer id
-     */
-    void setSdtCustomerId (final int sdtCustomerId);
-
-    /**
-     * Get customer identifier.
-     * 
-     * @return customer identifier
-     */
-    int getCustomerIdentifier ();
-
-    /**
-     * Set customer identifier.
-     * 
-     * @param customerIdentifier customer identifier
-     */
-    void setCustomerIdentifier (final int customerIdentifier);
-
-}
+package uk.gov.moj.sdt.dao;

@@ -30,7 +30,7 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
@@ -51,7 +51,7 @@ public class BulkCustomerValidator extends AbstractDomainObjectVisitor implement
     }
 
     @Override
-    public void visit (BulkCustomer bulkCustomer)
+    public void visit (IBulkCustomer bulkCustomer)
     {
         // TODO Do validation of bulk customer.
         System.out.println ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");

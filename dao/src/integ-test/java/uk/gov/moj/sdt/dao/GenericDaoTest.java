@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,58 +28,57 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.dao;
 
-package uk.gov.moj.sdt.domain.api;
+import junit.framework.TestCase;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
- * Interface for all classes implementing {@link IBulkCustomer}.
+ * Test {@link Genericdao} CRUD methods.
  * 
- * @author Robin Compston.
- *
+ * @author Robin Compston
+ * 
  */
-public interface IBulkCustomer extends IDomainObject
+@RunWith (SpringJUnit4ClassRunner.class)
+@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
+public class GenericDaoTest extends TestCase
 {
+    /**
+     * Logger object.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger (GenericDaoTest.class);
 
     /**
-     * Get Customer case code.
-     * 
-     * @return customer case code
+     * Default constructor for {@link GenericDaoTest}.
      */
-    String getCustomerCaseCode ();
+    public GenericDaoTest ()
+    {
+        super ();
+    }
 
     /**
-     * Set customer case code.
-     * 
-     * @param customerCaseCode customer case code
+     * Tests XML file is valid.
      */
-    void setCustomerCaseCode (final String customerCaseCode);
+    @Test
+    public void test1 ()
+    {
+        final IGenericDao genericDao =
+                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
-    /**
-     * Get SDT customer id.
-     * 
-     * @return SDT customer id
-     */
-    int getSdtCustomerId ();
+        final int id = 1;
+        final IBulkCustomer bulkCustomer = genericDao.fetch (BulkCustomer.class, id);
+        bulkCustomer.getId ();
 
-    /**
-     * Set SDT customer id.
-     * 
-     * @param sdtCustomerId SDT customer id
-     */
-    void setSdtCustomerId (final int sdtCustomerId);
-
-    /**
-     * Get customer identifier.
-     * 
-     * @return customer identifier
-     */
-    int getCustomerIdentifier ();
-
-    /**
-     * Set customer identifier.
-     * 
-     * @param customerIdentifier customer identifier
-     */
-    void setCustomerIdentifier (final int customerIdentifier);
-
+    }
 }
