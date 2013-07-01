@@ -44,29 +44,6 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
  */
 public interface IGenericDao
 {
-    // /**
-    // * Registers an existing business domain entity.
-    // *
-    // * <p>
-    // * This method loads the persistent entity associated with the given businessEntity and establishes a back-link
-    // such
-    // * that when the corresponding persistent entity is loaded through this DAO the given businessEntity will be used
-    // in
-    // * the result model hierarchy.
-    // * </p>
-    // * <p>
-    // * An example use would be a service that is passed a businessEntity as a parameter that must load additional data
-    // * into that object. Such a service must first attach existing data fragments to get a correctly wired object
-    // graph.
-    // * Only afterwards it would invoke fetch().
-    // * </p>
-    // *
-    // * @param businessEntity instance to register.
-    // *
-    // * @throws DataAccessException on any I/O related error.
-    // */
-    // void attach (final IDomainObject businessEntity) throws DataAccessException;
-    //
     /**
      * Loads a business domain entity model hierarchy as of the given businessTime and using the given id.
      * 
@@ -134,18 +111,36 @@ public interface IGenericDao
     <DomainType extends IDomainObject> DomainType[] query (final Class<DomainType> domainType,
                                                            final Criterion... restrictions) throws DataAccessException;
 
-//    /**
-//     * Ends the life-time of a given domainObject for the business time range of that domain object beginning from the
-//     * current transaction time.
-//     * 
-//     * @param <DomainType> of entity to delete.
-//     * @param domainObject instance to end life.
-//     * @return domainObject, with transaction times adjusted.
-//     * 
-//     * @throws DataAccessException on any I/O related error.
-//     */
-//    <DomainType extends IDomainObject> DomainType delete (final DomainType domainObject) throws DataAccessException;
-//
+    // /**
+    // * Ends the life-time of a given domainObject for the business time range of that domain object beginning from the
+    // * current transaction time.
+    // *
+    // * @param <DomainType> of entity to delete.
+    // * @param domainObject instance to end life.
+    // * @return domainObject, with transaction times adjusted.
+    // *
+    // * @throws DataAccessException on any I/O related error.
+    // */
+    // <DomainType extends IDomainObject> DomainType delete (final DomainType domainObject) throws DataAccessException;
+    //
+
+    /**
+     * Stores a new domainObject in the database.
+     * 
+     * <p>
+     * This method persists an object not having an id assigned initially.
+     * </p>
+     * 
+     * @param <DomainType> of entity to insert.
+     * @param domainObject instance to insert.
+     * @return domainObject, with transaction times and (RV)OIDs adjusted.
+     * 
+     * @throws DataAccessException on any I/O related error.
+     * 
+     * @see #persist(IDomainObject)
+     */
+    <DomainType extends IDomainObject> DomainType insert (final DomainType domainObject) throws DataAccessException;
+
     // /**
     // * returns next value for given sequence.
     // *

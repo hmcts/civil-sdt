@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.dao;
 
 import junit.framework.TestCase;
 
+import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -68,10 +69,10 @@ public class GenericDaoTest extends TestCase
     }
 
     /**
-     * Tests XML file is valid.
+     * Tests fetch.
      */
     @Test
-    public void test1 ()
+    public void testFetch ()
     {
         final IGenericDao genericDao =
                 (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
@@ -80,5 +81,44 @@ public class GenericDaoTest extends TestCase
         final IBulkCustomer bulkCustomer = genericDao.fetch (BulkCustomer.class, id);
         bulkCustomer.getId ();
 
+    }
+
+    /**
+     * Tests query.
+     */
+    @Test
+    public void testQuery ()
+    {
+        final IGenericDao genericDao =
+                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+
+        final IBulkCustomer[] bulkCustomers =
+                genericDao.query (BulkCustomer.class,
+                        Restrictions.eq ("sdtCustomerId", 123));
+
+        if (bulkCustomers.length == 1)
+        {
+
+            // User found
+            final IBulkCustomer bulkCustomer = bulkCustomers[0];
+            System.out.println ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
+        }
+    }
+
+    /**
+     * Tests insert.
+     */
+    @Test
+    public void testInsert ()
+    {
+        final IGenericDao genericDao =
+                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setId (2);
+        bulkCustomer.setSdtCustomerId (456);
+        bulkCustomer.setCustomerCaseCode ("GH");
+        
+        genericDao.insert (bulkCustomer);
     }
 }

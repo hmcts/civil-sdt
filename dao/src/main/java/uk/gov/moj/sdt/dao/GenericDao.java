@@ -41,7 +41,6 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -60,7 +59,8 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
  * 
  * @author Robin Compston
  */
-@Transactional (propagation = Propagation.MANDATORY)
+// @Transactional (propagation = Propagation.MANDATORY)
+@Transactional 
 public class GenericDao implements IGenericDao
 {
     /**
@@ -336,7 +336,7 @@ public class GenericDao implements IGenericDao
         final Session session = this.getSessionFactory ().getCurrentSession ();
 
         // Add any restrictions passed by caller.
-        final Criteria criteria = session.createCriteria (domainType.getSimpleName ());
+        final Criteria criteria = session.createCriteria (domainType);
         for (final Criterion restriction : restrictions)
         {
             // Added condition to check for null, if restriction null then it should not be added to criteria.
@@ -436,22 +436,8 @@ public class GenericDao implements IGenericDao
     // return domainObject;
     // }
 
-    /**
-     * Stores a new domainObject in the database.
-     * 
-     * <p>
-     * This method persists an object not having an id assigned initially.
-     * </p>
-     * 
-     * @param <DomainType> of entity to insert.
-     * @param domainObject instance to insert.
-     * @return domainObject, with transaction times and (RV)OIDs adjusted.
-     * 
-     * @throws DataAccessException on any I/O related error.
-     * 
-     * @see #persist(IDomainObject)
-     */
-    protected <DomainType extends IDomainObject> DomainType insert (final DomainType domainObject)
+    @Override
+    public <DomainType extends IDomainObject> DomainType insert (final DomainType domainObject)
         throws DataAccessException
     {
         final Session session = this.getSessionFactory ().getCurrentSession ();
@@ -473,7 +459,7 @@ public class GenericDao implements IGenericDao
      * @see #persist(IDomainObject)
      */
     // CHECKSTYLE:OFF Complexity is acceptable
-    protected <DomainType extends IDomainObject> DomainType update (final DomainType domainObject)
+    public <DomainType extends IDomainObject> DomainType update (final DomainType domainObject)
         throws DataAccessException
     // CHECKSTYLE:ON
     {
