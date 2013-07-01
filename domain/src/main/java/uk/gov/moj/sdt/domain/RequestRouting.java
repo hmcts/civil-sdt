@@ -31,85 +31,65 @@
 
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.IRequestRouting;
+import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+
 /**
  * SDT will maintain routing information for target applications based on the Request Type Tag.
  * 
  * @author d130680
  * 
  */
-public class RequestRouting extends AbstractDomainObject
+public class RequestRouting extends AbstractDomainObject implements IRequestRouting
 {
 
     /**
      * Target application.
      */
-    private TargetApplication targetApplication;
+    private ITargetApplication targetApplication;
 
     /**
      * Request type.
      */
-    private RequestType requestType;
+    private IRequestType requestType;
 
     /**
      * Web service endpoint.
      */
     private String webServiceEndpoint;
 
-    /**
-     * Get the Target Application.
-     * 
-     * @return target application
-     */
-    public TargetApplication getTargetApplication ()
+    @Override
+    public ITargetApplication getTargetApplication ()
     {
         return targetApplication;
     }
 
-    /**
-     * Set the Target Application.
-     * 
-     * @param targetApplication target application
-     */
-    public void setTargetApplication (final TargetApplication targetApplication)
+    @Override
+    public void setTargetApplication (final ITargetApplication targetApplication)
     {
         this.targetApplication = targetApplication;
     }
 
-    /**
-     * Get the Request Type.
-     * 
-     * @return request type
-     */
-    public RequestType getRequestType ()
+    @Override
+    public IRequestType getRequestType ()
     {
         return requestType;
     }
 
-    /**
-     * Set the Request Type.
-     * 
-     * @param requestType request type
-     */
-    public void setRequestType (final RequestType requestType)
+    @Override
+    public void setRequestType (final IRequestType requestType)
     {
         this.requestType = requestType;
     }
 
-    /**
-     * Get web service end point.
-     * 
-     * @return web service end point
-     */
+    @Override
     public String getWebServiceEndpoint ()
     {
         return webServiceEndpoint;
     }
 
-    /**
-     * Set web service end point.
-     * 
-     * @param webServiceEndpoint web service end point
-     */
+    @Override
     public void setWebServiceEndpoint (final String webServiceEndpoint)
     {
         this.webServiceEndpoint = webServiceEndpoint;

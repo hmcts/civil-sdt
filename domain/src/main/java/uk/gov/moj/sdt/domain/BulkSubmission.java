@@ -36,6 +36,8 @@ import java.util.List;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * For a Submit Bulk Request, the SDT application records the
@@ -44,7 +46,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  * @author d130680
  * 
  */
-public class BulkSubmission extends AbstractDomainObject
+public class BulkSubmission extends AbstractDomainObject implements IBulkSubmission
 {
 
     /**
@@ -55,7 +57,7 @@ public class BulkSubmission extends AbstractDomainObject
     /**
      * The target application that SDT routes the Bulk Request onto for subsequent processing.
      */
-    private TargetApplication targetApplication;
+    private ITargetApplication targetApplication;
 
     /**
      * A unique SDT Reference (unique within the SDT Data Retention Period)
@@ -113,221 +115,133 @@ public class BulkSubmission extends AbstractDomainObject
         super ();
     }
 
-    /**
-     * Get the Bulk Customer.
-     * 
-     * @return bulk customer
-     */
+    @Override
     public IBulkCustomer getBulkCustomer ()
     {
         return bulkCustomer;
     }
 
-    /**
-     * Set the Bulk Customer.
-     * 
-     * @param bulkCustomer bulk customer
-     */
+    @Override
     public void setBulkCustomer (final IBulkCustomer bulkCustomer)
     {
         this.bulkCustomer = bulkCustomer;
     }
 
-    /**
-     * Get the Target Application.
-     * 
-     * @return target application
-     */
-    public TargetApplication getTargetApplication ()
+    @Override
+    public ITargetApplication getTargetApplication ()
     {
         return targetApplication;
     }
 
-    /**
-     * Set the Target Application.
-     * 
-     * @param targetApplication target application
-     */
-    public void setTargetApplication (final TargetApplication targetApplication)
+    @Override
+    public void setTargetApplication (final ITargetApplication targetApplication)
     {
         this.targetApplication = targetApplication;
     }
 
-    /**
-     * Get SDT bulk reference.
-     * 
-     * @return SDT bulk reference
-     */
+    @Override
     public String getSdtBulkReference ()
     {
         return sdtBulkReference;
     }
 
-    /**
-     * Set SDT bulk reference.
-     * 
-     * @param sdtBulkReference SDT bulk reference
-     */
+    @Override
     public void setSdtBulkReference (final String sdtBulkReference)
     {
         this.sdtBulkReference = sdtBulkReference;
     }
 
-    /**
-     * Get customer reference.
-     * 
-     * @return customer reference
-     */
+    @Override
     public String getCustomerReference ()
     {
         return customerReference;
     }
 
-    /**
-     * Set customer reference.
-     * 
-     * @param customerReference customer reference
-     */
+    @Override
     public void setCustomerReference (final String customerReference)
     {
         this.customerReference = customerReference;
     }
 
-    /**
-     * Get created date.
-     * 
-     * @return created date
-     */
+    @Override
     public LocalDateTime getCreatedDate ()
     {
         return createdDate;
     }
 
-    /**
-     * Set created date.
-     * 
-     * @param createdDate created dated
-     */
+    @Override
     public void setCreatedDate (final LocalDateTime createdDate)
     {
         this.createdDate = createdDate;
     }
 
-    /**
-     * Get number of request.
-     * 
-     * @return number of request
-     */
+    @Override
     public int getNumberOfRequest ()
     {
         return numberOfRequest;
     }
 
-    /**
-     * Set number of request.
-     * 
-     * @param numberOfRequest number of request
-     */
+    @Override
     public void setNumberOfRequest (final int numberOfRequest)
     {
         this.numberOfRequest = numberOfRequest;
     }
 
-    /**
-     * Get submission status.
-     * 
-     * @return submission status
-     */
+    @Override
     public String getSubmissionStatus ()
     {
         return submissionStatus;
     }
 
-    /**
-     * Set submission status.
-     * 
-     * @param submissionStatus submission status
-     */
+    @Override
     public void setSubmissionStatus (final String submissionStatus)
     {
         this.submissionStatus = submissionStatus;
     }
 
-    /**
-     * Get completed date.
-     * 
-     * @return completed date
-     */
+    @Override
     public LocalDateTime getCompletedDate ()
     {
         return completedDate;
     }
 
-    /**
-     * Set completed date.
-     * 
-     * @param completedDate completed date
-     */
+    @Override
     public void setCompletedDate (final LocalDateTime completedDate)
     {
         this.completedDate = completedDate;
     }
 
-    /**
-     * Get updated date.
-     * 
-     * @return updated date
-     */
+    @Override
     public LocalDateTime getUpdatedDate ()
     {
         return updatedDate;
     }
 
-    /**
-     * Set updated date.
-     * 
-     * @param updatedDate updated date
-     */
+    @Override
     public void setUpdatedDate (final LocalDateTime updatedDate)
     {
         this.updatedDate = updatedDate;
     }
 
-    /**
-     * Get the XML payload.
-     * 
-     * @return xml payload
-     */
+    @Override
     public String getPayload ()
     {
         return payload;
     }
 
-    /**
-     * Set the XML payload.
-     * 
-     * @param payload xml payload
-     */
+    @Override
     public void setPayload (final String payload)
     {
         this.payload = payload;
     }
 
-    /**
-     * Get list of individual request.
-     * 
-     * @return list of individual requests
-     */
+    @Override
     public List<IndividualRequest> getIndividualRequests ()
     {
         return individualRequests;
     }
 
-    /**
-     * Set list of individual request.
-     * 
-     * @param individualRequests list of individual request
-     */
+    @Override
     public void setIndividualRequests (final List<IndividualRequest> individualRequests)
     {
         this.individualRequests = individualRequests;

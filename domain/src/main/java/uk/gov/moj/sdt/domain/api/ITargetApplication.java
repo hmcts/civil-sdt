@@ -29,67 +29,43 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain;
-
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
+package uk.gov.moj.sdt.domain.api;
 
 /**
- * Error message.
+ * Interface for classes implementing {@link ITargetApplication} .
  * 
- * @author d130680
+ * @author Manoj Kulkarni
  * 
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
+public interface ITargetApplication
 {
-    /**
-     * The error code.
-     */
-    private String errorCode;
 
     /**
-     * The error text.
+     * Get target application code.
+     * 
+     * @return target application code
      */
-    private String errorText;
+    String getTargetApplicationCode ();
 
     /**
-     * The error description.
+     * Set target application code.
+     * 
+     * @param targetApplicationCode target application code
      */
-    private String errorDescription;
+    void setTargetApplicationCode (final String targetApplicationCode);
 
-    @Override
-    public String getErrorCode ()
-    {
-        return errorCode;
-    }
+    /**
+     * Get target application name.
+     * 
+     * @return target application name
+     */
+    String getTargetApplicationName ();
 
-    @Override
-    public void setErrorCode (final String errorCode)
-    {
-        this.errorCode = errorCode;
-    }
-
-    @Override
-    public String getErrorText ()
-    {
-        return errorText;
-    }
-
-    @Override
-    public void setErrorText (final String errorText)
-    {
-        this.errorText = errorText;
-    }
-
-    @Override
-    public String getErrorDescription ()
-    {
-        return errorDescription;
-    }
-
-    @Override
-    public void setErrorDescription (final String errorDescription)
-    {
-        this.errorDescription = errorDescription;
-    }
+    /**
+     * Set target application name.
+     * 
+     * @param targetApplicationName target application name
+     */
+    void setTargetApplicationName (final String targetApplicationName);
 
 }

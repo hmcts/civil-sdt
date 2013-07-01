@@ -39,6 +39,9 @@ import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.misc.BulkRequestStatus;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
@@ -70,11 +73,11 @@ public final class BulkRequestToDomainResolver
      * @param bulkRequestType bulk request type
      * @return bulk submission
      */
-    public static BulkSubmission mapToBulkSubmission (final BulkRequestType bulkRequestType)
+    public static IBulkSubmission mapToBulkSubmission (final BulkRequestType bulkRequestType)
     {
         final HeaderType headerType = bulkRequestType.getHeader ();
-        final BulkSubmission bulkSubmission = new BulkSubmission ();
-        final TargetApplication targetApplication = new TargetApplication ();
+        final IBulkSubmission bulkSubmission = new BulkSubmission ();
+        final ITargetApplication targetApplication = new TargetApplication ();
 
         // Set bulk submission
         bulkSubmission.setCustomerReference (headerType.getCustomerReference ());
@@ -120,7 +123,7 @@ public final class BulkRequestToDomainResolver
      * @return list of individual requests
      */
     private static List<IndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
-                                                                    final BulkSubmission bulkSubmission)
+                                                                    final IBulkSubmission bulkSubmission)
     {
         final IndividualRequest individualRequest = new IndividualRequest ();
         final McolRequestsType mcolRequestsType = bulkRequestType.getRequests ().getMcolRequests ();
@@ -160,10 +163,10 @@ public final class BulkRequestToDomainResolver
      * @param requestTypeType requesttype type
      * @return request type
      */
-    private static RequestType mapToRequestType (final RequestTypeType requestTypeType)
+    private static IRequestType mapToRequestType (final RequestTypeType requestTypeType)
     {
 
-        final RequestType requestType = new RequestType ();
+        final IRequestType requestType = new RequestType ();
         requestType.setName (requestTypeType.name ());
 
         return requestType;

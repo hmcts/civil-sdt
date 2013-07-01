@@ -29,67 +29,58 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain;
+package uk.gov.moj.sdt.domain.api;
 
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
- * Error message.
+ * Interface for all classes implementing {@link IBulkCustomerApplication}.
  * 
- * @author d130680
+ * @author Manoj Kulkarni
  * 
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
+public interface IBulkCustomerApplication
 {
-    /**
-     * The error code.
-     */
-    private String errorCode;
 
     /**
-     * The error text.
+     * Get the Bulk Customer.
+     * 
+     * @return bulk customer
      */
-    private String errorText;
+    IBulkCustomer getBulkCustomer ();
 
     /**
-     * The error description.
+     * Set the Bulk Customer.
+     * 
+     * @param bulkCustomer bulk customer
      */
-    private String errorDescription;
+    void setBulkCustomer (final IBulkCustomer bulkCustomer);
 
-    @Override
-    public String getErrorCode ()
-    {
-        return errorCode;
-    }
+    /**
+     * Get the Target Application.
+     * 
+     * @return target application
+     */
+    ITargetApplication getTargetApplication ();
 
-    @Override
-    public void setErrorCode (final String errorCode)
-    {
-        this.errorCode = errorCode;
-    }
+    /**
+     * Set the Target Application.
+     * 
+     * @param targetApplication target application
+     */
+    void setTargetApplication (final ITargetApplication targetApplication);
 
-    @Override
-    public String getErrorText ()
-    {
-        return errorText;
-    }
+    /**
+     * Get customer application id.
+     * 
+     * @return customer application id
+     */
+    String getCustomerApplicationId ();
 
-    @Override
-    public void setErrorText (final String errorText)
-    {
-        this.errorText = errorText;
-    }
-
-    @Override
-    public String getErrorDescription ()
-    {
-        return errorDescription;
-    }
-
-    @Override
-    public void setErrorDescription (final String errorDescription)
-    {
-        this.errorDescription = errorDescription;
-    }
+    /**
+     * Set customer application id.
+     * 
+     * @param customerApplicationId customer application id
+     */
+    void setCustomerApplicationId (final String customerApplicationId);
 
 }

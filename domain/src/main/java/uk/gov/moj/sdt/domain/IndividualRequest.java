@@ -35,6 +35,10 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDateTime;
 
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IRequestType;
+
 /**
  * When processing an Individual Request within the Bulk Request, the SDT application records
  * the following information as part of the Individual Request details.
@@ -42,17 +46,17 @@ import org.joda.time.LocalDateTime;
  * @author d130680
  * 
  */
-public class IndividualRequest extends AbstractDomainObject
+public class IndividualRequest extends AbstractDomainObject implements IIndividualRequest
 {
     /**
      * Bulk submission.
      */
-    private BulkSubmission bulkSubmission;
+    private IBulkSubmission bulkSubmission;
 
     /**
      * Request type.
      */
-    private RequestType requestType;
+    private IRequestType requestType;
 
     /**
      * Identifier defined by End User to uniquely (unique for the End User within
@@ -149,361 +153,217 @@ public class IndividualRequest extends AbstractDomainObject
      */
     private String payload;
 
-    /**
-     * Get the Bulk Submission.
-     * 
-     * @return bulk submission
-     */
-    public BulkSubmission getBulkSubmission ()
+    @Override
+    public IBulkSubmission getBulkSubmission ()
     {
         return bulkSubmission;
     }
 
-    /**
-     * Set the Bulk Submission.
-     * 
-     * @param bulkSubmission bulk submission
-     */
-    public void setBulkSubmission (final BulkSubmission bulkSubmission)
+    @Override
+    public void setBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         this.bulkSubmission = bulkSubmission;
     }
 
-    /**
-     * Get the Request Type.
-     * 
-     * @return request type
-     */
-    public RequestType getRequestType ()
+    @Override
+    public IRequestType getRequestType ()
     {
         return requestType;
     }
 
-    /**
-     * Set the Request Type.
-     * 
-     * @param requestType request type
-     */
-    public void setRequestType (final RequestType requestType)
+    @Override
+    public void setRequestType (final IRequestType requestType)
     {
         this.requestType = requestType;
     }
 
-    /**
-     * Get customer request reference.
-     * 
-     * @return customer request reference
-     */
+    @Override
     public String getCustomerRequestReference ()
     {
         return customerRequestReference;
     }
 
-    /**
-     * Set customer request reference.
-     * 
-     * @param customerRequestReference customer request reference
-     */
+    @Override
     public void setCustomerRequestReference (final String customerRequestReference)
     {
         this.customerRequestReference = customerRequestReference;
     }
 
-    /**
-     * Get case number.
-     * 
-     * @return case number
-     */
+    @Override
     public String getCaseNumber ()
     {
         return caseNumber;
     }
 
-    /**
-     * Set case number.
-     * 
-     * @param caseNumber case number
-     */
+    @Override
     public void setCaseNumber (final String caseNumber)
     {
         this.caseNumber = caseNumber;
     }
 
-    /**
-     * Get request status.
-     * 
-     * @return request status
-     */
+    @Override
     public String getRequestStatus ()
     {
         return requestStatus;
     }
 
-    /**
-     * Set request status.
-     * 
-     * @param requestStatus request status
-     */
+    @Override
     public void setRequestStatus (final String requestStatus)
     {
         this.requestStatus = requestStatus;
     }
 
-    /**
-     * Get issued date.
-     * 
-     * @return issued date
-     */
+    @Override
     public LocalDateTime getIssuedDate ()
     {
         return issuedDate;
     }
 
-    /**
-     * Set issued date.
-     * 
-     * @param issuedDate issued date
-     */
+    @Override
     public void setIssuedDate (final LocalDateTime issuedDate)
     {
         this.issuedDate = issuedDate;
     }
 
-    /**
-     * Get SDT bulk reference.
-     * 
-     * @return SDT bulk reference
-     */
+    @Override
     public String getSdtBulkReference ()
     {
         return sdtBulkReference;
     }
 
-    /**
-     * Set SDT bulk reference.
-     * 
-     * @param sdtBulkReference SDT bulk reference
-     */
+    @Override
     public void setSdtBulkReference (final String sdtBulkReference)
     {
         this.sdtBulkReference = sdtBulkReference;
     }
 
-    /**
-     * Get line number.
-     * 
-     * @return line number
-     */
+    @Override
     public int getLineNumber ()
     {
         return lineNumber;
     }
 
-    /**
-     * Set line number.
-     * 
-     * @param lineNumber line number
-     */
+    @Override
     public void setLineNumber (final int lineNumber)
     {
         this.lineNumber = lineNumber;
     }
 
-    /**
-     * Get SDT request reference.
-     * 
-     * @return SDT request reference
-     */
+    @Override
     public String getSdtRequestReference ()
     {
         return sdtRequestReference;
     }
 
-    /**
-     * Set SDT request reference.
-     * 
-     * @param sdtRequestReference SDT request reference
-     */
+    @Override
     public void setSdtRequestReference (final String sdtRequestReference)
     {
         this.sdtRequestReference = sdtRequestReference;
     }
 
-    /**
-     * Get created date.
-     * 
-     * @return created date
-     */
+    @Override
     public LocalDateTime getCreatedDate ()
     {
         return createdDate;
     }
 
-    /**
-     * Set created date.
-     * 
-     * @param createdDate created dated
-     */
+    @Override
     public void setCreatedDate (final LocalDateTime createdDate)
     {
         this.createdDate = createdDate;
     }
 
-    /**
-     * Get updated date.
-     * 
-     * @return updated date
-     */
+    @Override
     public LocalDateTime getUpdatedDate ()
     {
         return updatedDate;
     }
 
-    /**
-     * Set updated date.
-     * 
-     * @param updatedDate updated date
-     */
+    @Override
     public void setUpdatedDate (final LocalDateTime updatedDate)
     {
         this.updatedDate = updatedDate;
     }
 
-    /**
-     * Get completed date.
-     * 
-     * @return completed date
-     */
+    @Override
     public LocalDateTime getCompletedDate ()
     {
         return completedDate;
     }
 
-    /**
-     * Set completed date.
-     * 
-     * @param completedDate completed date
-     */
+    @Override
     public void setCompletedDate (final LocalDateTime completedDate)
     {
         this.completedDate = completedDate;
     }
 
-    /**
-     * Get service date.
-     * 
-     * @return service date
-     */
+    @Override
     public LocalDateTime getServiceDate ()
     {
         return serviceDate;
     }
 
-    /**
-     * Set service date.
-     * 
-     * @param serviceDate service date
-     */
+    @Override
     public void setServiceDate (final LocalDateTime serviceDate)
     {
         this.serviceDate = serviceDate;
     }
 
-    /**
-     * Get warrant number.
-     * 
-     * @return warrant number
-     */
+    @Override
     public int getWarrantNumber ()
     {
         return warrantNumber;
     }
 
-    /**
-     * Set warrant number.
-     * 
-     * @param warrantNumber warrant number
-     */
+    @Override
     public void setWarrantNumber (final int warrantNumber)
     {
         this.warrantNumber = warrantNumber;
     }
 
-    /**
-     * Get enforcing court code.
-     * 
-     * @return enforcing court code
-     */
+    @Override
     public String getEnforcingCourtCode ()
     {
         return enforcingCourtCode;
     }
 
-    /**
-     * Set enforcing court code.
-     * 
-     * @param enforcingCourtCode enforcing court code
-     */
+    @Override
     public void setEnforcingCourtCode (final String enforcingCourtCode)
     {
         this.enforcingCourtCode = enforcingCourtCode;
     }
 
-    /**
-     * Get enforcing court name.
-     * 
-     * @return enforcing court name
-     */
+    @Override
     public String getEnforcingCourtName ()
     {
         return enforcingCourtName;
     }
 
-    /**
-     * Set enforcing court name.
-     * 
-     * @param enforcingCourtName enforcing court name
-     */
+    @Override
     public void setEnforcingCourtName (final String enforcingCourtName)
     {
         this.enforcingCourtName = enforcingCourtName;
     }
 
-    /**
-     * Get fee.
-     * 
-     * @return fee
-     */
+    @Override
     public BigDecimal getFee ()
     {
         return fee;
     }
 
-    /**
-     * Set fee.
-     * 
-     * @param fee fee
-     */
+    @Override
     public void setFee (final BigDecimal fee)
     {
         this.fee = fee;
     }
 
-    /**
-     * Get the XML payload.
-     * 
-     * @return xml payload
-     */
+    @Override
     public String getPayload ()
     {
         return payload;
     }
 
-    /**
-     * Set the XML payload.
-     * 
-     * @param payload xml payload
-     */
+    @Override
     public void setPayload (final String payload)
     {
         this.payload = payload;

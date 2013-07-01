@@ -29,67 +29,57 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain;
-
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
+package uk.gov.moj.sdt.domain.api;
 
 /**
- * Error message.
+ * Interface for all classes implementing {@link IGlobalParameter}.
  * 
- * @author d130680
+ * @author Manoj Kulkarni.
  * 
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
+public interface IGlobalParameter
 {
-    /**
-     * The error code.
-     */
-    private String errorCode;
 
     /**
-     * The error text.
+     * Get the parameter name.
+     * 
+     * @return parameter name
      */
-    private String errorText;
+    String getName ();
 
     /**
-     * The error description.
+     * Set the parameter name.
+     * 
+     * @param name parameter name
      */
-    private String errorDescription;
+    void setName (final String name);
 
-    @Override
-    public String getErrorCode ()
-    {
-        return errorCode;
-    }
+    /**
+     * Get the parameter value.
+     * 
+     * @return parameter value
+     */
+    String getValue ();
 
-    @Override
-    public void setErrorCode (final String errorCode)
-    {
-        this.errorCode = errorCode;
-    }
+    /**
+     * Set the parameter value.
+     * 
+     * @param value parameter value
+     */
+    void setValue (final String value);
 
-    @Override
-    public String getErrorText ()
-    {
-        return errorText;
-    }
+    /**
+     * Get the parameter description.
+     * 
+     * @return parameter description
+     */
+    String getDescription ();
 
-    @Override
-    public void setErrorText (final String errorText)
-    {
-        this.errorText = errorText;
-    }
-
-    @Override
-    public String getErrorDescription ()
-    {
-        return errorDescription;
-    }
-
-    @Override
-    public void setErrorDescription (final String errorDescription)
-    {
-        this.errorDescription = errorDescription;
-    }
+    /**
+     * Set the parameter description.
+     * 
+     * @param description parameter description
+     */
+    void setDescription (final String description);
 
 }

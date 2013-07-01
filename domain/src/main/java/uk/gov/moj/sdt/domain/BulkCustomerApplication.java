@@ -32,6 +32,8 @@
 package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Bulk customer application.
@@ -39,7 +41,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  * @author d130680
  * 
  */
-public class BulkCustomerApplication extends AbstractDomainObject
+public class BulkCustomerApplication extends AbstractDomainObject implements IBulkCustomerApplication
 {
     /**
      * Bulk customer.
@@ -49,68 +51,44 @@ public class BulkCustomerApplication extends AbstractDomainObject
     /**
      * Target Application that the Bulk Customer has been set up to submit messages to.
      */
-    private TargetApplication targetApplication;
+    private ITargetApplication targetApplication;
 
     /**
      * Customer application id.
      */
     private String customerApplicationId;
 
-    /**
-     * Get the Bulk Customer.
-     * 
-     * @return bulk customer
-     */
+    @Override
     public IBulkCustomer getBulkCustomer ()
     {
         return bulkCustomer;
     }
 
-    /**
-     * Set the Bulk Customer.
-     * 
-     * @param bulkCustomer bulk customer
-     */
+    @Override
     public void setBulkCustomer (final IBulkCustomer bulkCustomer)
     {
         this.bulkCustomer = bulkCustomer;
     }
 
-    /**
-     * Get the Target Application.
-     * 
-     * @return target application
-     */
-    public TargetApplication getTargetApplication ()
+    @Override
+    public ITargetApplication getTargetApplication ()
     {
         return targetApplication;
     }
 
-    /**
-     * Set the Target Application.
-     * 
-     * @param targetApplication target application
-     */
-    public void setTargetApplication (final TargetApplication targetApplication)
+    @Override
+    public void setTargetApplication (final ITargetApplication targetApplication)
     {
         this.targetApplication = targetApplication;
     }
 
-    /**
-     * Get customer application id.
-     * 
-     * @return customer application id
-     */
+    @Override
     public String getCustomerApplicationId ()
     {
         return customerApplicationId;
     }
 
-    /**
-     * Set customer application id.
-     * 
-     * @param customerApplicationId customer application id
-     */
+    @Override
     public void setCustomerApplicationId (final String customerApplicationId)
     {
         this.customerApplicationId = customerApplicationId;

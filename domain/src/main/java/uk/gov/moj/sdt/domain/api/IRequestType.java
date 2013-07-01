@@ -28,68 +28,57 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-
-package uk.gov.moj.sdt.domain;
-
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
+package uk.gov.moj.sdt.domain.api;
 
 /**
- * Error message.
+ * Interface for classes implementing {@link IRequesType}.
  * 
- * @author d130680
+ * @author Manoj Kulkarni
  * 
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
+public interface IRequestType
 {
-    /**
-     * The error code.
-     */
-    private String errorCode;
 
     /**
-     * The error text.
+     * Get name.
+     * 
+     * @return name
      */
-    private String errorText;
+    String getName ();
 
     /**
-     * The error description.
+     * Set name.
+     * 
+     * @param name name
      */
-    private String errorDescription;
+    void setName (final String name);
 
-    @Override
-    public String getErrorCode ()
-    {
-        return errorCode;
-    }
+    /**
+     * Get status.
+     * 
+     * @return status
+     */
+    String getStatus ();
 
-    @Override
-    public void setErrorCode (final String errorCode)
-    {
-        this.errorCode = errorCode;
-    }
+    /**
+     * Set status.
+     * 
+     * @param status status
+     */
+    void setStatus (final String status);
 
-    @Override
-    public String getErrorText ()
-    {
-        return errorText;
-    }
+    /**
+     * Get description.
+     * 
+     * @return description
+     */
+    String getDescription ();
 
-    @Override
-    public void setErrorText (final String errorText)
-    {
-        this.errorText = errorText;
-    }
-
-    @Override
-    public String getErrorDescription ()
-    {
-        return errorDescription;
-    }
-
-    @Override
-    public void setErrorDescription (final String errorDescription)
-    {
-        this.errorDescription = errorDescription;
-    }
+    /**
+     * Set description.
+     * 
+     * @param description description
+     */
+    void setDescription (final String description);
 
 }

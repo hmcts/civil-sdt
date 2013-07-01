@@ -35,7 +35,7 @@ import java.math.BigInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.producers.resolver.BulkRequestToDomainResolver;
@@ -85,7 +85,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
             }
 
             // Transform web service object to domain object(s)
-            final BulkSubmission bulkSubmission = transformToDomainType (bulkRequestType);
+            final IBulkSubmission bulkSubmission = transformToDomainType (bulkRequestType);
 
             // Validate domain
             validateDomain (bulkSubmission);
@@ -219,9 +219,9 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
      * Transform Web service object to Domain object.
      * 
      * @param bulkRequestType bulk request
-     * @return {@link BulkSubmission}
+     * @return {@link IBulkSubmission}
      */
-    private BulkSubmission transformToDomainType (final BulkRequestType bulkRequestType)
+    private IBulkSubmission transformToDomainType (final BulkRequestType bulkRequestType)
     {
         LOGGER.debug ("transform to domain type");
 
@@ -230,12 +230,12 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
     }
 
     /**
-     * Validate domain object - {@link BulkSubmission}.
+     * Validate domain object - {@link IBulkSubmission}.
      * 
      * @param bulkSubmission domain instance to validate.
      * @throws AbstractBusinessException in case of any business rule validation failure.
      */
-    private void validateDomain (final BulkSubmission bulkSubmission) throws AbstractBusinessException
+    private void validateDomain (final IBulkSubmission bulkSubmission) throws AbstractBusinessException
     {
         LOGGER.debug ("[validateDomain] started");
 

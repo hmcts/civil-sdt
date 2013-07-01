@@ -33,28 +33,33 @@ package uk.gov.moj.sdt.domain;
 
 import org.joda.time.LocalDateTime;
 
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+
 /**
  * Error log.
  * 
  * @author d130680
  * 
  */
-public class ErrorLog extends AbstractDomainObject
+public class ErrorLog extends AbstractDomainObject implements IErrorLog
 {
     /**
      * Bulk submission.
      */
-    private BulkSubmission bulkSubmission;
+    private IBulkSubmission bulkSubmission;
 
     /**
      * Individual request, null for error raised on bulk file.
      */
-    private IndividualRequest individualRequest;
+    private IIndividualRequest individualRequest;
 
     /**
      * Error message.
      */
-    private ErrorMessage errorMessage;
+    private IErrorMessage errorMessage;
 
     /**
      * Date record was created.
@@ -71,121 +76,73 @@ public class ErrorLog extends AbstractDomainObject
      */
     private String errorText;
 
-    /**
-     * Get the Bulk Submission.
-     * 
-     * @return bulk submission
-     */
-    public BulkSubmission getBulkSubmission ()
+    @Override
+    public IBulkSubmission getBulkSubmission ()
     {
         return bulkSubmission;
     }
 
-    /**
-     * Set the Bulk Submission.
-     * 
-     * @param bulkSubmission bulk submission
-     */
-    public void setBulkSubmission (final BulkSubmission bulkSubmission)
+    @Override
+    public void setBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         this.bulkSubmission = bulkSubmission;
     }
 
-    /**
-     * Get the Individual Request.
-     * 
-     * @return individual request
-     */
-    public IndividualRequest getIndividualRequest ()
+    @Override
+    public IIndividualRequest getIndividualRequest ()
     {
         return individualRequest;
     }
 
-    /**
-     * Set the Individual Request.
-     * 
-     * @param individualRequest individual request
-     */
-    public void setIndividualRequest (final IndividualRequest individualRequest)
+    @Override
+    public void setIndividualRequest (final IIndividualRequest individualRequest)
     {
         this.individualRequest = individualRequest;
     }
 
-    /**
-     * Get the Error Message.
-     * 
-     * @return error message
-     */
-    public ErrorMessage getErrorMessage ()
+    @Override
+    public IErrorMessage getErrorMessage ()
     {
         return errorMessage;
     }
 
-    /**
-     * Set the Error Message.
-     * 
-     * @param errorMessage error message
-     */
-    public void setErrorMessage (final ErrorMessage errorMessage)
+    @Override
+    public void setErrorMessage (final IErrorMessage errorMessage)
     {
         this.errorMessage = errorMessage;
     }
 
-    /**
-     * Get created date.
-     * 
-     * @return created date
-     */
+    @Override
     public LocalDateTime getCreatedDate ()
     {
         return createdDate;
     }
 
-    /**
-     * Set created date.
-     * 
-     * @param createdDate created dated
-     */
+    @Override
     public void setCreatedDate (final LocalDateTime createdDate)
     {
         this.createdDate = createdDate;
     }
 
-    /**
-     * Get updated date.
-     * 
-     * @return updated date
-     */
+    @Override
     public LocalDateTime getUpdatedDate ()
     {
         return updatedDate;
     }
 
-    /**
-     * Set updated date.
-     * 
-     * @param updatedDate updated date
-     */
+    @Override
     public void setUpdatedDate (final LocalDateTime updatedDate)
     {
         this.updatedDate = updatedDate;
     }
 
-    /**
-     * Get error Text.
-     * 
-     * @return error text
-     */
+    @Override
     public String getErrorText ()
     {
         return errorText;
     }
 
-    /**
-     * Set error Text.
-     * 
-     * @param errorText error text
-     */
+    @Override
     public void setErrorText (final String errorText)
     {
         this.errorText = errorText;

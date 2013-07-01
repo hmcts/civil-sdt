@@ -29,67 +29,58 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain;
+package uk.gov.moj.sdt.domain.api;
 
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
- * Error message.
+ * Interface for classes implementing {@link IRequestRouting} .
  * 
- * @author d130680
+ * @author Manoj Kulkarni
  * 
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
+public interface IRequestRouting
 {
-    /**
-     * The error code.
-     */
-    private String errorCode;
 
     /**
-     * The error text.
+     * Get the Target Application.
+     * 
+     * @return target application
      */
-    private String errorText;
+    ITargetApplication getTargetApplication ();
 
     /**
-     * The error description.
+     * Set the Target Application.
+     * 
+     * @param targetApplication target application
      */
-    private String errorDescription;
+    void setTargetApplication (final ITargetApplication targetApplication);
 
-    @Override
-    public String getErrorCode ()
-    {
-        return errorCode;
-    }
+    /**
+     * Get the Request Type.
+     * 
+     * @return request type
+     */
+    IRequestType getRequestType ();
 
-    @Override
-    public void setErrorCode (final String errorCode)
-    {
-        this.errorCode = errorCode;
-    }
+    /**
+     * Set the Request Type.
+     * 
+     * @param requestType request type
+     */
+    void setRequestType (final IRequestType requestType);
 
-    @Override
-    public String getErrorText ()
-    {
-        return errorText;
-    }
+    /**
+     * Get web service end point.
+     * 
+     * @return web service end point
+     */
+    String getWebServiceEndpoint ();
 
-    @Override
-    public void setErrorText (final String errorText)
-    {
-        this.errorText = errorText;
-    }
-
-    @Override
-    public String getErrorDescription ()
-    {
-        return errorDescription;
-    }
-
-    @Override
-    public void setErrorDescription (final String errorDescription)
-    {
-        this.errorDescription = errorDescription;
-    }
+    /**
+     * Set web service end point.
+     * 
+     * @param webServiceEndpoint web service end point
+     */
+    void setWebServiceEndpoint (final String webServiceEndpoint);
 
 }

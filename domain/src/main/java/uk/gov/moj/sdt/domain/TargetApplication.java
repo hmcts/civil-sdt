@@ -31,13 +31,15 @@
 
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+
 /**
  * Target Application that the Bulk Customer has been set up to submit messages to.
  * 
  * @author d130680
  * 
  */
-public class TargetApplication extends AbstractDomainObject
+public class TargetApplication extends AbstractDomainObject implements ITargetApplication
 {
     /**
      * Target application code.
@@ -49,41 +51,25 @@ public class TargetApplication extends AbstractDomainObject
      */
     private String targetApplicationName;
 
-    /**
-     * Get target application code.
-     * 
-     * @return target application code
-     */
+    @Override
     public String getTargetApplicationCode ()
     {
         return targetApplicationCode;
     }
 
-    /**
-     * Set target application code.
-     * 
-     * @param targetApplicationCode target application code
-     */
+    @Override
     public void setTargetApplicationCode (final String targetApplicationCode)
     {
         this.targetApplicationCode = targetApplicationCode;
     }
 
-    /**
-     * Get target application name.
-     * 
-     * @return target application name
-     */
+    @Override
     public String getTargetApplicationName ()
     {
         return targetApplicationName;
     }
 
-    /**
-     * Set target application name.
-     * 
-     * @param targetApplicationName target application name
-     */
+    @Override
     public void setTargetApplicationName (final String targetApplicationName)
     {
         this.targetApplicationName = targetApplicationName;

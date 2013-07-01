@@ -31,13 +31,15 @@
 
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+
 /**
  * Global parameters.
  * 
  * @author d130680
  * 
  */
-public class GlobalParameter extends AbstractDomainObject
+public class GlobalParameter extends AbstractDomainObject implements IGlobalParameter
 {
     /**
      * Parameter Name.
@@ -50,43 +52,44 @@ public class GlobalParameter extends AbstractDomainObject
     private String value;
 
     /**
-     * Get the parameter name.
-     * 
-     * @return parameter name
+     * Parameter description.
      */
+    private String description;
+
+    @Override
     public String getName ()
     {
         return name;
     }
 
-    /**
-     * Set the parameter name.
-     * 
-     * @param name parameter name
-     */
+    @Override
     public void setName (final String name)
     {
         this.name = name;
     }
 
-    /**
-     * Get the parameter value.
-     * 
-     * @return parameter value
-     */
+    @Override
     public String getValue ()
     {
         return value;
     }
 
-    /**
-     * Set the parameter value.
-     * 
-     * @param value parameter value
-     */
+    @Override
     public void setValue (final String value)
     {
         this.value = value;
+    }
+
+    @Override
+    public String getDescription ()
+    {
+        return description;
+    }
+
+    @Override
+    public void setDescription (final String description)
+    {
+        this.description = description;
     }
 
 }

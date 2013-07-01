@@ -29,67 +29,102 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain;
+package uk.gov.moj.sdt.domain.api;
 
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import org.joda.time.LocalDateTime;
+
 
 /**
- * Error message.
+ * Interface for all classes implementing {@link IErrorLog}.
  * 
- * @author d130680
+ * @author Manoj Kulkarni
  * 
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
+public interface IErrorLog
 {
-    /**
-     * The error code.
-     */
-    private String errorCode;
 
     /**
-     * The error text.
+     * Get the Bulk Submission.
+     * 
+     * @return bulk submission
      */
-    private String errorText;
+    IBulkSubmission getBulkSubmission ();
 
     /**
-     * The error description.
+     * Set the Bulk Submission.
+     * 
+     * @param bulkSubmission bulk submission
      */
-    private String errorDescription;
+    void setBulkSubmission (final IBulkSubmission bulkSubmission);
 
-    @Override
-    public String getErrorCode ()
-    {
-        return errorCode;
-    }
+    /**
+     * Get the Individual Request.
+     * 
+     * @return individual request
+     */
+    IIndividualRequest getIndividualRequest ();
 
-    @Override
-    public void setErrorCode (final String errorCode)
-    {
-        this.errorCode = errorCode;
-    }
+    /**
+     * Set the Individual Request.
+     * 
+     * @param individualRequest individual request
+     */
+    void setIndividualRequest (final IIndividualRequest individualRequest);
 
-    @Override
-    public String getErrorText ()
-    {
-        return errorText;
-    }
+    /**
+     * Get the Error Message.
+     * 
+     * @return error message
+     */
+    IErrorMessage getErrorMessage ();
 
-    @Override
-    public void setErrorText (final String errorText)
-    {
-        this.errorText = errorText;
-    }
+    /**
+     * Set the Error Message.
+     * 
+     * @param errorMessage error message
+     */
+    void setErrorMessage (final IErrorMessage errorMessage);
 
-    @Override
-    public String getErrorDescription ()
-    {
-        return errorDescription;
-    }
+    /**
+     * Get created date.
+     * 
+     * @return created date
+     */
+    LocalDateTime getCreatedDate ();
 
-    @Override
-    public void setErrorDescription (final String errorDescription)
-    {
-        this.errorDescription = errorDescription;
-    }
+    /**
+     * Set created date.
+     * 
+     * @param createdDate created dated
+     */
+    void setCreatedDate (final LocalDateTime createdDate);
+
+    /**
+     * Get updated date.
+     * 
+     * @return updated date
+     */
+    LocalDateTime getUpdatedDate ();
+
+    /**
+     * Set updated date.
+     * 
+     * @param updatedDate updated date
+     */
+    void setUpdatedDate (final LocalDateTime updatedDate);
+
+    /**
+     * Get error Text.
+     * 
+     * @return error text
+     */
+    String getErrorText ();
+
+    /**
+     * Set error Text.
+     * 
+     * @param errorText error text
+     */
+    void setErrorText (final String errorText);
 
 }

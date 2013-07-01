@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.IRequestType;
+
 /**
  * Each defined target application will have a set of associated Request Types.
  * E.g. Claim,, Judgment, Warrant, JudgmentWarrant and ClaimUpate.
@@ -38,7 +40,7 @@ package uk.gov.moj.sdt.domain;
  * @author d130680
  * 
  */
-public class RequestType extends AbstractDomainObject
+public class RequestType extends AbstractDomainObject implements IRequestType
 {
     /**
      * Request type name.
@@ -55,61 +57,37 @@ public class RequestType extends AbstractDomainObject
      */
     private String description;
 
-    /**
-     * Get name.
-     * 
-     * @return name
-     */
+    @Override
     public String getName ()
     {
         return name;
     }
 
-    /**
-     * Set name.
-     * 
-     * @param name name
-     */
+    @Override
     public void setName (final String name)
     {
         this.name = name;
     }
 
-    /**
-     * Get status.
-     * 
-     * @return status
-     */
+    @Override
     public String getStatus ()
     {
         return status;
     }
 
-    /**
-     * Set status.
-     * 
-     * @param status status
-     */
+    @Override
     public void setStatus (final String status)
     {
         this.status = status;
     }
 
-    /**
-     * Get description.
-     * 
-     * @return description
-     */
+    @Override
     public String getDescription ()
     {
         return description;
     }
 
-    /**
-     * Set description.
-     * 
-     * @param description description
-     */
+    @Override
     public void setDescription (final String description)
     {
         this.description = description;

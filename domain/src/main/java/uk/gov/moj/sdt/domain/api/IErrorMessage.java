@@ -29,67 +29,56 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain;
-
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
+package uk.gov.moj.sdt.domain.api;
 
 /**
- * Error message.
+ * Interface for all classes implementing {@link IErrorMessage}.
  * 
- * @author d130680
- * 
+ * @author Manoj Kulkarni
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
+public interface IErrorMessage
 {
-    /**
-     * The error code.
-     */
-    private String errorCode;
 
     /**
-     * The error text.
+     * Get error code.
+     * 
+     * @return error code
      */
-    private String errorText;
+    String getErrorCode ();
 
     /**
-     * The error description.
+     * Set error code.
+     * 
+     * @param errorCode error code
      */
-    private String errorDescription;
+    void setErrorCode (final String errorCode);
 
-    @Override
-    public String getErrorCode ()
-    {
-        return errorCode;
-    }
+    /**
+     * Get error Text.
+     * 
+     * @return error text
+     */
+    String getErrorText ();
 
-    @Override
-    public void setErrorCode (final String errorCode)
-    {
-        this.errorCode = errorCode;
-    }
+    /**
+     * Set error Text.
+     * 
+     * @param errorText error text
+     */
+    void setErrorText (final String errorText);
 
-    @Override
-    public String getErrorText ()
-    {
-        return errorText;
-    }
+    /**
+     * Get error description.
+     * 
+     * @return error description
+     */
+    String getErrorDescription ();
 
-    @Override
-    public void setErrorText (final String errorText)
-    {
-        this.errorText = errorText;
-    }
-
-    @Override
-    public String getErrorDescription ()
-    {
-        return errorDescription;
-    }
-
-    @Override
-    public void setErrorDescription (final String errorDescription)
-    {
-        this.errorDescription = errorDescription;
-    }
+    /**
+     * Set error description.
+     * 
+     * @param errorDescription error description
+     */
+    void setErrorDescription (final String errorDescription);
 
 }
