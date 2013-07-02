@@ -148,9 +148,6 @@ public final class BulkRequestToDomainResolver
             // Set the initial status
             individualRequest.setRequestStatus (IndividualRequestStatus.SUBMITTED.getStatus ());
 
-            // Set the bulk submission
-            individualRequest.setBulkSubmission (bulkSubmission);
-
             individualRequestList.add (individualRequest);
         }
 

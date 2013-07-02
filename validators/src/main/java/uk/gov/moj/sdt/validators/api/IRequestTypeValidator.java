@@ -24,45 +24,18 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators;
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
+package uk.gov.moj.sdt.validators.api;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
- * Implementation of DateValidation.
+ * An interface to provide validation methods for {@link RequestType}.
  * 
- * @author Simon Holmes
- * 
+ * @author Saurabh Agarwal
  */
-public class BulkCustomerValidator extends AbstractDomainObjectVisitor implements IBulkCustomerValidator
+public interface IRequestTypeValidator
 {
-
-    /**
-     * Logger instance.
-     */
-    private static final Log LOGGER = LogFactory.getLog (BulkCustomerValidator.class);
-
-    /**
-     * No-argument Constructor.
-     */
-    public BulkCustomerValidator ()
-    {
-    }
-
-    @Override
-    public void visit (BulkCustomer bulkCustomer)
-    {
-        // TODO Do validation of bulk customer.
-        LOGGER.info ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");
-    }
-
 }

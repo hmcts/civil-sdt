@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.producers.resolver.BulkRequestToDomainResolver;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
+import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -91,7 +92,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
             validateDomain (bulkSubmission);
 
             // Process validated request
-            LOGGER.info ("Service called to persist bulk request details");
+            processBulkSubmission (bulkSubmission);
 
         }
         catch (final AbstractBusinessException be)
@@ -122,6 +123,16 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
     private void logIncomingRequest (final BulkRequestType bulkRequest)
     {
         LOGGER.info ("[logIncomingRequest] - " + bulkRequest);
+    }
+
+    /**
+     * Process bulk submission instance.
+     * 
+     * @param bulkSubmission bulk submission instance.
+     */
+    private void processBulkSubmission (final IBulkSubmission bulkSubmission)
+    {
+        LOGGER.info ("Service called to persist bulk request details");
     }
 
     /**
@@ -159,7 +170,8 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         final int actualRequestCount = bulkRequestType.getRequests ().getMcolRequests ().getMcolRequest ().size ();
         if (headerReqCount.intValue () != actualRequestCount)
         {
-            return createErrorType ("REQ_COUNT_MISMATCH", "Number of requests do not match request count in header");
+            return createErrorType (AbstractBusinessException.ErrorCode.REQ_COUNT_MISMATCH,
+                    "Number of requests do not match request count in header");
         }
 
         LOGGER.debug ("validate request type matches request content for each request");
@@ -167,7 +179,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         {
             if ( !isValidRequestType (mcolRequest))
             {
-                return createErrorType ("REQ_TYPE_INCORRECT",
+                return createErrorType (AbstractBusinessException.ErrorCode.REQ_TYPE_INCORRECT,
                         "Request type does not match with specified request details");
             }
         }
@@ -239,13 +251,14 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
     {
         LOGGER.debug ("[validateDomain] started");
 
-        LOGGER.debug ("validate SDT Customer id");
-
-        LOGGER.debug ("validate Target application id");
-
-        LOGGER.debug ("validate customer reference is unique across data retention period");
-
-        LOGGER.debug ("validate customer reference for each request is unique across data retention period");
+        // LOGGER.debug ("validate SDT Customer id");
+        //
+        // LOGGER.debug ("validate Target application id");
+        //
+        // LOGGER.debug ("validate customer reference is unique across data retention period");
+        //
+        // LOGGER.debug ("validate customer reference for each request is unique across data retention period");
+        VisitableTreeWalker.walkTree (bulkSubmission, "Validator");
 
     }
 

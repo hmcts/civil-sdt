@@ -75,7 +75,7 @@ public final class VisitableTreeWalker
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
      *            class name of the visitor class.
      */
-    public static void walkList (final List<?> target, final String visitorSuffix)
+    private static void walkList (final List<?> target, final String visitorSuffix)
     {
         // Iterate over list and walk its elements.
         for (int i = 0; i < target.size (); i++)
@@ -92,7 +92,7 @@ public final class VisitableTreeWalker
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
      *            class name of the visitor class.
      */
-    public static void walkMap (final Map<?, ?> target, final String visitorSuffix)
+    private static void walkMap (final Map<?, ?> target, final String visitorSuffix)
     {
         // Iterate over map and walk its elements.
         final Set<?> keys = target.keySet ();
@@ -111,7 +111,7 @@ public final class VisitableTreeWalker
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
      *            class name of the visitor class.
      */
-    public static void walkSet (final Set<?> target, final String visitorSuffix)
+    private static void walkSet (final Set<?> target, final String visitorSuffix)
     {
         // Iterate over map and walk its elements.
         for (final Iterator<?> iter = target.iterator (); iter.hasNext ();)
@@ -147,7 +147,10 @@ public final class VisitableTreeWalker
             final IVisitable visitable = IVisitable.class.cast (target);
 
             // Call the target with this visitor to execute the pattern.
-            visitable.accept (visitor);
+            if (visitor != null)
+            {
+                visitable.accept (visitor);
+            }
         }
 
         // Recursively call all nested beans.
@@ -160,15 +163,15 @@ public final class VisitableTreeWalker
             {
                 method = propertyDescriptor.getReadMethod ();
                 final Object nestedObject = method.invoke (target, (Object[]) null);
-                if (target instanceof List<?>)
+                if (nestedObject instanceof List<?>)
                 {
                     walkList ((List<?>) nestedObject, visitorSuffix);
                 }
-                else if (target instanceof Map<?, ?>)
+                else if (nestedObject instanceof Map<?, ?>)
                 {
                     walkMap ((Map<?, ?>) nestedObject, visitorSuffix);
                 }
-                else if (target instanceof Set<?>)
+                else if (nestedObject instanceof Set<?>)
                 {
                     walkSet ((Set<?>) nestedObject, visitorSuffix);
                 }

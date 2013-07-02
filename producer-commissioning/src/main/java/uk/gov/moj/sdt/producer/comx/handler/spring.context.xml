@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+    <!-- Mock implementation for Bulk Request submission handler -->
+    <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandlerMock" 
+        class="uk.gov.moj.sdt.producer.comx.handler.MockWsCreateBulkRequestHandler">
+        <property name="responseFactory" ref="uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory"/>
+    </bean>
+    
+    <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler" 
+        class="uk.gov.moj.sdt.producer.comx.handler.WsCreateBulkRequestHandler">
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory" 
+        class="uk.gov.moj.sdt.producer.comx.sdtws.ResponseFactory">
+    </bean>
+    
+    <bean id="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler" 
+        class="uk.gov.moj.sdt.producer.comx.handler.WsReadBulkFeedbackRequestHandler">
+    </bean>
+    
+</beans>
+    

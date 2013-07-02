@@ -30,7 +30,11 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.visitor;
 
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.RequestType;
+import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 
 /**
@@ -42,9 +46,38 @@ import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor
 {
     @Override
-    public void visit (final IBulkCustomer bulkCustomer)
+    public void visit (final BulkCustomer bulkCustomer)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");
     }
+
+    @Override
+    public void visit (final BulkSubmission bulkSubmission)
+    {
+        throw new UnsupportedOperationException (
+                "Missing validator implementation - this method should never be called.");
+    }
+
+    @Override
+    public void visit (final RequestType requestType)
+    {
+        throw new UnsupportedOperationException (
+                "Missing validator implementation - this method should never be called.");
+    }
+
+    @Override
+    public void visit (final TargetApplication targetApplication)
+    {
+        throw new UnsupportedOperationException (
+                "Missing validator implementation - this method should never be called.");
+    }
+
+    @Override
+    public void visit (final IndividualRequest individualRequest)
+    {
+        throw new UnsupportedOperationException (
+                "Missing validator implementation - this method should never be called.");
+    }
+
 }

@@ -14,6 +14,22 @@
 		class="uk.gov.moj.sdt.validators.BulkCustomerValidator">
 	</bean>
 
+    <bean id="uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator"
+        class="uk.gov.moj.sdt.validators.BulkSubmissionValidator">
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.validators.api.IRequestTypeValidator"
+        class="uk.gov.moj.sdt.validators.RequestTypeValidator">
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.validators.api.ITargetApplicationValidator"
+        class="uk.gov.moj.sdt.validators.TargetApplicationValidator">
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.validators.api.IIndividualRequestValidator"
+        class="uk.gov.moj.sdt.validators.IndividualRequestValidator">
+    </bean>
+
 	<bean id="uk.gov.moj.sdt.validators.api.IDateValidator" class="uk.gov.moj.sdt.validators.DateValidator">
 	</bean>
 

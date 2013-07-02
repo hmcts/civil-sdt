@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.producers.api;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.validators.exception.AbstractBusinessException.ErrorCode;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -54,14 +55,14 @@ public abstract class AbstractWsHandler
     /**
      * Constructs and returns new instance of <code>ErrorType</code> using giving error code and description.
      * 
-     * @param code error code
+     * @param errorCode error code
      * @param description error description
      * @return {@link ErrorType}
      */
-    public ErrorType createErrorType (final String code, final String description)
+    public ErrorType createErrorType (final ErrorCode errorCode, final String description)
     {
         final ErrorType errorType = new ErrorType ();
-        errorType.setCode (code);
+        errorType.setCode (errorCode.toString ());
         errorType.setDescription (description);
         return errorType;
     }

@@ -24,45 +24,45 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
- * Implementation of DateValidation.
+ * Implementation of {@link IIndividualRequestValidator}.
  * 
- * @author Simon Holmes
+ * @author Saurabh Agarwal
  * 
  */
-public class BulkCustomerValidator extends AbstractDomainObjectVisitor implements IBulkCustomerValidator
+public class IndividualRequestValidator extends AbstractDomainObjectVisitor implements IIndividualRequestValidator
 {
 
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkCustomerValidator.class);
+    private static final Log LOGGER = LogFactory.getLog (IndividualRequestValidator.class);
 
     /**
      * No-argument Constructor.
      */
-    public BulkCustomerValidator ()
+    public IndividualRequestValidator ()
     {
     }
 
     @Override
-    public void visit (BulkCustomer bulkCustomer)
+    public void visit (IndividualRequest individualRequest)
     {
-        // TODO Do validation of bulk customer.
-        LOGGER.info ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");
+        // TODO Do validation
+        LOGGER.info ("visit(individualRequest)");
     }
 
 }

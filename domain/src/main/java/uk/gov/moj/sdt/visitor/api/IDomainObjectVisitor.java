@@ -30,7 +30,11 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.visitor.api;
 
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.RequestType;
+import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
@@ -46,6 +50,34 @@ public interface IDomainObjectVisitor extends IVisitor
      * 
      * @param bulkCustomer the domain object to be visited.
      */
-    void visit (IBulkCustomer bulkCustomer);
+    void visit (BulkCustomer bulkCustomer);
+
+    /**
+     * Visit the domain object.
+     * 
+     * @param bulkSubmission the domain object to be visited.
+     */
+    void visit (BulkSubmission bulkSubmission);
+
+    /**
+     * Visit the domain object.
+     * 
+     * @param requestType domain object to be visited.
+     */
+    void visit (RequestType requestType);
+
+    /**
+     * Visit the domain object.
+     * 
+     * @param targetApplication domain object to be visited.
+     */
+    void visit (TargetApplication targetApplication);
+
+    /**
+     * Visit the domain object.
+     * 
+     * @param individualRequest domain object to be visited.
+     */
+    void visit (IndividualRequest individualRequest);
 
 }

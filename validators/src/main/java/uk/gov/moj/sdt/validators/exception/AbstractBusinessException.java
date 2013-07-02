@@ -139,4 +139,10 @@ public class AbstractBusinessException extends RuntimeException implements IBusi
         return errorDescription;
     }
 
+    public enum ErrorCode
+    {
+        REQ_COUNT_MISMATCH, REQ_TYPE_INCORRECT
+    }
+
 }
+
