@@ -46,6 +46,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link IndividualStatusType }
+     * 
+     */
+    public IndividualStatusType createIndividualStatusType() {
+        return new IndividualStatusType();
+    }
+
+    /**
      * Create an instance of {@link UpdateStatusType }
      * 
      */

@@ -39,9 +39,9 @@ import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.producers.api.AbstractWsReadHandler;
 import uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
@@ -147,43 +147,10 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         mcolResponses.getMcolResponse ().add (getResponseInitAcceptedWarrant ());
         mcolResponses.getMcolResponse ().add (getResponseInitAcceptedPaid ());
         mcolResponses.getMcolResponse ().add (getResponseRejectedClaim ());
-        mcolResponses.getMcolResponse ().add (getResponseErrorClaim ());
 
         responses.setMcolResponses (mcolResponses);
 
         return responses;
-    }
-
-    /**
-     * Method to generate the response for an Erroneous claim.
-     * 
-     * @return the Erroneous claim.
-     */
-    private McolResponseType getResponseErrorClaim ()
-    {
-        // Instantiate a new response
-        final McolResponseType response = new McolResponseType ();
-
-        // Required Fields.
-        response.setRequestId ("12");
-        response.setRequestType (RequestTypeType.MCOL_CLAIM);
-        response.setClaimNumber ("11111112");
-
-        final Calendar cal = new GregorianCalendar ();
-        response.setIssueDate (cal);
-
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ERROR);
-        response.setStatus (status);
-
-        // Required for erroneous cases
-        final ErrorType errorType = new ErrorType ();
-
-        errorType.setCode ("The ERROR CODE");
-        errorType.setDescription ("The description of the error.");
-        status.setError (errorType);
-
-        return response;
     }
 
     /**
@@ -203,8 +170,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.REJECTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.REJECTED);
         response.setStatus (status);
 
         // Required for rejected cases
@@ -236,8 +203,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.INITIALLY_ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -263,8 +230,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.INITIALLY_ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -296,8 +263,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.INITIALLY_ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -323,8 +290,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.INITIALLY_ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -350,8 +317,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.INITIALLY_ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -381,8 +348,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -408,8 +375,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -441,8 +408,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -468,8 +435,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases
@@ -495,8 +462,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         final Calendar cal = new GregorianCalendar ();
         response.setIssueDate (cal);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.ACCEPTED);
         response.setStatus (status);
 
         // Required for accepted cases

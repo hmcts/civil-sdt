@@ -4,7 +4,7 @@ cvc-length-valid: Value '123456789012345678901234567890123' with length = '33' i
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'tns:sdtBulkReference' is not valid.
 cvc-datatype-valid.1.2.1: '2001-12-31T12:00:001' is not a valid value for 'dateTime'.
 cvc-type.3.1.3: The value '2001-12-31T12:00:001' of element 'tns:submittedDate' is not valid.
-cvc-enumeration-valid: Value 'UNKNOWN' is not facet-valid with respect to enumeration '[UPLOADED, FAILED, VALIDATED, PROCESSING, COMPLETED]'. It must be a value from the enumeration.
+cvc-enumeration-valid: Value 'UNKNOWN' is not facet-valid with respect to enumeration '[UPLOADED, FAILED, VALIDATED, COMPLETED]'. It must be a value from the enumeration.
 cvc-attribute.3: The value 'UNKNOWN' of attribute 'code' on element 'tns:bulkStatus' is not valid with respect to its type, 'bulkStatusCodeType'.
 cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to maxLength '32' for type '#AnonType_codeerrorType'.
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'base:code' is not valid.
@@ -26,8 +26,8 @@ cvc-maxLength-valid: Value '1234' with length = '4' is not facet-valid with resp
 cvc-type.3.1.3: The value '1234' of element 'tns:enforcingCourtCode' is not valid.
 cvc-maxLength-valid: Value '12345678901234567890123456789012345678901' with length = '41' is not facet-valid with respect to maxLength '40' for type 'courtNameType'.
 cvc-type.3.1.3: The value '12345678901234567890123456789012345678901' of element 'tns:enforcingCourtName' is not valid.
-cvc-enumeration-valid: Value 'UNKNOWN' is not facet-valid with respect to enumeration '[ACCEPTED, INITIALLY_ACCEPTED, REJECTED, ERROR]'. It must be a value from the enumeration.
-cvc-attribute.3: The value 'UNKNOWN' of attribute 'code' on element 'tns:status' is not valid with respect to its type, 'createStatusCodeType'.
+cvc-enumeration-valid: Value 'UNKNOWN' is not facet-valid with respect to enumeration '[RECEIVED, FORWARDED, INTIALLY_ACCEPTED, ACCEPTED, REJECTED]'. It must be a value from the enumeration.
+cvc-attribute.3: The value 'UNKNOWN' of attribute 'code' on element 'tns:status' is not valid with respect to its type, 'individualStatusCodeType'.
 cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to maxLength '32' for type '#AnonType_codeerrorType'.
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'base:code' is not valid.
 cvc-maxLength-valid: Value '123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' with length = '270' is not facet-valid with respect to maxLength '255' for type '#AnonType_descriptionerrorType'.

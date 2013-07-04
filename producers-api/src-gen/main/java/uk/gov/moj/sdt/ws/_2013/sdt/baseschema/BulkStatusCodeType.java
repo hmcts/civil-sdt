@@ -16,7 +16,6 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="UPLOADED"/>
  *     &lt;enumeration value="FAILED"/>
  *     &lt;enumeration value="VALIDATED"/>
- *     &lt;enumeration value="PROCESSING"/>
  *     &lt;enumeration value="COMPLETED"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
@@ -30,7 +29,6 @@ public enum BulkStatusCodeType {
     UPLOADED,
     FAILED,
     VALIDATED,
-    PROCESSING,
     COMPLETED;
 
     public String value() {

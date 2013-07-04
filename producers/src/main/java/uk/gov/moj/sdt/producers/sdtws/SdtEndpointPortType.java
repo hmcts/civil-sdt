@@ -38,8 +38,8 @@ import javax.jws.WebService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
@@ -97,8 +97,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         final McolResponsesType mcolResponses = new McolResponsesType ();
         final McolResponseType r1 = new McolResponseType ();
         r1.setClaimNumber ("claim123");
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
+        final IndividualStatusType status = new IndividualStatusType ();
+        status.setCode (IndividualStatusCodeType.ACCEPTED);
         r1.setStatus (status);
         mcolResponses.getMcolResponse ().add (r1);
         responses.setMcolResponses (mcolResponses);

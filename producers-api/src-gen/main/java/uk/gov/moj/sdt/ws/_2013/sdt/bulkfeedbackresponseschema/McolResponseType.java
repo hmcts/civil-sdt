@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.w3._2001.xmlschema.Adapter2;
 import org.w3._2001.xmlschema.Adapter3;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
 
 
 /**
@@ -30,7 +30,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  *         &lt;element name="enforcingCourtCode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtCodeType" minOccurs="0"/>
  *         &lt;element name="enforcingCourtName" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtNameType" minOccurs="0"/>
  *         &lt;element name="fee" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
- *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}createStatusType"/>
+ *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}individualStatusType"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -71,7 +71,7 @@ public class McolResponseType
     @XmlSchemaType(name = "unsignedLong")
     protected Long fee;
     @XmlElement(required = true)
-    protected CreateStatusType status;
+    protected IndividualStatusType status;
 
     /**
      * Gets the value of the claimNumber property.
@@ -246,10 +246,10 @@ public class McolResponseType
      * 
      * @return
      *     possible object is
-     *     {@link CreateStatusType }
+     *     {@link IndividualStatusType }
      *     
      */
-    public CreateStatusType getStatus() {
+    public IndividualStatusType getStatus() {
         return status;
     }
 
@@ -258,10 +258,10 @@ public class McolResponseType
      * 
      * @param value
      *     allowed object is
-     *     {@link CreateStatusType }
+     *     {@link IndividualStatusType }
      *     
      */
-    public void setStatus(CreateStatusType value) {
+    public void setStatus(IndividualStatusType value) {
         this.status = value;
     }
 

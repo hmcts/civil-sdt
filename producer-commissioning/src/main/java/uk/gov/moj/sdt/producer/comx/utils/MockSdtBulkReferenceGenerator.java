@@ -51,7 +51,7 @@ public class MockSdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
     private int currIndexToSelect = -1;
 
     /**
-     * The mock bulk id array that holds the 5 hard-coded unique bulk id reference numbers.
+     * The mock bulk id array that holds hard-coded unique bulk id reference numbers.
      */
     private String[] mockBulkIds = new String[] {"000000001", "000000002", "000000003", "000000004", "000000005"};
 
@@ -72,10 +72,8 @@ public class MockSdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
      */
     private int getCurrIndexToSelect ()
     {
-        this.currIndexToSelect++;
-
-        // We only have 5 bulk ids available, so cyle if limit reached.
-        if (this.getCurrIndexToSelect () >= this.mockBulkIds.length)
+        // We have fixed number of bulk ids available, so cycle if limit reached.
+        if (++this.currIndexToSelect >= this.mockBulkIds.length)
         {
             this.currIndexToSelect = 0;
         }

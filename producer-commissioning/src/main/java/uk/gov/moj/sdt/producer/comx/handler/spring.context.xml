@@ -15,6 +15,7 @@
     
     <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler" 
         class="uk.gov.moj.sdt.producer.comx.handler.WsCreateBulkRequestHandler">
+        <property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator"/>
     </bean>
 
     <bean id="uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory" 

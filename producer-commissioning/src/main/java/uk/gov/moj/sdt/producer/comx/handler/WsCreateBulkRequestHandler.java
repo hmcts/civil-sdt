@@ -39,6 +39,7 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.producers.resolver.BulkRequestToDomainResolver;
+import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -62,6 +63,11 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
      */
     private static final Log LOGGER = LogFactory.getLog (WsCreateBulkRequestHandler.class);
 
+    /**
+     * SDT Bulk reference generator.
+     */
+    private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
+
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
     {
@@ -75,6 +81,10 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
 
             // Log incoming message to database - could be possible to implement in interceptor.
             logIncomingRequest (bulkRequestType);
+
+            // Populate SDT Bulk reference in response.
+            bulkResponseType.setSdtBulkReference (sdtBulkReferenceGenerator.getSDTBulkReference (bulkRequestType
+                    .getHeader ().getTargetApplicationId ().toString ()));
 
             // Validate request to ensure that fields contain correct data. e.g. request count.
             final ErrorType wsErrorType = validateWsType (bulkRequestType);
@@ -260,6 +270,14 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         // LOGGER.debug ("validate customer reference for each request is unique across data retention period");
         VisitableTreeWalker.walkTree (bulkSubmission, "Validator");
 
+    }
+
+    /**
+     * @param sdtBulkReferenceGenerator the sdtBulkReferenceGenerator to set
+     */
+    public void setSdtBulkReferenceGenerator (final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator)
+    {
+        this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
     }
 
 }

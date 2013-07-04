@@ -228,8 +228,17 @@
             <xs:enumeration value="UPLOADED" />
             <xs:enumeration value="FAILED" />
             <xs:enumeration value="VALIDATED" />
-            <xs:enumeration value="PROCESSING" />
             <xs:enumeration value="COMPLETED" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="individualStatusCodeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RECEIVED" />
+            <xs:enumeration value="FORWARDED" />
+            <xs:enumeration value="INITIALLY_ACCEPTED" />
+            <xs:enumeration value="ACCEPTED" />
+            <xs:enumeration value="REJECTED" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -238,6 +247,13 @@
             <xs:element name="error" type="tns:errorType" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="code" type="tns:bulkStatusCodeType"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="individualStatusType">
+        <xs:sequence>
+            <xs:element name="error" type="tns:errorType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="code" type="tns:individualStatusCodeType"></xs:attribute>
     </xs:complexType>
 
 </xs:schema>
