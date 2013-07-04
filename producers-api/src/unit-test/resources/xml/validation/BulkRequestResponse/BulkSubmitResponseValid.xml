@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:bulkResponse xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema ../../../../../main/resources/xsd/BulkRequestResponse/BulkSubmitResponse.xsd ">
   <tns:customerReference>tns:customerReference</tns:customerReference>
-  <tns:sdtBulkReference>12345678901234567890123456789012</tns:sdtBulkReference>
+  <tns:sdtBulkReference>12345678901234567890123456789</tns:sdtBulkReference>
   <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
   <tns:targetApplicationId>mcol</tns:targetApplicationId>
   <tns:requestCount>0</tns:requestCount>

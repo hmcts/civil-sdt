@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.w3._2001.xmlschema.Adapter3;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.PersonType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
 
 
 /**
@@ -35,6 +36,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.PersonType;
  *         &lt;element name="claimAmount" type="{http://www.w3.org/2001/XMLSchema}unsignedLong"/>
  *         &lt;element name="solicitorCost" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
  *         &lt;element name="particulars" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema}particularsType" maxOccurs="24"/>
+ *         &lt;element name="sotSignature" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sotSignatureType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -54,7 +56,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.PersonType;
     "interest",
     "claimAmount",
     "solicitorCost",
-    "particulars"
+    "particulars",
+    "sotSignature"
 })
 public class ClaimType {
 
@@ -76,6 +79,8 @@ public class ClaimType {
     protected Long solicitorCost;
     @XmlElement(required = true)
     protected List<String> particulars;
+    @XmlElement(required = true)
+    protected SotSignatureType sotSignature;
 
     /**
      * Gets the value of the claimantReference property.
@@ -312,6 +317,30 @@ public class ClaimType {
             particulars = new ArrayList<String>();
         }
         return this.particulars;
+    }
+
+    /**
+     * Gets the value of the sotSignature property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link SotSignatureType }
+     *     
+     */
+    public SotSignatureType getSotSignature() {
+        return sotSignature;
+    }
+
+    /**
+     * Sets the value of the sotSignature property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link SotSignatureType }
+     *     
+     */
+    public void setSotSignature(SotSignatureType value) {
+        this.sotSignature = value;
     }
 
 }

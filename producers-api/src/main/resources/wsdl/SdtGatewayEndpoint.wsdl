@@ -23,10 +23,9 @@
                 </xs:restriction>
 			</xs:simpleType>
 
-			<!-- Proposed data format AA-TTTT-YYMMSDDHHMISS-999999999 -->
 			<xs:simpleType name="sdtBulkReferenceType">
 				<xs:restriction base="xs:string">
-					<xs:length value="32" />
+					<xs:length value="29" />
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -256,43 +255,43 @@
 
 		</xs:schema>
 		<!-- Claim.xsd -->
-		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema"
-			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema"
-			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-			elementFormDefault="qualified" version="1.0">
-
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
-
-			<xs:simpleType name="particularsType">
-				<xs:restriction base="xs:string">
-					<xs:minLength value="1" />
-					<xs:maxLength value="45" />
-				</xs:restriction>
-			</xs:simpleType>
-
-			<xs:complexType name="interestType">
-				<xs:sequence>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" 
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+        
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:simpleType name="particularsType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:maxLength value="45"/>
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:complexType name="interestType">
+                <xs:sequence>
                     <xs:element name="reserveRightToClaimInterest" type="xs:boolean"/>
-					<xs:element name="dailyAmount" type="xs:unsignedLong" />
-					<xs:element name="owedDate" type="xs:date" />
-					<xs:element name="claimDate" type="xs:date" />
-					<xs:element name="claimAmountInterestBase" type="xs:unsignedLong">
-						<xs:annotation>
-							<xs:documentation>Amount on which interest should be calculated.
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:complexType>
-
+                    <xs:element name="dailyAmount" type="xs:unsignedLong"/>
+                    <xs:element name="owedDate" type="xs:date"/>
+                    <xs:element name="claimDate" type="xs:date"/>
+                    <xs:element name="claimAmountInterestBase" type="xs:unsignedLong">
+                        <xs:annotation>
+                            <xs:documentation>Amount on which interest should be calculated.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            
             <xs:simpleType name="claimantReferenceType">
                 <xs:restriction base="xs:string">
                     <xs:minLength value="1" />
                     <xs:maxLength value="24" />
                 </xs:restriction>
             </xs:simpleType>
-
+        
             <xs:complexType name="correspondenceDetailType">
                 <xs:annotation>
                     <xs:documentation>
@@ -319,65 +318,55 @@
                     </xs:element> 
                 </xs:sequence>
             </xs:complexType>
-
-			<xs:complexType name="claimType">
-				<xs:annotation>
-					<xs:documentation>Represents Claim document.</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="claimantReference" type="tns:claimantReferenceType"
-						minOccurs="0" />
-					<xs:element name="claimant" type="base:personType"
-						minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>Should be populated if customer is a solicitor.
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="claimantCorrespondence" type="tns:correspondenceDetailType"
-						minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>Should be populated if customer is not a
-								solicitor.
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="defendant1" type="base:personType" />
-					<xs:element name="defendant2" type="base:personType"
-						minOccurs="0" />
-					<xs:element name="sendParticularsSeparately" type="xs:boolean" />
-					<xs:element name="interest" type="tns:interestType"
-						minOccurs="0" />
-					<xs:element name="claimAmount" type="xs:unsignedLong" />
-					<xs:element name="solicitorCost" type="xs:unsignedLong"	minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>Should be populated only if customer is
-								solicitor.
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="particulars" type="tns:particularsType"
-						minOccurs="1" maxOccurs="24">
-						<xs:annotation>
-							<xs:documentation>Details about the claim</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:element name="mcolClaim" type="tns:claimType" />
-
-		</xs:schema>
+        
+            <xs:complexType name="claimType">
+                <xs:annotation>
+                    <xs:documentation>Represents Claim document.</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="claimantReference" type="tns:claimantReferenceType" minOccurs="0"/>
+                    <xs:element name="claimant" type="base:personType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Should be populated if customer is a solicitor.</xs:documentation>
+                        </xs:annotation></xs:element>
+                    <xs:element name="claimantCorrespondence" type="tns:correspondenceDetailType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Should be populated if customer is not a solicitor.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="defendant1" type="base:personType"/>
+                    <xs:element name="defendant2" type="base:personType" minOccurs="0"/>
+                    <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
+                    <xs:element name="interest" type="tns:interestType" minOccurs="0"/>
+                    <xs:element name="claimAmount" type="xs:unsignedLong"/>
+                    <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0" >
+                        <xs:annotation>
+                            <xs:documentation>Should be populated only if customer is solicitor.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="particulars" type="tns:particularsType" minOccurs="1" maxOccurs="24">
+                        <xs:annotation>
+                            <xs:documentation>Details about the claim</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="sotSignature" type="base:sotSignatureType"/>
+                </xs:sequence>
+            </xs:complexType>
+            
+            <xs:element name="mcolClaim" type="tns:claimType"/>
+        
+        </xs:schema>
 
 		<!-- Warrant.xsd -->
-		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
-			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
-			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-			elementFormDefault="qualified" version="1.0">
-
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
-
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
             <xs:simpleType name="additionalNotesType">
                 <xs:restriction base="xs:string">
                     <xs:minLength value="1" />
@@ -385,102 +374,105 @@
                 </xs:restriction>
             </xs:simpleType>
         
-			<xs:complexType name="warrantType">
-				<xs:sequence>
-					<xs:element name="claimNumber" type="base:claimNumberType" />
-					<xs:element name="defendantId" type="base:defendantIdType" />
-					<xs:element name="defendantAddress" type="base:addressType" />
-					<xs:element name="balanceOfDebt" type="xs:unsignedLong" />
-					<xs:element name="warrantAmount" type="xs:unsignedLong" />
-					<xs:element name="solicitorCost" type="xs:unsignedLong"	minOccurs="0" />
-					<xs:element name="additionalNotes" type="tns:additionalNotesType"
-						minOccurs="0" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:element name="mcolWarrant" type="tns:warrantType" />
-
-		</xs:schema>
+            <xs:complexType name="warrantDetailType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:claimNumberType" />
+                    <xs:element name="defendantId" type="base:defendantIdType" />
+                    <xs:element name="defendantAddress" type="base:addressType" />
+                    <xs:element name="balanceOfDebt" type="xs:unsignedLong" />
+                    <xs:element name="warrantAmount" type="xs:unsignedLong" />
+                    <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0" />
+                    <xs:element name="additionalNotes" type="tns:additionalNotesType" minOccurs="0" />
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="warrantType">
+                <xs:sequence>
+                    <xs:element name="warrantDetail" type="tns:warrantDetailType" />
+                    <xs:element name="sotSignature" type="base:sotSignatureType"/>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:element name="mcolWarrant" type="tns:warrantType" />
+        
+        </xs:schema>
 
 		<!-- Judgment.xsd -->
-		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
-			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
-			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
-			elementFormDefault="qualified" version="1.0">
-
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
-			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
-
-			<xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType" />
-
-			<xs:complexType name="judgmentWarrantType">
-				<xs:sequence>
-					<xs:element name="mcolJudgment" type="tns:mcolJudgmentType" />
-					<xs:element name="mcolWarrant" type="wnt:warrantType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:element name="mcoljudgment" type="tns:mcolJudgmentType" />
-
-			<xs:simpleType name="judgmentTypeType">
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="A" />
-					<xs:enumeration value="D" />
-				</xs:restriction>
-			</xs:simpleType>
-
-			<xs:simpleType name="instalmentFrequencyType">
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="W" />
-					<xs:enumeration value="F" />
-					<xs:enumeration value="M" />
-				</xs:restriction>
-			</xs:simpleType>
-
-			<xs:complexType name="instalmentPaymentType">
-				<xs:annotation>
-					<xs:documentation>Details when payment is to be paid in
-						instalments. The amount cannot be greater than claim amount.
-					</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="amount" type="xs:unsignedLong" />
-					<xs:element name="frequency" type="tns:instalmentFrequencyType"></xs:element>
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:complexType name="fullPaymentType">
-				<xs:annotation>
-					<xs:documentation>Details when payment is to be paid in full by a specified date (as opposed to immediately)
-					</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="fullByDate" type="xs:date">
-						<xs:annotation>
-							<xs:documentation>The date by which defendant should pay the full
-								amount. Should be in future and not tomorrow.
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:complexType>
-
-			<xs:complexType name="immediatePaymentType">
-				<xs:annotation>
-					<xs:documentation>Details when payment is to be paid immediately
-					</xs:documentation>
-				</xs:annotation>
-			</xs:complexType>
-
-			<xs:complexType name="paymentScheduleType">
-				<xs:choice>
-					<xs:element name="inFullByPayment" type="tns:fullPaymentType" />
-					<xs:element name="instalment" type="tns:instalmentPaymentType" />
-					<xs:element name="immediatePayment" type="tns:immediatePaymentType" />
-				</xs:choice>
-			</xs:complexType>
-
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" 
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+        
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"/>
+            
+            <xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType"/>
+        
+            <xs:complexType name="judgmentWarrantType">
+                <xs:sequence>
+                    <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
+                    <xs:element name="warrantDetail" type="wnt:warrantDetailType"/>
+                    <xs:element name="sotSignature" type="base:sotSignatureType"/>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
+            
+            <xs:simpleType name="judgmentTypeType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="A"/>
+                    <xs:enumeration value="D"/>
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:simpleType name="instalmentFrequencyType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="W"/>
+                    <xs:enumeration value="F"/>
+                    <xs:enumeration value="M"/>
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:complexType name="instalmentPaymentType">
+                <xs:annotation>
+                    <xs:documentation>Details when payment is to be paid in instalments. The amount cannot be greater than claim amount.</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="amount" type="xs:unsignedLong"/>
+                    <xs:element name="frequency" type="tns:instalmentFrequencyType"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="fullPaymentType">
+                <xs:annotation>
+                    <xs:documentation>Details when payment is to be paid in full by a specified date (as opposed to immediately)</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="fullByDate" type="xs:date">
+                        <xs:annotation>
+                            <xs:documentation>The date by which defendant should pay the full amount. Should be in future and not tomorrow.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="immediatePaymentType">
+                <xs:annotation>
+                    <xs:documentation>Details when payment is to be paid immediately</xs:documentation>
+                </xs:annotation>
+            </xs:complexType>
+        
+            <xs:complexType name="paymentScheduleType">
+                <xs:choice>
+                    <xs:element name="inFullByPayment" type="tns:fullPaymentType"/>
+                    <xs:element name="instalment" type="tns:instalmentPaymentType"/>
+                    <xs:element name="immediatePayment" type="tns:immediatePaymentType"/>
+                </xs:choice>
+            </xs:complexType>
+         
             <xs:simpleType name="payeeLineType">
                 <xs:restriction base="xs:string">
                     <xs:minLength value="1" />
@@ -520,31 +512,34 @@
                 </xs:sequence>
             </xs:complexType>
         
-			<xs:complexType name="mcolJudgmentType">
-				<xs:sequence>
-					<xs:element name="claimNumber" type="base:claimNumberType" />
-					<xs:element name="jointJudgment" type="xs:boolean" />
-					<xs:element name="judgmentType" type="tns:judgmentTypeType" />
+            <xs:complexType name="judgmentDetailType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:claimNumberType"/>
+                    <xs:element name="jointJudgment" type="xs:boolean"/>
+                    <xs:element name="judgmentType" type="tns:judgmentTypeType"/>
                     <xs:element name="sentParticularsSeparately" type="xs:boolean" fixed="true" minOccurs="0"/>
-					<xs:element name="defendantId" type="base:defendantIdType" minOccurs="0"/>
-					<xs:element name="defendant1Address" type="base:addressType"
-						minOccurs="0" />
-					<xs:element name="defendant1DateOfBirth" type="xs:date"
-						minOccurs="0" />
-					<xs:element name="defendant2Address" type="base:addressType"
-						minOccurs="0" />
-					<xs:element name="defendant2DateOfBirth" type="xs:date"
-						minOccurs="0" />
-					<xs:element name="paymentSchedule" type="tns:paymentScheduleType" />
-					<xs:element name="interest" type="xs:unsignedLong"	minOccurs="0" />
-					<xs:element name="solicitorCost" type="xs:unsignedLong"	minOccurs="0" />
-					<xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0" />
+                    <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0"/>
+                    <xs:element name="defendant1Address" type="base:addressType" minOccurs="0"/>
+                    <xs:element name="defendant1DateOfBirth" type="xs:date" minOccurs="0"/>
+                    <xs:element name="defendant2Address" type="base:addressType" minOccurs="0"/>
+                    <xs:element name="defendant2DateOfBirth" type="xs:date" minOccurs="0"/>
+                    <xs:element name="paymentSchedule" type="tns:paymentScheduleType"/>
+                    <xs:element name="interest" type="xs:unsignedLong" minOccurs="0"/>
+                    <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0"/>
+                    <xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0"/>
                     <xs:element name="payee" type="tns:payeeType" minOccurs="0"/>
-				</xs:sequence>
-			</xs:complexType>
-
-		</xs:schema>
-
+                </xs:sequence>
+            </xs:complexType>
+            
+            <xs:complexType name="mcolJudgmentType">
+                <xs:sequence>
+                    <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
+                    <xs:element name="sotSignature" type="base:sotSignatureType"/>
+                </xs:sequence>
+            </xs:complexType>
+        
+        </xs:schema>
+        
 		<!-- ClaimStatusUpdate.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" 
@@ -610,7 +605,6 @@
 					<xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
 					<xs:element name="requestCount" type="base:requestCountType" />
 					<xs:element name="customerReference" type="base:customerReferenceType" />
-                    <xs:element name="sotSignature" type="base:sotSignatureType"/>
 				</xs:sequence>
 			</xs:complexType>
 

@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _McolJudgmentWarrant_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema", "mcolJudgmentWarrant");
-    private final static QName _Mcoljudgment_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema", "mcoljudgment");
+    private final static QName _McolJudgment_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema", "mcolJudgment");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: uk.gov.moj.sdt.ws._2013.mcol.judgmentschema
@@ -48,6 +48,14 @@ public class ObjectFactory {
      */
     public McolJudgmentType createMcolJudgmentType() {
         return new McolJudgmentType();
+    }
+
+    /**
+     * Create an instance of {@link JudgmentDetailType }
+     * 
+     */
+    public JudgmentDetailType createJudgmentDetailType() {
+        return new JudgmentDetailType();
     }
 
     /**
@@ -111,9 +119,9 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link McolJudgmentType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema", name = "mcoljudgment")
-    public JAXBElement<McolJudgmentType> createMcoljudgment(McolJudgmentType value) {
-        return new JAXBElement<McolJudgmentType>(_Mcoljudgment_QNAME, McolJudgmentType.class, null, value);
+    @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema", name = "mcolJudgment")
+    public JAXBElement<McolJudgmentType> createMcolJudgment(McolJudgmentType value) {
+        return new JAXBElement<McolJudgmentType>(_McolJudgment_QNAME, McolJudgmentType.class, null, value);
     }
 
 }

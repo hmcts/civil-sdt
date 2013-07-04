@@ -36,4 +36,3 @@ cvc-minInclusive-valid: Value '-1' is not facet-valid with respect to minInclusi
 cvc-type.3.1.3: The value '-1' of element 'tns:solicitorCost' is not valid.
 cvc-maxLength-valid: Value '1234567890123456789012345678901234567890123456' with length = '46' is not facet-valid with respect to maxLength '45' for type 'particularsType'.
 cvc-type.3.1.3: The value '1234567890123456789012345678901234567890123456' of element 'tns:particulars' is not valid.
-cvc-complex-type.2.4.a: Invalid content was found starting with element 'tns:sotSignature'. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema":particulars}' is expected.

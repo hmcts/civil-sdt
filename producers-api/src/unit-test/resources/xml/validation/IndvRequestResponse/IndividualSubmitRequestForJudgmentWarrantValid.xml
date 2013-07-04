@@ -3,13 +3,9 @@
   <tns:header>
     <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
     <tns:mcolCustomerId>MC1234567890</tns:mcolCustomerId>
-    <tns:sotSignature>
-      <tns1:flag>true</tns1:flag>
-      <tns1:name>tns2:name</tns1:name>
-    </tns:sotSignature>
   </tns:header>
   <tns:mcolJudgmentWarrant>
-    <tns3:mcolJudgment>
+    <tns3:judgmentDetail>
       <tns3:claimNumber>12345678</tns3:claimNumber>
       <tns3:jointJudgment>true</tns3:jointJudgment>
       <tns3:judgmentType>A</tns3:judgmentType>
@@ -22,8 +18,8 @@
           <tns3:fullByDate>2001-01-01</tns3:fullByDate>
         </tns3:inFullByPayment>
       </tns3:paymentSchedule>
-    </tns3:mcolJudgment>
-    <tns3:mcolWarrant>
+    </tns3:judgmentDetail>
+    <tns3:warrantDetail>
       <tns4:claimNumber>12345678</tns4:claimNumber>
       <tns4:defendantId>1</tns4:defendantId>
       <tns4:defendantAddress>
@@ -33,6 +29,10 @@
       </tns4:defendantAddress>
       <tns4:balanceOfDebt>0</tns4:balanceOfDebt>
       <tns4:warrantAmount>0</tns4:warrantAmount>
-    </tns3:mcolWarrant>
+    </tns3:warrantDetail>
+    <tns3:sotSignature>
+      <tns1:flag>true</tns1:flag>
+      <tns1:name>tns2:name</tns1:name>
+    </tns3:sotSignature>
   </tns:mcolJudgmentWarrant>
 </tns:createJudgmentWarrantRequest>

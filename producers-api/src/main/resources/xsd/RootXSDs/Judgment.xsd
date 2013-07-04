@@ -14,12 +14,13 @@
 
     <xs:complexType name="judgmentWarrantType">
         <xs:sequence>
-            <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
-            <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+            <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
+            <xs:element name="warrantDetail" type="wnt:warrantDetailType"/>
+            <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="mcoljudgment" type="tns:mcolJudgmentType"/>
+    <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
     
     <xs:simpleType name="judgmentTypeType">
         <xs:restriction base="xs:string">
@@ -112,7 +113,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="mcolJudgmentType">
+    <xs:complexType name="judgmentDetailType">
         <xs:sequence>
             <xs:element name="claimNumber" type="base:claimNumberType"/>
             <xs:element name="jointJudgment" type="xs:boolean"/>
@@ -131,4 +132,11 @@
         </xs:sequence>
     </xs:complexType>
     
+    <xs:complexType name="mcolJudgmentType">
+        <xs:sequence>
+            <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
+            <xs:element name="sotSignature" type="base:sotSignatureType"/>
+        </xs:sequence>
+    </xs:complexType>
+
 </xs:schema>

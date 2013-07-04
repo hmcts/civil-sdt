@@ -42,6 +42,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link WarrantDetailType }
+     * 
+     */
+    public WarrantDetailType createWarrantDetailType() {
+        return new WarrantDetailType();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link WarrantType }{@code >}}
      * 
      */

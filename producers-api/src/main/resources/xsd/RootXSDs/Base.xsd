@@ -10,10 +10,9 @@
         </xs:restriction>
 	</xs:simpleType>
 
-	<!-- Proposed data format AA-TTTT-YYMMSDDHHMISS-999999999 -->
 	<xs:simpleType name="sdtBulkReferenceType">
 		<xs:restriction base="xs:string">
-			<xs:length value="32" />
+			<xs:length value="29" />
 		</xs:restriction>
 	</xs:simpleType>
 

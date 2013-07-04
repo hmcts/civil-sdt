@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
 
 
@@ -24,7 +23,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
  *         &lt;element name="targetApplicationId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}targetApplicationIdType"/>
  *         &lt;element name="requestCount" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestCountType"/>
  *         &lt;element name="customerReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}customerReferenceType"/>
- *         &lt;element name="sotSignature" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sotSignatureType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,8 +36,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
     "sdtCustomerId",
     "targetApplicationId",
     "requestCount",
-    "customerReference",
-    "sotSignature"
+    "customerReference"
 })
 public class HeaderType {
 
@@ -51,8 +48,6 @@ public class HeaderType {
     protected BigInteger requestCount;
     @XmlElement(required = true)
     protected String customerReference;
-    @XmlElement(required = true)
-    protected SotSignatureType sotSignature;
 
     /**
      * Gets the value of the sdtCustomerId property.
@@ -148,30 +143,6 @@ public class HeaderType {
      */
     public void setCustomerReference(String value) {
         this.customerReference = value;
-    }
-
-    /**
-     * Gets the value of the sotSignature property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SotSignatureType }
-     *     
-     */
-    public SotSignatureType getSotSignature() {
-        return sotSignature;
-    }
-
-    /**
-     * Sets the value of the sotSignature property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SotSignatureType }
-     *     
-     */
-    public void setSotSignature(SotSignatureType value) {
-        this.sotSignature = value;
     }
 
 }

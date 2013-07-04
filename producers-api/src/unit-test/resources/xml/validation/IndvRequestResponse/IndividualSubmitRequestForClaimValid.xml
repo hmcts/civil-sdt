@@ -3,10 +3,6 @@
   <tns:header>
     <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
     <tns:mcolCustomerId>MC1234567890</tns:mcolCustomerId>
-    <tns:sotSignature>
-      <tns1:flag>true</tns1:flag>
-      <tns1:name>tns2:name</tns1:name>
-    </tns:sotSignature>
   </tns:header>
   <tns:mcolClaim>
     <tns2:claimantReference>tns2:claimantReference</tns2:claimantReference>
@@ -62,5 +58,9 @@
     <tns2:claimAmount>0</tns2:claimAmount>
     <tns2:solicitorCost>0</tns2:solicitorCost>
     <tns2:particulars>tns2:particulars</tns2:particulars>
+    <tns2:sotSignature>
+      <tns1:flag>true</tns1:flag>
+      <tns1:name>tns2:name</tns1:name>
+    </tns2:sotSignature>
   </tns:mcolClaim>
 </tns:createClaimRequest>

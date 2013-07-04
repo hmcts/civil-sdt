@@ -1,2 +1,3 @@
-cvc-complex-type.2.4.b: The content of element 'tns:mcolJudgment' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema":claimNumber}' is expected.
-cvc-complex-type.2.4.b: The content of element 'tns:mcolWarrant' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema":claimNumber}' is expected.
+cvc-complex-type.2.4.b: The content of element 'tns:judgmentDetail' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema":claimNumber}' is expected.
+cvc-complex-type.2.4.b: The content of element 'tns:warrantDetail' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema":claimNumber}' is expected.
+cvc-complex-type.2.4.b: The content of element 'tns:mcolJudgmentWarrant' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema":sotSignature}' is expected.

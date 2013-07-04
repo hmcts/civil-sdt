@@ -3,10 +3,6 @@
   <tns:header>
     <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
     <tns:mcolCustomerId>MC1234567890</tns:mcolCustomerId>
-    <tns:sotSignature>
-      <tns1:flag>true</tns1:flag>
-      <tns1:name>tns2:name</tns1:name>
-    </tns:sotSignature>
   </tns:header>
   <tns:mcolClaimStatusUpdate>
     <tns5:claimNumber>12345678</tns5:claimNumber>

@@ -22,7 +22,6 @@
             <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
             <xs:element name="requestCount" type="base:requestCountType"/>
             <xs:element name="customerReference" type="base:customerReferenceType"/>
-            <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
     </xs:complexType>
 

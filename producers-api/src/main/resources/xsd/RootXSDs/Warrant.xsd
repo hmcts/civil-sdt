@@ -15,7 +15,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-	<xs:complexType name="warrantType">
+	<xs:complexType name="warrantDetailType">
 		<xs:sequence>
 			<xs:element name="claimNumber" type="base:claimNumberType" />
 			<xs:element name="defendantId" type="base:defendantIdType" />
@@ -26,6 +26,13 @@
 			<xs:element name="additionalNotes" type="tns:additionalNotesType" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
+
+    <xs:complexType name="warrantType">
+        <xs:sequence>
+            <xs:element name="warrantDetail" type="tns:warrantDetailType" />
+            <xs:element name="sotSignature" type="base:sotSignatureType"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:element name="mcolWarrant" type="tns:warrantType" />
 

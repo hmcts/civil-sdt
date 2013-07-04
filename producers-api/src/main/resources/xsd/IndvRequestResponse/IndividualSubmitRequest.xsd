@@ -20,7 +20,6 @@
         <xs:sequence>
             <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
             <xs:element name="mcolCustomerId" type="base:mcolCustomerIdType"/>
-            <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
     </xs:complexType>
     

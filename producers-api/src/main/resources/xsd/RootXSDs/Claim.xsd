@@ -93,6 +93,7 @@
                     <xs:documentation>Details about the claim</xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
 	</xs:complexType>
     

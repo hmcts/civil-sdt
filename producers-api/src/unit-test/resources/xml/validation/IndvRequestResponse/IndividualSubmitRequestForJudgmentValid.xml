@@ -3,36 +3,38 @@
   <tns:header>
     <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
     <tns:mcolCustomerId>MC1234567890</tns:mcolCustomerId>
-    <tns:sotSignature>
-      <tns1:flag>true</tns1:flag>
-      <tns1:name>tns2:name</tns1:name>
-    </tns:sotSignature>
   </tns:header>
   <tns:mcolJudgment>
-    <tns3:claimNumber>12345678</tns3:claimNumber>
-    <tns3:jointJudgment>true</tns3:jointJudgment>
-    <tns3:judgmentType>A</tns3:judgmentType>
-    <tns3:sentParticularsSeparately>true</tns3:sentParticularsSeparately>
-    <tns3:defendantId>1</tns3:defendantId>
-    <tns3:defendant1Address>
-      <tns1:line1>tns1:line1</tns1:line1>
-      <tns1:line2>tns1:line2</tns1:line2>
-      <tns1:postcode>FL23 2SD</tns1:postcode>
-    </tns3:defendant1Address>
-    <tns3:defendant1DateOfBirth>2001-01-01</tns3:defendant1DateOfBirth>
-    <tns3:defendant2Address>
-      <tns1:line1>tns1:line1</tns1:line1>
-      <tns1:line2>tns1:line2</tns1:line2>
-      <tns1:postcode>FL23 2SD</tns1:postcode>
-    </tns3:defendant2Address>
-    <tns3:defendant2DateOfBirth>2001-01-01</tns3:defendant2DateOfBirth>
-    <tns3:paymentSchedule>
-      <tns3:inFullByPayment>
-        <tns3:fullByDate>2001-01-01</tns3:fullByDate>
-      </tns3:inFullByPayment>
-    </tns3:paymentSchedule>
-    <tns3:interest>0</tns3:interest>
-    <tns3:solicitorCost>0</tns3:solicitorCost>
-    <tns3:deductedAmount>0</tns3:deductedAmount>
+    <tns3:judgmentDetail>
+        <tns3:claimNumber>12345678</tns3:claimNumber>
+        <tns3:jointJudgment>true</tns3:jointJudgment>
+        <tns3:judgmentType>A</tns3:judgmentType>
+        <tns3:sentParticularsSeparately>true</tns3:sentParticularsSeparately>
+        <tns3:defendantId>1</tns3:defendantId>
+        <tns3:defendant1Address>
+          <tns1:line1>tns1:line1</tns1:line1>
+          <tns1:line2>tns1:line2</tns1:line2>
+          <tns1:postcode>FL23 2SD</tns1:postcode>
+        </tns3:defendant1Address>
+        <tns3:defendant1DateOfBirth>2001-01-01</tns3:defendant1DateOfBirth>
+        <tns3:defendant2Address>
+          <tns1:line1>tns1:line1</tns1:line1>
+          <tns1:line2>tns1:line2</tns1:line2>
+          <tns1:postcode>FL23 2SD</tns1:postcode>
+        </tns3:defendant2Address>
+        <tns3:defendant2DateOfBirth>2001-01-01</tns3:defendant2DateOfBirth>
+        <tns3:paymentSchedule>
+          <tns3:inFullByPayment>
+            <tns3:fullByDate>2001-01-01</tns3:fullByDate>
+          </tns3:inFullByPayment>
+        </tns3:paymentSchedule>
+        <tns3:interest>0</tns3:interest>
+        <tns3:solicitorCost>0</tns3:solicitorCost>
+        <tns3:deductedAmount>0</tns3:deductedAmount>
+    </tns3:judgmentDetail>
+    <tns3:sotSignature>
+      <tns1:flag>true</tns1:flag>
+      <tns1:name>tns2:name</tns1:name>
+    </tns3:sotSignature>
   </tns:mcolJudgment>
 </tns:createJudgmentRequest>
