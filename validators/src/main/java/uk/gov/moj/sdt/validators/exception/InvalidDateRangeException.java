@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,58 +24,79 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.validators.exception;
 
-import org.joda.time.LocalDate;
+import java.util.Map;
 
 /**
- * An interface to provide date validation methods.
+ * Invalid date range.
  * 
- * @author Simon Holmes
+ * @author d130680
  * 
  */
-public interface IDateValidator
+public class InvalidDateRangeException extends AbstractBusinessException
 {
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Tests if a given date is within two dates, inclusively.
+     * Invalid date range.
      * 
-     * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the range.
-     * @param endDate the end date of the range.
-     * @return TRUE if within date, FALSE if not.
+     * @param code error code
+     * @param description error description
      */
-    boolean isDateWitinRange (LocalDate dateToTest, final LocalDate startDate, final LocalDate endDate);
+    public InvalidDateRangeException (final String code, final String description)
+    {
+        super (code, description);
+    }
 
     /**
+     * Invalid date range.
      * 
-     * Tests if a date is BEFORE a given date, inclusively.
-     * 
-     * @param dateToTest the date that is to be tested.
-     * @param endDate the end date of the test.
-     * @return TRUE if before the given date, FALSE if not.
+     * @param code code
+     * @param description description
+     * @param replacements string replacements with tokens
      */
-    boolean isDateBefore (final LocalDate dateToTest, final LocalDate endDate);
+    public InvalidDateRangeException (final String code, final String description,
+            final Map<String, String> replacements)
+    {
+        super (code, description, replacements);
+    }
 
     /**
-     * Tests if a date is AFTER a given date, inclusively.
+     * Invalid date range.
      * 
-     * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the test.
-     * @return TRUE if after the given date, FALSE if not.
+     * @param s the s
      */
-    boolean isDateAfter (final LocalDate dateToTest, final LocalDate startDate);
+    public InvalidDateRangeException (final String s)
+    {
+        super (s);
+    }
 
     /**
-     * Tests if a date is within a given number of days, inclusive of the Xth day.
+     * Invalid date range.
      * 
-     * @param dateToTest the date that is to be tested
-     * @param numberOfDays the number of days the date should be within.
-     * @return TRUE if the date is within the last X days, FALSE if it is not.
+     * @param cause the cause
      */
-    boolean isDateWitinLastXDays (final LocalDate dateToTest, final Integer numberOfDays);
+    public InvalidDateRangeException (final Throwable cause)
+    {
+        super (cause);
+    }
+
+    /**
+     * Invalid date range.
+     * 
+     * @param s the s
+     * @param cause the cause
+     */
+    public InvalidDateRangeException (final String s, final Throwable cause)
+    {
+        super (s, cause);
+    }
 }

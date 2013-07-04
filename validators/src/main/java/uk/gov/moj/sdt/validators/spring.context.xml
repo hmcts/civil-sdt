@@ -29,6 +29,10 @@
     <bean id="uk.gov.moj.sdt.validators.api.IIndividualRequestValidator"
         class="uk.gov.moj.sdt.validators.IndividualRequestValidator">
     </bean>
+    
+        <bean id="uk.gov.moj.sdt.validators.api.IRequestDefenceDetailValidator"
+        class="uk.gov.moj.sdt.validators.RequestDefenceDetailValidator">
+    </bean>
 
 	<bean id="uk.gov.moj.sdt.validators.api.IDateValidator" class="uk.gov.moj.sdt.validators.DateValidator">
 	</bean>
