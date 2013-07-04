@@ -23,6 +23,15 @@
     
     <bean id="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler" 
         class="uk.gov.moj.sdt.producer.comx.handler.WsReadBulkFeedbackRequestHandler">
+    </bean>    
+
+    <bean id="uk.gov.moj.sdt.service.api.IDefenceService" 
+        class="uk.gov.moj.sdt.producer.comx.service.MockDefenceService">
+    </bean>
+        
+    <bean id="uk.gov.moj.sdt.producers.api.IWsReadDefenceDetailsHandler" 
+        class="uk.gov.moj.sdt.producer.comx.handler.WsReadDefenceDetailsHandler">
+        <property name="defenceService" ref="uk.gov.moj.sdt.service.api.IDefenceService"/>
     </bean>
     
 </beans>
