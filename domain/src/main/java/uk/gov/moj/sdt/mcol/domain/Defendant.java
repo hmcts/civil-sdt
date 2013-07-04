@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,68 +24,95 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.mcol.domain;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
-import uk.gov.moj.sdt.domain.RequestType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
+import java.util.Date;
 
 /**
- * An interface to implement the visitor pattern for visitor capable of visiting a domain object.
+ * Defendant object as returned by MCOL.
  * 
- * @author Robin Compston
+ * @author d130680
  * 
  */
-public interface IDomainObjectVisitor extends IVisitor
+public class Defendant
 {
-    /**
-     * Visit the domain object.
-     * 
-     * @param bulkCustomer the domain object to be visited.
-     */
-    void visit (BulkCustomer bulkCustomer);
 
     /**
-     * Visit the domain object.
-     * 
-     * @param bulkSubmission the domain object to be visited.
+     * The defendant ID.
      */
-    void visit (BulkSubmission bulkSubmission);
+    private String defendantId;
 
     /**
-     * Visit the domain object.
-     * 
-     * @param requestType domain object to be visited.
+     * The filed date.
      */
-    void visit (RequestType requestType);
+    private Date filedDate;
 
     /**
-     * Visit the domain object.
-     * 
-     * @param targetApplication domain object to be visited.
+     * The response which can be of DE, DC or PA.
      */
-    void visit (TargetApplication targetApplication);
+    private String response;
 
     /**
-     * Visit the domain object.
+     * Get the defendant Id.
      * 
-     * @param individualRequest domain object to be visited.
+     * @return defendant Id
      */
-    void visit (IndividualRequest individualRequest);
+    public String getDefendantId ()
+    {
+        return defendantId;
+    }
 
     /**
-     * Visit the Request Defence Detail.
+     * Set the defendant Id.
      * 
-     * @param requestDefenceDetail domain object to be visited.
+     * @param defendantId defendant Id
      */
-    void visit (RequestDefenceDetail requestDefenceDetail);
+    public void setDefendantId (final String defendantId)
+    {
+        this.defendantId = defendantId;
+    }
 
+    /**
+     * Get the filed date.
+     * 
+     * @return filed date
+     */
+    public Date getFiledDate ()
+    {
+        return filedDate;
+    }
+
+    /**
+     * Set the filed date.
+     * 
+     * @param filedDate filed date
+     */
+    public void setFiledDate (final Date filedDate)
+    {
+        this.filedDate = filedDate;
+    }
+
+    /**
+     * Get the response.
+     * 
+     * @return response
+     */
+    public String getResponse ()
+    {
+        return response;
+    }
+
+    /**
+     * Set the response.
+     * 
+     * @param response response.
+     */
+    public void setResponse (final String response)
+    {
+        this.response = response;
+    }
 }

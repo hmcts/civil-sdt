@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,68 +24,70 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.mcol.domain;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
-import uk.gov.moj.sdt.domain.RequestType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
+import java.util.List;
 
 /**
- * An interface to implement the visitor pattern for visitor capable of visiting a domain object.
+ * Defence details object as returned by MCOL.
  * 
- * @author Robin Compston
+ * @author d130680
  * 
  */
-public interface IDomainObjectVisitor extends IVisitor
+public class DefenceDetail
 {
-    /**
-     * Visit the domain object.
-     * 
-     * @param bulkCustomer the domain object to be visited.
-     */
-    void visit (BulkCustomer bulkCustomer);
 
     /**
-     * Visit the domain object.
-     * 
-     * @param bulkSubmission the domain object to be visited.
+     * The claim number.
      */
-    void visit (BulkSubmission bulkSubmission);
+    private String claimNumber;
 
     /**
-     * Visit the domain object.
-     * 
-     * @param requestType domain object to be visited.
+     * List of defendants returned from the query.
      */
-    void visit (RequestType requestType);
+    private List<Defendant> defendants;
 
     /**
-     * Visit the domain object.
+     * Get the claim number.
      * 
-     * @param targetApplication domain object to be visited.
+     * @return claim number
      */
-    void visit (TargetApplication targetApplication);
+    public String getClaimNumber ()
+    {
+        return claimNumber;
+    }
 
     /**
-     * Visit the domain object.
+     * Set the claim number.
      * 
-     * @param individualRequest domain object to be visited.
+     * @param claimNumber claim number
      */
-    void visit (IndividualRequest individualRequest);
+    public void setClaimNumber (final String claimNumber)
+    {
+        this.claimNumber = claimNumber;
+    }
 
     /**
-     * Visit the Request Defence Detail.
+     * Get the list of defendants.
      * 
-     * @param requestDefenceDetail domain object to be visited.
+     * @return list of defendants
      */
-    void visit (RequestDefenceDetail requestDefenceDetail);
+    public List<Defendant> getDefendants ()
+    {
+        return defendants;
+    }
 
+    /**
+     * Set the list of defendants.
+     * 
+     * @param defendants list of defendants
+     */
+    public void setDefendants (final List<Defendant> defendants)
+    {
+        this.defendants = defendants;
+    }
 }

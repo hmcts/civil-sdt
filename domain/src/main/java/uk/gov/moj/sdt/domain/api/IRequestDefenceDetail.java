@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,68 +24,76 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.domain.api;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
-import uk.gov.moj.sdt.domain.RequestType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
+import org.joda.time.LocalDate;
 
 /**
- * An interface to implement the visitor pattern for visitor capable of visiting a domain object.
+ * Interface for all classes implementing {@link IRequestDefenceDetail}.
  * 
- * @author Robin Compston
+ * @author d130680
  * 
  */
-public interface IDomainObjectVisitor extends IVisitor
+public interface IRequestDefenceDetail
 {
-    /**
-     * Visit the domain object.
-     * 
-     * @param bulkCustomer the domain object to be visited.
-     */
-    void visit (BulkCustomer bulkCustomer);
 
     /**
-     * Visit the domain object.
+     * Get the from date.
      * 
-     * @param bulkSubmission the domain object to be visited.
+     * @return from date
      */
-    void visit (BulkSubmission bulkSubmission);
+    LocalDate getFromDate ();
 
     /**
-     * Visit the domain object.
+     * Set the from date.
      * 
-     * @param requestType domain object to be visited.
+     * @param fromDate from date
      */
-    void visit (RequestType requestType);
+    void setFromDate (final LocalDate fromDate);
+    
+    /**
+     * Get the to date.
+     * 
+     * @return to date
+     */
+    LocalDate getToDate ();
 
     /**
-     * Visit the domain object.
+     * Set the to date.
      * 
-     * @param targetApplication domain object to be visited.
+     * @param toDate to date
      */
-    void visit (TargetApplication targetApplication);
+    void setToDate (final LocalDate toDate);
 
     /**
-     * Visit the domain object.
+     * Get the Target Application.
      * 
-     * @param individualRequest domain object to be visited.
+     * @return target application
      */
-    void visit (IndividualRequest individualRequest);
+    ITargetApplication getTargetApplication ();
 
     /**
-     * Visit the Request Defence Detail.
+     * Set the Target Application.
      * 
-     * @param requestDefenceDetail domain object to be visited.
+     * @param targetApplication target application
      */
-    void visit (RequestDefenceDetail requestDefenceDetail);
+    void setTargetApplication (final ITargetApplication targetApplication);
 
+    /**
+     * Get SDT customer id.
+     * 
+     * @return SDT customer id
+     */
+    int getSdtCustomerId ();
+
+    /**
+     * Set SDT customer id.
+     * 
+     * @param sdtCustomerId SDT customer id
+     */
+    void setSdtCustomerId (final int sdtCustomerId);
 }

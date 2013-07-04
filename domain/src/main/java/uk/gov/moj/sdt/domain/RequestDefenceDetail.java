@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,68 +24,94 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
-import uk.gov.moj.sdt.domain.RequestType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
+package uk.gov.moj.sdt.domain;
+
+import org.joda.time.LocalDate;
+
+import uk.gov.moj.sdt.domain.api.IRequestDefenceDetail;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+
 
 /**
- * An interface to implement the visitor pattern for visitor capable of visiting a domain object.
+ * Transient domain object for storing request defence detail information.
  * 
- * @author Robin Compston
+ * @author d130680
  * 
  */
-public interface IDomainObjectVisitor extends IVisitor
+public class RequestDefenceDetail extends AbstractDomainObject implements IRequestDefenceDetail
 {
-    /**
-     * Visit the domain object.
-     * 
-     * @param bulkCustomer the domain object to be visited.
-     */
-    void visit (BulkCustomer bulkCustomer);
 
     /**
-     * Visit the domain object.
-     * 
-     * @param bulkSubmission the domain object to be visited.
+     * The from date search criteria.
      */
-    void visit (BulkSubmission bulkSubmission);
+    private LocalDate fromDate;
 
     /**
-     * Visit the domain object.
-     * 
-     * @param requestType domain object to be visited.
+     * The to date search criteria.
      */
-    void visit (RequestType requestType);
+    private LocalDate toDate;
 
     /**
-     * Visit the domain object.
-     * 
-     * @param targetApplication domain object to be visited.
+     * The target application that SDT routes the Bulk Request onto for subsequent processing.
      */
-    void visit (TargetApplication targetApplication);
+    private ITargetApplication targetApplication;
 
     /**
-     * Visit the domain object.
-     * 
-     * @param individualRequest domain object to be visited.
+     * This is a manually allocated and maintained value.
      */
-    void visit (IndividualRequest individualRequest);
+    private int sdtCustomerId;
 
-    /**
-     * Visit the Request Defence Detail.
-     * 
-     * @param requestDefenceDetail domain object to be visited.
-     */
-    void visit (RequestDefenceDetail requestDefenceDetail);
+    @Override
+    public ITargetApplication getTargetApplication ()
+    {
+        return targetApplication;
+    }
+
+    @Override
+    public void setTargetApplication (final ITargetApplication targetApplication)
+    {
+        this.targetApplication = targetApplication;
+    }
+
+    @Override
+    public int getSdtCustomerId ()
+    {
+        return sdtCustomerId;
+    }
+
+    @Override
+    public void setSdtCustomerId (final int sdtCustomerId)
+    {
+        this.sdtCustomerId = sdtCustomerId;
+    }
+
+    @Override
+    public LocalDate getFromDate ()
+    {
+        return fromDate;
+    }
+
+    @Override
+    public void setFromDate (final LocalDate fromDate)
+    {
+        this.fromDate = fromDate;
+    }
+
+    @Override
+    public LocalDate getToDate ()
+    {
+        return toDate;
+    }
+
+    @Override
+    public void setToDate (final LocalDate toDate)
+    {
+        this.toDate = toDate;
+    }
 
 }
