@@ -35,8 +35,6 @@ import junit.framework.TestCase;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -55,11 +53,6 @@ import uk.gov.moj.sdt.utils.SpringApplicationContext;
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
 public class GenericDaoTest extends TestCase
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger (GenericDaoTest.class);
-
     /**
      * Default constructor for {@link GenericDaoTest}.
      */
