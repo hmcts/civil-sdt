@@ -59,7 +59,7 @@ public class BulkCustomerValidator extends AbstractDomainObjectVisitor implement
     }
 
     @Override
-    public void visit (BulkCustomer bulkCustomer)
+    public void visit (final BulkCustomer bulkCustomer)
     {
         // TODO Do validation of bulk customer.
         LOGGER.info ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");

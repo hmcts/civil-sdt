@@ -58,7 +58,7 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
     }
 
     @Override
-    public void visit (BulkSubmission bulkSubmission)
+    public void visit (final BulkSubmission bulkSubmission)
     {
 
         // TODO Do validation of bulk submission.

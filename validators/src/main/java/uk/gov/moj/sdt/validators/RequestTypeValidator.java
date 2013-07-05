@@ -59,7 +59,7 @@ public class RequestTypeValidator extends AbstractDomainObjectVisitor implements
     }
 
     @Override
-    public void visit (RequestType requestType)
+    public void visit (final RequestType requestType)
     {
         // TODO Do validation
         LOGGER.info ("visit(requestType)");

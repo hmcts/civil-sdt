@@ -59,7 +59,7 @@ public class TargetApplicationValidator extends AbstractDomainObjectVisitor impl
     }
 
     @Override
-    public void visit (TargetApplication targetApplication)
+    public void visit (final TargetApplication targetApplication)
     {
         // TODO Do validation
         LOGGER.info ("visit(targetApplication)");

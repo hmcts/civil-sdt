@@ -30,11 +30,10 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators.api;
 
-import uk.gov.moj.sdt.domain.IndividualRequest;
 
 
 /**
- * An interface to provide validation methods for {@link IndividualRequest}.
+ * An interface to provide validation methods for {@link uk.gov.moj.sdt.domain.IndividualRequest}.
  * 
  * @author Saurabh Agarwal
  * 

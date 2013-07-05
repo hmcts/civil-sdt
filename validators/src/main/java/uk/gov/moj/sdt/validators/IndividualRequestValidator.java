@@ -59,7 +59,7 @@ public class IndividualRequestValidator extends AbstractDomainObjectVisitor impl
     }
 
     @Override
-    public void visit (IndividualRequest individualRequest)
+    public void visit (final IndividualRequest individualRequest)
     {
         // TODO Do validation
         LOGGER.info ("visit(individualRequest)");
