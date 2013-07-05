@@ -41,7 +41,7 @@ import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
  * @author d130680
  * 
  */
-public class AbstractBusinessException extends RuntimeException implements IBusinessException
+public abstract class AbstractBusinessException extends RuntimeException implements IBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -51,12 +51,15 @@ public class AbstractBusinessException extends RuntimeException implements IBusi
     /**
      * Error code.
      */
+
+    // CHECKSTYLE:OFF
     private String errorCode;
 
     /**
-     * Error description
+     * Error description.
      */
     private String errorDescription;
+    // CHECKSTYLE:ON
 
     /**
      * Constructor for non-tokenised description.
@@ -139,9 +142,32 @@ public class AbstractBusinessException extends RuntimeException implements IBusi
         return errorDescription;
     }
 
+    /**
+     * Error code enums.
+     * 
+     * @author d130680
+     * 
+     */
     public enum ErrorCode
     {
-        REQ_COUNT_MISMATCH, REQ_TYPE_INCORRECT, INVALID_DATE_RANGE, ABOVE_MAXIMUM_RETENTION_PERIOD
+        /**
+         * Request count mismatch.
+         */
+        REQ_COUNT_MISMATCH,
+
+        /**
+         * Request type incorrect.
+         */
+        REQ_TYPE_INCORRECT,
+
+        /**
+         * Invalid date range.
+         */
+        INVALID_DATE_RANGE,
+        /**
+         * Maximum concurrent requests reached.
+         */
+        ABOVE_MAXIMUM_RETENTION_PERIOD
     }
 
 }

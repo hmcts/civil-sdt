@@ -24,33 +24,12 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-
-package uk.gov.moj.sdt.validators.exception.api;
+ * $Id: package-info.java 16448 2013-06-05 16:25:58Z agarwals $
+ * $LastChangedRevision: 16448 $
+ * $LastChangedDate: 2013-06-05 17:25:58 +0100 (Wed, 05 Jun 2013) $
+ * $LastChangedBy: agarwals $ */
 
 /**
- * Interface for business exceptions.
- * 
- * @author d130680
- * 
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public interface IBusinessException
-{
-
-    /**
-     * Get the error code.
-     * 
-     * @return error code
-     */
-    String getErrorCode ();
-
-    /**
-     * Get the error description.
-     * 
-     * @return error description
-     */
-    String getErrorDescription ();
-}
+package uk.gov.moj.sdt.validators.exception.api;

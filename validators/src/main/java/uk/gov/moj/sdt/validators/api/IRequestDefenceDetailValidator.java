@@ -30,11 +30,10 @@
  * $LastChangedBy: agarwals $ */
 package uk.gov.moj.sdt.validators.api;
 
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
 
 
 /**
- * An interface to provide validation methods for {@link RequestDefenceDetail}.
+ * An interface to provide validation methods for RequestDefenceDetail.
  * 
  * @author d130680
  * 

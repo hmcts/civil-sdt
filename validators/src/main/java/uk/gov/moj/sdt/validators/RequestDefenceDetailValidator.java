@@ -52,14 +52,15 @@ public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor i
 {
 
     /**
+     * Retention period in days for defence details.
+     */
+    public static final int DEFENCE_DETAILS_RETENTION_PERIOD = 90;
+
+    /**
      * Logger instance.
      */
     private static final Log LOGGER = LogFactory.getLog (RequestDefenceDetailValidator.class);
 
-    /**
-     * Retention period in days for defence details.
-     */
-    public static final int DEFENCE_DETAILS_RETENTION_PERIOD = 90;
 
     /**
      * No-argument Constructor.
@@ -80,7 +81,7 @@ public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor i
 
         boolean isValid = true;
 
-        IDateValidator dateValidator = new DateValidator ();
+        final IDateValidator dateValidator = new DateValidator ();
 
         final LocalDate toDate = defenceDetail.getToDate ();
         final LocalDate fromDate = defenceDetail.getFromDate ();
@@ -98,9 +99,11 @@ public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor i
 
         if ( !isValid)
         {
+            // CHECKSTYLE:OFF
             throw new InvalidDateRangeException (
                     AbstractBusinessException.ErrorCode.ABOVE_MAXIMUM_RETENTION_PERIOD.name (),
                     "SDT has reached the maximum number of Defence Requests that can be forwarded to the online Case Management application (MCOL) for processing at any point in time.");
+            // CHECKSTYLE:ON
         }
 
     }
