@@ -117,6 +117,14 @@ public abstract class AbstractVisitor implements IVisitor
             }
             catch (final InvocationTargetException e)
             {
+                // Check if this is a validation exception thrown by one of the validators and if so extract the
+                // validation exception from the InvocationTargetException added by reflection logic.
+                final Throwable throwable = e.getCause ();
+                if (RuntimeException.class.isAssignableFrom (throwable.getClass ()))
+                {
+                    throw RuntimeException.class.cast (throwable);
+                }
+
                 LOG.error ("Cannot find visit method for target bean [" + clazz.getName () + "].", e);
                 throw new UnsupportedOperationException (e);
             }
