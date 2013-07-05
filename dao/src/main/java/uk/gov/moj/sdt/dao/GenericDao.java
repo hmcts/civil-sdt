@@ -121,6 +121,7 @@ public class GenericDao implements IGenericDao
         // boundaries
         final Object o = criteria.uniqueResult ();
         domainObject = domainType.cast (o);
+        
 
         // Validate results.
         if (domainObject == null)
@@ -136,7 +137,7 @@ public class GenericDao implements IGenericDao
         return domainObject;
     }
 
-    // // CHECKSTYLE:OFF Complexity is acceptable
+    
     // @Override
     // public <DomainType extends IDomainObject> DomainType fetch (final DomainType domainObject,
     // final String... properties) throws DataAccessException
@@ -355,118 +356,12 @@ public class GenericDao implements IGenericDao
         return domainObjects.toArray (results);
     }
 
-    // // CHECKSTYLE:OFF Complexity is acceptable
-    // @Override
-    // public <DomainType extends IDomainObject> DomainType delete (final DomainType domainObject)
-    // throws DataAccessException
-    // // CHECKSTYLE:ON
-    // {
-    // // Eventually a delete statement is issued in case the transaction time range does not include a range, notice
-    // // this can happen if we persist and then delete an entity within a single transaction.
-    // // Use session as key to retrieve transaction time.
-    // final Session session = this.getSessionFactory ().getCurrentSession ();
-    //
-    // // Prepare to read rv class and setup bi-temporal restrictions.
-    //
-    // final Criteria criteria = session.createCriteria (domainObject.getClass ().getSimpleName ());
-    // criteria.add (Restrictions.eq ("id", id));
-    // criteria.add (Restrictions.le ("created", txTime));
-    //
-    // // Get back list of domain objects.
-    // final List<?> domainObjects = criteria.list ();
-    // if ( !domainObjects.isEmpty ())
-    // {
-    // // Check whether any record found was marked as expired already, these can not be modified
-    // // anymore...
-    // for (final Object entry : rvEntities)
-    // {
-    // final IBitemporalRvEntity rvEntity = (IBitemporalRvEntity) entry;
-    // if (rvEntity.getExpired ().before (IEntity.FOREVER))
-    // {
-    // throw new IllegalStateException ();
-    // }
-    // }
-    //
-    // // Adjust times to mark expiration point in time, notice we might have to split time for the first
-    // // and
-    // // last record found. For splitting we need to introduce a new record. This can be done in two ways,
-    // // either we split in transaction time or in business time. Splitting in transaction time would
-    // // result
-    // // in a new historic record when querying a specific point in business time. Since this record would
-    // // have identical working data users might find this awkward to see in history. Thus, we split in
-    // // business time rather than transaction time, if necessary.
-    // // If validFrom and validTo have been changed to span many previous records, then entities fully
-    // // contained within the range really need to be logically deleted. This is done in the loop. In this
-    // // case both if-clauses do not execute and the subsequent update expires the existing contained
-    // // record.
-    // for (final Object entry : rvEntities)
-    // {
-    // final IBitemporalRvEntity rvEntity = (IBitemporalRvEntity) entry;
-    // final Date rvValidFrom = rvEntity.getValidFrom ();
-    // final Date rvValidTo = rvEntity.getValidTo ();
-    //
-    // // Existing entity matches given business time but precedes validFrom of new entity, therefore a
-    // // new
-    // // entity is needed to cover time between rvValidFrom and bsFrom.
-    // if (rvValidFrom.before (bsFrom))
-    // {
-    // // split at the beginning
-    // final IBitemporalRvEntity rvClone = this.duplicate (session, rvEntity);
-    // rvClone.setRvOid (IEntity.NULL_ID);
-    // rvClone.setValidTo (rvValidFrom);
-    // session.save (rvClass.getSimpleName (), rvClone);
-    // rvEntity.setValidFrom (rvClone.getValidTo ());
-    // }
-    // // Existing entity matches given business time but comes after validTo of new entity, therefore
-    // // a
-    // // new entity is needed to cover time between bsTo and rvValidTo.
-    // if (rvValidTo.after (bsTo))
-    // {
-    // // split at the end
-    // final IBitemporalRvEntity rvClone = this.duplicate (session, rvEntity);
-    // rvClone.setRvOid (IEntity.NULL_ID);
-    // rvClone.setValidFrom (rvValidTo);
-    // session.save (rvClass.getSimpleName (), rvClone);
-    // rvEntity.setValidTo (rvClone.getValidFrom ());
-    // }
-    // session.update (rvClass.getSimpleName (), rvEntity);
-    // }
-    // }
-    //
-    // return domainObject;
-    // }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType insert (final DomainType domainObject)
+    public void persist (final Object domainObject)
         throws DataAccessException
     {
         final Session session = this.getSessionFactory ().getCurrentSession ();
-
-        domainObject.setId ((Integer) session.save (domainObject.getClass ().getSimpleName (), domainObject));
-
-        return domainObject;
-    }
-
-    /**
-     * Stores changes made to an existing domainObject into the database.
-     * 
-     * @param <DomainType> of entity to update.
-     * @param domainObject instance to update.
-     * @return domainObject, with transaction times and (RV)OIDs adjusted.
-     * 
-     * @throws DataAccessException on any I/O related error.
-     * 
-     * @see #persist(IDomainObject)
-     */
-    // CHECKSTYLE:OFF Complexity is acceptable
-    public <DomainType extends IDomainObject> DomainType update (final DomainType domainObject)
-        throws DataAccessException
-    // CHECKSTYLE:ON
-    {
-        final Session session = this.getSessionFactory ().getCurrentSession ();
-
-        domainObject.setId ((Integer) session.save (domainObject.getClass ().getSimpleName (), domainObject));
-
-        return domainObject;
+        session.saveOrUpdate (domainObject);
     }
 }

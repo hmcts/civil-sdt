@@ -68,7 +68,7 @@ public class GenericDaoTest extends TestCase
         super ();
     }
 
-    /**
+    /** 
      * Tests fetch.
      */
     @Test
@@ -119,6 +119,6 @@ public class GenericDaoTest extends TestCase
         bulkCustomer.setSdtCustomerId (456);
         bulkCustomer.setCustomerCaseCode ("GH");
         
-        genericDao.insert (bulkCustomer);
+        genericDao.persist (bulkCustomer);
     }
 }

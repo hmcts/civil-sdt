@@ -78,3 +78,42 @@ CYCLE
 NOCACHE
 NOORDER
 ;
+
+--
+-- Sequence to support global parameters
+--
+
+CREATE SEQUENCE glb_par_seq
+MINVALUE 1
+MAXVALUE 999999999
+INCREMENT BY 1
+CYCLE
+NOCACHE
+NOORDER
+;
+
+--
+-- Sequence to support request types
+--
+
+CREATE SEQUENCE req_typ_seq
+MINVALUE 1
+MAXVALUE 999999999
+INCREMENT BY 1
+CYCLE
+NOCACHE
+NOORDER
+;
+
+--
+-- Sequence to support request types
+--
+
+CREATE SEQUENCE tar_app_seq
+MINVALUE 1
+MAXVALUE 999999999
+INCREMENT BY 1
+CYCLE
+NOCACHE
+NOORDER
+;

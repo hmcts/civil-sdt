@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 03-Jul-2013 15:00:42 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="uk.gov.moj.sdt.domain.ErrorLog" lazy="false" table="ERROR_LOGS">
+        <id name="id" column="ERROR_LOG_ID" >  
+                  <generator class="sequence" >
+                  	<param name="sequence">err_log_seq</param>
+                  </generator>
+        </id>
+        <many-to-one name="bulkSubmission" class="uk.gov.moj.sdt.domain.BulkSubmission" fetch="join">
+            <column name="BULK_SUBMISSION_ID" />
+        </many-to-one>
+        <many-to-one name="individualRequest" class="uk.gov.moj.sdt.domain.IndividualRequest" fetch="join">
+            <column name="INDIVIDUAL_REQUEST_ID" />
+        </many-to-one>
+        <many-to-one name="errorMessage" class="uk.gov.moj.sdt.domain.ErrorMessage" fetch="join">
+            <column name="ERROR_MESSAGE" />
+        </many-to-one>
+        <property name="createdDate" type="org.joda.time.LocalDateTime">
+            <column name="CREATED_DATE" />
+        </property>
+        <property name="updatedDate" type="org.joda.time.LocalDateTime">
+            <column name="UPDATED_DATE" />
+        </property>
+        <property name="errorText" type="java.lang.String">
+            <column name="ERROR_TEXT" />
+        </property>
+        <version name="version" column="VERSION_NUMBER"/>
+    </class>
+</hibernate-mapping>

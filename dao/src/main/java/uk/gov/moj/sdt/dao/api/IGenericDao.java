@@ -40,112 +40,121 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
  * 
  * @see IGenericDaoSupport
  * 
- * @author Thomas Beckmann
+ * @author David Turner
  */
-public interface IGenericDao
-{
-    /**
-     * Loads a business domain entity model hierarchy as of the given businessTime and using the given id.
-     * 
-     * <p>
-     * This method loads the persistent entity representing the given domainType from the database assuming the given
-     * businessTime. The resultant persistent entity is then transformed into the business domain entity. The
-     * transformation is done deeply meaning that all associations are followed, however it stops at lazy load
-     * boundaries, regardless of whether the objects referenced got loaded already.
-     * </p>
-     * 
-     * @param <DomainType> of entity to load.
-     * @param domainType of entity to load.
-     * @param id of entity to load.
-     * @return business domain entity model hierarchy root object.
-     * 
-     * @throws DataAccessException on any I/O related error.
-     */
-    <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final int id)
-        throws DataAccessException;
+public interface IGenericDao {
+	/**
+	 * Loads a business domain entity model hierarchy as of the given
+	 * businessTime and using the given id.
+	 * 
+	 * <p>
+	 * This method loads the persistent entity representing the given domainType
+	 * from the database assuming the given businessTime. The resultant
+	 * persistent entity is then transformed into the business domain entity.
+	 * The transformation is done deeply meaning that all associations are
+	 * followed, however it stops at lazy load boundaries, regardless of whether
+	 * the objects referenced got loaded already.
+	 * </p>
+	 * 
+	 * @param <DomainType>
+	 *            of entity to load.
+	 * @param domainType
+	 *            of entity to load.
+	 * @param id
+	 *            of entity to load.
+	 * @return business domain entity model hierarchy root object.
+	 * 
+	 * @throws DataAccessException
+	 *             on any I/O related error.
+	 */
+	<DomainType extends IDomainObject> DomainType fetch(
+			final Class<DomainType> domainType, final int id)
+			throws DataAccessException;
 
-    // /**
-    // * Continues reading data from the database at the point of one or more properties that were lazily loaded by a
-    // * previous fetch. Associates these retrieved properties with the domain entity object to which they belong and
-    // then
-    // * returns that domain object with its now fetched properties. It takes a zero or more property names which are
-    // the
-    // * properties to be eagerly fatched. It does this at a particular point of time.
-    // *
-    // * <p>
-    // * This method continues reading an object graph (retrieved by fetch() of a particular id) at a lazy load
-    // position.
-    // * Client code calls this to force loading an association that was marked as lazy. The method follows the
-    // * association given by property and continues construction of the object graph up to lazy load boundaries.
-    // * </p>
-    // *
-    // * This does the same thing as fetch() above, but looks up the objects to be processed by following the property
-    // * on the persistent entity corresponding to domainObject.
-    // *
-    // * @param <DomainType> of entity to load.
-    // * @param properties of domainObject to load.
-    // * @param domainObject to load.
-    // * @return very same domainObject reference, for convenience only.
-    // *
-    // * @throws DataAccessException on any I/O related error.
-    // */
-    // <DomainType extends IDomainObject> DomainType fetch (final DomainType domainObject, final String... properties)
-    // throws DataAccessException;
+	// /**
+	// * Continues reading data from the database at the point of one or more
+	// properties that were lazily loaded by a
+	// * previous fetch. Associates these retrieved properties with the domain
+	// entity object to which they belong and
+	// then
+	// * returns that domain object with its now fetched properties. It takes a
+	// zero or more property names which are
+	// the
+	// * properties to be eagerly fatched. It does this at a particular point of
+	// time.
+	// *
+	// * <p>
+	// * This method continues reading an object graph (retrieved by fetch() of
+	// a particular id) at a lazy load
+	// position.
+	// * Client code calls this to force loading an association that was marked
+	// as lazy. The method follows the
+	// * association given by property and continues construction of the object
+	// graph up to lazy load boundaries.
+	// * </p>
+	// *
+	// * This does the same thing as fetch() above, but looks up the objects to
+	// be processed by following the property
+	// * on the persistent entity corresponding to domainObject.
+	// *
+	// * @param <DomainType> of entity to load.
+	// * @param properties of domainObject to load.
+	// * @param domainObject to load.
+	// * @return very same domainObject reference, for convenience only.
+	// *
+	// * @throws DataAccessException on any I/O related error.
+	// */
+	// <DomainType extends IDomainObject> DomainType fetch (final DomainType
+	// domainObject, final String... properties)
+	// throws DataAccessException;
 
-    /**
-     * Loads an array of domain object model hierarchies with a set of restrictions. This constructs a Hibernate query
-     * from the domainType and restrictions given and uses Session.createCriteria() to retrieve the persistent entities.
-     * Then the query is executed.
-     * 
-     * <p>
-     * This can be used to load a user by name, for example.
-     * </p>
-     * 
-     * @param <DomainType> of entity to load.
-     * @param domainType of entity to load.
-     * @param restrictions of the entities to load.
-     * @return business domain entity model hierarchy root object.
-     * 
-     * @throws DataAccessException on any I/O related error.
-     */
-    <DomainType extends IDomainObject> DomainType[] query (final Class<DomainType> domainType,
-                                                           final Criterion... restrictions) throws DataAccessException;
+	/**
+	 * Loads an array of domain object model hierarchies with a set of
+	 * restrictions. This constructs a Hibernate query from the domainType and
+	 * restrictions given and uses Session.createCriteria() to retrieve the
+	 * persistent entities. Then the query is executed.
+	 * 
+	 * <p>
+	 * This can be used to load a user by name, for example.
+	 * </p>
+	 * 
+	 * @param <DomainType>
+	 *            of entity to load.
+	 * @param domainType
+	 *            of entity to load.
+	 * @param restrictions
+	 *            of the entities to load.
+	 * @return business domain entity model hierarchy root object.
+	 * 
+	 * @throws DataAccessException
+	 *             on any I/O related error.
+	 */
+	<DomainType extends IDomainObject> DomainType[] query(
+			final Class<DomainType> domainType, final Criterion... restrictions)
+			throws DataAccessException;
 
-    // /**
-    // * Ends the life-time of a given domainObject for the business time range of that domain object beginning from the
-    // * current transaction time.
-    // *
-    // * @param <DomainType> of entity to delete.
-    // * @param domainObject instance to end life.
-    // * @return domainObject, with transaction times adjusted.
-    // *
-    // * @throws DataAccessException on any I/O related error.
-    // */
-    // <DomainType extends IDomainObject> DomainType delete (final DomainType domainObject) throws DataAccessException;
-    //
-
-    /**
-     * Stores a new domainObject in the database.
-     * 
-     * <p>
-     * This method persists an object not having an id assigned initially.
-     * </p>
-     * 
-     * @param <DomainType> of entity to insert.
-     * @param domainObject instance to insert.
-     * @return domainObject, with transaction times and (RV)OIDs adjusted.
-     * 
-     * @throws DataAccessException on any I/O related error.
-     * 
-     * @see #persist(IDomainObject)
-     */
-    <DomainType extends IDomainObject> DomainType insert (final DomainType domainObject) throws DataAccessException;
-
-    // /**
-    // * returns next value for given sequence.
-    // *
-    // * @param sequence name of sequence.
-    // * @return sequence value.
-    // */
-    // long getNextSequenceValue (final String sequence);
+	/**
+	 * Stores a domainObject in the database, either doing an insert or an
+	 * update.
+	 * 
+	 * <p>
+	 * This method persists or updates an object depending upon the presence of
+	 * an id (if there is one it is an update operation).
+	 * </p>
+	 * 
+	 * <p>
+	 * Since the passed in object will be persisted its immediate state after
+	 * this method finishes will be to have an id either assigned as part of a
+	 * insert operation or its previous value if this is an update.
+	 * </p>
+	 * 
+	 * @param domainObject
+	 *            instance to insert or update.
+	 * 
+	 * @throws DataAccessException
+	 *             on any I/O related error.
+	 * 
+	 * @see #persist(IDomainObject)
+	 */
+	void persist(final Object domainObject) throws DataAccessException;
 }
