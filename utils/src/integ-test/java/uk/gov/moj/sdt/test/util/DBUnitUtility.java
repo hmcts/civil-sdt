@@ -46,9 +46,6 @@ import java.util.Properties;
 
 import oracle.jdbc.pool.OracleDataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -62,8 +59,10 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import uk.gov.moj.sdt.validators.IndividualRequestValidator;
+import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 
 /**
  * The Class DBUnitUtility.
@@ -76,7 +75,7 @@ public final class DBUnitUtility
     /**
      * The logger.
      */
-    private static final Log LOGGER = LogFactory.getLog (DBUnitUtility.class);
+    private static final Logger LOG = LoggerFactory.getLogger (SdtUnitTestBase.class);
 
 
     /**
@@ -137,26 +136,26 @@ public final class DBUnitUtility
 
         try
         {
-            LOGGER.debug ("Generating DTD for schema " + targetSchema);
+            LOG.debug ("Generating DTD for schema " + targetSchema);
             // database connection
             final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
             final File theFile = new File ("src/test/resources/DTD/" + targetSchema + ".dtd");
             theFile.createNewFile ();
             // write DTD file
             FlatDtdDataSet.write (dbConnection.createDataSet (), new FileOutputStream (theFile));
-            LOGGER.debug ("Generated DTD for schema " + targetSchema + " at " + theFile.getAbsolutePath ());
+            LOG.debug ("Generated DTD for schema " + targetSchema + " at " + theFile.getAbsolutePath ());
         }
         catch (final DatabaseUnitException e)
         {
-            LOGGER.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
         }
         catch (final IOException e)
         {
-            LOGGER.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
         }
         catch (final SQLException e)
         {
-            LOGGER.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
         }
     }
 
@@ -173,7 +172,7 @@ public final class DBUnitUtility
         try
         {
             // database connection
-            LOGGER.debug ("Exporting data for schema " + targetSchema);
+            LOG.debug ("Exporting data for schema " + targetSchema);
             final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
 
             // full database export
@@ -194,21 +193,21 @@ public final class DBUnitUtility
             }
             final IDataSet dataSet = new FilteredDataSet (filter, dbConnection.createDataSet ());
             FlatXmlDataSet.write (dataSet, new FileOutputStream (file));
-            LOGGER.debug ("Exported data for schema " + targetSchema);
+            LOG.debug ("Exported data for schema " + targetSchema);
         }
         catch (final DatabaseUnitException e)
         {
-            LOGGER.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
         catch (final IOException e)
         {
-            LOGGER.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
         catch (final SQLException e)
         {
-            LOGGER.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
     }
@@ -225,9 +224,9 @@ public final class DBUnitUtility
         final String fileXml = "/" + classToLoadFor.getName ().replaceAll ("\\.", "/") + ".xml";
         if (DBUnitUtility.class.getResource (fileXml) != null)
         {
-            LOGGER.info ("Loading DB with: " + fileXml);
+            LOG.info ("Loading DB with: " + fileXml);
             DBUnitUtility.loadDatabase ("MCOL", fileXml, reloadRefdata);
-            LOGGER.info ("Loaded database");
+            LOG.info ("Loaded database");
         }
     }
 
@@ -259,7 +258,7 @@ public final class DBUnitUtility
         try
         {
             // database connection
-            LOGGER.info ("Starting load for schema=" + targetSchema + ", filePath=" + filePath + ", reloadRefdata=" +
+            LOG.info ("Starting load for schema=" + targetSchema + ", filePath=" + filePath + ", reloadRefdata=" +
                     reloadRefdata);
             final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
 
@@ -271,7 +270,7 @@ public final class DBUnitUtility
 
             // Generate the clean dataset, if loadRefData is true use clean_all.xml otherwise use clean.xml
             final String cleanDataPath = "/clean/" + targetSchema + "_clean" + (reloadRefdata ? "_all" : "") + ".xml";
-            LOGGER.info ("Reading clean dataset for data path=" + cleanDataPath);
+            LOG.info ("Reading clean dataset for data path=" + cleanDataPath);
             final IDataSet cleanDataset = builder.build (DBUnitUtility.class.getResourceAsStream (cleanDataPath));
 
             // Disable triggers & constraints
@@ -280,7 +279,7 @@ public final class DBUnitUtility
             if (cleanseDatabase)
             {
                 // Clean the DB
-                LOGGER.info ("Cleaning database");
+                LOG.info ("Cleaning database");
                 DatabaseOperation.TRUNCATE_TABLE.execute (dbConnection, cleanDataset);
                 dbConnection.getConnection ().commit ();
             }
@@ -290,14 +289,14 @@ public final class DBUnitUtility
                     DBUnitUtility.class.getResourceAsStream ("/refdata/" + targetSchema + "_refdata.xml");
             if (refDataStream != null && reloadRefdata)
             {
-                LOGGER.info ("Inserting reference data");
+                LOG.info ("Inserting reference data");
                 final IDataSet referenceDataset = builder.build (refDataStream);
                 DatabaseOperation.INSERT.execute (dbConnection, referenceDataset);
                 dbConnection.getConnection ().commit ();
             }
 
             // Insert the test data
-            LOGGER.info ("Inserting data from filePath=" + filePath);
+            LOG.info ("Inserting data from filePath=" + filePath);
             final IDataSet targetDataset = builder.build (DBUnitUtility.class.getResourceAsStream (filePath));
             DatabaseOperation.INSERT.execute (dbConnection, targetDataset);
 
@@ -308,17 +307,17 @@ public final class DBUnitUtility
         }
         catch (final DatabaseUnitException e)
         {
-            LOGGER.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
         catch (final IOException e)
         {
-            LOGGER.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
         catch (final SQLException e)
         {
-            LOGGER.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
     }
@@ -344,7 +343,7 @@ public final class DBUnitUtility
                 }
                 catch (final SQLException e)
                 {
-                    LOGGER.error ("Error closing connection for Schema '" + dbConnection.getSchema () + "': " + e);
+                    LOG.error ("Error closing connection for Schema '" + dbConnection.getSchema () + "': " + e);
                 }
 
                 // Remove it from the map.
@@ -367,7 +366,7 @@ public final class DBUnitUtility
     {
         try
         {
-            LOGGER.info ("Resetting sequences after DBUNIT test data loaded");
+            LOG.info ("Resetting sequences after DBUNIT test data loaded");
 
             // Get the connection already setup for DBUNIT.
             final IDatabaseConnection dbConnection = getConnectionInstance ("MCOL");
@@ -386,7 +385,7 @@ public final class DBUnitUtility
         }
         catch (final SQLException e)
         {
-            LOGGER.error (e.getStackTrace ());
+            LOG.error ("Failure to reset sequences", e);
         }
 
     }
@@ -401,7 +400,7 @@ public final class DBUnitUtility
     {
         try
         {
-            LOGGER.info ("Disabling triggers and constraints for schema = " + schemaName);
+            LOG.info ("Disabling triggers and constraints for schema = " + schemaName);
 
             // Get the connection already setup for DBUNIT.
             final Connection connection = getConnectionInstance (schemaName).getConnection ();
@@ -420,7 +419,7 @@ public final class DBUnitUtility
         }
         catch (final SQLException e)
         {
-            LOGGER.error (e.toString ());
+            LOG.error (e.toString ());
         }
     }
 
@@ -434,7 +433,7 @@ public final class DBUnitUtility
     {
         try
         {
-            LOGGER.info ("Enabling triggers and constraints for schema = " + schemaName);
+            LOG.info ("Enabling triggers and constraints for schema = " + schemaName);
 
             // Get the connection already setup for DBUNIT.
             final IDatabaseConnection dbConnection = getConnectionInstance (schemaName);
@@ -454,7 +453,7 @@ public final class DBUnitUtility
         }
         catch (final SQLException e)
         {
-            LOGGER.error (e.toString ());
+            LOG.error (e.toString ());
         }
     }
 
@@ -469,7 +468,7 @@ public final class DBUnitUtility
         try
         {
             // database connection
-            LOGGER.debug ("Loading data for schema " + targetSchema);
+            LOG.debug ("Loading data for schema " + targetSchema);
             final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
 
             // Create a DBUnit Dataset builder using the target schemas DTD
@@ -486,7 +485,7 @@ public final class DBUnitUtility
             prepareForDbunitLoad (targetSchema);
 
             // Clean the DB
-            LOGGER.debug ("Cleaning database");
+            LOG.debug ("Cleaning database");
             DatabaseOperation.TRUNCATE_TABLE.execute (dbConnection, cleanDataset);
             dbConnection.getConnection ().commit ();
 
@@ -495,7 +494,7 @@ public final class DBUnitUtility
             // "_refdata.xml");
             // if (refDataStream != null && reloadRefdata)
             // {
-            // LOGGER.debug("Inserting reference data");
+            // LOG.debug("Inserting reference data");
             // IDataSet referenceDataset = builder.build(refDataStream);
             // DatabaseOperation.INSERT.execute(connection, referenceDataset);
             // connection.getConnection().commit();
@@ -506,17 +505,17 @@ public final class DBUnitUtility
         }
         catch (final DatabaseUnitException e)
         {
-            LOGGER.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
         catch (final IOException e)
         {
-            LOGGER.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
         catch (final SQLException e)
         {
-            LOGGER.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
     }
@@ -554,7 +553,7 @@ public final class DBUnitUtility
                     ds.setPassword (password);
 
                     final Connection connection = ds.getConnection ();
-                    LOGGER.debug ("Connection created for username: " + username + ", password: " + password +
+                    LOG.debug ("Connection created for username: " + username + ", password: " + password +
                             ", url: " + dbUrl);
 
                     dbConnection = new DatabaseConnection (connection, schema);
@@ -566,17 +565,17 @@ public final class DBUnitUtility
                 }
                 catch (final DatabaseUnitException e)
                 {
-                    LOGGER.error ("Unable to initialise DBUnit Connection: " + e);
+                    LOG.error ("Unable to initialise DBUnit Connection: " + e);
                     e.printStackTrace ();
                 }
                 catch (final IOException e)
                 {
-                    LOGGER.error ("Unable to initialise DBUnit Connection: " + e);
+                    LOG.error ("Unable to initialise DBUnit Connection: " + e);
                     e.printStackTrace ();
                 }
                 catch (final SQLException e)
                 {
-                    LOGGER.error ("Unable to initialise DBUnit Connection: " + e);
+                    LOG.error ("Unable to initialise DBUnit Connection: " + e);
                     e.printStackTrace ();
                 }
             }
@@ -608,7 +607,7 @@ public final class DBUnitUtility
     private static void updateTriggers (final Connection dbConn, final String schema, final boolean enabled)
         throws SQLException
     {
-        LOGGER.debug ("Editing Audit triggers, enabled: " + enabled);
+        LOG.debug ("Editing Audit triggers, enabled: " + enabled);
         PreparedStatement s = null;
         ResultSet rs = null;
         final String modifier = enabled ? "ENABLE" : "DISABLE";
@@ -624,14 +623,14 @@ public final class DBUnitUtility
             {
                 queryToExecute = rs.getString (1);
                 final Statement s2 = dbConn.createStatement ();
-                LOGGER.debug ("Executing: " + queryToExecute);
+                LOG.debug ("Executing: " + queryToExecute);
                 s2.execute (queryToExecute);
                 s2.close ();
             }
         }
         catch (final SQLException e)
         {
-            LOGGER.error ("Error updating database triggers for Schema '" + schema + "', Query: " + queryToExecute +
+            LOG.error ("Error updating database triggers for Schema '" + schema + "', Query: " + queryToExecute +
                     " Error: " + e);
             e.printStackTrace ();
         }
