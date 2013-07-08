@@ -8,7 +8,7 @@
                   <generator class="sequence" >
                   	<param name="sequence">req_typ_seq</param>
                   </generator>
-        </id>
+        </id><version name="version" column="VERSION_NUMBER"/>
         <property name="name" type="java.lang.String">
             <column name="REQUEST_TYPE_NAME" />
         </property>
@@ -18,6 +18,5 @@
         <property name="description" type="java.lang.String">
             <column name="REQUEST_TYPE_DESCRIPTION" />
         </property>
-        <version name="version" column="VERSION_NUMBER"/>
     </class>
 </hibernate-mapping>

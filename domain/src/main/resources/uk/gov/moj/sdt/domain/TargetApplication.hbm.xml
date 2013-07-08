@@ -9,12 +9,12 @@
                   	<param name="sequence">tar_app_seq</param>
                   </generator>
         </id>
+        <version name="version" column="VERSION_NUMBER"/>
         <property name="targetApplicationCode" type="java.lang.String">
             <column name="TARGET_APPLICATION_CODE" />
         </property>
         <property name="targetApplicationName" type="java.lang.String">
             <column name="TARGET_APPLICATION_NAME" />
         </property>
-        <version name="version" column="VERSION_NUMBER"/>
     </class>
 </hibernate-mapping>

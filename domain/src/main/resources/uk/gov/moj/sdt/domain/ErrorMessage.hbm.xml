@@ -8,7 +8,8 @@
                   <generator class="sequence" >
                   	<param name="sequence">msg_log_seq</param>
                   </generator>
-        </id>
+        </id>        
+        <version name="version" column="VERSION_NUMBER"/>
         <property name="errorCode" type="java.lang.String">
             <column name="ERROR_CODE" />
         </property>
@@ -18,7 +19,6 @@
         <property name="errorDescription" type="java.lang.String">
             <column name="ERROR_DESCRIPTION" />
         </property>
-        <version name="version" column="VERSION_NUMBER"/>
-    </class>
+        </class>
 </hibernate-mapping>
 

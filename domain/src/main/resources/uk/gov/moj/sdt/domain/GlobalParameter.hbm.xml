@@ -9,6 +9,7 @@
                   	<param name="sequence">glb_par_seq</param>
                   </generator>
         </id>
+        <version name="version" column="VERSION_NUMBER"/>
         <property name="name" type="java.lang.String">
             <column name="PARAMETER_NAME" />
         </property>
@@ -17,7 +18,6 @@
         </property>
         <property name="description" type="java.lang.String">
             <column name="PARAMETER_DESCRIPTION" />
-        </property>
-        <version name="version" column="VERSION_NUMBER"/>
+        </property>        
     </class>
 </hibernate-mapping>

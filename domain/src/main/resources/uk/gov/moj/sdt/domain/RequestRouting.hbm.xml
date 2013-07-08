@@ -13,6 +13,5 @@
         <property name="webServiceEndpoint" type="java.lang.String">
             <column name="WEB_SERVICE_ENDPOINT" />
         </property>
-        <version name="version" column="VERSION_NUMBER"/>
     </class>
 </hibernate-mapping>

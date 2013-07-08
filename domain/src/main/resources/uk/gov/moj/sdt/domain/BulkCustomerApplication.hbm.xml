@@ -9,10 +9,9 @@
         </many-to-one>
         <many-to-one name="targetApplication" class="uk.gov.moj.sdt.domain.TargetApplication" fetch="join">
             <column name="TARGET_APPLICATION_ID" />
-        </many-to-one>
+        </many-to-one>        
         <property name="customerApplicationId" type="java.lang.String">
             <column name="CUSTOMER_APPLICATION_ID" />
         </property>
-        <version name="version" column="VERSION_NUMBER"/>
-    </class>
+     </class>
 </hibernate-mapping>
