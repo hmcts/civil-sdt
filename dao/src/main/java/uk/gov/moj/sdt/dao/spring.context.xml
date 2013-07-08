@@ -16,4 +16,10 @@
 			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
 	</bean>
 
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" class="uk.gov.moj.sdt.dao.BulkCustomerDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>
+
 </beans>

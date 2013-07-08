@@ -30,94 +30,47 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import junit.framework.TestCase;
-
 import org.hibernate.criterion.Restrictions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.dao.DataAccessException;
 
-import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
- * Test {@link GenericDao} CRUD methods.
+ * Implements specific DAO functionality based on {@link IBulkCustomerDao}. This is a derived DAO extending
+ * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct domain
+ * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
+ * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
+ * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
  * 
  * @author Robin Compston
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class GenericDaoTest extends TestCase
+public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
 {
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (GenericDaoTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger (BulkCustomerDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
      */
-    public GenericDaoTest ()
+    public BulkCustomerDao ()
     {
         super ();
     }
 
-    /**
-     * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
-     */
-    @Test
-    public void testFetch ()
+    @Override
+    public IBulkCustomer[] getBulkCustomerBySdtId (final int sdtCustomerId) throws DataAccessException
     {
-        final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+        LOG.debug ("Get a bulk customer matching sdtId [" + sdtCustomerId + "]");
 
-        final int id = 1;
-        final IBulkCustomer bulkCustomer = genericDao.fetch (BulkCustomer.class, id);
-        bulkCustomer.getId ();
-
-    }
-
-    /**
-     * Tests query.
-     */
-    @Test
-    public void testQuery ()
-    {
-        final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
-
+        // Call the generic dao to perform this query.
         final IBulkCustomer[] bulkCustomers =
-                genericDao.query (BulkCustomer.class, Restrictions.eq ("sdtCustomerId", 123));
+                this.query (IBulkCustomer.class, Restrictions.eq ("sdtCustomerId", sdtCustomerId));
 
-        if (bulkCustomers.length == 1)
-        {
-
-            // User found
-            final IBulkCustomer bulkCustomer = bulkCustomers[0];
-            LOG.debug ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
-        }
-    }
-
-    /**
-     * Tests insert.
-     */
-    @Test
-    public void testInsert ()
-    {
-        final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
-
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setId (2);
-        bulkCustomer.setSdtCustomerId (456);
-        bulkCustomer.setCustomerCaseCode ("GH");
-
-        genericDao.persist (bulkCustomer);
+        return bulkCustomers;
     }
 }
