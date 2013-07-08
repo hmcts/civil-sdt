@@ -118,12 +118,9 @@ public interface IGenericDao {
 	 * This can be used to load a user by name, for example.
 	 * </p>
 	 * 
-	 * @param <DomainType>
-	 *            of entity to load.
-	 * @param domainType
-	 *            of entity to load.
-	 * @param restrictions
-	 *            of the entities to load.
+	 * @param <DomainType> of entity to load.
+	 * @param domainType of entity to load.
+	 * @param restrictions of the entities to load.
 	 * @return business domain entity model hierarchy root object.
 	 * 
 	 * @throws DataAccessException

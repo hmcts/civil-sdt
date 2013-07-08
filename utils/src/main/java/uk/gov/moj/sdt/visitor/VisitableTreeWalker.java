@@ -48,7 +48,7 @@ import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
- * Implementation of DateValidation.
+ * Implementation of VisitableTreeWalker.
  * 
  * @author Robin Compston
  * 
@@ -80,7 +80,7 @@ public final class VisitableTreeWalker
         // Iterate over list and walk its elements.
         for (int i = 0; i < target.size (); i++)
         {
-            walkTree (target.get (i), visitorSuffix);
+            VisitableTreeWalker.walkTree (target.get (i), visitorSuffix);
         }
     }
 
@@ -99,7 +99,7 @@ public final class VisitableTreeWalker
         for (final Iterator<?> iter = keys.iterator (); iter.hasNext ();)
         {
             final Object key = iter.next ();
-            walkTree (target.get (key), visitorSuffix);
+            VisitableTreeWalker.walkTree (target.get (key), visitorSuffix);
         }
     }
 
@@ -117,7 +117,7 @@ public final class VisitableTreeWalker
         for (final Iterator<?> iter = target.iterator (); iter.hasNext ();)
         {
             final Object object = iter.next ();
-            walkTree (object, visitorSuffix);
+            VisitableTreeWalker.walkTree (object, visitorSuffix);
         }
     }
 
@@ -143,14 +143,17 @@ public final class VisitableTreeWalker
             // Get IVisitor registered when visitor object instantiated.
             final IVisitor visitor = AbstractVisitor.getVisitor (visitorClassName);
 
+            if (visitor == null)
+            {
+                throw new UnsupportedOperationException ("Could not find visitor class of derived name [" +
+                        visitorClassName + "]");
+            }
+
             // Do safe cast to IVisitable to allow call to accept ().
             final IVisitable visitable = IVisitable.class.cast (target);
 
             // Call the target with this visitor to execute the pattern.
-            if (visitor != null)
-            {
-                visitable.accept (visitor);
-            }
+            visitable.accept (visitor);
         }
 
         // Recursively call all nested beans.
@@ -165,19 +168,19 @@ public final class VisitableTreeWalker
                 final Object nestedObject = method.invoke (target, (Object[]) null);
                 if (nestedObject instanceof List<?>)
                 {
-                    walkList ((List<?>) nestedObject, visitorSuffix);
+                    VisitableTreeWalker.walkList ((List<?>) nestedObject, visitorSuffix);
                 }
                 else if (nestedObject instanceof Map<?, ?>)
                 {
-                    walkMap ((Map<?, ?>) nestedObject, visitorSuffix);
+                    VisitableTreeWalker.walkMap ((Map<?, ?>) nestedObject, visitorSuffix);
                 }
                 else if (nestedObject instanceof Set<?>)
                 {
-                    walkSet ((Set<?>) nestedObject, visitorSuffix);
+                    VisitableTreeWalker.walkSet ((Set<?>) nestedObject, visitorSuffix);
                 }
                 else if (nestedObject != null && IVisitable.class.isAssignableFrom (nestedObject.getClass ()))
                 {
-                    walkTree (nestedObject, visitorSuffix);
+                    VisitableTreeWalker.walkTree (nestedObject, visitorSuffix);
                 }
             }
         }
