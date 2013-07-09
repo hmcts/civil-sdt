@@ -85,12 +85,6 @@ public abstract class AbstractVisitor implements IVisitor
     public static IVisitor getVisitor (final String key)
     {
         final IVisitor visitor = allVisitors.get (key);
-        if (visitor == null)
-        {
-            LOG.error ("Visitor [" + key +
-                    "] not registered in allVisitors map. Make sure this visitor is created as a Spring bean.",
-                    new UnsupportedOperationException (""));
-        }
 
         return visitor;
     }

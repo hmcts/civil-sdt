@@ -45,21 +45,20 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
- * Implementation of VisitableTreeWalker.
+ * Implementation of NonVisitableTreeWalker.
  * 
  * @author Robin Compston
  * 
  */
-public final class VisitableTreeWalker
+public final class NonVisitableTreeWalker
 {
     /**
      * Static logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (VisitableTreeWalker.class);
+    private static final Logger LOG = LoggerFactory.getLogger (NonVisitableTreeWalker.class);
 
     /**
      * Collection of all objects in tree which have already been processed..
@@ -69,13 +68,12 @@ public final class VisitableTreeWalker
     /**
      * Default private constructor for utility class.
      */
-    private VisitableTreeWalker ()
+    private NonVisitableTreeWalker ()
     {
     }
 
     /**
-     * Walk a list possibly containing objects which implement the {@link IVisitable} interface applying the
-     * corresponding {@link IVisitor} to each of them.
+     * Walk a list containing objects applying the corresponding {@link IVisitor} to each of them.
      * 
      * @param target the list to walk.
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
@@ -91,8 +89,7 @@ public final class VisitableTreeWalker
     }
 
     /**
-     * Walk a map possibly containing objects which implement the {@link IVisitable} interface applying the
-     * corresponding {@link IVisitor} to each of them.
+     * Walk a map containing objects applying the corresponding {@link IVisitor} to each of them.
      * 
      * @param target the map to walk.
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
@@ -110,8 +107,7 @@ public final class VisitableTreeWalker
     }
 
     /**
-     * Walk a set possibly containing objects which implement the {@link IVisitable} interface applying the
-     * corresponding {@link IVisitor} to each of them.
+     * Walk a set containing objects applying the corresponding {@link IVisitor} to each of them.
      * 
      * @param target the set to walk.
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
@@ -128,39 +124,33 @@ public final class VisitableTreeWalker
     }
 
     /**
-     * Walk a tree of objects which implement the {@link IVisitable} interface applying the corresponding
-     * {@link IVisitor} to each of them.
+     * Walk a tree containing objects applying the corresponding {@link IVisitor} to each of them.
      * 
+     * @param <ObjectType> of object to walk.
      * @param target the top level object of the object tree to walk.
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
      *            class name of the visitor class.
      */
-    private void walkTree (final Object target, final String visitorSuffix)
+    public <ObjectType extends Object> void walkTree (final ObjectType target, final String visitorSuffix)
     {
-        // Is the current target an instance of IVisitable - if not, do not apply visitor to it.
-        if (IVisitable.class.isAssignableFrom (target.getClass ()))
+        // Get fully qualified class name of target.
+        final String targetClassName = target.getClass ().getSimpleName ();
+
+        // Add suffix to form visitor class name.
+        final String visitorClassName = targetClassName + visitorSuffix;
+
+        // Get IVisitor registered when visitor object instantiated.
+        final IVisitor visitor = AbstractVisitor.getVisitor (visitorClassName);
+
+        // Only apply visitor to target if a visitor exists for the type of the target class.
+        if (visitor == null)
         {
-            // Get fully qualified class name of target.
-            final String targetClassName = target.getClass ().getSimpleName ();
-
-            // Add suffix to form visitor class name.
-            final String visitorClassName = targetClassName + visitorSuffix;
-
-            // Get IVisitor registered when visitor object instantiated.
-            final IVisitor visitor = AbstractVisitor.getVisitor (visitorClassName);
-
-            if (visitor == null)
-            {
-                throw new UnsupportedOperationException ("Could not find visitor class of derived name [" +
-                        visitorClassName + "]");
-            }
-
-            // Do safe cast to IVisitable to allow call to accept ().
-            final IVisitable visitable = IVisitable.class.cast (target);
-
-            // Call the target with this visitor to execute the pattern.
-            visitable.accept (visitor);
+            // Do not go on if this target does not have a visitor (namedd according to cenvention.
+            return;
         }
+
+        // Call the target with this visitor to execute the pattern.
+        visitor.visit (target);
 
         // Recursively call all nested beans.
         Method method = null;
@@ -189,7 +179,6 @@ public final class VisitableTreeWalker
                 // Record this object as now processed.
                 alreadyProcessed.add (nestedObject);
 
-                // Deal with all types of collection and with nested objects.
                 if (nestedObject instanceof List<?>)
                 {
                     this.walkList ((List<?>) nestedObject, visitorSuffix);
@@ -202,7 +191,7 @@ public final class VisitableTreeWalker
                 {
                     this.walkSet ((Set<?>) nestedObject, visitorSuffix);
                 }
-                else if (nestedObject != null && IVisitable.class.isAssignableFrom (nestedObject.getClass ()))
+                else if (nestedObject != null)
                 {
                     this.walkTree (nestedObject, visitorSuffix);
                 }
@@ -229,17 +218,17 @@ public final class VisitableTreeWalker
     }
 
     /**
-     * Walk a tree of objects which implement the {@link IVisitable} interface applying the corresponding
-     * {@link IVisitor} to each of them.
+     * Walk a tree containing objects applying the corresponding {@link IVisitor} to each of them.
      * 
+     * @param <ObjectType> of object to walk.
      * @param target the top level object of the object tree to walk.
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
      *            class name of the visitor class.
      */
-    public static void walk (final Object target, final String visitorSuffix)
+    public static <ObjectType extends Object> void walk (final ObjectType target, final String visitorSuffix)
     {
         // Create instance for this thread and call it.
-        final VisitableTreeWalker visitableTreeWalker = new VisitableTreeWalker ();
-        visitableTreeWalker.walkTree (target, visitorSuffix);
+        final NonVisitableTreeWalker nonVisitableTreeWalker = new NonVisitableTreeWalker ();
+        nonVisitableTreeWalker.walkTree (target, visitorSuffix);
     }
 }

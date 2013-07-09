@@ -268,7 +268,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         // LOGGER.debug ("validate customer reference is unique across data retention period");
         //
         // LOGGER.debug ("validate customer reference for each request is unique across data retention period");
-        VisitableTreeWalker.walkTree (bulkSubmission, "Validator");
+        VisitableTreeWalker.walk (bulkSubmission, "Validator");
 
     }
 

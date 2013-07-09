@@ -136,7 +136,7 @@ public class WsReadDefenceDetailsHandler extends AbstractWsReadHandler implement
     private void validateDomain (final IRequestDefenceDetail defenceDetail) throws AbstractBusinessException
     {
         LOGGER.debug ("[validateDomain] started");
-        VisitableTreeWalker.walkTree (defenceDetail, "Validator");
+        VisitableTreeWalker.walk (defenceDetail, "Validator");
         LOGGER.debug ("[validateDomain] finished");
     }
 
