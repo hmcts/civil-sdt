@@ -35,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDate;
 
 import uk.gov.moj.sdt.domain.RequestDefenceDetail;
-import uk.gov.moj.sdt.validators.api.IDateValidator;
 import uk.gov.moj.sdt.validators.api.IRequestDefenceDetailValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.InvalidDateRangeException;
@@ -61,7 +60,6 @@ public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor i
      */
     private static final Log LOGGER = LogFactory.getLog (RequestDefenceDetailValidator.class);
 
-
     /**
      * No-argument Constructor.
      */
@@ -81,12 +79,10 @@ public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor i
 
         boolean isValid = true;
 
-        final IDateValidator dateValidator = new DateValidator ();
-
         final LocalDate toDate = defenceDetail.getToDate ();
         final LocalDate fromDate = defenceDetail.getFromDate ();
         // Check the date range is valid
-        isValid = dateValidator.isDateAfter (toDate, fromDate);
+        isValid = DateValidator.isDateAfter (toDate, fromDate);
 
         if ( !isValid)
         {
@@ -95,7 +91,7 @@ public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor i
         }
 
         // Check date is within last 90days
-        isValid = dateValidator.isDateWitinLastXDays (fromDate, new Integer (DEFENCE_DETAILS_RETENTION_PERIOD));
+        isValid = DateValidator.isDateWitinLastXDays (fromDate, new Integer (DEFENCE_DETAILS_RETENTION_PERIOD));
 
         if ( !isValid)
         {
