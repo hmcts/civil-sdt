@@ -33,68 +33,43 @@ package uk.gov.moj.sdt.utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import junit.framework.Assert;
+
+import org.junit.Test;
 
 /**
- * Utility class that replaces a token with a string.
+ * Unit test for {@link TokenReplacer} class.
  * 
  * @author d130680
  * 
  */
-public final class TokenReplacer
+public class UtilitiesTest extends SdtUnitTestBase
 {
 
     /**
-     * Private constructer.
+     * Constructer.
      */
-    private TokenReplacer ()
+    public UtilitiesTest ()
     {
-
+        super (UtilitiesTest.class.getName ());
     }
 
     /**
-     * Replaces tokens with specific string in a piece of text.
-     * 
-     * e.g. The quick {1} jumped {2} the lazy {3}
-     * 
-     * replacements map would consist of:
-     * 
-     * 1, fox
-     * 2, over
-     * 3, dog
-     * 
-     * @param text the text to tokenise
-     * @param replacements map of token and string
-     * @return tokenised text
+     * Test the tokenisation works.
      */
-    public static String replaceTokens (final String text, final Map<String, String> replacements)
+    @Test
+    public void testTokenisation ()
     {
-        final Pattern pattern = Pattern.compile ("\\{([^}]*)\\}");
-        final Matcher matcher = pattern.matcher (text);
-        final StringBuffer buffer = new StringBuffer ();
-        while (matcher.find ())
-        {
-            final String replacement = replacements.get (matcher.group (1));
-            if (replacement != null)
-            {
-                matcher.appendReplacement (buffer, "");
-                buffer.append (replacement);
-            }
-        }
-        matcher.appendTail (buffer);
-        return buffer.toString ();
+        final Map<String, String> m = new HashMap<String, String> ();
+
+        m.put ("1", "fox");
+        m.put ("2", "dog");
+        m.put ("replaceme", "over");
+        final String s = Utilities.replaceTokens ("The quick brown {1} jumped {replaceme} the lazy brown {2}", m);
+
+        Assert.assertEquals ("The quick brown fox jumped over the lazy brown dog", s);
+
     }
 
-    // CHECKSTYLE:OFF
-    public static void main (final String[] args)
-    {
-        Map<String, String> m = new HashMap<String, String> ();
-
-        m.put ("1", "Albert");
-        m.put ("2", "Bob");
-        System.out.print (TokenReplacer.replaceTokens ("Hello {1} Hi {2}", m));
-
-    }
-    // CHECKSTYLE:ON
 }
