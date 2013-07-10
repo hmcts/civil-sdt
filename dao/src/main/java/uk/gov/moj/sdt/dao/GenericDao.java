@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.dao;
 
 import java.lang.reflect.Array;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -45,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Implements generic DAO functionality based on {@link IGenericDao} allowing a single DAO class to provide access to
@@ -105,6 +107,9 @@ public class GenericDao implements IGenericDao
     public <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final int id)
         throws DataAccessException
     {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
         GenericDao.LOG.debug ("fetch(): domainType=" + domainType + ", id=" + id);
 
         // Domain object of type asked for by caller.
@@ -117,11 +122,18 @@ public class GenericDao implements IGenericDao
         final Criteria criteria = session.createCriteria (domainType);
         criteria.add (Restrictions.eq ("id", id));
 
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBulkSubmitCounts ();
+
         // Get unique result using criteria and assign to domain object. This will be a tree of objects up to lazy
         // boundaries
         final Object o = criteria.uniqueResult ();
         domainObject = domainType.cast (o);
         
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseCallsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseCallsCount ();
 
         // Validate results.
         if (domainObject == null)
@@ -334,6 +346,9 @@ public class GenericDao implements IGenericDao
                                                                         final Criterion... restrictions)
         throws DataAccessException
     {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
         final Session session = this.getSessionFactory ().getCurrentSession ();
 
         // Add any restrictions passed by caller.
@@ -350,6 +365,11 @@ public class GenericDao implements IGenericDao
         // Get a list of results from Hibernate.
         final List<?> domainObjects = criteria.list ();
 
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseCallsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseCallsCount ();
+
         @SuppressWarnings ("unchecked") final DomainType[] results =
                 (DomainType[]) Array.newInstance (domainType, domainObjects.size ());
 
@@ -361,7 +381,15 @@ public class GenericDao implements IGenericDao
     public void persist (final Object domainObject)
         throws DataAccessException
     {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
         final Session session = this.getSessionFactory ().getCurrentSession ();
         session.saveOrUpdate (domainObject);
+
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseCallsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseCallsCount ();
     }
 }
