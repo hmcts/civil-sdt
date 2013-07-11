@@ -1,5 +1,5 @@
 <!-- =========================================================================== 
-    = MCOL Project 
+    = sdt Project 
     = 
     = Name: build-standard-targets.xml 
     = Description: Top level build file to define standard targets. 
@@ -258,12 +258,12 @@
 			<mapper type="glob" from="*.template" to="*" />
 		</copy>
 
-		<!-- Copy mcol.template files and drop the .template suffix. Because this has a mixture of build time 
+		<!-- Copy sdt.template files and drop the .template suffix. Because this has a mixture of build time 
 		    and runtime resolved properties, it has to be templatized at build time but left with quoted properties 
 		    which are resolved at runtime. -->
 		<copy todir="${classes.dir}" overwrite="true">
 			<fileset dir="${filters.dir}" casesensitive="false">
-				<include name="**/mcol.properties.template" />
+				<include name="**/sdt.properties.template" />
 			</fileset>
             <filterchain>
                 <filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />

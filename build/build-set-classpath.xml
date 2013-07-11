@@ -1,5 +1,5 @@
 <!-- ===========================================================================
- = MCOL Project
+ = sdt Project
  =
  = Name:        build-set-classpath.xml
  = Description: Build file to set classpath containing 3rd party and application libraries. 
@@ -26,14 +26,14 @@
 		</fileset>		
 	</path>
 	
-    <!-- Add jars from directory to which all mcol application jars are written -->
+    <!-- Add jars from directory to which all sdt application jars are written -->
     <path id="lib.app.dir">
         <fileset dir="${lib.app.dir}">
             <include name="*.jar" />
         </fileset>
     </path>
 
-    <!-- Add jars from directory to which all mcol test jars are written -->
+    <!-- Add jars from directory to which all sdt test jars are written -->
     <path id="lib.test.dir">
         <fileset dir="${lib.test.dir}">
             <include name="*.jar" />
@@ -47,14 +47,14 @@
         </fileset>
     </path>
 
-	<!-- Set 3rd party and mcol application jars to classpath for building 'src' code in all projects -->
+	<!-- Set 3rd party and sdt application jars to classpath for building 'src' code in all projects -->
 	<path id="build.src.classpath">
 		<path refid="3rd-party.dir" />
 		<path refid="3rd-party.spring3.dir" />
 		<path refid="lib.app.dir" />
 	</path>
 
-	<!-- Set 3rd party and mcol application jars to classpath for building 'src' code in all projects -->
+	<!-- Set 3rd party and sdt application jars to classpath for building 'src' code in all projects -->
 	<path id="build.src-gen.classpath">
 		<path refid="3rd-party.dir" />
 		<path refid="3rd-party.spring3.dir" />

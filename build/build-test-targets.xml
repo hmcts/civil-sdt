@@ -1,5 +1,5 @@
 <!-- ===========================================================================
- = MCOL Project
+ = sdt Project
  =
  = Name:        build-test-targets.xml
  = Description: Top level build file to define test targets. 
@@ -34,8 +34,8 @@
 
 	<!-- Define set of properties to be passed to junit to satisfy unresolved property values in test 
         code and code being tested (if not in app server) -->
-	<propertyset id="mcol-properties">
-		<propertyref prefix="mcol" />
+	<propertyset id="sdt-properties">
+		<propertyref prefix="sdt" />
 	</propertyset>
 	<propertyset id="js-properties">
 		<propertyref prefix="js" />
@@ -44,7 +44,7 @@
 		<propertyref prefix="javax" />
 	</propertyset>
 	<propertyset id="all-runtime-properties">
-		<propertyset refid="mcol-properties" />
+		<propertyset refid="sdt-properties" />
 		<propertyset refid="js-properties" />
 		<propertyset refid="javax-properties" />
 	</propertyset>
