@@ -154,7 +154,7 @@ public final class Utilities
     /**
      * Replaces tokens with specific string in a piece of text.
      * 
-     * e.g. The quick {1} jumped {2} the lazy {3}
+     * e.g. The quick {0} jumped {1} the lazy brown {2}
      * 
      * List would consist of:
      * 
@@ -170,19 +170,14 @@ public final class Utilities
     {
 
         String textToReplace = text;
-        if (textToReplace.contains ("{0}"))
-        {
-            Utilities.LOG.error ("** ERROR - The string tokensation is one based and not zero based");
-            throw new RuntimeException ("** ERROR - The string tokensation is one based and not zero based");
-        }
         for (int i = 0; i < replacements.size (); i++)
         {
             // Get the replacement text from the list
             final String replacement = replacements.get (i);
             if (replacement != null)
             {
-                // Get the next token, since our tokenisation is one based increment i by 1
-                final String token = "{" + (i + 1) + "}";
+                // Get the next token
+                final String token = "{" + i + "}";
                 textToReplace = textToReplace.replace (token, replacement);
             }
         }

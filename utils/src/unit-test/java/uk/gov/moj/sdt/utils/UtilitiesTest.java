@@ -64,7 +64,7 @@ public class UtilitiesTest extends SdtUnitTestBase
         final List<String> l = new ArrayList<String> ();
         l.add ("John Doe");
 
-        final String s = Utilities.replaceTokens ("User {1} was not found", l);
+        final String s = Utilities.replaceTokens ("User {0} was not found", l);
 
         Assert.assertEquals ("User John Doe was not found", s);
 
@@ -80,32 +80,11 @@ public class UtilitiesTest extends SdtUnitTestBase
         l.add ("fox");
         l.add ("dog");
         l.add ("over");
-        final String s = Utilities.replaceTokens ("The quick brown {1} jumped {3} the lazy brown {2}", l);
+        final String s = Utilities.replaceTokens ("The quick brown {0} jumped {2} the lazy brown {1}", l);
 
         Assert.assertEquals ("The quick brown fox jumped over the lazy brown dog", s);
 
     }
 
-    /**
-     * Test an exception is thrown.
-     */
-    @Test
-    public void testZeroBasedException ()
-    {
-        final List<String> l = new ArrayList<String> ();
-        l.add ("John Doe");
-
-        try
-        {
-            final String s = Utilities.replaceTokens ("User {0} was not found", l);
-            fail ("RuntimeException expected");
-        }
-        catch (final RuntimeException e)
-        {
-            Assert.assertEquals ("** ERROR - The string tokensation is one based and not zero based", e.getMessage ());
-        }
-
-
-    }
 
 }
