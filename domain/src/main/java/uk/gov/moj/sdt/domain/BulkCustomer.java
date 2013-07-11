@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import java.util.Set;
+
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 
@@ -44,6 +46,10 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
 {
 
+	/**
+	 * The target applications that this customer can work with.e.g. 'MCOL'
+	 */
+	private Set targetApplications;
     /**
      * Unique code for each Bulk Customer organisation.
      */
@@ -94,5 +100,15 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     {
         this.customerIdentifier = customerIdentifier;
     }
+
+	@Override
+	public void setTargetApplications(final Set targetApplications) {
+		this.targetApplications = targetApplications;
+	}
+
+	@Override
+	public Set getTargetApplications() {
+		return targetApplications;
+	}
 
 }

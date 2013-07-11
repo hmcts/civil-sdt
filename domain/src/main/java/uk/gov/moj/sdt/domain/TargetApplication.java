@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import java.util.Set;
+
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
@@ -41,6 +43,15 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  */
 public class TargetApplication extends AbstractDomainObject implements ITargetApplication
 {
+	/**
+	 * A collection of all request types that can be used with this target application.
+	 */
+	private Set requestRoutings;
+	/**
+	 * A collection of all customers who can work with this target application.
+	 */
+	private Set bulkCustomers;
+
     /**
      * Target application code.
      */
@@ -74,5 +85,26 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
     {
         this.targetApplicationName = targetApplicationName;
     }
+
+	@Override
+	public Set getBulkCustomers() {
+		return bulkCustomers;
+	}
+
+	@Override
+	public void setBulkCustomers(final Set bulkCustomers) {
+		this.bulkCustomers = bulkCustomers;
+		
+	}
+
+	@Override
+	public Set getRequestRoutings() {
+		return requestRoutings;
+	}
+
+	@Override
+	public void setRequestRoutings(final Set requestRoutings) {
+		this.requestRoutings = requestRoutings;		
+	}
 
 }

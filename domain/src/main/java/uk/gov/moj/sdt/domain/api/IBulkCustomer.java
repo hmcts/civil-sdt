@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain.api;
 
+import java.util.Set;
+
 /**
  * Interface for all classes implementing {@link IBulkCustomer}.
  * 
@@ -81,5 +83,16 @@ public interface IBulkCustomer extends IDomainObject
      * @param customerIdentifier customer identifier
      */
     void setCustomerIdentifier (final int customerIdentifier);
-
+    
+    /**
+     * Set the target applications.
+     * @param targetApplications the target applications that this customer can use.
+     */
+    void setTargetApplications (final Set targetApplications);
+    
+    /**
+     * Get the target applications.
+     * @return return target applications that this customer can work with.
+     */
+    Set getTargetApplications();
 }

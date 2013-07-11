@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import java.util.Set;
+
 import uk.gov.moj.sdt.domain.api.IRequestType;
 
 /**
@@ -42,6 +44,11 @@ import uk.gov.moj.sdt.domain.api.IRequestType;
  */
 public class RequestType extends AbstractDomainObject implements IRequestType
 {
+	
+	/**
+	 * The target applications that this customer can work with.e.g. 'MCOL'
+	 */
+	private Set targetApplications;
     /**
      * Request type name.
      */
@@ -92,5 +99,15 @@ public class RequestType extends AbstractDomainObject implements IRequestType
     {
         this.description = description;
     }
+
+	@Override
+	public void setTargetApplications(final Set targetApplications) {
+		this.targetApplications = targetApplications;
+	}
+
+	@Override
+	public Set getTargetApplications() {
+		return targetApplications;
+	}
 
 }

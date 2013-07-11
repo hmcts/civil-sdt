@@ -64,8 +64,9 @@ public class BulkCustomerDaoTest extends TestCase
     public BulkCustomerDaoTest ()
     {
         super ();
+        //DBUnitUtility.loadDatabase(this.getClass(), false);
     }
-
+ 
     /**
      * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
      */
@@ -76,8 +77,9 @@ public class BulkCustomerDaoTest extends TestCase
                 (IBulkCustomerDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
 
         final IBulkCustomer[] bulkCustomers = bulkCustomersDao.getBulkCustomerBySdtId (123);
-        LOG.debug ("Retrieved bulk customer id [" + Integer.toString (bulkCustomers[0].getId ()) + "]");
-
+        if(bulkCustomers.length > 0){
+        	LOG.debug ("Retrieved bulk customer id [" + Long.toString (bulkCustomers[0].getId ()) + "]");
+        }
         return;
     }
 }

@@ -16,5 +16,9 @@
         <property name="targetApplicationName" type="java.lang.String">
             <column name="TARGET_APPLICATION_NAME" />
         </property>
+        <set name="bulkCustomers" table="BULK_CUSTOMER_APPLICATIONS">
+        	<key column="TARGET_APPLICATION_ID"/>
+        	<many-to-many column="BULK_CUSTOMER_ID" class="uk.gov.moj.sdt.domain.BulkCustomer"/>
+    	</set>
     </class>
 </hibernate-mapping>

@@ -45,6 +45,8 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
+
 /**
  * Test {@link GenericDao} CRUD methods.
  * 
@@ -66,6 +68,7 @@ public class GenericDaoTest extends TestCase
     public GenericDaoTest ()
     {
         super ();
+        DBUnitUtility.loadDatabase(this.getClass(), false);
     }
 
     /**
