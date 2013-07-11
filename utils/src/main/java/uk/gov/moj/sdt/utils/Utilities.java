@@ -32,9 +32,7 @@ package uk.gov.moj.sdt.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,31 +156,37 @@ public final class Utilities
      * 
      * e.g. The quick {1} jumped {2} the lazy {3}
      * 
-     * replacements map would consist of:
+     * List would consist of:
      * 
-     * 1, fox
-     * 2, over
-     * 3, dog
+     * fox
+     * over
+     * dog
      * 
      * @param text the text to tokenise
-     * @param replacements map of token and string
+     * @param replacements list of string(s)
      * @return tokenised text
      */
-    public static String replaceTokens (final String text, final Map<String, String> replacements)
+    public static String replaceTokens (final String text, final List<String> replacements)
     {
-        final Pattern pattern = Pattern.compile ("\\{([^}]*)\\}");
-        final Matcher matcher = pattern.matcher (text);
-        final StringBuffer buffer = new StringBuffer ();
-        while (matcher.find ())
+
+        String textToReplace = text;
+        if (textToReplace.contains ("{0}"))
         {
-            final String replacement = replacements.get (matcher.group (1));
+            Utilities.LOG.error ("** ERROR - The string tokensation is one based and not zero based");
+            throw new RuntimeException ("** ERROR - The string tokensation is one based and not zero based");
+        }
+        for (int i = 0; i < replacements.size (); i++)
+        {
+            // Get the replacement text from the list
+            final String replacement = replacements.get (i);
             if (replacement != null)
             {
-                matcher.appendReplacement (buffer, "");
-                buffer.append (replacement);
+                // Get the next token, since our tokenisation is one based increment i by 1
+                final String token = "{" + (i + 1) + "}";
+                textToReplace = textToReplace.replace (token, replacement);
             }
         }
-        matcher.appendTail (buffer);
-        return buffer.toString ();
+
+        return textToReplace;
     }
 }

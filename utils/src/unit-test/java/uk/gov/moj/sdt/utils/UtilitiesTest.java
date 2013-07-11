@@ -31,8 +31,8 @@
 
 package uk.gov.moj.sdt.utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -59,16 +59,52 @@ public class UtilitiesTest extends SdtUnitTestBase
      * Test the tokenisation works.
      */
     @Test
-    public void testTokenisation ()
+    public void testSingleTokenisation ()
     {
-        final Map<String, String> m = new HashMap<String, String> ();
+        final List<String> l = new ArrayList<String> ();
+        l.add ("John Doe");
 
-        m.put ("1", "fox");
-        m.put ("2", "dog");
-        m.put ("replaceme", "over");
-        final String s = Utilities.replaceTokens ("The quick brown {1} jumped {replaceme} the lazy brown {2}", m);
+        final String s = Utilities.replaceTokens ("User {1} was not found", l);
+
+        Assert.assertEquals ("User John Doe was not found", s);
+
+    }
+
+    /**
+     * Test the tokenisation works with multiple tokens and out of sequence tokens.
+     */
+    @Test
+    public void testMultipleTokenisation ()
+    {
+        final List<String> l = new ArrayList<String> ();
+        l.add ("fox");
+        l.add ("dog");
+        l.add ("over");
+        final String s = Utilities.replaceTokens ("The quick brown {1} jumped {3} the lazy brown {2}", l);
 
         Assert.assertEquals ("The quick brown fox jumped over the lazy brown dog", s);
+
+    }
+
+    /**
+     * Test an exception is thrown.
+     */
+    @Test
+    public void testZeroBasedException ()
+    {
+        final List<String> l = new ArrayList<String> ();
+        l.add ("John Doe");
+
+        try
+        {
+            final String s = Utilities.replaceTokens ("User {0} was not found", l);
+            fail ("RuntimeException expected");
+        }
+        catch (final RuntimeException e)
+        {
+            Assert.assertEquals ("** ERROR - The string tokensation is one based and not zero based", e.getMessage ());
+        }
+
 
     }
 
