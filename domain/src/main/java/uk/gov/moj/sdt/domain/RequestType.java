@@ -48,7 +48,7 @@ public class RequestType extends AbstractDomainObject implements IRequestType
 	/**
 	 * The target applications that this customer can work with.e.g. 'MCOL'
 	 */
-	private Set targetApplications;
+	private Set <TargetApplication> targetApplications;
     /**
      * Request type name.
      */
@@ -101,12 +101,12 @@ public class RequestType extends AbstractDomainObject implements IRequestType
     }
 
 	@Override
-	public void setTargetApplications(final Set targetApplications) {
+	public void setTargetApplications(final Set <TargetApplication> targetApplications) {
 		this.targetApplications = targetApplications;
 	}
 
 	@Override
-	public Set getTargetApplications() {
+	public Set <TargetApplication> getTargetApplications() {
 		return targetApplications;
 	}
 

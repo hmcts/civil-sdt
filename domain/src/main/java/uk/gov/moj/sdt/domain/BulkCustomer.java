@@ -49,7 +49,7 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
 	/**
 	 * The target applications that this customer can work with.e.g. 'MCOL'
 	 */
-	private Set targetApplications;
+	private Set <TargetApplication> targetApplications;
     /**
      * Unique code for each Bulk Customer organisation.
      */
@@ -102,12 +102,12 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     }
 
 	@Override
-	public void setTargetApplications(final Set targetApplications) {
+	public void setTargetApplications(final Set <TargetApplication> targetApplications) {
 		this.targetApplications = targetApplications;
 	}
 
 	@Override
-	public Set getTargetApplications() {
+	public Set <TargetApplication> getTargetApplications() {
 		return targetApplications;
 	}
 

@@ -32,6 +32,8 @@ package uk.gov.moj.sdt.domain.api;
 
 import java.util.Set;
 
+import uk.gov.moj.sdt.domain.TargetApplication;
+
 /**
  * Interface for classes implementing {@link IRequesType}.
  * 
@@ -86,12 +88,12 @@ public interface IRequestType
      * Set the target applications.
      * @param targetApplications the target applications that this customer can use.
      */
-    void setTargetApplications (final Set targetApplications);
+    void setTargetApplications (final Set <TargetApplication> targetApplications);
     
     /**
      * Get the target applications.
      * @return return target applications that this customer can work with.
      */
-    Set getTargetApplications();
+    Set <TargetApplication> getTargetApplications();
 
 }

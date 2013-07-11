@@ -33,6 +33,9 @@ package uk.gov.moj.sdt.domain.api;
 
 import java.util.Set;
 
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.RequestRouting;
+
 /**
  * Interface for classes implementing {@link ITargetApplication} .
  * 
@@ -46,13 +49,13 @@ public interface ITargetApplication
 	 * Retrieve a set of all customers who can work against this application.
 	 * @return a set of bulk customers who can use this application.
 	 */
-	Set getBulkCustomers ();
+	Set <BulkCustomer> getBulkCustomers ();
 	
 	/**
 	 * Set the list of customers who can work against this application.
 	 * @param bulkCustomers the list of all customers who can work on this application.
 	 */
-	void setBulkCustomers(Set bulkCustomers);
+	void setBulkCustomers(Set <BulkCustomer> bulkCustomers);
     /**
      * Get target application code.
      * 
@@ -86,12 +89,12 @@ public interface ITargetApplication
 	 * Retrieve a set of all customers who can work against this application.
 	 * @return a set of bulk customers who can use this application.
 	 */
-	Set getRequestRoutings ();
+	Set <RequestRouting> getRequestRoutings ();
 	
 	/**
 	 * Set the list of request types which work with this application.
 	 * @param requestRoutings the list of all requestRoutings who can work with this application.
 	 */
-	void setRequestRoutings(Set requestRoutings);
+	void setRequestRoutings(Set <RequestRouting> requestRoutings);
 
 }

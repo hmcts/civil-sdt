@@ -46,11 +46,11 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
 	/**
 	 * A collection of all request types that can be used with this target application.
 	 */
-	private Set requestRoutings;
+	private Set <RequestRouting> requestRoutings;
 	/**
 	 * A collection of all customers who can work with this target application.
 	 */
-	private Set bulkCustomers;
+	private Set <BulkCustomer> bulkCustomers;
 
     /**
      * Target application code.
@@ -87,23 +87,23 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
     }
 
 	@Override
-	public Set getBulkCustomers() {
+	public Set <BulkCustomer> getBulkCustomers() {
 		return bulkCustomers;
 	}
 
 	@Override
-	public void setBulkCustomers(final Set bulkCustomers) {
+	public void setBulkCustomers(final Set <BulkCustomer> bulkCustomers) {
 		this.bulkCustomers = bulkCustomers;
 		
 	}
 
 	@Override
-	public Set getRequestRoutings() {
+	public Set <RequestRouting> getRequestRoutings() {
 		return requestRoutings;
 	}
 
 	@Override
-	public void setRequestRoutings(final Set requestRoutings) {
+	public void setRequestRoutings(final Set <RequestRouting> requestRoutings) {
 		this.requestRoutings = requestRoutings;		
 	}
 
