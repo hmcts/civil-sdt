@@ -31,20 +31,9 @@
 
 package uk.gov.moj.sdt.messaging;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jms.core.JmsTemplate;
 
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 
@@ -62,138 +51,32 @@ public class MessageWriter implements IMessageWriter
     private final Log logger = LogFactory.getLog (getClass ());
 
     /**
-     * Connection factory for all connections to ActiveMQ.
+     * The JmsTemplate object from Spring framework.
      */
-    private ActiveMQConnectionFactory connectionFactory;
+    private final JmsTemplate jmsTemplate;
 
     /**
-     * Connection for the message producing queue.
+     * The queue name configurable as a bean property.
      */
-    private Connection connection;
+    private final String queueName;
 
     /**
-     * Session for the message producing queue.
-     */
-    private Session session;
-
-    /**
-     * Producers for the queues stored in a map with queue name as the key.
-     */
-    private Map<String, MessageProducer> producerMap = new HashMap<String, MessageProducer> ();
-
-    @Override
-    public void queueMessage (final String message, final String queueName) throws Exception
-    {
-        // Get the producer matching to the queue name
-        final MessageProducer producer = getMessageProducer (queueName);
-
-        try
-        {
-
-            final TextMessage txtMessage = session.createTextMessage ();
-            txtMessage.setText (message);
-
-            logger.debug ("Sending message " + message + " on queue " + queueName);
-            producer.send (txtMessage);
-
-        }
-        catch (final JMSException e)
-        {
-            logger.error (e);
-            throw new Exception (e);
-        }
-
-    }
-
-    /**
-     * Method to create and cache a message producer for the specified queue name.
+     * Creates a message sender with the JmsTemplate.
      * 
-     * @param queueName name of the queue
-     * @return message producer
-     * @throws Exception if there is any error in creation of the producer
+     * @param jmsTemplate The JMS template
+     * @param queueName The JMS queue name
      */
-    private synchronized MessageProducer getMessageProducer (final String queueName) throws Exception
+    public MessageWriter (final JmsTemplate jmsTemplate, final String queueName)
     {
-        if (producerMap.containsKey (queueName))
-        {
-            return producerMap.get (queueName);
-        }
-
-        logger.debug ("Creating new producer for queue [" + queueName + "]");
-        MessageProducer producer = null;
-
-        // Initialise session once only for the class
-        try
-        {
-            if (connectionFactory == null)
-            {
-                // TODO Discuss whether the connection factory needs to be injected with Spring configuration
-                connectionFactory = new ActiveMQConnectionFactory ("failover:tcp://localhost:61616");
-                // TODO Discuss what properties are required and set them to the connectionFactory
-                final int socketTimeOutMs = 60000;
-                final Properties connectionProperties = new Properties ();
-                connectionProperties.put ("useLocalHost", true);
-                connectionProperties.put ("keepAlive", true);
-                connectionProperties.put ("soTimeout", socketTimeOutMs);
-                connectionFactory.setProperties (connectionProperties);
-            }
-
-            connection = connectionFactory.createConnection ();
-
-            // JMS messages are sent and received using a Session. We will
-            // create here a non-transactional session object. If you want
-            // to use transactions you should set the first parameter to 'true'
-            session = connection.createSession (false, Session.AUTO_ACKNOWLEDGE);
-
-            // Destination represents here our queue on the
-            // JMS server. You don't have to do anything special on the
-            // server to create it, it will be created automatically.
-            final Destination destination = session.createQueue (queueName);
-
-            producer = session.createProducer (destination);
-
-            // Cache the producer
-            producerMap.put (queueName, producer);
-        }
-        catch (final JMSException e)
-        {
-            logger.error (e);
-            throw new Exception (e);
-        }
-
-        return producer;
+        this.jmsTemplate = jmsTemplate;
+        this.queueName = queueName;
     }
 
     @Override
-    public synchronized void closeQueue (final String queueName) throws Exception
+    public void queueMessage (final String message)
     {
-        final MessageProducer producer = producerMap.get (queueName);
-
-        try
-        {
-            logger.debug ("Attempting to release connection for queue [" + queueName + "]");
-
-            if (producer != null)
-            {
-                // In Close queue Send an empty message to indicate that this is the final message
-                producer.send (session.createMessage ());
-                producer.close ();
-                producerMap.remove (queueName);
-            }
-
-            // Check to see if there are any producers left in the map, if not then close the connection
-            if (producerMap.isEmpty ())
-            {
-                session.close ();
-                connection.close ();
-            }
-
-        }
-        catch (final JMSException e)
-        {
-            logger.error (e);
-            throw new Exception (e);
-        }
+        logger.debug ("Sending message");
+        this.jmsTemplate.convertAndSend (queueName, message);
+        logger.debug ("Message Sent");
     }
-
 }

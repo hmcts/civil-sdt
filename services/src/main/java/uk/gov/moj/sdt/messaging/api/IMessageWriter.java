@@ -43,16 +43,7 @@ public interface IMessageWriter
      * Writes a message to the message queue.
      * 
      * @param message the message to be written to the message queue
-     * @param queueName the name of the message queue
-     * @throws Exception if there are any errors during sending.
      */
-    void queueMessage (String message, String queueName) throws Exception;
+    void queueMessage (String message);
 
-    /**
-     * Closes the message queue associated with the name.
-     * 
-     * @param queueName name of the queue
-     * @throws Exception if there are any errors
-     */
-    void closeQueue (String queueName) throws Exception;
 }

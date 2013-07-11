@@ -162,6 +162,7 @@
 				<include name="${org.springframework.core.jar}" />
 				<include name="${org.springframework.expression.jar}" />
 				<include name="${org.springframework.jdbc.jar}" />
+				<include name="${org.springframework.jms.jar}" />
 				<include name="${org.springframework.js.jar}" />
 				<include name="${org.springframework.js.resources.jar}" />
 				<include name="${org.springframework.orm.jar}" />

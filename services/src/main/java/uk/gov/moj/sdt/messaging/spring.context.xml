@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.6.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-2.5.xsd
+	">
 
+	<amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:61616">
+		<property name="useLocalHost" value="true"/>
+		<property name="keepAlive" value="true"/>
+		<property name="soTimeout" value="60000"/>
+	</amq:connectionFactory>
+	
+	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<constructor-arg ref="amqConnectionFactory"/>
+		<constructor-arg value="JMSTestQueue"/>
+		<property name="sessionCacheSize" value="100"/>
+	</bean>
+	
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<constructor-arg ref="connectionFactory"/>
+	</bean>
+	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriter" 
 		class="uk.gov.moj.sdt.messaging.MessageWriter">
+		<constructor-arg ref="jmsTemplate"/>
 	</bean>
-
+				
 </beans>

@@ -28,27 +28,20 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-
 package uk.gov.moj.sdt.messaging;
-
-import static org.easymock.EasyMock.createMockBuilder;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
 
 /**
- * Test class for testing the MessageWriter implementation.
+ * IntegrationTest class for testing the MessageWriter implementation.
  * 
  * @author Manoj Kulkarni
  * 
  */
-public class MessageWriterTest
+public class MessageWriterIntTest
 {
-
     /**
      * JMS Template for mocking.
      */
@@ -65,10 +58,12 @@ public class MessageWriterTest
     @Before
     public void setUp ()
     {
-        // Nicemock returns default values
-        jmsTemplate = createNiceMock (JmsTemplate.class);
-        messageWriter =
-                createMockBuilder (MessageWriter.class).withConstructor (jmsTemplate, "JMSUnitTestQ").createMock ();
+        /* jmsTemplate = new JmsTemplate ();
+         * final ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory ();
+         * connectionFactory.setBrokerURL ("tcp://localhost:61616");
+         * jmsTemplate.setConnectionFactory (connectionFactory);
+         * messageWriter =
+         * createMockBuilder (MessageWriter.class).withConstructor (jmsTemplate, "JMSIntTestQueue").createMock (); */
     }
 
     /**
@@ -79,8 +74,8 @@ public class MessageWriterTest
     public void testQueueMessage ()
     {
         // Setup finished, now activate the mock
-        replay (messageWriter);
-        messageWriter.queueMessage ("Test");
-        verify (messageWriter);
+        /* replay (messageWriter);
+         * messageWriter.queueMessage ("IntegrationTest");
+         * verify (messageWriter); */
     }
 }
