@@ -176,6 +176,7 @@
 			</fileset>
 			<fileset dir="${3rd-party.dir}" casesensitive="false">
 				<include name="${activation.jar}" />
+				<include name="${activemq-all.jar}" />
 				<include name="${annogen.jar}" />
 				<include name="${antlr.jar}" />
 				<include name="${aopalliance.jar}" />
