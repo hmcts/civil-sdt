@@ -30,7 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * An invalid request type has been sent.
@@ -63,10 +63,9 @@ public class InvalidRequestTypeException extends AbstractBusinessException
      * @param description error description
      * @param replacements string replacements with tokens
      */
-    public InvalidRequestTypeException (final String code, final String description,
-            final Map<String, String> replacements)
+    public InvalidRequestTypeException (final String code, final String description, final List<String> replacements)
     {
-        super (code, description);
+        super (code, description, replacements);
     }
 
     /**

@@ -30,7 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Customer reference could not be found.
@@ -64,7 +64,7 @@ public class CustomerReferenceNotFoundException extends AbstractBusinessExceptio
      * @param replacements string replacements with tokens
      */
     public CustomerReferenceNotFoundException (final String code, final String description,
-            final Map<String, String> replacements)
+            final List<String> replacements)
     {
         super (code, description, replacements);
     }

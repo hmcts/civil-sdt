@@ -30,7 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * The total number of individual requests in a bulk submission should match the request count.
@@ -64,9 +64,9 @@ public class RequestCountMismatchException extends AbstractBusinessException
      * @param replacements string replacements with tokens
      */
     public RequestCountMismatchException (final String code, final String description,
-            final Map<String, String> replacements)
+ final List<String> replacements)
     {
-        super (code, description);
+        super (code, description, replacements);
     }
 
     /**

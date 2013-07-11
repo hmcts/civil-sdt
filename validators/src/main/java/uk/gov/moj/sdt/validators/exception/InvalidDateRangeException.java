@@ -30,7 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Invalid date range.
@@ -63,8 +63,7 @@ public class InvalidDateRangeException extends AbstractBusinessException
      * @param description description
      * @param replacements string replacements with tokens
      */
-    public InvalidDateRangeException (final String code, final String description,
-            final Map<String, String> replacements)
+    public InvalidDateRangeException (final String code, final String description, final List<String> replacements)
     {
         super (code, description, replacements);
     }

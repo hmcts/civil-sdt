@@ -30,7 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Duplicate user request identifier found, it needs to be unique for each individual request.
@@ -64,9 +64,9 @@ public class DuplicateUserRequestIdentifierException extends AbstractBusinessExc
      * @param replacements string replacements with tokens
      */
     public DuplicateUserRequestIdentifierException (final String code, final String description,
-            final Map<String, String> replacements)
+            final List<String> replacements)
     {
-        super (code, description);
+        super (code, description, replacements);
     }
 
     /**

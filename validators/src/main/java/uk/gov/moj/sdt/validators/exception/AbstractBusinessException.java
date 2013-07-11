@@ -30,7 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
-import java.util.Map;
+import java.util.List;
 
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
@@ -81,8 +81,7 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
      * @param description error description
      * @param replacements list of strings to replace
      */
-    public AbstractBusinessException (final String code, final String description,
-            final Map<String, String> replacements)
+    public AbstractBusinessException (final String code, final String description, final List<String> replacements)
     {
         super ("The following exception occured [" + code + "] message[" +
                 Utilities.replaceTokens (description, replacements) + "]");

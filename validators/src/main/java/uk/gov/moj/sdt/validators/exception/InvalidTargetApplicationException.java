@@ -30,7 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Used when a customer is not registered to send a request to a specified target application.
@@ -64,9 +64,9 @@ public class InvalidTargetApplicationException extends AbstractBusinessException
      * @param replacements string replacements with tokens
      */
     public InvalidTargetApplicationException (final String code, final String description,
-            final Map<String, String> replacements)
+            final List<String> replacements)
     {
-        super (code, description);
+        super (code, description, replacements);
     }
 
     /**
