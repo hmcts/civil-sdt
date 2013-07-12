@@ -62,7 +62,7 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     {
         super ();
 
-        // SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
+        SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
     }
 
     /**
