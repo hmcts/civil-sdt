@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,57 +28,83 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.dao.cache;
 
-package uk.gov.moj.sdt.domain.api;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.gov.moj.sdt.dao.api.IErrorMessageDao;
+import uk.gov.moj.sdt.dao.cache.api.IErrorMessageCache;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
- * Interface for all classes implementing {@link IErrorMessage}.
+ * A cahce of all the error messages.
  * 
- * @author Manoj Kulkarni
+ * @author d301488
+ * 
  */
-public interface IErrorMessage extends IDomainObject
+public class ErrorMessageCache implements IErrorMessageCache
 {
 
     /**
-     * Get error code.
-     * 
-     * @return error code
+     * The map of error messages.
      */
-    String getErrorCode ();
+    private static Map<String, IErrorMessage> errorMessages = new HashMap<String, IErrorMessage> ();
 
     /**
-     * Set error code.
-     * 
-     * @param errorCode error code
+     * Logger object.
      */
-    void setErrorCode (final String errorCode);
+    private static final Logger LOG = LoggerFactory.getLogger (ErrorMessageCache.class);
 
     /**
-     * Get error Text.
-     * 
-     * @return error text
+     * Error message dao.
      */
-    String getErrorText ();
+    private IErrorMessageDao errorMessageDao;
+
+    @Override
+    public IErrorMessage getErrorMessage (final String errorMessageCode)
+    {
+        LOG.debug ("Retrieving error message with code " + errorMessageCode);
+        if (errorMessages.isEmpty ())
+        {
+            final IErrorMessage[] result = errorMessageDao.getAllErrorMessages ();
+            for (IErrorMessage errorMessage : result)
+            {
+                // Add all retrieved messages to a map, keyed by the Error Code.
+                errorMessages.put (errorMessage.getErrorCode (), errorMessage);
+            }
+        }
+
+        return errorMessages.get (errorMessageCode);
+    }
+
+    @Override
+    public void clearCache ()
+    {
+
+        synchronized (errorMessages)
+        {
+            errorMessages.clear ();
+            errorMessages = null;
+        }
+    }
 
     /**
-     * Set error Text.
-     * 
-     * @param errorText error text
+     * @return the errorMessageDao
      */
-    void setErrorText (final String errorText);
+    public IErrorMessageDao getErrorMessageDao ()
+    {
+        return errorMessageDao;
+    }
 
     /**
-     * Get error description.
-     * 
-     * @return error description
+     * @param errorMessageDao the errorMessageDao to set
      */
-    String getErrorDescription ();
-
-    /**
-     * Set error description.
-     * 
-     * @param errorDescription error description
-     */
-    void setErrorDescription (final String errorDescription);
-
+    public void setErrorMessageDao (final IErrorMessageDao errorMessageDao)
+    {
+        this.errorMessageDao = errorMessageDao;
+    }
 }

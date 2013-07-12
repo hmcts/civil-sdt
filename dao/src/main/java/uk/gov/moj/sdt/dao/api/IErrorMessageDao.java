@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,57 +28,26 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.dao.api;
 
-package uk.gov.moj.sdt.domain.api;
+import org.springframework.dao.DataAccessException;
+
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
- * Interface for all classes implementing {@link IErrorMessage}.
+ * Interface for all classes implementing {@link IErrorMessageDao}.
  * 
- * @author Manoj Kulkarni
+ * @author Simon Holmes
  */
-public interface IErrorMessage extends IDomainObject
+public interface IErrorMessageDao
 {
 
     /**
-     * Get error code.
+     * Retrieve a map of {@link IErrorMessages} objects containing every error message.
      * 
-     * @return error code
+     * @return A Map of all the error messages.
+     * @throws DataAccessException Hibernate exception
      */
-    String getErrorCode ();
-
-    /**
-     * Set error code.
-     * 
-     * @param errorCode error code
-     */
-    void setErrorCode (final String errorCode);
-
-    /**
-     * Get error Text.
-     * 
-     * @return error text
-     */
-    String getErrorText ();
-
-    /**
-     * Set error Text.
-     * 
-     * @param errorText error text
-     */
-    void setErrorText (final String errorText);
-
-    /**
-     * Get error description.
-     * 
-     * @return error description
-     */
-    String getErrorDescription ();
-
-    /**
-     * Set error description.
-     * 
-     * @param errorDescription error description
-     */
-    void setErrorDescription (final String errorDescription);
+    IErrorMessage[] getAllErrorMessages () throws DataAccessException;
 
 }

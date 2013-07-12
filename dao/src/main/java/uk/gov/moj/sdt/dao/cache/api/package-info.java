@@ -29,56 +29,7 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.domain.api;
-
 /**
- * Interface for all classes implementing {@link IErrorMessage}.
- * 
- * @author Manoj Kulkarni
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public interface IErrorMessage extends IDomainObject
-{
-
-    /**
-     * Get error code.
-     * 
-     * @return error code
-     */
-    String getErrorCode ();
-
-    /**
-     * Set error code.
-     * 
-     * @param errorCode error code
-     */
-    void setErrorCode (final String errorCode);
-
-    /**
-     * Get error Text.
-     * 
-     * @return error text
-     */
-    String getErrorText ();
-
-    /**
-     * Set error Text.
-     * 
-     * @param errorText error text
-     */
-    void setErrorText (final String errorText);
-
-    /**
-     * Get error description.
-     * 
-     * @return error description
-     */
-    String getErrorDescription ();
-
-    /**
-     * Set error description.
-     * 
-     * @param errorDescription error description
-     */
-    void setErrorDescription (final String errorDescription);
-
-}
+package uk.gov.moj.sdt.dao.cache.api;

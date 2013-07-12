@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,57 +28,51 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.dao;
 
-package uk.gov.moj.sdt.domain.api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+
+import uk.gov.moj.sdt.dao.api.IErrorMessageDao;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
- * Interface for all classes implementing {@link IErrorMessage}.
+ * Implements specific DAO functionality based on {@link IErrorMessages}. This is a derived DAO extending
+ * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct a
+ * map of all error messages.
  * 
- * @author Manoj Kulkarni
+ * @author Simon Holmes
+ * 
  */
-public interface IErrorMessage extends IDomainObject
+public class ErrorMessageDao extends GenericDao implements IErrorMessageDao
 {
 
     /**
-     * Get error code.
-     * 
-     * @return error code
+     * Logger object.
      */
-    String getErrorCode ();
+    private static final Logger LOG = LoggerFactory.getLogger (ErrorMessageDao.class);
 
     /**
-     * Set error code.
-     * 
-     * @param errorCode error code
+     * Default constructor for {@link GenericDaoTest}.
      */
-    void setErrorCode (final String errorCode);
+    public ErrorMessageDao ()
+    {
+        super ();
+    }
 
     /**
-     * Get error Text.
-     * 
-     * @return error text
+     * {@inheritDoc}
      */
-    String getErrorText ();
+    @Override
+    public IErrorMessage[] getAllErrorMessages () throws DataAccessException
+    {
+        LOG.debug ("Get all error messages.");
 
-    /**
-     * Set error Text.
-     * 
-     * @param errorText error text
-     */
-    void setErrorText (final String errorText);
+        LOG.debug ("Getting all error messages from database.");
 
-    /**
-     * Get error description.
-     * 
-     * @return error description
-     */
-    String getErrorDescription ();
+        // Call the generic dao to perform this query. Get all error messages, without restrictions.
+        return this.query (IErrorMessage.class);
 
-    /**
-     * Set error description.
-     * 
-     * @param errorDescription error description
-     */
-    void setErrorDescription (final String errorDescription);
-
+    }
 }

@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,57 +28,62 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.dao;
 
-package uk.gov.moj.sdt.domain.api;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import uk.gov.moj.sdt.dao.api.IErrorMessageDao;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
- * Interface for all classes implementing {@link IErrorMessage}.
+ * Test {@link ErrorMessageDao} query methods.
  * 
- * @author Manoj Kulkarni
+ * @author Robin Compston
+ * 
  */
-public interface IErrorMessage extends IDomainObject
+@RunWith (SpringJUnit4ClassRunner.class)
+@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
+public class ErrorMessageDaoTest extends TestCase
 {
 
     /**
-     * Get error code.
-     * 
-     * @return error code
+     * Logger object.
      */
-    String getErrorCode ();
+    private static final Logger LOG = LoggerFactory.getLogger (ErrorMessageDaoTest.class);
 
     /**
-     * Set error code.
-     * 
-     * @param errorCode error code
+     * Default constructor for {@link BulkCustomerDaoTest}.
      */
-    void setErrorCode (final String errorCode);
+    public ErrorMessageDaoTest ()
+    {
+        super ();
+    }
 
     /**
-     * Get error Text.
-     * 
-     * @return error text
+     * Tests {@link uk.gov.moj.sdt.dao.GenericDao} querey.
      */
-    String getErrorText ();
+    @Test
+    public void testGetAllErrorMessages ()
+    {
 
-    /**
-     * Set error Text.
-     * 
-     * @param errorText error text
-     */
-    void setErrorText (final String errorText);
+        final IErrorMessageDao errorMessageDao =
+                (IErrorMessageDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IErrorMessageDao");
 
-    /**
-     * Get error description.
-     * 
-     * @return error description
-     */
-    String getErrorDescription ();
+        final IErrorMessage[] errorMessages = errorMessageDao.getAllErrorMessages ();
 
-    /**
-     * Set error description.
-     * 
-     * @param errorDescription error description
-     */
-    void setErrorDescription (final String errorDescription);
+        LOG.debug ("Retrieved " + errorMessages.length + " error message(s).");
 
+        Assert.assertEquals (2, errorMessages.length);
+
+        return;
+    }
 }
