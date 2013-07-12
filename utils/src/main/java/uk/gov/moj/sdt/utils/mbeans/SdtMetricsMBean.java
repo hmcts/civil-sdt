@@ -197,6 +197,46 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long databaseCallsTimeMax;
 
     /**
+     * Number of DAO reads.
+     */
+    private long databaseReadsCount;
+
+    /**
+     * Time reading database.
+     */
+    private long databaseReadsTime;
+
+    /**
+     * Maxiumum time reading database.
+     */
+    private long databaseReadsTimeMin;
+
+    /**
+     * Maxiumum time reading database.
+     */
+    private long databaseReadsTimeMax;
+
+    /**
+     * Number of DAO writes.
+     */
+    private long databaseWritesCount;
+
+    /**
+     * Time writing database.
+     */
+    private long databaseWritesTime;
+
+    /**
+     * Maxiumum writing reading database.
+     */
+    private long databaseWritesTimeMin;
+
+    /**
+     * Maxiumum writing reading database.
+     */
+    private long databaseWritesTimeMax;
+
+    /**
      * Number of active customers.
      */
     private long activeCustomers;
@@ -627,6 +667,106 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
+     * Get the number of database (Hibernate) Reads.
+     * 
+     * @return the number of database (Hibernate) Reads.
+     */
+    private long getDatabaseReadsCount ()
+    {
+        return this.databaseReadsCount;
+    }
+
+    /**
+     * Get the time spent reading the database (Hibernate).
+     * 
+     * @return the time spent reading the database (Hibernate).
+     */
+    private long getDatabaseReadsTime ()
+    {
+        return this.databaseReadsTime;
+    }
+
+    /**
+     * Get average time for defences feedbacks since last reset.
+     * 
+     * @return average time (milliseconds) for defence feedbacks.
+     */
+    private long getDatabaseReadsTimeAvg ()
+    {
+        return (this.databaseReadsCount == 0) ? 0 : this.databaseReadsTime / this.databaseReadsCount;
+    }
+
+    /**
+     * Get the minimum time spent reading the database (Hibernate).
+     * 
+     * @return the minimum time spent reading the database (Hibernate).
+     */
+    private long getDatabaseReadsTimeMin ()
+    {
+        return this.databaseReadsTimeMin;
+    }
+
+    /**
+     * Get the maximum time spent reading the database (Hibernate).
+     * 
+     * @return the maximum time spent reading the database (Hibernate).
+     */
+    private long getDatabaseReadsTimeMax ()
+    {
+        return this.databaseReadsTimeMax;
+    }
+
+    /**
+     * Get the number of database (Hibernate) Writes.
+     * 
+     * @return the number of database (Hibernate) Writes.
+     */
+    private long getDatabaseWritesCount ()
+    {
+        return this.databaseWritesCount;
+    }
+
+    /**
+     * Get the time spent Writeing the database (Hibernate).
+     * 
+     * @return the time spent Writeing the database (Hibernate).
+     */
+    private long getDatabaseWritesTime ()
+    {
+        return this.databaseWritesTime;
+    }
+
+    /**
+     * Get average time for defences feedbacks since last reset.
+     * 
+     * @return average time (milliseconds) for defence feedbacks.
+     */
+    private long getDatabaseWritesTimeAvg ()
+    {
+        return (this.databaseWritesCount == 0) ? 0 : this.databaseWritesTime / this.databaseWritesCount;
+    }
+
+    /**
+     * Get the minimum time spent Writeing the database (Hibernate).
+     * 
+     * @return the minimum time spent Writeing the database (Hibernate).
+     */
+    private long getDatabaseWritesTimeMin ()
+    {
+        return this.databaseWritesTimeMin;
+    }
+
+    /**
+     * Get the maximum time spent Writeing the database (Hibernate).
+     * 
+     * @return the maximum time spent Writeing the database (Hibernate).
+     */
+    private long getDatabaseWritesTimeMax ()
+    {
+        return this.databaseWritesTimeMax;
+    }
+
+    /**
      * Get the number of active customers using the system.
      * 
      * @return the number of active customers using the system.
@@ -831,14 +971,29 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public void upDatabaseCallsCount ()
+    public void upDatabaseReadsCount ()
     {
         this.databaseCallsCount += 1;
+        this.databaseReadsCount += 1;
     }
 
     @Override
-    public void addDatabaseCallsTime (final long databaseCallsTime)
+    public void addDatabaseReadsTime (final long databaseReadsTime)
     {
+        this.databaseReadsTime += databaseReadsTime;
+
+        // Update the minimum if needed.
+        if (this.databaseReadsTimeMin == 0 || databaseReadsTime < this.databaseReadsTimeMin)
+        {
+            this.databaseReadsTimeMin = databaseReadsTime;
+        }
+
+        // Update the maximum if needed.
+        if (this.databaseReadsTimeMax == 0 || databaseReadsTime > this.databaseReadsTimeMax)
+        {
+            this.databaseReadsTimeMax = databaseReadsTime;
+        }
+
         this.databaseCallsTime += databaseCallsTime;
 
         // Update the minimum if needed.
@@ -852,7 +1007,46 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         {
             this.databaseCallsTimeMax = databaseCallsTime;
         }
+}
+
+    @Override
+    public void upDatabaseWritesCount ()
+    {
+        this.databaseCallsCount += 1;
+        this.databaseWritesCount += 1;
     }
+
+    @Override
+    public void addDatabaseWritesTime (final long databaseWritesTime)
+    {
+        this.databaseWritesTime += databaseWritesTime;
+
+        // Update the minimum if needed.
+        if (this.databaseWritesTimeMin == 0 || databaseWritesTime < this.databaseWritesTimeMin)
+        {
+            this.databaseWritesTimeMin = databaseWritesTime;
+        }
+
+        // Update the maximum if needed.
+        if (this.databaseWritesTimeMax == 0 || databaseWritesTime > this.databaseWritesTimeMax)
+        {
+            this.databaseWritesTimeMax = databaseWritesTime;
+        }
+
+        this.databaseCallsTime += databaseCallsTime;
+
+        // Update the minimum if needed.
+        if (this.databaseCallsTimeMin == 0 || databaseCallsTime < this.databaseCallsTimeMin)
+        {
+            this.databaseCallsTimeMin = databaseCallsTime;
+        }
+
+        // Update the maximum if needed.
+        if (this.databaseCallsTimeMax == 0 || databaseCallsTime > this.databaseCallsTimeMax)
+        {
+            this.databaseCallsTimeMax = databaseCallsTime;
+        }
+}
 
     @Override
     public void upActiveCustomers ()
@@ -1058,11 +1252,27 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public String getDatabaseStats ()
+    public String getDatabaseCallsStats ()
     {
         return "Database calls: count[" + this.getDatabaseCallsCount () + "], time[" + this.getDatabaseCallsTime () +
                 "], average[" + this.getDatabaseCallsTimeAvg () + "], minimum[" + this.getDatabaseCallsTimeMin () +
                 "], maximum[" + this.getDatabaseCallsTimeMax () + "]";
+    }
+
+    @Override
+    public String getDatabaseReadsStats ()
+    {
+        return "Database reads: count[" + this.getDatabaseReadsCount () + "], time[" + this.getDatabaseReadsTime () +
+                "], average[" + this.getDatabaseReadsTimeAvg () + "], minimum[" + this.getDatabaseReadsTimeMin () +
+                "], maximum[" + this.getDatabaseReadsTimeMax () + "]";
+    }
+
+    @Override
+    public String getDatabaseWritesStats ()
+    {
+        return "Database writes: count[" + this.getDatabaseWritesCount () + "], time[" + this.getDatabaseWritesTime () +
+                "], average[" + this.getDatabaseWritesTimeAvg () + "], minimum[" + this.getDatabaseWritesTimeMin () +
+                "], maximum[" + this.getDatabaseWritesTimeMax () + "]";
     }
 
     @Override

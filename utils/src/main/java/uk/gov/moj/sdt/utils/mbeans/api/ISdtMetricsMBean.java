@@ -74,11 +74,25 @@ public interface ISdtMetricsMBean
     String getDomainObjectsStats ();
 
     /**
-     * Get the database statistics.
+     * Get the database call statistics.
      * 
      * @return the database statistics.
      */
-    String getDatabaseStats ();
+    String getDatabaseCallsStats ();
+
+    /**
+     * Get the database read statistics.
+     * 
+     * @return the database statistics.
+     */
+    String getDatabaseReadsStats ();
+
+    /**
+     * Get the database write statistics.
+     * 
+     * @return the database statistics.
+     */
+    String getDatabaseWritesStats ();
 
     /**
      * Get the active customers statistics.
@@ -184,16 +198,28 @@ public interface ISdtMetricsMBean
     void downDomainObjectsCount ();
 
     /**
-     * Increment the database calls count.
+     * Increment the database reads count.
      */
-    void upDatabaseCallsCount ();
+    void upDatabaseReadsCount ();
 
     /**
-     * Add to the total database call time.
+     * Add to the total database reads time.
      * 
-     * @param databaseCallsTime time to add to database calls time.
+     * @param databaseReadsTime time to add to database reads time.
      */
-    void addDatabaseCallsTime (final long databaseCallsTime);
+    void addDatabaseReadsTime (final long databaseReadsTime);
+
+    /**
+     * Increment the database writes count.
+     */
+    void upDatabaseWritesCount ();
+
+    /**
+     * Add to the total database writes time.
+     * 
+     * @param databaseWritesTime time to add to database writes time.
+     */
+    void addDatabaseWritesTime (final long databaseWritesTime);
 
     /**
      * Increment the active customers count.
