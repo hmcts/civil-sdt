@@ -34,11 +34,11 @@
 # app db driver
 db.driver=oracle.jdbc.OracleDriver
 # app db url
-db.url=${my.db.url}
+db.url=${sdt.database.connection.url}
 # db schema username
-db.user=${my.db.user}
+db.user=${sdt.database.connection.user}
 # db schema password
-db.pass=${my.db.pass}
+db.pass=${sdt.database.connection.password}
 # Initial number of connections in the pool
 db.pool.initialSize=3
 # Minimum number of idle connections
