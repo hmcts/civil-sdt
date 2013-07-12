@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -29,27 +29,7 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.cache.api;
-
 /**
- * Interface for all classes implementing the cache manager.
- * 
- * @author Manoj Kulkarni
- * 
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public interface ICacheManager
-{
-    /**
-     * Gets the value associated with the parameter from the cache.
-     * 
-     * @param cacheParam The String keyword identifying the cache parameter
-     * @return String value of the parameter
-     */
-    Object getValue (Object cacheParam);
-
-    /**
-     * Re-sets the cache.
-     */
-    void resetCache ();
-
-}
+package uk.gov.moj.sdt.utils.cache;

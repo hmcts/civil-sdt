@@ -29,7 +29,22 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
+package uk.gov.moj.sdt.utils.cache.api;
+
+
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * Public interface for all classes implementing {@link ICacheable}.
+ * 
+ * @author Robin Compston
+ * 
  */
-package uk.gov.moj.sdt.cache.api;
+public interface ICacheable
+{
+    /**
+     * Gets the value associated with the parameter from the cache.
+     * 
+     * @param paramName the keyword identifying the cached parameter.
+     * @return Object value of the parameter.
+     */
+    String getValue (String paramName);
+}

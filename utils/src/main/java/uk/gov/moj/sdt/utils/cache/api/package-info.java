@@ -29,43 +29,7 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.cache;
-
-import uk.gov.moj.sdt.utils.cache.AbstractCacheControl;
-
 /**
- * Cache bean for the Global parameters.
- * 
- * @author Manoj Kulkarni
- * 
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public final class GlobalParametersCache extends AbstractCacheControl
-{
-    @Override
-    public String getValue (final String paramName)
-    {
-        // Should cache be discarded?
-        if (this.uncacheRequired ())
-        {
-            this.resetCache ();
-        }
-
-        // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
-        synchronized (this.getCacheMap ())
-        {
-            if (this.getCacheMap () == null)
-            {
-                loadCache ();
-            }
-        }
-
-        // Get the value of the named parameter.
-        return this.getCacheMap ().get (paramName);
-    }
-
-    @Override
-    protected void loadCache ()
-    {
-        // TODO: Call the Global parameters Dao and fetch the list of IGlobalParameter domain object
-    }
-}
+package uk.gov.moj.sdt.utils.cache.api;
