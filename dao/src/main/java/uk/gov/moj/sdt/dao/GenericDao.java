@@ -129,10 +129,11 @@ public class GenericDao implements IGenericDao
         // boundaries
         final Object o = criteria.uniqueResult ();
         domainObject = domainType.cast (o);
+        
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseCallsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseCallsCount ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
 
         // Validate results.
         if (domainObject == null)
@@ -148,6 +149,7 @@ public class GenericDao implements IGenericDao
         return domainObject;
     }
 
+    
     // @Override
     // public <DomainType extends IDomainObject> DomainType fetch (final DomainType domainObject,
     // final String... properties) throws DataAccessException
@@ -365,8 +367,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseCallsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseCallsCount ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
 
         @SuppressWarnings ("unchecked") final DomainType[] results =
                 (DomainType[]) Array.newInstance (domainType, domainObjects.size ());
@@ -374,8 +376,10 @@ public class GenericDao implements IGenericDao
         return domainObjects.toArray (results);
     }
 
+
     @Override
-    public void persist (final Object domainObject) throws DataAccessException
+    public void persist (final Object domainObject)
+        throws DataAccessException
     {
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
@@ -385,7 +389,7 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseCallsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseCallsCount ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseWritesTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseWritesCount ();
     }
 }
