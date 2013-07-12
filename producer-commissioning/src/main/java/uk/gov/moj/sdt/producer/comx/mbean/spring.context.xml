@@ -20,11 +20,12 @@
 			<bean
 				class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
 				<property name="managedMethods">
-					<value>getBulkSubmitStats, getBulkFeedbackStats,
-						getDefenceFeedbackStats, getStatusStats, getDomainObjectsStats,
-						getDatabaseStats, getActiveCustomersStats, getRequestQueueStats,
-						getCaseMgmtStats, getErrorStats, getLastBulkSubmitRef,
-						getLastBulkRequestRef, reset
+					<value>getBulkSubmitStats,
+						getBulkFeedbackStats,getDefenceFeedbackStats, getStatusStats,
+						getDomainObjectsStats, getDatabaseCallsStats,
+						getDatabaseReadsStats, getDatabaseWritesStats,
+						getActiveCustomersStats, getRequestQueueStats, getCaseMgmtStats,
+						getErrorStats, getLastBulkSubmitRef, getLastBulkRequestRef, reset
 					</value>
 				</property>
 			</bean>
