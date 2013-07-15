@@ -40,7 +40,7 @@ import uk.gov.moj.sdt.domain.TargetApplication;
  * @author Manoj Kulkarni
  * 
  */
-public interface IRequestType
+public interface IRequestType extends IDomainObject
 {
 
     /**

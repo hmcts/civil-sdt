@@ -43,7 +43,7 @@ import org.joda.time.LocalDateTime;
  * @author Manoj Kulkarni
  * 
  */
-public interface IIndividualRequest
+public interface IIndividualRequest extends IDomainObject
 {
 
     /**

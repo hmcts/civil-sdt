@@ -28,15 +28,14 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.utils.cache;
-
-import java.util.HashMap;
-import java.util.Map;
+package uk.gov.moj.sdt.domain.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.moj.sdt.utils.cache.api.ICacheable;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * An abstract class to provide a cache/uncache facility to classes that cache data from the database.
@@ -53,30 +52,42 @@ public abstract class AbstractCacheControl implements ICacheable
     private static final Logger LOG = LoggerFactory.getLogger (AbstractCacheControl.class);
 
     /**
-     * Value which determines the current value of a flag which controls whether individual {@link AbstractCacheControl}
-     * instances need to be uncached.
-     */
-    private static int cacheResetControl;
-
-    /**
-     * The cache variable that holds the global parameters as a key-value pair for this singleton.
-     */
-    private Map<String, String> cacheMap = new HashMap<String, String>();
-
-    /**
      * Value of the cache count for this {@link AbstractCacheControl} instance need to be uncached.
      */
     private int localCacheResetControl;
 
-    /**
-     * Get the map holding cached values.
-     * 
-     * @return the map holding cached values.
-     */
-    protected Map<String, String> getCacheMap ()
+    @Override
+    public final <DomainType extends IDomainObject> DomainType getValue (final Class<DomainType> domainType,
+                                                                         final String key)
     {
-        return cacheMap;
+        // Should cache be discarded?
+        if (this.uncacheRequired ())
+        {
+            LOG.debug ("Uncaching " + this.getClass ().getCanonicalName ());
+
+            this.uncache ();
+        }
+
+        return this.getSpecificValue (domainType, key);
     }
+
+    /**
+     * Get the implementation specific value from the sub class. This should be responsible for loading the cache if it
+     * is not loaded and then returning the value to the caller.
+     * 
+     * @param key key to cached object to be retrieved.
+     * @return the Object from the cache.
+     */
+    /**
+     * Gets the value associated with the parameter from the cache.
+     * 
+     * @param <DomainType> of entity to retrieved.
+     * @param domainType of entity to load.
+     * @param key key to cached object to be retrieved.
+     * @return DomainType instance retrieved.
+     */
+    protected abstract <DomainType extends IDomainObject> DomainType
+            getSpecificValue (final Class<DomainType> domainType, final String key);
 
     /**
      * Load the cache with appropriate source data for this cache object. Each implementing class must load its own
@@ -87,47 +98,25 @@ public abstract class AbstractCacheControl implements ICacheable
     /**
      * Clears the cache so that fresh values can be loaded from source.
      */
-    protected void resetCache ()
-    {
-        synchronized (this.getCacheMap ())
-        {
-            // Clear map but do not destroy it. 
-            this.getCacheMap ().clear ();
-        }
-    }
+    protected abstract void uncache ();
 
     /**
      * Check whether an uncache is required.
      * 
      * @return true - uncache required, false - uncache not required.
      */
-    protected boolean uncacheRequired ()
+    protected final boolean uncacheRequired ()
     {
-        if (this.localCacheResetControl < AbstractCacheControl.cacheResetControl)
+        if (this.localCacheResetControl < SdtMetricsMBean.getSdtMetrics ().getCacheResetControl ())
         {
-            LOG.debug ("Uncaching " + this.getClass ().getCanonicalName ());
+            LOG.debug ("Uncache required for " + this.getClass ().getCanonicalName ());
 
             // Bring current value up to date and retport uncache required.
-            this.localCacheResetControl = AbstractCacheControl.cacheResetControl;
+            this.localCacheResetControl = SdtMetricsMBean.getSdtMetrics ().getCacheResetControl ();
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Mark all cache classes extending {@link AbstractCacheControl} as needing to uncache any cached content. It is the
-     * responsibility of the implementation to notice this has been called and discard any cached items, forcing a
-     * refresh from source. This is currently called from an MBean.
-     */
-    public static void setUncache ()
-    {
-        LOG.debug ("Uncached requested on all classes implmenting ICacheable.");
-
-        // Increment global flag to tell all instances they need to uncache.
-        AbstractCacheControl.cacheResetControl++;
-
-        return;
     }
 }

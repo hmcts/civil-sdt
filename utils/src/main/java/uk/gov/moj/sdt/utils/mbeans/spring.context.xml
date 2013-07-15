@@ -7,8 +7,8 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<!-- Note all ids should be based on fully qualified interface name and 
-		all classes should have an interface. -->
+	<!-- Note all ids should be based on fully qualified names (interfaces where 
+		this is not ambiguous) and all classes should have an interface. -->
 
 	<bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean" />
 

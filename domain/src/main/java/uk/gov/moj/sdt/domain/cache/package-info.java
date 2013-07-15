@@ -32,4 +32,4 @@
 /**
  * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-package uk.gov.moj.sdt.utils.cache;
+package uk.gov.moj.sdt.domain.cache;

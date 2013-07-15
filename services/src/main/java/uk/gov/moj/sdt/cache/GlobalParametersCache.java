@@ -31,41 +31,134 @@
 
 package uk.gov.moj.sdt.cache;
 
-import uk.gov.moj.sdt.utils.cache.AbstractCacheControl;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
 
 /**
  * Cache bean for the Global parameters.
  * 
- * @author Manoj Kulkarni
+ * @author Manoj Kulkarni/Robin Compston
  * 
  */
 public final class GlobalParametersCache extends AbstractCacheControl
 {
-    @Override
-    public String getValue (final String paramName)
+    /**
+     * Logger object.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger (GlobalParametersCache.class);
+
+    /**
+     * DAO to retrieve error messages.
+     */
+    private IGenericDao genericDao;
+
+    /**
+     * The cache variable that holds the global parameters as a key-value pair for this singleton.
+     */
+    private Map<String, IGlobalParameter> globalParameters = new HashMap<String, IGlobalParameter> ();
+
+    /**
+     * Get the map holding cached values.
+     * 
+     * @return the map holding cached values.
+     */
+    protected Map<String, IGlobalParameter> getGlobalParameters ()
     {
-        // Should cache be discarded?
-        if (this.uncacheRequired ())
+        return globalParameters;
+    }
+
+    @Override
+    protected <DomainType extends IDomainObject> DomainType getSpecificValue (final Class<DomainType> domainType,
+                                                                              final String paramName)
+    {
+        // Assume map is uninitialised if empty.
+        if (this.getGlobalParameters ().isEmpty ())
         {
-            this.resetCache ();
+            loadCache ();
         }
 
-        // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
-        synchronized (this.getCacheMap ())
-        {
-            if (this.getCacheMap () == null)
-            {
-                loadCache ();
-            }
-        }
+        LOG.debug ("Retrieving global parameter with key [" + paramName + "]");
 
         // Get the value of the named parameter.
-        return this.getCacheMap ().get (paramName);
+        final Object someObject = this.getGlobalParameters ().get (paramName);
+
+        DomainType domainObject = null;
+        
+        // Double check that the expected class matches the retrieved class.
+        if (domainType.getClass ().isAssignableFrom (someObject.getClass ()))
+        {
+            // Prepare object of correct type to return to caller.
+            domainObject = domainType.cast (someObject);
+        }
+        else
+        {
+            // Unsupported entity type.
+            throw new UnsupportedOperationException ("Expected class [" + domainType.getCanonicalName () +
+                    "] does not match retrieved class [" + someObject.getClass ().getCanonicalName () + "].");
+        }
+
+        return domainObject;
     }
 
     @Override
     protected void loadCache ()
     {
-        // TODO: Call the Global parameters Dao and fetch the list of IGlobalParameter domain object
+        // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
+        synchronized (this.getGlobalParameters ())
+        {
+            // Assume map is uninitialised if empty.
+            if (this.getGlobalParameters ().isEmpty ())
+            {
+                LOG.debug ("Loading global parameters into cache.");
+
+                // Retrieve all rows from global parameters table.
+                final IGlobalParameter[] result = genericDao.query (IGlobalParameter.class);
+
+                for (IGlobalParameter globalParameter : result)
+                {
+                    // Add all retrieved parameters to a map, keyed by the global parameter name.
+                    this.getGlobalParameters ().put (globalParameter.getName (), globalParameter);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void uncache ()
+    {
+        // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
+        synchronized (this.getGlobalParameters ())
+        {
+            // Clear map but do not destroy it.
+            this.getGlobalParameters ().clear ();
+        }
+    }
+
+    /**
+     * Getter for the Generic DAO.
+     * 
+     * @return the generic DAO.
+     */
+    public IGenericDao getGenericDao ()
+    {
+        return genericDao;
+    }
+
+    /**
+     * Setter for generic DAO.
+     * 
+     * @param genericDao the genericDao to set.
+     */
+    public void setErrorMessageDao (final IGenericDao genericDao)
+    {
+        this.genericDao = genericDao;
     }
 }

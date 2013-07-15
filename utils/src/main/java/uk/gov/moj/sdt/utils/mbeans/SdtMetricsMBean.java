@@ -92,6 +92,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private static SdtMetricsMBean thisBean;
 
     /**
+     * Value which determines the current value of a flag which controls whether individual {@link AbstractCacheControl}
+     * instances need to be uncached.
+     */
+    private int cacheResetControl;
+
+    /**
      * Count of all bulk submits.
      */
     private long bulkSubmitCounts;
@@ -1321,7 +1327,18 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         return this.lastBulkRequestRef;
     }
 
-    // TODO - add function to reload database global data on demand.
+    @Override
+    public int getCacheResetControl ()
+    {
+        return this.cacheResetControl;
+    }
+
+    @Override
+    public void uncache ()
+    {
+        this.cacheResetControl++;
+    }
+
     // TODO - add function to reload log4j config on demand.
 
 

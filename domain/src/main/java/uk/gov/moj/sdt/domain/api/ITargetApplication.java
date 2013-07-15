@@ -42,7 +42,7 @@ import uk.gov.moj.sdt.domain.RequestRouting;
  * @author Manoj Kulkarni
  * 
  */
-public interface ITargetApplication
+public interface ITargetApplication extends IDomainObject
 {
 
 	/**

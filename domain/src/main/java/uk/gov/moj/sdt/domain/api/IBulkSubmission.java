@@ -42,7 +42,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
  * 
  * @author Manoj Kulkarni
  */
-public interface IBulkSubmission
+public interface IBulkSubmission extends IDomainObject
 {
 
     /**

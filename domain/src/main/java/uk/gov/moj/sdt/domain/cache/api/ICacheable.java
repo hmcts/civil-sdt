@@ -29,7 +29,25 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
+package uk.gov.moj.sdt.domain.cache.api;
+
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * Public interface for all classes implementing {@link ICacheable}.
+ * 
+ * @author Robin Compston
+ * 
  */
-package uk.gov.moj.sdt.utils.cache.api;
+public interface ICacheable
+{
+    /**
+     * Gets the value associated with the parameter from the cache.
+     * 
+     * @param <DomainType> of entity to retrieved.
+     * @param domainType of entity to load.
+     * @param key the keyword identifying the cached parameter.
+     * @return DomainType instance retrieved.
+     */
+    <DomainType extends IDomainObject> DomainType getValue (final Class<DomainType> domainType, final String key);
+}

@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.mbeans.api;
 
+
 /**
  * Interface for all classes implementing {@link CopyOfISdtMetricsMBean}.
  * 
@@ -137,9 +138,23 @@ public interface ISdtMetricsMBean
     String getLastBulkRequestRef ();
 
     /**
+     * Get the current cache reset control. 
+     * 
+     * @return the last bulk request reference.
+     */
+    int getCacheResetControl ();
+
+    /**
      * Reset all metrics to initial value.
      */
     void reset ();
+    
+    /**
+     * Mark all cache classes extending {@link AbstractCacheControl} as needing to uncache any cached content. It is the
+     * responsibility of the implementation to notice this has been called and discard any cached items, forcing a
+     * refresh from source.
+     */
+    void uncache ();
     
     /**
      * Increment count of bulk submits.

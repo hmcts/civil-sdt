@@ -37,7 +37,7 @@ package uk.gov.moj.sdt.domain.api;
  * @author Manoj Kulkarni.
  * 
  */
-public interface IGlobalParameter
+public interface IGlobalParameter extends IDomainObject
 {
 
     /**

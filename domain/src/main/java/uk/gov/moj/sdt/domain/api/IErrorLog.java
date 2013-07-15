@@ -40,7 +40,7 @@ import org.joda.time.LocalDateTime;
  * @author Manoj Kulkarni
  * 
  */
-public interface IErrorLog
+public interface IErrorLog extends IDomainObject
 {
 
     /**

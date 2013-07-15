@@ -38,7 +38,7 @@ import org.joda.time.LocalDate;
  * @author d130680
  * 
  */
-public interface IRequestDefenceDetail
+public interface IRequestDefenceDetail extends IDomainObject
 {
 
     /**

@@ -38,7 +38,7 @@ package uk.gov.moj.sdt.domain.api;
  * @author Manoj Kulkarni
  * 
  */
-public interface IBulkCustomerApplication
+public interface IBulkCustomerApplication extends IDomainObject
 {
 
     /**
