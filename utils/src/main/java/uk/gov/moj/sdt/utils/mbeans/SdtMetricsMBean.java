@@ -332,7 +332,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private String lastBulkRequestRef;
 
-
     /**
      * Constructor for {@link SdtMetricsMBean}.
      */
@@ -340,7 +339,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     {
         SdtMetricsMBean.thisBean = this;
     }
-    
+
     // BULK SUBMISSION
 
     /**
@@ -974,6 +973,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void downDomainObjectsCount ()
     {
         this.domainObjectsCount -= 1;
+
+        // Time problems means that this can go negative since beans created before Spring had finished initialising are
+        // never recorded. Avoid this.
+        if (this.domainObjectsCount < 0)
+        {
+            this.domainObjectsCount = 0;
+        }
     }
 
     @Override
@@ -1013,7 +1019,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         {
             this.databaseCallsTimeMax = databaseCallsTime;
         }
-}
+    }
 
     @Override
     public void upDatabaseWritesCount ()
@@ -1052,7 +1058,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         {
             this.databaseCallsTimeMax = databaseCallsTime;
         }
-}
+    }
 
     @Override
     public void upActiveCustomers ()
@@ -1341,7 +1347,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
 
     // TODO - add function to reload log4j config on demand.
 
-
     /**
      * Get singleton instance of this bean - used by callers to update statistics.
      * 
@@ -1349,8 +1354,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     public static SdtMetricsMBean getSdtMetrics ()
     {
-        // Get singleton instance of metrics bean.
-        return thisBean;
+        return SdtMetricsMBean.thisBean;
     }
 
 }
