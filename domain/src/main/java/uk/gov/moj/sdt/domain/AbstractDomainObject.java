@@ -94,12 +94,6 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     }
 
     @Override
-    public void setVersion (final int version)
-    {
-        this.version = version;
-    }
-
-    @Override
     public void accept (final IVisitor visitor)
     {
         // Call any visitor, passing a reference to this class so that it can act on this class.

@@ -60,13 +60,6 @@ public interface IDomainObject
     int getVersion ();
     
     /**
-     * Set the versions.
-     * 
-     * @param version the version
-     */
-    void setVersion (final int version);
-
-    /**
      * Get the business interface of this object.
      * 
      * @return business interface of this domain object.
