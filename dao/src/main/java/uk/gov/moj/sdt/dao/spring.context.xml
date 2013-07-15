@@ -7,8 +7,8 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<!-- Note all ids should be based on fully qualified interface name and 
-		all classes should have an interface. -->
+	<!-- Note all ids should be based on fully qualified names (interfaces where 
+		this is not ambiguous) and all classes should have an interface. -->
 
 	<!-- Configure the generic DAO as bean within the Spring's application context. -->
 	<bean id="uk.gov.moj.sdt.dao.api.IGenericDao" class="uk.gov.moj.sdt.dao.GenericDao">
@@ -22,10 +22,4 @@
 			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
 	</bean>
 	
-	<!-- Configure the generic DAO as bean within the Spring's application context. -->
-	<bean id="uk.gov.moj.sdt.dao.api.IErrorMessageDao" class="uk.gov.moj.sdt.dao.ErrorMessageDao">
-		<property name="sessionFactory"
-			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
-	</bean>
-
 </beans>

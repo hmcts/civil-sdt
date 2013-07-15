@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.gov.moj.sdt.dao.api.IErrorMessageDao;
+import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
@@ -69,16 +69,15 @@ public class ErrorMessageDaoTest extends TestCase
     }
 
     /**
-     * Tests {@link uk.gov.moj.sdt.dao.GenericDao} querey.
+     * Tests {@link uk.gov.moj.sdt.dao.IGenericDao} query.
      */
     @Test
     public void testGetAllErrorMessages ()
     {
+        final IGenericDao genericDao =
+                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
-        final IErrorMessageDao errorMessageDao =
-                (IErrorMessageDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IErrorMessageDao");
-
-        final IErrorMessage[] errorMessages = errorMessageDao.getAllErrorMessages ();
+        final IErrorMessage[] errorMessages = genericDao.query (IErrorMessage.class);
 
         LOG.debug ("Retrieved " + errorMessages.length + " error message(s).");
 
