@@ -80,7 +80,7 @@ public class MessageWriterTest
     {
         // Setup finished, now activate the mock
         replay (messageWriter);
-        messageWriter.queueMessage ("Test");
+        final String correlationId = messageWriter.queueMessage ("Test");
         verify (messageWriter);
     }
 }

@@ -43,7 +43,8 @@ public interface IMessageWriter
      * Writes a message to the message queue.
      * 
      * @param message the message to be written to the message queue
+     * @return the Co-relation ID of the sent message.
      */
-    void queueMessage (String message);
+    String queueMessage (String message);
 
 }

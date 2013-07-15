@@ -31,9 +31,13 @@
 
 package uk.gov.moj.sdt.messaging;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessagePostProcessor;
 
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 
@@ -73,10 +77,33 @@ public class MessageWriter implements IMessageWriter
     }
 
     @Override
-    public void queueMessage (final String message)
+    public String queueMessage (final String message)
     {
         logger.debug ("Sending message");
-        this.jmsTemplate.convertAndSend (queueName, message);
+
+        final String msgUniqueId = String.valueOf (System.currentTimeMillis ());
+        this.jmsTemplate.convertAndSend (queueName, message, new MessagePostProcessor ()
+        {
+
+            @Override
+            public Message postProcessMessage (final Message message) throws JMSException
+            {
+                message.setJMSCorrelationID (msgUniqueId);
+                return message;
+            }
+
+        });
         logger.debug ("Message Sent");
+        return msgUniqueId;
+    }
+
+    /**
+     * The queue name where the messages are sent.
+     * 
+     * @return the name of the queue that the messages are to be sent.
+     */
+    public String getQueueName ()
+    {
+        return this.queueName;
     }
 }

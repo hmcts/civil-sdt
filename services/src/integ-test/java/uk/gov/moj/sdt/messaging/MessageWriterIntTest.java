@@ -30,9 +30,23 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.messaging;
 
-import org.junit.Before;
+import static org.junit.Assert.assertTrue;
+
+import java.text.SimpleDateFormat;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.TextMessage;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -40,42 +54,42 @@ import org.springframework.jms.core.JmsTemplate;
  * @author Manoj Kulkarni
  * 
  */
+@RunWith (SpringJUnit4ClassRunner.class)
+@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
 public class MessageWriterIntTest
 {
     /**
-     * JMS Template for mocking.
+     * Logger object.
      */
-    private JmsTemplate jmsTemplate;
-
-    /**
-     * MessageWriter for mocking.
-     */
-    private MessageWriter messageWriter;
-
-    /**
-     * Set up the variables.
-     */
-    @Before
-    public void setUp ()
-    {
-        /* jmsTemplate = new JmsTemplate ();
-         * final ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory ();
-         * connectionFactory.setBrokerURL ("tcp://localhost:61616");
-         * jmsTemplate.setConnectionFactory (connectionFactory);
-         * messageWriter =
-         * createMockBuilder (MessageWriter.class).withConstructor (jmsTemplate, "JMSIntTestQueue").createMock (); */
-    }
+    private static final Logger LOG = LoggerFactory.getLogger (MessageWriterIntTest.class);
 
     /**
      * Test method to test the sending of message.
      * 
+     * @throws JMSException exception
+     * 
      */
     @Test
-    public void testQueueMessage ()
+    public void testQueueMessage () throws JMSException
     {
-        // Setup finished, now activate the mock
-        /* replay (messageWriter);
-         * messageWriter.queueMessage ("IntegrationTest");
-         * verify (messageWriter); */
+        final MessageWriter messageWriter =
+                (MessageWriter) SpringApplicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
+        final String strMessage = "TestMessage" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
+        final String corelationId = messageWriter.queueMessage (strMessage);
+        LOG.debug ("Correlation ID is " + corelationId);
+
+        final JmsTemplate jmsTemplate = (JmsTemplate) SpringApplicationContext.getBean ("jmsTemplate");
+
+        final String selectorString = "JMSCorrelationID='" + corelationId + "'";
+        final Message message = jmsTemplate.receiveSelected (messageWriter.getQueueName (), selectorString);
+        if (message instanceof TextMessage)
+        {
+            final TextMessage txtmessage = (TextMessage) message;
+            LOG.debug ("Message Receieved -" + txtmessage.getText ());
+            assertTrue (txtmessage.getText ().equals (strMessage));
+        }
+
     }
 }
