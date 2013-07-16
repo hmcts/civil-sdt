@@ -9,7 +9,7 @@
                   	<param name="sequence">ind_req_seq</param>
                   </generator>
         </id>
-        <version name="version" column="VERSION_NUMBER"/>
+        <version name="version" access="field" column="VERSION_NUMBER"/>
         <many-to-one name="bulkSubmission" class="uk.gov.moj.sdt.domain.BulkSubmission" fetch="join">
             <column name="BULK_SUBMISSION_ID" />
         </many-to-one>

@@ -42,10 +42,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
-
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
  * Test {@link GenericDao} CRUD methods.
@@ -68,7 +69,7 @@ public class GenericDaoTest extends TestCase
     public GenericDaoTest ()
     {
         super ();
-        DBUnitUtility.loadDatabase(this.getClass(), false);
+        DBUnitUtility.loadDatabase (this.getClass (), false);
     }
 
     /**
@@ -104,6 +105,27 @@ public class GenericDaoTest extends TestCase
             // User found
             final IBulkCustomer bulkCustomer = bulkCustomers[0];
             LOG.debug ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
+        }
+    }
+
+    /**
+     * Tests the global parameter.
+     */
+    @Test
+    public void testGlobalParametersQuery ()
+    {
+        final IGenericDao genericDao =
+                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+
+        final IGlobalParameter[] globalParameters = genericDao.query (GlobalParameter.class);
+
+        if (globalParameters.length == 2)
+        {
+            // Found the global parameters
+            for (IGlobalParameter globalParam : globalParameters)
+            {
+                LOG.debug ("GlobalParam =" + globalParam.getName () + ":" + globalParam.getValue ());
+            }
         }
     }
 

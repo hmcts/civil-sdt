@@ -8,7 +8,7 @@
                   <generator class="sequence" >
                   	<param name="sequence">req_typ_seq</param>
                   </generator>
-        </id><version name="version" column="VERSION_NUMBER"/>
+        </id><version name="version" access="field" column="VERSION_NUMBER"/>
         <property name="name" type="java.lang.String">
             <column name="REQUEST_TYPE_NAME" />
         </property>

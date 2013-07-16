@@ -41,6 +41,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
@@ -64,9 +65,9 @@ public class BulkCustomerDaoTest extends TestCase
     public BulkCustomerDaoTest ()
     {
         super ();
-        //DBUnitUtility.loadDatabase(this.getClass(), false);
+        DBUnitUtility.loadDatabase (this.getClass (), false);
     }
- 
+
     /**
      * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
      */
@@ -77,8 +78,9 @@ public class BulkCustomerDaoTest extends TestCase
                 (IBulkCustomerDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
 
         final IBulkCustomer[] bulkCustomers = bulkCustomersDao.getBulkCustomerBySdtId (123);
-        if(bulkCustomers.length > 0){
-        	LOG.debug ("Retrieved bulk customer id [" + Long.toString (bulkCustomers[0].getId ()) + "]");
+        if (bulkCustomers.length > 0)
+        {
+            LOG.debug ("Retrieved bulk customer id [" + Long.toString (bulkCustomers[0].getId ()) + "]");
         }
         return;
     }

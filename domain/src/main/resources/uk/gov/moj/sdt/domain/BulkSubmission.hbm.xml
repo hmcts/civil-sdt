@@ -9,7 +9,7 @@
                   	<param name="sequence">bulk_sub_seq</param>
                   </generator>
         </id>
-        <version name="version" column="VERSION_NUMBER"/>
+        <version name="version" access="field" column="VERSION_NUMBER"/>
         <many-to-one name="bulkCustomer" class="uk.gov.moj.sdt.domain.BulkCustomer" fetch="join">
             <column name="BULK_CUSTOMER_ID" />
         </many-to-one>

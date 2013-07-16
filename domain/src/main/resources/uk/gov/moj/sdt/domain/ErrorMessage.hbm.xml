@@ -10,7 +10,7 @@
 				<param name="sequence">msg_log_seq</param>
 			</generator>
 		</id>
-		<version name="version" column="VERSION_NUMBER" />
+		<version name="version" access="field" column="VERSION_NUMBER" />
 		<property name="errorCode" type="java.lang.String">
 			<column name="ERROR_CODE" />
 		</property>

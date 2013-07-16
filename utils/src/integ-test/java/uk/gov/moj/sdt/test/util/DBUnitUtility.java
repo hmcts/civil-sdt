@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,6 +54,7 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.filter.ExcludeTableFilter;
@@ -72,609 +74,680 @@ import uk.gov.moj.sdt.utils.SdtUnitTestBase;
  * 
  * @author Peter Bonnett.
  */
-public final class DBUnitUtility {
+public final class DBUnitUtility
+{
 
-	/**
-	 * The logger.
-	 */
-	private static final Logger LOG = LoggerFactory
-			.getLogger(SdtUnitTestBase.class);
+    /**
+     * The logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger (SdtUnitTestBase.class);
 
-	/**
-	 * Map of database connections for all schemas (one each).
-	 */
-	private static Map<String, IDatabaseConnection> allConnections = new HashMap<String, IDatabaseConnection>();
+    /**
+     * Map of database connections for all schemas (one each).
+     */
+    private static Map<String, IDatabaseConnection> allConnections = new HashMap<String, IDatabaseConnection> ();
 
-	/**
-	 * Private constructor to hide what is a utility class with only static
-	 * methods.
-	 */
-	private DBUnitUtility() {
-	}
+    /**
+     * Private constructor to hide what is a utility class with only static
+     * methods.
+     */
+    private DBUnitUtility ()
+    {
+    }
 
-	/**
-	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
-	 */
-	// public static void main (final String[] args)
-	// {
-	// for (String schema : schemas)
-	// {
-	// // generateDTD(schema);
-	// exportDatabase (schema, "C:/" + schema + ".xml", false);
-	// // loadDatabase(schema, "/full/" + schema + "_full.xml", true);
-	// // cleanDatabase("MCOL", true);
-	// }
-	// // prepareBatch();
-	// }
+    /**
+     * The main method.
+     * 
+     * @param args
+     *            the arguments
+     */
+    // public static void main (final String[] args)
+    // {
+    // for (String schema : schemas)
+    // {
+    // // generateDTD(schema);
+    // exportDatabase (schema, "C:/" + schema + ".xml", false);
+    // // loadDatabase(schema, "/full/" + schema + "_full.xml", true);
+    // // cleanDatabase("MCOL", true);
+    // }
+    // // prepareBatch();
+    // }
 
-	/**
-	 * Prepare batch.
-	 */
-	public static void prepareBatch() {
-		cleanDatabase("MCOL_CCBC", true);
-		cleanDatabase("MCOL_CPC", true);
-		cleanDatabase("MCOL_BATCH", true);
-		loadDatabase("MCOL", "/full/MCOL_Just_Users.xml", true);
-	}
+    /**
+     * Prepare batch.
+     */
+    public static void prepareBatch ()
+    {
+        cleanDatabase ("MCOL_CCBC", true);
+        cleanDatabase ("MCOL_CPC", true);
+        cleanDatabase ("MCOL_BATCH", true);
+        loadDatabase ("MCOL", "/full/MCOL_Just_Users.xml", true);
+    }
 
-	/**
-	 * loads db users.
-	 */
-	public static void loadUser() {
-		loadDatabase("MCOL", "/full/MCOL_full.xml", true, true);
-	}
+    /**
+     * loads db users.
+     */
+    public static void loadUser ()
+    {
+        loadDatabase ("MCOL", "/full/MCOL_full.xml", true, true);
+    }
 
-	/**
-	 * Generates a DBUnit DTD for the given schema.
-	 * 
-	 * @param targetSchema
-	 *            Schema required
-	 */
-	public static void generateDTD(final String targetSchema) {
+    /**
+     * Generates a DBUnit DTD for the given schema.
+     * 
+     * @param targetSchema
+     *            Schema required
+     */
+    public static void generateDTD (final String targetSchema)
+    {
 
-		try {
-			LOG.debug("Generating DTD for schema " + targetSchema);
-			// database connection
-			final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
-			final File theFile = new File("src/integ-test/resources/DTD/"
-					+ targetSchema + ".dtd");
-			theFile.createNewFile();
-			// write DTD file
-			FlatDtdDataSet.write(dbConnection.createDataSet(),
-					new FileOutputStream(theFile));
-			LOG.debug("Generated DTD for schema " + targetSchema + " at "
-					+ theFile.getAbsolutePath());
-		} catch (final DatabaseUnitException e) {
-			LOG.error("Error generating DTD for Schema '" + targetSchema
-					+ "': " + e);
-		} catch (final IOException e) {
-			LOG.error("Error generating DTD for Schema '" + targetSchema
-					+ "': " + e);
-		} catch (final SQLException e) {
-			LOG.error("Error generating DTD for Schema '" + targetSchema
-					+ "': " + e);
-		}
-	}
+        try
+        {
+            LOG.debug ("Generating DTD for schema " + targetSchema);
+            // database connection
+            final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
+            final File theFile = new File ("src/integ-test/resources/DTD/" + targetSchema + ".dtd");
+            theFile.createNewFile ();
+            // write DTD file
+            FlatDtdDataSet.write (dbConnection.createDataSet (), new FileOutputStream (theFile));
+            LOG.debug ("Generated DTD for schema " + targetSchema + " at " + theFile.getAbsolutePath ());
+        }
+        catch (final DatabaseUnitException e)
+        {
+            LOG.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
+        }
+        catch (final IOException e)
+        {
+            LOG.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
+        }
+        catch (final SQLException e)
+        {
+            LOG.error ("Error generating DTD for Schema '" + targetSchema + "': " + e);
+        }
+    }
 
-	/**
-	 * Experts the database for the target schema.
-	 * 
-	 * @param targetSchema
-	 *            schema to use
-	 * @param file
-	 *            File to save to
-	 * @param includeRefdata
-	 *            Should we export the refdata?
-	 */
-	public static void exportDatabase(final String targetSchema,
-			final String file, final boolean includeRefdata) {
+    /**
+     * Experts the database for the target schema.
+     * 
+     * @param targetSchema
+     *            schema to use
+     * @param file
+     *            File to save to
+     * @param includeRefdata
+     *            Should we export the refdata?
+     */
+    public static void exportDatabase (final String targetSchema, final String file, final boolean includeRefdata)
+    {
 
-		try {
-			// database connection
-			LOG.debug("Exporting data for schema " + targetSchema);
-			final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
+        try
+        {
+            // database connection
+            LOG.debug ("Exporting data for schema " + targetSchema);
+            final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
 
-			// full database export
-			ITableFilter filter = new ExcludeTableFilter();
-			// If there's reference data exclude those tables
-			final InputStream refDataStream = DBUnitUtility.class
-					.getResourceAsStream("/refdata/" + targetSchema
-							+ "_refdata.xml");
-			if (!includeRefdata && refDataStream != null) {
-				// Create a DBUnit Dataset builder using the target schemas DTD
-				final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-				builder.setDtdMetadata(true);
-				builder.setMetaDataSetFromDtd(DBUnitUtility.class
-						.getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
-				builder.setColumnSensing(true);
-				final IDataSet referenceDataset = builder.build(refDataStream);
-				filter = new ExcludeTableFilter(
-						referenceDataset.getTableNames());
-			}
-			final IDataSet dataSet = new FilteredDataSet(filter,
-					dbConnection.createDataSet());
-			FlatXmlDataSet.write(dataSet, new FileOutputStream(file));
-			LOG.debug("Exported data for schema " + targetSchema);
-		} catch (final DatabaseUnitException e) {
-			LOG.error("Error exporting data for Schema '" + targetSchema
-					+ "': " + e);
-			e.printStackTrace();
-		} catch (final IOException e) {
-			LOG.error("Error exporting data for Schema '" + targetSchema
-					+ "': " + e);
-			e.printStackTrace();
-		} catch (final SQLException e) {
-			LOG.error("Error exporting data for Schema '" + targetSchema
-					+ "': " + e);
-			e.printStackTrace();
-		}
-	}
+            // full database export
+            ITableFilter filter = new ExcludeTableFilter ();
+            // If there's reference data exclude those tables
+            final InputStream refDataStream =
+                    DBUnitUtility.class.getResourceAsStream ("/refdata/" + targetSchema + "_refdata.xml");
+            if ( !includeRefdata && refDataStream != null)
+            {
+                // Create a DBUnit Dataset builder using the target schemas DTD
+                final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder ();
+                builder.setDtdMetadata (true);
+                builder.setMetaDataSetFromDtd (DBUnitUtility.class
+                        .getResourceAsStream ("/DTD/" + targetSchema + ".dtd"));
+                builder.setColumnSensing (true);
+                final IDataSet referenceDataset = builder.build (refDataStream);
+                filter = new ExcludeTableFilter (referenceDataset.getTableNames ());
+            }
+            final IDataSet dataSet = new FilteredDataSet (filter, dbConnection.createDataSet ());
+            FlatXmlDataSet.write (dataSet, new FileOutputStream (file));
+            LOG.debug ("Exported data for schema " + targetSchema);
+        }
+        catch (final DatabaseUnitException e)
+        {
+            LOG.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+        catch (final IOException e)
+        {
+            LOG.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+        catch (final SQLException e)
+        {
+            LOG.error ("Error exporting data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+    }
 
-	/**
-	 * Loads the database from a given file.
-	 * 
-	 * @param classToLoadFor
-	 *            Which class is requesting data
-	 * @param reloadRefdata
-	 *            the reload refdata
-	 */
-	public static void loadDatabase(final Class<?> classToLoadFor,
-			final boolean reloadRefdata) {
-		// Can have individual XML for a method, or just one for a class
-		final String fileXml = "/"
-				+ classToLoadFor.getName().replaceAll("\\.", "/") + ".xml";
-		if (DBUnitUtility.class.getResource(fileXml) != null) {
-			LOG.info("Loading DB with: " + fileXml);
-			DBUnitUtility.loadDatabase("SDT_OWNER", fileXml, reloadRefdata);
-			LOG.info("Loaded database");
-		}
-	}
+    /**
+     * Loads the database from a given file.
+     * 
+     * @param classToLoadFor
+     *            Which class is requesting data
+     * @param reloadRefdata
+     *            the reload refdata
+     */
+    public static void loadDatabase (final Class<?> classToLoadFor, final boolean reloadRefdata)
+    {
+        // Can have individual XML for a method, or just one for a class
+        final String fileXml = "/" + classToLoadFor.getName ().replaceAll ("\\.", "/") + ".xml";
+        if (DBUnitUtility.class.getResource (fileXml) != null)
+        {
+            LOG.info ("Loading DB with: " + fileXml);
+            DBUnitUtility.loadDatabase ("SDT_OWNER", fileXml, reloadRefdata);
+            LOG.info ("Loaded database");
+        }
+    }
 
-	/**
-	 * Loads the database from a given file.
-	 * 
-	 * @param targetSchema
-	 *            Schema to load
-	 * @param filePath
-	 *            Path to file
-	 * @param reloadRefdata
-	 *            the reload refdata
-	 */
-	public static void loadDatabase(final String targetSchema,
-			final String filePath, final boolean reloadRefdata) {
-		loadDatabase(targetSchema, filePath, reloadRefdata, true);
+    /**
+     * Loads the database from a given file.
+     * 
+     * @param targetSchema
+     *            Schema to load
+     * @param filePath
+     *            Path to file
+     * @param reloadRefdata
+     *            the reload refdata
+     */
+    public static void loadDatabase (final String targetSchema, final String filePath, final boolean reloadRefdata)
+    {
+        loadDatabase (targetSchema, filePath, reloadRefdata, true);
 
-	}
+    }
 
-	/**
-	 * Loads the database from a given file.
-	 * 
-	 * @param targetSchema
-	 *            Schema to load
-	 * @param filePath
-	 *            Path to file
-	 * @param reloadRefdata
-	 *            the reload refdata
-	 * @param cleanseDatabase
-	 *            clean database?
-	 */
-	public static void loadDatabase(final String targetSchema,
-			final String filePath, final boolean reloadRefdata,
-			final boolean cleanseDatabase) {
+    /**
+     * Loads the database from a given file.
+     * 
+     * @param targetSchema
+     *            Schema to load
+     * @param filePath
+     *            Path to file
+     * @param reloadRefdata
+     *            the reload refdata
+     * @param cleanseDatabase
+     *            clean database?
+     */
+    public static void loadDatabase (final String targetSchema, final String filePath, final boolean reloadRefdata,
+                                     final boolean cleanseDatabase)
+    {
 
-		try {
+        try
+        {
 
-			// database connection
-			LOG.info("Starting load for schema=" + targetSchema + ", filePath="
-					+ filePath + ", reloadRefdata=" + reloadRefdata);
-			final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
+            // database connection
+            LOG.info ("Starting load for schema=" + targetSchema + ", filePath=" + filePath + ", reloadRefdata=" +
+                    reloadRefdata);
+            final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
 
-			// Create a DBUnit Dataset builder using the target schemas DTD
-			final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-			builder.setDtdMetadata(true);
-			builder.setMetaDataSetFromDtd(DBUnitUtility.class
-					.getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
-			builder.setColumnSensing(true);
+            // Create a DBUnit Dataset builder using the target schemas DTD
+            final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder ();
+            builder.setDtdMetadata (true);
+            builder.setMetaDataSetFromDtd (DBUnitUtility.class.getResourceAsStream ("/DTD/" + targetSchema + ".dtd"));
+            builder.setColumnSensing (true);
 
-			// Generate the clean dataset, if loadRefData is true use
-			// clean_all.xml otherwise use clean.xml
-			final String cleanDataPath = "/clean/" + targetSchema
-					+ "_clean_minus_refdata" + ".xml";
-			LOG.info("Reading clean dataset for data path=" + cleanDataPath);
-			final IDataSet cleanDataset = builder.build(DBUnitUtility.class
-					.getResourceAsStream(cleanDataPath));
+            // Generate the clean dataset, if loadRefData is true use
+            // clean_all.xml otherwise use clean.xml
+            final String cleanDataPath = "/clean/" + targetSchema + "_clean_minus_refdata" + ".xml";
+            LOG.info ("Reading clean dataset for data path=" + cleanDataPath);
+            final IDataSet cleanDataset = builder.build (DBUnitUtility.class.getResourceAsStream (cleanDataPath));
 
-			// Disable triggers & constraints
-			prepareForDbunitLoad(targetSchema);
+            final IDataSet dtdDataSet =
+                    new FlatDtdDataSet (DBUnitUtility.class.getResourceAsStream ("/DTD/" + targetSchema + ".dtd"));
+            final CompositeDataSet compositeDataSet = new CompositeDataSet (dtdDataSet, cleanDataset);
 
-			if (cleanseDatabase) {
-				// Clean the DB
-				LOG.info("Cleaning database");
-				DatabaseOperation.TRUNCATE_TABLE.execute(dbConnection,
-						cleanDataset);
-				dbConnection.getConnection().commit();
-			}
+            // Disable triggers & constraints
+            prepareForDbunitLoad (targetSchema);
 
-			// If there's reference data insert it
-			final InputStream refDataStream = DBUnitUtility.class
-					.getResourceAsStream("/refdata/" + targetSchema
-							+ "_refdata.xml");
-			if (refDataStream != null && reloadRefdata) {
-				LOG.info("Inserting reference data");
-				final IDataSet referenceDataset = builder.build(refDataStream);
-				DatabaseOperation.INSERT
-						.execute(dbConnection, referenceDataset);
-				dbConnection.getConnection().commit();
-			}
+            if (cleanseDatabase)
+            {
+                // Clean the DB
+                LOG.info ("Cleaning database");
+                // DatabaseOperation.TRUNCATE_TABLE.execute (dbConnection, cleanDataset);
+                DatabaseOperation.TRUNCATE_TABLE.execute (dbConnection, compositeDataSet);
+                dbConnection.getConnection ().commit ();
+            }
 
-			// Insert the test data
-			LOG.info("Inserting data from filePath=" + filePath);
-			final IDataSet targetDataset = builder.build(DBUnitUtility.class
-					.getResourceAsStream(filePath));
-			DatabaseOperation.INSERT.execute(dbConnection, targetDataset);
+            // If there's reference data insert it
+            final InputStream refDataStream =
+                    DBUnitUtility.class.getResourceAsStream ("/refdata/" + targetSchema + "_refdata.xml");
+            if (refDataStream != null && reloadRefdata)
+            {
+                LOG.info ("Inserting reference data");
+                final IDataSet referenceDataset = builder.build (refDataStream);
+                DatabaseOperation.INSERT.execute (dbConnection, referenceDataset);
+                dbConnection.getConnection ().commit ();
+            }
 
-			// Enable triggers & constraints
-			finishDbunitLoad(targetSchema);
+            // Insert the test data
+            LOG.info ("Inserting data from filePath=" + filePath);
+            final IDataSet targetDataset = builder.build (DBUnitUtility.class.getResourceAsStream (filePath));
+            DatabaseOperation.INSERT.execute (dbConnection, targetDataset);
 
-		} catch (final DatabaseUnitException e) {
-			LOG.error("Error loading data for Schema '" + targetSchema + "': "
-					+ e);
-			e.printStackTrace();
-		} catch (final IOException e) {
-			LOG.error("Error loading data for Schema '" + targetSchema + "': "
-					+ e);
-			e.printStackTrace();
-		} catch (final SQLException e) {
-			LOG.error("Error loading data for Schema '" + targetSchema + "': "
-					+ e);
-			e.printStackTrace();
-		}
-	}
+            // Enable triggers & constraints
+            finishDbunitLoad (targetSchema);
 
-	/**
-	 * Close connection statement for specific schema.
-	 * 
-	 * @param schema
-	 *            the schema for which the connection is to be closed.
-	 */
-	private static synchronized void closeConnection(final String schema) {
-		synchronized (allConnections) {
-			// Get the connection to be closed.
-			final IDatabaseConnection dbConnection = allConnections.get(schema);
+        }
+        catch (final DatabaseUnitException e)
+        {
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+        catch (final IOException e)
+        {
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+        catch (final SQLException e)
+        {
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+    }
 
-			// If it was found, close it.
-			if (dbConnection != null) {
-				try {
-					dbConnection.close();
-				} catch (final SQLException e) {
-					LOG.error("Error closing connection for Schema '"
-							+ dbConnection.getSchema() + "': " + e);
-				}
+    /**
+     * Close connection statement for specific schema.
+     * 
+     * @param schema
+     *            the schema for which the connection is to be closed.
+     */
+    private static synchronized void closeConnection (final String schema)
+    {
+        synchronized (allConnections)
+        {
+            // Get the connection to be closed.
+            final IDatabaseConnection dbConnection = allConnections.get (schema);
 
-				// Remove it from the map.
-				allConnections.remove(schema);
-			}
-		}
-	}
+            // If it was found, close it.
+            if (dbConnection != null)
+            {
+                try
+                {
+                    dbConnection.close ();
+                }
+                catch (final SQLException e)
+                {
+                    LOG.error ("Error closing connection for Schema '" + dbConnection.getSchema () + "': " + e);
+                }
 
-	/**
-	 * Drop primary keys.
-	 */
-	public static void dropPrimaryKeys() {
-		LOG.info("Dropping primary keys");
-		runSQLFile("./../utils/src/integ-test/resources/init/drop_primary_keys.sql");
-	}
+                // Remove it from the map.
+                allConnections.remove (schema);
+            }
+        }
+    }
 
-	/**
-	 * Re-enable primary keys.
-	 */
-	public static void enablePrimaryKeys() {
-		LOG.info("Enabling primary keys");
-		runSQLFile("./../utils/src/integ-test/resources/init/create_primary_keys.sql");
-	
-	}
+    /**
+     * Drop primary keys.
+     */
+    public static void dropPrimaryKeys ()
+    {
+        LOG.info ("Dropping primary keys");
+        runSQLFile ("./../utils/src/integ-test/resources/init/drop_primary_keys.sql");
+    }
 
-	/**
-	 * Run sql files.
-	 * 
-	 * @param fileName
-	 *            the name of the file to run.
-	 */
-	private static void runSQLFile(final String fileName) {
-		try {
-			LOG.info("Running " + fileName);
+    /**
+     * Re-enable primary keys.
+     */
+    public static void enablePrimaryKeys ()
+    {
+        LOG.info ("Enabling primary keys");
+        runSQLFile ("./../utils/src/integ-test/resources/init/create_primary_keys.sql");
 
-			// Get the connection already setup for DBUNIT.
-			final IDatabaseConnection dbConnection = getConnectionInstance("SDT_OWNER");
-			final Connection connection = dbConnection.getConnection();
+    }
 
-			final FileInputStream inputStream = new FileInputStream(fileName);
+    /**
+     * Run sql files.
+     * 
+     * @param fileName
+     *            the name of the file to run.
+     */
+    private static void runSQLFile (final String fileName)
+    {
+        try
+        {
+            LOG.info ("Running " + fileName);
 
-			final StringBuilder stringBuilder = new StringBuilder();
-			final InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-			final BufferedReader reader = new BufferedReader(inputStreamReader);
-			String line = reader.readLine();
-			while (null != line) {
-				stringBuilder.append(' ');
-				stringBuilder.append(line);
-				line = reader.readLine();
-			}
-			final String sqlString = stringBuilder.toString();
-			final Statement stmt = connection.createStatement();
+            // Get the connection already setup for DBUNIT.
+            final IDatabaseConnection dbConnection = getConnectionInstance ("SDT_OWNER");
+            final Connection connection = dbConnection.getConnection ();
+            connection.prepareStatement ("SET CONSTRAINTS ALL DEFERRED").execute ();
 
-			// Execute the query
-			stmt.executeUpdate(sqlString);
+            final FileInputStream inputStream = new FileInputStream (fileName);
 
-			// Close the result set, statement and the connection
-			stmt.close();
+            final StringBuilder stringBuilder = new StringBuilder ();
+            final InputStreamReader inputStreamReader = new InputStreamReader (inputStream);
+            final BufferedReader reader = new BufferedReader (inputStreamReader);
+            String line = reader.readLine ();
+            while (null != line)
+            {
+                stringBuilder.append (' ');
+                stringBuilder.append (line);
+                line = reader.readLine ();
+            }
+            final String sqlString = stringBuilder.toString ();
+            final Statement stmt = connection.createStatement ();
 
-		} catch (final SQLException e) {
-			LOG.error("Failure to drop constraints", e);
-		} catch (final FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-	}
+            // Execute the query
+            stmt.executeUpdate (sqlString);
 
-	/**
-	 * Method to disable all constraints and triggers for specific schema prior
-	 * to loading data via DBUNIT for a specific integration test.
-	 * 
-	 * @param schemaName
-	 *            name of the schema in which constraints and triggers are to be
-	 *            disabled
-	 */
-	public static void prepareForDbunitLoad(final String schemaName) {
-		// try
-		// {
-		LOG.info("Disabling triggers and constraints for schema = "
-				+ schemaName);
-		dropPrimaryKeys();
-		// // Get the connection already setup for DBUNIT.
-		// final Connection connection = getConnectionInstance
-		// (schemaName).getConnection ();
-		//
-		// // Call the reset stored procedure which should have been loaded into
-		// the database by ANT script.
-		// final CallableStatement cs = connection.prepareCall
-		// ("{call MCOL_TEST.Prepare_For_Dbunit_Load(?)}");
-		// cs.setString ("p_SchemaName", schemaName);
-		//
-		// // Close result set and calleable statement.
-		// final ResultSet rs = cs.executeQuery ();
-		// if (rs != null)
-		// {
-		// rs.close ();
-		// }
-		// cs.close ();
-		// }
-		// catch (final SQLException e)
-		// {
-		// LOG.error (e.toString ());
-		// }
-	}
+            // Close the result set, statement and the connection
+            stmt.close ();
 
-	/**
-	 * Method to enable all constraints and triggers for specific schema prior
-	 * to loading data via DBUNIT for a specific integration test.
-	 * 
-	 * @param schemaName
-	 *            name of the schema in which constraints and triggers are to be
-	 *            enabled
-	 */
-	public static void finishDbunitLoad(final String schemaName) {
-		enablePrimaryKeys();
-	}
+        }
+        catch (final SQLException e)
+        {
+            LOG.error ("Failure to drop constraints", e);
+        }
+        catch (final FileNotFoundException e)
+        {
+            e.printStackTrace ();
+        }
+        catch (final IOException e)
+        {
+            e.printStackTrace ();
+        }
+    }
 
-	/**
-	 * Clean database.
-	 * 
-	 * @param targetSchema
-	 *            the target schema
-	 * @param reloadRefdata
-	 *            the reload refdata
-	 */
-	public static void cleanDatabase(final String targetSchema,
-			final boolean reloadRefdata) {
-		try {
-			// database connection
-			LOG.debug("Loading data for schema " + targetSchema);
-			final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
+    /**
+     * Method to disable all constraints and triggers for specific schema prior
+     * to loading data via DBUNIT for a specific integration test.
+     * 
+     * @param schemaName
+     *            name of the schema in which constraints and triggers are to be
+     *            disabled
+     */
+    public static void prepareForDbunitLoad (final String schemaName)
+    {
+        try
+        {
+            LOG.info ("Disabling triggers and constraints for schema = " + schemaName);
+            // dropPrimaryKeys();
+            // Get the connection already setup for DBUNIT.
+            final Connection connection = getConnectionInstance (schemaName).getConnection ();
+            // connection.prepareStatement ("SET CONSTRAINTS ALL DEFERRED").execute ();
 
-			// Create a DBUnit Dataset builder using the target schemas DTD
-			final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-			builder.setDtdMetadata(true);
-			builder.setMetaDataSetFromDtd(DBUnitUtility.class
-					.getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
-			builder.setColumnSensing(true);
+            // Call the reset stored procedure which should have been loaded into
+            // the database by ANT script.
+            final CallableStatement cs = connection.prepareCall ("{call SDT_OWNER.Prepare_For_Dbunit_Load(?)}");
+            cs.setString ("p_SchemaName", schemaName);
+            //
+            // Close result set and calleable statement.
+            final ResultSet rs = cs.executeQuery ();
+            if (rs != null)
+            {
+                rs.close ();
+            }
+            cs.close ();
+        }
+        catch (final SQLException e)
+        {
+            LOG.error (e.toString ());
+        }
+    }
 
-			// Generate the clean dataset, if loadRefData is true use
-			// clean_all.xml otherwise use clean.xml
-			final String cleanDataPath = "/clean/" + targetSchema + "_clean"
-					+ (reloadRefdata ? "_all" : "") + ".xml";
-			final IDataSet cleanDataset = builder.build(DBUnitUtility.class
-					.getResourceAsStream(cleanDataPath));
+    /**
+     * Method to enable all constraints and triggers for specific schema prior
+     * to loading data via DBUNIT for a specific integration test.
+     * 
+     * @param schemaName
+     *            name of the schema in which constraints and triggers are to be
+     *            enabled
+     */
+    public static void finishDbunitLoad (final String schemaName)
+    {
+        // enablePrimaryKeys ();
+        try
+        {
+            LOG.info ("Enabling triggers and constraints for schema = " + schemaName);
 
-			// Disable triggers & constraints
-			prepareForDbunitLoad(targetSchema);
+            // Get the connection already setup for DBUNIT.
+            final IDatabaseConnection dbConnection = getConnectionInstance (schemaName);
+            final Connection connection = dbConnection.getConnection ();
 
-			// Clean the DB
-			LOG.debug("Cleaning database");
-			DatabaseOperation.TRUNCATE_TABLE
-					.execute(dbConnection, cleanDataset);
-			dbConnection.getConnection().commit();
+            // Call the reset stored procedure which should have been loaded into the database by ANT script.
+            final CallableStatement cs = connection.prepareCall ("{call SDT_OWNER.Finish_Dbunit_Load(?)}");
+            cs.setString ("p_SchemaName", schemaName);
 
-			// If there's reference data insert it
-			// InputStream refDataStream =
-			// DBUnitUtility.class.getResourceAsStream("/refdata/" +
-			// targetSchema +
-			// "_refdata.xml");
-			// if (refDataStream != null && reloadRefdata)
-			// {
-			// LOG.debug("Inserting reference data");
-			// IDataSet referenceDataset = builder.build(refDataStream);
-			// DatabaseOperation.INSERT.execute(connection, referenceDataset);
-			// connection.getConnection().commit();
-			// }
+            // Close result set and calleable statement.
+            final ResultSet rs = cs.executeQuery ();
+            if (rs != null)
+            {
+                rs.close ();
+            }
+            cs.close ();
+        }
+        catch (final SQLException e)
+        {
+            LOG.error (e.toString ());
+        }
+    }
 
-			// Enable triggers & constraints
-			finishDbunitLoad(targetSchema);
-		} catch (final DatabaseUnitException e) {
-			LOG.error("Error loading data for Schema '" + targetSchema + "': "
-					+ e);
-			e.printStackTrace();
-		} catch (final IOException e) {
-			LOG.error("Error loading data for Schema '" + targetSchema + "': "
-					+ e);
-			e.printStackTrace();
-		} catch (final SQLException e) {
-			LOG.error("Error loading data for Schema '" + targetSchema + "': "
-					+ e);
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Clean database.
+     * 
+     * @param targetSchema
+     *            the target schema
+     * @param reloadRefdata
+     *            the reload refdata
+     */
+    public static void cleanDatabase (final String targetSchema, final boolean reloadRefdata)
+    {
+        try
+        {
+            // database connection
+            LOG.debug ("Loading data for schema " + targetSchema);
+            final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
 
-	/**
-	 * Internal method to create a DBUnit connection to the DB defined in
-	 * dbunit.properties.
-	 * 
-	 * @param schema
-	 *            Target Schema
-	 * @return DBUnit connection to database
-	 */
-	private static IDatabaseConnection getConnectionInstance(final String schema) {
-		IDatabaseConnection dbConnection;
+            // Create a DBUnit Dataset builder using the target schemas DTD
+            final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder ();
+            builder.setDtdMetadata (true);
+            builder.setMetaDataSetFromDtd (DBUnitUtility.class.getResourceAsStream ("/DTD/" + targetSchema + ".dtd"));
+            builder.setColumnSensing (true);
 
-		synchronized (allConnections) {
-			// Find the connection for this schema.
-			dbConnection = allConnections.get(schema);
+            // Generate the clean dataset, if loadRefData is true use
+            // clean_all.xml otherwise use clean.xml
+            final String cleanDataPath = "/clean/" + targetSchema + "_clean" + (reloadRefdata ? "_all" : "") + ".xml";
+            final IDataSet cleanDataset = builder.build (DBUnitUtility.class.getResourceAsStream (cleanDataPath));
 
-			// If no connection found for this schema, create one.
-			if (null == dbConnection) {
-				final Properties p = new Properties();
-				try {
-					final File f = new File(
-							"./src/integ-test/resources/dbunit.properties");
-					System.out.println(f.getAbsolutePath());
-					System.out.println(f.exists());
-					p.load(DBUnitUtility.class
-							.getResourceAsStream("/dbunit.properties"));
-					final String dbUrl = p.getProperty("db.url");
-					final String username = p.getProperty("db.system.user");
-					final String password = p.getProperty("db.system.pass");
-					final OracleDataSource ds = new OracleDataSource();
-					ds.setDriverType("thin");
-					ds.setURL(dbUrl);
-					ds.setUser(username);
-					ds.setPassword(password);
+            // Disable triggers & constraints
+            prepareForDbunitLoad (targetSchema);
 
-					final Connection connection = ds.getConnection();
-					LOG.debug("Connection created for username: " + username
-							+ ", password: " + password + ", url: " + dbUrl);
+            // Clean the DB
+            LOG.debug ("Cleaning database");
+            DatabaseOperation.TRUNCATE_TABLE.execute (dbConnection, cleanDataset);
+            dbConnection.getConnection ().commit ();
 
-					dbConnection = new DatabaseConnection(connection, schema);
-					dbConnection.getConfig().setProperty(
-							DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
-							new OracleDataTypeFactory());
+            // If there's reference data insert it
+            // InputStream refDataStream =
+            // DBUnitUtility.class.getResourceAsStream("/refdata/" +
+            // targetSchema +
+            // "_refdata.xml");
+            // if (refDataStream != null && reloadRefdata)
+            // {
+            // LOG.debug("Inserting reference data");
+            // IDataSet referenceDataset = builder.build(refDataStream);
+            // DatabaseOperation.INSERT.execute(connection, referenceDataset);
+            // connection.getConnection().commit();
+            // }
 
-					// Cache the connection for this schema.
-					allConnections.put(schema, dbConnection);
-				} catch (final DatabaseUnitException e) {
-					LOG.error("Unable to initialise DBUnit Connection: " + e);
-					e.printStackTrace();
-				} catch (final IOException e) {
-					LOG.error("Unable to initialise DBUnit Connection: " + e);
-					e.printStackTrace();
-				} catch (final SQLException e) {
-					LOG.error("Unable to initialise DBUnit Connection: " + e);
-					e.printStackTrace();
-				}
-			}
-		}
+            // Enable triggers & constraints
+            finishDbunitLoad (targetSchema);
+        }
+        catch (final DatabaseUnitException e)
+        {
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+        catch (final IOException e)
+        {
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+        catch (final SQLException e)
+        {
+            LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
+            e.printStackTrace ();
+        }
+    }
 
-		return dbConnection;
-	}
+    /**
+     * Internal method to create a DBUnit connection to the DB defined in
+     * dbunit.properties.
+     * 
+     * @param schema
+     *            Target Schema
+     * @return DBUnit connection to database
+     */
+    private static IDatabaseConnection getConnectionInstance (final String schema)
+    {
+        IDatabaseConnection dbConnection;
 
-	/**
-	 * Disables/enables all triggers.
-	 * 
-	 * @param schema
-	 *            DB Schema
-	 * @param enabled
-	 *            are the triggers to be enabled or disabled?
-	 * @throws SQLException
-	 *             the sQL exception
-	 */
-	public static void updateTriggers(final String schema, final boolean enabled)
-			throws SQLException {
-		updateTriggers(getConnectionInstance(schema).getConnection(), schema,
-				enabled);
-	}
+        synchronized (allConnections)
+        {
+            // Find the connection for this schema.
+            dbConnection = allConnections.get (schema);
 
-	/**
-	 * Disables/enables all triggers.
-	 * 
-	 * @param dbConn
-	 *            DB Connection
-	 * @param schema
-	 *            DB Schema
-	 * @param enabled
-	 *            are the triggers to be enabled or disabled?
-	 * @throws SQLException
-	 *             the sQL exception
-	 */
-	private static void updateTriggers(final Connection dbConn,
-			final String schema, final boolean enabled) throws SQLException {
-		LOG.debug("Editing Audit triggers, enabled: " + enabled);
-		PreparedStatement s = null;
-		ResultSet rs = null;
-		final String modifier = enabled ? "ENABLE" : "DISABLE";
-		String queryToExecute = "SELECT 'ALTER TRIGGER ' || owner || '.' || trigger_name || ' "
-				+ modifier + "' FROM all_triggers WHERE owner = ?";
-		try {
-			s = dbConn.prepareStatement(queryToExecute);
-			s.setString(1, schema);
-			rs = s.executeQuery();
-			while (rs.next()) {
-				queryToExecute = rs.getString(1);
-				final Statement s2 = dbConn.createStatement();
-				LOG.debug("Executing: " + queryToExecute);
-				s2.execute(queryToExecute);
-				s2.close();
-			}
-		} catch (final SQLException e) {
-			LOG.error("Error updating database triggers for Schema '" + schema
-					+ "', Query: " + queryToExecute + " Error: " + e);
-			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				rs.close();
-			}
-			if (s != null) {
-				s.close();
-			}
-		}
-	}
+            // If no connection found for this schema, create one.
+            if (null == dbConnection)
+            {
+                final Properties p = new Properties ();
+                try
+                {
+                    final File f = new File ("./src/integ-test/resources/dbunit.properties");
+                    System.out.println (f.getAbsolutePath ());
+                    System.out.println (f.exists ());
+                    p.load (DBUnitUtility.class.getResourceAsStream ("/dbunit.properties"));
+                    final String dbUrl = p.getProperty ("db.url");
+                    final String username = p.getProperty ("db.system.user");
+                    final String password = p.getProperty ("db.system.pass");
+                    final OracleDataSource ds = new OracleDataSource ();
+                    ds.setDriverType ("thin");
+                    ds.setURL (dbUrl);
+                    ds.setUser (username);
+                    ds.setPassword (password);
 
-	/**
-	 * Get a standard connection instance.
-	 * 
-	 * @param schemaName
-	 *            the name of schema
-	 * @return a standard connection instance.
-	 */
-	public static Connection getStandardConnection(final String schemaName) {
-		try {
-			return getConnectionInstance(schemaName).getConnection();
-		} catch (final SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+                    final Connection connection = ds.getConnection ();
+                    LOG.debug ("Connection created for username: " + username + ", password: " + password + ", url: " +
+                            dbUrl);
+
+                    dbConnection = new DatabaseConnection (connection, schema);
+                    dbConnection.getConfig ().setProperty (DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
+                            new OracleDataTypeFactory ());
+
+                    // Cache the connection for this schema.
+                    allConnections.put (schema, dbConnection);
+                }
+                catch (final DatabaseUnitException e)
+                {
+                    LOG.error ("Unable to initialise DBUnit Connection: " + e);
+                    e.printStackTrace ();
+                }
+                catch (final IOException e)
+                {
+                    LOG.error ("Unable to initialise DBUnit Connection: " + e);
+                    e.printStackTrace ();
+                }
+                catch (final SQLException e)
+                {
+                    LOG.error ("Unable to initialise DBUnit Connection: " + e);
+                    e.printStackTrace ();
+                }
+            }
+        }
+
+        return dbConnection;
+    }
+
+    /**
+     * Disables/enables all triggers.
+     * 
+     * @param schema
+     *            DB Schema
+     * @param enabled
+     *            are the triggers to be enabled or disabled?
+     * @throws SQLException
+     *             the sQL exception
+     */
+    public static void updateTriggers (final String schema, final boolean enabled) throws SQLException
+    {
+        updateTriggers (getConnectionInstance (schema).getConnection (), schema, enabled);
+    }
+
+    /**
+     * Disables/enables all triggers.
+     * 
+     * @param dbConn
+     *            DB Connection
+     * @param schema
+     *            DB Schema
+     * @param enabled
+     *            are the triggers to be enabled or disabled?
+     * @throws SQLException
+     *             the sQL exception
+     */
+    private static void updateTriggers (final Connection dbConn, final String schema, final boolean enabled)
+        throws SQLException
+    {
+        LOG.debug ("Editing Audit triggers, enabled: " + enabled);
+        PreparedStatement s = null;
+        ResultSet rs = null;
+        final String modifier = enabled ? "ENABLE" : "DISABLE";
+        String queryToExecute =
+                "SELECT 'ALTER TRIGGER ' || owner || '.' || trigger_name || ' " + modifier +
+                        "' FROM all_triggers WHERE owner = ?";
+        try
+        {
+            s = dbConn.prepareStatement (queryToExecute);
+            s.setString (1, schema);
+            rs = s.executeQuery ();
+            while (rs.next ())
+            {
+                queryToExecute = rs.getString (1);
+                final Statement s2 = dbConn.createStatement ();
+                LOG.debug ("Executing: " + queryToExecute);
+                s2.execute (queryToExecute);
+                s2.close ();
+            }
+        }
+        catch (final SQLException e)
+        {
+            LOG.error ("Error updating database triggers for Schema '" + schema + "', Query: " + queryToExecute +
+                    " Error: " + e);
+            e.printStackTrace ();
+        }
+        finally
+        {
+            if (rs != null)
+            {
+                rs.close ();
+            }
+            if (s != null)
+            {
+                s.close ();
+            }
+        }
+    }
+
+    /**
+     * Get a standard connection instance.
+     * 
+     * @param schemaName
+     *            the name of schema
+     * @return a standard connection instance.
+     */
+    public static Connection getStandardConnection (final String schemaName)
+    {
+        try
+        {
+            return getConnectionInstance (schemaName).getConnection ();
+        }
+        catch (final SQLException e)
+        {
+            e.printStackTrace ();
+        }
+        return null;
+    }
 
 }

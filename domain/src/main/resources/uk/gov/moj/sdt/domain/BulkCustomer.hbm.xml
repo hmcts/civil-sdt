@@ -8,7 +8,7 @@
           	<param name="sequence">bulk_cust_seq</param>
           </generator>
         </id>
-        <version name="version" column="VERSION_NUMBER"/>
+        <version name="version" access="field" column="VERSION_NUMBER"/>
         <property name="customerCaseCode" column="BULK_CUSTOMER_CASE_CODE" />
         <property name="sdtCustomerId" column="SDT_CUSTOMER_ID"/>
         <set name="targetApplications" table="BULK_CUSTOMER_APPLICATIONS">
