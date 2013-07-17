@@ -13,7 +13,9 @@ define individual_requests_lob     = 'LOB (individual_payload) STORE AS is_lob(T
 define message_logs                = 'TABLESPACE users'
 define request_types               = 'TABLESPACE users'
 define request_routings            = 'TABLESPACE users'
+define service_requests            = 'TABLESPACE users'
 define target_applications         = 'TABLESPACE users'
+
 
 
 CREATE TABLE bulk_customers
@@ -23,7 +25,6 @@ CREATE TABLE bulk_customers
 ,version_number           INTEGER         -- hiberate versioning column
 ) &bulk_customers
 ;
-
 
 CREATE TABLE bulk_customer_applications
 (bulk_customer_id         INTEGER         -- pk, fk from bulk_customers
@@ -122,6 +123,14 @@ CREATE TABLE message_logs
 ) &message_logs
 ;
 
+CREATE TABLE request_routings
+(request_type_id          INTEGER        -- pk, fk to request_types
+,target_application_id    INTEGER        -- pk, fk to valid_services
+,web_service_endpoint     VARCHAR2(255)
+,version_number           INTEGER         -- hiberate versioning column
+) &request_routings
+;
+
 CREATE TABLE request_types
 (request_type_id          INTEGER
 ,request_type_name        VARCHAR2(50)
@@ -131,12 +140,17 @@ CREATE TABLE request_types
 ) &request_types
 ;
 
-CREATE TABLE request_routings
-(request_type_id          INTEGER        -- pk, fk to request_types
-,target_application_id    INTEGER        -- pk, fk to valid_services
-,web_service_endpoint     VARCHAR2(255)
-,version_number           INTEGER         -- hiberate versioning column
-) &request_routings
+CREATE TABLE service_requests
+(service_request_id       INTEGER         -- synthetic pk
+,request_payload          BLOB            -- the full incoming message including headers 
+,request_timestamp        TIMESTAMP       -- date/time of request receipt
+,response_payload         BLOB            -- the full outgoing message including headers
+,response_timestamp       TIMESTAMP       -- date/time of request response
+,request_type             VARCHAR2(32)     -- the type of request
+,bulk_customer_id         VARCHAR2(32)     -- should logically map bulk customers but not guaranteed
+,sdt_bulk_reference       VARCHAR2(32)    -- should logically map bulk submissions but not guaranteed 
+,version_number           INTEGER         -- hiberate versioning column 
+) &service_requests
 ;
 
 CREATE TABLE target_applications

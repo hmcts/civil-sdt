@@ -29,9 +29,10 @@ NOORDER
 ;
 
 --
--- PK for individual_requests
+-- PK for error_logs
+--
 
-CREATE SEQUENCE ind_req_seq
+CREATE SEQUENCE err_log_seq
 MINVALUE 1
 MAXVALUE 999999999999999999999999999
 INCREMENT BY 1
@@ -41,10 +42,22 @@ NOORDER
 ;
 
 --
--- PK for error_logs
+-- Sequence to support global parameters
 --
 
-CREATE SEQUENCE err_log_seq
+CREATE SEQUENCE glb_par_seq
+MINVALUE 1
+MAXVALUE 999999999
+INCREMENT BY 1
+CYCLE
+NOCACHE
+NOORDER
+;
+
+--
+-- PK for individual_requests
+
+CREATE SEQUENCE ind_req_seq
 MINVALUE 1
 MAXVALUE 999999999999999999999999999
 INCREMENT BY 1
@@ -67,33 +80,7 @@ NOORDER
 ;
 
 --
--- Sequence to support sdt_bulk_reference
---
-
-CREATE SEQUENCE sdt_ref_seq
-MINVALUE 1
-MAXVALUE 999999999
-INCREMENT BY 1
-CYCLE
-NOCACHE
-NOORDER
-;
-
---
--- Sequence to support global parameters
---
-
-CREATE SEQUENCE glb_par_seq
-MINVALUE 1
-MAXVALUE 999999999
-INCREMENT BY 1
-CYCLE
-NOCACHE
-NOORDER
-;
-
---
--- Sequence to support request types
+-- Sequence to support request_types
 --
 
 CREATE SEQUENCE req_typ_seq
@@ -106,7 +93,7 @@ NOORDER
 ;
 
 --
--- Sequence to support request types
+-- Sequence to support target_applications
 --
 
 CREATE SEQUENCE tar_app_seq
@@ -114,6 +101,31 @@ MINVALUE 1
 MAXVALUE 999999999
 INCREMENT BY 1
 CYCLE
+NOCACHE
+NOORDER
+;
+
+--
+-- Sequence to support sdt_bulk_reference
+--
+
+CREATE SEQUENCE sdt_ref_seq
+MINVALUE 1
+MAXVALUE 999999999
+INCREMENT BY 1
+CYCLE
+NOCACHE
+NOORDER
+;
+--
+-- PK for service_requests
+--
+
+CREATE SEQUENCE srv_req_seq
+MINVALUE 1
+MAXVALUE 999999999999999999999999999
+INCREMENT BY 1
+NOCYCLE
 NOCACHE
 NOORDER
 ;
