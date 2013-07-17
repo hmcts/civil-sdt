@@ -91,9 +91,9 @@ public final class GlobalParametersCache extends AbstractCacheControl
         final Object someObject = this.getGlobalParameters ().get (paramName);
 
         DomainType domainObject = null;
-        
+
         // Double check that the expected class matches the retrieved class.
-        if (domainType.getClass ().isAssignableFrom (someObject.getClass ()))
+        if (domainType.isAssignableFrom (someObject.getClass ()))
         {
             // Prepare object of correct type to return to caller.
             domainObject = domainType.cast (someObject);
