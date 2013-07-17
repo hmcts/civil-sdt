@@ -5,7 +5,7 @@
     <file-match-pattern match-pattern="src/main/java" include-pattern="true"/>
   </fileset>
   <fileset name="test files" enabled="true" check-config-name="sdt_test_checkstyle" local="false">
-    <file-match-pattern match-pattern="src/unit-test/src" include-pattern="true"/>
+    <file-match-pattern match-pattern="src/unit-test/java" include-pattern="true"/>
     <file-match-pattern match-pattern="src/integ-test/java" include-pattern="true"/>
   </fileset>
 </fileset-config>

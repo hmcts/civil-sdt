@@ -23,6 +23,8 @@
         <file name="../domain/build.xml" />
         <file name="../dao/build.xml" />
     	<file name="../validators/build.xml" />
+    	<file name="../transformers/build.xml" />
+    	<file name="../interceptors/build.xml" />
         <file name="../services/build.xml" />
         <file name="../producers-api/build.xml" />
         <file name="../producers/build.xml" />
