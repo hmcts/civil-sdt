@@ -82,25 +82,30 @@ CREATE TABLE global_parameters
 ;
 
 CREATE TABLE individual_requests
-(individual_request_id    INTEGER        -- pk
-,bulk_submission_id       INTEGER        -- fk from bulk_submissions
-,request_type_id          INTEGER        -- fk from request_type
-,customer_request_ref     VARCHAR2(32)
-,case_number              VARCHAR2(32)
-,request_status           VARCHAR2(32)
-,issued_date              TIMESTAMP
-,sdt_bulk_reference       VARCHAR2(32)
-,request_retry_count      INTEGER        -- number of attempts made to submit request
-,line_number              INTEGER
-,sdt_request_reference    VARCHAR2(38)   -- fixed format
-,created_date             TIMESTAMP      -- date/time of record created
-,updated_date             TIMESTAMP      -- date/time of last change to record
-,completed_date           TIMESTAMP
-,service_date             TIMESTAMP
-,warrant_number           INTEGER
-,enforcing_court_code     VARCHAR2(32)
-,enforcing_court_name     VARCHAR2(255)
-,fee                      NUMBER(8,2)
+(individual_request_id        INTEGER        -- pk
+,bulk_submission_id           INTEGER        -- fk from bulk_submissions
+,request_type_id              INTEGER        -- fk from request_type
+,customer_request_ref         VARCHAR2(32)   -- unique request ref
+--,case_number                VARCHAR2(32)
+,request_status               VARCHAR2(32)
+--,issued_date                TIMESTAMP
+,sdt_bulk_reference           VARCHAR2(32)
+,request_retry_count          INTEGER        -- number of attempts made to submit request
+,line_number                  INTEGER
+,sdt_request_reference        VARCHAR2(38)   -- fixed format
+,created_date                 TIMESTAMP      -- date/time of record created
+,updated_date                 TIMESTAMP      -- date/time of last change to record
+,completed_date               TIMESTAMP
+--,service_date               TIMESTAMP
+--,warrant_number             INTEGER
+--,enforcing_court_code       VARCHAR2(32)
+--,enforcing_court_name       VARCHAR2(255)
+--,fee                        NUMBER(8,2)
+,rejection_reason_code        VARCHAR2(32)
+,rejection_reason_description VARCHAR2(4000)
+,forwarding_attempts          INTEGER
+,target_application_status    VARCHAR2(4000)
+,target_application_response  VARCHAR2(4000) 
 ,version_number           INTEGER         -- hiberate versioning column
 ,individual_payload       BLOB
 ) &individual_requests_lob 
