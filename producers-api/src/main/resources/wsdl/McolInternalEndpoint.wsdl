@@ -4,8 +4,8 @@
 	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalEndpoint"
 	xmlns:req="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema"
 	xmlns:resp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema"
-	xmlns:dreq="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema"
-	xmlns:dresp="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema"
+	xmlns:qreq="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryRequestSchema"
+	xmlns:qresp="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryResponseSchema"
 	targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/McolInternalEndpoint">
 
 	<types>
@@ -21,8 +21,8 @@
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" schemaLocation="../xsd/IndvRequestResponse/IndividualSubmitRequest.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" schemaLocation="../xsd/IndvRequestResponse/IndividualSubmitResponse.xsd"/>
 
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackRequestSchema" schemaLocation="../xsd/DefenceRequestResponse/DefenceFeedbackRequestMCOL.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema" schemaLocation="../xsd/DefenceRequestResponse/DefenceFeedbackResponseMCOL.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryRequestSchema" schemaLocation="../xsd/SubmitQueryRequestResponse/SubmitQueryRequestMCOL.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryResponseSchema" schemaLocation="../xsd/SubmitQueryRequestResponse/SubmitQueryResponseMCOL.xsd"/>
 
         </xs:schema>
 	</types>
@@ -45,11 +45,11 @@
 	<message name="createResponse">
 		<part name="createResponse" element="resp:createResponse" />
 	</message>
-	<message name="defenceRequest">
-		<part name="parameters" element="dreq:defenceRequest" />
+	<message name="submitQueryRequest">
+		<part name="parameters" element="qreq:submitQueryRequest" />
 	</message>
-	<message name="defenceResponse">
-		<part name="parameters" element="dresp:defenceResponse" />
+	<message name="submitQueryResponse">
+		<part name="parameters" element="qresp:submitQueryResponse" />
 	</message>
 
 	<portType name="IMcolInternalEndpointPortType">
@@ -73,9 +73,9 @@
 			<input message="tns:updateClaimRequest" />
 			<output message="tns:createResponse" />
 		</operation>
-		<operation name="getDefenceDetails">
-			<input message="tns:defenceRequest" />
-			<output message="tns:defenceResponse" />
+		<operation name="submitQuery">
+			<input message="tns:submitQueryRequest" />
+			<output message="tns:submitQueryResponse" />
 		</operation>
 	</portType>
 
@@ -127,7 +127,7 @@
 				<soap:body use="literal" />
 			</output>
 		</operation>
-		<operation name="getDefenceDetails">
+		<operation name="submitQuery">
 			<soap:operation soapAction="" />
 			<input>
 				<soap:body use="literal" />

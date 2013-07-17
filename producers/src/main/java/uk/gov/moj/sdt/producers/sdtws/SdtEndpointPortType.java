@@ -50,9 +50,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.McolResponsesType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.DefenceRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefenceResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
  * Implementation of {@link ISdtEndpointPortType}.
@@ -123,7 +123,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     }
 
     @Override
-    public DefenceResponseType getDefenceDetails (final DefenceRequestType defenceRequest)
+    public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequest)
     {
         // TODO Auto-generated method stub
         return null;

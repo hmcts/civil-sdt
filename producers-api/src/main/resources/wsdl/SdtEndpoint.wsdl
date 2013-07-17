@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <definitions name="SdtEndpoint" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/"
-	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" xmlns:breq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" 
+    xmlns:breq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
 	xmlns:bresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema"
 	xmlns:bfreq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema"
 	xmlns:bfresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"
-	xmlns:dreq="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackRequestSchema"
-	xmlns:dresp="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackResponseSchema"
+    xmlns:qreq="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema"
+    xmlns:qresp="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
 	targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint">
 
 	<types>
@@ -25,9 +26,8 @@
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" schemaLocation="../xsd/RequestBulkFeedback/BulkFeedbackRequest.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" schemaLocation="../xsd/RequestBulkFeedback/BulkFeedbackResponse.xsd"/>
 
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackRequestSchema" schemaLocation="../xsd/DefenceRequestResponse/DefenceFeedbackRequest.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/DefenceFeedbackResponseSchema" schemaLocation="../xsd/DefenceRequestResponse/DefenceFeedbackResponse.xsd"/>
-
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" schemaLocation="../xsd/SubmitQueryRequestResponse/SubmitQueryRequestGeneric.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" schemaLocation="../xsd/SubmitQueryRequestResponse/SubmitQueryResponse.xsd"/>
         </xs:schema>
 
 	</types>
@@ -44,11 +44,11 @@
 	<message name="bulkFeedbackResponse">
 		<part name="bulkFeedbackResponse" element="bfresp:bulkFeedbackResponse" />
 	</message>
-	<message name="defenceRequest">
-		<part name="defenceRequest" element="dreq:defenceRequest" />
+	<message name="submitQueryRequest">
+		<part name="submitQueryRequest" element="qreq:submitQueryRequest" />
 	</message>
-	<message name="defenceResponse">
-		<part name="defenceResponse" element="dresp:defenceResponse" />
+	<message name="submitQueryResponse">
+		<part name="submitQueryResponse" element="qresp:submitQueryResponse" />
 	</message>
 
 	<portType name="ISdtEndpointPortType">
@@ -60,9 +60,9 @@
 			<input message="tns:bulkFeedbackRequest" />
 			<output message="tns:bulkFeedbackResponse" />
 		</operation>
-		<operation name="getDefenceDetails">
-			<input message="tns:defenceRequest" />
-			<output message="tns:defenceResponse" />
+		<operation name="submitQuery">
+			<input message="tns:submitQueryRequest" />
+			<output message="tns:submitQueryResponse" />
 		</operation>
 	</portType>
 
@@ -87,7 +87,7 @@
 				<soap:body use="literal" />
 			</output>
 		</operation>
-		<operation name="getDefenceDetails">
+		<operation name="submitQuery">
 			<soap:operation soapAction="" />
 			<input>
 				<soap:body use="literal" />

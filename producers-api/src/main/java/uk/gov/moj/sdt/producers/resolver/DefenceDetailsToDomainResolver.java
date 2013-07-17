@@ -30,26 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.producers.resolver;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import org.joda.time.LocalDate;
-
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IRequestDefenceDetail;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.mcol.domain.DefenceDetail;
-import uk.gov.moj.sdt.mcol.domain.Defendant;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.CriteriaType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.DefenceRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.HeaderType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefenceDetailType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefenceDetailsType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefenceResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefendantType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.ResponseType;
 
 /**
  * Maps incoming request objects to equivalent domain objects.
@@ -74,23 +54,23 @@ public final class DefenceDetailsToDomainResolver
      * @param defenceRequest jaxb object
      * @return domain object
      */
-    public static IRequestDefenceDetail mapToDefenceDetail (final DefenceRequestType defenceRequest)
-    {
-
-        final HeaderType headerType = defenceRequest.getHeader ();
-        final CriteriaType criteriaType = defenceRequest.getCriteria ();
-        final ITargetApplication targetApplication = new TargetApplication ();
-        final IRequestDefenceDetail requestDefenceDetail = new RequestDefenceDetail ();
-
-        requestDefenceDetail.setFromDate (new LocalDate (criteriaType.getMcolDefence ().getFromDate ()));
-        requestDefenceDetail.setToDate (new LocalDate (criteriaType.getMcolDefence ().getToDate ()));
-
-        requestDefenceDetail.setSdtCustomerId (headerType.getSdtCustomerId ().intValue ());
-        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ().value ());
-
-        requestDefenceDetail.setTargetApplication (targetApplication);
-        return requestDefenceDetail;
-    }
+    // public static IRequestDefenceDetail mapToDefenceDetail (final DefenceRequestType defenceRequest)
+    // {
+    //
+    // final HeaderType headerType = defenceRequest.getHeader ();
+    // final CriteriaType criteriaType = defenceRequest.getCriteria ();
+    // final ITargetApplication targetApplication = new TargetApplication ();
+    // final IRequestDefenceDetail requestDefenceDetail = new RequestDefenceDetail ();
+    //
+    // requestDefenceDetail.setFromDate (new LocalDate (criteriaType.getMcolDefence ().getFromDate ()));
+    // requestDefenceDetail.setToDate (new LocalDate (criteriaType.getMcolDefence ().getToDate ()));
+    //
+    // requestDefenceDetail.setSdtCustomerId (headerType.getSdtCustomerId ().intValue ());
+    // targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ().value ());
+    //
+    // requestDefenceDetail.setTargetApplication (targetApplication);
+    // return requestDefenceDetail;
+    // }
 
     /**
      * Maps defence request domain object maps to JAXB defence request type.
@@ -98,41 +78,40 @@ public final class DefenceDetailsToDomainResolver
      * @param mockDefenceDetailList mock mcol defence details objects
      * @return DefenceResponseType jaxb object
      */
-    public static DefenceResponseType mapToDefenceRequestType (final List<DefenceDetail> mockDefenceDetailList)
-    {
-        final DefenceResponseType defenceResponseType = new DefenceResponseType ();
-
-        //Extract the mock defefence details
-        final DefenceDetailsType defenceDetailsType = new DefenceDetailsType ();
-
-        for (DefenceDetail mockDefenceDetail : mockDefenceDetailList)
-        {
-            final DefenceDetailType defenceDetailType = new DefenceDetailType ();
-            final DefenceDetailType.Defendants defendants = new DefenceDetailType.Defendants ();
-
-            defenceDetailType.setClaimNumber (mockDefenceDetail.getClaimNumber ());
-
-            //copy the mock defendant to DefendantType
-            for (Defendant mockDefendant : mockDefenceDetail.getDefendants ())
-            {
-                final DefendantType defendantType = new DefendantType ();
-                defendantType.setDefendantId (mockDefendant.getDefendantId ());
-                final Calendar calendar = new GregorianCalendar ();
-                calendar.setTime (mockDefendant.getFiledDate ());
-                defendantType.setFiledDate (calendar);
-                defendantType.setResponseType (ResponseType.valueOf (mockDefendant.getResponse ()));
-                
-                defendants.getDefendant ().add (defendantType);
-
-               
-            }
-            defenceDetailType.setDefendants (defendants);
-            defenceDetailsType.getDefenceDetail ().add (defenceDetailType);
-        }
-        // Add to the response
-        defenceResponseType.setDefenceDetails (defenceDetailsType);
-        
-        return defenceResponseType;
-    }
+    // public static DefenceResponseType mapToDefenceRequestType (final List<DefenceDetail> mockDefenceDetailList)
+    // {
+    // final DefenceResponseType defenceResponseType = new DefenceResponseType ();
+    //
+    // // Extract the mock defefence details
+    // final DefenceDetailsType defenceDetailsType = new DefenceDetailsType ();
+    //
+    // for (DefenceDetail mockDefenceDetail : mockDefenceDetailList)
+    // {
+    // final DefenceDetailType defenceDetailType = new DefenceDetailType ();
+    // final DefenceDetailType.Defendants defendants = new DefenceDetailType.Defendants ();
+    //
+    // defenceDetailType.setClaimNumber (mockDefenceDetail.getClaimNumber ());
+    //
+    // // copy the mock defendant to DefendantType
+    // for (Defendant mockDefendant : mockDefenceDetail.getDefendants ())
+    // {
+    // final DefendantType defendantType = new DefendantType ();
+    // defendantType.setDefendantId (mockDefendant.getDefendantId ());
+    // final Calendar calendar = new GregorianCalendar ();
+    // calendar.setTime (mockDefendant.getFiledDate ());
+    // defendantType.setFiledDate (calendar);
+    // defendantType.setResponseType (ResponseType.valueOf (mockDefendant.getResponse ()));
+    //
+    // defendants.getDefendant ().add (defendantType);
+    //
+    // }
+    // defenceDetailType.setDefendants (defendants);
+    // defenceDetailsType.getDefenceDetail ().add (defenceDetailType);
+    // }
+    // // Add to the response
+    // defenceResponseType.setDefenceDetails (defenceDetailsType);
+    //
+    // return defenceResponseType;
+    // }
 
 }

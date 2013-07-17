@@ -30,23 +30,15 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.producer.comx.handler;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IRequestDefenceDetail;
-import uk.gov.moj.sdt.mcol.domain.DefenceDetail;
 import uk.gov.moj.sdt.producers.api.AbstractWsReadHandler;
 import uk.gov.moj.sdt.producers.api.IWsReadDefenceDetailsHandler;
-import uk.gov.moj.sdt.producers.resolver.DefenceDetailsToDomainResolver;
 import uk.gov.moj.sdt.service.api.IDefenceService;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.DefenceRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefenceResponseType;
 
 /**
  * Implementation for handling request defence details flow.
@@ -75,57 +67,57 @@ public class WsReadDefenceDetailsHandler extends AbstractWsReadHandler implement
      * @param defenceRequestType defence details to search for
      * @return defence details response
      */
-    public DefenceResponseType getDefenceDetails (final DefenceRequestType defenceRequestType)
-    {
-        LOGGER.info ("[requestDefenceDetails] started");
-
-        // Initialise response
-        DefenceResponseType defenceResponse = new DefenceResponseType ();
-        defenceResponse.setStatus (new StatusType ());
-
-        try
-        {
-            
-            logIncomingRequest (defenceRequestType);
-
-            // Transform to domain object
-            final IRequestDefenceDetail requestDefenceDetail =
-                    DefenceDetailsToDomainResolver.mapToDefenceDetail (defenceRequestType);
-
-            // Validate domain
-            validateDomain (requestDefenceDetail);
-
-            // Process validated request
-            defenceResponse = processRequestDefenceDetail (requestDefenceDetail);
-
-        }
-        catch (final AbstractBusinessException be)
-        {
-            handleBusinessException (be, defenceResponse.getStatus ());
-        }
-        // CHECKSTYLE:OFF
-        catch (final Exception e)
-        // CHECKSTYLE:ON
-        {
-            handleException (e, defenceResponse.getStatus ());
-        }
-        finally
-        {
-            LOGGER.info ("[requestDefenceDetails] completed");
-        }
-
-        return defenceResponse;
-    }
+    // public DefenceResponseType getDefenceDetails (final DefenceRequestType defenceRequestType)
+    // {
+    // LOGGER.info ("[requestDefenceDetails] started");
+    //
+    // // Initialise response
+    // DefenceResponseType defenceResponse = new DefenceResponseType ();
+    // defenceResponse.setStatus (new StatusType ());
+    //
+    // try
+    // {
+    //
+    // logIncomingRequest (defenceRequestType);
+    //
+    // // Transform to domain object
+    // final IRequestDefenceDetail requestDefenceDetail =
+    // DefenceDetailsToDomainResolver.mapToDefenceDetail (defenceRequestType);
+    //
+    // // Validate domain
+    // validateDomain (requestDefenceDetail);
+    //
+    // // Process validated request
+    // defenceResponse = processRequestDefenceDetail (requestDefenceDetail);
+    //
+    // }
+    // catch (final AbstractBusinessException be)
+    // {
+    // handleBusinessException (be, defenceResponse.getStatus ());
+    // }
+    // // CHECKSTYLE:OFF
+    // catch (final Exception e)
+    // // CHECKSTYLE:ON
+    // {
+    // handleException (e, defenceResponse.getStatus ());
+    // }
+    // finally
+    // {
+    // LOGGER.info ("[requestDefenceDetails] completed");
+    // }
+    //
+    // return defenceResponse;
+    // }
 
     /**
      * Log raw request object.
      * 
      * @param defenceDetails request instance.
      */
-    private void logIncomingRequest (final DefenceRequestType defenceDetails)
-    {
-        LOGGER.info ("[logIncomingRequest] - " + defenceDetails);
-    }
+    // private void logIncomingRequest (final DefenceRequestType defenceDetails)
+    // {
+    // LOGGER.info ("[logIncomingRequest] - " + defenceDetails);
+    // }
 
     /**
      * Validate to ensure integrity of defence details.
@@ -146,22 +138,20 @@ public class WsReadDefenceDetailsHandler extends AbstractWsReadHandler implement
      * @param requestDefenceDetail defence detail criteria
      * @return DefenceResponseType defense response
      */
-    private DefenceResponseType processRequestDefenceDetail (final IRequestDefenceDetail requestDefenceDetail)
-    {
-        LOGGER.info ("Service called to request defence details");
-        final List<DefenceDetail> list =
-                defenceService.getDefenceDetails (requestDefenceDetail.getFromDate ().toDate (), requestDefenceDetail
-                        .getToDate ().toDate ());
-
-        final DefenceResponseType response = DefenceDetailsToDomainResolver.mapToDefenceRequestType (list);
-
-        final StatusType status = new StatusType ();
-        response.setStatus (status);
-        status.setCode (StatusCodeType.OK);
-
-        return response;
-
-    }
+    // private DefenceResponseType processRequestDefenceDetail (final IRequestDefenceDetail requestDefenceDetail)
+    // {
+    // LOGGER.info ("Service called to request defence details");
+    // final List<DefenceDetail> list =
+    // defenceService.getDefenceDetails (requestDefenceDetail.getFromDate ().toDate (), requestDefenceDetail
+    // .getToDate ().toDate ());
+    //
+    // final DefenceResponseType response = DefenceDetailsToDomainResolver.mapToDefenceRequestType (list);
+    //
+    // final StatusType status = new StatusType ();
+    // response.setStatus (status);
+    // status.setCode (StatusCodeType.OK);
+    // return response;
+    // }
 
     /**
      * Set the Defence Service.

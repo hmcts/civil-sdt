@@ -18,6 +18,8 @@
             <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
             <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
             <xs:element name="fee" type="xs:unsignedLong"  minOccurs="0"/>
+            <!-- TODO Confirm element name/format -->
+            <xs:element name="targetApplicationStatus" type="xs:string" minOccurs="0" />
             <xs:element name="status" type="base:createStatusType"/>
         </xs:sequence>
     </xs:complexType>

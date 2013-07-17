@@ -38,7 +38,7 @@ import java.util.List;
 import uk.gov.moj.sdt.mcol.domain.DefenceDetail;
 import uk.gov.moj.sdt.mcol.domain.Defendant;
 import uk.gov.moj.sdt.service.api.IDefenceService;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.ResponseType;
+import uk.gov.moj.sdt.ws._2013.mcol.submitqueryresponseschema.ResponseType;
 
 /**
  * Implementation for mock MCOL services.

@@ -30,6 +30,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
  *         &lt;element name="enforcingCourtCode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtCodeType" minOccurs="0"/>
  *         &lt;element name="enforcingCourtName" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtNameType" minOccurs="0"/>
  *         &lt;element name="fee" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
+ *         &lt;element name="targetApplicationStatus" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}individualStatusType"/>
  *       &lt;/sequence>
  *     &lt;/extension>
@@ -48,6 +49,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
     "enforcingCourtCode",
     "enforcingCourtName",
     "fee",
+    "targetApplicationStatus",
     "status"
 })
 public class McolResponseType
@@ -70,6 +72,7 @@ public class McolResponseType
     @XmlJavaTypeAdapter(Adapter3 .class)
     @XmlSchemaType(name = "unsignedLong")
     protected Long fee;
+    protected String targetApplicationStatus;
     @XmlElement(required = true)
     protected IndividualStatusType status;
 
@@ -239,6 +242,30 @@ public class McolResponseType
      */
     public void setFee(Long value) {
         this.fee = value;
+    }
+
+    /**
+     * Gets the value of the targetApplicationStatus property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getTargetApplicationStatus() {
+        return targetApplicationStatus;
+    }
+
+    /**
+     * Sets the value of the targetApplicationStatus property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setTargetApplicationStatus(String value) {
+        this.targetApplicationStatus = value;
     }
 
     /**

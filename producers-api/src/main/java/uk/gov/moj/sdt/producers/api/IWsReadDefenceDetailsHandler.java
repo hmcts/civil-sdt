@@ -30,13 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.producers.api;
 
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.DefenceRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefenceResponseType;
 
 /**
  * Interface for handling request defence details flow.
  * 
  * @author d130680
+ * @deprecated TODO Needs to be renamed to IWsSubmitQueryHandler and should extend IWsReadHandler.
  * 
  */
 public interface IWsReadDefenceDetailsHandler
@@ -48,5 +47,5 @@ public interface IWsReadDefenceDetailsHandler
      * @param defenceDetails defence details to search for
      * @return defence details
      */
-    DefenceResponseType getDefenceDetails (final DefenceRequestType defenceDetails);
+    // DefenceResponseType getDefenceDetails (final DefenceRequestType defenceDetails);
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Response from MCOL to SDT -->
+<submitQueryResponse>
+    <mcolCustomerId>1234</mcolCustomerId>
+    <resultCount>3</resultCount>
+	<mcolResults>
+		<mcolDefenceDetail>
+		  <claimNumber>12345678</claimNumber>
+          <defendants>
+            <defendant defendantId="1">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+            <defendant defendantId="2">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+          </defendants>
+		</mcolDefenceDetail>
+        <mcolDefenceDetail>
+          <claimNumber>22345678</claimNumber>
+          <defendants>
+            <defendant defendantId="1">
+              <filedDate>2001-12-31T12:00:00</filedDate>
+              <responseType>PA</responseType>
+            </defendant>
+          </defendants>
+        </mcolDefenceDetail>
+	</mcolResults>
+    <status code="OK/Error">
+        <error>
+            <code>code</code>
+            <description>description</description>
+        </error>
+    </status>
+</submitQueryResponse>

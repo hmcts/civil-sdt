@@ -46,9 +46,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequest
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackrequestschema.DefenceRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.defencefeedbackresponseschema.DefenceResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
  * Implementation of {@link ISdtEndpointPortType}.
@@ -119,22 +119,29 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         return response;
     }
 
+    // @Override
+    // public DefenceResponseType getDefenceDetails (final DefenceRequestType defenceRequest)
+    // {
+    // LOGGER.debug (this.getClass ().getName () + " endpoint called, getDefenceDetails=" +
+    // defenceRequest.getHeader ().getSdtCustomerId ());
+    //
+    // // Update mbean stats.
+    // SdtMetricsMBean.getSdtMetrics ().upDefenceFeedbackCounts ();
+    //
+    // // Measure response time.
+    // final long startTime = new GregorianCalendar ().getTimeInMillis ();
+    // final DefenceResponseType response = wsReadDefenceDetailsHandler.getDefenceDetails (defenceRequest);
+    // final long endTime = new GregorianCalendar ().getTimeInMillis ();
+    // SdtMetricsMBean.getSdtMetrics ().addDefenceFeedbackTime (endTime - startTime);
+    //
+    // return response;
+    // }
+
     @Override
-    public DefenceResponseType getDefenceDetails (final DefenceRequestType defenceRequest)
+    public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequest)
     {
-        LOGGER.debug (this.getClass ().getName () + " endpoint called, getDefenceDetails=" +
-                defenceRequest.getHeader ().getSdtCustomerId ());
-
-        // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upDefenceFeedbackCounts ();
-
-        // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
-        final DefenceResponseType response = wsReadDefenceDetailsHandler.getDefenceDetails (defenceRequest);
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDefenceFeedbackTime (endTime - startTime);
-
-        return response;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -160,5 +167,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     {
         this.wsReadDefenceDetailsHandler = wsReadDefenceDetailsHandler;
     }
+
 
 }
