@@ -2,6 +2,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
-	<bean id="uk.gov.moj.sdt.interceptors.TestInterceptor" class="uk.gov.moj.sdt.interceptors.TestInterceptor" />
+	<bean id="uk.gov.moj.sdt.interceptors.BulkSubmissionInterceptor" class="uk.gov.moj.sdt.interceptors.BulkSubmissionInterceptor" />
 
 </beans>
