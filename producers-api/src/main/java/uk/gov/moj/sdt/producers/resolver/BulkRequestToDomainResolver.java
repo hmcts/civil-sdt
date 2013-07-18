@@ -125,7 +125,7 @@ public final class BulkRequestToDomainResolver
     private static List<IndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
                                                                     final IBulkSubmission bulkSubmission)
     {
-        final IndividualRequest individualRequest = new IndividualRequest ();
+        IndividualRequest individualRequest = null;
         final McolRequestsType mcolRequestsType = bulkRequestType.getRequests ().getMcolRequests ();
 
         final List<McolRequestType> mcolRequestTypeList = mcolRequestsType.getMcolRequest ();
@@ -135,6 +135,8 @@ public final class BulkRequestToDomainResolver
         int lineNumber = 0;
         for (McolRequestType mcolRequestType : mcolRequestTypeList)
         {
+            individualRequest = new IndividualRequest ();
+
             // Set customer reference
             individualRequest.setCustomerRequestReference (mcolRequestType.getRequestId ());
 
@@ -147,6 +149,9 @@ public final class BulkRequestToDomainResolver
 
             // Set the initial status
             individualRequest.setRequestStatus (IndividualRequestStatus.SUBMITTED.getStatus ());
+
+            // Set the bulk submission
+            individualRequest.setBulkSubmission (bulkSubmission);
 
             individualRequestList.add (individualRequest);
         }
