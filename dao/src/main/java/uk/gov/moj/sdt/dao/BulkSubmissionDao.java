@@ -30,58 +30,42 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.dao.DataAccessException;
 
-import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
 
 /**
- * Test {@link BulkCustomerDao} query methods.
+ * Implements specific DAO functionality based on {@link IBulkSubmissionDao}. This is a derived DAO extending
+ * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct domain
+ * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
+ * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
+ * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
  * 
  * @author Robin Compston
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContextTests
+public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
 {
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (BulkCustomerDaoTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionDao.class);
 
     /**
-     * Default constructor for {@link BulkCustomerDaoTest}.
+     * Default constructor for {@link GenericDaoTest}.
      */
-    public BulkCustomerDaoTest ()
+    public BulkSubmissionDao ()
     {
         super ();
-        DBUnitUtility.loadDatabase (this.getClass (), false);
     }
 
-    /**
-     * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
-     */
-    @Test
-    public void testGetBulkCustomerBySdtId ()
+    @Override
+    public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
+        throws DataAccessException
     {
-        // final IBulkCustomerDao bulkCustomersDao =
-        // (IBulkCustomerDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
-        final IBulkCustomerDao bulkCustomersDao =
-                (IBulkCustomerDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
-
-        final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId (2);
-        if (bulkCustomer != null)
-        {
-            LOG.debug ("Retrieved bulk customer id [" + Long.toString (bulkCustomer.getId ()) + "]");
-        }
-        return;
+        // TODO - Need to implement this
+        return true;
     }
 }

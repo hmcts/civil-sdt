@@ -28,25 +28,44 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
+package uk.gov.moj.sdt.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
+import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 /**
- * Interface for all classes implementing {@link IBulkCustomerDao}.
+ * Implements specific DAO functionality based on {@link ITargetApplicationDao}. This is a derived DAO extending
+ * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct domain
+ * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
+ * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
+ * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
  * 
- * @author Robin Compston
+ * @author Son Loi
  */
-public interface IBulkCustomerDao
+public class TargetApplicationDao extends GenericDao implements ITargetApplicationDao
 {
     /**
-     * Retrieve a {@link IBulkCustomer} object from Hibernate matching the given SDT ID.
-     * 
-     * @param stdId the SDT ID to match when retrieving the bulk customer.
-     * @return the bulk customer matching the given SDT ID.
-     * @throws DataAccessException Hibernate exception
+     * Logger object.
      */
-    IBulkCustomer[] getBulkCustomerBySdtId (final int stdId) throws DataAccessException;
+    private static final Logger LOG = LoggerFactory.getLogger (TargetApplicationDao.class);
+
+    /**
+     * Default constructor for {@link GenericDaoTest}.
+     */
+    public TargetApplicationDao ()
+    {
+        super ();
+    }
+
+    @Override
+    public boolean hasAccess (final IBulkCustomer bulkCustomer, final String targetApplicationCode)
+        throws DataAccessException
+    {
+        // TODO - Need to implement this
+        return true;
+    }
 }

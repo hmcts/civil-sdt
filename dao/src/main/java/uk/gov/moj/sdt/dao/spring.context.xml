@@ -22,4 +22,21 @@
 			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
 	</bean>
 	
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" class="uk.gov.moj.sdt.dao.BulkSubmissionDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>
+	
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.IIndividualRequestDao" class="uk.gov.moj.sdt.dao.IndividualRequestDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>	
+	
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.ITargetApplicationDao" class="uk.gov.moj.sdt.dao.TargetApplicationDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>	
 </beans>

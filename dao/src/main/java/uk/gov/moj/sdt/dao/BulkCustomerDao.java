@@ -63,7 +63,7 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
     }
 
     @Override
-    public IBulkCustomer[] getBulkCustomerBySdtId (final int sdtCustomerId) throws DataAccessException
+    public IBulkCustomer getBulkCustomerBySdtId (final int sdtCustomerId) throws DataAccessException
     {
         LOG.debug ("Get a bulk customer matching sdtId [" + sdtCustomerId + "]");
 
@@ -71,6 +71,13 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
         final IBulkCustomer[] bulkCustomers =
                 this.query (IBulkCustomer.class, Restrictions.eq ("sdtCustomerId", sdtCustomerId));
 
-        return bulkCustomers;
+        // Should only return one or none at all
+        if (bulkCustomers == null || bulkCustomers.length == 0)
+        {
+            return null;
+        }
+
+        assert bulkCustomers.length == 1;
+        return bulkCustomers[0];
     }
 }

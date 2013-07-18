@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,8 +28,44 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.dao;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * Implements specific DAO functionality based on {@link IIndividualRequestDao}. This is a derived DAO extending
+ * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct domain
+ * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
+ * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
+ * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
+ * 
+ * @author Son Loi
  */
-package uk.gov.moj.sdt.dao.api;
+public class IndividualRequestDao extends GenericDao implements IIndividualRequestDao
+{
+    /**
+     * Logger object.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger (IndividualRequestDao.class);
+
+    /**
+     * Default constructor for {@link GenericDaoTest}.
+     */
+    public IndividualRequestDao ()
+    {
+        super ();
+    }
+
+    @Override
+    public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
+        throws DataAccessException
+    {
+        // TODO - Need to implement this
+        return true;
+    }
+}
