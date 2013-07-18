@@ -39,12 +39,12 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
  * Integration test for the Global Parameters Cache.
@@ -53,8 +53,9 @@ import uk.gov.moj.sdt.utils.SpringApplicationContext;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class GlobalParametersCacheIntTest
+@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
+        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
+public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
      * Logger object.
@@ -77,7 +78,7 @@ public class GlobalParametersCacheIntTest
     public void testGetValue ()
     {
         final ICacheable cacheable =
-                (ICacheable) SpringApplicationContext.getBean ("uk.gov.moj.sdt.cache.GlobalParametersCache");
+                (ICacheable) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.GlobalParametersCache");
 
         final IGlobalParameter globalParameter = cacheable.getValue (IGlobalParameter.class, "SDT_DATA_RETENTION");
 

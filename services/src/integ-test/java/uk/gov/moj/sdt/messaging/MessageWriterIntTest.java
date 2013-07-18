@@ -44,9 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -56,7 +55,7 @@ import uk.gov.moj.sdt.utils.SpringApplicationContext;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class MessageWriterIntTest
+public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
      * Logger object.
@@ -73,14 +72,14 @@ public class MessageWriterIntTest
     public void testQueueMessage () throws JMSException
     {
         final MessageWriter messageWriter =
-                (MessageWriter) SpringApplicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
+                (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
         final String strMessage = "TestMessage" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
         final String corelationId = messageWriter.queueMessage (strMessage);
         LOG.debug ("Correlation ID is " + corelationId);
 
-        final JmsTemplate jmsTemplate = (JmsTemplate) SpringApplicationContext.getBean ("jmsTemplate");
+        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
         final String selectorString = "JMSCorrelationID='" + corelationId + "'";
         final Message message = jmsTemplate.receiveSelected (messageWriter.getQueueName (), selectorString);

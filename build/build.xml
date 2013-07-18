@@ -98,6 +98,14 @@
             <arg value="--force" />
         </exec>
     </target>
+	
+	<!-- Start the apache active mq server. -->
+	<target name="start-activemq-server" description="Start the active mq messaging server">
+		<parallel>
+	        <exec executable="${activemq.dir}/activemq.bat" failonerror="true" dir="${activemq.dir}" >
+	        </exec>
+		</parallel>	
+	</target>
 
     <!-- Create SDT schema and objects -->
     <target name="build-db" depends="init" description="Builds the DB by creating schema and schema objects">

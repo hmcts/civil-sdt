@@ -30,19 +30,17 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
  * Test {@link BulkCustomerDao} query methods.
@@ -52,7 +50,7 @@ import uk.gov.moj.sdt.utils.SpringApplicationContext;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class BulkCustomerDaoTest extends TestCase
+public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
      * Logger object.
@@ -74,10 +72,12 @@ public class BulkCustomerDaoTest extends TestCase
     @Test
     public void testGetBulkCustomerBySdtId ()
     {
+        // final IBulkCustomerDao bulkCustomersDao =
+        // (IBulkCustomerDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
         final IBulkCustomerDao bulkCustomersDao =
-                (IBulkCustomerDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
+                (IBulkCustomerDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
 
-        final IBulkCustomer[] bulkCustomers = bulkCustomersDao.getBulkCustomerBySdtId (123);
+        final IBulkCustomer[] bulkCustomers = bulkCustomersDao.getBulkCustomerBySdtId (2);
         if (bulkCustomers.length > 0)
         {
             LOG.debug ("Retrieved bulk customer id [" + Long.toString (bulkCustomers[0].getId ()) + "]");

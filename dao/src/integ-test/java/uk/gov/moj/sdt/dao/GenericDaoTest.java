@@ -30,14 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import junit.framework.TestCase;
-
 import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -46,7 +45,6 @@ import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
 /**
  * Test {@link GenericDao} CRUD methods.
@@ -56,7 +54,7 @@ import uk.gov.moj.sdt.utils.SpringApplicationContext;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class GenericDaoTest extends TestCase
+public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
      * Logger object.
@@ -79,9 +77,9 @@ public class GenericDaoTest extends TestCase
     public void testFetch ()
     {
         final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
-        final int id = 1;
+        final long id = 10711;
         final IBulkCustomer bulkCustomer = genericDao.fetch (BulkCustomer.class, id);
         bulkCustomer.getId ();
 
@@ -94,14 +92,13 @@ public class GenericDaoTest extends TestCase
     public void testQuery ()
     {
         final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
         final IBulkCustomer[] bulkCustomers =
-                genericDao.query (BulkCustomer.class, Restrictions.eq ("sdtCustomerId", 123));
+                genericDao.query (BulkCustomer.class, Restrictions.eq ("sdtCustomerId", 2));
 
         if (bulkCustomers.length == 1)
         {
-
             // User found
             final IBulkCustomer bulkCustomer = bulkCustomers[0];
             LOG.debug ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
@@ -115,7 +112,7 @@ public class GenericDaoTest extends TestCase
     public void testGlobalParametersQuery ()
     {
         final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
         final IGlobalParameter[] globalParameters = genericDao.query (GlobalParameter.class);
 
@@ -136,7 +133,7 @@ public class GenericDaoTest extends TestCase
     public void testInsert ()
     {
         final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
         bulkCustomer.setId (2);

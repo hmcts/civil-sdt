@@ -31,18 +31,18 @@
 package uk.gov.moj.sdt.dao;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
 
 /**
  * Test {@link ErrorMessageDao} query methods.
@@ -52,7 +52,7 @@ import uk.gov.moj.sdt.utils.SpringApplicationContext;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class ErrorMessageDaoTest extends TestCase
+public class ErrorMessageDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
 
     /**
@@ -66,6 +66,7 @@ public class ErrorMessageDaoTest extends TestCase
     public ErrorMessageDaoTest ()
     {
         super ();
+        DBUnitUtility.loadDatabase (getClass (), false);
     }
 
     /**
@@ -75,7 +76,7 @@ public class ErrorMessageDaoTest extends TestCase
     public void testGetAllErrorMessages ()
     {
         final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
         final IErrorMessage[] errorMessages = genericDao.query (IErrorMessage.class);
 

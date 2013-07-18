@@ -1,3 +1,5 @@
+alter session set current_schema=sdt_owner;
+
 -- Procedure to disable all constraints and triggers prior to loading test data with DBUNIT.
 create or replace
 procedure Prepare_For_Dbunit_Load

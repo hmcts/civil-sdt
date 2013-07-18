@@ -104,7 +104,7 @@ public class GenericDao implements IGenericDao
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final int id)
+    public <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final long id)
         throws DataAccessException
     {
         // Record start time.
@@ -129,7 +129,7 @@ public class GenericDao implements IGenericDao
         // boundaries
         final Object o = criteria.uniqueResult ();
         domainObject = domainType.cast (o);
-        
+
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
         SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
@@ -149,7 +149,6 @@ public class GenericDao implements IGenericDao
         return domainObject;
     }
 
-    
     // @Override
     // public <DomainType extends IDomainObject> DomainType fetch (final DomainType domainObject,
     // final String... properties) throws DataAccessException
@@ -376,10 +375,8 @@ public class GenericDao implements IGenericDao
         return domainObjects.toArray (results);
     }
 
-
     @Override
-    public void persist (final Object domainObject)
-        throws DataAccessException
+    public void persist (final Object domainObject) throws DataAccessException
     {
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();

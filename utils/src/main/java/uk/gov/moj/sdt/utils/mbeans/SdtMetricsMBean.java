@@ -1354,6 +1354,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     public static SdtMetricsMBean getSdtMetrics ()
     {
+        if (thisBean == null)
+        {
+            thisBean = new SdtMetricsMBean ();
+            LOG.debug ("Initialised SdtMetricsMBean");
+        }
         return SdtMetricsMBean.thisBean;
     }
 
