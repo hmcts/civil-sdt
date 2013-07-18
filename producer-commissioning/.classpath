@@ -9,6 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/producers-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/validators"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/domain"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/services"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/services-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

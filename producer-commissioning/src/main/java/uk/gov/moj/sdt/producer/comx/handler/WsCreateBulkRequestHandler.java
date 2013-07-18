@@ -30,8 +30,6 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.producer.comx.handler;
 
-import java.math.BigInteger;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,11 +40,9 @@ import uk.gov.moj.sdt.producers.resolver.BulkRequestToDomainResolver;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.McolRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
@@ -79,21 +75,9 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         try
         {
 
-            // Log incoming message to database - could be possible to implement in interceptor.
-            logIncomingRequest (bulkRequestType);
-
             // Populate SDT Bulk reference in response.
             bulkResponseType.setSdtBulkReference (sdtBulkReferenceGenerator.getSDTBulkReference (bulkRequestType
                     .getHeader ().getTargetApplicationId ().toString ()));
-
-            // Validate request to ensure that fields contain correct data. e.g. request count.
-            final ErrorType wsErrorType = validateWsType (bulkRequestType);
-
-            if (wsErrorType != null)
-            {
-                populateError (bulkResponseType.getStatus (), wsErrorType, StatusCodeType.ERROR);
-                return bulkResponseType;
-            }
 
             // Transform web service object to domain object(s)
             final IBulkSubmission bulkSubmission = transformToDomainType (bulkRequestType);
@@ -123,16 +107,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         }
 
         return bulkResponseType;
-    }
-
-    /**
-     * Log raw request object.
-     * 
-     * @param bulkRequest request instance.
-     */
-    private void logIncomingRequest (final BulkRequestType bulkRequest)
-    {
-        LOGGER.info ("[logIncomingRequest] - " + bulkRequest);
     }
 
     /**
@@ -166,78 +140,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
     }
 
     /**
-     * Validate to ensure integrity of bulk request.
-     * 
-     * @param bulkRequestType bulk request
-     * @return {@link ErrorType}
-     */
-    private ErrorType validateWsType (final BulkRequestType bulkRequestType)
-    {
-        LOGGER.debug ("[validateWsType] started");
-
-        LOGGER.debug ("validate request count");
-        final BigInteger headerReqCount = bulkRequestType.getHeader ().getRequestCount ();
-        final int actualRequestCount = bulkRequestType.getRequests ().getMcolRequests ().getMcolRequest ().size ();
-        if (headerReqCount.intValue () != actualRequestCount)
-        {
-            return createErrorType (AbstractBusinessException.ErrorCode.REQ_COUNT_MISMATCH,
-                    "Number of requests do not match request count in header");
-        }
-
-        LOGGER.debug ("validate request type matches request content for each request");
-        for (McolRequestType mcolRequest : bulkRequestType.getRequests ().getMcolRequests ().getMcolRequest ())
-        {
-            if ( !isValidRequestType (mcolRequest))
-            {
-                return createErrorType (AbstractBusinessException.ErrorCode.REQ_TYPE_INCORRECT,
-                        "Request type does not match with specified request details");
-            }
-        }
-
-        return null;
-
-    }
-
-    /**
-     * Validates that request type matches with the request content.
-     * 
-     * @param mcolRequestType MCOL request type
-     * @return true if request type matches content else false
-     */
-    private boolean isValidRequestType (final McolRequestType mcolRequestType)
-    {
-        boolean valid = true;
-        switch (mcolRequestType.getRequestType ())
-        {
-            case MCOL_CLAIM:
-                valid = (mcolRequestType.getMcolClaim () != null) ? true : false;
-                break;
-
-            case MCOL_JUDGMENT:
-                valid = (mcolRequestType.getMcolJudgment () != null) ? true : false;
-                break;
-
-            case MCOL_WARRANT:
-                valid = (mcolRequestType.getMcolWarrant () != null) ? true : false;
-                break;
-
-            case MCOL_JUDGMENT_WARRANT:
-                valid = (mcolRequestType.getMcolJudgmentWarrant () != null) ? true : false;
-                break;
-
-            case MCOL_CLAIM_STATUS_UPDATE:
-                valid = (mcolRequestType.getMcolClaimStatusUpdate () != null) ? true : false;
-                break;
-
-            default:
-                valid = false;
-        }
-
-        return valid;
-
-    }
-
-    /**
      * Transform Web service object to Domain object.
      * 
      * @param bulkRequestType bulk request
@@ -261,12 +163,15 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
     {
         LOGGER.debug ("[validateDomain] started");
 
+        // Validation done on BulkCustomer
         // LOGGER.debug ("validate SDT Customer id");
         //
         // LOGGER.debug ("validate Target application id");
         //
-        // LOGGER.debug ("validate customer reference is unique across data retention period");
+        // Validation done on BulkSubmission
+        // LOGGER.debug ("validate customer reference is unique across data retention period"); BulkSubmission
         //
+        // Validation done IndividualRequest
         // LOGGER.debug ("validate customer reference for each request is unique across data retention period");
         VisitableTreeWalker.walk (bulkSubmission, "Validator");
 
