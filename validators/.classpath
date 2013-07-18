@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/domain"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

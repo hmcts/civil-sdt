@@ -15,7 +15,10 @@
 	</bean>
 
     <bean id="uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator"
-        class="uk.gov.moj.sdt.validators.BulkSubmissionValidator">
+        class="uk.gov.moj.sdt.validators.BulkSubmissionValidator">        
+        <property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" />
+        <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" />                               
+        <property name="targetApplicationtDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao" />        
     </bean>
 
     <bean id="uk.gov.moj.sdt.validators.api.IRequestTypeValidator"
@@ -28,6 +31,7 @@
 
     <bean id="uk.gov.moj.sdt.validators.api.IIndividualRequestValidator"
         class="uk.gov.moj.sdt.validators.IndividualRequestValidator">
+        <property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao" />
     </bean>
     
         <bean id="uk.gov.moj.sdt.validators.api.IRequestDefenceDetailValidator"

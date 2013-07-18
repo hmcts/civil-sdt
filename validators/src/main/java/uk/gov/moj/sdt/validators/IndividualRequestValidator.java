@@ -30,11 +30,18 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
+import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
+import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
@@ -52,6 +59,11 @@ public class IndividualRequestValidator extends AbstractDomainObjectVisitor impl
     private static final Log LOGGER = LogFactory.getLog (IndividualRequestValidator.class);
 
     /**
+     * Individual request dao.
+     */
+    private IIndividualRequestDao individualRequestDao;
+
+    /**
      * No-argument Constructor.
      */
     public IndividualRequestValidator ()
@@ -61,8 +73,34 @@ public class IndividualRequestValidator extends AbstractDomainObjectVisitor impl
     @Override
     public void visit (final IndividualRequest individualRequest)
     {
-        // TODO Do validation
+        // Do validation
         LOGGER.info ("visit(individualRequest)");
+        final IBulkCustomer bulkCustomer = individualRequest.getBulkSubmission ().getBulkCustomer ();
+
+        // Validate customer reference is unique across data retention period for individual request
+        final String customerRequestReference = individualRequest.getCustomerRequestReference ();
+        if ( !individualRequestDao.isCustomerReferenceUnique (bulkCustomer, customerRequestReference ))
+        {
+            final List<String> replacements = new ArrayList<String> ();
+            replacements.add (String.valueOf (customerRequestReference ));
+            replacements.add (String.valueOf (individualRequest.getId ()));
+            // CHECKSTYLE:OFF
+            throw new SdtCustomerReferenceNotUniqueException (
+                    AbstractBusinessException.ErrorCode.SDT_CUSTOMER_REFRENCE_NOT_UNIQUE.toString (),
+                    "SDT Customer Reference [{0}] was not unique across the data retention period for the Individual Request [{1}].",
+                    replacements);
+            // CHECKSTYLE:ON
+        }
+    }
+
+    /**
+     * Set individual request dao.
+     * 
+     * @param individualRequestDao individual request dao
+     */
+    public void setIndividualRequestDao (final IIndividualRequestDao individualRequestDao)
+    {
+        this.individualRequestDao = individualRequestDao;
     }
 
 }

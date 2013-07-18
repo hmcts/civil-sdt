@@ -163,10 +163,27 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
          * Invalid date range.
          */
         INVALID_DATE_RANGE,
+
         /**
          * Maximum concurrent requests reached.
          */
-        ABOVE_MAXIMUM_RETENTION_PERIOD
+        ABOVE_MAXIMUM_RETENTION_PERIOD,
+
+        /**
+         * SDT Customer ID not found.
+         */
+        SDT_CUSTOMER_ID_NOT_FOUND,
+
+        /**
+         * SDT Customer Reference not unique.
+         */
+        SDT_CUSTOMER_REFRENCE_NOT_UNIQUE,
+
+        /**
+         * Invalid target application.
+         */
+        INVALID_TARGET_APPLICATION
+
     }
 
 }
