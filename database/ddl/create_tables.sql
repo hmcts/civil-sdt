@@ -21,7 +21,7 @@ define target_applications         = 'TABLESPACE users'
 CREATE TABLE bulk_customers
 (bulk_customer_id         INTEGER               -- synthetic pk
 ,bulk_customer_case_code  CHAR(2)      
-,sdt_customer_id          NUMBER(4,0)
+,sdt_customer_id          NUMBER(8,0)           -- external id for customer identification, 10000000-99999999
 ,version_number           INTEGER DEFAULT 0     -- hiberate versioning column
 ) &bulk_customers
 ;
@@ -152,7 +152,7 @@ CREATE TABLE service_requests
 ,response_payload         BLOB               -- the full outgoing message including headers
 ,response_timestamp       TIMESTAMP          -- date/time of request response
 ,request_type             VARCHAR2(32)       -- the type of request
-,bulk_customer_id         VARCHAR2(32)       -- should logically map bulk customers but not guaranteed
+,sdt_customer_id          VARCHAR2(32)       -- should logically map bulk customers but not guaranteed
 ,sdt_bulk_reference       VARCHAR2(32)       -- should logically map bulk submissions but not guaranteed 
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column 
 ) &service_requests
