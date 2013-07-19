@@ -68,7 +68,7 @@ CREATE TABLE error_messages
 ,error_code               VARCHAR2(32)         
 ,error_text               VARCHAR2(1000)        -- error mesg with placeholder for context
 ,error_description        VARCHAR2(2000)        -- generic description of error
-,version_number           INTEGER DEFAULT0      -- hiberate versioning column
+,version_number           INTEGER DEFAULT 0     -- hiberate versioning column
 ) &error_messages
 ;
 
