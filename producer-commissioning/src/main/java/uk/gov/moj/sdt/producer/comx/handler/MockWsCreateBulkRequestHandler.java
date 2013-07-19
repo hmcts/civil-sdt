@@ -40,7 +40,6 @@ import uk.gov.moj.sdt.producer.comx.sdtws.IResponseFactory;
 import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.McolRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
@@ -111,15 +110,6 @@ public class MockWsCreateBulkRequestHandler extends AbstractWsCreateHandler impl
             return responseFactory.createFailResponse (BulkResponseFailure.BULK_CUSTOMER_REFERENCE_NOT_UNIQUE, request);
         }
 
-        LOGGER.debug ("validate request type matches request content for each request");
-        for (McolRequestType mcolRequest : request.getRequests ().getMcolRequests ().getMcolRequest ())
-        {
-            if ( !isValidRequestType (mcolRequest))
-            {
-                return responseFactory.createFailResponse (BulkResponseFailure.INVALID_REQUEST_TYPE, request);
-            }
-        }
-
         LOGGER.debug ("validate customer reference for each request");
         if ("TEST_600".equalsIgnoreCase (request.getHeader ().getCustomerReference ()))
         {
@@ -128,45 +118,6 @@ public class MockWsCreateBulkRequestHandler extends AbstractWsCreateHandler impl
         }
 
         return responseFactory.createSuccessResponse (request);
-
-    }
-
-    /**
-     * Validates that request type matches with the request content.
-     * 
-     * @param mcolRequestType MCOL request type
-     * @return true if request type matches content else false
-     */
-    private boolean isValidRequestType (final McolRequestType mcolRequestType)
-    {
-        boolean valid = false;
-        switch (mcolRequestType.getRequestType ())
-        {
-            case MCOL_CLAIM:
-                valid = (mcolRequestType.getMcolClaim () != null) ? true : false;
-                break;
-
-            case MCOL_JUDGMENT:
-                valid = (mcolRequestType.getMcolJudgment () != null) ? true : false;
-                break;
-
-            case MCOL_WARRANT:
-                valid = (mcolRequestType.getMcolWarrant () != null) ? true : false;
-                break;
-
-            case MCOL_JUDGMENT_WARRANT:
-                valid = (mcolRequestType.getMcolJudgmentWarrant () != null) ? true : false;
-                break;
-
-            case MCOL_CLAIM_STATUS_UPDATE:
-                valid = (mcolRequestType.getMcolClaimStatusUpdate () != null) ? true : false;
-                break;
-
-            default:
-                valid = false;
-        }
-
-        return valid;
 
     }
 

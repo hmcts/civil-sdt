@@ -8,9 +8,30 @@
 	
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
 
-    <xs:complexType name="createResponseType">
+    <xs:complexType name="headerType">
         <xs:sequence>
             <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
+            <xs:element name="caseId" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1" />
+                        <xs:maxLength value="20" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="createResponseType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:element name="body" type="tns:bodyType"/>
+            <xs:element name="status" type="base:createStatusType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="bodyType">
+        <xs:sequence>
             <xs:element name="claimNumber" type="base:claimNumberType"  minOccurs="0"/>
             <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
             <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
@@ -18,9 +39,14 @@
             <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
             <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
             <xs:element name="fee" type="xs:unsignedLong"  minOccurs="0"/>
-            <!-- TODO Confirm element name/format -->
-            <xs:element name="targetApplicationStatus" type="xs:string" minOccurs="0" />
-            <xs:element name="status" type="base:createStatusType"/>
+            <xs:element name="additionalStatus" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1" />
+                        <xs:maxLength value="255" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 

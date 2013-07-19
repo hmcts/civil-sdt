@@ -112,7 +112,7 @@
             <arg value="jaxws21" />
             <arg value="-b" />
             <arg value="${resources.dir}/jaxb-bindings.xml" />
-            <arg value="${resources.dir}/wsdl/SdtGatewayEndpoint.wsdl" />
+            <arg value="${resources.dir}/wsdl/SdtEndpoint.wsdl" />
             <classpath>
                 <path refid="cxf.classpath" />
             </classpath>

@@ -1,15 +1,10 @@
 
 package uk.gov.moj.sdt.ws._2013.mcol.responseschema;
 
-import java.util.Calendar;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.w3._2001.xmlschema.Adapter2;
-import org.w3._2001.xmlschema.Adapter3;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 
 
@@ -23,15 +18,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="sdtRequestId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtRequestIdType"/>
- *         &lt;element name="claimNumber" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}claimNumberType" minOccurs="0"/>
- *         &lt;element name="issueDate" type="{http://www.w3.org/2001/XMLSchema}date" minOccurs="0"/>
- *         &lt;element name="serviceDate" type="{http://www.w3.org/2001/XMLSchema}date" minOccurs="0"/>
- *         &lt;element name="warrantNumber" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}warrantNumberType" minOccurs="0"/>
- *         &lt;element name="enforcingCourtCode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtCodeType" minOccurs="0"/>
- *         &lt;element name="enforcingCourtName" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtNameType" minOccurs="0"/>
- *         &lt;element name="fee" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
- *         &lt;element name="targetApplicationStatus" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="header" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema}headerType"/>
+ *         &lt;element name="body" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema}bodyType"/>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}createStatusType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -43,255 +31,65 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "createResponseType", propOrder = {
-    "sdtRequestId",
-    "claimNumber",
-    "issueDate",
-    "serviceDate",
-    "warrantNumber",
-    "enforcingCourtCode",
-    "enforcingCourtName",
-    "fee",
-    "targetApplicationStatus",
+    "header",
+    "body",
     "status"
 })
 public class CreateResponseType {
 
     @XmlElement(required = true)
-    protected String sdtRequestId;
-    protected String claimNumber;
-    @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
-    @XmlSchemaType(name = "date")
-    protected Calendar issueDate;
-    @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
-    @XmlSchemaType(name = "date")
-    protected Calendar serviceDate;
-    protected String warrantNumber;
-    protected String enforcingCourtCode;
-    protected String enforcingCourtName;
-    @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter3 .class)
-    @XmlSchemaType(name = "unsignedLong")
-    protected Long fee;
-    protected String targetApplicationStatus;
+    protected HeaderType header;
+    @XmlElement(required = true)
+    protected BodyType body;
     @XmlElement(required = true)
     protected CreateStatusType status;
 
     /**
-     * Gets the value of the sdtRequestId property.
+     * Gets the value of the header property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link HeaderType }
      *     
      */
-    public String getSdtRequestId() {
-        return sdtRequestId;
+    public HeaderType getHeader() {
+        return header;
     }
 
     /**
-     * Sets the value of the sdtRequestId property.
+     * Sets the value of the header property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link HeaderType }
      *     
      */
-    public void setSdtRequestId(String value) {
-        this.sdtRequestId = value;
+    public void setHeader(HeaderType value) {
+        this.header = value;
     }
 
     /**
-     * Gets the value of the claimNumber property.
+     * Gets the value of the body property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link BodyType }
      *     
      */
-    public String getClaimNumber() {
-        return claimNumber;
+    public BodyType getBody() {
+        return body;
     }
 
     /**
-     * Sets the value of the claimNumber property.
+     * Sets the value of the body property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link BodyType }
      *     
      */
-    public void setClaimNumber(String value) {
-        this.claimNumber = value;
-    }
-
-    /**
-     * Gets the value of the issueDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public Calendar getIssueDate() {
-        return issueDate;
-    }
-
-    /**
-     * Sets the value of the issueDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIssueDate(Calendar value) {
-        this.issueDate = value;
-    }
-
-    /**
-     * Gets the value of the serviceDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public Calendar getServiceDate() {
-        return serviceDate;
-    }
-
-    /**
-     * Sets the value of the serviceDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setServiceDate(Calendar value) {
-        this.serviceDate = value;
-    }
-
-    /**
-     * Gets the value of the warrantNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getWarrantNumber() {
-        return warrantNumber;
-    }
-
-    /**
-     * Sets the value of the warrantNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setWarrantNumber(String value) {
-        this.warrantNumber = value;
-    }
-
-    /**
-     * Gets the value of the enforcingCourtCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getEnforcingCourtCode() {
-        return enforcingCourtCode;
-    }
-
-    /**
-     * Sets the value of the enforcingCourtCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setEnforcingCourtCode(String value) {
-        this.enforcingCourtCode = value;
-    }
-
-    /**
-     * Gets the value of the enforcingCourtName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getEnforcingCourtName() {
-        return enforcingCourtName;
-    }
-
-    /**
-     * Sets the value of the enforcingCourtName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setEnforcingCourtName(String value) {
-        this.enforcingCourtName = value;
-    }
-
-    /**
-     * Gets the value of the fee property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public Long getFee() {
-        return fee;
-    }
-
-    /**
-     * Sets the value of the fee property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFee(Long value) {
-        this.fee = value;
-    }
-
-    /**
-     * Gets the value of the targetApplicationStatus property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTargetApplicationStatus() {
-        return targetApplicationStatus;
-    }
-
-    /**
-     * Sets the value of the targetApplicationStatus property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTargetApplicationStatus(String value) {
-        this.targetApplicationStatus = value;
+    public void setBody(BodyType value) {
+        this.body = value;
     }
 
     /**

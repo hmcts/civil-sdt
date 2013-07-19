@@ -66,14 +66,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link McolDefenceCriteriaType }
-     * 
-     */
-    public McolDefenceCriteriaType createMcolDefenceCriteriaType() {
-        return new McolDefenceCriteriaType();
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SubmitQueryRequestType }{@code >}}
      * 
      */

@@ -58,10 +58,24 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="individualRequestType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:choice>
+                <xs:element name="mcolClaim" type="clm:claimType"/>
+                <xs:element name="mcolJudgment" type="jud:mcolJudgmentType"/>
+                <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
+                <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+                <xs:element name="mcolClaimStatusUpdate" type="clmupd:claimStatusUpdateType"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="createClaimRequest" type="tns:createClaimRequestType"/>
     <xs:element name="createJudgmentRequest" type="tns:createJudgmentRequestType"/>
     <xs:element name="createJudgmentWarrantRequest" type="tns:createJudgmentWarrantRequestType"/>
     <xs:element name="createWarrantRequest" type="tns:createWarrantRequestType"/>
     <xs:element name="updateClaimRequest" type="tns:updateClaimRequestType"/>
+    <xs:element name="individualRequest" type="tns:individualRequestType"/>
 
 </xs:schema>

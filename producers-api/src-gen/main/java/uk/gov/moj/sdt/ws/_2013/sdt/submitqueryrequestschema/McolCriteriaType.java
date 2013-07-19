@@ -3,6 +3,7 @@ package uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -16,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice>
- *         &lt;element name="mcolDefenceCriteria" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema}mcolDefenceCriteriaType"/>
+ *         &lt;any/>
  *       &lt;/choice>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -27,34 +28,35 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "mcolCriteriaType", propOrder = {
-    "mcolDefenceCriteria"
+    "any"
 })
 public class McolCriteriaType {
 
-    protected McolDefenceCriteriaType mcolDefenceCriteria;
+    @XmlAnyElement(lax = true)
+    protected Object any;
 
     /**
-     * Gets the value of the mcolDefenceCriteria property.
+     * Gets the value of the any property.
      * 
      * @return
      *     possible object is
-     *     {@link McolDefenceCriteriaType }
+     *     {@link Object }
      *     
      */
-    public McolDefenceCriteriaType getMcolDefenceCriteria() {
-        return mcolDefenceCriteria;
+    public Object getAny() {
+        return any;
     }
 
     /**
-     * Sets the value of the mcolDefenceCriteria property.
+     * Sets the value of the any property.
      * 
      * @param value
      *     allowed object is
-     *     {@link McolDefenceCriteriaType }
+     *     {@link Object }
      *     
      */
-    public void setMcolDefenceCriteria(McolDefenceCriteriaType value) {
-        this.mcolDefenceCriteria = value;
+    public void setAny(Object value) {
+        this.any = value;
     }
 
 }

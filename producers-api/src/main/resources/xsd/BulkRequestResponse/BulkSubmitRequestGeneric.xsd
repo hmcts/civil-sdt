@@ -4,17 +4,9 @@
     targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" 
     elementFormDefault="qualified"
     xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
-    xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" 
-    xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" 
-    xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema"
-    xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
     version="1.0">
     
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
-    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" schemaLocation="../RootXSDs/Claim.xsd"/>
-    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" schemaLocation="../RootXSDs/Judgment.xsd"/>
-    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" schemaLocation="../RootXSDs/ClaimStatusUpdate.xsd"/>
-    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="../RootXSDs/Warrant.xsd"/>
     
     <xs:complexType name="headerType">
         <xs:sequence>

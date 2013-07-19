@@ -26,6 +26,7 @@ public class ObjectFactory {
 
     private final static QName _UpdateClaimRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", "updateClaimRequest");
     private final static QName _CreateClaimRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", "createClaimRequest");
+    private final static QName _IndividualRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", "individualRequest");
     private final static QName _CreateWarrantRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", "createWarrantRequest");
     private final static QName _CreateJudgmentRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", "createJudgmentRequest");
     private final static QName _CreateJudgmentWarrantRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", "createJudgmentWarrantRequest");
@@ -35,6 +36,14 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link IndividualRequestType }
+     * 
+     */
+    public IndividualRequestType createIndividualRequestType() {
+        return new IndividualRequestType();
     }
 
     /**
@@ -101,6 +110,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", name = "createClaimRequest")
     public JAXBElement<CreateClaimRequestType> createCreateClaimRequest(CreateClaimRequestType value) {
         return new JAXBElement<CreateClaimRequestType>(_CreateClaimRequest_QNAME, CreateClaimRequestType.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link IndividualRequestType }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema", name = "individualRequest")
+    public JAXBElement<IndividualRequestType> createIndividualRequest(IndividualRequestType value) {
+        return new JAXBElement<IndividualRequestType>(_IndividualRequest_QNAME, IndividualRequestType.class, null, value);
     }
 
     /**
