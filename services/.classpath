@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/services-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dao"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

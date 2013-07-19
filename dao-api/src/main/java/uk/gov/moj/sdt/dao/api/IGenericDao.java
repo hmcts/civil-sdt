@@ -150,4 +150,14 @@ public interface IGenericDao
      * @see #persist(IDomainObject)
      */
     void persist (final Object domainObject) throws DataAccessException;
+
+    /**
+     * This method returns a sequence number associated with the sequence name.
+     * 
+     * @param sequenceName The name of the sequence
+     * @return the sequence number
+     * @throws DataAccessException on any I/O related error
+     */
+    long getNextSequenceValue (final String sequenceName) throws DataAccessException;
+
 }

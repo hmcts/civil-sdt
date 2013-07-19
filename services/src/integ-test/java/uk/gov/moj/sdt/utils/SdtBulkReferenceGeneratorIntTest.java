@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,27 +28,23 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.messaging;
 
+package uk.gov.moj.sdt.utils;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.text.SimpleDateFormat;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.TextMessage;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * IntegrationTest class for testing the MessageWriter implementation.
+ * Test class for SdtBulkReferenceGenerator.
  * 
  * @author Manoj Kulkarni
  * 
@@ -56,40 +52,60 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
-public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
+public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (MessageWriterIntTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger (SdtBulkReferenceGeneratorIntTest.class);
 
     /**
-     * Test method to test the sending of message.
-     * 
-     * @throws JMSException exception
-     * 
+     * Test method for the SDT bulk reference generation.
      */
     @Test
-    public void testQueueMessage () throws JMSException
+    public void testGetSDTBulkReference ()
     {
-        final MessageWriter messageWriter =
-                (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
+        final SdtBulkReferenceGenerator referenceGenerator =
+                (SdtBulkReferenceGenerator) this.applicationContext
+                        .getBean ("uk.gov.moj.sdt.utils.SdtBulkReferenceGenerator");
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
-        final String strMessage = "TestMessage" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        final String corelationId = messageWriter.queueMessage (strMessage);
-        LOG.debug ("Correlation ID is " + corelationId);
-
-        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
-
-        final String selectorString = "JMSCorrelationID='" + corelationId + "'";
-        final Message message = jmsTemplate.receiveSelected (messageWriter.getQueueName (), selectorString);
-        if (message instanceof TextMessage)
+        // Negative Test 1 - Supply blank application name
+        try
         {
-            final TextMessage txtmessage = (TextMessage) message;
-            LOG.debug ("Message Receieved -" + txtmessage.getText ());
-            assertTrue (txtmessage.getText ().equals (strMessage));
+            referenceGenerator.getSDTBulkReference (null);
+        }
+        catch (final IllegalArgumentException e)
+        {
+            LOG.debug (e.getMessage ());
+            assertTrue (true);
         }
 
+        // Negative Test 2 - Supply application name less than expected value of 4
+        try
+        {
+            referenceGenerator.getSDTBulkReference ("NCO");
+        }
+        catch (final IllegalArgumentException e)
+        {
+            LOG.debug (e.getMessage ());
+            assertTrue (true);
+        }
+
+        // Negative Test 3 - Supply application name more than expected value of 4
+        try
+        {
+            referenceGenerator.getSDTBulkReference ("MCOLS");
+        }
+        catch (final IllegalArgumentException e)
+        {
+            LOG.debug (e.getMessage ());
+            assertTrue (true);
+        }
+
+        final String bulkReferenceNumber = referenceGenerator.getSDTBulkReference ("MCOL");
+        LOG.debug ("Generated reference number is " + bulkReferenceNumber);
+        assertNotNull (bulkReferenceNumber);
+        assertEquals (29, bulkReferenceNumber.length ());
     }
+
 }

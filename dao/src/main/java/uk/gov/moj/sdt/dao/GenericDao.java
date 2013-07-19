@@ -31,10 +31,12 @@
 package uk.gov.moj.sdt.dao;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
@@ -388,5 +390,22 @@ public class GenericDao implements IGenericDao
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
         SdtMetricsMBean.getSdtMetrics ().addDatabaseWritesTime (endTime - startTime);
         SdtMetricsMBean.getSdtMetrics ().upDatabaseWritesCount ();
+    }
+
+    @Override
+    public long getNextSequenceValue (final String sequenceName) throws DataAccessException
+    {
+        LOG.debug ("Sequence generation for " + sequenceName);
+
+        if (sequenceName == null || sequenceName.trim ().isEmpty ())
+        {
+            throw new IllegalArgumentException ("Invalid sequence name");
+        }
+
+        final Session session = this.getSessionFactory ().getCurrentSession ();
+        final Query query = session.createSQLQuery ("SELECT " + sequenceName + ".nextval FROM DUAL");
+        final Object result = query.uniqueResult ();
+        return ((BigDecimal) result).longValue ();
+
     }
 }

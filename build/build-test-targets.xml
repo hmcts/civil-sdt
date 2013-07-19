@@ -31,6 +31,8 @@
 	<available filepath="." file="${integ.test.filters.dir}" type="dir" property="integ.test.filters.exists" />
 	<!-- Check if integ test webapp directory exists and set indicator property -->
 	<available filepath="." file="${integ.test.webapp.dir}" type="dir" property="integ.test.webapp.exists" />
+	<!-- Check if main resources directory exists and set indicator property -->
+	<available filepath="." file="${resources.dir}" type="dir" property="main.resources.exists" />
 
 	<!-- Define set of properties to be passed to junit to satisfy unresolved property values in test 
         code and code being tested (if not in app server) -->
@@ -330,6 +332,33 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<!-- Copy main 'resources' resources-->
+	<target name="-copy-main-resources-resources" if="main.resources.exists" depends="init-tests" description="Copy any main resources in the src directory">
+			<copy todir="${integ.test.classes.dir}" overwrite="true">
+				<fileset dir="${resources.dir}" casesensitive="false">
+					<include name="**/*.xml" />
+					<include name="**/*.properties" />
+				</fileset>	
+				<filterchain>
+					<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+				</filterchain>
+				<mapper type="glob" from="*" to="*" />
+			</copy>
+
+			<!-- Do not apply filtering to any binary files or else they will be corrupted -->
+			<copy todir="${integ.test.classes.dir}" overwrite="true">
+				<fileset dir="${resources.dir}" casesensitive="false">
+					<include name="**/*" />
+					<exclude name="**/*.xml" />
+					<exclude name="**/*.properties" />
+					<exclude name="**/*.template" />
+					<exclude name="**/*.dtd" />
+					<exclude name="**/*.xsd" />
+					<exclude name="**/.svn/**" />
+				</fileset>
+			</copy>
+	</target>
 
 	<!-- Copy integ test filters resources -->
 	<target name="-copy-integ-test-filters-resources" if="integ.test.filters.exists" depends="init-tests" description="Copy any resources in the filters directory">
@@ -377,7 +406,7 @@
 
 	<!-- Assemble integ test artefacts -->
 	<target name="dist-integ-tests" if="integ.test.src.exists" depends="compile-integ-tests, -copy-integ-test-src-resources, -copy-integ-test-resources-resources, 
-				-copy-integ-test-filters-resources, -copy-integ-test-webapp-resources" description="Generate the distribution" />
+		-copy-main-resources-resources, -copy-integ-test-filters-resources, -copy-integ-test-webapp-resources" description="Generate the distribution" />
 
 	<!-- Runs integ tests from the current test bundle. If this is not a integ test bundle then nothing is executed. -->
 	<target name="run-integration-tests" depends="dist-tests" description="Run integ tests associated with this module">
@@ -405,6 +434,9 @@
 				<pathelement location="${instr.target.dir}" />
 				<pathelement location="${integ.test.classes.dir}" />
 				<pathelement location="${classes.dir}" />
+				<fileset dir="${lib.test.dir}">
+				     <include name="**/*.jar"/>
+				</fileset>
 				<path refid="build.integ.test.classpath" />
 			</classpath>
 
