@@ -24,53 +24,95 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id:  $
+ * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.interceptors;
-
-
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.phase.Phase;
+package uk.gov.moj.sdt.utils;
 
 /**
- * Interceptor class which handles bulk submission message received from bulk customer.
+ * Class holding all thread specific context that needs to be passed around in SDT.
  * 
- * This interceptor is necessary because it needs to process the raw XML sent from the bulk customer before CXF
- * has turned it into JAXB objects, after which the non generic portions of the XML (those portions which are case
- * management system specific) will no longer be visible. This is because the XSD defined for SDT treats the case
- * management specific portions of the XML under an <any> tag. This non generic XML must be stored in the database as a
- * blob so that SDT does not need to know the details of its content. Two different portions of XML need to be stored in
- * the database:
- * 
- * 1. The payload of the entire bulk submission,
- * 2. The payload of each individual request.
- * 
- * Both of these portions are stored by the interceptor in ThreadLocal storage so that they can be retrieved later and
- * used to populate the domain objects with the raw XML before storing in the database via Hibernate.
- * 
- * @author Robin Compston
- * 
+ * @author Robin Compston.
  */
-public class BulkSubmissionInterceptor extends AbstractSdtInterceptor
+public final class SdtContext
 {
     /**
-     * Test interceptor to prove concept.
+     * Thread local holder available throughout thread.
      */
-    public BulkSubmissionInterceptor ()
+    private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext> ();
+
+    /**
+     * The raw inbound XML handled by CXF and stored for application use in thread local memory.
+     */
+    private String rawInXml;
+
+    /**
+     * The raw outbound XML handled by CXF and stored for application use in thread local memory.
+     */
+    private String rawOutXml;
+
+    /**
+     * Constructor for {@link ThreadContext}.
+     */
+    private SdtContext ()
     {
-        super (Phase.RECEIVE);
     }
 
-    @Override
-    public void handleMessage (final SoapMessage message) throws Fault
+    /**
+     * Getter for rawInXml.
+     * 
+     * @return raw inbound XML.
+     */
+    public String getRawInXml ()
     {
-        // Read contents of message, i.e. XML received from client.
-        final String xml = this.readInputMessage (message);
+        return rawInXml;
+    }
 
-        // TODO Place entire XML in ThreadLocal from where other processing can extract it. This assumes that parsing to
-        // extract the various siginificant portions of the message can be done later as and when needed.
+    /**
+     * Getter for rawOutXml.
+     * 
+     * @return raw outbound XML.
+     */
+    public String getRawOutXml ()
+    {
+        return rawOutXml;
+    }
+
+    /**
+     * Setter for rawInXml.
+     * 
+     * @param rawInXml return raw inbound XML.
+     */
+    public void setRawInXml (final String rawInXml)
+    {
+        this.rawInXml = rawInXml;
+    }
+
+    /**
+     * Setter for rawOutXml.
+     * 
+     * @param rawOutXml return raw outbound XML.
+     */
+    public void setRawOutXml (final String rawOutXml)
+    {
+        this.rawOutXml = rawOutXml;
+    }
+
+    /**
+     * Get the SdtContext for this thread.
+     * 
+     * @return the SdtContext for this thread.
+     */
+    public static SdtContext getContext ()
+    {
+        SdtContext sdtContext = THREAD_LOCAL.get ();
+        if (sdtContext == null)
+        {
+            sdtContext = new SdtContext ();
+            THREAD_LOCAL.set (sdtContext);
+        }
+
+        return sdtContext;
     }
 }
