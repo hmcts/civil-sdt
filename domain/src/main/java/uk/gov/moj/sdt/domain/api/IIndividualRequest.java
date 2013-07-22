@@ -31,10 +31,7 @@
 
 package uk.gov.moj.sdt.domain.api;
 
-import java.math.BigDecimal;
-
 import org.joda.time.LocalDateTime;
-
 
 /**
  * 
@@ -93,14 +90,14 @@ public interface IIndividualRequest extends IDomainObject
      * 
      * @return case number
      */
-    String getCaseNumber ();
+    // String getCaseNumber ();
 
     /**
      * Set case number.
      * 
      * @param caseNumber case number
      */
-    void setCaseNumber (final String caseNumber);
+    // void setCaseNumber (final String caseNumber);
 
     /**
      * Get request status.
@@ -121,14 +118,14 @@ public interface IIndividualRequest extends IDomainObject
      * 
      * @return issued date
      */
-    LocalDateTime getIssuedDate ();
+    // LocalDateTime getIssuedDate ();
 
     /**
      * Set issued date.
      * 
      * @param issuedDate issued date
      */
-    void setIssuedDate (final LocalDateTime issuedDate);
+    // void setIssuedDate (final LocalDateTime issuedDate);
 
     /**
      * Get SDT bulk reference.
@@ -219,70 +216,70 @@ public interface IIndividualRequest extends IDomainObject
      * 
      * @return service date
      */
-    LocalDateTime getServiceDate ();
+    // LocalDateTime getServiceDate ();
 
     /**
      * Set service date.
      * 
      * @param serviceDate service date
      */
-    void setServiceDate (final LocalDateTime serviceDate);
+    // void setServiceDate (final LocalDateTime serviceDate);
 
     /**
      * Get warrant number.
      * 
      * @return warrant number
      */
-    int getWarrantNumber ();
+    // int getWarrantNumber ();
 
     /**
      * Set warrant number.
      * 
      * @param warrantNumber warrant number
      */
-    void setWarrantNumber (final int warrantNumber);
+    // void setWarrantNumber (final int warrantNumber);
 
     /**
      * Get enforcing court code.
      * 
      * @return enforcing court code
      */
-    String getEnforcingCourtCode ();
+    // String getEnforcingCourtCode ();
 
     /**
      * Set enforcing court code.
      * 
      * @param enforcingCourtCode enforcing court code
      */
-    void setEnforcingCourtCode (final String enforcingCourtCode);
+    // void setEnforcingCourtCode (final String enforcingCourtCode);
 
     /**
      * Get enforcing court name.
      * 
      * @return enforcing court name
      */
-    String getEnforcingCourtName ();
+    // String getEnforcingCourtName ();
 
     /**
      * Set enforcing court name.
      * 
      * @param enforcingCourtName enforcing court name
      */
-    void setEnforcingCourtName (final String enforcingCourtName);
+    // void setEnforcingCourtName (final String enforcingCourtName);
 
     /**
      * Get fee.
      * 
      * @return fee
      */
-    BigDecimal getFee ();
+    // BigDecimal getFee ();
 
     /**
      * Set fee.
      * 
      * @param fee fee
      */
-    void setFee (final BigDecimal fee);
+    // void setFee (final BigDecimal fee);
 
     /**
      * Get the XML payload.
