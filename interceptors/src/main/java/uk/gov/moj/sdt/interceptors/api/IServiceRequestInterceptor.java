@@ -24,45 +24,21 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: IWsCreateHandler.java 16467 2013-06-07 17:09:50Z agarwals $
- * $LastChangedRevision: 16467 $
- * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
- * $LastChangedBy: agarwals $ */
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.interceptors.api;
 
-package uk.gov.moj.sdt.domain.api;
+import org.apache.cxf.binding.soap.SoapMessage;
+import org.apache.cxf.phase.PhaseInterceptor;
 
 /**
- * Marker interface for domain objects.
- * 
- * @author Robin Compston
+ * Interceptor interface for audit and logging.
+ * @author d195274
+ *
  */
-public interface IDomainObject
+public interface IServiceRequestInterceptor extends PhaseInterceptor<SoapMessage>
 {
-    /**
-     * Get primary key.
-     * 
-     * @return primary key
-     */
-    int getId ();
 
-    /**
-     * Set primary key.
-     * 
-     * @param id primary key
-     */
-    void setId (final int id);
-
-    /**
-     * Get Hibernate version id.
-     * 
-     * @return Hibernate version id
-     */
-    int getVersion ();
-
-    /**
-     * Get the business interface of this object.
-     * 
-     * @return business interface of this domain object.
-     */
-    Class<?> getBusinessInterfaceType ();
 }
