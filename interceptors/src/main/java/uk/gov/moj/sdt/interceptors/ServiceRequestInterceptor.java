@@ -28,7 +28,7 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.interceptors.in;
+package uk.gov.moj.sdt.interceptors;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
-import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.interceptors.api.IServiceRequestInterceptor;
 
 
