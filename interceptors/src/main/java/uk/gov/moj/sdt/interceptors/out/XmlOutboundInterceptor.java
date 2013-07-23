@@ -28,7 +28,7 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.interceptors.in;
+package uk.gov.moj.sdt.interceptors.out;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
@@ -38,36 +38,37 @@ import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
- * Interceptor class which handles bulk submission message received by SDT.
+ * Interceptor class which handles bulk submission message sent by SDT.
  * 
- * This interceptor is necessary in order to process the raw XML sent to SDT before CXF has turned it into JAXB objects,
- * after which any non generic portions of the XML (those portions which are case management system specific) will no
- * longer be visible. This is because the XSD defined for SDT treats the case management specific portions of the XML as
- * part of an <any> tag. This non generic XML must be stored in the database as a blob and the details of its content
- * should be hidden from SDT. SDT stores the entire XML in ThreadLocal storage so that it can be retrieved later and
- * various portions of it used to populate the domain objects with the raw XML before storing them in the database via
- * Hibernate.
+ * This interceptor is necessary in order to process the raw XML sent from SDT after CXF has produced it from JAXB
+ * objects. Non generic XML content (which should be hidden from SDT) must NOT be represented by JAXB classes known to
+ * SDT. Instead, this non generic XML is inserted as raw XML into the XML already produced by CXF and at the relevant
+ * insertion point. This is because the XML sent by SDT should have non generic content (this is true both of the System
+ * Gateway and the specific Case Managements Systems). This non generic XML is be stored in the database as a blob and
+ * read via Hibernate and loaded into ThreadLocal memory from which this interceptor takes it in order to populate the
+ * outgoing XML.
  * 
  * @author Robin Compston
  * 
  */
-public class XmlInboundInterceptor extends AbstractSdtInterceptor
+public class XmlOutboundInterceptor extends AbstractSdtInterceptor
 {
     /**
      * Test interceptor to prove concept.
      */
-    public XmlInboundInterceptor ()
+    public XmlOutboundInterceptor ()
     {
-        super (Phase.RECEIVE);
+        super (Phase.SEND);
     }
 
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
     {
-        // Read contents of message, i.e. XML received from client.
-        final String xml = this.readInputMessage (message);
+        // Read the raw XML from ThreadLocal which has been placed there by earlier processing (and ultimately read from
+        // the database).
+        final String xml = SdtContext.getContext ().getRawOutXml ();
 
-        // Place entire XML in ThreadLocal from where other processing can extract it.
-        SdtContext.getContext ().setRawInXml (xml);
+        // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
+        this.enrichOutputMessage (message, xml, "requests");
     }
 }

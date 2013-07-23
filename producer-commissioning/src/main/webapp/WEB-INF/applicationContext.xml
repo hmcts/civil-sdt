@@ -17,7 +17,7 @@
 	<!-- Configures CXF component. Enables logging of request and response payload. -->
 	<cxf:bus>
 		<cxf:inInterceptors>
-			<ref bean="uk.gov.moj.sdt.interceptors.SdtInboundInterceptor" />
+			<ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
 		</cxf:inInterceptors>
 		<cxf:features>
 			<cxf:logging />
