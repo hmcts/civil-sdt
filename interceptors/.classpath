@@ -4,11 +4,11 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/integ-test/java"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dao"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/domain"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/services"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
