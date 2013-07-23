@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema;
+package uk.gov.moj.sdt.ws._2013.mcol.queryschema;
 
 import java.util.Calendar;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -23,7 +23,7 @@ import org.w3._2001.xmlschema.Adapter1;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="filedDate" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="responseType" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema}responseType"/>
+ *         &lt;element name="responseType" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}responseType"/>
  *       &lt;/sequence>
  *       &lt;attribute name="defendantId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}defendantIdType" />
  *     &lt;/restriction>

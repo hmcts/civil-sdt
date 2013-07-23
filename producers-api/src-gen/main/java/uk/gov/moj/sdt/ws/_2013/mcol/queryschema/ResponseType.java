@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema;
+package uk.gov.moj.sdt.ws._2013.mcol.queryschema;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;

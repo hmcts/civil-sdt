@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.mcol.submitqueryrequestschema;
+package uk.gov.moj.sdt.ws._2013.mcol.queryschema;
 
 import java.util.Calendar;
 import javax.xml.bind.annotation.XmlAccessType;

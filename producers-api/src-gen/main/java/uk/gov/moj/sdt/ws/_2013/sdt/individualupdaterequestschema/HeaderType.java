@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.mcol.responseschema;
+package uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

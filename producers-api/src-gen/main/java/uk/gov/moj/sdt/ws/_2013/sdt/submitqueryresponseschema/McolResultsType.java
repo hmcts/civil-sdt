@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import uk.gov.moj.sdt.ws._2013.mcol.queryschema.McolDefenceDetailType;
 
 
 /**
@@ -18,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice>
- *         &lt;element name="mcolDefenceDetail" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema}mcolDefenceDetailType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="mcolDefenceDetail" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}mcolDefenceDetailType" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/choice>
  *     &lt;/restriction>
  *   &lt;/complexContent>

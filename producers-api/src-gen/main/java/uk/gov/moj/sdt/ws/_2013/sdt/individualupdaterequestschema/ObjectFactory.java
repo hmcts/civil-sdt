@@ -42,6 +42,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link HeaderType }
+     * 
+     */
+    public HeaderType createHeaderType() {
+        return new HeaderType();
+    }
+
+    /**
+     * Create an instance of {@link UpdateDetailType }
+     * 
+     */
+    public UpdateDetailType createUpdateDetailType() {
+        return new UpdateDetailType();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link UpdateRequestType }{@code >}}
      * 
      */

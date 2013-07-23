@@ -5,21 +5,22 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import uk.gov.moj.sdt.ws._2013.mcol.responsedetailschema.ResponseDetailType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 
 
 /**
- * <p>Java class for createResponseType complex type.
+ * <p>Java class for individualResponseType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="createResponseType">
+ * &lt;complexType name="individualResponseType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="header" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema}headerType"/>
- *         &lt;element name="body" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema}bodyType"/>
+ *         &lt;element name="mcolResponseDetail" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema}responseDetailType"/>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}createStatusType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -30,17 +31,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "createResponseType", propOrder = {
+@XmlType(name = "individualResponseType", propOrder = {
     "header",
-    "body",
+    "mcolResponseDetail",
     "status"
 })
-public class CreateResponseType {
+public class IndividualResponseType {
 
     @XmlElement(required = true)
     protected HeaderType header;
     @XmlElement(required = true)
-    protected BodyType body;
+    protected ResponseDetailType mcolResponseDetail;
     @XmlElement(required = true)
     protected CreateStatusType status;
 
@@ -69,27 +70,27 @@ public class CreateResponseType {
     }
 
     /**
-     * Gets the value of the body property.
+     * Gets the value of the mcolResponseDetail property.
      * 
      * @return
      *     possible object is
-     *     {@link BodyType }
+     *     {@link ResponseDetailType }
      *     
      */
-    public BodyType getBody() {
-        return body;
+    public ResponseDetailType getMcolResponseDetail() {
+        return mcolResponseDetail;
     }
 
     /**
-     * Sets the value of the body property.
+     * Sets the value of the mcolResponseDetail property.
      * 
      * @param value
      *     allowed object is
-     *     {@link BodyType }
+     *     {@link ResponseDetailType }
      *     
      */
-    public void setBody(BodyType value) {
-        this.body = value;
+    public void setMcolResponseDetail(ResponseDetailType value) {
+        this.mcolResponseDetail = value;
     }
 
     /**

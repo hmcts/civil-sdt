@@ -17,6 +17,8 @@
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="../xsd/RootXSDs/Warrant.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" schemaLocation="../xsd/RootXSDs/Judgment.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" schemaLocation="../xsd/RootXSDs/ClaimStatusUpdate.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" schemaLocation="../xsd/RootXSDs/McolQuery.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" schemaLocation="../xsd/RootXSDs/McolResponseDetail.xsd"/>
 
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" schemaLocation="../xsd/IndvRequestResponse/IndividualSubmitRequest.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" schemaLocation="../xsd/IndvRequestResponse/IndividualSubmitResponse.xsd"/>
@@ -27,23 +29,11 @@
         </xs:schema>
 	</types>
 
-	<message name="createClaimRequest">
-		<part name="createClaimRequest" element="req:createClaimRequest" />
+	<message name="individualRequest">
+		<part name="individualRequest" element="req:individualRequest" />
 	</message>
-	<message name="createJudgmentRequest">
-		<part name="createJudgmentRequest" element="req:createJudgmentRequest" />
-	</message>
-	<message name="createJudgmentWarrantRequest">
-		<part name="createJudgmentWarrantRequest" element="req:createJudgmentWarrantRequest" />
-	</message>
-	<message name="createWarrantRequest">
-		<part name="createWarrantRequest" element="req:createWarrantRequest" />
-	</message>
-	<message name="updateClaimRequest">
-		<part name="updateClaimRequest" element="req:updateClaimRequest" />
-	</message>
-	<message name="createResponse">
-		<part name="createResponse" element="resp:createResponse" />
+	<message name="individualResponse">
+		<part name="individualResponse" element="resp:individualResponse" />
 	</message>
 	<message name="submitQueryRequest">
 		<part name="parameters" element="qreq:submitQueryRequest" />
@@ -53,25 +43,9 @@
 	</message>
 
 	<portType name="IMcolInternalEndpointPortType">
-		<operation name="createClaim">
-			<input message="tns:createClaimRequest" />
-			<output message="tns:createResponse" />
-		</operation>
-		<operation name="createJudgment">
-			<input message="tns:createJudgmentRequest" />
-			<output message="tns:createResponse" />
-		</operation>
-		<operation name="createJudgmentWarrant">
-			<input message="tns:createJudgmentWarrantRequest" />
-			<output message="tns:createResponse" />
-		</operation>
-		<operation name="createWarrant">
-			<input message="tns:createWarrantRequest" />
-			<output message="tns:createResponse" />
-		</operation>
-		<operation name="updateClaim">
-			<input message="tns:updateClaimRequest" />
-			<output message="tns:createResponse" />
+		<operation name="submitIndividual">
+			<input message="tns:individualRequest" />
+			<output message="tns:individualResponse" />
 		</operation>
 		<operation name="submitQuery">
 			<input message="tns:submitQueryRequest" />
@@ -82,43 +56,7 @@
 	<binding name="McolInternalEndpointHttpPortBinding" type="tns:IMcolInternalEndpointPortType">
 		<soap:binding style="document"
 			transport="http://schemas.xmlsoap.org/soap/http" />
-		<operation name="createClaim">
-			<soap:operation soapAction="" />
-			<input>
-				<soap:body use="literal" />
-			</input>
-			<output>
-				<soap:body use="literal" />
-			</output>
-		</operation>
-		<operation name="createJudgment">
-			<soap:operation soapAction="" />
-			<input>
-				<soap:body use="literal" />
-			</input>
-			<output>
-				<soap:body use="literal" />
-			</output>
-		</operation>
-		<operation name="createJudgmentWarrant">
-			<soap:operation soapAction="" />
-			<input>
-				<soap:body use="literal" />
-			</input>
-			<output>
-				<soap:body use="literal" />
-			</output>
-		</operation>
-		<operation name="createWarrant">
-			<soap:operation soapAction="" />
-			<input>
-				<soap:body use="literal" />
-			</input>
-			<output>
-				<soap:body use="literal" />
-			</output>
-		</operation>
-		<operation name="updateClaim">
+		<operation name="submitIndividual">
 			<soap:operation soapAction="" />
 			<input>
 				<soap:body use="literal" />

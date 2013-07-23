@@ -28,37 +28,8 @@
     
     <xs:complexType name="mcolResultsType">
         <xs:choice>
-            <xs:element name="mcolDefenceDetail" type="tns:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:any/>
         </xs:choice>
     </xs:complexType>
-    
-	<xs:complexType name="mcolDefenceDetailType">
-		<xs:sequence>
-			<xs:element name="claimNumber" type="base:claimNumberType" />
-			<xs:element name="defendants">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="defendantType">
-		<xs:sequence>
-			<xs:element name="filedDate" type="xs:dateTime" />
-			<xs:element name="responseType" type="tns:responseType" />
-		</xs:sequence>
-        <xs:attribute name="defendantId" type="base:defendantIdType" />
-	</xs:complexType>
-
-	<xs:simpleType name="responseType">
-		<xs:restriction base="xs:string">
-            <xs:enumeration value="DE"/>
-            <xs:enumeration value="DC"/>
-            <xs:enumeration value="PA"/>
-		</xs:restriction>
-	</xs:simpleType>
     
 </xs:schema>

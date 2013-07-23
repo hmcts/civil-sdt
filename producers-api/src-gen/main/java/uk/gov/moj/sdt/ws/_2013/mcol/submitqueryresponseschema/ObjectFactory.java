@@ -34,14 +34,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link McolDefenceDetailType }
-     * 
-     */
-    public McolDefenceDetailType createMcolDefenceDetailType() {
-        return new McolDefenceDetailType();
-    }
-
-    /**
      * Create an instance of {@link SubmitQueryResponseType }
      * 
      */
@@ -50,27 +42,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link DefendantType }
-     * 
-     */
-    public DefendantType createDefendantType() {
-        return new DefendantType();
-    }
-
-    /**
      * Create an instance of {@link McolResultsType }
      * 
      */
     public McolResultsType createMcolResultsType() {
         return new McolResultsType();
-    }
-
-    /**
-     * Create an instance of {@link McolDefenceDetailType.Defendants }
-     * 
-     */
-    public McolDefenceDetailType.Defendants createMcolDefenceDetailTypeDefendants() {
-        return new McolDefenceDetailType.Defendants();
     }
 
     /**

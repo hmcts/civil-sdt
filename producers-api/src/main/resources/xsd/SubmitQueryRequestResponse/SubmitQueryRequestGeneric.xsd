@@ -30,10 +30,18 @@
         </xs:choice>
 	</xs:complexType>
     
+    <xs:complexType name="criteria" abstract="true">
+        <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
+    </xs:complexType>
+    
     <xs:complexType name="mcolCriteriaType">
-        <xs:choice>
-            <xs:any/>
-        </xs:choice>
+        <xs:complexContent>
+            <xs:extension base="tns:criteria">
+                <xs:choice>
+                    <xs:any/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
 </xs:schema>

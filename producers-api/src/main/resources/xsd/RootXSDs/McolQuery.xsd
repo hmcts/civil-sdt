@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+	elementFormDefault="qualified"
+    version="1.0">
+    
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd" />
+    
+    <xs:complexType name="mcolDefenceCriteriaType">
+        <xs:sequence>
+            <xs:element name="fromDate" type="xs:date" />
+            <xs:element name="toDate" type="xs:date" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="mcolDefenceCriteria" type="tns:mcolDefenceCriteriaType" />
+
+    <xs:complexType name="mcolDefenceDetailType">
+        <xs:sequence>
+            <xs:element name="claimNumber" type="base:claimNumberType" />
+            <xs:element name="defendants">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="defendantType">
+        <xs:sequence>
+            <xs:element name="filedDate" type="xs:dateTime" />
+            <xs:element name="responseType" type="tns:responseType" />
+        </xs:sequence>
+        <xs:attribute name="defendantId" type="base:defendantIdType" />
+    </xs:complexType>
+
+    <xs:simpleType name="responseType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DE"/>
+            <xs:enumeration value="DC"/>
+            <xs:enumeration value="PA"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="mcolDefenceDetail" type="tns:mcolDefenceDetailType"/>
+
+</xs:schema>

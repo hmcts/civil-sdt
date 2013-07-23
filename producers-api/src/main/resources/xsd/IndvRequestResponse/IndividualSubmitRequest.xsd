@@ -20,44 +20,10 @@
         <xs:sequence>
             <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
             <xs:element name="mcolCustomerId" type="base:mcolCustomerIdType"/>
+            <xs:element name="requestType" type="base:requestTypeType"/>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="createClaimRequestType">
-        <xs:sequence>
-            <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="mcolClaim" type="clm:claimType"/>
-        </xs:sequence>
-    </xs:complexType>
-    
-    <xs:complexType name="createJudgmentRequestType">
-        <xs:sequence>
-            <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="mcolJudgment" type="jud:mcolJudgmentType"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="createJudgmentWarrantRequestType">
-        <xs:sequence>
-            <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="updateClaimRequestType">
-        <xs:sequence>
-            <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="mcolClaimStatusUpdate" type="clmupd:claimStatusUpdateType"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="createWarrantRequestType">
-        <xs:sequence>
-            <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="mcolWarrant" type="wnt:warrantType"/>
-        </xs:sequence>
-    </xs:complexType>
-
     <xs:complexType name="individualRequestType">
         <xs:sequence>
             <xs:element name="header" type="tns:headerType"/>
@@ -71,11 +37,6 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="createClaimRequest" type="tns:createClaimRequestType"/>
-    <xs:element name="createJudgmentRequest" type="tns:createJudgmentRequestType"/>
-    <xs:element name="createJudgmentWarrantRequest" type="tns:createJudgmentWarrantRequestType"/>
-    <xs:element name="createWarrantRequest" type="tns:createWarrantRequestType"/>
-    <xs:element name="updateClaimRequest" type="tns:updateClaimRequestType"/>
     <xs:element name="individualRequest" type="tns:individualRequestType"/>
 
 </xs:schema>

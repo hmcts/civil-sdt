@@ -24,7 +24,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _CreateResponse_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema", "createResponse");
+    private final static QName _IndividualResponse_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema", "individualResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: uk.gov.moj.sdt.ws._2013.mcol.responseschema
@@ -34,19 +34,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CreateResponseType }
+     * Create an instance of {@link IndividualResponseType }
      * 
      */
-    public CreateResponseType createCreateResponseType() {
-        return new CreateResponseType();
-    }
-
-    /**
-     * Create an instance of {@link BodyType }
-     * 
-     */
-    public BodyType createBodyType() {
-        return new BodyType();
+    public IndividualResponseType createIndividualResponseType() {
+        return new IndividualResponseType();
     }
 
     /**
@@ -58,12 +50,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link CreateResponseType }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link IndividualResponseType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema", name = "createResponse")
-    public JAXBElement<CreateResponseType> createCreateResponse(CreateResponseType value) {
-        return new JAXBElement<CreateResponseType>(_CreateResponse_QNAME, CreateResponseType.class, null, value);
+    @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema", name = "individualResponse")
+    public JAXBElement<IndividualResponseType> createIndividualResponse(IndividualResponseType value) {
+        return new JAXBElement<IndividualResponseType>(_IndividualResponse_QNAME, IndividualResponseType.class, null, value);
     }
 
 }

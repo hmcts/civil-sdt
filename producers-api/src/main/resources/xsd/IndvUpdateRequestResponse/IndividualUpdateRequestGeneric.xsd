@@ -26,7 +26,7 @@
 
     <xs:complexType name="updateDetailType">
         <xs:choice>
-             <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
+             <xs:any/>
         </xs:choice>
     </xs:complexType>
            

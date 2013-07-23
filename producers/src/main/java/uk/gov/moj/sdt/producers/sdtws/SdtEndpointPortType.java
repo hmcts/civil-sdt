@@ -96,7 +96,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         final ResponsesType responses = new ResponsesType ();
         final McolResponsesType mcolResponses = new McolResponsesType ();
         final McolResponseType r1 = new McolResponseType ();
-        r1.setClaimNumber ("claim123");
         final IndividualStatusType status = new IndividualStatusType ();
         status.setCode (IndividualStatusCodeType.ACCEPTED);
         r1.setStatus (status);

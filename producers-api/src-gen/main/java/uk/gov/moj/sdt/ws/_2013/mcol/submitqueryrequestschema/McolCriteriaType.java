@@ -4,6 +4,7 @@ package uk.gov.moj.sdt.ws._2013.mcol.submitqueryrequestschema;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import uk.gov.moj.sdt.ws._2013.mcol.queryschema.McolDefenceCriteriaType;
 
 
 /**
@@ -16,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice>
- *         &lt;element name="mcolDefenceCriteria" type="{http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryRequestSchema}mcolDefenceCriteriaType"/>
+ *         &lt;element name="mcolDefenceCriteria" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}mcolDefenceCriteriaType"/>
  *       &lt;/choice>
  *     &lt;/restriction>
  *   &lt;/complexContent>

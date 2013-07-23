@@ -3,53 +3,27 @@
     xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
     targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
     xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+    xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" 
     elementFormDefault="qualified"
     version="1.0">
 	
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" schemaLocation="../RootXSDs/McolResponseDetail.xsd"/>
 
     <xs:complexType name="headerType">
         <xs:sequence>
             <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
-            <xs:element name="caseId" minOccurs="0">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="1" />
-                        <xs:maxLength value="20" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="createResponseType">
+    <xs:complexType name="individualResponseType">
         <xs:sequence>
             <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="body" type="tns:bodyType"/>
+            <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
             <xs:element name="status" type="base:createStatusType"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="bodyType">
-        <xs:sequence>
-            <xs:element name="claimNumber" type="base:claimNumberType"  minOccurs="0"/>
-            <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
-            <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
-            <xs:element name="warrantNumber" type="base:warrantNumberType"  minOccurs="0"/>
-            <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
-            <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
-            <xs:element name="fee" type="xs:unsignedLong"  minOccurs="0"/>
-            <xs:element name="additionalStatus" minOccurs="0">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="1" />
-                        <xs:maxLength value="255" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:element name="createResponse" type="tns:createResponseType"/>
+    <xs:element name="individualResponse" type="tns:individualResponseType"/>
     
  </xs:schema>

@@ -3,10 +3,12 @@
 	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" 
     targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema"
     xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+    xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" 
 	elementFormDefault="qualified"
     version="1.0">
 	
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" schemaLocation="../RootXSDs/McolQuery.xsd"/>
 	
     <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType" />
     
@@ -30,17 +32,18 @@
         </xs:choice>
 	</xs:complexType>
     
+    <xs:complexType name="criteria" abstract="true">
+        <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
+    </xs:complexType>
+    
     <xs:complexType name="mcolCriteriaType">
-        <xs:choice>
-            <xs:element name="mcolDefenceCriteria" type="tns:mcolDefenceCriteriaType"/>
-        </xs:choice>
+        <xs:complexContent>
+            <xs:extension base="tns:criteria">
+                <xs:choice>
+                    <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
-	<xs:complexType name="mcolDefenceCriteriaType">
-		<xs:sequence>
-			<xs:element name="fromDate" type="xs:date" />
-			<xs:element name="toDate" type="xs:date" />
-		</xs:sequence>
-	</xs:complexType>
-	
 </xs:schema>

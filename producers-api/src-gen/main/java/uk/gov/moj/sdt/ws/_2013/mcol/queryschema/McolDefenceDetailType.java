@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema;
+package uk.gov.moj.sdt.ws._2013.mcol.queryschema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="defendant" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema}defendantType" maxOccurs="2"/>
+ *                   &lt;element name="defendant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}defendantType" maxOccurs="2"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -110,7 +110,7 @@ public class McolDefenceDetailType {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="defendant" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema}defendantType" maxOccurs="2"/>
+     *         &lt;element name="defendant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}defendantType" maxOccurs="2"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>

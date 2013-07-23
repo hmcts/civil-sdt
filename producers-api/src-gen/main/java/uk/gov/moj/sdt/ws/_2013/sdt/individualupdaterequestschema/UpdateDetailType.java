@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema;
+package uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,18 +8,18 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for mcolCriteriaType complex type.
+ * <p>Java class for updateDetailType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="mcolCriteriaType">
+ * &lt;complexType name="updateDetailType">
  *   &lt;complexContent>
- *     &lt;extension base="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema}criteria">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice>
  *         &lt;any/>
  *       &lt;/choice>
- *     &lt;/extension>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -27,12 +27,10 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "mcolCriteriaType", propOrder = {
+@XmlType(name = "updateDetailType", propOrder = {
     "any"
 })
-public class McolCriteriaType
-    extends Criteria
-{
+public class UpdateDetailType {
 
     @XmlAnyElement(lax = true)
     protected Object any;

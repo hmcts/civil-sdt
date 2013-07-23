@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.mcol.responseschema;
+package uk.gov.moj.sdt.ws._2013.mcol.responsedetailschema;
 
 import java.util.Calendar;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,12 +13,12 @@ import org.w3._2001.xmlschema.Adapter3;
 
 
 /**
- * <p>Java class for bodyType complex type.
+ * <p>Java class for responseDetailType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="bodyType">
+ * &lt;complexType name="responseDetailType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -29,7 +29,7 @@ import org.w3._2001.xmlschema.Adapter3;
  *         &lt;element name="enforcingCourtCode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtCodeType" minOccurs="0"/>
  *         &lt;element name="enforcingCourtName" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}courtNameType" minOccurs="0"/>
  *         &lt;element name="fee" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
- *         &lt;element name="additionalStatus" minOccurs="0">
+ *         &lt;element name="judgmentWarrantStatus" minOccurs="0">
  *           &lt;simpleType>
  *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *               &lt;minLength value="1"/>
@@ -46,7 +46,7 @@ import org.w3._2001.xmlschema.Adapter3;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "bodyType", propOrder = {
+@XmlType(name = "responseDetailType", propOrder = {
     "claimNumber",
     "issueDate",
     "serviceDate",
@@ -54,9 +54,9 @@ import org.w3._2001.xmlschema.Adapter3;
     "enforcingCourtCode",
     "enforcingCourtName",
     "fee",
-    "additionalStatus"
+    "judgmentWarrantStatus"
 })
-public class BodyType {
+public class ResponseDetailType {
 
     protected String claimNumber;
     @XmlElement(type = String.class)
@@ -74,7 +74,7 @@ public class BodyType {
     @XmlJavaTypeAdapter(Adapter3 .class)
     @XmlSchemaType(name = "unsignedLong")
     protected Long fee;
-    protected String additionalStatus;
+    protected String judgmentWarrantStatus;
 
     /**
      * Gets the value of the claimNumber property.
@@ -245,27 +245,27 @@ public class BodyType {
     }
 
     /**
-     * Gets the value of the additionalStatus property.
+     * Gets the value of the judgmentWarrantStatus property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getAdditionalStatus() {
-        return additionalStatus;
+    public String getJudgmentWarrantStatus() {
+        return judgmentWarrantStatus;
     }
 
     /**
-     * Sets the value of the additionalStatus property.
+     * Sets the value of the judgmentWarrantStatus property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setAdditionalStatus(String value) {
-        this.additionalStatus = value;
+    public void setJudgmentWarrantStatus(String value) {
+        this.judgmentWarrantStatus = value;
     }
 
 }

@@ -11,7 +11,7 @@
 	<types>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../xsd/RootXSDs/Base.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" schemaLocation="../xsd/IndvUpdateRequestResponse/IndividualUpdateRequest.xsd"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" schemaLocation="../xsd/IndvUpdateRequestResponse/IndividualUpdateRequestGeneric.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateResponseSchema" schemaLocation="../xsd/IndvUpdateRequestResponse/IndividualUpdateResponse.xsd"/>
         </xs:schema>
 	</types>

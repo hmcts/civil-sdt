@@ -158,6 +158,12 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+    <xs:simpleType name="criteriaTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="mcolDefenceCriteria" />
+        </xs:restriction>
+    </xs:simpleType>
+
 	<xs:simpleType name="statusCodeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="OK" />

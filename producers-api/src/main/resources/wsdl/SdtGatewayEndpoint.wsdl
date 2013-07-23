@@ -171,6 +171,12 @@
                 </xs:restriction>
             </xs:simpleType>
         
+            <xs:simpleType name="criteriaTypeType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="mcolDefenceCriteria" />
+                </xs:restriction>
+            </xs:simpleType>
+        
             <xs:simpleType name="statusCodeType">
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="OK" />
@@ -270,7 +276,7 @@
             </xs:complexType>
         
         </xs:schema>
-
+        
 		<!-- Claim.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
             targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema"
@@ -601,6 +607,58 @@
         
         </xs:schema>
 
+        <!-- McolQuery.xsd -->
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            elementFormDefault="qualified"
+            version="1.0">
+            
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            
+            <xs:complexType name="mcolDefenceCriteriaType">
+                <xs:sequence>
+                    <xs:element name="fromDate" type="xs:date" />
+                    <xs:element name="toDate" type="xs:date" />
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:element name="mcolDefenceCriteria" type="tns:mcolDefenceCriteriaType" />
+        
+            <xs:complexType name="mcolDefenceDetailType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:claimNumberType" />
+                    <xs:element name="defendants">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+        
+            <xs:complexType name="defendantType">
+                <xs:sequence>
+                    <xs:element name="filedDate" type="xs:dateTime" />
+                    <xs:element name="responseType" type="tns:responseType" />
+                </xs:sequence>
+                <xs:attribute name="defendantId" type="base:defendantIdType" />
+            </xs:complexType>
+        
+            <xs:simpleType name="responseType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="DE"/>
+                    <xs:enumeration value="DC"/>
+                    <xs:enumeration value="PA"/>
+                </xs:restriction>
+            </xs:simpleType>
+        
+            <xs:element name="mcolDefenceDetail" type="tns:mcolDefenceDetailType"/>
+        
+        </xs:schema>
+        
 		<!-- BulkSubmitRequest.xsd -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
@@ -725,10 +783,12 @@
             xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" 
             targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" 
             xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" 
             elementFormDefault="qualified"
             version="1.0">
             
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema"/>
             
             <xs:complexType name="bulkRequestStatusType">
                 <xs:sequence>
@@ -762,15 +822,7 @@
                 <xs:complexContent>
                     <xs:extension base="tns:responseType">
                         <xs:sequence>
-                            <xs:element name="claimNumber" type="base:claimNumberType"  minOccurs="0"/>
-                            <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
-                            <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
-                            <xs:element name="warrantNumber" type="base:warrantNumberType"  minOccurs="0"/>
-                            <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
-                            <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
-                            <xs:element name="fee" type="xs:unsignedLong"  minOccurs="0"/>
-                            <!-- TODO Confirm element name/format -->
-                            <xs:element name="targetApplicationStatus" type="xs:string" minOccurs="0" />
+                            <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
                             <xs:element name="status" type="base:individualStatusType"/>
                         </xs:sequence>
                     </xs:extension>
@@ -787,16 +839,18 @@
             <xs:element name="bulkFeedbackResponse" type="tns:bulkFeedbackResponseType"/>
         
         </xs:schema>
-
+        
         <!-- SubmitQueryRequest.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" 
             targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema"
             xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" 
             elementFormDefault="qualified"
             version="1.0">
             
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"/>
             
             <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType" />
             
@@ -820,30 +874,32 @@
                 </xs:choice>
             </xs:complexType>
             
-            <xs:complexType name="mcolCriteriaType">
-                <xs:choice>
-                    <xs:element name="mcolDefenceCriteria" type="tns:mcolDefenceCriteriaType"/>
-                </xs:choice>
-            </xs:complexType>
-        
-            <xs:complexType name="mcolDefenceCriteriaType">
-                <xs:sequence>
-                    <xs:element name="fromDate" type="xs:date" />
-                    <xs:element name="toDate" type="xs:date" />
-                </xs:sequence>
+            <xs:complexType name="criteria" abstract="true">
+                <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
             </xs:complexType>
             
-        </xs:schema>
+            <xs:complexType name="mcolCriteriaType">
+                <xs:complexContent>
+                    <xs:extension base="tns:criteria">
+                        <xs:choice>
+                            <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
+                        </xs:choice>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
         
+        </xs:schema>        
         <!-- SubmitQueryResponse.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" 
             targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" 
             elementFormDefault="qualified"
             version="1.0">
             
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"/>
             
             <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
         
@@ -865,41 +921,11 @@
             
             <xs:complexType name="mcolResultsType">
                 <xs:choice>
-                    <xs:element name="mcolDefenceDetail" type="tns:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:choice>
             </xs:complexType>
             
-            <xs:complexType name="mcolDefenceDetailType">
-                <xs:sequence>
-                    <xs:element name="claimNumber" type="base:claimNumberType" />
-                    <xs:element name="defendants">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:complexType>
-        
-            <xs:complexType name="defendantType">
-                <xs:sequence>
-                    <xs:element name="filedDate" type="xs:dateTime" />
-                    <xs:element name="responseType" type="tns:responseType" />
-                </xs:sequence>
-                <xs:attribute name="defendantId" type="base:defendantIdType" />
-            </xs:complexType>
-        
-            <xs:simpleType name="responseType">
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="DE"/>
-                    <xs:enumeration value="DC"/>
-                    <xs:enumeration value="PA"/>
-                </xs:restriction>
-            </xs:simpleType>
-            
         </xs:schema>
-
 	</types>
 
 	<message name="submitBulkRequest">
