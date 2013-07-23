@@ -24,36 +24,36 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
+ * $Id: BulkFeedbackRequestXsdTest.java 16385 2013-05-22 09:56:52Z agarwals $
+ * $LastChangedRevision: 16385 $
+ * $LastChangedDate: 2013-05-22 10:56:52 +0100 (Wed, 22 May 2013) $
+ * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validation;
 
 import uk.gov.moj.sdt.utils.SdtXmlTestBase;
 
 /**
- * Test case for IndividualUpdateRequestXsdTest.
+ * Test case for Submit Query Request Generic Xsd.
  * 
  * @author Simon Holmes
  * 
  */
-public class DefenceFeedbackResponseXsdTest extends SdtXmlTestBase
+public class SubmitQueryResponseMCOLXsdTest extends SdtXmlTestBase
 {
     /**
      * The name of the xsd.
      */
-    private static final String XSD_NAME = "DefenceFeedbackResponse";
+    private static final String XSD_NAME = "SubmitQueryResponseMCOL";
 
     /**
      * The name of the folder where XSD is stored.
      */
-    private static final String XSD_DIR = "DefenceRequestResponse/";
+    private static final String XSD_DIR = "SubmitQueryRequestResponse/";
 
     /**
      * The name of the folder where all valid/invalid XML is stored.
      */
-    private static final String XML_DIR = "DefenceRequestResponse/";
+    private static final String XML_DIR = "SubmitQueryRequestResponse/";
 
     /**
      * The path of the xsd file.
@@ -61,11 +61,11 @@ public class DefenceFeedbackResponseXsdTest extends SdtXmlTestBase
     private static final String XSD_PATH = XSD_DIR + XSD_NAME + ".xsd";
 
     /**
-     * Constructs a new {@link DefenceFeedbackResponseXsdTest}.
+     * Constructs a new {@link BulkFeedbackRequestXsdTest}.
      * 
      * @param testName Name of this test.
      */
-    public DefenceFeedbackResponseXsdTest (final String testName)
+    public SubmitQueryResponseMCOLXsdTest (final String testName)
     {
         super (testName);
     }

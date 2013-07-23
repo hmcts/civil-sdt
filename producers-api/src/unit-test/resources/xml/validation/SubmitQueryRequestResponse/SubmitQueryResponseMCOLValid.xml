@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:submitQueryResponse xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryResponseSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryResponseSchema ../../../../../main/resources/xsd/SubmitQueryRequestResponse/SubmitQueryResponseMCOL.xsd ">
+  <tns:mcolCustomerId>123456789112</tns:mcolCustomerId>
+  <tns:resultCount>0</tns:resultCount>
+  <tns:mcolResults>
+    <tns:mcolDefenceDetail>
+      <tns:claimNumber>13548968</tns:claimNumber>
+      <tns:defendants>
+        <tns:defendant defendantId="1">
+          <tns:filedDate>2001-12-31T12:00:00</tns:filedDate>
+          <tns:responseType>DE</tns:responseType>
+        </tns:defendant>
+      </tns:defendants>
+    </tns:mcolDefenceDetail>
+  </tns:mcolResults>
+  <tns:status code="OK">
+    <tns1:error>
+      <tns1:code>tns1:code</tns1:code>
+      <tns1:description>tns1:description</tns1:description>
+    </tns1:error>
+  </tns:status>
+</tns:submitQueryResponse>

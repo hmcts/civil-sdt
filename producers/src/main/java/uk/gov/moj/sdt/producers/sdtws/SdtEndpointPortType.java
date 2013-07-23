@@ -61,9 +61,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  */
 
 @WebService (serviceName = "SdtEndpoint", portName = "SdtEndpointPort",
- targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", 
- wsdlLocation = "wsdl/SdtGatewayEndpoint.wsdl",
- endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
+        targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint",
+        wsdlLocation = "wsdl/SdtGatewayEndpoint.wsdl",
+        endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
 public class SdtEndpointPortType implements ISdtEndpointPortType
 {
     /**
@@ -98,7 +98,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         final McolResponseType r1 = new McolResponseType ();
         final IndividualStatusType status = new IndividualStatusType ();
         status.setCode (IndividualStatusCodeType.ACCEPTED);
-        r1.setStatus (status);
+        // r1.setStatus (status);
         mcolResponses.getMcolResponse ().add (r1);
         responses.setMcolResponses (mcolResponses);
 

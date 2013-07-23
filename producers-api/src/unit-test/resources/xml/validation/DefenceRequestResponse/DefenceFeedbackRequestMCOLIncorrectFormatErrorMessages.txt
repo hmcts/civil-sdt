@@ -1,6 +1,0 @@
-cvc-length-valid: Value 'MC123456789' with length = '11' is not facet-valid with respect to length '12' for type 'mcolCustomerIdType'.
-cvc-type.3.1.3: The value 'MC123456789' of element 'tns:mcolCustomerId' is not valid.
-cvc-datatype-valid.1.2.1: '2001-01-1101' is not a valid value for 'date'.
-cvc-type.3.1.3: The value '2001-01-1101' of element 'tns:fromDate' is not valid.
-cvc-datatype-valid.1.2.1: '2001-01-1101' is not a valid value for 'date'.
-cvc-type.3.1.3: The value '2001-01-1101' of element 'tns:toDate' is not valid.

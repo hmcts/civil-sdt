@@ -1,2 +1,0 @@
-cvc-complex-type.2.4.b: The content of element 'tns:defendant' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/DefenceFeedbackResponseSchema":filedDate}' is expected.
-cvc-complex-type.2.4.b: The content of element 'tns1:error' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema":code}' is expected.

@@ -1,0 +1,8 @@
+cvc-type.3.1.3: The value '1234567811' of element 'tns:sdtCustomerId' is not valid.
+cvc-pattern-valid: Value '1234567811' is not facet-valid with respect to pattern '[1-9][0-9]{7}' for type 'sdtCustomerIdType'.
+cvc-type.3.1.3: The value 'invalid' of element 'tns:targetApplicationId' is not valid.
+cvc-enumeration-valid: Value 'invalid' is not facet-valid with respect to enumeration '[mcol, mcol_com]'. It must be a value from the enumeration.
+cvc-datatype-valid.1.2.1: '211001-11101-01' is not a valid value for 'date'.
+cvc-type.3.1.3: The value '211001-11101-01' of element 'tns:fromDate' is not valid.
+cvc-datatype-valid.1.2.1: '101-110111' is not a valid value for 'date'.
+cvc-type.3.1.3: The value '101-110111' of element 'tns:toDate' is not valid.
