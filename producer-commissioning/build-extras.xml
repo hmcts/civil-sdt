@@ -149,6 +149,7 @@
 				<include name="${hibernate-core.jar}" />
 				<include name="${hibernate-ehcache.jar}" />
 				<include name="${hibernate-jpa.jar}" />
+				<include name="${javassist.jar}" />
 				<include name="${jboss-logging.jar}" />
 				<include name="${jboss-transaction-api.jar}" />
 				<include name="${joda-time.jar}" />

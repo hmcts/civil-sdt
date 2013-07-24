@@ -129,9 +129,10 @@
 				<include name="${antlr.jar}" />
 				<include name="${ehcache-core.jar}" />
 				<include name="${hibernate-commons-annotations.jar}" />
-				<include name="${hibernate-core.jar}" />
+				<include name="${hibernate-core.jar}" />				
 				<include name="${hibernate-ehcache.jar}" />
 				<include name="${hibernate-jpa.jar}" />
+				<include name="${javassist.jar}" />
 				<include name="${jboss-logging.jar}" />
 				<include name="${jboss-transaction-api.jar}" />
 				<include name="${joda-time.jar}" />

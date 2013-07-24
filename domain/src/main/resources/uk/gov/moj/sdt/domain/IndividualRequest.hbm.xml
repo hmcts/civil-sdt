@@ -19,15 +19,19 @@
         <property name="customerRequestReference" type="java.lang.String">
             <column name="CUSTOMER_REQUEST_REF" />
         </property>
+        <!-- 
         <property name="caseNumber" type="java.lang.String">
             <column name="CASE_NUMBER" />
         </property>
+         -->
         <property name="requestStatus" type="java.lang.String">
             <column name="REQUEST_STATUS" />
         </property>
+        <!-- 
         <property name="issuedDate" type="org.joda.time.LocalDateTime">
             <column name="ISSUED_DATE" />
         </property>
+        -->
         <property name="sdtBulkReference" type="java.lang.String">
             <column name="SDT_BULK_REFERENCE" />
         </property>
@@ -46,12 +50,16 @@
         <property name="completedDate" type="org.joda.time.LocalDateTime">
             <column name="COMPLETED_DATE" />
         </property>
+        <!-- 
         <property name="serviceDate" type="org.joda.time.LocalDateTime">
             <column name="SERVICE_DATE" />
         </property>
+        -->
+        <!--  
         <property name="warrantNumber" type="int">
             <column name="WARRANT_NUMBER" />
         </property>
+        
         <property name="enforcingCourtCode" type="java.lang.String">
             <column name="ENFORCING_COURT_CODE" />
         </property>
@@ -61,6 +69,7 @@
         <property name="fee" type="java.math.BigDecimal">
             <column name="FEE" />
         </property>
+        -->
         <property name="payload" type="binary">
             <column name="PAYLOAD" />
         </property>        
