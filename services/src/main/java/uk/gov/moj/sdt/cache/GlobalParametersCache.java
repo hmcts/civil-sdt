@@ -143,21 +143,11 @@ public final class GlobalParametersCache extends AbstractCacheControl
     }
 
     /**
-     * Getter for the Generic DAO.
-     * 
-     * @return the generic DAO.
-     */
-    public IGenericDao getGenericDao ()
-    {
-        return genericDao;
-    }
-
-    /**
      * Setter for generic DAO.
      * 
      * @param genericDao the genericDao to set.
      */
-    public void setErrorMessageDao (final IGenericDao genericDao)
+    public void setGenericDao (final IGenericDao genericDao)
     {
         this.genericDao = genericDao;
     }

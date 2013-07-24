@@ -90,9 +90,9 @@ public class ErrorMessagesCache extends AbstractCacheControl
         final Object someObject = this.getErrorMessages ().get (errorMessageCode);
 
         DomainType domainObject = null;
-        
+
         // Double check that the expected class matches the retrieved class.
-        if (domainType.getClass ().isAssignableFrom (someObject.getClass ()))
+        if (domainType.isAssignableFrom (someObject.getClass ()))
         {
             // Prepare object of correct type to return to caller.
             domainObject = domainType.cast (someObject);
@@ -142,21 +142,11 @@ public class ErrorMessagesCache extends AbstractCacheControl
     }
 
     /**
-     * Getter for the Generic DAO.
-     * 
-     * @return the generic DAO.
-     */
-    public IGenericDao getGenericDao ()
-    {
-        return genericDao;
-    }
-
-    /**
      * Setter for generic DAO.
      * 
      * @param genericDao the genericDao to set.
      */
-    public void setErrorMessageDao (final IGenericDao genericDao)
+    public void setGenericDao (final IGenericDao genericDao)
     {
         this.genericDao = genericDao;
     }

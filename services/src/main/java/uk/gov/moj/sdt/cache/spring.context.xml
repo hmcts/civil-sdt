@@ -8,15 +8,15 @@
 		this is not ambiguous) and all classes should have an interface. -->
 
 	<!-- Global store of all error messages. -->
-	<!-- 
-	<bean id="uk.gov.moj.sdt.dao.cache.api.IErrorMessageCache" class="uk.gov.moj.sdt.cache.ErrorMessagesCache">
-		<property name="errorMessageDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
+	 
+	<bean id="uk.gov.moj.sdt.cache.ErrorMessagesCache" class="uk.gov.moj.sdt.cache.ErrorMessagesCache" lazy-init="true">
+		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
 	</bean>
-	 -->
+	 
 
 	<!-- Global store of all global parameters. -->
 	<bean id="uk.gov.moj.sdt.cache.GlobalParametersCache" class="uk.gov.moj.sdt.cache.GlobalParametersCache" lazy-init="true">
-		<property name="errorMessageDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
+		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
 	</bean>
 
 </beans>
