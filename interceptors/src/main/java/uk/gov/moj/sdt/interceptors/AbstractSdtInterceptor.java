@@ -77,6 +77,10 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
         if (os != null)
         {
             final CachedOutputStream bos = new CachedOutputStream ();
+
+            // TODO add further logic to read the XML waiting to be written to the output strem, insert the non generic
+            // raw XML into the correct place and put all of this XML back in the output stream. This cannot be tested
+            // until we have developed a consumer which sends a SOAP message.
         }
     }
 
