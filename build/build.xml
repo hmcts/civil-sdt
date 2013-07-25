@@ -52,6 +52,10 @@
 
     <!-- Delete all build artefacts -->
     <target name="clean-application" description="Cleanup build and distribution folders for all projects">
+    	<tstamp>
+    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss,SSS"/>
+    	</tstamp>
+    	<echo file="build.log" append="true">Cleaning application ${now} ${line.separator}</echo>
         <subant antfile="build.xml" target="clean" inheritrefs="true" inheritAll="false">
             <filelist refid="all-project-list" />
         </subant>
@@ -64,6 +68,11 @@
 
     <!-- Delete deployed war in tc-server -->
     <target name="clean-tc-server" description="Cleanup tc-server exploded war directories, cache and war files.">
+    	<tstamp>
+    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss,SSS"/>
+    	</tstamp>
+    	<echo file="build.log" append="true">Cleaning tc-server ${now} ${line.separator}</echo>
+    	
         <!-- consumers and producers are part of prototype -->
     	<delete file="${app.server.webapps.dir}/consumers.war" />
         <delete file="${app.server.webapps.dir}/producers.war" />
