@@ -46,6 +46,8 @@
 
     <!-- General initialisation - ensure build directory (for classes) and dist directory (for jar) are present -->
     <target name="init" description="Initialise">
+    	<!-- Initialise the stopwatch fore logging build times -->
+    	<stopwatch name="timer1"/>    	
     </target>
 
     <!-- Delete all build artefacts -->
@@ -151,6 +153,16 @@
 				<include name="log4j.xml" />
 			</fileset>
 		</copy>
+    	
+    	<!-- Log the time the build took -->
+    	<tstamp>
+    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss,SSS"/>
+    	</tstamp>
+    	    
+    	<stopwatch name="timer1" action="total"/>    	
+    		
+    	<echo file="build.log" append="true">Build time ${now} : ${timer1} ${line.separator}</echo>
+    	 
     </target>
 	
 	<!-- Run unit tests in all modules -->
