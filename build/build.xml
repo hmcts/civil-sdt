@@ -53,9 +53,9 @@
     <!-- Delete all build artefacts -->
     <target name="clean-application" description="Cleanup build and distribution folders for all projects">
     	<tstamp>
-    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss,SSS"/>
+    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss"/>
     	</tstamp>
-    	<echo file="build.log" append="true">Cleaning application ${now} ${line.separator}</echo>
+    	<echo file="build.log" append="true">${now}: Cleaning application ${line.separator}</echo>
         <subant antfile="build.xml" target="clean" inheritrefs="true" inheritAll="false">
             <filelist refid="all-project-list" />
         </subant>
@@ -69,9 +69,9 @@
     <!-- Delete deployed war in tc-server -->
     <target name="clean-tc-server" description="Cleanup tc-server exploded war directories, cache and war files.">
     	<tstamp>
-    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss,SSS"/>
+    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss"/>
     	</tstamp>
-    	<echo file="build.log" append="true">Cleaning tc-server ${now} ${line.separator}</echo>
+    	<echo file="build.log" append="true">${now}: Cleaning tc-server ${line.separator}</echo>
     	
         <!-- consumers and producers are part of prototype -->
     	<delete file="${app.server.webapps.dir}/consumers.war" />
@@ -165,12 +165,12 @@
     	
     	<!-- Log the time the build took -->
     	<tstamp>
-    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss,SSS"/>
+    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss"/>
     	</tstamp>
     	    
     	<stopwatch name="timer1" action="total"/>    	
     		
-    	<echo file="build.log" append="true">Build time ${now} : ${timer1} ${line.separator}</echo>
+    	<echo file="build.log" append="true">${now}: Build time ${timer1} ${line.separator}</echo>
     	 
     </target>
 	
