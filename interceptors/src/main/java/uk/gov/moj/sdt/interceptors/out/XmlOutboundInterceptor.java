@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.interceptors.out;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.phase.Phase;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
@@ -58,7 +59,8 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
      */
     public XmlOutboundInterceptor ()
     {
-        super (Phase.SEND);
+        super (Phase.PRE_STREAM);
+        addBefore (LoggingOutInterceptor.class.getName());
     }
 
     @Override
@@ -69,6 +71,6 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
         final String xml = SdtContext.getContext ().getRawOutXml ();
 
         // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
-        this.enrichOutputMessage (message, xml, "requests");
+        this.modifyMessage (message, xml, "requests");
     }
 }

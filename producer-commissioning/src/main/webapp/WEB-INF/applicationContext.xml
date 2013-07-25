@@ -19,6 +19,9 @@
 		<cxf:inInterceptors>
 			<ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
 		</cxf:inInterceptors>
+		<cxf:outInterceptors>
+			<ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />
+		</cxf:outInterceptors>
 		<cxf:features>
 			<cxf:logging />
 		</cxf:features>
