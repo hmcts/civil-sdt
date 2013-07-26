@@ -70,14 +70,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PersonType }
-     * 
-     */
-    public PersonType createPersonType() {
-        return new PersonType();
-    }
-
-    /**
      * Create an instance of {@link ErrorType }
      * 
      */

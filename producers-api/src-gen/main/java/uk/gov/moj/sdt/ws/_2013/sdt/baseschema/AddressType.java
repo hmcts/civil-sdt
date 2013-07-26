@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="line2" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType"/>
  *         &lt;element name="line3" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType" minOccurs="0"/>
  *         &lt;element name="line4" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType" minOccurs="0"/>
- *         &lt;element name="line5" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType" minOccurs="0"/>
  *         &lt;element name="postcode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}postcodeType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -37,7 +36,6 @@ import javax.xml.bind.annotation.XmlType;
     "line2",
     "line3",
     "line4",
-    "line5",
     "postcode"
 })
 public class AddressType {
@@ -48,7 +46,6 @@ public class AddressType {
     protected String line2;
     protected String line3;
     protected String line4;
-    protected String line5;
     @XmlElement(required = true)
     protected String postcode;
 
@@ -146,30 +143,6 @@ public class AddressType {
      */
     public void setLine4(String value) {
         this.line4 = value;
-    }
-
-    /**
-     * Gets the value of the line5 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getLine5() {
-        return line5;
-    }
-
-    /**
-     * Sets the value of the line5 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setLine5(String value) {
-        this.line5 = value;
     }
 
     /**

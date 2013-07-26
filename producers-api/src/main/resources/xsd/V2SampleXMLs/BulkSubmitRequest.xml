@@ -2,7 +2,6 @@
 <!-- Message from external system to SDT Gateway -->
 <bulkRequest>
     <header>
-        <!-- TODO TBC Gateway can validate the id -->
         <sdtCustomerId>SDT_Customer_id</sdtCustomerId> 
         <targetApplicationId>mcol</targetApplicationId>
         <requestCount>2</requestCount>

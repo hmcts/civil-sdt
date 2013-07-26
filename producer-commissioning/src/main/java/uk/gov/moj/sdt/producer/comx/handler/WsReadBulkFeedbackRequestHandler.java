@@ -35,6 +35,7 @@ import java.math.BigInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.producers.api.AbstractWsHandler;
 import uk.gov.moj.sdt.producers.api.AbstractWsReadHandler;
 import uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -74,11 +75,13 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
 
         // Create Response
         final BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
+
         final BulkRequestStatusType bulkStatus = new BulkRequestStatusType ();
 
         final Integer requestCount = 12;
         bulkStatus.setRequestCount (BigInteger.valueOf (requestCount));
         bulkStatus.setSdtBulkReference (bulkFeedbackRequest.getHeader ().getSdtBulkReference ());
+        bulkStatus.setSdtService (AbstractWsHandler.SDT_COMX_SERVICE);
         response.setBulkRequestStatus (bulkStatus);
         response.setResponses (getResponses ());
 

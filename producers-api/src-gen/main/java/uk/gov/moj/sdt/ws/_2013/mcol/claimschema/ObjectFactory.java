@@ -34,6 +34,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ClaimantType }
+     * 
+     */
+    public ClaimantType createClaimantType() {
+        return new ClaimantType();
+    }
+
+    /**
      * Create an instance of {@link CorrespondenceDetailType }
      * 
      */
@@ -50,11 +58,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link DefendantType }
+     * 
+     */
+    public DefendantType createDefendantType() {
+        return new DefendantType();
+    }
+
+    /**
      * Create an instance of {@link InterestType }
      * 
      */
     public InterestType createInterestType() {
         return new InterestType();
+    }
+
+    /**
+     * Create an instance of {@link ClaimantType.Address }
+     * 
+     */
+    public ClaimantType.Address createClaimantTypeAddress() {
+        return new ClaimantType.Address();
     }
 
     /**

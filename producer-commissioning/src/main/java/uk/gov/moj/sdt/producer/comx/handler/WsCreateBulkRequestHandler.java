@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.producers.api.AbstractWsCreateHandler;
+import uk.gov.moj.sdt.producers.api.AbstractWsHandler;
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.producers.resolver.BulkRequestToDomainResolver;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
@@ -130,6 +131,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
 
         LOGGER.debug ("setup initial response");
         final BulkResponseType response = new BulkResponseType ();
+        response.setSdtService (AbstractWsHandler.SDT_COMX_SERVICE);
         response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
         response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
         final StatusType status = new StatusType ();
@@ -163,16 +165,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
     {
         LOGGER.debug ("[validateDomain] started");
 
-        // Validation done on BulkCustomer
-        // LOGGER.debug ("validate SDT Customer id");
-        //
-        // LOGGER.debug ("validate Target application id");
-        //
-        // Validation done on BulkSubmission
-        // LOGGER.debug ("validate customer reference is unique across data retention period"); BulkSubmission
-        //
-        // Validation done IndividualRequest
-        // LOGGER.debug ("validate customer reference for each request is unique across data retention period");
         VisitableTreeWalker.walk (bulkSubmission, "Validator");
 
     }

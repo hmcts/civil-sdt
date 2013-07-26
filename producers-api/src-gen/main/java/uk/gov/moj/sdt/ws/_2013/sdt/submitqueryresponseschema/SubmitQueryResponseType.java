@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
 
 
 /**
@@ -22,7 +21,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="sdtCustomerId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtCustomerIdType"/>
- *         &lt;element name="targetApplicationId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}targetApplicationIdType"/>
+ *         &lt;element name="sdtService" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="resultCount" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger"/>
  *         &lt;element name="results" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema}resultsType"/>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}statusType"/>
@@ -37,7 +36,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "submitQueryResponseType", propOrder = {
     "sdtCustomerId",
-    "targetApplicationId",
+    "sdtService",
     "resultCount",
     "results",
     "status"
@@ -47,7 +46,7 @@ public class SubmitQueryResponseType {
     @XmlElement(required = true)
     protected BigInteger sdtCustomerId;
     @XmlElement(required = true)
-    protected TargetApplicationIdType targetApplicationId;
+    protected String sdtService;
     @XmlElement(required = true)
     @XmlSchemaType(name = "nonNegativeInteger")
     protected BigInteger resultCount;
@@ -81,27 +80,27 @@ public class SubmitQueryResponseType {
     }
 
     /**
-     * Gets the value of the targetApplicationId property.
+     * Gets the value of the sdtService property.
      * 
      * @return
      *     possible object is
-     *     {@link TargetApplicationIdType }
+     *     {@link String }
      *     
      */
-    public TargetApplicationIdType getTargetApplicationId() {
-        return targetApplicationId;
+    public String getSdtService() {
+        return sdtService;
     }
 
     /**
-     * Sets the value of the targetApplicationId property.
+     * Sets the value of the sdtService property.
      * 
      * @param value
      *     allowed object is
-     *     {@link TargetApplicationIdType }
+     *     {@link String }
      *     
      */
-    public void setTargetApplicationId(TargetApplicationIdType value) {
-        this.targetApplicationId = value;
+    public void setSdtService(String value) {
+        this.sdtService = value;
     }
 
     /**

@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="line3" type="{http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema}payeeLineType" minOccurs="0"/>
  *         &lt;element name="line4" type="{http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema}payeeLineType" minOccurs="0"/>
  *         &lt;element name="line5" type="{http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema}payeeLineType" minOccurs="0"/>
- *         &lt;element name="postcode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}postcodeType"/>
+ *         &lt;element name="postcode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}postcodeType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -49,7 +49,6 @@ public class PayeeAddressType {
     protected String line3;
     protected String line4;
     protected String line5;
-    @XmlElement(required = true)
     protected String postcode;
 
     /**

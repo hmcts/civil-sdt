@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.w3._2001.xmlschema.Adapter1;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
 
 
 /**
@@ -27,7 +26,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
  *         &lt;element name="customerReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}customerReferenceType"/>
  *         &lt;element name="sdtBulkReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtBulkReferenceType"/>
  *         &lt;element name="submittedDate" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
- *         &lt;element name="targetApplicationId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}targetApplicationIdType"/>
+ *         &lt;element name="sdtService" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="requestCount" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestCountType"/>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}statusType"/>
  *       &lt;/sequence>
@@ -43,7 +42,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
     "customerReference",
     "sdtBulkReference",
     "submittedDate",
-    "targetApplicationId",
+    "sdtService",
     "requestCount",
     "status"
 })
@@ -58,7 +57,7 @@ public class BulkResponseType {
     @XmlSchemaType(name = "dateTime")
     protected Calendar submittedDate;
     @XmlElement(required = true)
-    protected TargetApplicationIdType targetApplicationId;
+    protected String sdtService;
     @XmlElement(required = true)
     protected BigInteger requestCount;
     @XmlElement(required = true)
@@ -137,27 +136,27 @@ public class BulkResponseType {
     }
 
     /**
-     * Gets the value of the targetApplicationId property.
+     * Gets the value of the sdtService property.
      * 
      * @return
      *     possible object is
-     *     {@link TargetApplicationIdType }
+     *     {@link String }
      *     
      */
-    public TargetApplicationIdType getTargetApplicationId() {
-        return targetApplicationId;
+    public String getSdtService() {
+        return sdtService;
     }
 
     /**
-     * Sets the value of the targetApplicationId property.
+     * Sets the value of the sdtService property.
      * 
      * @param value
      *     allowed object is
-     *     {@link TargetApplicationIdType }
+     *     {@link String }
      *     
      */
-    public void setTargetApplicationId(TargetApplicationIdType value) {
-        this.targetApplicationId = value;
+    public void setSdtService(String value) {
+        this.sdtService = value;
     }
 
     /**

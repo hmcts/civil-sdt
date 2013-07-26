@@ -48,6 +48,16 @@ public abstract class AbstractWsHandler
 {
 
     /**
+     * Constant for production SDT service.
+     */
+    public static final String SDT_SERVICE = "SDT";
+
+    /**
+     * Constant for commissioning SDT service.
+     */
+    public static final String SDT_COMX_SERVICE = "SDT Commissioning";
+
+    /**
      * Logger instance.
      */
     private static final Log LOGGER = LogFactory.getLog (AbstractWsHandler.class);

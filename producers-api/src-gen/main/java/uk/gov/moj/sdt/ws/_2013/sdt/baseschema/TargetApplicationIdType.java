@@ -15,7 +15,6 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;simpleType name="targetApplicationIdType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="mcol"/>
- *     &lt;enumeration value="mcol_com"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -26,9 +25,7 @@ import javax.xml.bind.annotation.XmlType;
 public enum TargetApplicationIdType {
 
     @XmlEnumValue("mcol")
-    MCOL("mcol"),
-    @XmlEnumValue("mcol_com")
-    MCOL_COM("mcol_com");
+    MCOL("mcol");
     private final String value;
 
     TargetApplicationIdType(String v) {

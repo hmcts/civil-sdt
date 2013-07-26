@@ -1,27 +1,35 @@
 
-package uk.gov.moj.sdt.ws._2013.sdt.baseschema;
+package uk.gov.moj.sdt.ws._2013.mcol.claimschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AddressType;
 
 
 /**
  * 
- * 				Describes a person
- * 			
+ *                 Describes a defendant
+ *             
  * 
- * <p>Java class for personType complex type.
+ * <p>Java class for defendantType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="personType">
+ * &lt;complexType name="defendantType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="name" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}nameType"/>
+ *         &lt;element name="name">
+ *           &lt;simpleType>
+ *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *               &lt;minLength value="1"/>
+ *               &lt;maxLength value="60"/>
+ *             &lt;/restriction>
+ *           &lt;/simpleType>
+ *         &lt;/element>
  *         &lt;element name="address" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}addressType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -32,11 +40,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "personType", propOrder = {
+@XmlType(name = "defendantType", propOrder = {
     "name",
     "address"
 })
-public class PersonType {
+public class DefendantType {
 
     @XmlElement(required = true)
     protected String name;

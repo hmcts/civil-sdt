@@ -15,7 +15,7 @@
 	<xs:complexType name="submitQueryResponseType">
 		<xs:sequence>
             <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
-            <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
+            <xs:element name="sdtService" type="xs:string"/>
             <xs:element name="resultCount" type="xs:nonNegativeInteger" />
 			<xs:element name="results" type="tns:resultsType" />
             <xs:element name="status" type="base:statusType" />

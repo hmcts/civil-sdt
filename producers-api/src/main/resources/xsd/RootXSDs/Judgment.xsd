@@ -88,7 +88,7 @@
             <xs:element name="line3" type="tns:payeeLineType" minOccurs="0" />
             <xs:element name="line4" type="tns:payeeLineType" minOccurs="0" />
             <xs:element name="line5" type="tns:payeeLineType" minOccurs="0" />
-            <xs:element name="postcode" type="base:postcodeType" />
+            <xs:element name="postcode" type="base:postcodeType" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
 

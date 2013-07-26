@@ -22,7 +22,6 @@ import org.w3._2001.xmlschema.Adapter3;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="reserveRightToClaimInterest" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="dailyAmount" type="{http://www.w3.org/2001/XMLSchema}unsignedLong"/>
  *         &lt;element name="owedDate" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *         &lt;element name="claimDate" type="{http://www.w3.org/2001/XMLSchema}date"/>
@@ -37,7 +36,6 @@ import org.w3._2001.xmlschema.Adapter3;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "interestType", propOrder = {
-    "reserveRightToClaimInterest",
     "dailyAmount",
     "owedDate",
     "claimDate",
@@ -45,7 +43,6 @@ import org.w3._2001.xmlschema.Adapter3;
 })
 public class InterestType {
 
-    protected boolean reserveRightToClaimInterest;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter3 .class)
     @XmlSchemaType(name = "unsignedLong")
@@ -62,22 +59,6 @@ public class InterestType {
     @XmlJavaTypeAdapter(Adapter3 .class)
     @XmlSchemaType(name = "unsignedLong")
     protected Long claimAmountInterestBase;
-
-    /**
-     * Gets the value of the reserveRightToClaimInterest property.
-     * 
-     */
-    public boolean isReserveRightToClaimInterest() {
-        return reserveRightToClaimInterest;
-    }
-
-    /**
-     * Sets the value of the reserveRightToClaimInterest property.
-     * 
-     */
-    public void setReserveRightToClaimInterest(boolean value) {
-        this.reserveRightToClaimInterest = value;
-    }
 
     /**
      * Gets the value of the dailyAmount property.

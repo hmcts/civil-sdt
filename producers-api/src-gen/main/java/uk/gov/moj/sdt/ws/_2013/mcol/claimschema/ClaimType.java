@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.w3._2001.xmlschema.Adapter3;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.PersonType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
 
 
@@ -27,11 +26,12 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="claimantReference" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema}claimantReferenceType" minOccurs="0"/>
- *         &lt;element name="claimant" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}personType" minOccurs="0"/>
+ *         &lt;element name="claimant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema}claimantType" minOccurs="0"/>
  *         &lt;element name="claimantCorrespondence" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema}correspondenceDetailType" minOccurs="0"/>
- *         &lt;element name="defendant1" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}personType"/>
- *         &lt;element name="defendant2" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}personType" minOccurs="0"/>
+ *         &lt;element name="defendant1" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema}defendantType"/>
+ *         &lt;element name="defendant2" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema}defendantType" minOccurs="0"/>
  *         &lt;element name="sendParticularsSeparately" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="reserveRightToClaimInterest" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="interest" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema}interestType" minOccurs="0"/>
  *         &lt;element name="claimAmount" type="{http://www.w3.org/2001/XMLSchema}unsignedLong"/>
  *         &lt;element name="solicitorCost" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
@@ -53,6 +53,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
     "defendant1",
     "defendant2",
     "sendParticularsSeparately",
+    "reserveRightToClaimInterest",
     "interest",
     "claimAmount",
     "solicitorCost",
@@ -62,12 +63,13 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
 public class ClaimType {
 
     protected String claimantReference;
-    protected PersonType claimant;
+    protected ClaimantType claimant;
     protected CorrespondenceDetailType claimantCorrespondence;
     @XmlElement(required = true)
-    protected PersonType defendant1;
-    protected PersonType defendant2;
+    protected DefendantType defendant1;
+    protected DefendantType defendant2;
     protected boolean sendParticularsSeparately;
+    protected boolean reserveRightToClaimInterest;
     protected InterestType interest;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter3 .class)
@@ -111,10 +113,10 @@ public class ClaimType {
      * 
      * @return
      *     possible object is
-     *     {@link PersonType }
+     *     {@link ClaimantType }
      *     
      */
-    public PersonType getClaimant() {
+    public ClaimantType getClaimant() {
         return claimant;
     }
 
@@ -123,10 +125,10 @@ public class ClaimType {
      * 
      * @param value
      *     allowed object is
-     *     {@link PersonType }
+     *     {@link ClaimantType }
      *     
      */
-    public void setClaimant(PersonType value) {
+    public void setClaimant(ClaimantType value) {
         this.claimant = value;
     }
 
@@ -159,10 +161,10 @@ public class ClaimType {
      * 
      * @return
      *     possible object is
-     *     {@link PersonType }
+     *     {@link DefendantType }
      *     
      */
-    public PersonType getDefendant1() {
+    public DefendantType getDefendant1() {
         return defendant1;
     }
 
@@ -171,10 +173,10 @@ public class ClaimType {
      * 
      * @param value
      *     allowed object is
-     *     {@link PersonType }
+     *     {@link DefendantType }
      *     
      */
-    public void setDefendant1(PersonType value) {
+    public void setDefendant1(DefendantType value) {
         this.defendant1 = value;
     }
 
@@ -183,10 +185,10 @@ public class ClaimType {
      * 
      * @return
      *     possible object is
-     *     {@link PersonType }
+     *     {@link DefendantType }
      *     
      */
-    public PersonType getDefendant2() {
+    public DefendantType getDefendant2() {
         return defendant2;
     }
 
@@ -195,10 +197,10 @@ public class ClaimType {
      * 
      * @param value
      *     allowed object is
-     *     {@link PersonType }
+     *     {@link DefendantType }
      *     
      */
-    public void setDefendant2(PersonType value) {
+    public void setDefendant2(DefendantType value) {
         this.defendant2 = value;
     }
 
@@ -216,6 +218,22 @@ public class ClaimType {
      */
     public void setSendParticularsSeparately(boolean value) {
         this.sendParticularsSeparately = value;
+    }
+
+    /**
+     * Gets the value of the reserveRightToClaimInterest property.
+     * 
+     */
+    public boolean isReserveRightToClaimInterest() {
+        return reserveRightToClaimInterest;
+    }
+
+    /**
+     * Sets the value of the reserveRightToClaimInterest property.
+     * 
+     */
+    public void setReserveRightToClaimInterest(boolean value) {
+        this.reserveRightToClaimInterest = value;
     }
 
     /**
