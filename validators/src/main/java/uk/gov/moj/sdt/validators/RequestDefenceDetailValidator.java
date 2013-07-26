@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDate;
 
 import uk.gov.moj.sdt.domain.RequestDefenceDetail;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IRequestDefenceDetailValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.InvalidDateRangeException;
@@ -68,7 +69,7 @@ public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor i
     }
 
     @Override
-    public void visit (final RequestDefenceDetail defenceDetail)
+    public void visit (final RequestDefenceDetail defenceDetail, final ITree tree)
     {
         // TODO - need to validate these fields
         // LOGGER.debug ("validate SDT Customer id");

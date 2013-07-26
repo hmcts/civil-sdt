@@ -39,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
@@ -71,7 +72,7 @@ public class IndividualRequestValidator extends AbstractDomainObjectVisitor impl
     }
 
     @Override
-    public void visit (final IndividualRequest individualRequest)
+    public void visit (final IndividualRequest individualRequest, final ITree tree)
     {
         // Do validation
         LOGGER.info ("visit(individualRequest)");
@@ -79,10 +80,10 @@ public class IndividualRequestValidator extends AbstractDomainObjectVisitor impl
 
         // Validate customer reference is unique across data retention period for individual request
         final String customerRequestReference = individualRequest.getCustomerRequestReference ();
-        if ( !individualRequestDao.isCustomerReferenceUnique (bulkCustomer, customerRequestReference ))
+        if ( !individualRequestDao.isCustomerReferenceUnique (bulkCustomer, customerRequestReference))
         {
             final List<String> replacements = new ArrayList<String> ();
-            replacements.add (String.valueOf (customerRequestReference ));
+            replacements.add (String.valueOf (customerRequestReference));
             replacements.add (String.valueOf (individualRequest.getId ()));
             // CHECKSTYLE:OFF
             throw new SdtCustomerReferenceNotUniqueException (

@@ -38,6 +38,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
@@ -90,7 +91,7 @@ public abstract class AbstractVisitor implements IVisitor
     }
 
     @Override
-    public final void visit (final Object visitable)
+    public final void visit (final Object visitable, final ITree tree)
     {
         // Class of target bean.
         Class<?> clazz = null;
@@ -102,12 +103,12 @@ public abstract class AbstractVisitor implements IVisitor
             clazz = visitable.getClass ();
 
             // Get the method appropriate for the visit method to call which takes a parameter of the target bean type.
-            final Method method = getClass ().getMethod ("visit", new Class[] {clazz});
+            final Method method = getClass ().getMethod ("visit", new Class[] {clazz, ITree.class});
 
             try
             {
                 // Invoke the appropriate specific visit method in this IVisitor.
-                method.invoke (this, new Object[] {visitable});
+                method.invoke (this, new Object[] {visitable, tree});
             }
             catch (final InvocationTargetException e)
             {

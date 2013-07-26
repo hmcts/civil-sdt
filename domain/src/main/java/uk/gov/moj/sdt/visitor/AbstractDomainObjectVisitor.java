@@ -36,6 +36,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.RequestDefenceDetail;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 
 /**
@@ -47,45 +48,44 @@ import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor
 {
     @Override
-    public void visit (final BulkCustomer bulkCustomer)
+    public void visit (final BulkCustomer bulkCustomer, final ITree tree)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");
     }
 
     @Override
-    public void visit (final BulkSubmission bulkSubmission)
+    public void visit (final BulkSubmission bulkSubmission, final ITree tree)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");
     }
 
     @Override
-    public void visit (final RequestType requestType)
+    public void visit (final RequestType requestType, final ITree tree)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");
     }
 
     @Override
-    public void visit (final TargetApplication targetApplication)
+    public void visit (final TargetApplication targetApplication, final ITree tree)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");
     }
 
     @Override
-    public void visit (final IndividualRequest individualRequest)
+    public void visit (final IndividualRequest individualRequest, final ITree tree)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");
     }
 
     @Override
-    public void visit (final RequestDefenceDetail defenceDetail)
+    public void visit (final RequestDefenceDetail defenceDetail, final ITree tree)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");
     }
-
 }

@@ -34,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.ITargetApplicationValidator;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
@@ -59,7 +60,7 @@ public class TargetApplicationValidator extends AbstractDomainObjectVisitor impl
     }
 
     @Override
-    public void visit (final TargetApplication targetApplication)
+    public void visit (final TargetApplication targetApplication, final ITree tree)
     {
         // TODO Do validation
         LOGGER.info ("visit(targetApplication)");

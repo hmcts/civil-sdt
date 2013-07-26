@@ -44,6 +44,7 @@ import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
@@ -87,7 +88,7 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
     }
 
     @Override
-    public void visit (final BulkSubmission bulkSubmission)
+    public void visit (final BulkSubmission bulkSubmission, final ITree tree)
     {
 
         // Do validation of bulk submission.

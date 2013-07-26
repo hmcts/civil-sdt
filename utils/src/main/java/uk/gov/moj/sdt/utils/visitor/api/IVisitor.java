@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.utils.visitor.api;
 /**
  * An interface to implement the visitor pattern.
  * 
- * @author Simon Holmes
+ * @author Robin Compston
  * 
  */
 public interface IVisitor
@@ -42,7 +42,8 @@ public interface IVisitor
      * Method call to link {@link IVisitable} with {@link IVisitor}.
      * 
      * @param object object which visitor is to act upon.
+     * @param tree tree which is being walked.
      */
-    void visit (Object object);
+    void visit (Object object, ITree tree);
 
 }

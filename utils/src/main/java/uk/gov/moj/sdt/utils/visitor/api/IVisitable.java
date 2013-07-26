@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.utils.visitor.api;
 
-
 /**
  * Marker interface for domain objects.
  * 
@@ -43,6 +42,7 @@ public interface IVisitable
      * Accept visitor in order to implement visitor pattern.
      * 
      * @param visitor the visitor which is going to to act on this {@link IVisitable}.
+     * @param tree the tree being walked in order to apply visitors.
      */
-    void accept (IVisitor visitor);
+    void accept (IVisitor visitor, ITree tree);
 }

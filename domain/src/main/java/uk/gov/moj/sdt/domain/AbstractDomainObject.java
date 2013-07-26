@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
@@ -98,10 +99,10 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     }
 
     @Override
-    public void accept (final IVisitor visitor)
+    public void accept (final IVisitor visitor, final ITree tree)
     {
         // Call any visitor, passing a reference to this class so that it can act on this class.
-        visitor.visit (this);
+        visitor.visit (this, tree);
     }
 
     /* This implementation assumes the business interface is the first declared interface. */

@@ -28,42 +28,49 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators;
+package uk.gov.moj.sdt.visitor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
-import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
- * Implementation of DateValidation.
+ * A class to represent a tree being walked by the tree walker.
  * 
- * @author Simon Holmes
+ * @author Robin Compston
  * 
  */
-public class BulkCustomerValidator extends AbstractDomainObjectVisitor implements IBulkCustomerValidator
+public class Tree implements ITree
 {
+    /**
+     * Object which is at the root (inverted tree) of the tree.
+     */
+    private Object root;
 
     /**
-     * Logger instance.
+     * Object which is at the parent (inverted tree) of the tree.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkCustomerValidator.class);
+    private Object parent;
 
-    /**
-     * No-argument Constructor.
-     */
-    public BulkCustomerValidator ()
+    @Override
+    public Object getRoot ()
     {
+        return this.root;
     }
 
     @Override
-    public void visit (final BulkCustomer bulkCustomer, final ITree tree)
+    public void setRoot (final Object root)
     {
-        // TODO Do validation of bulk customer.
-        LOGGER.info ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");
+        this.root = root;
     }
 
+    @Override
+    public Object getParent ()
+    {
+        return this.parent;
+    }
+
+    @Override
+    public void setParent (final Object parent)
+    {
+        this.parent = parent;
+    }
 }

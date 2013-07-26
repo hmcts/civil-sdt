@@ -60,7 +60,6 @@ public class WsReadDefenceDetailsHandler extends AbstractWsReadHandler implement
      */
     private IDefenceService defenceService;
 
-
     /**
      * Processes request defence details message and returns the defence details.
      * 

@@ -36,8 +36,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,17 +52,12 @@ import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
  * @author Robin Compston
  * 
  */
-public final class VisitableTreeWalker
+public final class VisitableTreeWalker extends AbstractTreeWalker
 {
     /**
      * Static logging object.
      */
     private static final Logger LOG = LoggerFactory.getLogger (VisitableTreeWalker.class);
-
-    /**
-     * Collection of all objects in tree which have already been processed..
-     */
-    private Set<Object> alreadyProcessed = new HashSet<Object> ();
 
     /**
      * Default private constructor for utility class.
@@ -74,69 +67,22 @@ public final class VisitableTreeWalker
     }
 
     /**
-     * Walk a list possibly containing objects which implement the {@link IVisitable} interface applying the
-     * corresponding {@link IVisitor} to each of them.
-     * 
-     * @param target the list to walk.
-     * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
-     *            class name of the visitor class.
-     */
-    private void walkList (final List<?> target, final String visitorSuffix)
-    {
-        // Iterate over list and walk its elements.
-        for (int i = 0; i < target.size (); i++)
-        {
-            this.walkTree (target.get (i), visitorSuffix);
-        }
-    }
-
-    /**
-     * Walk a map possibly containing objects which implement the {@link IVisitable} interface applying the
-     * corresponding {@link IVisitor} to each of them.
-     * 
-     * @param target the map to walk.
-     * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
-     *            class name of the visitor class.
-     */
-    private void walkMap (final Map<?, ?> target, final String visitorSuffix)
-    {
-        // Iterate over map and walk its elements.
-        final Set<?> keys = target.keySet ();
-        for (final Iterator<?> iter = keys.iterator (); iter.hasNext ();)
-        {
-            final Object key = iter.next ();
-            this.walkTree (target.get (key), visitorSuffix);
-        }
-    }
-
-    /**
-     * Walk a set possibly containing objects which implement the {@link IVisitable} interface applying the
-     * corresponding {@link IVisitor} to each of them.
-     * 
-     * @param target the set to walk.
-     * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
-     *            class name of the visitor class.
-     */
-    private void walkSet (final Set<?> target, final String visitorSuffix)
-    {
-        // Iterate over map and walk its elements.
-        for (final Iterator<?> iter = target.iterator (); iter.hasNext ();)
-        {
-            final Object object = iter.next ();
-            this.walkTree (object, visitorSuffix);
-        }
-    }
-
-    /**
-     * Walk a tree of objects which implement the {@link IVisitable} interface applying the corresponding
-     * {@link IVisitor} to each of them.
+     * Walk a tree containing objects applying the corresponding {@link IVisitor} to each of them.
      * 
      * @param target the top level object of the object tree to walk.
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
      *            class name of the visitor class.
      */
-    private void walkTree (final Object target, final String visitorSuffix)
+    protected void walkTree (final Object target, final String visitorSuffix)
     {
+        // At the top level create a Tree object representing other Visitable objects which may need to be accessed by
+        // the active visitor.
+        if (this.getTree () == null)
+        {
+            this.setTree (new Tree ());
+            this.getTree ().setRoot (target);
+        }
+
         // Is the current target an instance of IVisitable - if not, do not apply visitor to it.
         if (IVisitable.class.isAssignableFrom (target.getClass ()))
         {
@@ -159,7 +105,7 @@ public final class VisitableTreeWalker
             final IVisitable visitable = IVisitable.class.cast (target);
 
             // Call the target with this visitor to execute the pattern.
-            visitable.accept (visitor);
+            visitable.accept (visitor, this.getTree ());
         }
 
         // Recursively call all nested beans.
@@ -181,30 +127,68 @@ public final class VisitableTreeWalker
                 final Object nestedObject = method.invoke (target, (Object[]) null);
 
                 // Check if this object has already been seen - if so ignore it.
-                if (alreadyProcessed.contains (nestedObject))
+                if (getAlreadyProcessed ().contains (nestedObject))
                 {
                     continue;
                 }
 
                 // Record this object as now processed.
-                alreadyProcessed.add (nestedObject);
+                getAlreadyProcessed ().add (nestedObject);
 
                 // Deal with all types of collection and with nested objects.
                 if (nestedObject instanceof List<?>)
                 {
+                    // Save the current parent so that it can be reinstated after walking this branch.
+                    final Object parent = getTree ().getParent ();
+
+                    // Set this object as new parent.
+                    getTree ().setParent (target);
+
                     this.walkList ((List<?>) nestedObject, visitorSuffix);
+
+                    // Restore the previous parent.
+                    getTree ().setParent (parent);
                 }
                 else if (nestedObject instanceof Map<?, ?>)
                 {
+                    // Save the current parent so that it can be reinstated after walking this branch.
+                    final Object parent = getTree ().getParent ();
+
+                    // Set this object as new parent.
+                    getTree ().setParent (target);
+
                     this.walkMap ((Map<?, ?>) nestedObject, visitorSuffix);
+
+                    // Restore the previous parent.
+                    getTree ().setParent (parent);
                 }
                 else if (nestedObject instanceof Set<?>)
                 {
+                    // Save the current parent so that it can be reinstated after walking this branch.
+                    final Object parent = getTree ().getParent ();
+
+                    // Set this object as new parent.
+                    getTree ().setParent (target);
+
                     this.walkSet ((Set<?>) nestedObject, visitorSuffix);
+
+                    // Restore the previous parent.
+                    getTree ().setParent (parent);
                 }
+                // Don't go any further down the tree if the object is not of type IVisitable.
                 else if (nestedObject != null && IVisitable.class.isAssignableFrom (nestedObject.getClass ()))
                 {
+                    // Save the current parent so that it can be reinstated after walking this branch.
+                    final Object parent = getTree ().getParent ();
+
+                    // Set this object as new parent.
+                    getTree ().setParent (target);
+
+                    // Go deeper down tree.
                     this.walkTree (nestedObject, visitorSuffix);
+
+                    // Restore the previous parent.
+                    getTree ().setParent (parent);
                 }
             }
         }
@@ -236,7 +220,7 @@ public final class VisitableTreeWalker
      * @param visitorSuffix the suffix which by convention is appended to the target class name in order to form the
      *            class name of the visitor class.
      */
-    public static void walk (final Object target, final String visitorSuffix)
+    public static void walk (final IVisitable target, final String visitorSuffix)
     {
         // Create instance for this thread and call it.
         final VisitableTreeWalker visitableTreeWalker = new VisitableTreeWalker ();

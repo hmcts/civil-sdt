@@ -31,12 +31,14 @@
 
 package uk.gov.moj.sdt.domain.api;
 
+import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
+
 /**
  * Marker interface for domain objects.
  * 
  * @author Robin Compston
  */
-public interface IDomainObject
+public interface IDomainObject extends IVisitable
 {
     /**
      * Get primary key.

@@ -36,6 +36,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.RequestDefenceDetail;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
@@ -50,42 +51,48 @@ public interface IDomainObjectVisitor extends IVisitor
      * Visit the domain object.
      * 
      * @param bulkCustomer the domain object to be visited.
+     * @param tree tree being walked.
      */
-    void visit (BulkCustomer bulkCustomer);
+    void visit (BulkCustomer bulkCustomer, ITree tree);
 
     /**
      * Visit the domain object.
      * 
      * @param bulkSubmission the domain object to be visited.
+     * @param tree tree being walked.
      */
-    void visit (BulkSubmission bulkSubmission);
+    void visit (BulkSubmission bulkSubmission, ITree tree);
 
     /**
      * Visit the domain object.
      * 
      * @param requestType domain object to be visited.
+     * @param tree tree being walked.
      */
-    void visit (RequestType requestType);
+    void visit (RequestType requestType, ITree tree);
 
     /**
      * Visit the domain object.
      * 
      * @param targetApplication domain object to be visited.
+     * @param tree tree being walked.
      */
-    void visit (TargetApplication targetApplication);
+    void visit (TargetApplication targetApplication, ITree tree);
 
     /**
      * Visit the domain object.
      * 
      * @param individualRequest domain object to be visited.
+     * @param tree tree being walked.
      */
-    void visit (IndividualRequest individualRequest);
+    void visit (IndividualRequest individualRequest, ITree tree);
 
     /**
      * Visit the Request Defence Detail.
      * 
      * @param requestDefenceDetail domain object to be visited.
+     * @param tree tree being walked.
      */
-    void visit (RequestDefenceDetail requestDefenceDetail);
+    void visit (RequestDefenceDetail requestDefenceDetail, ITree tree);
 
 }

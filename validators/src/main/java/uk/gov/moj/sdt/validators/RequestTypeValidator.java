@@ -34,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.RequestType;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IRequestTypeValidator;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
@@ -59,7 +60,7 @@ public class RequestTypeValidator extends AbstractDomainObjectVisitor implements
     }
 
     @Override
-    public void visit (final RequestType requestType)
+    public void visit (final RequestType requestType, final ITree tree)
     {
         // TODO Do validation
         LOGGER.info ("visit(requestType)");
