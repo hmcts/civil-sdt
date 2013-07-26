@@ -97,6 +97,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     public void modifyMessage (final SoapMessage message, final String xml, final String insertionTagName)
             throws Fault
     {
+        // Work out if this message is inbound or outbound.
         boolean isOutbound = false;
         isOutbound =
                 message == message.getExchange ().getOutMessage () ||
@@ -104,32 +105,45 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 
         if (isOutbound)
         {
+            // Outbound message.
+            
+            // Get the original stream which is due to be written from the message. 
             final OutputStream os = message.getContent (OutputStream.class);
 
+            // Create a cached stream which can capture any changes.
             final CachedStream cs = new CachedStream ();
             message.setContent (OutputStream.class, cs);
 
+            // Call the interceptors in the chain (at this phase ???)
             message.getInterceptorChain ().doIntercept (message);
 
             try
             {
+                // Flush the cached streqam after whatever the interceptors have done and close it.
                 cs.flush ();
                 org.apache.commons.io.IOUtils.closeQuietly (cs);
+                
+                // Get the cached stream put in the message earlier.
                 final CachedOutputStream csnew = (CachedOutputStream) message.getContent (OutputStream.class);
 
+                // Get the data waiting to be written on the stream.
                 final String currentEnvelopeMessage = IOUtils.toString (csnew.getInputStream (), "UTF-8");
                 csnew.flush ();
                 org.apache.commons.io.IOUtils.closeQuietly (csnew);
 
+                // Modify it if desired.
                 String res = changeOutboundMessage (currentEnvelopeMessage);
                 res = res != null ? res : currentEnvelopeMessage;
 
+                // Turn the modified data into a new input stream.
                 final InputStream replaceInStream = org.apache.commons.io.IOUtils.toInputStream (res, "UTF-8");
 
+                // Copy the new input stream to the output stream and close the input stream.
                 org.apache.commons.io.IOUtils.copy (replaceInStream, os);
                 replaceInStream.close ();
                 org.apache.commons.io.IOUtils.closeQuietly (replaceInStream);
 
+                // Flush the output stream, set it in the message and close it.
                 os.flush ();
                 message.setContent (OutputStream.class, os);
                 org.apache.commons.io.IOUtils.closeQuietly (os);
@@ -144,14 +158,21 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
         {
             try
             {
+                // Get the input stream.
                 InputStream is = message.getContent (InputStream.class);
-                final String currentEnvelopeMessage = IOUtils.toString (is, "UTF-8");
+                
+                // Read the message out of the stream and close it.
+                final String currentEnvelopeMessage = org.apache.commons.io.IOUtils.toString (is, "UTF-8");
                 org.apache.commons.io.IOUtils.closeQuietly (is);
 
+                // Modify it if desired.
                 String res = changeInboundMessage (currentEnvelopeMessage);
                 res = res != null ? res : currentEnvelopeMessage;
 
+                // Write the modified data back to the input stream.
                 is = org.apache.commons.io.IOUtils.toInputStream (res, "UTF-8");
+                
+                // Put input stream in message and close it.
                 message.setContent (InputStream.class, is);
                 org.apache.commons.io.IOUtils.closeQuietly (is);
             }
