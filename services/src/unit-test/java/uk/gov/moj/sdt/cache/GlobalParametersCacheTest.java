@@ -37,22 +37,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.domain.ErrorMessage;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 
 /**
- * Test class for error messages cache.
+ * Test class for global parameters cache.
  * 
  * @author d130680
  * 
  */
-public class ErrorMessagesCacheTest
+public class GlobalParametersCacheTest
 {
 
     /**
-     * Error messages cache.
+     * Global parameters cache.
      */
-    private ErrorMessagesCache cache;
+    private GlobalParametersCache cache;
 
     /**
      * Generic dao.
@@ -62,7 +62,7 @@ public class ErrorMessagesCacheTest
     /**
      * Dao query results.
      */
-    private ErrorMessage[] result;
+    private GlobalParameter[] result;
 
     /**
      * Setup mock objects and inject DAO dependencies into our class.
@@ -71,21 +71,24 @@ public class ErrorMessagesCacheTest
     @Before
     public void setUp ()
     {
-        cache = new ErrorMessagesCache ();
+        cache = new GlobalParametersCache ();
         mockGenericDao = EasyMock.createMock (IGenericDao.class);
         cache.setGenericDao (mockGenericDao);
 
         // Setup some results
-        result = new ErrorMessage[3];
-        result[0] = new ErrorMessage ();
-        result[0].setErrorCode ("1");
-        result[0].setErrorDescription ("errorDescription 1");
-        result[1] = new ErrorMessage ();
-        result[1].setErrorCode ("2");
-        result[1].setErrorDescription ("errorDescription 2");
-        result[2] = new ErrorMessage ();
-        result[2].setErrorCode ("3");
-        result[2].setErrorDescription ("errorDescription 3");
+        result = new GlobalParameter[3];
+        result[0] = new GlobalParameter ();
+        result[0].setName ("param1");
+        result[0].setValue ("one");
+        result[0].setDescription ("parameter 1");
+        result[1] = new GlobalParameter ();
+        result[1].setName ("param2");
+        result[1].setValue ("two");
+        result[1].setDescription ("parameter 2");
+        result[2] = new GlobalParameter ();
+        result[2].setName ("param3");
+        result[2].setValue ("three");
+        result[2].setDescription ("parameter 3");
 
     }
 
@@ -97,21 +100,24 @@ public class ErrorMessagesCacheTest
     {
 
         // Activate the mock generic dao
-        EasyMock.expect (mockGenericDao.query (IErrorMessage.class)).andReturn (result);
+        EasyMock.expect (mockGenericDao.query (IGlobalParameter.class)).andReturn (result);
         EasyMock.replay (mockGenericDao);
 
         // Get some values
-        IErrorMessage errorMessage = cache.getValue (IErrorMessage.class, "1");
-        Assert.assertEquals (errorMessage.getErrorCode (), "1");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 1");
+        IGlobalParameter param = cache.getValue (IGlobalParameter.class, "param1");
+        Assert.assertEquals (param.getName (), "param1");
+        Assert.assertEquals (param.getValue (), "one");
+        Assert.assertEquals (param.getDescription (), "parameter 1");
 
-        errorMessage = cache.getValue (IErrorMessage.class, "3");
-        Assert.assertEquals (errorMessage.getErrorCode (), "3");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 3");
+        param = cache.getValue (IGlobalParameter.class, "param3");
+        Assert.assertEquals (param.getName (), "param3");
+        Assert.assertEquals (param.getValue (), "three");
+        Assert.assertEquals (param.getDescription (), "parameter 3");
 
-        errorMessage = cache.getValue (IErrorMessage.class, "2");
-        Assert.assertEquals (errorMessage.getErrorCode (), "2");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 2");
+        param = cache.getValue (IGlobalParameter.class, "param2");
+        Assert.assertEquals (param.getName (), "param2");
+        Assert.assertEquals (param.getValue (), "two");
+        Assert.assertEquals (param.getDescription (), "parameter 2");
 
         EasyMock.verify (mockGenericDao);
 
@@ -121,16 +127,15 @@ public class ErrorMessagesCacheTest
      * Test key not found.
      */
     @Test
-    public void testKeyNotFound ()
+    public void testParamNotFound ()
     {
-
         // Activate the mock generic dao
-        EasyMock.expect (mockGenericDao.query (IErrorMessage.class)).andReturn (result);
+        EasyMock.expect (mockGenericDao.query (IGlobalParameter.class)).andReturn (result);
         EasyMock.replay (mockGenericDao);
 
         // Get some values
-        final IErrorMessage errorMessage = cache.getValue (IErrorMessage.class, "dont_exist");
-        Assert.assertNull (errorMessage);
+        final IGlobalParameter param = cache.getValue (IGlobalParameter.class, "dont_exist");
+        Assert.assertNull (param);
 
         EasyMock.verify (mockGenericDao);
 
@@ -144,19 +149,21 @@ public class ErrorMessagesCacheTest
     {
 
         // Activate the mock generic dao
-        EasyMock.expect (mockGenericDao.query (IErrorMessage.class)).andReturn (result);
+        EasyMock.expect (mockGenericDao.query (IGlobalParameter.class)).andReturn (result);
         EasyMock.replay (mockGenericDao);
 
         // Get some values to prove the cache is not empty
-        final IErrorMessage errorMessage = cache.getValue (IErrorMessage.class, "1");
-        Assert.assertEquals (errorMessage.getErrorCode (), "1");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 1");
+        final IGlobalParameter param = cache.getValue (IGlobalParameter.class, "param1");
+        Assert.assertEquals (param.getName (), "param1");
+        Assert.assertEquals (param.getValue (), "one");
+        Assert.assertEquals (param.getDescription (), "parameter 1");
 
         cache.uncache ();
 
-        Assert.assertEquals (cache.getErrorMessages ().size (), 0);
+        Assert.assertEquals (cache.getGlobalParameters ().size (), 0);
 
         EasyMock.verify (mockGenericDao);
 
     }
+
 }

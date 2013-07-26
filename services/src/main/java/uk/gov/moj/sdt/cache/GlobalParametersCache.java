@@ -92,6 +92,12 @@ public final class GlobalParametersCache extends AbstractCacheControl
 
         DomainType domainObject = null;
 
+        if (someObject == null)
+        {
+            LOG.warn ("Parameter with name [" + paramName + "] not found.");
+            return null;
+        }
+
         // Double check that the expected class matches the retrieved class.
         if (domainType.isAssignableFrom (someObject.getClass ()))
         {

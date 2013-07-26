@@ -57,7 +57,7 @@ public class ErrorMessagesCache extends AbstractCacheControl
     /**
      * The map of error messages.
      */
-    private static Map<String, IErrorMessage> errorMessages = new HashMap<String, IErrorMessage> ();
+    private Map<String, IErrorMessage> errorMessages = new HashMap<String, IErrorMessage> ();
 
     /**
      * DAO to retrieve error messages.
@@ -88,6 +88,12 @@ public class ErrorMessagesCache extends AbstractCacheControl
 
         // Get the value of the named parameter.
         final Object someObject = this.getErrorMessages ().get (errorMessageCode);
+
+        if (someObject == null)
+        {
+            LOG.warn ("Error message with key [" + errorMessageCode + "] not found.");
+            return null;
+        }
 
         DomainType domainObject = null;
 
