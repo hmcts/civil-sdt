@@ -45,14 +45,14 @@ public interface IDomainObject extends IVisitable
      * 
      * @return primary key
      */
-    int getId ();
+    long getId ();
 
     /**
      * Set primary key.
      * 
      * @param id primary key
      */
-    void setId (final int id);
+    void setId (final long id);
 
     /**
      * Get Hibernate version id.

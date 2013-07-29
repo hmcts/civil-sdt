@@ -39,7 +39,7 @@ import uk.gov.moj.sdt.domain.TargetApplication;
  * Interface for all classes implementing {@link IBulkCustomer}.
  * 
  * @author Robin Compston.
- *
+ * 
  */
 public interface IBulkCustomer extends IDomainObject
 {
@@ -63,38 +63,40 @@ public interface IBulkCustomer extends IDomainObject
      * 
      * @return SDT customer id
      */
-    int getSdtCustomerId ();
+    long getSdtCustomerId ();
 
     /**
      * Set SDT customer id.
      * 
      * @param sdtCustomerId SDT customer id
      */
-    void setSdtCustomerId (final int sdtCustomerId);
+    void setSdtCustomerId (final long sdtCustomerId);
 
     /**
      * Get customer identifier.
      * 
      * @return customer identifier
      */
-    int getCustomerIdentifier ();
+    long getCustomerIdentifier ();
 
     /**
      * Set customer identifier.
      * 
-     * @param customerIdentifier customer identifier
+     * @param sdtCustomerId customer identifier
      */
-    void setCustomerIdentifier (final int customerIdentifier);
-    
+    void setCustomerIdentifier (final long sdtCustomerId);
+
     /**
      * Set the target applications.
+     * 
      * @param targetApplications the target applications that this customer can use.
      */
-    void setTargetApplications (final Set <TargetApplication> targetApplications);
-    
+    void setTargetApplications (final Set<TargetApplication> targetApplications);
+
     /**
      * Get the target applications.
+     * 
      * @return return target applications that this customer can work with.
      */
-    Set <TargetApplication> getTargetApplications();
+    Set<TargetApplication> getTargetApplications ();
 }

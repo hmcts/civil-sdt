@@ -48,7 +48,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  */
 public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomerDao
 {
-    
+
     /**
      * Mock the behaviour of Bulk customer DAO, returns a static array of bulk customer.
      * 
@@ -56,7 +56,7 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
      * @return the bulk customer matching the given SDT ID.
      * @throws DataAccessException Hibernate exception
      */
-    public IBulkCustomer getBulkCustomerBySdtId (final int sdtCustomerId) throws DataAccessException
+    public IBulkCustomer getBulkCustomerBySdtId (final long sdtCustomerId) throws DataAccessException
     {
 
         IBulkCustomer bulkCustomer = null;
@@ -68,8 +68,8 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
             bulkCustomer.setCustomerCaseCode ("customerCaseCode");
             bulkCustomer.setSdtCustomerId (sdtCustomerId);
             bulkCustomer.setId (sdtCustomerId);
-            
-            //Mock the Target Application 
+
+            // Mock the Target Application
             final Set<TargetApplication> targetApplications = new HashSet<TargetApplication> ();
             final TargetApplication targetApplication = new TargetApplication ();
             targetApplication.setTargetApplicationCode ("targetApplicationCode");

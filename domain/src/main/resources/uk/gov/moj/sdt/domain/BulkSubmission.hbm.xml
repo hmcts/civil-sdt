@@ -22,7 +22,7 @@
         <property name="customerReference" type="java.lang.String">
             <column name="CUSTOMER_REFERENCE" />
         </property>
-        <property name="createdDate" type="org.joda.time.LocalDateTime">
+        <property name="createdDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="CREATED_DATE" />
         </property>
         <property name="numberOfRequest" type="int">
@@ -31,13 +31,13 @@
         <property name="submissionStatus" type="java.lang.String">
             <column name="BULK_SUBMISSION_STATUS" />
         </property>
-        <property name="completedDate" type="org.joda.time.LocalDateTime">
+        <property name="completedDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="COMPLETED_DATE" />
         </property>
-        <property name="updatedDate" type="org.joda.time.LocalDateTime">
+         <property name="updatedDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="UPDATED_DATE" />
         </property>
-        <property name="payload" type="java.lang.String">
+        <property name="payload" type="uk.gov.moj.sdt.domain.type.BlobType">
             <column name="BULK_PAYLOAD" />
         </property>
         <list name="individualRequests" inverse="false" table="INDIVIDUAL_REQUESTS" lazy="true">

@@ -97,7 +97,7 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
         // TODO - A generic method in AbstractDomainObject will do this check now
         // Validate SDT Customer ID from BulkCustomer
         LOGGER.debug ("Validating SDT Customer ID");
-        final int sdtCustomerId = bulkSubmission.getBulkCustomer ().getSdtCustomerId ();
+        final long sdtCustomerId = bulkSubmission.getBulkCustomer ().getSdtCustomerId ();
 
         final IBulkCustomer bulkCustomer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
         List<String> replacements = null;

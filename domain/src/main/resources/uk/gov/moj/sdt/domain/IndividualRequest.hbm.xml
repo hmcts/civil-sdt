@@ -69,7 +69,7 @@
         <property name="fee" type="java.math.BigDecimal">
             <column name="FEE" />
         </property>
-        -->
+         -->        
         <property name="payload" type="binary">
             <column name="PAYLOAD" />
         </property>        

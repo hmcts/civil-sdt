@@ -36,7 +36,6 @@ import org.joda.time.LocalDate;
 import uk.gov.moj.sdt.domain.api.IRequestDefenceDetail;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
-
 /**
  * Transient domain object for storing request defence detail information.
  * 
@@ -64,7 +63,7 @@ public class RequestDefenceDetail extends AbstractDomainObject implements IReque
     /**
      * This is a manually allocated and maintained value.
      */
-    private int sdtCustomerId;
+    private long sdtCustomerId;
 
     @Override
     public ITargetApplication getTargetApplication ()
@@ -79,13 +78,13 @@ public class RequestDefenceDetail extends AbstractDomainObject implements IReque
     }
 
     @Override
-    public int getSdtCustomerId ()
+    public long getSdtCustomerId ()
     {
         return sdtCustomerId;
     }
 
     @Override
-    public void setSdtCustomerId (final int sdtCustomerId)
+    public void setSdtCustomerId (final long sdtCustomerId)
     {
         this.sdtCustomerId = sdtCustomerId;
     }

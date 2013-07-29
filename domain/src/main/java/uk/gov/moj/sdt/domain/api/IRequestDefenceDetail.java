@@ -54,7 +54,7 @@ public interface IRequestDefenceDetail extends IDomainObject
      * @param fromDate from date
      */
     void setFromDate (final LocalDate fromDate);
-    
+
     /**
      * Get the to date.
      * 
@@ -88,12 +88,12 @@ public interface IRequestDefenceDetail extends IDomainObject
      * 
      * @return SDT customer id
      */
-    int getSdtCustomerId ();
+    long getSdtCustomerId ();
 
     /**
      * Set SDT customer id.
      * 
      * @param sdtCustomerId SDT customer id
      */
-    void setSdtCustomerId (final int sdtCustomerId);
+    void setSdtCustomerId (final long sdtCustomerId);
 }

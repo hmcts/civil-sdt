@@ -30,7 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -41,93 +43,39 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
 
 /**
- * Test {@link GenericDao} CRUD methods.
+ * Test class for the Bulk Submissions Dao.
  * 
- * @author Robin Compston
+ * @author Manoj Kulkarni
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTests
+public class BulkSubmissionsDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (GenericDaoTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionsDaoTest.class);
 
     /**
-     * Default constructor for {@link GenericDaoTest}.
+     * Default constructor.
      */
-    public GenericDaoTest ()
+    public BulkSubmissionsDaoTest ()
     {
         super ();
         DBUnitUtility.loadDatabase (this.getClass (), false);
     }
 
     /**
-     * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
-     */
-    @Test
-    public void testFetch ()
-    {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
-
-        final long id = 10711;
-        final IBulkCustomer bulkCustomer = genericDao.fetch (BulkCustomer.class, id);
-        bulkCustomer.getId ();
-
-    }
-
-    /**
-     * Tests query.
-     */
-    @Test
-    public void testQuery ()
-    {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
-
-        final IBulkCustomer[] bulkCustomers =
-                genericDao.query (BulkCustomer.class, Restrictions.eq ("sdtCustomerId", 2L));
-
-        if (bulkCustomers.length == 1)
-        {
-            // User found
-            final IBulkCustomer bulkCustomer = bulkCustomers[0];
-            LOG.debug ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
-        }
-    }
-
-    /**
-     * Tests the global parameter.
-     */
-    @Test
-    public void testGlobalParametersQuery ()
-    {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
-
-        final IGlobalParameter[] globalParameters = genericDao.query (GlobalParameter.class);
-
-        if (globalParameters.length == 2)
-        {
-            // Found the global parameters
-            for (IGlobalParameter globalParam : globalParameters)
-            {
-                LOG.debug ("GlobalParam =" + globalParam.getName () + ":" + globalParam.getValue ());
-            }
-        }
-    }
-
-    /**
-     * Tests insert.
+     * This method tests that record can be successfully inserted into the Bulk Submission.
      */
     @Test
     public void testInsert ()
@@ -135,11 +83,37 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         final IGenericDao genericDao =
                 (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        // bulkCustomer.setId (2);
-        bulkCustomer.setSdtCustomerId (456);
-        bulkCustomer.setCustomerCaseCode ("GH");
+        final IBulkSubmission bulkSubmission = new BulkSubmission ();
 
-        genericDao.persist (bulkCustomer);
+        final IBulkCustomer bulkCustomer = genericDao.fetch (BulkCustomer.class, 10711);
+
+        LOG.debug ("Bulk Customer is " + bulkCustomer);
+
+        bulkSubmission.setBulkCustomer (bulkCustomer);
+
+        LOG.debug ("Bulk Customer's target applications are " + bulkCustomer.getTargetApplications ());
+
+        final ITargetApplication targetApp = genericDao.fetch (TargetApplication.class, 10713L);
+
+        bulkSubmission.setTargetApplication (targetApp);
+
+        bulkSubmission.setCreatedDate (LocalDateTime.now ());
+        bulkSubmission.setCustomerReference ("REF1");
+        bulkSubmission.setNumberOfRequest (1);
+        final String xmlToLoad = "<Payload>2</Payload>";
+        bulkSubmission.setPayload (xmlToLoad);
+        bulkSubmission.setSdtBulkReference ("MCOL-10012013010101-100000009");
+        bulkSubmission.setSubmissionStatus ("PENDING");
+
+        genericDao.persist (bulkSubmission);
+
+        LOG.debug ("Persisted successfully");
+
+        final Criterion criterion = Restrictions.eq ("sdtBulkReference", "MCOL-10012013010101-100000009");
+        final IBulkSubmission[] submissions = genericDao.query (BulkSubmission.class, criterion);
+
+        LOG.debug ("submissions length is " + submissions.length);
+
+        LOG.debug ("payload for bulk submission is " + new String (submissions[0].getPayload ()));
     }
 }

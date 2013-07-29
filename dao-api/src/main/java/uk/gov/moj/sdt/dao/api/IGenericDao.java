@@ -55,8 +55,7 @@ public interface IGenericDao
      * boundaries, regardless of whether the objects referenced got loaded already.
      * </p>
      * 
-     * @param <DomainType>
-     *            of entity to load.
+     * @param <DomainType> of entity to load
      * @param domainType
      *            of entity to load.
      * @param id

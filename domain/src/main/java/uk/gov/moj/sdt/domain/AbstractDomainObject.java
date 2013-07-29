@@ -49,7 +49,7 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     /**
      * Primary key.
      */
-    private int id;
+    private long id;
 
     /**
      * Hibernate version number.
@@ -81,13 +81,13 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     }
 
     @Override
-    public int getId ()
+    public long getId ()
     {
         return id;
     }
 
     @Override
-    public void setId (final int id)
+    public void setId (final long id)
     {
         this.id = id;
     }

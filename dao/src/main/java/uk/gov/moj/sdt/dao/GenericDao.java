@@ -408,4 +408,5 @@ public class GenericDao implements IGenericDao
         return ((BigDecimal) result).longValue ();
 
     }
+
 }

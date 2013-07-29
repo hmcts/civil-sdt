@@ -111,9 +111,9 @@ public interface IBulkSubmission extends IDomainObject
     /**
      * Set created date.
      * 
-     * @param createdDate created dated
+     * @param localDateTime created dated
      */
-    void setCreatedDate (final LocalDateTime createdDate);
+    void setCreatedDate (final LocalDateTime localDateTime);
 
     /**
      * Get number of request.
@@ -181,9 +181,9 @@ public interface IBulkSubmission extends IDomainObject
     /**
      * Set the XML payload.
      * 
-     * @param payload xml payload
+     * @param bs xml payload
      */
-    void setPayload (final String payload);
+    void setPayload (final String bs);
 
     /**
      * Get list of individual request.

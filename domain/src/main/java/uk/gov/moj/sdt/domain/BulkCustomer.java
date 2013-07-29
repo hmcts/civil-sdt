@@ -35,7 +35,6 @@ import java.util.Set;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
-
 /**
  * Bulk Customer Information manually set up and maintained
  * for the SDT application for each registered Target Application.
@@ -46,10 +45,10 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
 {
 
-	/**
-	 * The target applications that this customer can work with.e.g. 'MCOL'
-	 */
-	private Set <TargetApplication> targetApplications;
+    /**
+     * The target applications that this customer can work with.e.g. 'MCOL'
+     */
+    private Set<TargetApplication> targetApplications;
     /**
      * Unique code for each Bulk Customer organisation.
      */
@@ -58,12 +57,12 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     /**
      * This is a manually allocated and maintained value.
      */
-    private int sdtCustomerId;
+    private long sdtCustomerId;
 
     /**
      * The National Coded Party for the organisation, between 1000 and 9999.
      */
-    private int customerIdentifier;
+    private long customerIdentifier;
 
     @Override
     public String getCustomerCaseCode ()
@@ -78,37 +77,39 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     }
 
     @Override
-    public int getSdtCustomerId ()
+    public long getSdtCustomerId ()
     {
         return sdtCustomerId;
     }
 
     @Override
-    public void setSdtCustomerId (final int sdtCustomerId)
+    public void setSdtCustomerId (final long sdtCustomerId)
     {
         this.sdtCustomerId = sdtCustomerId;
     }
 
     @Override
-    public int getCustomerIdentifier ()
+    public long getCustomerIdentifier ()
     {
         return customerIdentifier;
     }
 
     @Override
-    public void setCustomerIdentifier (final int customerIdentifier)
+    public void setCustomerIdentifier (final long customerIdentifier)
     {
         this.customerIdentifier = customerIdentifier;
     }
 
-	@Override
-	public void setTargetApplications(final Set <TargetApplication> targetApplications) {
-		this.targetApplications = targetApplications;
-	}
+    @Override
+    public void setTargetApplications (final Set<TargetApplication> targetApplications)
+    {
+        this.targetApplications = targetApplications;
+    }
 
-	@Override
-	public Set <TargetApplication> getTargetApplications() {
-		return targetApplications;
-	}
+    @Override
+    public Set<TargetApplication> getTargetApplications ()
+    {
+        return targetApplications;
+    }
 
 }

@@ -62,17 +62,17 @@ public class MockGenericDao
     /**
      * Check whether a sdt customer id is valid or not.
      * 
-     * @param sdtCustomerId sdtCustomerId to check
+     * @param l sdtCustomerId to check
      * @return true or false
      */
-    protected boolean isSDTCustomerIdValid (final int sdtCustomerId)
+    protected boolean isSDTCustomerIdValid (final long l)
     {
-        final List<Integer> validSDTCustomers = new ArrayList<Integer> ();
-        validSDTCustomers.add (new Integer (VALID_SDT_CUSTOMER_ID1));
-        validSDTCustomers.add (new Integer (VALID_SDT_CUSTOMER_ID2));
-        validSDTCustomers.add (new Integer (VALID_SDT_CUSTOMER_ID3));
+        final List<Long> validSDTCustomers = new ArrayList<Long> ();
+        validSDTCustomers.add (new Long (VALID_SDT_CUSTOMER_ID1));
+        validSDTCustomers.add (new Long (VALID_SDT_CUSTOMER_ID2));
+        validSDTCustomers.add (new Long (VALID_SDT_CUSTOMER_ID3));
 
-        return validSDTCustomers.contains (new Integer (sdtCustomerId));
+        return validSDTCustomers.contains (new Long (l));
     }
 
     /**

@@ -9,3 +9,4 @@
 @ddl/create_foreign_keys
 @ddl/create_sequences
 @ddl/create_data
+@ddl/dbunit_load

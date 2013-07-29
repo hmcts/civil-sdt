@@ -63,7 +63,7 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
     }
 
     @Override
-    public IBulkCustomer getBulkCustomerBySdtId (final int sdtCustomerId) throws DataAccessException
+    public IBulkCustomer getBulkCustomerBySdtId (final long sdtCustomerId) throws DataAccessException
     {
         LOG.debug ("Get a bulk customer matching sdtId [" + sdtCustomerId + "]");
 
