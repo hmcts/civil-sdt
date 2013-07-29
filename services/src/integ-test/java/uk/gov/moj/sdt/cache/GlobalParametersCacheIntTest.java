@@ -31,7 +31,10 @@
 package uk.gov.moj.sdt.cache;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -87,6 +90,34 @@ public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTes
         assertTrue (globalParameter.getName ().equals ("SDT_DATA_RETENTION"));
 
         LOG.debug ("Global Parameter value is " + globalParameter.getValue ());
+
+        // Negative test
+        final IGlobalParameter globalParameter2 = cacheable.getValue (IGlobalParameter.class, "SDTS_DATA_RETENTION");
+
+        assertNull (globalParameter2);
+    }
+
+    /**
+     * Tests the un-cache method of the GlobalParametersCache.
+     */
+    @Test
+    public void testUncache ()
+    {
+        final GlobalParametersCache cache =
+                (GlobalParametersCache) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.GlobalParametersCache");
+
+        final ICacheable cacheable =
+                (ICacheable) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.GlobalParametersCache");
+
+        final IGlobalParameter globalParameter = cacheable.getValue (IGlobalParameter.class, "SDT_DATA_RETENTION");
+
+        assertNotNull (globalParameter);
+
+        cache.uncache ();
+
+        final Map<String, IGlobalParameter> parameters = cache.getGlobalParameters ();
+
+        assertTrue (parameters.size () == 0);
     }
 
 }
