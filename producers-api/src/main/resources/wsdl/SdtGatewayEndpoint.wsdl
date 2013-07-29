@@ -412,7 +412,7 @@
             elementFormDefault="qualified"
             version="1.0">
             
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
             
             <xs:simpleType name="additionalNotesType">
                 <xs:restriction base="xs:string">
@@ -421,7 +421,7 @@
                 </xs:restriction>
             </xs:simpleType>
         
-            <xs:complexType name="warrantDetailType">
+            <xs:complexType name="warrantType">
                 <xs:sequence>
                     <xs:element name="claimNumber" type="base:claimNumberType" />
                     <xs:element name="defendantId" type="base:defendantIdType" />
@@ -430,12 +430,6 @@
                     <xs:element name="warrantAmount" type="xs:unsignedLong" />
                     <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0" />
                     <xs:element name="additionalNotes" type="tns:additionalNotesType" minOccurs="0" />
-                </xs:sequence>
-            </xs:complexType>
-        
-            <xs:complexType name="warrantType">
-                <xs:sequence>
-                    <xs:element name="warrantDetail" type="tns:warrantDetailType" />
                     <xs:element name="sotSignature" type="base:sotSignatureType"/>
                 </xs:sequence>
             </xs:complexType>
@@ -443,7 +437,6 @@
             <xs:element name="mcolWarrant" type="tns:warrantType" />
         
         </xs:schema>
-
 		<!-- Judgment.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
             targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
@@ -453,16 +446,15 @@
             elementFormDefault="qualified"
             version="1.0">
         
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
             
             <xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType"/>
         
             <xs:complexType name="judgmentWarrantType">
                 <xs:sequence>
-                    <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
-                    <xs:element name="warrantDetail" type="wnt:warrantDetailType"/>
-                    <xs:element name="sotSignature" type="base:sotSignatureType"/>
+                    <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
+                    <xs:element name="mcolWarrant" type="wnt:warrantType"/>
                 </xs:sequence>
             </xs:complexType>
         
@@ -559,7 +551,7 @@
                 </xs:sequence>
             </xs:complexType>
         
-            <xs:complexType name="judgmentDetailType">
+            <xs:complexType name="mcolJudgmentType">
                 <xs:sequence>
                     <xs:element name="claimNumber" type="base:claimNumberType"/>
                     <xs:element name="jointJudgment" type="xs:boolean"/>
@@ -575,12 +567,6 @@
                     <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0"/>
                     <xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0"/>
                     <xs:element name="payee" type="tns:payeeType" minOccurs="0"/>
-                </xs:sequence>
-            </xs:complexType>
-            
-            <xs:complexType name="mcolJudgmentType">
-                <xs:sequence>
-                    <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
                     <xs:element name="sotSignature" type="base:sotSignatureType"/>
                 </xs:sequence>
             </xs:complexType>

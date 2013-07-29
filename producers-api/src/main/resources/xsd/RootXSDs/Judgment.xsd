@@ -14,9 +14,8 @@
 
     <xs:complexType name="judgmentWarrantType">
         <xs:sequence>
-            <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
-            <xs:element name="warrantDetail" type="wnt:warrantDetailType"/>
-            <xs:element name="sotSignature" type="base:sotSignatureType"/>
+            <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
+            <xs:element name="mcolWarrant" type="wnt:warrantType"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -113,7 +112,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="judgmentDetailType">
+    <xs:complexType name="mcolJudgmentType">
         <xs:sequence>
             <xs:element name="claimNumber" type="base:claimNumberType"/>
             <xs:element name="jointJudgment" type="xs:boolean"/>
@@ -129,12 +128,6 @@
             <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0"/>
             <xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0"/>
             <xs:element name="payee" type="tns:payeeType" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-    
-    <xs:complexType name="mcolJudgmentType">
-        <xs:sequence>
-            <xs:element name="judgmentDetail" type="tns:judgmentDetailType"/>
             <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
     </xs:complexType>

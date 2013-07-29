@@ -5,8 +5,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantDetailType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
+import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantType;
 
 
 /**
@@ -19,9 +18,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="judgmentDetail" type="{http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema}judgmentDetailType"/>
- *         &lt;element name="warrantDetail" type="{http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema}warrantDetailType"/>
- *         &lt;element name="sotSignature" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sotSignatureType"/>
+ *         &lt;element name="mcolJudgment" type="{http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema}mcolJudgmentType"/>
+ *         &lt;element name="mcolWarrant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema}warrantType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -32,89 +30,62 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "judgmentWarrantType", propOrder = {
-    "judgmentDetail",
-    "warrantDetail",
-    "sotSignature"
+    "mcolJudgment",
+    "mcolWarrant"
 })
 public class JudgmentWarrantType {
 
     @XmlElement(required = true)
-    protected JudgmentDetailType judgmentDetail;
+    protected McolJudgmentType mcolJudgment;
     @XmlElement(required = true)
-    protected WarrantDetailType warrantDetail;
-    @XmlElement(required = true)
-    protected SotSignatureType sotSignature;
+    protected WarrantType mcolWarrant;
 
     /**
-     * Gets the value of the judgmentDetail property.
+     * Gets the value of the mcolJudgment property.
      * 
      * @return
      *     possible object is
-     *     {@link JudgmentDetailType }
+     *     {@link McolJudgmentType }
      *     
      */
-    public JudgmentDetailType getJudgmentDetail() {
-        return judgmentDetail;
+    public McolJudgmentType getMcolJudgment() {
+        return mcolJudgment;
     }
 
     /**
-     * Sets the value of the judgmentDetail property.
+     * Sets the value of the mcolJudgment property.
      * 
      * @param value
      *     allowed object is
-     *     {@link JudgmentDetailType }
+     *     {@link McolJudgmentType }
      *     
      */
-    public void setJudgmentDetail(JudgmentDetailType value) {
-        this.judgmentDetail = value;
+    public void setMcolJudgment(McolJudgmentType value) {
+        this.mcolJudgment = value;
     }
 
     /**
-     * Gets the value of the warrantDetail property.
+     * Gets the value of the mcolWarrant property.
      * 
      * @return
      *     possible object is
-     *     {@link WarrantDetailType }
+     *     {@link WarrantType }
      *     
      */
-    public WarrantDetailType getWarrantDetail() {
-        return warrantDetail;
+    public WarrantType getMcolWarrant() {
+        return mcolWarrant;
     }
 
     /**
-     * Sets the value of the warrantDetail property.
+     * Sets the value of the mcolWarrant property.
      * 
      * @param value
      *     allowed object is
-     *     {@link WarrantDetailType }
+     *     {@link WarrantType }
      *     
      */
-    public void setWarrantDetail(WarrantDetailType value) {
-        this.warrantDetail = value;
-    }
-
-    /**
-     * Gets the value of the sotSignature property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SotSignatureType }
-     *     
-     */
-    public SotSignatureType getSotSignature() {
-        return sotSignature;
-    }
-
-    /**
-     * Sets the value of the sotSignature property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SotSignatureType }
-     *     
-     */
-    public void setSotSignature(SotSignatureType value) {
-        this.sotSignature = value;
+    public void setMcolWarrant(WarrantType value) {
+        this.mcolWarrant = value;
     }
 
 }

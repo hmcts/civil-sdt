@@ -51,14 +51,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JudgmentDetailType }
-     * 
-     */
-    public JudgmentDetailType createJudgmentDetailType() {
-        return new JudgmentDetailType();
-    }
-
-    /**
      * Create an instance of {@link FullPaymentType }
      * 
      */
