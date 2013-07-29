@@ -63,7 +63,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
      * Test method for the SDT bulk reference generation.
      */
     @Test
-    public void testGetSDTBulkReference ()
+    public void testGetSdtBulkReference ()
     {
         final SdtBulkReferenceGenerator referenceGenerator =
                 (SdtBulkReferenceGenerator) this.applicationContext
@@ -72,7 +72,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
         // Negative Test 1 - Supply blank application name
         try
         {
-            referenceGenerator.getSDTBulkReference (null);
+            referenceGenerator.getSdtBulkReference (null);
         }
         catch (final IllegalArgumentException e)
         {
@@ -83,7 +83,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
         // Negative Test 2 - Supply application name less than expected value of 4
         try
         {
-            referenceGenerator.getSDTBulkReference ("NCO");
+            referenceGenerator.getSdtBulkReference ("NCO");
         }
         catch (final IllegalArgumentException e)
         {
@@ -94,7 +94,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
         // Negative Test 3 - Supply application name more than expected value of 4
         try
         {
-            referenceGenerator.getSDTBulkReference ("MCOLS");
+            referenceGenerator.getSdtBulkReference ("MCOLS");
         }
         catch (final IllegalArgumentException e)
         {
@@ -102,7 +102,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
             assertTrue (true);
         }
 
-        final String bulkReferenceNumber = referenceGenerator.getSDTBulkReference ("MCOL");
+        final String bulkReferenceNumber = referenceGenerator.getSdtBulkReference ("MCOL");
         LOG.debug ("Generated reference number is " + bulkReferenceNumber);
         assertNotNull (bulkReferenceNumber);
         assertEquals (29, bulkReferenceNumber.length ());

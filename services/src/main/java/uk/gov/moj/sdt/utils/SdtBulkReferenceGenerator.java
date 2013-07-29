@@ -61,7 +61,7 @@ public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
     private IGenericDao genericDao;
 
     @Override
-    public String getSDTBulkReference (final String targetApplication)
+    public String getSdtBulkReference (final String targetApplication)
     {
         final int targetAppLength = 4;
 

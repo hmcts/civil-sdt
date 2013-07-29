@@ -45,6 +45,6 @@ public interface ISdtBulkReferenceGenerator
      * @param targetApplication - The application where the request will be submitted to
      * @return the unique bulk SDT Reference number
      */
-    String getSDTBulkReference (String targetApplication);
+    String getSdtBulkReference (String targetApplication);
 
 }

@@ -77,7 +77,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         {
 
             // Populate SDT Bulk reference in response.
-            bulkResponseType.setSdtBulkReference (sdtBulkReferenceGenerator.getSDTBulkReference (bulkRequestType
+            bulkResponseType.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkRequestType
                     .getHeader ().getTargetApplicationId ().toString ()));
 
             // Transform web service object to domain object(s)

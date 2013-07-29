@@ -56,7 +56,7 @@ public class MockSdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
     private String[] mockBulkIds = new String[] {"000000001", "000000002", "000000003", "000000004", "000000005"};
 
     @Override
-    public synchronized String getSDTBulkReference (final String targetApplication)
+    public synchronized String getSdtBulkReference (final String targetApplication)
     {
         final int i = this.getCurrIndexToSelect ();
         final String bulkId = this.mockBulkIds[i];
