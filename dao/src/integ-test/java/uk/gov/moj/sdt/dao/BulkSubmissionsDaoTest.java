@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import static org.junit.Assert.assertEquals;
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
@@ -114,6 +116,12 @@ public class BulkSubmissionsDaoTest extends AbstractTransactionalJUnit4SpringCon
 
         LOG.debug ("submissions length is " + submissions.length);
 
+        assertEquals (submissions.length, 1);
+
         LOG.debug ("payload for bulk submission is " + new String (submissions[0].getPayload ()));
+
+        assertEquals (new String (submissions[0].getPayload ()), xmlToLoad);
+
+        assertEquals (submissions[0].getCustomerReference (), "REF1");
     }
 }
