@@ -28,66 +28,104 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.mcol.domain;
+package uk.gov.moj.sdt.submitquery.domain;
 
-import java.util.List;
+import uk.gov.moj.sdt.domain.AbstractDomainObject;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryResponse;
 
 /**
- * Defence details object as returned by MCOL.
+ * Defendant object as returned by MCOL.
  * 
  * @author d130680
  * 
  */
-public class DefenceDetail
+public class SubmitQueryResponse extends AbstractDomainObject implements ISubmitQueryResponse
 {
 
     /**
-     * The claim number.
+     * SDT customer Id.
      */
-    private String claimNumber;
+    private long sdtCustomerId;
 
     /**
-     * List of defendants returned from the query.
+     * Target application to send the request to, e.g. mcol.
      */
-    private List<Defendant> defendants;
+    private TargetApplication targetApplication;
 
     /**
-     * Get the claim number.
-     * 
-     * @return claim number
+     * The total count of the results from the query.
      */
-    public String getClaimNumber ()
+    private int resultCount;
+
+    /**
+     * Stores either OK or ERROR.
+     */
+    private String status;
+
+    /**
+     * Stores the error message when the status is ERROR.
+     */
+    private IErrorMessage errorMessage;
+
+    @Override
+    public long getSdtCustomerId ()
     {
-        return claimNumber;
+        return sdtCustomerId;
     }
 
-    /**
-     * Set the claim number.
-     * 
-     * @param claimNumber claim number
-     */
-    public void setClaimNumber (final String claimNumber)
+    @Override
+    public void setSdtCustomerId (final long sdtCustomerId)
     {
-        this.claimNumber = claimNumber;
+        this.sdtCustomerId = sdtCustomerId;
     }
 
-    /**
-     * Get the list of defendants.
-     * 
-     * @return list of defendants
-     */
-    public List<Defendant> getDefendants ()
+    @Override
+    public TargetApplication getTargetApplication ()
     {
-        return defendants;
+        return targetApplication;
     }
 
-    /**
-     * Set the list of defendants.
-     * 
-     * @param defendants list of defendants
-     */
-    public void setDefendants (final List<Defendant> defendants)
+    @Override
+    public void setTargetApplication (final TargetApplication targetApplication)
     {
-        this.defendants = defendants;
+        this.targetApplication = targetApplication;
+    }
+
+    @Override
+    public int getResultCount ()
+    {
+        return resultCount;
+    }
+
+    @Override
+    public void setResultCount (final int resultCount)
+    {
+        this.resultCount = resultCount;
+    }
+
+    @Override
+    public String getStatus ()
+    {
+        return status;
+    }
+
+    @Override
+    public void setStatus (final String status)
+    {
+        this.status = status;
+    }
+
+    @Override
+    public IErrorMessage getErrorMessage ()
+    {
+        return errorMessage;
+    }
+
+    @Override
+    public void setErrorMessage (final IErrorMessage errorMessage)
+    {
+        this.errorMessage = errorMessage;
     }
 }

@@ -11,7 +11,7 @@
 		class="uk.gov.moj.sdt.producer.comx.sdtws.SdtEndpointPortType">
         <property name="wsCreateBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler"/>
         <property name="wsReadBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler"/>
-        <property name="wsReadDefenceDetailsHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadDefenceDetailsHandler"/>
+        <property name="wsReadSubmitQueryHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler"/>
 	</bean>
 	
 

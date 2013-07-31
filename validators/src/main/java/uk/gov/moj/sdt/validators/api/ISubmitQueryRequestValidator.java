@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,32 +24,18 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-package uk.gov.moj.sdt.service.api;
-
-import java.util.Date;
-import java.util.List;
-
-import uk.gov.moj.sdt.mcol.domain.DefenceDetail;
+ * $Id: IBulkSubmissionValidator.java 16611 2013-07-02 09:44:42Z agarwals $
+ * $LastChangedRevision: 16611 $
+ * $LastChangedDate: 2013-07-02 10:44:42 +0100 (Tue, 02 Jul 2013) $
+ * $LastChangedBy: agarwals $ */
+package uk.gov.moj.sdt.validators.api;
 
 /**
- * Interface for mock MCOL services.
+ * An interface to provide validation methods for SubmitQueryRequest.
  * 
  * @author d130680
  * 
  */
-public interface IDefenceService
+public interface ISubmitQueryRequestValidator
 {
-
-    /**
-     * Get a list of defence details from the specified date range.
-     * 
-     * @param fromDate from date
-     * @param toDate to date
-     * @return list of defence details
-     */
-    List<DefenceDetail> getDefenceDetails (Date fromDate, Date toDate);
 }

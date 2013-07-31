@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.mbeans.api;
 
-
 /**
  * Interface for all classes implementing {@link CopyOfISdtMetricsMBean}.
  * 
@@ -54,11 +53,11 @@ public interface ISdtMetricsMBean
     String getBulkFeedbackStats ();
 
     /**
-     * Get summary of defence feedback  statistics.
+     * Get summary of submit query statistics.
      * 
-     * @return summary of defence feedback statistics.
+     * @return summary of submit query statistics.
      */
-    String getDefenceFeedbackStats ();
+    String getSubmitQueryStats ();
 
     /**
      * Get summary of status statistics.
@@ -124,21 +123,21 @@ public interface ISdtMetricsMBean
     String getErrorStats ();
 
     /**
-     * Get the last bulk submit reference assiged. 
+     * Get the last bulk submit reference assiged.
      * 
      * @return the last bulk submit reference.
      */
     String getLastBulkSubmitRef ();
 
     /**
-     * Get the last bulk request reference assiged. 
+     * Get the last bulk request reference assiged.
      * 
      * @return the last bulk request reference.
      */
     String getLastBulkRequestRef ();
 
     /**
-     * Get the current cache reset control. 
+     * Get the current cache reset control.
      * 
      * @return the last bulk request reference.
      */
@@ -148,14 +147,14 @@ public interface ISdtMetricsMBean
      * Reset all metrics to initial value.
      */
     void reset ();
-    
+
     /**
      * Mark all cache classes extending {@link AbstractCacheControl} as needing to uncache any cached content. It is the
      * responsibility of the implementation to notice this has been called and discard any cached items, forcing a
      * refresh from source.
      */
     void uncache ();
-    
+
     /**
      * Increment count of bulk submits.
      */
@@ -181,16 +180,16 @@ public interface ISdtMetricsMBean
     void addBulkFeedbackTime (final long bulkFeedbackTime);
 
     /**
-     * Increment count of defence feedbacks.
+     * Increment count of submit querys.
      */
-    void upDefenceFeedbackCounts ();
+    void upSubmitQueryCounts ();
 
     /**
-     * Add latest defence feedback time to total.
+     * Add latest submit query time to total.
      * 
-     * @param defenceFeedbackTime time to add to total defence feedback time.
+     * @param submitQueryTime time to add to total submit query time.
      */
-    void addDefenceFeedbackTime (final long defenceFeedbackTime);
+    void addSubmitQueryTime (final long submitQueryTime);
 
     /**
      * Increment the bulk status update count.

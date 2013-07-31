@@ -34,8 +34,8 @@
         <property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao" />
     </bean>
     
-        <bean id="uk.gov.moj.sdt.validators.api.IRequestDefenceDetailValidator"
-        class="uk.gov.moj.sdt.validators.RequestDefenceDetailValidator">
+        <bean id="uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator"
+        class="uk.gov.moj.sdt.validators.SubmitQueryRequestValidator">
     </bean>
 
 	<bean id="uk.gov.moj.sdt.validators.api.IDateValidator" class="uk.gov.moj.sdt.validators.DateValidator">

@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,20 +24,29 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: IBulkSubmissionValidator.java 16611 2013-07-02 09:44:42Z agarwals $
- * $LastChangedRevision: 16611 $
- * $LastChangedDate: 2013-07-02 10:44:42 +0100 (Tue, 02 Jul 2013) $
- * $LastChangedBy: agarwals $ */
-package uk.gov.moj.sdt.validators.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.producers.api;
 
-
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
- * An interface to provide validation methods for RequestDefenceDetail.
+ * Interface for handling request defence details flow.
  * 
  * @author d130680
  * 
  */
-public interface IRequestDefenceDetailValidator
+public interface IWsReadSubmitQueryHandler extends IWsReadHandler
 {
+
+    /**
+     * Query to submit to the case management systems.
+     * 
+     * @param requestType request including criteria
+     * @return response from managment system
+     */
+    SubmitQueryResponseType submitQuery (final SubmitQueryRequestType requestType);
 }

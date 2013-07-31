@@ -138,24 +138,24 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long bulkFeedbackTimeMax;
 
     /**
-     * Count of all defence feedback.
+     * Count of all submit query.
      */
-    private long defenceFeedbackCounts;
+    private long submitQueryCounts;
 
     /**
-     * Total processing time of all defence feedbacks.
+     * Total processing time of all submit querys.
      */
-    private long defenceFeedbackTime;
+    private long submitQueryTime;
 
     /**
-     * Minimum processing time of all defence feedbacks.
+     * Minimum processing time of all submit querys.
      */
-    private long defenceFeedbackTimeMin;
+    private long submitQueryTimeMin;
 
     /**
-     * Maxiumum processing time of all defence feedbacks.
+     * Maxiumum processing time of all submit querys.
      */
-    private long defenceFeedbackTimeMax;
+    private long submitQueryTimeMax;
 
     /**
      * Bulk status update count (as a result of all requests on a bulk being updated).
@@ -168,7 +168,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long requestStatusUpdateCount;
 
     /**
-     * Maxiumum processing time of all defence feedbacks.
+     * Maxiumum processing time of all submit querys.
      */
     private long completedBulkSubmitCount;
 
@@ -510,75 +510,75 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Get current count of defences feedbacks since last reset.
      * 
-     * @return count of defence feedbacks.
+     * @return count of submit querys.
      */
-    private long getDefenceFeedbackCounts ()
+    private long getSubmitQueryCounts ()
     {
-        return this.defenceFeedbackCounts;
+        return this.submitQueryCounts;
     }
 
     @Override
-    public void upDefenceFeedbackCounts ()
+    public void upSubmitQueryCounts ()
     {
-        this.defenceFeedbackCounts += 1;
+        this.submitQueryCounts += 1;
     }
 
     /**
      * Get total time for defences feedbacks since last reset.
      * 
-     * @return total time (milliseconds) for defence feedbacks.
+     * @return total time (milliseconds) for submit querys.
      */
-    private long getDefenceFeedbackTime ()
+    private long getSubmitQueryTime ()
     {
-        return this.defenceFeedbackTime;
+        return this.submitQueryTime;
     }
 
     @Override
-    public void addDefenceFeedbackTime (final long defenceFeedbackTime)
+    public void addSubmitQueryTime (final long submitQueryTime)
     {
-        this.defenceFeedbackTime += defenceFeedbackTime;
+        this.submitQueryTime += submitQueryTime;
 
         // Update the minimum if needed.
-        if (this.defenceFeedbackTimeMin == 0 || defenceFeedbackTime < this.defenceFeedbackTimeMin)
+        if (this.submitQueryTimeMin == 0 || submitQueryTime < this.submitQueryTimeMin)
         {
-            this.defenceFeedbackTimeMin = defenceFeedbackTime;
+            this.submitQueryTimeMin = submitQueryTime;
         }
 
         // Update the maximum if needed.
-        if (this.defenceFeedbackTimeMax == 0 || defenceFeedbackTime > this.defenceFeedbackTimeMax)
+        if (this.submitQueryTimeMax == 0 || submitQueryTime > this.submitQueryTimeMax)
         {
-            this.defenceFeedbackTimeMax = defenceFeedbackTime;
+            this.submitQueryTimeMax = submitQueryTime;
         }
     }
 
     /**
-     * Get average time for defences feedbacks since last reset.
+     * Get average time for submit query feedbacks since last reset.
      * 
-     * @return average time (milliseconds) for defence feedbacks.
+     * @return average time (milliseconds) for submit querys.
      */
-    private long getDefenceFeedbackTimeAvg ()
+    private long getSubmitQueryTimeAvg ()
     {
-        return (this.defenceFeedbackCounts == 0) ? 0 : this.defenceFeedbackTime / this.defenceFeedbackCounts;
+        return (this.submitQueryCounts == 0) ? 0 : this.submitQueryTime / this.submitQueryCounts;
     }
 
     /**
-     * Get minimum time for defences feedbacks since last reset.
+     * Get minimum time for submit query feedbacks since last reset.
      * 
-     * @return minimum time (milliseconds) for defence feedbacks.
+     * @return minimum time (milliseconds) for submit querys.
      */
-    private long getDefenceFeedbackTimeMin ()
+    private long getSubmitQueryTimeMin ()
     {
-        return this.defenceFeedbackTimeMin;
+        return this.submitQueryTimeMin;
     }
 
     /**
-     * Get maximum time for defences feedbacks since last reset.
+     * Get maximum time for submit query feedbacks since last reset.
      * 
-     * @return maximum time (milliseconds) for defence feedbacks.
+     * @return maximum time (milliseconds) for submit querys.
      */
-    private long getDefenceFeedbackTimeMax ()
+    private long getSubmitQueryTimeMax ()
     {
-        return this.defenceFeedbackTimeMax;
+        return this.submitQueryTimeMax;
     }
 
     /**
@@ -644,7 +644,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Get average time for defences feedbacks since last reset.
      * 
-     * @return average time (milliseconds) for defence feedbacks.
+     * @return average time (milliseconds) for submit querys.
      */
     private long getDatabaseCallsTimeAvg ()
     {
@@ -694,7 +694,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Get average time for defences feedbacks since last reset.
      * 
-     * @return average time (milliseconds) for defence feedbacks.
+     * @return average time (milliseconds) for submit querys.
      */
     private long getDatabaseReadsTimeAvg ()
     {
@@ -744,7 +744,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Get average time for defences feedbacks since last reset.
      * 
-     * @return average time (milliseconds) for defence feedbacks.
+     * @return average time (milliseconds) for submit querys.
      */
     private long getDatabaseWritesTimeAvg ()
     {
@@ -804,7 +804,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Get average time for defences feedbacks since last reset.
      * 
-     * @return average time (milliseconds) for defence feedbacks.
+     * @return average time (milliseconds) for submit querys.
      */
     private long getRequestQueueTimeAvg ()
     {
@@ -888,7 +888,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private long getCaseMgmtResponseTimeAvg ()
     {
-        return (this.defenceFeedbackCounts == 0) ? 0 : this.caseMgmtResponseTime / this.defenceFeedbackCounts;
+        return (this.submitQueryCounts == 0) ? 0 : this.caseMgmtResponseTime / this.submitQueryCounts;
     }
 
     /**
@@ -1192,10 +1192,10 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.bulkFeedbackTime = 0;
         this.bulkFeedbackTimeMin = 0;
         this.bulkFeedbackTimeMax = 0;
-        this.defenceFeedbackCounts = 0;
-        this.defenceFeedbackTime = 0;
-        this.defenceFeedbackTimeMin = 0;
-        this.defenceFeedbackTimeMax = 0;
+        this.submitQueryCounts = 0;
+        this.submitQueryTime = 0;
+        this.submitQueryTimeMin = 0;
+        this.submitQueryTimeMax = 0;
         this.bulkStatusUpdateCount = 0;
         this.requestStatusUpdateCount = 0;
         this.completedBulkSubmitCount = 0;
@@ -1242,11 +1242,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public String getDefenceFeedbackStats ()
+    public String getSubmitQueryStats ()
     {
-        return "Defence feedback: count[" + this.getDefenceFeedbackCounts () + "], time[" +
-                this.getDefenceFeedbackTime () + "], average[" + this.getDefenceFeedbackTimeAvg () + "], minimum[" +
-                this.getDefenceFeedbackTimeMin () + "], maximum[" + this.getDefenceFeedbackTimeMax () + "]";
+        return "Defence feedback: count[" + this.getSubmitQueryCounts () + "], time[" + this.getSubmitQueryTime () +
+                "], average[" + this.getSubmitQueryTimeAvg () + "], minimum[" + this.getSubmitQueryTimeMin () +
+                "], maximum[" + this.getSubmitQueryTimeMax () + "]";
     }
 
     @Override

@@ -33,9 +33,9 @@ package uk.gov.moj.sdt.visitor;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 
@@ -83,7 +83,7 @@ public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implem
     }
 
     @Override
-    public void visit (final RequestDefenceDetail defenceDetail, final ITree tree)
+    public void visit (final SubmitQueryRequest submitQueryRequest, final ITree tree)
     {
         throw new UnsupportedOperationException (
                 "Missing validator implementation - this method should never be called.");

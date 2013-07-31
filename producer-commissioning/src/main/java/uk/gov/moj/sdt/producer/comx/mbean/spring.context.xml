@@ -21,7 +21,7 @@
 				class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
 				<property name="managedMethods">
 					<value>getBulkSubmitStats,
-						getBulkFeedbackStats,getDefenceFeedbackStats, getStatusStats,
+						getBulkFeedbackStats,getSubmitQueryStats, getStatusStats,
 						getDomainObjectsStats, getDatabaseCallsStats,
 						getDatabaseReadsStats, getDatabaseWritesStats,
 						getActiveCustomersStats, getRequestQueueStats, getCaseMgmtStats,

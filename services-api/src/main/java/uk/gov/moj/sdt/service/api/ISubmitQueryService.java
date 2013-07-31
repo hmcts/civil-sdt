@@ -28,91 +28,25 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.mcol.domain;
+package uk.gov.moj.sdt.service.api;
 
-import java.util.Date;
+import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryResponse;
 
 /**
- * Defendant object as returned by MCOL.
+ * Interface for MCOL services.
  * 
  * @author d130680
  * 
  */
-public class Defendant
+public interface ISubmitQueryService
 {
 
     /**
-     * The defendant ID.
-     */
-    private String defendantId;
-
-    /**
-     * The filed date.
-     */
-    private Date filedDate;
-
-    /**
-     * The response which can be of DE, DC or PA.
-     */
-    private String response;
-
-    /**
-     * Get the defendant Id.
+     * Deals with a query from SDT that will be passed on to MCOL.
      * 
-     * @return defendant Id
+     * @param request request going to MCOL
+     * @return response from MCOL converted to domain
      */
-    public String getDefendantId ()
-    {
-        return defendantId;
-    }
-
-    /**
-     * Set the defendant Id.
-     * 
-     * @param defendantId defendant Id
-     */
-    public void setDefendantId (final String defendantId)
-    {
-        this.defendantId = defendantId;
-    }
-
-    /**
-     * Get the filed date.
-     * 
-     * @return filed date
-     */
-    public Date getFiledDate ()
-    {
-        return filedDate;
-    }
-
-    /**
-     * Set the filed date.
-     * 
-     * @param filedDate filed date
-     */
-    public void setFiledDate (final Date filedDate)
-    {
-        this.filedDate = filedDate;
-    }
-
-    /**
-     * Get the response.
-     * 
-     * @return response
-     */
-    public String getResponse ()
-    {
-        return response;
-    }
-
-    /**
-     * Set the response.
-     * 
-     * @param response response.
-     */
-    public void setResponse (final String response)
-    {
-        this.response = response;
-    }
+    ISubmitQueryResponse submitQuery (final ISubmitQueryRequest request);
 }

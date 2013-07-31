@@ -32,76 +32,42 @@ package uk.gov.moj.sdt.validators;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.LocalDate;
 
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
+import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
-import uk.gov.moj.sdt.validators.api.IRequestDefenceDetailValidator;
-import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
-import uk.gov.moj.sdt.validators.exception.InvalidDateRangeException;
+import uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
- * Request Defence Detail domain validator.
+ * Submit Query Request domain validator.
  * 
  * @author d130680
  * 
  */
-public class RequestDefenceDetailValidator extends AbstractDomainObjectVisitor implements
-        IRequestDefenceDetailValidator
+public class SubmitQueryRequestValidator extends AbstractDomainObjectVisitor implements ISubmitQueryRequestValidator
 {
-
-    /**
-     * Retention period in days for defence details.
-     */
-    public static final int DEFENCE_DETAILS_RETENTION_PERIOD = 90;
 
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (RequestDefenceDetailValidator.class);
+    private static final Log LOGGER = LogFactory.getLog (SubmitQueryRequestValidator.class);
 
     /**
      * No-argument Constructor.
      */
-    public RequestDefenceDetailValidator ()
+    public SubmitQueryRequestValidator ()
     {
     }
 
     @Override
-    public void visit (final RequestDefenceDetail defenceDetail, final ITree tree)
+    public void visit (final SubmitQueryRequest submitQueryRequest, final ITree tree)
     {
         // TODO - need to validate these fields
         // LOGGER.debug ("validate SDT Customer id");
         //
         // LOGGER.debug ("validate Target application id");
 
-        LOGGER.info ("Request Defence Detail SDT Customer id [" + defenceDetail.getSdtCustomerId () + "].");
-
-        boolean isValid = true;
-
-        final LocalDate toDate = defenceDetail.getToDate ();
-        final LocalDate fromDate = defenceDetail.getFromDate ();
-        // Check the date range is valid
-        isValid = DateValidator.isDateAfter (toDate, fromDate);
-
-        if ( !isValid)
-        {
-            throw new InvalidDateRangeException (AbstractBusinessException.ErrorCode.INVALID_DATE_RANGE.name (),
-                    "SDT detected that an invalid date range was specified for the Request Defence Details.");
-        }
-
-        // Check date is within last 90days
-        isValid = DateValidator.isDateWitinLastXDays (fromDate, new Integer (DEFENCE_DETAILS_RETENTION_PERIOD));
-
-        if ( !isValid)
-        {
-            // CHECKSTYLE:OFF
-            throw new InvalidDateRangeException (
-                    AbstractBusinessException.ErrorCode.ABOVE_MAXIMUM_RETENTION_PERIOD.name (),
-                    "SDT has reached the maximum number of Defence Requests that can be forwarded to the online Case Management application (MCOL) for processing at any point in time.");
-            // CHECKSTYLE:ON
-        }
+        LOGGER.info ("Request Defence Detail SDT Customer id [" + submitQueryRequest.getSdtCustomerId () + "].");
 
     }
 

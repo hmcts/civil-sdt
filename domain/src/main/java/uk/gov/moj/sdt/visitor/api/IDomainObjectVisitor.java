@@ -33,9 +33,9 @@ package uk.gov.moj.sdt.visitor.api;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestDefenceDetail;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
@@ -88,11 +88,11 @@ public interface IDomainObjectVisitor extends IVisitor
     void visit (IndividualRequest individualRequest, ITree tree);
 
     /**
-     * Visit the Request Defence Detail.
+     * Visit the Submit Query Request.
      * 
-     * @param requestDefenceDetail domain object to be visited.
+     * @param submitQueryRequest domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (RequestDefenceDetail requestDefenceDetail, ITree tree);
+    void visit (final SubmitQueryRequest submitQueryRequest, final ITree tree);
 
 }

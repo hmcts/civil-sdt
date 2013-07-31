@@ -28,24 +28,88 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.producers.api;
+package uk.gov.moj.sdt.submitquery.domain.api;
 
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
- * Interface for handling request defence details flow.
+ * Interface for submit query response domain object.
  * 
  * @author d130680
- * @deprecated TODO Needs to be renamed to IWsSubmitQueryHandler and should extend IWsReadHandler.
  * 
  */
-public interface IWsReadDefenceDetailsHandler
+public interface ISubmitQueryResponse extends IDomainObject
 {
 
     /**
-     * Processes request defence details message and returns the defence details.
+     * Get SDT customer Id.
      * 
-     * @param defenceDetails defence details to search for
-     * @return defence details
+     * @return SDT customer Id
      */
-    // DefenceResponseType getDefenceDetails (final DefenceRequestType defenceDetails);
+    long getSdtCustomerId ();
+
+    /**
+     * Set SDT customer Id.
+     * 
+     * @param sdtCustomerId SDT customer Id
+     */
+    void setSdtCustomerId (final long sdtCustomerId);
+
+    /**
+     * Get target application.
+     * 
+     * @return target application
+     */
+    TargetApplication getTargetApplication ();
+
+    /**
+     * Set target application.
+     * 
+     * @param targetApplication target application
+     */
+    void setTargetApplication (final TargetApplication targetApplication);
+
+    /**
+     * Get result count.
+     * 
+     * @return result count
+     */
+    int getResultCount ();
+
+    /**
+     * Set result count.
+     * 
+     * @param resultCount result count
+     */
+    void setResultCount (final int resultCount);
+
+    /**
+     * Get status.
+     * 
+     * @return status
+     */
+    String getStatus ();
+
+    /**
+     * Set status.
+     * 
+     * @param status status
+     */
+    void setStatus (final String status);
+
+    /**
+     * Get error message.
+     * 
+     * @return error message
+     */
+    IErrorMessage getErrorMessage ();
+
+    /**
+     * Set error message.
+     * 
+     * @param errorMessage error message
+     */
+    void setErrorMessage (final IErrorMessage errorMessage);
 }

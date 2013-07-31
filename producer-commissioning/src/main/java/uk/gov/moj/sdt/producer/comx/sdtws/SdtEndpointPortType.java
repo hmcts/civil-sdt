@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler;
-import uk.gov.moj.sdt.producers.api.IWsReadDefenceDetailsHandler;
+import uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
@@ -55,11 +55,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * 
  * @author Saurabh Agarwal
  */
-
-@WebService (serviceName = "SdtEndpoint", portName = "SdtEndpointPort", 
-targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", 
-wsdlLocation = "wsdl/SdtGatewayEndpoint.wsdl", 
-endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
+// CHECKSTYLE:OFF
+@WebService (serviceName = "SdtEndpoint", portName = "SdtEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", wsdlLocation = "wsdl/SdtGatewayEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
+// CHECKSTYLE:ON
 public class SdtEndpointPortType implements ISdtEndpointPortType
 {
 
@@ -79,9 +77,9 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     private IWsReadBulkRequestHandler wsReadBulkRequestHandler;
 
     /**
-     * Handles request defence details.
+     * Handles submit query details.
      */
-    private IWsReadDefenceDetailsHandler wsReadDefenceDetailsHandler;
+    private IWsReadSubmitQueryHandler wsReadSubmitQueryHandler;
 
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequest)
@@ -119,29 +117,23 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         return response;
     }
 
-    // @Override
-    // public DefenceResponseType getDefenceDetails (final DefenceRequestType defenceRequest)
-    // {
-    // LOGGER.debug (this.getClass ().getName () + " endpoint called, getDefenceDetails=" +
-    // defenceRequest.getHeader ().getSdtCustomerId ());
-    //
-    // // Update mbean stats.
-    // SdtMetricsMBean.getSdtMetrics ().upDefenceFeedbackCounts ();
-    //
-    // // Measure response time.
-    // final long startTime = new GregorianCalendar ().getTimeInMillis ();
-    // final DefenceResponseType response = wsReadDefenceDetailsHandler.getDefenceDetails (defenceRequest);
-    // final long endTime = new GregorianCalendar ().getTimeInMillis ();
-    // SdtMetricsMBean.getSdtMetrics ().addDefenceFeedbackTime (endTime - startTime);
-    //
-    // return response;
-    // }
-
     @Override
     public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequest)
     {
-        // TODO Auto-generated method stub
-        return null;
+        LOGGER.debug (this.getClass ().getName () + " endpoint called, submitQuery=" +
+                submitQueryRequest.getHeader ().getSdtCustomerId ());
+
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upSubmitQueryCounts ();
+
+        // Measure response time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final SubmitQueryResponseType response = wsReadSubmitQueryHandler.submitQuery (submitQueryRequest);
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addSubmitQueryTime (endTime - startTime);
+
+        return response;
+
     }
 
     /**
@@ -161,12 +153,11 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     }
 
     /**
-     * @param wsReadDefenceDetailsHandler the wsReadDefenceDetailsHandler to set
+     * @param wsReadSubmitQueryHandler the wsReadSubmitQueryHandler to set
      */
-    public void setWsReadDefenceDetailsHandler (final IWsReadDefenceDetailsHandler wsReadDefenceDetailsHandler)
+    public void setWsReadSubmitQueryHandler (final IWsReadSubmitQueryHandler wsReadSubmitQueryHandler)
     {
-        this.wsReadDefenceDetailsHandler = wsReadDefenceDetailsHandler;
+        this.wsReadSubmitQueryHandler = wsReadSubmitQueryHandler;
     }
-
 
 }
