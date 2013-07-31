@@ -158,6 +158,9 @@
 				<include name="${org.springframework.webflow.jar}" />
 				<include name="${slf4j-api.jar}" />
 				<include name="${slf4j-log4j12.jar}" />
+				<include name="${usertype-spi.jar}" />
+				<include name="${usertype.core.jar}" />
+				<include name="${usertype.jodatime.jar}" />
 			</fileset>
 			<fileset dir="${3rd-party.dir}" casesensitive="false">
 				<include name="${activation.jar}" />
