@@ -19,10 +19,10 @@
         <many-to-one name="errorMessage" class="uk.gov.moj.sdt.domain.ErrorMessage" fetch="join">
             <column name="ERROR_MESSAGE" />
         </many-to-one>
-        <property name="createdDate" type="org.joda.time.LocalDateTime">
+        <property name="createdDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="CREATED_DATE" />
         </property>
-        <property name="updatedDate" type="org.joda.time.LocalDateTime">
+        <property name="updatedDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="UPDATED_DATE" />
         </property>
         <property name="errorText" type="java.lang.String">

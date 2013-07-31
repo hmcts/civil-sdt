@@ -13,11 +13,11 @@
 			access="field">
 			<column name="BULK_CUSTOMER_ID" />
 		</property>
-		<property name="requestDateTime" type="org.joda.time.LocalDateTime"
+		<property name="requestDateTime" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime"
 			access="field">
 			<column name="REQUEST_TIMESTAMP" />
 		</property>
-		<property name="responseDateTime" type="org.joda.time.LocalDateTime"
+		<property name="responseDateTime" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime"
 			access="field">
 			<column name="RESPONSE_TIMESTAMP" />
 		</property>

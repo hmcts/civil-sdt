@@ -295,4 +295,88 @@ public interface IIndividualRequest extends IDomainObject
      */
     void setPayload (final String payload);
 
+    /**
+     * Set request retry count.
+     * 
+     * @return request retry count
+     */
+    int getRequestRetryCount ();
+
+    /**
+     * Set request retry count.
+     * 
+     * @param requestRetryCount request retry count
+     */
+    void setRequestRetryCount (final int requestRetryCount);
+
+    /**
+     * Get reason rejection code.
+     * 
+     * @return reason rejection code
+     */
+    String getRejectionReasonCode ();
+
+    /**
+     * Set reason rejection code.
+     * 
+     * @param rejectionReasonCode reason rejection code
+     */
+    void setRejectionReasonCode (final String rejectionReasonCode);
+
+    /**
+     * Get reason rejection description.
+     * 
+     * @return reason rejection description
+     */
+    String getRejectionReasonDescription ();
+
+    /**
+     * Set reason rejection description.
+     * 
+     * @param rejectionReasonDescription reason rejection description
+     */
+    void setRejectionReasonDescription (final String rejectionReasonDescription);
+
+    /**
+     * Get forwarding attempts.
+     * 
+     * @return forwarding attempts
+     */
+    int getForwardingAttempts ();
+
+    /**
+     * Set forwarding attempts.
+     * 
+     * @param forwardingAttempts forwarding attempts
+     */
+    void setForwardingAttempts (final int forwardingAttempts);
+
+    /**
+     * Get target application status.
+     * 
+     * @return target application status
+     */
+    String getTargetApplicationStatus ();
+
+    /**
+     * Set target application status.
+     * 
+     * @param targetApplicationStatus target application status
+     */
+    void setTargetApplicationStatus (final String targetApplicationStatus);
+
+    /**
+     * Get target application response.
+     * 
+     * @return target application response
+     */
+    String getTargetApplicationResponse ();
+
+    /**
+     * Set target application response.
+     * 
+     * @param targetApplicationResponse target application response
+     */
+    void setTargetApplicationResponse (final String targetApplicationResponse);
+
 }
