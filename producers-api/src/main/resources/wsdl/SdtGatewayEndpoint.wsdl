@@ -201,21 +201,21 @@
                 <xs:sequence>
                     <xs:element name="error" type="tns:errorType" minOccurs="0" />
                 </xs:sequence>
-                <xs:attribute name="code" type="tns:statusCodeType"></xs:attribute>
+                <xs:attribute name="code" type="tns:statusCodeType" use="required"/>
             </xs:complexType>
         
             <xs:complexType name="createStatusType">
                 <xs:sequence>
                     <xs:element name="error" type="tns:errorType" minOccurs="0" />
                 </xs:sequence>
-                <xs:attribute name="code" type="tns:createStatusCodeType"></xs:attribute>
+                <xs:attribute name="code" type="tns:createStatusCodeType" use="required"/>
             </xs:complexType>
         
             <xs:complexType name="updateStatusType">
                 <xs:sequence>
                     <xs:element name="error" type="tns:errorType" minOccurs="0" />
                 </xs:sequence>
-                <xs:attribute name="code" type="tns:updateStatusCodeType"></xs:attribute>
+                <xs:attribute name="code" type="tns:updateStatusCodeType" use="required"/>
             </xs:complexType>
         
             <xs:simpleType name="bulkStatusCodeType">
@@ -241,14 +241,14 @@
                 <xs:sequence>
                     <xs:element name="error" type="tns:errorType" minOccurs="0" />
                 </xs:sequence>
-                <xs:attribute name="code" type="tns:bulkStatusCodeType"></xs:attribute>
+                <xs:attribute name="code" type="tns:bulkStatusCodeType" use="required"/>
             </xs:complexType>
         
             <xs:complexType name="individualStatusType">
                 <xs:sequence>
                     <xs:element name="error" type="tns:errorType" minOccurs="0" />
                 </xs:sequence>
-                <xs:attribute name="code" type="tns:individualStatusCodeType"></xs:attribute>
+                <xs:attribute name="code" type="tns:individualStatusCodeType" use="required"/>
             </xs:complexType>
         
         </xs:schema>
@@ -437,6 +437,7 @@
             <xs:element name="mcolWarrant" type="tns:warrantType" />
         
         </xs:schema>
+
 		<!-- Judgment.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
             targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"
@@ -446,8 +447,8 @@
             elementFormDefault="qualified"
             version="1.0">
         
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" />
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"/>
             
             <xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType"/>
         
@@ -548,6 +549,142 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:element>
+                    <xs:element name="dxNumber" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="35"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="faxNumber" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="24"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="email" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="254"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="pcm" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="2"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="reference" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="24"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="bankAccountNumber" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="8"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="bankAccountHolder" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="70"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="bankSortCode" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="8"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="bankName" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="30"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="bankInfo1" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="30"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="bankInfo2" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="30"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="slipCodeline1" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="58"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="slipCodeline2" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="58"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="giroAccountNumber" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="8"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="giroTransCode1" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="9"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="giroTransCode2" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="9"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="apacsTransCode" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                                <xs:maxLength value="2"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
                 </xs:sequence>
             </xs:complexType>
         
@@ -572,7 +709,7 @@
             </xs:complexType>
         
         </xs:schema>
-        
+
 		<!-- ClaimStatusUpdate.xsd -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" 
@@ -625,7 +762,7 @@
             elementFormDefault="qualified"
             version="1.0">
             
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
             
             <xs:complexType name="mcolDefenceCriteriaType">
                 <xs:sequence>
@@ -639,13 +776,7 @@
             <xs:complexType name="mcolDefenceDetailType">
                 <xs:sequence>
                     <xs:element name="claimNumber" type="base:claimNumberType" />
-                    <xs:element name="defendants">
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
+                    <xs:element name="defendant" type="tns:defendantType"/>
                 </xs:sequence>
             </xs:complexType>
         
@@ -654,7 +785,7 @@
                     <xs:element name="filedDate" type="xs:dateTime" />
                     <xs:element name="responseType" type="tns:responseType" />
                 </xs:sequence>
-                <xs:attribute name="defendantId" type="base:defendantIdType" />
+                <xs:attribute name="defendantId" type="base:defendantIdType" use="required" />
             </xs:complexType>
         
             <xs:simpleType name="responseType">

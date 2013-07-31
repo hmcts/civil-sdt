@@ -11,7 +11,7 @@
         <choice>
             <!-- Either PCOL or MCOL requests will be allowed -->
             <mcolRequests>
-                <mcolRequest requestType="claim" requestId="request identifier">
+                <mcolRequest requestType="mcolClaim" requestId="request identifier">
                     <choice>
                         <mcolClaim></mcolClaim>
                         <mcolJudgment></mcolJudgment>

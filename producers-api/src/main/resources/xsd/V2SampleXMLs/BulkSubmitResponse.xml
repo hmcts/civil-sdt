@@ -3,6 +3,7 @@
     <customerReference>customer_external_reference</customerReference>
     <sdtBulkReference>sdt_reference</sdtBulkReference>
     <submittedDate>2001-12-31T12:00:00</submittedDate>
+    <sdtService>SDT</sdtService>
     <requestCount>10</requestCount>
     <status code="OK/Error">
         <error> <!-- only if error found -->
@@ -10,12 +11,4 @@
             <description>description</description>
         </error>
     </status>
-    
-    <!-- 
-    <status>OK/Error</status>
-    <error> 
-       <code>AUTH_FAILED</code>
-       <description>Failed authorisation</description>
-    </error>
-     -->
 </bulkResponse>

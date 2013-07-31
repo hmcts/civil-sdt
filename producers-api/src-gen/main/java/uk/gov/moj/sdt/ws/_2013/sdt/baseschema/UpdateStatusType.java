@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="error" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}errorType" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="code" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}updateStatusCodeType" />
+ *       &lt;attribute name="code" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}updateStatusCodeType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 public class UpdateStatusType {
 
     protected ErrorType error;
-    @XmlAttribute(name = "code")
+    @XmlAttribute(name = "code", required = true)
     protected UpdateStatusCodeType code;
 
     /**

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Message from SDT to MCOL -->
-<createClaimRequest>
+<individualRequest>
     <header>
         <sdtRequestId>xyz123</sdtRequestId>
         <mcolCustomerId>Mcol Customer Id</mcolCustomerId>
+        <requestType>mcolClaimStatusUpdate</requestType>
     </header>
-    <mcolClaim>
-        <claimantReference>damaged_wall</claimantReference>
-    </mcolClaim>
-</createClaimRequest>
+    <mcolClaimStatusUpdate>
+        <claimNumber>12345678</claimNumber>
+        <defendantId>1</defendantId>
+        <notificationType>MP</notificationType>
+    </mcolClaimStatusUpdate>
+</individualRequest>

@@ -2,31 +2,31 @@
 <!-- Response from SDT to External Client -->
 <submitQueryResponse>
     <sdtCustomerId>1234</sdtCustomerId>
-    <targetApplicationId>mcol</targetApplicationId>
+    <sdtService>SDT</sdtService>
     <resultCount>3</resultCount>
+    <sdtService>SDT</sdtService>
     <results>
     	<mcolResults>
     		<mcolDefenceDetail>
     		  <claimNumber>12345678</claimNumber>
-              <defendants>
-                <defendant defendantId="1">
-                  <filedDate>2001-12-31T12:00:00</filedDate>
-                  <responseType>PA</responseType>
-                </defendant>
-                <defendant defendantId="2">
-                  <filedDate>2001-12-31T12:00:00</filedDate>
-                  <responseType>PA</responseType>
-                </defendant>
-              </defendants>
+              <defendant defendantId="1">
+                <filedDate>2001-12-31T12:00:00</filedDate>
+                <responseType>PA</responseType>
+              </defendant>
     		</mcolDefenceDetail>
             <mcolDefenceDetail>
+              <claimNumber>12345678</claimNumber>
+              <defendant defendantId="1">
+                <filedDate>2001-12-31T12:00:00</filedDate>
+                <responseType>PA</responseType>
+              </defendant>
+            </mcolDefenceDetail>
+            <mcolDefenceDetail>
               <claimNumber>22345678</claimNumber>
-              <defendants>
-                <defendant defendantId="1">
-                  <filedDate>2001-12-31T12:00:00</filedDate>
-                  <responseType>PA</responseType>
-                </defendant>
-              </defendants>
+              <defendant defendantId="1">
+                <filedDate>2001-12-31T12:00:00</filedDate>
+                <responseType>PA</responseType>
+              </defendant>
             </mcolDefenceDetail>
     	</mcolResults>
     </results>

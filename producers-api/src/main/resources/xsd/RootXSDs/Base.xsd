@@ -188,21 +188,21 @@
 		<xs:sequence>
 			<xs:element name="error" type="tns:errorType" minOccurs="0" />
 		</xs:sequence>
-		<xs:attribute name="code" type="tns:statusCodeType"></xs:attribute>
+		<xs:attribute name="code" type="tns:statusCodeType" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="createStatusType">
 		<xs:sequence>
 			<xs:element name="error" type="tns:errorType" minOccurs="0" />
 		</xs:sequence>
-		<xs:attribute name="code" type="tns:createStatusCodeType"></xs:attribute>
+		<xs:attribute name="code" type="tns:createStatusCodeType" use="required"/>
 	</xs:complexType>
 
     <xs:complexType name="updateStatusType">
         <xs:sequence>
             <xs:element name="error" type="tns:errorType" minOccurs="0" />
         </xs:sequence>
-        <xs:attribute name="code" type="tns:updateStatusCodeType"></xs:attribute>
+        <xs:attribute name="code" type="tns:updateStatusCodeType" use="required"/>
     </xs:complexType>
 
     <xs:simpleType name="bulkStatusCodeType">
@@ -228,14 +228,14 @@
         <xs:sequence>
             <xs:element name="error" type="tns:errorType" minOccurs="0" />
         </xs:sequence>
-        <xs:attribute name="code" type="tns:bulkStatusCodeType"></xs:attribute>
+        <xs:attribute name="code" type="tns:bulkStatusCodeType" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="individualStatusType">
         <xs:sequence>
             <xs:element name="error" type="tns:errorType" minOccurs="0" />
         </xs:sequence>
-        <xs:attribute name="code" type="tns:individualStatusCodeType"></xs:attribute>
+        <xs:attribute name="code" type="tns:individualStatusCodeType" use="required"/>
     </xs:complexType>
 
 </xs:schema>

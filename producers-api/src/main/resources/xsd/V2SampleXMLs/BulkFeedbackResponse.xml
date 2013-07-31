@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bulkFeedbackResponse>
     <bulkRequestStatus>
+        <customerReference>12345</customerReference>
         <sdtBulkReference>std_reference</sdtBulkReference>
-        <requestCount>20</requestCount>
+        <submittedDate>2001-12-31T12:00:00</submittedDate>
+        <sdtService>SDT</sdtService>
+        <requestCount>1</requestCount>
+        <bulkStatus code="ACCEPTED|ERROR">
+            <error>
+                <code>1234</code>
+                <description>description</description>
+            </error>
+        </bulkStatus>
     </bulkRequestStatus>
     <responses> 
         <choice>
             <!-- Either PCOL or MCOL responses will be allowed -->
             <mcolResponses>
-                <mcolResponse requestType="claim" requestId="request identifier">
-                    <claimNumber>12345678</claimNumber>
-                    <issueDate>2012-11-11</issueDate>
-                    <serviceDate>2012-11-11</serviceDate>
-                    <warrantNumber>12345678</warrantNumber>
-                    <enforcingCourtCode>123</enforcingCourtCode>
-                    <enforcingCourtName>enforcing_court_name</enforcingCourtName>
-                    <fee>9999</fee>
+                <mcolResponse requestType="mcolClaim" requestId="request identifier">
+                    <mcolResponseDetail>
+                        <claimNumber>12345678</claimNumber>
+                        <issueDate>2012-11-11</issueDate>
+                        <serviceDate>2012-11-11</serviceDate>
+                        <warrantNumber>12345678</warrantNumber>
+                        <enforcingCourtCode>123</enforcingCourtCode>
+                        <enforcingCourtName>enforcing_court_name</enforcingCourtName>
+                        <fee>9999</fee>
+                    </mcolResponseDetail>
                     <status code="OK|ERROR">
                         <error>
                             <code>1234</code>
@@ -26,6 +37,8 @@
             </mcolResponses>
             <pcolResponses>
                 <pcolResponse requestType="abc" requestId="request identifier">
+                    <pcolResponseDetail>
+                    </pcolResponseDetail>
                     <status code="OK|ERROR">
                         <error>
                             <code>1234</code>

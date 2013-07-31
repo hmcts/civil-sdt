@@ -20,13 +20,7 @@
     <xs:complexType name="mcolDefenceDetailType">
         <xs:sequence>
             <xs:element name="claimNumber" type="base:claimNumberType" />
-            <xs:element name="defendants">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="defendant" type="tns:defendantType" maxOccurs="2" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="defendant" type="tns:defendantType"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -35,7 +29,7 @@
             <xs:element name="filedDate" type="xs:dateTime" />
             <xs:element name="responseType" type="tns:responseType" />
         </xs:sequence>
-        <xs:attribute name="defendantId" type="base:defendantIdType" />
+        <xs:attribute name="defendantId" type="base:defendantIdType" use="required"/>
     </xs:complexType>
 
     <xs:simpleType name="responseType">

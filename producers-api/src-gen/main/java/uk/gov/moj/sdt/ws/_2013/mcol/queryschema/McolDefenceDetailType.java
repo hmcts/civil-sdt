@@ -1,8 +1,6 @@
 
 package uk.gov.moj.sdt.ws._2013.mcol.queryschema;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -20,17 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="claimNumber" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}claimNumberType"/>
- *         &lt;element name="defendants">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="defendant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}defendantType" maxOccurs="2"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
+ *         &lt;element name="defendant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}defendantType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -42,14 +30,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "mcolDefenceDetailType", propOrder = {
     "claimNumber",
-    "defendants"
+    "defendant"
 })
 public class McolDefenceDetailType {
 
     @XmlElement(required = true)
     protected String claimNumber;
     @XmlElement(required = true)
-    protected McolDefenceDetailType.Defendants defendants;
+    protected DefendantType defendant;
 
     /**
      * Gets the value of the claimNumber property.
@@ -76,87 +64,27 @@ public class McolDefenceDetailType {
     }
 
     /**
-     * Gets the value of the defendants property.
+     * Gets the value of the defendant property.
      * 
      * @return
      *     possible object is
-     *     {@link McolDefenceDetailType.Defendants }
+     *     {@link DefendantType }
      *     
      */
-    public McolDefenceDetailType.Defendants getDefendants() {
-        return defendants;
+    public DefendantType getDefendant() {
+        return defendant;
     }
 
     /**
-     * Sets the value of the defendants property.
+     * Sets the value of the defendant property.
      * 
      * @param value
      *     allowed object is
-     *     {@link McolDefenceDetailType.Defendants }
+     *     {@link DefendantType }
      *     
      */
-    public void setDefendants(McolDefenceDetailType.Defendants value) {
-        this.defendants = value;
-    }
-
-
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="defendant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}defendantType" maxOccurs="2"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "defendant"
-    })
-    public static class Defendants {
-
-        @XmlElement(required = true)
-        protected List<DefendantType> defendant;
-
-        /**
-         * Gets the value of the defendant property.
-         * 
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the defendant property.
-         * 
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getDefendant().add(newItem);
-         * </pre>
-         * 
-         * 
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link DefendantType }
-         * 
-         * 
-         */
-        public List<DefendantType> getDefendant() {
-            if (defendant == null) {
-                defendant = new ArrayList<DefendantType>();
-            }
-            return this.defendant;
-        }
-
+    public void setDefendant(DefendantType value) {
+        this.defendant = value;
     }
 
 }

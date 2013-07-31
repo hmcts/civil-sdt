@@ -25,7 +25,7 @@ import org.w3._2001.xmlschema.Adapter1;
  *         &lt;element name="filedDate" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="responseType" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}responseType"/>
  *       &lt;/sequence>
- *       &lt;attribute name="defendantId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}defendantIdType" />
+ *       &lt;attribute name="defendantId" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}defendantIdType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -46,7 +46,7 @@ public class DefendantType {
     protected Calendar filedDate;
     @XmlElement(required = true)
     protected ResponseType responseType;
-    @XmlAttribute(name = "defendantId")
+    @XmlAttribute(name = "defendantId", required = true)
     protected String defendantId;
 
     /**
