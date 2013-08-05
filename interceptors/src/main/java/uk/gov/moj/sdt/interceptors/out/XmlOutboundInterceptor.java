@@ -71,6 +71,6 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
         final String xml = SdtContext.getContext ().getRawOutXml ();
 
         // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
-        this.modifyMessage (message, xml, "requests");
+        this.modifyMessage (message, xml, "<ns2:mcolResults/>");
     }
 }

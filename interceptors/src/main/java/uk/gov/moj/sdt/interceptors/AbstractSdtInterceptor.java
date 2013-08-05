@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.helpers.IOUtils;
@@ -70,6 +71,27 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     protected String changeOutboundMessage (final String currentEnvelope)
     {
         final String newCurrentEnvelope = currentEnvelope + "<this_has_been_hacked/>";
+        return newCurrentEnvelope;
+    }
+    
+    /**
+     * Change the raw XML in the outbound message.
+     * 
+     * @param currentEnvelope the raw outbound SOAP XML to be changed.
+     * @param xml the xml to insert.
+     * @param insertionTagName the tag to replace.
+     * @return the changed raw SOAP XML.
+     */
+    protected String changeOutboundMessage (final String currentEnvelope, final String xml, 
+                                            final String insertionTagName) 
+    {
+        //Create start and end tag
+        final String startTag = StringUtils.remove (insertionTagName,  "/");
+        final String endTag = startTag.replace ("<", "</");
+        
+        //Add the beginning and end tags for the xml to be inserted
+        final String newXml = startTag + xml + endTag; 
+        final String newCurrentEnvelope = currentEnvelope.replace (insertionTagName, newXml);  
         return newCurrentEnvelope;
     }
 
@@ -132,7 +154,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 org.apache.commons.io.IOUtils.closeQuietly (csnew);
 
                 // Modify it if desired.
-                String res = changeOutboundMessage (currentEnvelopeMessage);
+                String res = changeOutboundMessage (currentEnvelopeMessage, xml, insertionTagName);
                 res = res != null ? res : currentEnvelopeMessage;
 
                 // Turn the modified data into a new input stream.

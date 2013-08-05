@@ -87,14 +87,14 @@ public class MockSubmitQueryService implements ISubmitQueryService
     {
 
         final String result =
-                "<mcolDefenceDetail><claimNumber>12345678</claimNumber><defendants>"
-                        + "<defendant defendantId=\"1\"><filedDate>2001-12-31T12:00:00</filedDate>"
-                        + "<responseType>PA</responseType></defendant><defendant defendantId=\"2\">"
-                        + "<filedDate>2001-12-31T12:00:00</filedDate><responseType>PA</responseType>"
-                        + "</defendant></defendants></mcolDefenceDetail>mcolDefenceDetail>"
-                        + "<claimNumber>22345678</claimNumber><defendants><defendant defendantId=\"1\">"
-                        + "<filedDate>2001-12-31T12:00:00</filedDate><responseType>PA</responseType>"
-                        + "</defendant></defendants></mcolDefenceDetail>";
+                "<ns2:mcolDefenceDetail><ns2:claimNumber>12345678</ns2:claimNumber><ns2:defendants>"
+                        + "<ns2:defendant defendantId=\"1\"><ns2:filedDate>2001-12-31T12:00:00</ns2:filedDate>"
+                        + "<ns2:responseType>PA</ns2:responseType></ns2:defendant><ns2:defendant defendantId=\"2\">"
+                        + "<ns2:filedDate>2001-12-31T12:00:00</ns2:filedDate><ns2:responseType>PA</ns2:responseType>"
+                        + "</ns2:defendant></ns2:defendants></ns2:mcolDefenceDetail><ns2:mcolDefenceDetail>"
+                        + "<ns2:claimNumber>22345678</ns2:claimNumber><ns2:defendants><ns2:defendant defendantId=\"1\">"
+                        + "<ns2:filedDate>2001-12-31T12:00:00</ns2:filedDate><ns2:responseType>PA</ns2:responseType>"
+                        + "</ns2:defendant></ns2:defendants></ns2:mcolDefenceDetail>";
 
         SdtContext.getContext ().setRawOutXml (result);
     }

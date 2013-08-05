@@ -38,6 +38,8 @@ import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.McolResultsType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ResultsType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
@@ -92,6 +94,12 @@ public final class SubmitQueryToDomainResolver
         // Maps some values
         jaxbResponse.setSdtCustomerId (BigInteger.valueOf (domainResponse.getSdtCustomerId ()));
         jaxbResponse.setResultCount (BigInteger.valueOf (domainResponse.getResultCount ()));
+
+        // Set dummy results so the tags we need are written
+        final ResultsType resultsType = new ResultsType ();
+        final McolResultsType mcolResultsType = new McolResultsType ();
+        resultsType.setMcolResults (mcolResultsType);
+        jaxbResponse.setResults (resultsType);
 
         return jaxbResponse;
     }
