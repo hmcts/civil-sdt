@@ -2,11 +2,11 @@
 <tns:mcolClaim xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema ../../../../../main/resources/xsd/RootXSDs/Claim.xsd ">
   <tns:claimantReference>tns:claimantReference</tns:claimantReference>
   <tns:claimant>
-    <base:address>
-      <base:line3>base:line3</base:line3>
-      <base:line4>base:line4</base:line4>
-      <base:line5>base:line5</base:line5>
-    </base:address>
+    <tns:address>
+      <tns:line3>tns:line3</tns:line3>
+      <tns:line4>tns:line4</tns:line4>
+      <tns:postcode>FL23 2SD</tns:postcode>
+    </tns:address>
   </tns:claimant>
   <tns:interest>
   </tns:interest>
