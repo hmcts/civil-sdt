@@ -38,19 +38,16 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
-import uk.gov.moj.sdt.validators.exception.SdtCustomerIdNotFoundException;
 import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Implementation of {@link IBulkSubmissionValidator}.
@@ -58,7 +55,7 @@ import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
  * @author Saurabh Agarwal
  * 
  */
-public class BulkSubmissionValidator extends AbstractDomainObjectVisitor implements IBulkSubmissionValidator
+public class BulkSubmissionValidator extends AbstractSdtValidator implements IBulkSubmissionValidator
 {
     /**
      * Logger instance.
@@ -66,19 +63,9 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
     private static final Log LOGGER = LogFactory.getLog (BulkSubmissionValidator.class);
 
     /**
-     * Bulk customer dao.
-     */
-    private IBulkCustomerDao bulkCustomerDao;
-
-    /**
      * Bulk submission dao.
      */
     private IBulkSubmissionDao bulkSubmissionDao;
-
-    /**
-     * Target application dao.
-     */
-    private ITargetApplicationDao targetApplicationtDao;
 
     /**
      * No-argument Constructor.
@@ -94,44 +81,21 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
         // Do validation of bulk submission.
         LOGGER.info ("visit(BulkSubmission)");
 
-        // TODO - A generic method in AbstractDomainObject will do this check now
-        // Validate SDT Customer ID from BulkCustomer
-        LOGGER.debug ("Validating SDT Customer ID");
-        final long sdtCustomerId = bulkSubmission.getBulkCustomer ().getSdtCustomerId ();
+        // Validate SDT Customer ID and target application
+        final IBulkCustomer bulkCustomer = bulkSubmission.getBulkCustomer ();
+        final long sdtCustomerId = bulkCustomer.getSdtCustomerId ();
 
-        final IBulkCustomer bulkCustomer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
-        List<String> replacements = null;
-
-        if (bulkCustomer == null)
-        {
-            replacements = new ArrayList<String> ();
-            replacements.add (String.valueOf (sdtCustomerId));
-            throw new SdtCustomerIdNotFoundException (
-                    AbstractBusinessException.ErrorCode.SDT_CUSTOMER_ID_NOT_FOUND.toString (),
-                    "SDT Customer Id [{0}] was not found.", replacements);
-        }
-
-        // TODO - A generic method in AbstractDomainObject will do this check now
-        // Validate target application
-        final String targetApplicationCode = bulkSubmission.getTargetApplication ().getTargetApplicationCode ();
-        if ( !targetApplicationtDao.hasAccess (bulkCustomer, targetApplicationCode))
-        {
-            replacements = new ArrayList<String> ();
-            replacements.add (targetApplicationCode);
-            replacements.add (String.valueOf (sdtCustomerId));
-
-            throw new SdtCustomerReferenceNotUniqueException (
-                    AbstractBusinessException.ErrorCode.INVALID_TARGET_APPLICATION.toString (),
-                    "SDT Customer Id [{1}] does not have access to Target Application [{0}].", replacements);
-        }
+        final ITargetApplication targetApplication = bulkSubmission.getTargetApplication ();
+        checkCustomerExistsHasAccess (sdtCustomerId, targetApplication.getTargetApplicationCode ());
 
         // Validate customer reference is unique across data retention period for bulk submission
         final String sdtCustomerReference = bulkSubmission.getCustomerReference ();
+        List<String> replacements = null;
         if ( !bulkSubmissionDao.isCustomerReferenceUnique (bulkCustomer, sdtCustomerReference))
         {
             replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (sdtCustomerReference));
-            replacements.add (String.valueOf (bulkCustomer.getSdtCustomerId ()));
+            replacements.add (String.valueOf (sdtCustomerId));
             // CHECKSTYLE:OFF
             throw new SdtCustomerReferenceNotUniqueException (
                     AbstractBusinessException.ErrorCode.SDT_CUSTOMER_REFRENCE_NOT_UNIQUE.toString (),
@@ -142,6 +106,7 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
 
         // Validate customer reference is within the list of individual requests
         final Set<String> customerReferenceSet = new HashSet<String> ();
+
         for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests ())
         {
 
@@ -179,16 +144,6 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
     }
 
     /**
-     * Set bulk customer dao.
-     * 
-     * @param bulkCustomerDao bulk customer dao
-     */
-    public void setBulkCustomerDao (final IBulkCustomerDao bulkCustomerDao)
-    {
-        this.bulkCustomerDao = bulkCustomerDao;
-    }
-
-    /**
      * Set bulk submission dao.
      * 
      * @param bulkSubmissionDao bulk submission dao
@@ -196,16 +151,6 @@ public class BulkSubmissionValidator extends AbstractDomainObjectVisitor impleme
     public void setBulkSubmissionDao (final IBulkSubmissionDao bulkSubmissionDao)
     {
         this.bulkSubmissionDao = bulkSubmissionDao;
-    }
-
-    /**
-     * Set target application dao.
-     * 
-     * @param targetApplicationtDao target application dao
-     */
-    public void setTargetApplicationtDao (final ITargetApplicationDao targetApplicationtDao)
-    {
-        this.targetApplicationtDao = targetApplicationtDao;
     }
 
 }

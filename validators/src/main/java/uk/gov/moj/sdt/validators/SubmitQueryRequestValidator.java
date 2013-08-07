@@ -36,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Submit Query Request domain validator.
@@ -44,7 +43,7 @@ import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
  * @author d130680
  * 
  */
-public class SubmitQueryRequestValidator extends AbstractDomainObjectVisitor implements ISubmitQueryRequestValidator
+public class SubmitQueryRequestValidator extends AbstractSdtValidator implements ISubmitQueryRequestValidator
 {
 
     /**
@@ -62,12 +61,12 @@ public class SubmitQueryRequestValidator extends AbstractDomainObjectVisitor imp
     @Override
     public void visit (final SubmitQueryRequest submitQueryRequest, final ITree tree)
     {
-        // TODO - need to validate these fields
-        // LOGGER.debug ("validate SDT Customer id");
-        //
-        // LOGGER.debug ("validate Target application id");
 
-        LOGGER.info ("Request Defence Detail SDT Customer id [" + submitQueryRequest.getSdtCustomerId () + "].");
+        // Validate customer exists and can access target application
+        checkCustomerExistsHasAccess (submitQueryRequest.getSdtCustomerId (), submitQueryRequest
+                .getTargetApplication ().getTargetApplicationCode ());
+
+        LOGGER.info ("Submit Query SDT Customer id [" + submitQueryRequest.getSdtCustomerId () + "].");
 
     }
 

@@ -36,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.ITargetApplicationValidator;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Implementation of {@link ITargetApplicationValidator}.
@@ -44,7 +43,7 @@ import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
  * @author Saurabh Agarwal
  * 
  */
-public class TargetApplicationValidator extends AbstractDomainObjectVisitor implements ITargetApplicationValidator
+public class TargetApplicationValidator extends AbstractSdtValidator implements ITargetApplicationValidator
 {
 
     /**

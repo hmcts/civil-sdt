@@ -43,7 +43,6 @@ import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Implementation of {@link IIndividualRequestValidator}.
@@ -51,7 +50,7 @@ import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
  * @author Saurabh Agarwal
  * 
  */
-public class IndividualRequestValidator extends AbstractDomainObjectVisitor implements IIndividualRequestValidator
+public class IndividualRequestValidator extends AbstractSdtValidator implements IIndividualRequestValidator
 {
 
     /**

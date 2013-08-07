@@ -9,32 +9,43 @@
 
 	<!-- Load all IValidators to force their constructors to run so that they 
 		register themselves in map. -->
-
-	<bean id="uk.gov.moj.sdt.validators.api.IBulkCustomerValidator"
-		class="uk.gov.moj.sdt.validators.BulkCustomerValidator">
-	</bean>
-
-    <bean id="uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator"
-        class="uk.gov.moj.sdt.validators.BulkSubmissionValidator">        
-        <property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" />
-        <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" />                               
+		
+	<!-- Abstract base class for validators -->
+    <bean id="uk.gov.moj.sdt.validators.AbstractSdtValidator" abstract="true"
+        class="uk.gov.moj.sdt.validators.AbstractSdtValidator">        
+        <property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" />                               
         <property name="targetApplicationtDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao" />        
     </bean>
 
-    <bean id="uk.gov.moj.sdt.validators.api.IRequestTypeValidator"
+	<bean id="uk.gov.moj.sdt.validators.api.IBulkCustomerValidator" 
+		parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
+		class="uk.gov.moj.sdt.validators.BulkCustomerValidator">
+	</bean>
+
+    <bean id="uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator" 
+    	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
+        class="uk.gov.moj.sdt.validators.BulkSubmissionValidator">        
+        <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" />                                       
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.validators.api.IRequestTypeValidator" 
+    	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
         class="uk.gov.moj.sdt.validators.RequestTypeValidator">
     </bean>
 
-    <bean id="uk.gov.moj.sdt.validators.api.ITargetApplicationValidator"
+    <bean id="uk.gov.moj.sdt.validators.api.ITargetApplicationValidator" 
+    	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
         class="uk.gov.moj.sdt.validators.TargetApplicationValidator">
     </bean>
 
-    <bean id="uk.gov.moj.sdt.validators.api.IIndividualRequestValidator"
+    <bean id="uk.gov.moj.sdt.validators.api.IIndividualRequestValidator" 
+    	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
         class="uk.gov.moj.sdt.validators.IndividualRequestValidator">
         <property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao" />
     </bean>
     
-        <bean id="uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator"
+    <bean id="uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator" 
+    	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
         class="uk.gov.moj.sdt.validators.SubmitQueryRequestValidator">
     </bean>
 

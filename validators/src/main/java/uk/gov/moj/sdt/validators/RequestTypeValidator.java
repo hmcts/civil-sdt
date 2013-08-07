@@ -36,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IRequestTypeValidator;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Implementation of {@link IRequestTypeValidator}.
@@ -44,7 +43,7 @@ import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
  * @author Saurabh Agarwal
  * 
  */
-public class RequestTypeValidator extends AbstractDomainObjectVisitor implements IRequestTypeValidator
+public class RequestTypeValidator extends AbstractSdtValidator implements IRequestTypeValidator
 {
 
     /**

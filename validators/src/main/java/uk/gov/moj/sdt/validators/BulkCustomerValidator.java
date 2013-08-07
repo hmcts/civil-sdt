@@ -36,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Implementation of DateValidation.
@@ -44,7 +43,7 @@ import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
  * @author Simon Holmes
  * 
  */
-public class BulkCustomerValidator extends AbstractDomainObjectVisitor implements IBulkCustomerValidator
+public class BulkCustomerValidator extends AbstractSdtValidator implements IBulkCustomerValidator
 {
 
     /**
@@ -62,8 +61,15 @@ public class BulkCustomerValidator extends AbstractDomainObjectVisitor implement
     @Override
     public void visit (final BulkCustomer bulkCustomer, final ITree tree)
     {
-        // TODO Do validation of bulk customer.
+
         LOGGER.info ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");
+        
+        // Validate the customer is exists
+        final long sdtCustomerId = bulkCustomer.getSdtCustomerId ();
+        checkBulkCustomerExist (sdtCustomerId);
+        
+        // TODO Do validation of bulk customer.
+
     }
 
 }
