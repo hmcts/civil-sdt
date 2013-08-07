@@ -5,6 +5,8 @@
   <tns:responses>
     <tns:mcolResponses>	
       <tns:mcolResponse>
+      	<tns:mcolResponseDetail>
+      	</tns:mcolResponseDetail>
       </tns:mcolResponse>
     </tns:mcolResponses>
   </tns:responses>

@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:updateRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema ../../../../../main/resources/xsd/IndvUpdateRequestResponse/IndividualUpdateRequest.xsd ">
-  <tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
-  <tns:claimNumber>12345678</tns:claimNumber>
-  <tns:issueDate>2001-01-01</tns:issueDate>
-  <tns:serviceDate>2001-01-01</tns:serviceDate>
-  <tns:warrantNumber>12345678</tns:warrantNumber>
-  <tns:enforcingCourtCode>123</tns:enforcingCourtCode>
-  <tns:enforcingCourtName>tns:enforcingCourtName</tns:enforcingCourtName>
-  <tns:fee>0</tns:fee>
+<tns:updateRequest 
+xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" 
+xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema ../../../../../main/resources/xsd/IndvUpdateRequestResponse/IndividualUpdateRequest.xsd ">
+  <tns:header>
+  	<tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
+  </tns:header>
+  <tns:updateDetail>
+  	<tns:mcolResponseDetail>
+	  <mresp:claimNumber>12345678</mresp:claimNumber>
+	  <mresp:issueDate>2001-01-01</mresp:issueDate>
+	  <mresp:serviceDate>2001-01-01</mresp:serviceDate>
+	  <mresp:warrantNumber>12345678</mresp:warrantNumber>
+	  <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
+	  <mresp:enforcingCourtName>tns:enforcingCourtName</mresp:enforcingCourtName>
+	  <mresp:fee>0</mresp:fee>
+	</tns:mcolResponseDetail>  
+  </tns:updateDetail>
   <tns:status code="ACCEPTED">
     <tns1:error>
       <tns1:code>tns1:code</tns1:code>

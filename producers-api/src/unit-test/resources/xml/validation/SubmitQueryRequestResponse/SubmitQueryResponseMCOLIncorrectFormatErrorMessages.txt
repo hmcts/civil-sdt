@@ -1,11 +1,11 @@
 cvc-length-valid: Value '12345672289112' with length = '14' is not facet-valid with respect to length '12' for type 'mcolCustomerIdType'.
 cvc-type.3.1.3: The value '12345672289112' of element 'tns:mcolCustomerId' is not valid.
 cvc-pattern-valid: Value '1353348968' is not facet-valid with respect to pattern '[0-9A-Za-z]{8}' for type 'claimNumberType'.
-cvc-type.3.1.3: The value '1353348968' of element 'tns:claimNumber' is not valid.
+cvc-type.3.1.3: The value '1353348968' of element 'mquer:claimNumber' is not valid.
 cvc-pattern-valid: Value '3' is not facet-valid with respect to pattern '1|2' for type 'defendantIdType'.
-cvc-attribute.3: The value '3' of attribute 'defendantId' on element 'tns:defendant' is not valid with respect to its type, 'defendantIdType'.
+cvc-attribute.3: The value '3' of attribute 'defendantId' on element 'mquer:defendant' is not valid with respect to its type, 'defendantIdType'.
 cvc-enumeration-valid: Value 'AA' is not facet-valid with respect to enumeration '[DE, DC, PA]'. It must be a value from the enumeration.
-cvc-type.3.1.3: The value 'AA' of element 'tns:responseType' is not valid.
+cvc-type.3.1.3: The value 'AA' of element 'mquer:responseType' is not valid.
 cvc-enumeration-valid: Value 'NOTENUM1' is not facet-valid with respect to enumeration '[OK, ERROR]'. It must be a value from the enumeration.
 cvc-attribute.3: The value 'NOTENUM1' of attribute 'code' on element 'tns:status' is not valid with respect to its type, 'statusCodeType'.
 cvc-maxLength-valid: Value 'abcdefghijklmnopqrstuvwxyz123456789' with length = '35' is not facet-valid with respect to maxLength '32' for type '#AnonType_codeerrorType'.

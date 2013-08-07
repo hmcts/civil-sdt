@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:bulkFeedbackResponse xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema ../../../../../main/resources/xsd/RequestBulkFeedback/BulkFeedbackResponse.xsd ">
+<tns:bulkFeedbackResponse xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" 
+xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema ../../../../../main/resources/xsd/RequestBulkFeedback/BulkFeedbackResponse.xsd ">
   <tns:bulkRequestStatus>
       <tns:customerReference>tns:customerReference</tns:customerReference>
       <tns:sdtBulkReference>12345678901234567890123456789</tns:sdtBulkReference>
       <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
-      <tns:targetApplicationId>mcol</tns:targetApplicationId>
+      <tns:sdtService>mcol</tns:sdtService>
       <tns:requestCount>0</tns:requestCount>
       <tns:bulkStatus code="FAILED">
           <base:error>
@@ -16,13 +18,15 @@
   <tns:responses>
     <tns:mcolResponses>
       <tns:mcolResponse requestId="123" requestType="mcolClaim">
-        <tns:claimNumber>12345678</tns:claimNumber>
-        <tns:issueDate>2001-01-01</tns:issueDate>
-        <tns:serviceDate>2001-01-01</tns:serviceDate>
-        <tns:warrantNumber>12345678</tns:warrantNumber>
-        <tns:enforcingCourtCode>123</tns:enforcingCourtCode>
-        <tns:enforcingCourtName>tns:enforcingCourtName</tns:enforcingCourtName>
-        <tns:fee>0</tns:fee>
+      	<tns:mcolResponseDetail>
+	        <rdns:claimNumber>12345678</rdns:claimNumber>
+	        <rdns:issueDate>2001-01-01</rdns:issueDate>
+	        <rdns:serviceDate>2001-01-01</rdns:serviceDate>
+	        <rdns:warrantNumber>12345678</rdns:warrantNumber>
+	        <rdns:enforcingCourtCode>123</rdns:enforcingCourtCode>
+	        <rdns:enforcingCourtName>tns:enforcingCourtName</rdns:enforcingCourtName>
+	        <rdns:fee>0</rdns:fee>
+        </tns:mcolResponseDetail>
         <tns:status code="ACCEPTED">
           <base:error>
             <base:code>base:code</base:code>

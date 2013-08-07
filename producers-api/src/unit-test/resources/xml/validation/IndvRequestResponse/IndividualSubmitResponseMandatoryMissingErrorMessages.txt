@@ -1,1 +1,1 @@
-cvc-complex-type.2.4.b: The content of element 'tns:createResponse' is not complete. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema":status}' is expected.
+cvc-complex-type.2.4.a: Invalid content was found starting with element 'tns:body'. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema":mcolResponseDetail}' is expected.

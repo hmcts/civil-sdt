@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:createResponse xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitResponse.xsd ">
+<tns:individualResponse xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitResponse.xsd ">
   <tns:header>
     <tns:sdtRequestId>1234567</tns:sdtRequestId>
-    <tns:caseId>123456</tns:caseId>
   </tns:header>
   <tns:body>
   </tns:body>
 
-</tns:createResponse>
+</tns:individualResponse>

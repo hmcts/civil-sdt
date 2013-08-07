@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:createResponse xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitResponse.xsd ">
+<tns:individualResponse 
+xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
+xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitResponse.xsd ">
   <tns:header>
     <tns:sdtRequestId>aaaaaaaaaaa</tns:sdtRequestId>
-    <tns:caseId>aaaaaaaaaa</tns:caseId>
   </tns:header>
-  <tns:body>
-    <tns:claimNumber>2134asds6546</tns:claimNumber>
-    <tns:issueDate>2001-23201-01</tns:issueDate>
-    <tns:serviceDate>2001-32301-01</tns:serviceDate>
-    <tns:warrantNumber>123452123678</tns:warrantNumber>
-    <tns:enforcingCourtCode>1232133</tns:enforcingCourtCode>
-    <tns:enforcingCourtName>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaCourt Code</tns:enforcingCourtName>
-    <tns:fee>0</tns:fee>
-    <tns:additionalStatus>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet duiLorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet duiLorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet dui</tns:additionalStatus>
-  </tns:body>
+  <tns:mcolResponseDetail>
+    <mresp:claimNumber>2134asds6546</mresp:claimNumber>
+    <mresp:issueDate>2001-23201-01</mresp:issueDate>
+    <mresp:serviceDate>2001-32301-01</mresp:serviceDate>
+    <mresp:warrantNumber>123452123678</mresp:warrantNumber>
+    <mresp:enforcingCourtCode>1232133</mresp:enforcingCourtCode>
+    <mresp:enforcingCourtName>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaCourt Code</mresp:enforcingCourtName>
+    <mresp:fee>0</mresp:fee>
+    <mresp:judgmentWarrantStatus>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet duiLorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet duiLorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet dui</mresp:judgmentWarrantStatus>
+  </tns:mcolResponseDetail>
   <tns:status code="NOTENUM1">
     <tns1:error>
       <tns1:code>abcdefghijklmnopqrstuvwxyz123456789</tns1:code>
       <tns1:description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel est lacus. Integer ut mi facilisis nisi varius mattis eu sit amet dui. Donec neque purus, rutrum sit amet iaculis nec, faucibus porttitor velit. Integer vel pulvinar nunc aenean suscipit111111111111111111111111</tns1:description>
     </tns1:error>
   </tns:status>
-</tns:createResponse>
+</tns:individualResponse>

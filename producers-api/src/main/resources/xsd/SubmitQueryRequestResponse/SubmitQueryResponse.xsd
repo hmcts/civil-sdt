@@ -28,7 +28,7 @@
     
     <xs:complexType name="mcolResultsType">
         <xs:choice>
-            <xs:any/>
+            <xs:any processContents="lax"/>
         </xs:choice>
     </xs:complexType>
     
