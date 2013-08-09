@@ -41,8 +41,8 @@ import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
-import uk.gov.moj.sdt.validators.exception.SdtCustomerIdNotFoundException;
-import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
+import uk.gov.moj.sdt.validators.exception.SdtCustomerNotSetupException;
+import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotFoundException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
@@ -69,36 +69,12 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     private ITargetApplicationDao targetApplicationtDao;
 
     /**
-     * Validates the bulk customer exists.
-     * 
-     * @param sdtCustomerId bulk customer to check
-     */
-    public void checkBulkCustomerExist (final long sdtCustomerId)
-    {
-        // Validate SDT Customer ID from BulkCustomer
-        LOGGER.info ("Validating SDT Customer ID [" + sdtCustomerId + "]");
-
-        final IBulkCustomer customer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
-        List<String> replacements = null;
-
-        if (customer == null)
-        {
-            replacements = new ArrayList<String> ();
-            replacements.add (String.valueOf (sdtCustomerId));
-            throw new SdtCustomerIdNotFoundException (
-                    AbstractBusinessException.ErrorCode.SDT_CUSTOMER_ID_NOT_FOUND.toString (),
-                    "SDT Customer Id [{0}] was not found.", replacements);
-        }
-
-    }
-
-    /**
      * Check that the bulk customer exists has access to the target application.
      * 
      * @param sdtCustomerId bulk customer
      * @param targetApplicationCode target application
      */
-    public void checkCustomerExistsHasAccess (final long sdtCustomerId, final String targetApplicationCode)
+    public void checkCustomerHasAccess (final long sdtCustomerId, final String targetApplicationCode)
     {
         LOGGER.info ("Validating SDT Customer ID [" + sdtCustomerId + "] and target application + [" +
                 targetApplicationCode + "]");
@@ -112,20 +88,22 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
             {
                 replacements = new ArrayList<String> ();
                 replacements.add (targetApplicationCode);
-                replacements.add (String.valueOf (sdtCustomerId));
 
-                throw new SdtCustomerReferenceNotUniqueException (
-                        AbstractBusinessException.ErrorCode.INVALID_TARGET_APPLICATION.toString (),
-                        "SDT Customer Id [{1}] does not have access to Target Application [{0}].", replacements);
+                // TODO - Confirm contact information
+                throw new SdtCustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
+                        "The Bulk Customer organisation is not set up to send Service Request messages to the {0}. "
+                                + "Please contact <TBC> for assistance.", replacements);
             }
         }
         else
         {
             replacements = new ArrayList<String> ();
-            replacements.add (String.valueOf (sdtCustomerId));
-            throw new SdtCustomerIdNotFoundException (
-                    AbstractBusinessException.ErrorCode.SDT_CUSTOMER_ID_NOT_FOUND.toString (),
-                    "SDT Customer Id [{0}] was not found.", replacements);
+            replacements.add (targetApplicationCode);
+            // TODO - Confirm contact information
+            throw new SdtCustomerReferenceNotFoundException (
+                    AbstractBusinessException.ErrorCode.CUST_REF_MISSING.toString (),
+                    "The Bulk Customer organisation does not have a Customer Reference set up for {0}. "
+                            + "Please contact <TBC> for assistance", replacements);
 
         }
 

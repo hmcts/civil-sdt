@@ -86,10 +86,11 @@ public abstract class AbstractWsHandler
     public void handleException (final Exception exception, final StatusType statusType)
     {
         LOGGER.error ("Unexpected error", exception);
-        // TODO - Agree on code and description value.
+
         final ErrorType errorType = new ErrorType ();
-        errorType.setCode ("SYSTEM_ERROR");
-        errorType.setDescription ("Due to an internal system error, the request could not be processed");
+        errorType.setCode ("SDT_INT_ERR");
+        // TODO - Confirm who to contact
+        errorType.setDescription ("A system error has occurred. Please contact TBC for assistance");
 
         populateError (statusType, errorType, StatusCodeType.ERROR);
 

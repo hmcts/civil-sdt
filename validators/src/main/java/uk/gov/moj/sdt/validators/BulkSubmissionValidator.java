@@ -46,6 +46,7 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
+import uk.gov.moj.sdt.validators.exception.DuplicateUserFileReferenceException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
 
@@ -86,7 +87,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         final long sdtCustomerId = bulkCustomer.getSdtCustomerId ();
 
         final ITargetApplication targetApplication = bulkSubmission.getTargetApplication ();
-        checkCustomerExistsHasAccess (sdtCustomerId, targetApplication.getTargetApplicationCode ());
+        checkCustomerHasAccess (sdtCustomerId, targetApplication.getTargetApplicationCode ());
 
         // Validate customer reference is unique across data retention period for bulk submission
         final String sdtCustomerReference = bulkSubmission.getCustomerReference ();
@@ -112,18 +113,16 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
 
             final String customerRequestReference = individualRequest.getCustomerRequestReference ();
             final boolean success = customerReferenceSet.add (customerRequestReference);
-            // Check that the customer request reference is unique within the current list of individual requests
+            // Check that the user file reference is unique within the current list of individual requests
             if ( !success)
             {
                 replacements = new ArrayList<String> ();
                 replacements.add (customerRequestReference);
-                replacements.add (String.valueOf (sdtCustomerId));
 
                 // CHECKSTYLE:OFF
-                throw new SdtCustomerReferenceNotUniqueException (
-                        AbstractBusinessException.ErrorCode.SDT_CUSTOMER_REFRENCE_NOT_UNIQUE.toString (),
-                        "Individual Request Id [{0}] was not unique within the list of Invidiual Requests for SDT Customer Id [{1}].",
-                        replacements);
+                throw new DuplicateUserFileReferenceException (
+                        AbstractBusinessException.ErrorCode.DUP_CUST_FILEID.toString (),
+                        "Duplicate User File Reference {0} supplied.", replacements);
                 // CHECKSTYLE:ON
             }
         }
@@ -132,10 +131,13 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         if (bulkSubmission.getNumberOfRequest () != bulkSubmission.getIndividualRequests ().size ())
         {
             replacements = new ArrayList<String> ();
+            replacements.add (Integer.valueOf (bulkSubmission.getIndividualRequests ().size ()).toString ());
+            replacements.add (Integer.valueOf (bulkSubmission.getNumberOfRequest ()).toString ());
             replacements.add (bulkSubmission.getCustomerReference ());
             throw new RequestCountMismatchException (
                     AbstractBusinessException.ErrorCode.REQ_COUNT_MISMATCH.toString (),
-                    "Request count mismatch for Bulk Submission [{0}].", replacements);
+                    "Unexpected Total Number of Requests identified. {0} requested identified, "
+                            + "{1} requests expected in Bulk Request {2}.", replacements);
 
         }
 

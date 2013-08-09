@@ -33,12 +33,12 @@ package uk.gov.moj.sdt.validators.exception;
 import java.util.List;
 
 /**
- * SDT Customer ID not unique.
+ * SDT Customer has not been setup for target application.
  * 
  * @author d130680
  * 
  */
-public class SdtCustomerIdNotFoundException extends AbstractBusinessException
+public class SdtCustomerNotSetupException extends AbstractBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,56 +46,55 @@ public class SdtCustomerIdNotFoundException extends AbstractBusinessException
     private static final long serialVersionUID = 1L;
 
     /**
-     * SDT Customer ID not unique.
+     * SDT Customer has not been setup for target application.
      * 
      * @param code error code
      * @param description error description
      */
-    public SdtCustomerIdNotFoundException (final String code, final String description)
+    public SdtCustomerNotSetupException (final String code, final String description)
     {
         super (code, description);
     }
 
     /**
-     * SDT Customer ID not unique.
+     * SDT Customer has not been setup for target application.
      * 
      * @param code code
      * @param description description
      * @param replacements string replacements with tokens
      */
-    public SdtCustomerIdNotFoundException (final String code, final String description,
-            final List<String> replacements)
+    public SdtCustomerNotSetupException (final String code, final String description, final List<String> replacements)
     {
         super (code, description, replacements);
     }
 
     /**
-     * SDT Customer ID not unique.
+     * SDT Customer has not been setup for target application.
      * 
      * @param s the s
      */
-    public SdtCustomerIdNotFoundException (final String s)
+    public SdtCustomerNotSetupException (final String s)
     {
         super (s);
     }
 
     /**
-     * SDT Customer ID not unique.
+     * SDT Customer has not been setup for target application.
      * 
      * @param cause the cause
      */
-    public SdtCustomerIdNotFoundException (final Throwable cause)
+    public SdtCustomerNotSetupException (final Throwable cause)
     {
         super (cause);
     }
 
     /**
-     * SDT Customer ID not unique.
+     * SDT Customer has not been setup for target application.
      * 
      * @param s the s
      * @param cause the cause
      */
-    public SdtCustomerIdNotFoundException (final String s, final Throwable cause)
+    public SdtCustomerNotSetupException (final String s, final Throwable cause)
     {
         super (s, cause);
     }

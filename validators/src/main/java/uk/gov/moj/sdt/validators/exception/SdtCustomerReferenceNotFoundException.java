@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,48 +24,79 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.validators;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
+package uk.gov.moj.sdt.validators.exception;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.utils.visitor.api.ITree;
-import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
+import java.util.List;
 
 /**
- * Implementation of DateValidation.
+ * SDT Customer Reference not found.
  * 
- * @author Simon Holmes
+ * @author d130680
  * 
  */
-public class BulkCustomerValidator extends AbstractSdtValidator implements IBulkCustomerValidator
+public class SdtCustomerReferenceNotFoundException extends AbstractBusinessException
 {
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Logger instance.
+     * SDT Customer Reference not found.
+     * 
+     * @param code error code
+     * @param description error description
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkCustomerValidator.class);
+    public SdtCustomerReferenceNotFoundException (final String code, final String description)
+    {
+        super (code, description);
+    }
 
     /**
-     * No-argument Constructor.
+     * SDT Customer Reference not found.
+     * 
+     * @param code code
+     * @param description description
+     * @param replacements string replacements with tokens
      */
-    public BulkCustomerValidator ()
+    public SdtCustomerReferenceNotFoundException (final String code, final String description,
+            final List<String> replacements)
     {
+        super (code, description, replacements);
     }
 
-    @Override
-    public void visit (final BulkCustomer bulkCustomer, final ITree tree)
+    /**
+     * SDT Customer Reference not found.
+     * 
+     * @param s the s
+     */
+    public SdtCustomerReferenceNotFoundException (final String s)
     {
-
-        LOGGER.info ("Bulk customer id [" + bulkCustomer.getCustomerIdentifier () + "].");
-
-        // TODO Do validation of bulk customer.
-
+        super (s);
     }
 
+    /**
+     * SDT Customer Reference not found.
+     * 
+     * @param cause the cause
+     */
+    public SdtCustomerReferenceNotFoundException (final Throwable cause)
+    {
+        super (cause);
+    }
+
+    /**
+     * SDT Customer Reference not found.
+     * 
+     * @param s the s
+     * @param cause the cause
+     */
+    public SdtCustomerReferenceNotFoundException (final String s, final Throwable cause)
+    {
+        super (s, cause);
+    }
 }

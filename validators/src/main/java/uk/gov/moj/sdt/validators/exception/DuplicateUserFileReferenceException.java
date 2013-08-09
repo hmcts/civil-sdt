@@ -33,12 +33,12 @@ package uk.gov.moj.sdt.validators.exception;
 import java.util.List;
 
 /**
- * Duplicate customer reference found.
+ * Duplicate user file reference found.
  * 
  * @author d130680
  * 
  */
-public class DuplicateCustomerReferenceException extends AbstractBusinessException
+public class DuplicateUserFileReferenceException extends AbstractBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,56 +46,56 @@ public class DuplicateCustomerReferenceException extends AbstractBusinessExcepti
     private static final long serialVersionUID = 1L;
 
     /**
-     * Duplicate customer reference found.
+     * Duplicate user file reference found.
      * 
      * @param code error code
      * @param description error description
      */
-    public DuplicateCustomerReferenceException (final String code, final String description)
+    public DuplicateUserFileReferenceException (final String code, final String description)
     {
         super (code, description);
     }
 
     /**
-     * Duplicate customer reference found.
+     * Duplicate user file reference found.
      * 
      * @param code error code
      * @param description error description
      * @param replacements string replacements with tokens
      */
-    public DuplicateCustomerReferenceException (final String code, final String description,
+    public DuplicateUserFileReferenceException (final String code, final String description,
             final List<String> replacements)
     {
         super (code, description, replacements);
     }
 
     /**
-     * Duplicate customer reference found.
+     * Duplicate user file reference found.
      * 
      * @param s the s
      */
-    public DuplicateCustomerReferenceException (final String s)
+    public DuplicateUserFileReferenceException (final String s)
     {
         super (s);
     }
 
     /**
-     * Duplicate customer reference found.
+     * Duplicate user file reference found.
      * 
      * @param cause the cause
      */
-    public DuplicateCustomerReferenceException (final Throwable cause)
+    public DuplicateUserFileReferenceException (final Throwable cause)
     {
         super (cause);
     }
 
     /**
-     * Duplicate customer reference found.
+     * Duplicate user file reference found.
      * 
      * @param s the s
      * @param cause the cause
      */
-    public DuplicateCustomerReferenceException (final String s, final Throwable cause)
+    public DuplicateUserFileReferenceException (final String s, final Throwable cause)
     {
         super (s, cause);
     }

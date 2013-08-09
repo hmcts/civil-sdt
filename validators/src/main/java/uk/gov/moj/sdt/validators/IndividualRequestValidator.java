@@ -42,7 +42,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
-import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
+import uk.gov.moj.sdt.validators.exception.DuplicateUserFileReferenceException;
 
 /**
  * Implementation of {@link IIndividualRequestValidator}.
@@ -77,18 +77,16 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
         LOGGER.info ("visit(individualRequest)");
         final IBulkCustomer bulkCustomer = individualRequest.getBulkSubmission ().getBulkCustomer ();
 
-        // Validate customer reference is unique across data retention period for individual request
+        // Validate user file reference is unique across data retention period for individual request
         final String customerRequestReference = individualRequest.getCustomerRequestReference ();
         if ( !individualRequestDao.isCustomerReferenceUnique (bulkCustomer, customerRequestReference))
         {
             final List<String> replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (customerRequestReference));
-            replacements.add (String.valueOf (individualRequest.getId ()));
             // CHECKSTYLE:OFF
-            throw new SdtCustomerReferenceNotUniqueException (
-                    AbstractBusinessException.ErrorCode.SDT_CUSTOMER_REFRENCE_NOT_UNIQUE.toString (),
-                    "SDT Customer Reference [{0}] was not unique across the data retention period for the Individual Request [{1}].",
-                    replacements);
+            throw new DuplicateUserFileReferenceException (
+                    AbstractBusinessException.ErrorCode.DUP_CUST_FILEID.toString (),
+                    "Duplicate User File Reference {0} supplied.", replacements);
             // CHECKSTYLE:ON
         }
     }

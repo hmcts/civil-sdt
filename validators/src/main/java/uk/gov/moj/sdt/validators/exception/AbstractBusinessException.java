@@ -59,6 +59,7 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
      * Error description.
      */
     private String errorDescription;
+
     // CHECKSTYLE:ON
 
     /**
@@ -155,24 +156,9 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         REQ_COUNT_MISMATCH,
 
         /**
-         * Request type incorrect.
+         * SDT Customer reference not found.
          */
-        REQ_TYPE_INCORRECT,
-
-        /**
-         * Invalid date range.
-         */
-        INVALID_DATE_RANGE,
-
-        /**
-         * Maximum concurrent requests reached.
-         */
-        ABOVE_MAXIMUM_RETENTION_PERIOD,
-
-        /**
-         * SDT Customer ID not found.
-         */
-        SDT_CUSTOMER_ID_NOT_FOUND,
+        CUST_REF_MISSING,
 
         /**
          * SDT Customer Reference not unique.
@@ -182,9 +168,12 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         /**
          * Invalid target application.
          */
-        INVALID_TARGET_APPLICATION
+        CUST_NOT_SETUP,
 
+        /**
+         * Duplicate user file reference.
+         */
+        DUP_CUST_FILEID
     }
 
 }
-
