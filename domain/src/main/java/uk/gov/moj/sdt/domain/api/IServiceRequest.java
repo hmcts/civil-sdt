@@ -119,4 +119,32 @@ public interface IServiceRequest extends IDomainObject
      */
     void setBulkReference (final String bulkReference);
 
+    /**
+     * Get internal system error.
+     * 
+     * @return internal system error
+     */
+    String getInternalSystemError ();
+
+    /**
+     * Set internal system error.
+     * 
+     * @param internalSystemError internal system error
+     */
+    void setInternalSystemError (final String internalSystemError);
+
+    /**
+     * Get service request header.
+     * 
+     * @return service request header
+     */
+    String getServiceRequestHeader ();
+
+    /**
+     * Set service request header.
+     * 
+     * @param serviceRequestHeader service request header
+     */
+    void setServiceRequestHeader (final String serviceRequestHeader);
+
 }

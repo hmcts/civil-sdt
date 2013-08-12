@@ -186,6 +186,11 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      */
     private String payload;
 
+    /**
+     * Internal system error.
+     */
+    private String internalSystemError;
+
     @Override
     public IBulkSubmission getBulkSubmission ()
     {
@@ -472,5 +477,17 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void setTargetApplicationResponse (final String targetApplicationResponse)
     {
         this.targetApplicationResponse = targetApplicationResponse;
+    }
+
+    @Override
+    public String getInternalSystemError ()
+    {
+        return internalSystemError;
+    }
+
+    @Override
+    public void setInternalSystemError (final String internalSystemError)
+    {
+        this.internalSystemError = internalSystemError;
     }
 }

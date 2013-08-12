@@ -36,5 +36,12 @@
 			access="field">
 			<column name="SDT_BULK_REFERENCE" />
 		</property>
+		<property name="serviceRequestHeader" type="java.lang.String">
+            <column name="SERVICE_REQUEST_HEADER" />
+        </property>		
+		<property name="internalSystemError" type="java.lang.String">
+            <column name="INTERNAL_SYSTEM_ERROR" />
+        </property>
+		
 	</class>
 </hibernate-mapping>

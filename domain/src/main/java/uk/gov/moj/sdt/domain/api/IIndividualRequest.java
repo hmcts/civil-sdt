@@ -379,4 +379,18 @@ public interface IIndividualRequest extends IDomainObject
      */
     void setTargetApplicationResponse (final String targetApplicationResponse);
 
+    /**
+     * Get internal system error.
+     * 
+     * @return internal system error
+     */
+    String getInternalSystemError ();
+
+    /**
+     * Set internal system error.
+     * 
+     * @param internalSystemError internal system error
+     */
+    void setInternalSystemError (final String internalSystemError);
+
 }

@@ -91,5 +91,8 @@
         <property name="payload" type="binary">
             <column name="PAYLOAD" />
         </property>        
+        <property name="internalSystemError" type="java.lang.String">
+            <column name="INTERNAL_SYSTEM_ERROR" />
+        </property>
     </class>
 </hibernate-mapping>

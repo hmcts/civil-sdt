@@ -79,6 +79,16 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     private String bulkReference;
 
     /**
+     * Internal system error.
+     */
+    private String internalSystemError;
+
+    /**
+     * Service request header.
+     */
+    private String serviceRequestHeader;
+
+    /**
      * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setRequestDateTime(org.joda.time.LocalDateTime)
      * @param requestDateTime the time the request is received.
      */
@@ -147,5 +157,29 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     public void setBulkReference (final String bulkReference)
     {
         this.bulkReference = bulkReference;
+    }
+
+    @Override
+    public String getInternalSystemError ()
+    {
+        return internalSystemError;
+    }
+
+    @Override
+    public void setInternalSystemError (final String internalSystemError)
+    {
+        this.internalSystemError = internalSystemError;
+    }
+
+    @Override
+    public String getServiceRequestHeader ()
+    {
+        return serviceRequestHeader;
+    }
+
+    @Override
+    public void setServiceRequestHeader (final String serviceRequestHeader)
+    {
+        this.serviceRequestHeader = serviceRequestHeader;
     }
 }
