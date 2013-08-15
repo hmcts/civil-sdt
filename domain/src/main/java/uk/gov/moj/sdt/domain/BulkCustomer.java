@@ -59,11 +59,6 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
      */
     private long sdtCustomerId;
 
-    /**
-     * The National Coded Party for the organisation, between 1000 and 9999.
-     */
-    private long customerIdentifier;
-
     @Override
     public String getCustomerCaseCode ()
     {
@@ -86,18 +81,6 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     public void setSdtCustomerId (final long sdtCustomerId)
     {
         this.sdtCustomerId = sdtCustomerId;
-    }
-
-    @Override
-    public long getCustomerIdentifier ()
-    {
-        return customerIdentifier;
-    }
-
-    @Override
-    public void setCustomerIdentifier (final long customerIdentifier)
-    {
-        this.customerIdentifier = customerIdentifier;
     }
 
     @Override

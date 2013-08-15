@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.validators.exception;
 import java.util.List;
 
 /**
- * Customer reference could not be found.
+ * SDT Customer Reference not found.
  * 
  * @author d130680
  * 
@@ -46,7 +46,7 @@ public class CustomerReferenceNotFoundException extends AbstractBusinessExceptio
     private static final long serialVersionUID = 1L;
 
     /**
-     * Customer reference not found.
+     * SDT Customer Reference not found.
      * 
      * @param code error code
      * @param description error description
@@ -57,7 +57,7 @@ public class CustomerReferenceNotFoundException extends AbstractBusinessExceptio
     }
 
     /**
-     * Customer reference not found.
+     * SDT Customer Reference not found.
      * 
      * @param code code
      * @param description description
@@ -70,7 +70,7 @@ public class CustomerReferenceNotFoundException extends AbstractBusinessExceptio
     }
 
     /**
-     * Customer reference not found.
+     * SDT Customer Reference not found.
      * 
      * @param s the s
      */
@@ -80,7 +80,7 @@ public class CustomerReferenceNotFoundException extends AbstractBusinessExceptio
     }
 
     /**
-     * Customer reference not found.
+     * SDT Customer Reference not found.
      * 
      * @param cause the cause
      */
@@ -90,7 +90,7 @@ public class CustomerReferenceNotFoundException extends AbstractBusinessExceptio
     }
 
     /**
-     * Customer reference not found.
+     * SDT Customer Reference not found.
      * 
      * @param s the s
      * @param cause the cause

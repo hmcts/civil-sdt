@@ -41,8 +41,8 @@ import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
-import uk.gov.moj.sdt.validators.exception.SdtCustomerNotSetupException;
-import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotFoundException;
+import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
+import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotFoundException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
@@ -90,7 +90,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
                 replacements.add (targetApplicationCode);
 
                 // TODO - Confirm contact information
-                throw new SdtCustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
+                throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
                         "The Bulk Customer organisation is not set up to send Service Request messages to the {0}. "
                                 + "Please contact <TBC> for assistance.", replacements);
             }
@@ -100,7 +100,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
             replacements = new ArrayList<String> ();
             replacements.add (targetApplicationCode);
             // TODO - Confirm contact information
-            throw new SdtCustomerReferenceNotFoundException (
+            throw new CustomerReferenceNotFoundException (
                     AbstractBusinessException.ErrorCode.CUST_REF_MISSING.toString (),
                     "The Bulk Customer organisation does not have a Customer Reference set up for {0}. "
                             + "Please contact <TBC> for assistance", replacements);

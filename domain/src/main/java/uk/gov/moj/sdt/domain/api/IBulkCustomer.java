@@ -73,20 +73,6 @@ public interface IBulkCustomer extends IDomainObject
     void setSdtCustomerId (final long sdtCustomerId);
 
     /**
-     * Get customer identifier.
-     * 
-     * @return customer identifier
-     */
-    long getCustomerIdentifier ();
-
-    /**
-     * Set customer identifier.
-     * 
-     * @param sdtCustomerId customer identifier
-     */
-    void setCustomerIdentifier (final long sdtCustomerId);
-
-    /**
      * Set the target applications.
      * 
      * @param targetApplications the target applications that this customer can use.

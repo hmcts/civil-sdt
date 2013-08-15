@@ -31,9 +31,7 @@
 package uk.gov.moj.sdt.validators;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,14 +39,12 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
-import uk.gov.moj.sdt.validators.exception.DuplicateUserFileReferenceException;
+import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
-import uk.gov.moj.sdt.validators.exception.SdtCustomerReferenceNotUniqueException;
 
 /**
  * Implementation of {@link IBulkSubmissionValidator}.
@@ -96,36 +92,34 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         {
             replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (sdtCustomerReference));
-            replacements.add (String.valueOf (sdtCustomerId));
             // CHECKSTYLE:OFF
-            throw new SdtCustomerReferenceNotUniqueException (
-                    AbstractBusinessException.ErrorCode.SDT_CUSTOMER_REFRENCE_NOT_UNIQUE.toString (),
-                    "SDT Customer Reference [{0}] was not unique across the data retention period for the Bulk Submission and SDT Customer Id [{1}].",
-                    replacements);
+            throw new CustomerReferenceNotUniqueException (
+                    AbstractBusinessException.ErrorCode.DUP_CUST_FILEID.toString (),
+                    "Duplicate User File Reference {0} supplied.", replacements);
             // CHECKSTYLE:ON
         }
 
         // Validate customer reference is within the list of individual requests
-        final Set<String> customerReferenceSet = new HashSet<String> ();
-
-        for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests ())
-        {
-
-            final String customerRequestReference = individualRequest.getCustomerRequestReference ();
-            final boolean success = customerReferenceSet.add (customerRequestReference);
-            // Check that the user file reference is unique within the current list of individual requests
-            if ( !success)
-            {
-                replacements = new ArrayList<String> ();
-                replacements.add (customerRequestReference);
-
-                // CHECKSTYLE:OFF
-                throw new DuplicateUserFileReferenceException (
-                        AbstractBusinessException.ErrorCode.DUP_CUST_FILEID.toString (),
-                        "Duplicate User File Reference {0} supplied.", replacements);
-                // CHECKSTYLE:ON
-            }
-        }
+        // final Set<String> customerReferenceSet = new HashSet<String> ();
+        //
+        // for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests ())
+        // {
+        //
+        // final String customerRequestReference = individualRequest.getCustomerRequestReference ();
+        // final boolean success = customerReferenceSet.add (customerRequestReference);
+        // // Check that the user file reference is unique within the current list of individual requests
+        // if ( !success)
+        // {
+        // replacements = new ArrayList<String> ();
+        // replacements.add (customerRequestReference);
+        //
+        // // CHECKSTYLE:OFF
+        // throw new DuplicateUserFileReferenceException (AbstractBusinessException.ErrorCode.DUP_CUST_REQID.toString
+        // (),
+        // "Duplicate Unique Request Identifier submitted {0}.", replacements);
+        // // // CHECKSTYLE:ON
+        // }
+        // }
 
         // Check the request count matches
         if (bulkSubmission.getNumberOfRequest () != bulkSubmission.getIndividualRequests ().size ())

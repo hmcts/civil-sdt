@@ -161,11 +161,6 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         CUST_REF_MISSING,
 
         /**
-         * SDT Customer Reference not unique.
-         */
-        SDT_CUSTOMER_REFRENCE_NOT_UNIQUE,
-
-        /**
          * Invalid target application.
          */
         CUST_NOT_SETUP,
@@ -173,7 +168,13 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         /**
          * Duplicate user file reference.
          */
-        DUP_CUST_FILEID
+        DUP_CUST_FILEID,
+
+        /**
+         * Duplicate unique request identifier.
+         */
+        DUP_CUST_REQID
+
     }
 
 }

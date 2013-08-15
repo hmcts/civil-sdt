@@ -64,7 +64,6 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
         {
 
             bulkCustomer = new BulkCustomer ();
-            bulkCustomer.setCustomerIdentifier (sdtCustomerId);
             bulkCustomer.setCustomerCaseCode ("customerCaseCode");
             bulkCustomer.setSdtCustomerId (sdtCustomerId);
             bulkCustomer.setId (sdtCustomerId);

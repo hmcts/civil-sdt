@@ -83,11 +83,11 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
         {
             final List<String> replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (customerRequestReference));
-            // CHECKSTYLE:OFF
+
             throw new DuplicateUserFileReferenceException (
-                    AbstractBusinessException.ErrorCode.DUP_CUST_FILEID.toString (),
-                    "Duplicate User File Reference {0} supplied.", replacements);
-            // CHECKSTYLE:ON
+                    AbstractBusinessException.ErrorCode.DUP_CUST_REQID.toString (),
+                    "Duplicate Unique Request Identifier submitted {0}.", replacements);
+
         }
     }
 

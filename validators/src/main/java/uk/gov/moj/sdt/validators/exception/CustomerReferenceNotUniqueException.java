@@ -33,12 +33,12 @@ package uk.gov.moj.sdt.validators.exception;
 import java.util.List;
 
 /**
- * SDT Customer has not been setup for target application.
+ * SDT Customer Reference not unique across data retention period.
  * 
  * @author d130680
  * 
  */
-public class SdtCustomerNotSetupException extends AbstractBusinessException
+public class CustomerReferenceNotUniqueException extends AbstractBusinessException
 {
     /**
      * The Constant serialVersionUID.
@@ -46,55 +46,56 @@ public class SdtCustomerNotSetupException extends AbstractBusinessException
     private static final long serialVersionUID = 1L;
 
     /**
-     * SDT Customer has not been setup for target application.
+     * SDT Customer Reference not unique across data retention period.
      * 
      * @param code error code
      * @param description error description
      */
-    public SdtCustomerNotSetupException (final String code, final String description)
+    public CustomerReferenceNotUniqueException (final String code, final String description)
     {
         super (code, description);
     }
 
     /**
-     * SDT Customer has not been setup for target application.
+     * SDT Customer Reference not unique across data retention period.
      * 
      * @param code code
      * @param description description
      * @param replacements string replacements with tokens
      */
-    public SdtCustomerNotSetupException (final String code, final String description, final List<String> replacements)
+    public CustomerReferenceNotUniqueException (final String code, final String description,
+            final List<String> replacements)
     {
         super (code, description, replacements);
     }
 
     /**
-     * SDT Customer has not been setup for target application.
+     * SDT Customer Reference not unique across data retention period.
      * 
      * @param s the s
      */
-    public SdtCustomerNotSetupException (final String s)
+    public CustomerReferenceNotUniqueException (final String s)
     {
         super (s);
     }
 
     /**
-     * SDT Customer has not been setup for target application.
+     * SDT Customer Reference not unique across data retention period.
      * 
      * @param cause the cause
      */
-    public SdtCustomerNotSetupException (final Throwable cause)
+    public CustomerReferenceNotUniqueException (final Throwable cause)
     {
         super (cause);
     }
 
     /**
-     * SDT Customer has not been setup for target application.
+     * SDT Customer Reference not unique across data retention period.
      * 
      * @param s the s
      * @param cause the cause
      */
-    public SdtCustomerNotSetupException (final String s, final Throwable cause)
+    public CustomerReferenceNotUniqueException (final String s, final Throwable cause)
     {
         super (s, cause);
     }
