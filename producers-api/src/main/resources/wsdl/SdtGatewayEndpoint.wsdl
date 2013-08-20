@@ -1068,10 +1068,12 @@
             xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" 
             targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+            xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" 
             elementFormDefault="qualified"
             version="1.0">
             
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"/>
             
             <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
         
@@ -1093,7 +1095,7 @@
             
             <xs:complexType name="mcolResultsType">
                 <xs:choice>
-                    <xs:any/>
+                    <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:choice>
             </xs:complexType>
             

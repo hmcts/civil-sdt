@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" 
     targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
     xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
-    xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" 
-	elementFormDefault="qualified"
+    elementFormDefault="qualified"
     version="1.0">
     
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
-    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" schemaLocation="../RootXSDs/McolQuery.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
     
-	<xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
+    <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
 
-	<xs:complexType name="submitQueryResponseType">
-		<xs:sequence>
+    <xs:complexType name="submitQueryResponseType">
+        <xs:sequence>
             <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
             <xs:element name="sdtService" type="xs:string"/>
             <xs:element name="resultCount" type="xs:nonNegativeInteger" />
-			<xs:element name="results" type="tns:resultsType" />
+            <xs:element name="results" type="tns:resultsType" />
             <xs:element name="status" type="base:statusType" />
-		</xs:sequence>
-	</xs:complexType>
+        </xs:sequence>
+    </xs:complexType>
     
     <xs:complexType name="resultsType">
         <xs:choice>
@@ -30,7 +28,7 @@
     
     <xs:complexType name="mcolResultsType">
         <xs:choice>
-            <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:any processContents="lax"/>
         </xs:choice>
     </xs:complexType>
     
