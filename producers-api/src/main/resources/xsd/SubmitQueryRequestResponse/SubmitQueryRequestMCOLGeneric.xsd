@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryRequestSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryRequestSchema"
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+	elementFormDefault="qualified"
+    version="1.0">
+	
+	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+    
+    <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType"/>
+    
+	<xs:complexType name="submitQueryRequestType">
+		<xs:sequence>
+			<xs:element name="header" type="tns:headerType" />
+            <xs:element name="mcolCriteria" type="tns:mcolCriteriaType" />
+		</xs:sequence>	
+	</xs:complexType>
+    
+	<xs:complexType name="headerType">
+		<xs:sequence>
+			<xs:element name="mcolCustomerId" type="base:mcolCustomerIdType" />
+		</xs:sequence>
+	</xs:complexType>
+    
+    <xs:complexType name="mcolCriteriaType">
+        <xs:choice>
+            <xs:any/>
+        </xs:choice>
+    </xs:complexType>
+
+</xs:schema>

@@ -3,9 +3,9 @@ package uk.gov.moj.sdt.ws._2013.mcol.responseschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.mcol.responsedetailschema.ResponseDetailType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 
 
@@ -20,7 +20,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="header" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema}headerType"/>
- *         &lt;element name="mcolResponseDetail" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema}responseDetailType"/>
+ *         &lt;any/>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}createStatusType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -33,15 +33,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "individualResponseType", propOrder = {
     "header",
-    "mcolResponseDetail",
+    "any",
     "status"
 })
 public class IndividualResponseType {
 
     @XmlElement(required = true)
     protected HeaderType header;
-    @XmlElement(required = true)
-    protected ResponseDetailType mcolResponseDetail;
+    @XmlAnyElement(lax = true)
+    protected Object any;
     @XmlElement(required = true)
     protected CreateStatusType status;
 
@@ -70,27 +70,27 @@ public class IndividualResponseType {
     }
 
     /**
-     * Gets the value of the mcolResponseDetail property.
+     * Gets the value of the any property.
      * 
      * @return
      *     possible object is
-     *     {@link ResponseDetailType }
+     *     {@link Object }
      *     
      */
-    public ResponseDetailType getMcolResponseDetail() {
-        return mcolResponseDetail;
+    public Object getAny() {
+        return any;
     }
 
     /**
-     * Sets the value of the mcolResponseDetail property.
+     * Sets the value of the any property.
      * 
      * @param value
      *     allowed object is
-     *     {@link ResponseDetailType }
+     *     {@link Object }
      *     
      */
-    public void setMcolResponseDetail(ResponseDetailType value) {
-        this.mcolResponseDetail = value;
+    public void setAny(Object value) {
+        this.any = value;
     }
 
     /**

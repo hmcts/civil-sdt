@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.mcol.queryschema.McolDefenceDetailType;
 
 
 /**
@@ -19,7 +19,7 @@ import uk.gov.moj.sdt.ws._2013.mcol.queryschema.McolDefenceDetailType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice>
- *         &lt;element name="mcolDefenceDetail" type="{http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema}mcolDefenceDetailType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;any maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/choice>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -30,39 +30,40 @@ import uk.gov.moj.sdt.ws._2013.mcol.queryschema.McolDefenceDetailType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "mcolResultsType", propOrder = {
-    "mcolDefenceDetail"
+    "any"
 })
 public class McolResultsType {
 
-    protected List<McolDefenceDetailType> mcolDefenceDetail;
+    @XmlAnyElement(lax = true)
+    protected List<Object> any;
 
     /**
-     * Gets the value of the mcolDefenceDetail property.
+     * Gets the value of the any property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the mcolDefenceDetail property.
+     * This is why there is not a <CODE>set</CODE> method for the any property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getMcolDefenceDetail().add(newItem);
+     *    getAny().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link McolDefenceDetailType }
+     * {@link Object }
      * 
      * 
      */
-    public List<McolDefenceDetailType> getMcolDefenceDetail() {
-        if (mcolDefenceDetail == null) {
-            mcolDefenceDetail = new ArrayList<McolDefenceDetailType>();
+    public List<Object> getAny() {
+        if (any == null) {
+            any = new ArrayList<Object>();
         }
-        return this.mcolDefenceDetail;
+        return this.any;
     }
 
 }

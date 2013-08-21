@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" 
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/RequestSchema" 
+    elementFormDefault="qualified"
+    xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
+    version="1.0">
+	
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
+     
+    <xs:complexType name="headerType">
+        <xs:sequence>
+            <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
+            <xs:element name="mcolCustomerId" type="base:mcolCustomerIdType"/>
+            <xs:element name="requestType" type="base:requestTypeType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="individualRequestType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType"/>
+            <xs:choice>
+                <xs:any/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="individualRequest" type="tns:individualRequestType"/>
+
+</xs:schema>

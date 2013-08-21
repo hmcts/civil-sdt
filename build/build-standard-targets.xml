@@ -136,7 +136,7 @@
             <arg value="jaxws21" />
             <arg value="-b" />
             <arg value="${resources.dir}/jaxb-bindings.xml" />
-            <arg value="${resources.dir}/wsdl/McolInternalEndpoint.wsdl" />
+            <arg value="${resources.dir}/wsdl/McolInternalEndpointGeneric.wsdl" />
             <classpath>
                 <path refid="cxf.classpath" />
             </classpath>

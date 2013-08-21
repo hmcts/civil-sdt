@@ -67,8 +67,6 @@ import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
-
 /**
  * The Class DBUnitUtility.
  * 
@@ -80,7 +78,7 @@ public final class DBUnitUtility
     /**
      * The logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (SdtUnitTestBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger (DBUnitUtility.class);
 
     /**
      * Map of database connections for all schemas (one each).

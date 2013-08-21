@@ -15,12 +15,6 @@
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../xsd/RootXSDs/Base.xsd"/>
 
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" schemaLocation="../xsd/RootXSDs/Claim.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="../xsd/RootXSDs/Warrant.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" schemaLocation="../xsd/RootXSDs/Judgment.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" schemaLocation="../xsd/RootXSDs/ClaimStatusUpdate.xsd"/>
-            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" schemaLocation="../xsd/RootXSDs/McolQuery.xsd"/>
-
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" schemaLocation="../xsd/BulkRequestResponse/BulkSubmitRequestGeneric.xsd"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" schemaLocation="../xsd/BulkRequestResponse/BulkSubmitResponse.xsd"/>
 
