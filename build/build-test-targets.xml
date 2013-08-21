@@ -426,7 +426,7 @@
 			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
 			<jvmarg value="-Demma.coverage.out.merge=true" />
 
-			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8004" />
+			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8008" />
 
 			<syspropertyset refid="all-runtime-properties" />
 
