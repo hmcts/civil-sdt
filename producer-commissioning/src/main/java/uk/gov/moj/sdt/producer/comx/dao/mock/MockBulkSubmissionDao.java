@@ -51,12 +51,6 @@ public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmis
      */
     public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
     {
-
-        if (isSDTCustomerIdValid (bulkCustomer.getSdtCustomerId ()) && isCustomerReferenceValid (customerReference))
-        {
-            return true;
-        }
-
-        return false;
+        return isCustomerReferenceValid (customerReference);
     }
 }

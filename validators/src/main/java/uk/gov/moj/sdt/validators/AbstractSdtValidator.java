@@ -42,7 +42,6 @@ import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
-import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotFoundException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
@@ -79,33 +78,26 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         LOGGER.info ("Validating SDT Customer ID [" + sdtCustomerId + "] and target application + [" +
                 targetApplicationCode + "]");
         final IBulkCustomer bulkCustomer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
+
+        assert bulkCustomer != null;
+
         List<String> replacements = null;
 
-        if (bulkCustomer != null)
-        {
-
-            if ( !targetApplicationtDao.hasAccess (bulkCustomer, targetApplicationCode))
-            {
-                replacements = new ArrayList<String> ();
-                replacements.add (targetApplicationCode);
-
-                // TODO - Confirm contact information
-                throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
-                        "The Bulk Customer organisation is not set up to send Service Request messages to the {0}. "
-                                + "Please contact <TBC> for assistance.", replacements);
-            }
-        }
-        else
+        if ( !targetApplicationtDao.hasAccess (bulkCustomer, targetApplicationCode))
         {
             replacements = new ArrayList<String> ();
             replacements.add (targetApplicationCode);
-            // TODO - Confirm contact information
-            throw new CustomerReferenceNotFoundException (
-                    AbstractBusinessException.ErrorCode.CUST_REF_MISSING.toString (),
-                    "The Bulk Customer organisation does not have a Customer Reference set up for {0}. "
-                            + "Please contact <TBC> for assistance", replacements);
-
+            throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
+                    "The Bulk Customer organisation is not set up to send Service Request messages to the {0}. "
+                            + "Please contact <TBC> for assistance.", replacements);
         }
+
+        // TODO Check that Target Application reference is setup.
+        // replacements = new ArrayList<String> ();
+        // replacements.add (targetApplicationCode);
+        // throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_REF_MISSING.toString (),
+        // "The Bulk Customer organisation does not have a Customer Reference set up for {0}. "
+        // + "Please contact <TBC> for assistance", replacements);
 
     }
 
@@ -117,6 +109,16 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     public void setBulkCustomerDao (final IBulkCustomerDao bulkCustomerDao)
     {
         this.bulkCustomerDao = bulkCustomerDao;
+    }
+
+    /**
+     * Returns bulk customer dao.
+     * 
+     * @return IBulkCustomerDao instance
+     */
+    public IBulkCustomerDao getBulkCustomerDao ()
+    {
+        return bulkCustomerDao;
     }
 
     /**

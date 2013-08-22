@@ -45,34 +45,17 @@ import java.util.List;
 public class MockGenericDao
 {
     /**
-     * Valid sdt customer id.
+     * Pre-defined values for valid customer references.
      */
-    public static final int VALID_SDT_CUSTOMER_ID1 = 123;
+    private static final List<String> DUPLICATE_REFERENCE;
 
-    /**
-     * Valid sdt customer id.
-     */
-    public static final int VALID_SDT_CUSTOMER_ID2 = 200;
-
-    /**
-     * Valid sdt customer id.
-     */
-    public static final int VALID_SDT_CUSTOMER_ID3 = 201;
-
-    /**
-     * Check whether a sdt customer id is valid or not.
-     * 
-     * @param l sdtCustomerId to check
-     * @return true or false
-     */
-    protected boolean isSDTCustomerIdValid (final long l)
+    static
     {
-        final List<Long> validSDTCustomers = new ArrayList<Long> ();
-        validSDTCustomers.add (new Long (VALID_SDT_CUSTOMER_ID1));
-        validSDTCustomers.add (new Long (VALID_SDT_CUSTOMER_ID2));
-        validSDTCustomers.add (new Long (VALID_SDT_CUSTOMER_ID3));
 
-        return validSDTCustomers.contains (new Long (l));
+        DUPLICATE_REFERENCE = new ArrayList<String> ();
+
+        DUPLICATE_REFERENCE.add ("duplicate");
+
     }
 
     /**
@@ -84,14 +67,6 @@ public class MockGenericDao
      */
     protected boolean isCustomerReferenceValid (final String customerReference)
     {
-
-        final List<String> validCustomerReference = new ArrayList<String> ();
-
-        validCustomerReference.add ("abc1223456");
-        validCustomerReference.add ("abc1112222");
-        validCustomerReference.add ("xyz1112222");
-
-        return validCustomerReference.contains (customerReference);
-
+        return !DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ());
     }
 }

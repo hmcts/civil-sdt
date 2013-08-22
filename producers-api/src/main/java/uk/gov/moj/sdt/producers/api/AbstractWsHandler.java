@@ -104,6 +104,8 @@ public abstract class AbstractWsHandler
      */
     public void handleBusinessException (final IBusinessException businessException, final StatusType statusType)
     {
+        LOGGER.info ("Business error during request processing - " + businessException);
+
         final ErrorType errorType = new ErrorType ();
         errorType.setCode (businessException.getErrorCode ());
         errorType.setDescription (businessException.getErrorDescription ());

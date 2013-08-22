@@ -59,24 +59,18 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
     public IBulkCustomer getBulkCustomerBySdtId (final long sdtCustomerId) throws DataAccessException
     {
 
-        IBulkCustomer bulkCustomer = null;
-        if (isSDTCustomerIdValid (sdtCustomerId))
-        {
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        bulkCustomer.setCustomerCaseCode ("customerCaseCode");
+        bulkCustomer.setSdtCustomerId (sdtCustomerId);
+        bulkCustomer.setId (sdtCustomerId);
 
-            bulkCustomer = new BulkCustomer ();
-            bulkCustomer.setCustomerCaseCode ("customerCaseCode");
-            bulkCustomer.setSdtCustomerId (sdtCustomerId);
-            bulkCustomer.setId (sdtCustomerId);
+        // Mock the Target Application
+        final Set<TargetApplication> targetApplications = new HashSet<TargetApplication> ();
+        final TargetApplication targetApplication = new TargetApplication ();
+        targetApplication.setTargetApplicationCode ("mcol");
+        targetApplication.setTargetApplicationName ("mcol");
 
-            // Mock the Target Application
-            final Set<TargetApplication> targetApplications = new HashSet<TargetApplication> ();
-            final TargetApplication targetApplication = new TargetApplication ();
-            targetApplication.setTargetApplicationCode ("targetApplicationCode");
-            targetApplication.setTargetApplicationName ("targetApplicationName");
-
-            bulkCustomer.setTargetApplications (targetApplications);
-
-        }
+        bulkCustomer.setTargetApplications (targetApplications);
 
         return bulkCustomer;
 

@@ -65,7 +65,6 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
     public boolean hasAccess (final IBulkCustomer bulkCustomer, final String targetApplicationCode)
         throws DataAccessException
     {
-        // TODO - Need to implement this
         return true;
     }
 }

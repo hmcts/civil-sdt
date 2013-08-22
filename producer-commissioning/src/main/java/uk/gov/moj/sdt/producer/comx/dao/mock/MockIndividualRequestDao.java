@@ -31,6 +31,9 @@
 
 package uk.gov.moj.sdt.producer.comx.dao.mock;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
@@ -42,6 +45,21 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  */
 public class MockIndividualRequestDao extends MockGenericDao implements IIndividualRequestDao
 {
+
+    /**
+     * Pre-defined values for valid customer references.
+     */
+    private static final List<String> DUPLICATE_REFERENCE;
+
+    static
+    {
+
+        DUPLICATE_REFERENCE = new ArrayList<String> ();
+
+        DUPLICATE_REFERENCE.add ("duplicate");
+
+    }
+
     /**
      * Check the customer reference is unique across data retention period.
      * 
@@ -51,7 +69,6 @@ public class MockIndividualRequestDao extends MockGenericDao implements IIndivid
      */
     public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
     {
-
-        return true;
+        return !DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ());
     }
 }

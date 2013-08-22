@@ -34,11 +34,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
-import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
-import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 
 /**
  * Implementation of bulk customer validation.
@@ -55,16 +53,6 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
     private static final Log LOGGER = LogFactory.getLog (BulkCustomerValidator.class);
 
     /**
-     * SDT Customer Id valid start.
-     */
-    private static final long SDT_ID_START = 10000000;
-
-    /**
-     * SDT Customer Id valid end.
-     */
-    private static final long SDT_ID_END = 99999999;
-
-    /**
      * No-argument Constructor.
      */
     public BulkCustomerValidator ()
@@ -75,33 +63,14 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
     public void visit (final BulkCustomer bulkCustomer, final ITree tree)
     {
 
-        final long sdtCustomerId = bulkCustomer.getSdtCustomerId ();
+        LOGGER.info ("started visit(BulkCustomer)");
 
-        LOGGER.info ("Bulk customer id [" + sdtCustomerId + "].");
+        final IBulkCustomer bulkCustomerFound =
+                getBulkCustomerDao ().getBulkCustomerBySdtId (bulkCustomer.getSdtCustomerId ());
 
-        // Validate that the customer exists and can access the target application
-        // Get the target application, the first entry should be the one we want to test access against.
-        final TargetApplication targetApplication = bulkCustomer.getTargetApplications ().iterator ().next ();
+        assert bulkCustomerFound != null;
 
-        if (targetApplication != null && sdtCustomerId > 0)
-        {
-            //TODO - waiting for Shu-Yee to confirm whether these start and end Id's need to be enforced. 
-            if (sdtCustomerId < SDT_ID_START || sdtCustomerId > SDT_ID_END)
-            {
-                throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
-                        "SDT Customer Id not between " + SDT_ID_START + " and " + SDT_ID_END + ", actual value was [" +
-                                sdtCustomerId + "]");
-            }
-            else
-            {
-                checkCustomerHasAccess (sdtCustomerId, targetApplication.getTargetApplicationCode ());
-            }
-        }
-        else
-        {
-            throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
-                    "SDTCustomerId and/or TargetApplicationCode is not valid!");
-        }
+        LOGGER.debug ("completed visit(BulkCustomer)");
 
     }
 

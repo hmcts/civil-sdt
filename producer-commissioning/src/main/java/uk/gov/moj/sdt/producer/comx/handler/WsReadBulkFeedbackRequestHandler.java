@@ -104,7 +104,6 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
      */
     private void transformToDomainType (final BulkFeedbackRequestType bulkRequest)
     {
-        // TODO Auto-generated method stub
         LOGGER.info ("transform to domain type");
 
     }

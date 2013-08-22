@@ -61,7 +61,6 @@ public class TargetApplicationValidator extends AbstractSdtValidator implements 
     @Override
     public void visit (final TargetApplication targetApplication, final ITree tree)
     {
-        // TODO Do validation
         LOGGER.info ("visit(targetApplication)");
     }
 }
