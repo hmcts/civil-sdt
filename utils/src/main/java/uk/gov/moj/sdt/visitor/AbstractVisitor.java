@@ -90,11 +90,44 @@ public abstract class AbstractVisitor implements IVisitor
         return visitor;
     }
 
+    /**
+     * Get the interface which corresponds to the given class name with the prefix 'I'.
+     * 
+     * @param clazz the class whose corresponding interface is to be found.
+     * @return Class<?> class of the interface corresponding to the given object with "I" prefix.
+     */
+    private Class<?> getInterfaceClass (final Class<?> clazz)
+    {
+        // Get all interfaces on the class.
+        final Class<?>[] interfaces = clazz.getInterfaces ();
+
+        // Find the simple name of the given class.
+        final String simpleName = clazz.getSimpleName ();
+
+        // By convention for an interface name to look for based on given class name with "I" prefix.
+        final String interfaceName = "I" + simpleName;
+
+        // Look thru all interfaces for one that matches.
+        for (Class<?> interfaceInstance : interfaces)
+        {
+            if (interfaceInstance.getSimpleName ().equals (interfaceName))
+            {
+                return interfaceInstance;
+            }
+        }
+
+        throw new UnsupportedOperationException (
+                "No matching interface found for class - interface should be called [" + interfaceName + "]");
+    }
+
     @Override
     public final void visit (final Object visitable, final ITree tree)
     {
         // Class of target bean.
         Class<?> clazz = null;
+
+        // Interface of target bean.
+        Class<?> interfaceClass = null;
 
         // Now we try to invoke the method visit.
         try
@@ -102,8 +135,12 @@ public abstract class AbstractVisitor implements IVisitor
             // Get class of visitable in order to find method signature.
             clazz = visitable.getClass ();
 
+            // Find the corresponding interface since the visit method expects an interface not a class. By convention
+            // this is the same as the class name with "I" prefix.
+            interfaceClass = getInterfaceClass (clazz);
+
             // Get the method appropriate for the visit method to call which takes a parameter of the target bean type.
-            final Method method = getClass ().getMethod ("visit", new Class[] {clazz, ITree.class});
+            final Method method = getClass ().getMethod ("visit", new Class[] {interfaceClass, ITree.class});
 
             try
             {
@@ -120,18 +157,18 @@ public abstract class AbstractVisitor implements IVisitor
                     throw RuntimeException.class.cast (throwable);
                 }
 
-                LOG.error ("Cannot find visit method for target bean [" + clazz.getName () + "].", e);
+                LOG.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
                 throw new UnsupportedOperationException (e);
             }
             catch (final IllegalAccessException e)
             {
-                LOG.error ("Cannot find visit method for target bean [" + clazz.getName () + "].", e);
+                LOG.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
                 throw new UnsupportedOperationException (e);
             }
         }
         catch (final NoSuchMethodException e)
         {
-            LOG.error ("Cannot find visit method for target bean [" + clazz.getName () + "].", e);
+            LOG.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
             throw new UnsupportedOperationException (e);
         }
     }
