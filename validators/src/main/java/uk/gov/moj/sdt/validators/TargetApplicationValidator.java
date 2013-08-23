@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.validators;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.ITargetApplicationValidator;
 
@@ -59,7 +59,7 @@ public class TargetApplicationValidator extends AbstractSdtValidator implements 
     }
 
     @Override
-    public void visit (final TargetApplication targetApplication, final ITree tree)
+    public void visit (final ITargetApplication targetApplication, final ITree tree)
     {
         LOGGER.info ("visit(targetApplication)");
     }

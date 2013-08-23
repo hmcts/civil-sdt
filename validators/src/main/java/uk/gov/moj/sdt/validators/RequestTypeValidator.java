@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.validators;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.RequestType;
+import uk.gov.moj.sdt.domain.api.IRequestType;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IRequestTypeValidator;
 
@@ -59,7 +59,7 @@ public class RequestTypeValidator extends AbstractSdtValidator implements IReque
     }
 
     @Override
-    public void visit (final RequestType requestType, final ITree tree)
+    public void visit (final IRequestType requestType, final ITree tree)
     {
         // TODO Do validation
         LOGGER.info ("visit(requestType)");

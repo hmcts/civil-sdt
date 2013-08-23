@@ -30,12 +30,12 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.visitor.api;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
@@ -53,7 +53,7 @@ public interface IDomainObjectVisitor extends IVisitor
      * @param bulkCustomer the domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (BulkCustomer bulkCustomer, ITree tree);
+    void visit (IBulkCustomer bulkCustomer, ITree tree);
 
     /**
      * Visit the domain object.
@@ -61,7 +61,7 @@ public interface IDomainObjectVisitor extends IVisitor
      * @param bulkSubmission the domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (BulkSubmission bulkSubmission, ITree tree);
+    void visit (IBulkSubmission bulkSubmission, ITree tree);
 
     /**
      * Visit the domain object.
@@ -69,7 +69,7 @@ public interface IDomainObjectVisitor extends IVisitor
      * @param requestType domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (RequestType requestType, ITree tree);
+    void visit (IRequestType requestType, ITree tree);
 
     /**
      * Visit the domain object.
@@ -77,7 +77,7 @@ public interface IDomainObjectVisitor extends IVisitor
      * @param targetApplication domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (TargetApplication targetApplication, ITree tree);
+    void visit (ITargetApplication targetApplication, ITree tree);
 
     /**
      * Visit the domain object.
@@ -85,7 +85,7 @@ public interface IDomainObjectVisitor extends IVisitor
      * @param individualRequest domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (IndividualRequest individualRequest, ITree tree);
+    void visit (IIndividualRequest individualRequest, ITree tree);
 
     /**
      * Visit the Submit Query Request.
@@ -93,6 +93,6 @@ public interface IDomainObjectVisitor extends IVisitor
      * @param submitQueryRequest domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (final SubmitQueryRequest submitQueryRequest, final ITree tree);
+    void visit (ISubmitQueryRequest submitQueryRequest, final ITree tree);
 
 }

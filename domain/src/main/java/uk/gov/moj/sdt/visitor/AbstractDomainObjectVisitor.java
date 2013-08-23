@@ -30,17 +30,19 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.visitor;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 
 /**
- * Implement visit method, common to all {@link IDomainObjectVisitor}s.
+ * Implement default visit methods. These should never be called and therefore raise exceptions. In each case the
+ * implementation of {@link IDomainObjectVisitor} should overload the one visit method it implements and the others
+ * should not be called by that class.
  * 
  * @author Robin Compston
  * 
@@ -48,44 +50,38 @@ import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
 public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor
 {
     @Override
-    public void visit (final BulkCustomer bulkCustomer, final ITree tree)
+    public void visit (final IBulkCustomer bulkCustomer, final ITree tree)
     {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }
 
     @Override
-    public void visit (final BulkSubmission bulkSubmission, final ITree tree)
+    public void visit (final IBulkSubmission bulkSubmission, final ITree tree)
     {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }
 
     @Override
-    public void visit (final RequestType requestType, final ITree tree)
+    public void visit (final IRequestType requestType, final ITree tree)
     {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }
 
     @Override
-    public void visit (final TargetApplication targetApplication, final ITree tree)
+    public void visit (final ITargetApplication targetApplication, final ITree tree)
     {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }
 
     @Override
-    public void visit (final IndividualRequest individualRequest, final ITree tree)
+    public void visit (final IIndividualRequest individualRequest, final ITree tree)
     {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }
 
     @Override
-    public void visit (final SubmitQueryRequest submitQueryRequest, final ITree tree)
+    public void visit (final ISubmitQueryRequest submitQueryRequest, final ITree tree)
     {
-        throw new UnsupportedOperationException (
-                "Missing validator implementation - this method should never be called.");
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }
 }

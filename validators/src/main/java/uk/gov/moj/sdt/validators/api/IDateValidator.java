@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.validators.api;
 import org.joda.time.LocalDate;
 
 /**
- * An interface to provide date validation methods.
+ * An interface to provide validation methods for {@link org.joda.time.LocalDate}.
  * 
  * @author Simon Holmes
  * 

@@ -30,11 +30,10 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators.api;
 
-
 /**
- * An interface to provide date validation methods.
+ * An interface to provide validation methods for {@link uk.gov.moj.sdt.domain.BulkCustomer}.
  * 
- * @author Simon Holmes
+ * @author Robin Compston
  * 
  */
 public interface IBulkCustomerValidator

@@ -60,11 +60,4 @@ public interface IDomainObject extends IVisitable
      * @return Hibernate version id
      */
     int getVersion ();
-
-    /**
-     * Get the business interface of this object.
-     * 
-     * @return business interface of this domain object.
-     */
-    Class<?> getBusinessInterfaceType ();
 }

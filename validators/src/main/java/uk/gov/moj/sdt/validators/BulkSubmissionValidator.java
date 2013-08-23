@@ -37,8 +37,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
@@ -72,7 +72,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
     }
 
     @Override
-    public void visit (final BulkSubmission bulkSubmission, final ITree tree)
+    public void visit (final IBulkSubmission bulkSubmission, final ITree tree)
     {
 
         // Do validation of bulk submission.

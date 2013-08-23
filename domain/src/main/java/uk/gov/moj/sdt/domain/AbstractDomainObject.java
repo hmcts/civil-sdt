@@ -104,11 +104,4 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
         // Call any visitor, passing a reference to this class so that it can act on this class.
         visitor.visit (this, tree);
     }
-
-    /* This implementation assumes the business interface is the first declared interface. */
-    @Override
-    public Class<?> getBusinessInterfaceType ()
-    {
-        return this.getClass ().getInterfaces ()[0];
-    }
 }

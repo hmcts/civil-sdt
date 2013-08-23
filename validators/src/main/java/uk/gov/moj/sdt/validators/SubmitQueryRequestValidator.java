@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.validators;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
+import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator;
 
@@ -59,12 +59,12 @@ public class SubmitQueryRequestValidator extends AbstractSdtValidator implements
     }
 
     @Override
-    public void visit (final SubmitQueryRequest submitQueryRequest, final ITree tree)
+    public void visit (final ISubmitQueryRequest submitQueryRequest, final ITree tree)
     {
 
         // Validate customer exists and can access target application
-        checkCustomerHasAccess (submitQueryRequest.getSdtCustomerId (), submitQueryRequest
-                .getTargetApplication ().getTargetApplicationCode ());
+        checkCustomerHasAccess (submitQueryRequest.getSdtCustomerId (), submitQueryRequest.getTargetApplication ()
+                .getTargetApplicationCode ());
 
         LOGGER.info ("Submit Query SDT Customer id [" + submitQueryRequest.getSdtCustomerId () + "].");
 

@@ -37,8 +37,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
@@ -71,7 +71,7 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
     }
 
     @Override
-    public void visit (final IndividualRequest individualRequest, final ITree tree)
+    public void visit (final IIndividualRequest individualRequest, final ITree tree)
     {
         LOGGER.info ("started visit(individualRequest)");
         final IBulkCustomer bulkCustomer = individualRequest.getBulkSubmission ().getBulkCustomer ();

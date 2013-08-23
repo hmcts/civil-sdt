@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.validators;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
@@ -60,7 +59,7 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
     }
 
     @Override
-    public void visit (final BulkCustomer bulkCustomer, final ITree tree)
+    public void visit (final IBulkCustomer bulkCustomer, final ITree tree)
     {
 
         LOGGER.info ("started visit(BulkCustomer)");
