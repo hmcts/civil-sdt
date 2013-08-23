@@ -92,6 +92,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         {
             replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (sdtCustomerReference));
+            // TODO Obtain error description from database. Similar changes might be required in other validators.
             // CHECKSTYLE:OFF
             throw new CustomerReferenceNotUniqueException (
                     AbstractBusinessException.ErrorCode.DUP_CUST_FILEID.toString (),

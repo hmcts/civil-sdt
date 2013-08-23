@@ -151,17 +151,22 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     public enum ErrorCode
     {
         /**
+         * Internal error.
+         */
+        SDT_INT_ERR,
+
+        /**
          * Request count mismatch.
          */
         REQ_COUNT_MISMATCH,
 
         /**
-         * SDT Customer reference not found.
+         * Customer not configured with reference for target application.
          */
         CUST_REF_MISSING,
 
         /**
-         * Invalid target application.
+         * Customer not setup for target application.
          */
         CUST_NOT_SETUP,
 

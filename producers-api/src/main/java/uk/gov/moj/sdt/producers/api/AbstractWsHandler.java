@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.producers.api;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException.ErrorCode;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -88,8 +89,9 @@ public abstract class AbstractWsHandler
         LOGGER.error ("Unexpected error", exception);
 
         final ErrorType errorType = new ErrorType ();
-        errorType.setCode ("SDT_INT_ERR");
-        // TODO - Confirm who to contact
+
+        // TODO Error description should be obtained from database.
+        errorType.setCode (AbstractBusinessException.ErrorCode.SDT_INT_ERR.toString ());
         errorType.setDescription ("A system error has occurred. Please contact TBC for assistance");
 
         populateError (statusType, errorType, StatusCodeType.ERROR);

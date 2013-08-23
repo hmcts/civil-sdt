@@ -27,7 +27,7 @@
     
     <xs:complexType name="mcolResponsesType">
         <xs:sequence>
-            <xs:element name="mcolResponse" type="tns:mcolResponseType" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="mcolResponse" type="tns:mcolResponseType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
