@@ -3,13 +3,15 @@
 	<classpathentry kind="src" path="src/integ-test/java"/>
 	<classpathentry kind="src" path="src/unit-test/java"/>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/producers-api"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/services"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/validators"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/handlers"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/domain"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/services-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/transformers"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/handlers-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

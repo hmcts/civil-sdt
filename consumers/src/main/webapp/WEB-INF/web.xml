@@ -25,7 +25,7 @@
 	<!-- Test servlet to allow testing from browser -->
 	<servlet>
     	<servlet-name>consumer</servlet-name>
-    	<servlet-class>uk.gov.moj.sdt.consumers.prototype.ConsumerServlet</servlet-class>
+    	<servlet-class>uk.gov.moj.sdt.consumers.ConsumerServlet</servlet-class>
     	<load-on-startup>1</load-on-startup>
   	</servlet>
  

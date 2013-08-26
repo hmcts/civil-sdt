@@ -1,0 +1,32 @@
+<!-- ===========================================================================
+ = MCOL
+ =
+ = Name:    	build.xml
+ = Description: Build file for a specific project.
+ =
+ = $Revision: $
+ = $Author: $
+ = $Date: $
+ = $URL: $
+ =
+ = Copyright Logica UK Ltd. 2012
+ =========================================================================== -->
+
+<project name="producers-commissioning" basedir="." default="dist">
+
+	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
+	<import file="../build/build-setup-env.xml" />
+
+	<!-- Define classpath for compilation -->
+	<import file="../build/build-set-classpath.xml" />
+
+	<!-- STANDARD TARGETS -->
+	<import file="../build/build-standard-targets.xml" />
+
+    <!-- EXTRA TARGETS -->
+    <import file="build-extras.xml" />
+
+    <!-- TEST TARGETS -->
+    <import file="../build/build-test-targets.xml" />
+
+</project>
