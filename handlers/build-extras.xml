@@ -12,7 +12,7 @@
  = Copyright Logica UK Ltd. 2012
  =========================================================================== -->
 
-<project name="handlers-api-extras" basedir=".">
+<project name="handlers-extras" basedir=".">
 
     <!-- Calls extra build distribution targets required by this project. -->
     <target name="dist-extras" depends="" description="Run extra targets for this project">

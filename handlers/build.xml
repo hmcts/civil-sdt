@@ -12,7 +12,7 @@
  = Copyright Logica UK Ltd. 2012
  =========================================================================== -->
 
-<project name="handlers-api" basedir="." default="dist">
+<project name="handlers" basedir="." default="dist">
 
     <!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
     <import file="../build/build-setup-env.xml" />
