@@ -40,7 +40,7 @@
     <filelist id="deploy-project-list" dir=".">
         <file name="../producers/build.xml" />
         <file name="../producers-commissioning/build.xml" />
-        <file name="../consumers/build.xml" />
+        <!--<file name="../consumers/build.xml" />-->
     </filelist>
 
     <!-- TARGETS -->
@@ -77,10 +77,10 @@
         <!-- consumers and producers are part of prototype -->
     	<delete file="${app.server.webapps.dir}/consumers.war" />
         <delete file="${app.server.webapps.dir}/producers.war" />
-        <delete file="${app.server.webapps.dir}/producer-comx.war" />
+        <delete file="${app.server.webapps.dir}/producers-comx.war" />
         <delete dir="${app.server.webapps.dir}/consumers" />
         <delete dir="${app.server.webapps.dir}/producers" />
-        <delete dir="${app.server.webapps.dir}/producer-comx" />
+        <delete dir="${app.server.webapps.dir}/producers-comx" />
 
         <delete file="${c}/sdt.war" />
         <delete dir="${app.server.webapps.dir}/sdt" />

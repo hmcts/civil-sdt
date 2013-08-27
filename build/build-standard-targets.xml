@@ -95,16 +95,6 @@
 
 	<target name="generate-from-wsdl" if="wsdl.exists" depends="clean-src-gen" description="Generate CXF files from wsdl">
 		<!-- TODO - find way of collecting up all wsdl files using wild card -->
-		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
-			<arg value="-d" />
-			<arg value="${src-gen.dir}" />
-			<arg value="-frontend" />
-			<arg value="jaxws21" />
-			<arg value="${resources.dir}/wsdl/GreetingEndpoint.wsdl" />
-			<classpath>
-				<path refid="cxf.classpath" />
-			</classpath>
-		</java>
         <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
             <arg value="-d" />
             <arg value="${src-gen.dir}" />

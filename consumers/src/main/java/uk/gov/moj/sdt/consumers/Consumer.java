@@ -34,15 +34,11 @@ package uk.gov.moj.sdt.consumers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.producers.prototype.common.disc_types.GetGreetingRequestType;
-import uk.gov.moj.sdt.producers.prototype.common.disc_types.GetGreetingResponseType;
-import uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType;
-
 /**
  * 
  * 
  * @author d6997
- *
+ * 
  */
 public class Consumer
 {
@@ -50,22 +46,6 @@ public class Consumer
      * Logger for this class.
      */
     private static final Log LOGGER = LogFactory.getLog (Consumer.class);
-
-    /**
-     * The proxy endpoint injected by Spring.
-     */
-    private IGreetingEndpointPortType greetingEndpointPortType;
-
-    /**
-     * Setter for greetingEndpointPortType.
-     * 
-     * @param greetingEndpointPortType
-     *            new value of greetingEndpointPortType.
-     */
-    public void setGreetingEndpointPortType (final IGreetingEndpointPortType greetingEndpointPortType)
-    {
-        this.greetingEndpointPortType = greetingEndpointPortType;
-    }
 
     /**
      * Call SOAP endpoint and report reponse.
@@ -76,18 +56,6 @@ public class Consumer
     public String getGreeting (final String name)
     {
         LOGGER.debug ("Call getGreeting endpoint, name=" + name);
-
-        // Set up the argument for this endpoint.
-        final GetGreetingRequestType getGreetingRequestType = new GetGreetingRequestType ();
-        getGreetingRequestType.setArg0 (name);
-
-        // Call the proxy to access the web service, passing the name of the
-        // called as a parameter.
-        final GetGreetingResponseType getGreetingResponseType =
-                this.greetingEndpointPortType.getGreeting (getGreetingRequestType);
-
-        // Return extracted return value out of the return object for this
-        // endpoint.
-        return getGreetingResponseType.getReturn ();
+        return "hello";
     }
 }
