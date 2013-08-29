@@ -50,11 +50,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link UpdateDetailType }
+     * Create an instance of {@link UpdateRequestType.TargetAppDetail }
      * 
      */
-    public UpdateDetailType createUpdateDetailType() {
-        return new UpdateDetailType();
+    public UpdateRequestType.TargetAppDetail createUpdateRequestTypeTargetAppDetail() {
+        return new UpdateRequestType.TargetAppDetail();
     }
 
     /**

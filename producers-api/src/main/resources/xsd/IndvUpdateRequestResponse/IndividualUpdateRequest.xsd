@@ -19,17 +19,17 @@
     <xs:complexType name="updateRequestType">
 		<xs:sequence>
             <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="updateDetail" type="tns:updateDetailType"/>
+            <xs:element name="targetAppDetail">
+                <xs:complexType>
+                    <xs:choice>
+                       <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
 			<xs:element name="status" type="base:updateStatusType" />
 		</xs:sequence>
 	</xs:complexType>
 
-    <xs:complexType name="updateDetailType">
-        <xs:choice>
-             <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
-        </xs:choice>
-    </xs:complexType>
-           
     <xs:element name="updateRequest" type="tns:updateRequestType" />
     
 </xs:schema>

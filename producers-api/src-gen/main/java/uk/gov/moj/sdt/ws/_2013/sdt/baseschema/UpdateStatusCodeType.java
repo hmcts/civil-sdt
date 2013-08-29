@@ -2,6 +2,7 @@
 package uk.gov.moj.sdt.ws._2013.sdt.baseschema;
 
 import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -13,8 +14,8 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;simpleType name="updateStatusCodeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="ACCEPTED"/>
- *     &lt;enumeration value="REJECTED"/>
+ *     &lt;enumeration value="Accepted"/>
+ *     &lt;enumeration value="Rejected"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -24,15 +25,27 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum UpdateStatusCodeType {
 
-    ACCEPTED,
-    REJECTED;
+    @XmlEnumValue("Accepted")
+    ACCEPTED("Accepted"),
+    @XmlEnumValue("Rejected")
+    REJECTED("Rejected");
+    private final String value;
+
+    UpdateStatusCodeType(String v) {
+        value = v;
+    }
 
     public String value() {
-        return name();
+        return value;
     }
 
     public static UpdateStatusCodeType fromValue(String v) {
-        return valueOf(v);
+        for (UpdateStatusCodeType c: UpdateStatusCodeType.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 
 }

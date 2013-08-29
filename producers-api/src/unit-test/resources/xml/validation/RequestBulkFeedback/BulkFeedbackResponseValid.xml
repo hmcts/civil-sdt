@@ -8,12 +8,18 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
       <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
       <tns:sdtService>mcol</tns:sdtService>
       <tns:requestCount>0</tns:requestCount>
-      <tns:bulkStatus code="FAILED">
+      <tns:bulkStatus code="Failed">
           <base:error>
             <base:code>base:code</base:code>
             <base:description>base:description</base:description>
           </base:error>
       </tns:bulkStatus>
+      <tns:status code="Ok">
+          <base:error>
+            <base:code>base:code</base:code>
+            <base:description>base:description</base:description>
+          </base:error>
+      </tns:status>
   </tns:bulkRequestStatus>
   <tns:responses>
     <tns:mcolResponses>
@@ -27,7 +33,7 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
 	        <rdns:enforcingCourtName>tns:enforcingCourtName</rdns:enforcingCourtName>
 	        <rdns:fee>0</rdns:fee>
         </tns:mcolResponseDetail>
-        <tns:status code="ACCEPTED">
+        <tns:status code="Accepted">
           <base:error>
             <base:code>base:code</base:code>
             <base:description>base:description</base:description>

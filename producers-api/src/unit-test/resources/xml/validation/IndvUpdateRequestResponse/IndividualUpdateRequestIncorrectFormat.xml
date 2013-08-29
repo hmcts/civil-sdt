@@ -5,7 +5,7 @@ xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1
   <tns:header>
   	<tns:sdtRequestId>sdtRequestIdabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz</tns:sdtRequestId>
   </tns:header>
-  <tns:updateDetail>
+  <tns:targetAppDetail>
   	<tns:mcolResponseDetail>
 	  <mresp:claimNumber>12222345678</mresp:claimNumber>
 	  <mresp:issueDate>2001-201-201</mresp:issueDate>
@@ -15,7 +15,7 @@ xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1
 	  <mresp:enforcingCourtName>enforcingCourtNameabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz</mresp:enforcingCourtName>
 	  <mresp:fee>99999999999</mresp:fee>
 	</tns:mcolResponseDetail>
-  </tns:updateDetail>
+  </tns:targetAppDetail>
   <tns:status code="NOTAENUM">
     <tns1:error>
     <tns1:code>abcdefghijklmnopqrstuvwxyz123456789</tns1:code>

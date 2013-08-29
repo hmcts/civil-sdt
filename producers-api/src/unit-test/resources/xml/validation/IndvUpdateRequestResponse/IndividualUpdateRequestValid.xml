@@ -5,7 +5,7 @@ xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1
   <tns:header>
   	<tns:sdtRequestId>tns:sdtRequestId</tns:sdtRequestId>
   </tns:header>
-  <tns:updateDetail>
+  <tns:targetAppDetail>
   	<tns:mcolResponseDetail>
 	  <mresp:claimNumber>12345678</mresp:claimNumber>
 	  <mresp:issueDate>2001-01-01</mresp:issueDate>
@@ -15,8 +15,8 @@ xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1
 	  <mresp:enforcingCourtName>tns:enforcingCourtName</mresp:enforcingCourtName>
 	  <mresp:fee>0</mresp:fee>
 	</tns:mcolResponseDetail>  
-  </tns:updateDetail>
-  <tns:status code="ACCEPTED">
+  </tns:targetAppDetail>
+  <tns:status code="Accepted">
     <tns1:error>
       <tns1:code>tns1:code</tns1:code>
       <tns1:description>tns1:description</tns1:description>

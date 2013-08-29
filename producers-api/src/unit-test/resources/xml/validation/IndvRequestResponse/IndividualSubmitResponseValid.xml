@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:individualResponse 
-xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema" 
-xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitResponse.xsd ">
+xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema" 
+xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema ../../../../../main/resources/xsd/IndvRequestResponse/IndividualSubmitResponse.xsd ">
   <tns:header>
     <tns:sdtRequestId>1234567</tns:sdtRequestId>
   </tns:header>
-  <tns:mcolResponseDetail>
-    <mresp:claimNumber>21346546</mresp:claimNumber>
-    <mresp:issueDate>2001-01-01</mresp:issueDate>
-    <mresp:serviceDate>2001-01-01</mresp:serviceDate>
-    <mresp:warrantNumber>12345678</mresp:warrantNumber>
-    <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
-    <mresp:enforcingCourtName>Court Code</mresp:enforcingCourtName>
-    <mresp:fee>0</mresp:fee>
-    <mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus>
-  </tns:mcolResponseDetail>
-  <tns:status code="ACCEPTED">
+  <tns:targetAppDetail>
+    <tns:mcolResponseDetail>
+        <mresp:claimNumber>21346546</mresp:claimNumber>
+        <mresp:issueDate>2001-01-01</mresp:issueDate>
+        <mresp:serviceDate>2001-01-01</mresp:serviceDate>
+        <mresp:warrantNumber>12345678</mresp:warrantNumber>
+        <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
+        <mresp:enforcingCourtName>Court Code</mresp:enforcingCourtName>
+        <mresp:fee>0</mresp:fee>
+        <mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus>
+    </tns:mcolResponseDetail>
+  </tns:targetAppDetail>
+  <tns:status code="Accepted">
     <tns1:error>
       <tns1:code>tns1:code</tns1:code>
       <tns1:description>tns1:description</tns1:description>

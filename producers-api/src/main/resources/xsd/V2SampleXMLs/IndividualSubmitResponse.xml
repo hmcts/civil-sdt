@@ -3,15 +3,17 @@
     <header>
         <sdtRequestId>xyz123</sdtRequestId>
     </header>
-    <mcolResponseDetail>
-        <claimNumber>12345678</claimNumber>
-        <issueDate>2001-01-01</issueDate>
-        <serviceDate>2001-01-01</serviceDate>
-        <warrantNumber>12345678</warrantNumber>
-        <enforcingCourtCode>123</enforcingCourtCode>
-        <enforcingCourtName>enforcing_court_name</enforcingCourtName>
-        <fee>9999</fee>
-    </mcolResponseDetail>
+    <targetAppDetail>
+        <mcolResponseDetail>
+            <claimNumber>12345678</claimNumber>
+            <issueDate>2001-01-01</issueDate>
+            <serviceDate>2001-01-01</serviceDate>
+            <warrantNumber>12345678</warrantNumber>
+            <enforcingCourtCode>123</enforcingCourtCode>
+            <enforcingCourtName>enforcing_court_name</enforcingCourtName>
+            <fee>9999</fee>
+        </mcolResponseDetail>
+    </targetAppDetail>
     <status code="ACCEPTED/INITIALLY_ACCEPTED/REJECTED/ERROR">
         <error>
             <code>1234</code>

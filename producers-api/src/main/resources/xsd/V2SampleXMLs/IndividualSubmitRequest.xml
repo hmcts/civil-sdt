@@ -3,12 +3,14 @@
 <individualRequest>
     <header>
         <sdtRequestId>xyz123</sdtRequestId>
-        <mcolCustomerId>Mcol Customer Id</mcolCustomerId>
+        <targetAppCustomerId>Mcol Customer Id</targetAppCustomerId>
         <requestType>mcolClaimStatusUpdate</requestType>
     </header>
-    <mcolClaimStatusUpdate>
-        <claimNumber>12345678</claimNumber>
-        <defendantId>1</defendantId>
-        <notificationType>MP</notificationType>
-    </mcolClaimStatusUpdate>
+    <targetAppDetail>
+        <mcolClaimStatusUpdate>
+            <claimNumber>12345678</claimNumber>
+            <defendantId>1</defendantId>
+            <notificationType>MP</notificationType>
+        </mcolClaimStatusUpdate>
+    </targetAppDetail>
 </individualRequest>

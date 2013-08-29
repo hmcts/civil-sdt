@@ -2,6 +2,7 @@
 package uk.gov.moj.sdt.ws._2013.sdt.baseschema;
 
 import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -13,8 +14,8 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;simpleType name="statusCodeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="OK"/>
- *     &lt;enumeration value="ERROR"/>
+ *     &lt;enumeration value="Ok"/>
+ *     &lt;enumeration value="Error"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -24,15 +25,27 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum StatusCodeType {
 
-    OK,
-    ERROR;
+    @XmlEnumValue("Ok")
+    OK("Ok"),
+    @XmlEnumValue("Error")
+    ERROR("Error");
+    private final String value;
+
+    StatusCodeType(String v) {
+        value = v;
+    }
 
     public String value() {
-        return name();
+        return value;
     }
 
     public static StatusCodeType fromValue(String v) {
-        return valueOf(v);
+        for (StatusCodeType c: StatusCodeType.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 
 }

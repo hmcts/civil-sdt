@@ -2,6 +2,7 @@
 package uk.gov.moj.sdt.ws._2013.sdt.baseschema;
 
 import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -13,10 +14,10 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;simpleType name="bulkStatusCodeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="UPLOADED"/>
- *     &lt;enumeration value="FAILED"/>
- *     &lt;enumeration value="VALIDATED"/>
- *     &lt;enumeration value="COMPLETED"/>
+ *     &lt;enumeration value="Uploaded"/>
+ *     &lt;enumeration value="Failed"/>
+ *     &lt;enumeration value="Validated"/>
+ *     &lt;enumeration value="Completed"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -26,17 +27,31 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum BulkStatusCodeType {
 
-    UPLOADED,
-    FAILED,
-    VALIDATED,
-    COMPLETED;
+    @XmlEnumValue("Uploaded")
+    UPLOADED("Uploaded"),
+    @XmlEnumValue("Failed")
+    FAILED("Failed"),
+    @XmlEnumValue("Validated")
+    VALIDATED("Validated"),
+    @XmlEnumValue("Completed")
+    COMPLETED("Completed");
+    private final String value;
+
+    BulkStatusCodeType(String v) {
+        value = v;
+    }
 
     public String value() {
-        return name();
+        return value;
     }
 
     public static BulkStatusCodeType fromValue(String v) {
-        return valueOf(v);
+        for (BulkStatusCodeType c: BulkStatusCodeType.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 
 }

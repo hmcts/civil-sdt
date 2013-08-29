@@ -3,6 +3,7 @@ package uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusType;
@@ -19,7 +20,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="header" type="{http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema}headerType"/>
- *         &lt;element name="updateDetail" type="{http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema}updateDetailType"/>
+ *         &lt;element name="targetAppDetail">
+ *           &lt;complexType>
+ *             &lt;complexContent>
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 &lt;choice>
+ *                   &lt;any/>
+ *                 &lt;/choice>
+ *               &lt;/restriction>
+ *             &lt;/complexContent>
+ *           &lt;/complexType>
+ *         &lt;/element>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}updateStatusType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -32,7 +43,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "updateRequestType", propOrder = {
     "header",
-    "updateDetail",
+    "targetAppDetail",
     "status"
 })
 public class UpdateRequestType {
@@ -40,7 +51,7 @@ public class UpdateRequestType {
     @XmlElement(required = true)
     protected HeaderType header;
     @XmlElement(required = true)
-    protected UpdateDetailType updateDetail;
+    protected UpdateRequestType.TargetAppDetail targetAppDetail;
     @XmlElement(required = true)
     protected UpdateStatusType status;
 
@@ -69,27 +80,27 @@ public class UpdateRequestType {
     }
 
     /**
-     * Gets the value of the updateDetail property.
+     * Gets the value of the targetAppDetail property.
      * 
      * @return
      *     possible object is
-     *     {@link UpdateDetailType }
+     *     {@link UpdateRequestType.TargetAppDetail }
      *     
      */
-    public UpdateDetailType getUpdateDetail() {
-        return updateDetail;
+    public UpdateRequestType.TargetAppDetail getTargetAppDetail() {
+        return targetAppDetail;
     }
 
     /**
-     * Sets the value of the updateDetail property.
+     * Sets the value of the targetAppDetail property.
      * 
      * @param value
      *     allowed object is
-     *     {@link UpdateDetailType }
+     *     {@link UpdateRequestType.TargetAppDetail }
      *     
      */
-    public void setUpdateDetail(UpdateDetailType value) {
-        this.updateDetail = value;
+    public void setTargetAppDetail(UpdateRequestType.TargetAppDetail value) {
+        this.targetAppDetail = value;
     }
 
     /**
@@ -114,6 +125,61 @@ public class UpdateRequestType {
      */
     public void setStatus(UpdateStatusType value) {
         this.status = value;
+    }
+
+
+    /**
+     * <p>Java class for anonymous complex type.
+     * 
+     * <p>The following schema fragment specifies the expected content contained within this class.
+     * 
+     * <pre>
+     * &lt;complexType>
+     *   &lt;complexContent>
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       &lt;choice>
+     *         &lt;any/>
+     *       &lt;/choice>
+     *     &lt;/restriction>
+     *   &lt;/complexContent>
+     * &lt;/complexType>
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "any"
+    })
+    public static class TargetAppDetail {
+
+        @XmlAnyElement(lax = true)
+        protected Object any;
+
+        /**
+         * Gets the value of the any property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Object }
+         *     
+         */
+        public Object getAny() {
+            return any;
+        }
+
+        /**
+         * Sets the value of the any property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Object }
+         *     
+         */
+        public void setAny(Object value) {
+            this.any = value;
+        }
+
     }
 
 }

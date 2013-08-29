@@ -15,6 +15,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
             <base:description>123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</base:description>
           </base:error>
       </tns:bulkStatus>
+      <tns:status code="Ok">
+          <base:error>
+            <base:code>base:code</base:code>
+            <base:description>base:description</base:description>
+          </base:error>
+      </tns:status>
   </tns:bulkRequestStatus>
   <tns:responses>
     <tns:mcolResponses>

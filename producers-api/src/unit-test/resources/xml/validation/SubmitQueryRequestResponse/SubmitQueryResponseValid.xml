@@ -18,7 +18,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
     </tns:mcolDefenceDetail>
    	</tns:mcolResults>
   </tns:results>
-  <tns:status code="OK">
+  <tns:status code="Ok">
     <tns1:error>
       <tns1:code>tns1:code</tns1:code>
       <tns1:description>tns1:description</tns1:description>

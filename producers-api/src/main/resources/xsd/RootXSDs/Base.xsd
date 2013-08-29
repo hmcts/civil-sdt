@@ -142,24 +142,24 @@
 
 	<xs:simpleType name="statusCodeType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="OK" />
-			<xs:enumeration value="ERROR" />
+			<xs:enumeration value="Ok" />
+			<xs:enumeration value="Error" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="createStatusCodeType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="ACCEPTED" />
-			<xs:enumeration value="INITIALLY_ACCEPTED" />
-			<xs:enumeration value="REJECTED" />
-			<xs:enumeration value="ERROR" />
+			<xs:enumeration value="Accepted" />
+			<xs:enumeration value="Initially Accepted" />
+			<xs:enumeration value="Rejected" />
+			<xs:enumeration value="Error" />
 		</xs:restriction>
 	</xs:simpleType>
 
     <xs:simpleType name="updateStatusCodeType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="ACCEPTED" />
-            <xs:enumeration value="REJECTED" />
+            <xs:enumeration value="Accepted" />
+            <xs:enumeration value="Rejected" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -207,20 +207,20 @@
 
     <xs:simpleType name="bulkStatusCodeType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="UPLOADED" />
-            <xs:enumeration value="FAILED" />
-            <xs:enumeration value="VALIDATED" />
-            <xs:enumeration value="COMPLETED" />
+            <xs:enumeration value="Uploaded" />
+            <xs:enumeration value="Failed" />
+            <xs:enumeration value="Validated" />
+            <xs:enumeration value="Completed" />
         </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="individualStatusCodeType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="RECEIVED" />
-            <xs:enumeration value="FORWARDED" />
-            <xs:enumeration value="INITIALLY_ACCEPTED" />
-            <xs:enumeration value="ACCEPTED" />
-            <xs:enumeration value="REJECTED" />
+            <xs:enumeration value="Received" />
+            <xs:enumeration value="Forwarded" />
+            <xs:enumeration value="Initially Accepted" />
+            <xs:enumeration value="Accepted" />
+            <xs:enumeration value="Rejected" />
         </xs:restriction>
     </xs:simpleType>
 

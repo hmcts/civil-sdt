@@ -5,7 +5,7 @@
   <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
   <tns:sdtService>mcol</tns:sdtService>
   <tns:requestCount>0</tns:requestCount>
-  <tns:status code="OK">
+  <tns:status code="Ok">
     <tns1:error>
       <tns1:code>tns1:code</tns1:code>
       <tns1:description>tns1:description</tns1:description>

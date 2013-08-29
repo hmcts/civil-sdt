@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:submitQueryRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryRequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/SubmitQueryRequestSchema ../../../../../main/resources/xsd/SubmitQueryRequestResponse/SubmitQueryRequestMCOL.xsd ">
+<tns:submitQueryRequest xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema" xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema ../../../../../main/resources/xsd/SubmitQueryRequestResponse/SubmitQueryRequestMcol.xsd ">
   <tns:header>
-    <tns:mcolCustomerId>123456781119012</tns:mcolCustomerId>
+    <tns:targetAppCustomerId>123456781119012</tns:targetAppCustomerId>
   </tns:header>
   <tns:mcolCriteria>
     <tns:mcolDefenceCriteria>

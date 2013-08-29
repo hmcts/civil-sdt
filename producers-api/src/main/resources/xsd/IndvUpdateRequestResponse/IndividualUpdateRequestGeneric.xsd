@@ -3,12 +3,10 @@
 	xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" 
     targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema"
     xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
-    xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" 
 	elementFormDefault="qualified"
     version="1.0">
     
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
-	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" schemaLocation="../RootXSDs/McolResponseDetail.xsd"/>
     
     <xs:complexType name="headerType">
         <xs:sequence>
@@ -19,16 +17,16 @@
     <xs:complexType name="updateRequestType">
 		<xs:sequence>
             <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="updateDetail" type="tns:updateDetailType"/>
+            <xs:element name="targetAppDetail">
+                <xs:complexType>
+                    <xs:choice>
+                         <xs:any/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
 			<xs:element name="status" type="base:updateStatusType" />
 		</xs:sequence>
 	</xs:complexType>
-
-    <xs:complexType name="updateDetailType">
-        <xs:choice>
-             <xs:any/>
-        </xs:choice>
-    </xs:complexType>
            
     <xs:element name="updateRequest" type="tns:updateRequestType" />
     
