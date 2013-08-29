@@ -35,12 +35,6 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="mcolCustomerIdType">
-        <xs:restriction base="xs:string">
-            <xs:length value="12"/>
-        </xs:restriction>
-	</xs:simpleType>
-
 	<xs:simpleType name="claimNumberType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[0-9A-Za-z]{8}" />
