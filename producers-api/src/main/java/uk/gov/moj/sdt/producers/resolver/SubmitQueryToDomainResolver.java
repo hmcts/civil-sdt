@@ -33,14 +33,14 @@ package uk.gov.moj.sdt.producers.resolver;
 import java.math.BigInteger;
 
 import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.submitquery.domain.SubmitQueryRequest;
-import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.McolResultsType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ResultsType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
+import uk.gov.moj.sdt.ws.domain.SubmitQueryRequest;
+import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryResponse;
 
 /**
  * Maps jaxb object to domain object and vice versa.

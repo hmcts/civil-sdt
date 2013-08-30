@@ -29,7 +29,26 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
+package uk.gov.moj.sdt.services.api;
+
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
+
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * Interface for Get Bulk Feedback services.
+ * 
+ * @author d130680
+ * 
  */
-package uk.gov.moj.sdt.submitquery.domain;
+public interface IBulkFeedbackService
+{
+
+    /**
+     * Deals with bulk feedback requests and passes them onto MCOL.
+     * 
+     * @param bulkFeedbackRequest bulk feedback request
+     * @return bulk submission with 0 or more individual requests
+     */
+    IBulkSubmission getBulkFeedback (IBulkFeedbackRequest bulkFeedbackRequest);
+
+}

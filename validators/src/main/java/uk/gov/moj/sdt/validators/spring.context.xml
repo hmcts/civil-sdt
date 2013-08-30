@@ -49,6 +49,13 @@
         class="uk.gov.moj.sdt.validators.SubmitQueryRequestValidator">
     </bean>
 
+    <bean id="uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator" 
+    	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
+        class="uk.gov.moj.sdt.validators.BulkFeedbackRequestValidator">        
+        <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" />                                       
+    </bean>
+
+
 	<bean id="uk.gov.moj.sdt.validators.api.IDateValidator" class="uk.gov.moj.sdt.validators.DateValidator">
 	</bean>
 

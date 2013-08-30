@@ -178,7 +178,12 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         /**
          * Duplicate unique request identifier.
          */
-        DUP_CUST_REQID
+        DUP_CUST_REQID,
+
+        /**
+         * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
+         */
+        BULK_REF_INVALID
 
     }
 

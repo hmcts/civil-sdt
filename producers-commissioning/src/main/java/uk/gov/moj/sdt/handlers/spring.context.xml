@@ -24,12 +24,14 @@
 
     <bean id="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler" 
         class="uk.gov.moj.sdt.handlers.WsReadBulkFeedbackRequestHandler">
+        <property name="bulkFeedbackService" ref="uk.gov.moj.sdt.services.api.IBulkFeedbackService"/>
     </bean>
                 
     <bean id="uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler" 
         class="uk.gov.moj.sdt.handlers.WsReadSubmitQueryHandler">
         <property name="submitQueryService" ref="uk.gov.moj.sdt.services.api.ISubmitQueryService"/>
     </bean>        
+
         
 </beans>
     

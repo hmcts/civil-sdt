@@ -182,6 +182,13 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     private String targetApplicationResponse;
 
     /**
+     * TODO - Find out whether this should be used instead of rejection reason code and description.
+     * 
+     * Error log.
+     */
+    private ErrorLog errorLog;
+
+    /**
      * XML payload.
      */
     private String payload;
@@ -490,4 +497,17 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     {
         this.internalSystemError = internalSystemError;
     }
+
+    @Override
+    public ErrorLog getErrorLog ()
+    {
+        return errorLog;
+    }
+
+    @Override
+    public void setErrorLog (final ErrorLog errorLog)
+    {
+        this.errorLog = errorLog;
+    }
+
 }

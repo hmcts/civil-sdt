@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,37 +28,53 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
+package uk.gov.moj.sdt.ws.domain;
 
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.AbstractDomainObject;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
 
 /**
- * Interface for all classes implementing {@link IBulkSubmissionDao}.
+ * Interface for submit query request domain object.
  * 
  * @author d130680
+ * 
  */
-public interface IBulkSubmissionDao
+public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQueryRequest
 {
-    /**
-     * Check the customer reference is unique across data retention period.
-     * 
-     * @param customerReference customer reference
-     * @param bulkCustomer bulk customer
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
-     */
-    boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException;
 
     /**
-     * Checks that the bulk reference is valid.
-     * 
-     * @param bulkReference bulk reference
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
+     * SDT customer Id.
      */
-    boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException;
+    private long sdtCustomerId;
+
+    /**
+     * Target application to send the request to, e.g. mcol.
+     */
+    private TargetApplication targetApplication;
+
+    @Override
+    public long getSdtCustomerId ()
+    {
+        return sdtCustomerId;
+    }
+
+    @Override
+    public void setSdtCustomerId (final long sdtCustomerId)
+    {
+        this.sdtCustomerId = sdtCustomerId;
+    }
+
+    @Override
+    public TargetApplication getTargetApplication ()
+    {
+        return targetApplication;
+    }
+
+    @Override
+    public void setTargetApplication (final TargetApplication targetApplication)
+    {
+        this.targetApplication = targetApplication;
+    }
 
 }

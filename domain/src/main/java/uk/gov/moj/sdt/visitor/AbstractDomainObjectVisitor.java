@@ -35,9 +35,10 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IRequestType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
+import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
+import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
 
 /**
  * Implement default visit methods. These should never be called and therefore raise exceptions. In each case the
@@ -81,6 +82,12 @@ public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implem
 
     @Override
     public void visit (final ISubmitQueryRequest submitQueryRequest, final ITree tree)
+    {
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    }
+
+    @Override
+    public void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree)
     {
         throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }

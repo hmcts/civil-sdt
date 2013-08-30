@@ -28,25 +28,104 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.services.api;
+package uk.gov.moj.sdt.ws.domain;
 
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.AbstractDomainObject;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryResponse;
 
 /**
- * Interface for Submit Query services.
+ * Defendant object as returned by MCOL.
  * 
  * @author d130680
  * 
  */
-public interface ISubmitQueryService
+public class SubmitQueryResponse extends AbstractDomainObject implements ISubmitQueryResponse
 {
 
     /**
-     * Deals with a query from SDT that will be passed on to MCOL.
-     * 
-     * @param request request going to MCOL
-     * @return response from MCOL converted to domain
+     * SDT customer Id.
      */
-    ISubmitQueryResponse submitQuery (final ISubmitQueryRequest request);
+    private long sdtCustomerId;
+
+    /**
+     * Target application to send the request to, e.g. mcol.
+     */
+    private TargetApplication targetApplication;
+
+    /**
+     * The total count of the results from the query.
+     */
+    private int resultCount;
+
+    /**
+     * Stores either OK or ERROR.
+     */
+    private String status;
+
+    /**
+     * Stores the error message when the status is ERROR.
+     */
+    private IErrorMessage errorMessage;
+
+    @Override
+    public long getSdtCustomerId ()
+    {
+        return sdtCustomerId;
+    }
+
+    @Override
+    public void setSdtCustomerId (final long sdtCustomerId)
+    {
+        this.sdtCustomerId = sdtCustomerId;
+    }
+
+    @Override
+    public TargetApplication getTargetApplication ()
+    {
+        return targetApplication;
+    }
+
+    @Override
+    public void setTargetApplication (final TargetApplication targetApplication)
+    {
+        this.targetApplication = targetApplication;
+    }
+
+    @Override
+    public int getResultCount ()
+    {
+        return resultCount;
+    }
+
+    @Override
+    public void setResultCount (final int resultCount)
+    {
+        this.resultCount = resultCount;
+    }
+
+    @Override
+    public String getStatus ()
+    {
+        return status;
+    }
+
+    @Override
+    public void setStatus (final String status)
+    {
+        this.status = status;
+    }
+
+    @Override
+    public IErrorMessage getErrorMessage ()
+    {
+        return errorMessage;
+    }
+
+    @Override
+    public void setErrorMessage (final IErrorMessage errorMessage)
+    {
+        this.errorMessage = errorMessage;
+    }
 }

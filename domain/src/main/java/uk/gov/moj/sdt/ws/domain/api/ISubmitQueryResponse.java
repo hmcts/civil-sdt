@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,37 +28,88 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
+package uk.gov.moj.sdt.ws.domain.api;
 
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
- * Interface for all classes implementing {@link IBulkSubmissionDao}.
+ * Interface for submit query response domain object.
  * 
  * @author d130680
+ * 
  */
-public interface IBulkSubmissionDao
+public interface ISubmitQueryResponse extends IDomainObject
 {
-    /**
-     * Check the customer reference is unique across data retention period.
-     * 
-     * @param customerReference customer reference
-     * @param bulkCustomer bulk customer
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
-     */
-    boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException;
 
     /**
-     * Checks that the bulk reference is valid.
+     * Get SDT customer Id.
      * 
-     * @param bulkReference bulk reference
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
+     * @return SDT customer Id
      */
-    boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException;
+    long getSdtCustomerId ();
 
+    /**
+     * Set SDT customer Id.
+     * 
+     * @param sdtCustomerId SDT customer Id
+     */
+    void setSdtCustomerId (final long sdtCustomerId);
+
+    /**
+     * Get target application.
+     * 
+     * @return target application
+     */
+    TargetApplication getTargetApplication ();
+
+    /**
+     * Set target application.
+     * 
+     * @param targetApplication target application
+     */
+    void setTargetApplication (final TargetApplication targetApplication);
+
+    /**
+     * Get result count.
+     * 
+     * @return result count
+     */
+    int getResultCount ();
+
+    /**
+     * Set result count.
+     * 
+     * @param resultCount result count
+     */
+    void setResultCount (final int resultCount);
+
+    /**
+     * Get status.
+     * 
+     * @return status
+     */
+    String getStatus ();
+
+    /**
+     * Set status.
+     * 
+     * @param status status
+     */
+    void setStatus (final String status);
+
+    /**
+     * Get error message.
+     * 
+     * @return error message
+     */
+    IErrorMessage getErrorMessage ();
+
+    /**
+     * Set error message.
+     * 
+     * @param errorMessage error message
+     */
+    void setErrorMessage (final IErrorMessage errorMessage);
 }

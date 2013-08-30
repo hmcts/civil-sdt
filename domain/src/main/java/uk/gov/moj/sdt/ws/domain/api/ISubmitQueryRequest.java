@@ -28,104 +28,46 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.submitquery.domain;
+package uk.gov.moj.sdt.ws.domain.api;
 
-import uk.gov.moj.sdt.domain.AbstractDomainObject;
 import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryResponse;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
 
 /**
- * Defendant object as returned by MCOL.
+ * Submit query request domain object.
  * 
  * @author d130680
  * 
  */
-public class SubmitQueryResponse extends AbstractDomainObject implements ISubmitQueryResponse
+public interface ISubmitQueryRequest extends IDomainObject
 {
 
     /**
-     * SDT customer Id.
+     * Get SDT customer Id.
+     * 
+     * @return SDT customer Id
      */
-    private long sdtCustomerId;
+    long getSdtCustomerId ();
 
     /**
-     * Target application to send the request to, e.g. mcol.
+     * Set SDT customer Id.
+     * 
+     * @param sdtCustomerId SDT customer Id
      */
-    private TargetApplication targetApplication;
+    void setSdtCustomerId (final long sdtCustomerId);
 
     /**
-     * The total count of the results from the query.
+     * Get target application.
+     * 
+     * @return target application
      */
-    private int resultCount;
+    TargetApplication getTargetApplication ();
 
     /**
-     * Stores either OK or ERROR.
+     * Set target application.
+     * 
+     * @param targetApplication target application
      */
-    private String status;
+    void setTargetApplication (final TargetApplication targetApplication);
 
-    /**
-     * Stores the error message when the status is ERROR.
-     */
-    private IErrorMessage errorMessage;
-
-    @Override
-    public long getSdtCustomerId ()
-    {
-        return sdtCustomerId;
-    }
-
-    @Override
-    public void setSdtCustomerId (final long sdtCustomerId)
-    {
-        this.sdtCustomerId = sdtCustomerId;
-    }
-
-    @Override
-    public TargetApplication getTargetApplication ()
-    {
-        return targetApplication;
-    }
-
-    @Override
-    public void setTargetApplication (final TargetApplication targetApplication)
-    {
-        this.targetApplication = targetApplication;
-    }
-
-    @Override
-    public int getResultCount ()
-    {
-        return resultCount;
-    }
-
-    @Override
-    public void setResultCount (final int resultCount)
-    {
-        this.resultCount = resultCount;
-    }
-
-    @Override
-    public String getStatus ()
-    {
-        return status;
-    }
-
-    @Override
-    public void setStatus (final String status)
-    {
-        this.status = status;
-    }
-
-    @Override
-    public IErrorMessage getErrorMessage ()
-    {
-        return errorMessage;
-    }
-
-    @Override
-    public void setErrorMessage (final IErrorMessage errorMessage)
-    {
-        this.errorMessage = errorMessage;
-    }
 }

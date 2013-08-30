@@ -108,6 +108,11 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     private List<IndividualRequest> individualRequests;
 
     /**
+     * Error log.
+     */
+    private ErrorLog errorLog;
+
+    /**
      * Constructor for {@link BulkSubmission}.
      */
     public BulkSubmission ()
@@ -245,6 +250,18 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     public void setIndividualRequests (final List<IndividualRequest> individualRequests)
     {
         this.individualRequests = individualRequests;
+    }
+
+    @Override
+    public ErrorLog getErrorLog ()
+    {
+        return errorLog;
+    }
+
+    @Override
+    public void setErrorLog (final ErrorLog errorLog)
+    {
+        this.errorLog = errorLog;
     }
 
 }

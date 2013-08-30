@@ -24,41 +24,19 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
+ * $Id: IBulkSubmissionValidator.java 16611 2013-07-02 09:44:42Z agarwals $
+ * $LastChangedRevision: 16611 $
+ * $LastChangedDate: 2013-07-02 10:44:42 +0100 (Tue, 02 Jul 2013) $
+ * $LastChangedBy: agarwals $ */
+package uk.gov.moj.sdt.validators.api;
 
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 /**
- * Interface for all classes implementing {@link IBulkSubmissionDao}.
+ * An interface to provide validation methods for BulkFeedbackRequest.
  * 
  * @author d130680
+ * 
  */
-public interface IBulkSubmissionDao
+public interface IBulkFeedbackRequestValidator
 {
-    /**
-     * Check the customer reference is unique across data retention period.
-     * 
-     * @param customerReference customer reference
-     * @param bulkCustomer bulk customer
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
-     */
-    boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException;
-
-    /**
-     * Checks that the bulk reference is valid.
-     * 
-     * @param bulkReference bulk reference
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
-     */
-    boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException;
-
 }

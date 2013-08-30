@@ -9,4 +9,15 @@
         class="uk.gov.moj.sdt.services.MockSubmitQueryService">        
     </bean>
 
+    <!-- Mock implementation for Bulk Feedback Service -->        
+    <bean id="uk.gov.moj.sdt.services.api.IBulkFeedbackService" 
+        class="uk.gov.moj.sdt.services.MockBulkFeedbackService">
+        
+        <property name="bulkFeedbackValidated" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryValidated" />
+        <property name="bulkFeedbackUploaded" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryUploaded" />        
+        <property name="bulkFeedbackCompleted" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted" />
+        <property name="bulkFeedbackError" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError" />         
+                
+    </bean>
+	
 </beans>

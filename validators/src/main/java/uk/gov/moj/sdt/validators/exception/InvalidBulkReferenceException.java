@@ -28,53 +28,74 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.submitquery.domain;
+package uk.gov.moj.sdt.validators.exception;
 
-import uk.gov.moj.sdt.domain.AbstractDomainObject;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.submitquery.domain.api.ISubmitQueryRequest;
+import java.util.List;
 
 /**
- * Interface for submit query request domain object.
+ * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
  * 
  * @author d130680
  * 
  */
-public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQueryRequest
+public class InvalidBulkReferenceException extends AbstractBusinessException
 {
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
-     * SDT customer Id.
+     * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
+     * 
+     * @param code error code
+     * @param description error description
      */
-    private long sdtCustomerId;
+    public InvalidBulkReferenceException (final String code, final String description)
+    {
+        super (code, description);
+    }
 
     /**
-     * Target application to send the request to, e.g. mcol.
+     * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
+     * 
+     * @param code code
+     * @param description description
+     * @param replacements string replacements with tokens
      */
-    private TargetApplication targetApplication;
-
-    @Override
-    public long getSdtCustomerId ()
+    public InvalidBulkReferenceException (final String code, final String description, final List<String> replacements)
     {
-        return sdtCustomerId;
+        super (code, description, replacements);
     }
 
-    @Override
-    public void setSdtCustomerId (final long sdtCustomerId)
+    /**
+     * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
+     * 
+     * @param s the s
+     */
+    public InvalidBulkReferenceException (final String s)
     {
-        this.sdtCustomerId = sdtCustomerId;
+        super (s);
     }
 
-    @Override
-    public TargetApplication getTargetApplication ()
+    /**
+     * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
+     * 
+     * @param cause the cause
+     */
+    public InvalidBulkReferenceException (final Throwable cause)
     {
-        return targetApplication;
+        super (cause);
     }
 
-    @Override
-    public void setTargetApplication (final TargetApplication targetApplication)
+    /**
+     * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
+     * 
+     * @param s the s
+     * @param cause the cause
+     */
+    public InvalidBulkReferenceException (final String s, final Throwable cause)
     {
-        this.targetApplication = targetApplication;
+        super (s, cause);
     }
-
 }

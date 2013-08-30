@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,37 +28,45 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
 
-import org.springframework.dao.DataAccessException;
+package uk.gov.moj.sdt.ws.domain.api;
 
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
 
 /**
- * Interface for all classes implementing {@link IBulkSubmissionDao}.
+ * Interface for bulk feedback request.
  * 
  * @author d130680
+ * 
  */
-public interface IBulkSubmissionDao
+public interface IBulkFeedbackRequest extends IDomainObject
 {
-    /**
-     * Check the customer reference is unique across data retention period.
-     * 
-     * @param customerReference customer reference
-     * @param bulkCustomer bulk customer
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
-     */
-    boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException;
 
     /**
-     * Checks that the bulk reference is valid.
+     * Get SDT Customer Id.
      * 
-     * @param bulkReference bulk reference
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
+     * @return SDT Customer Id
      */
-    boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException;
+    String getSdtCustomerId ();
 
+    /**
+     * Set SDT Customer Id.
+     * 
+     * @param sdtCustomerId SDT Customer Id
+     */
+    void setSdtCustomerId (final String sdtCustomerId);
+
+    /**
+     * Get SDT Bulk reference.
+     * 
+     * @return SDT Bulk reference
+     */
+    String getSdtBulkReference ();
+
+    /**
+     * Set SDT Bulk reference.
+     * 
+     * @param sdtBulkReference SDT Bulk reference
+     */
+    void setSdtBulkReference (String sdtBulkReference);
 }

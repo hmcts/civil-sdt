@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+	<!-- This is the spring configuration file for initialising completed bulk feed back data -->
+
+	<!-- Submission date, this maps to created date in bulk submission -->
+	<bean id="org.joda.time.LocalDateTime.submissionDateCompleted" class="org.joda.time.LocalDateTime">
+		<!-- Use static date of 22 July 2013 -->
+		 <constructor-arg index="0" value="2013"/>
+		 <constructor-arg index="1" value="7"/>
+		 <constructor-arg index="2" value="22"/>
+		 <constructor-arg index="3" value="13"/>
+		 <constructor-arg index="4" value="0"/>		
+	</bean>
+	
+	<!-- Bulk Submission definition -->
+	<bean id="uk.gov.moj.sdt.domain.api.IBulkSumissionCompleted" class="uk.gov.moj.sdt.domain.BulkSubmission">     
+        <property name="customerReference" value="USER_FILE_REFERENCE_B2"/>
+        <property name="createdDate" ref="org.joda.time.LocalDateTime.submissionDateCompleted"/>
+        <property name="numberOfRequest" value="16"/>
+        <property name="submissionStatus" value="Completed"/>   
+    </bean>
+    
+    <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
+    <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
+    	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionCompleted"/>
+    </bean>
+</beans>

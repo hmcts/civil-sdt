@@ -68,4 +68,11 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
         // TODO - Need to implement this
         return true;
     }
+
+    @Override
+    public boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException
+    {
+        // TODO - Need to implement this
+        return true;
+    }
 }

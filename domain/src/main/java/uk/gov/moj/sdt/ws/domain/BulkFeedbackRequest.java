@@ -28,46 +28,52 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.submitquery.domain.api;
 
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IDomainObject;
+package uk.gov.moj.sdt.ws.domain;
+
+import uk.gov.moj.sdt.domain.AbstractDomainObject;
+import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
 
 /**
- * Submit query request domain object.
+ * Get Bulk Feedback request domain object.
  * 
  * @author d130680
  * 
  */
-public interface ISubmitQueryRequest extends IDomainObject
+public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFeedbackRequest
 {
 
     /**
-     * Get SDT customer Id.
-     * 
-     * @return SDT customer Id
+     * SDT Customer Id.
      */
-    long getSdtCustomerId ();
+    private String sdtCustomerId;
 
     /**
-     * Set SDT customer Id.
-     * 
-     * @param sdtCustomerId SDT customer Id
+     * SDT Bulk reference.
      */
-    void setSdtCustomerId (final long sdtCustomerId);
+    private String sdtBulkReference;
 
-    /**
-     * Get target application.
-     * 
-     * @return target application
-     */
-    TargetApplication getTargetApplication ();
+    @Override
+    public String getSdtCustomerId ()
+    {
+        return sdtCustomerId;
+    }
 
-    /**
-     * Set target application.
-     * 
-     * @param targetApplication target application
-     */
-    void setTargetApplication (final TargetApplication targetApplication);
+    @Override
+    public void setSdtCustomerId (final String sdtCustomerId)
+    {
+        this.sdtCustomerId = sdtCustomerId;
+    }
 
+    @Override
+    public String getSdtBulkReference ()
+    {
+        return sdtBulkReference;
+    }
+
+    @Override
+    public void setSdtBulkReference (final String sdtBulkReference)
+    {
+        this.sdtBulkReference = sdtBulkReference;
+    }
 }

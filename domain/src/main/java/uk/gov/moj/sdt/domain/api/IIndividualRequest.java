@@ -33,6 +33,8 @@ package uk.gov.moj.sdt.domain.api;
 
 import org.joda.time.LocalDateTime;
 
+import uk.gov.moj.sdt.domain.ErrorLog;
+
 /**
  * 
  * Interface for all classes implementing {@link IIndividualRequest}.
@@ -392,5 +394,19 @@ public interface IIndividualRequest extends IDomainObject
      * @param internalSystemError internal system error
      */
     void setInternalSystemError (final String internalSystemError);
+
+    /**
+     * Get error log.
+     * 
+     * @return error log
+     */
+    ErrorLog getErrorLog ();
+
+    /**
+     * Set error log.
+     * 
+     * @param errorLog error log
+     */
+    void setErrorLog (final ErrorLog errorLog);
 
 }

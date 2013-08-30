@@ -28,79 +28,80 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.visitor.api;
+package uk.gov.moj.sdt.validators;
 
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IRequestType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
+import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
+import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
+import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
 
 /**
- * An interface to implement the visitor pattern for visitor capable of visiting a domain object.
+ * Bulk Feedback Request domain validator.
  * 
- * @author Robin Compston
+ * @author d130680
  * 
  */
-public interface IDomainObjectVisitor extends IVisitor
+public class BulkFeedbackRequestValidator extends AbstractSdtValidator implements IBulkFeedbackRequestValidator
 {
-    /**
-     * Visit the domain object.
-     * 
-     * @param bulkCustomer the domain object to be visited.
-     * @param tree tree being walked.
-     */
-    void visit (IBulkCustomer bulkCustomer, ITree tree);
 
     /**
-     * Visit the domain object.
-     * 
-     * @param bulkSubmission the domain object to be visited.
-     * @param tree tree being walked.
+     * Logger instance.
      */
-    void visit (IBulkSubmission bulkSubmission, ITree tree);
+    private static final Log LOGGER = LogFactory.getLog (BulkFeedbackRequestValidator.class);
 
     /**
-     * Visit the domain object.
-     * 
-     * @param requestType domain object to be visited.
-     * @param tree tree being walked.
+     * Bulk submission dao.
      */
-    void visit (IRequestType requestType, ITree tree);
+    private IBulkSubmissionDao bulkSubmissionDao;
 
     /**
-     * Visit the domain object.
-     * 
-     * @param targetApplication domain object to be visited.
-     * @param tree tree being walked.
+     * No-argument Constructor.
      */
-    void visit (ITargetApplication targetApplication, ITree tree);
+    public BulkFeedbackRequestValidator ()
+    {
+    }
+
+    @Override
+    public void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree)
+    {
+
+        LOGGER.info ("started visit(BulkFeedbackRequest)");
+        final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
+
+        // Validate the bulk reference, throw an exception if it doesn't exist
+        if ( !bulkSubmissionDao.isBulkReferenceValid (sdtBulkReference))
+        {
+            final List<String> replacements = new ArrayList<String> ();
+            replacements.add (String.valueOf (sdtBulkReference));
+
+            // CHECKSTYLE:OFF
+            throw new InvalidBulkReferenceException (
+                    AbstractBusinessException.ErrorCode.BULK_REF_INVALID.toString (),
+                    "There is no Bulk Request submission associated with your account for the supplied SDT Bulk Reference {0}",
+                    replacements);
+            // CHECKSTYLE:ON
+
+        }
+
+        LOGGER.debug ("completed visit(BulkFeedbackRequest)");
+
+    }
 
     /**
-     * Visit the domain object.
+     * Set bulk submission dao.
      * 
-     * @param individualRequest domain object to be visited.
-     * @param tree tree being walked.
+     * @param bulkSubmissionDao bulk submission dao
      */
-    void visit (IIndividualRequest individualRequest, ITree tree);
-
-    /**
-     * Visit the Submit Query Request.
-     * 
-     * @param submitQueryRequest domain object to be visited.
-     * @param tree tree being walked.
-     */
-    void visit (ISubmitQueryRequest submitQueryRequest, final ITree tree);
-
-    /**
-     * Visit the Bulk Feedback Request.
-     * 
-     * @param bulkFeedbackRequest domain object to be visited.
-     * @param tree tree being walked.
-     */
-    void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree);
+    public void setBulkSubmissionDao (final IBulkSubmissionDao bulkSubmissionDao)
+    {
+        this.bulkSubmissionDao = bulkSubmissionDao;
+    }
 }

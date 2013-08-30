@@ -42,15 +42,15 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  */
 public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmissionDao
 {
-    /**
-     * Check the customer reference is unique across data retention period.
-     * 
-     * @param customerReference customer reference
-     * @param bulkCustomer bulk customer
-     * @return true or false
-     */
+    @Override
     public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
     {
         return isCustomerReferenceValid (customerReference);
+    }
+
+    @Override
+    public boolean isBulkReferenceValid (final String bulkReference)
+    {
+        return super.isBulkReferenceValid (bulkReference);
     }
 }
