@@ -12,6 +12,12 @@
                 <description>description</description>
             </error>
         </bulkStatus>
+        <status code="OK/Error">
+            <error> <!-- only if error found -->
+                <code>code</code>
+                <description>description</description>
+            </error>
+        </status>
     </bulkRequestStatus>
     <responses> 
             <!-- Either PCOL or MCOL responses will be allowed -->
