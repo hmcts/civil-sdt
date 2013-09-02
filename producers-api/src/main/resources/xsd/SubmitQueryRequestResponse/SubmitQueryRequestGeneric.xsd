@@ -38,7 +38,7 @@
         <xs:complexContent>
             <xs:extension base="tns:criteria">
                 <xs:choice>
-                    <xs:any/>
+                    <xs:any processContents="lax"/>
                 </xs:choice>
             </xs:extension>
         </xs:complexContent>

@@ -17,7 +17,7 @@
             <xs:element name="targetAppDetail">
                 <xs:complexType>
                     <xs:choice>
-                        <xs:any minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
                     </xs:choice>
                 </xs:complexType>
             </xs:element>

@@ -20,7 +20,7 @@
             <xs:element name="targetAppDetail">
                 <xs:complexType>
                     <xs:choice>
-                         <xs:any/>
+                         <xs:any processContents="lax"/>
                     </xs:choice>
                 </xs:complexType>
             </xs:element>
