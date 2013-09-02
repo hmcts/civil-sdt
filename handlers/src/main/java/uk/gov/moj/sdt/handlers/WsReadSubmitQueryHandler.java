@@ -34,8 +34,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
-import uk.gov.moj.sdt.producers.resolver.SubmitQueryToDomainResolver;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
+import uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer;
+import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -65,6 +66,12 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
      */
     private ISubmitQueryService submitQueryService;
 
+    /**
+     * The transformer associated with this handler.
+     */
+    private ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, 
+            ISubmitQueryResponse> transformer;
+
     @Override
     public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType requestType)
     {
@@ -79,7 +86,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
 
             // Transform to domain object
             final ISubmitQueryRequest submitQueryRequest =
-                    SubmitQueryToDomainResolver.mapToSubmitQueryRequest (requestType);
+                    SubmitQueryToDomainTransformer.mapToSubmitQueryRequest (requestType);
 
             // Validate domain
             validateDomain (submitQueryRequest);
@@ -133,7 +140,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
         final ISubmitQueryResponse domainResponse = submitQueryService.submitQuery (request);
 
         final SubmitQueryResponseType response =
-                SubmitQueryToDomainResolver.mapToSubmitQueryResponseType (domainResponse);
+                SubmitQueryToDomainTransformer.mapToSubmitQueryResponseType (domainResponse);
 
         // Set the sdt service to show the response was sent from the commissioning poject
         response.setSdtService (AbstractWsHandler.SDT_COMX_SERVICE);
@@ -155,4 +162,27 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
         this.submitQueryService = submitQueryService;
     }
 
+    /**
+     * Getter for transformer.
+     * 
+     * @return the transformer associated with this class.
+     */
+    public ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryResponse>
+            getTransformer ()
+    {
+        return transformer;
+    }
+
+    /**
+     * Setter for transformer.
+     * 
+     * @param transformer the transformer to be associated with this class.
+     */
+    public
+            void
+            setTransformer (final ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, 
+                            ISubmitQueryRequest, ISubmitQueryResponse> transformer)
+    {
+        this.transformer = transformer;
+    }
 }

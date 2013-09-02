@@ -36,6 +36,8 @@ import org.apache.cxf.phase.Phase;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
@@ -111,6 +113,7 @@ public class ServiceRequestInboundInterceptor extends AbstractSdtInterceptor
     }
 
     @Override
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void handleMessage (final SoapMessage soapMessage) throws Fault
     {
         xmlMessage = readInputMessage (soapMessage);

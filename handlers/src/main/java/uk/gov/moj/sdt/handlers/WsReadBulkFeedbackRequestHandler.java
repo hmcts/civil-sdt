@@ -35,8 +35,8 @@ import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
-import uk.gov.moj.sdt.producers.resolver.BulkFeedbackToDomainResolver;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
+import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -64,6 +64,12 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
      */
     private IBulkFeedbackService bulkFeedbackService;
 
+    /**
+     * The transformer associated with this handler.
+     */
+    private ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, 
+                IBulkFeedbackRequest, IBulkSubmission> transformer;
+
     @Override
     public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
     {
@@ -81,14 +87,14 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
             // Transform Web service object to Domain object.
             LOGGER.info ("transform to domain type");
             final IBulkFeedbackRequest bulkFeedbackRequestDomain =
-                    BulkFeedbackToDomainResolver.mapToBulkFeedbackRequest (bulkFeedbackRequest);
+                    getTransformer ().transformJaxbToDomain (bulkFeedbackRequest);
 
             // Validate the domain object
             validateDomain (bulkFeedbackRequestDomain);
 
             final IBulkSubmission bulkSubmission = bulkFeedbackService.getBulkFeedback (bulkFeedbackRequestDomain);
 
-            response = BulkFeedbackToDomainResolver.mapToBulkFeedbackResponseType (bulkSubmission, SDT_COMX_SERVICE);
+            response = getTransformer ().transformDomainToJaxb (bulkSubmission);
         }
         catch (final AbstractBusinessException be)
         {
@@ -130,4 +136,27 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         this.bulkFeedbackService = bulkFeedbackService;
     }
 
+    /**
+     * Getter for transformer.
+     * 
+     * @return the transformer associated with this class.
+     */
+    public ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission>
+            getTransformer ()
+    {
+        return transformer;
+    }
+
+    /**
+     * Setter for transformer.
+     * 
+     * @param transformer the transformer to be associated with this class.
+     */
+    public
+            void
+            setTransformer (final ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, 
+                            IBulkFeedbackRequest, IBulkSubmission> transformer)
+    {
+        this.transformer = transformer;
+    }
 }

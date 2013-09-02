@@ -29,19 +29,10 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.producers.sdtws;
+package uk.gov.moj.sdt.producers.sdtws.api;
 
-import java.util.Calendar;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import uk.gov.moj.sdt.producers.sdtws.api.IResponseFactory;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.producers.sdtws.BulkResponseFailure;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 
@@ -51,12 +42,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
  * @author d130680
  *
  */
-public class ResponseFactory implements IResponseFactory {
+public interface IResponseFactory {
 	
-    /**
-     * Logger for this class.
-     */
-    private static final Log LOGGER = LogFactory.getLog (ResponseFactory.class);
 	
 	/**
 	 * Generates a successful response.
@@ -64,24 +51,8 @@ public class ResponseFactory implements IResponseFactory {
 	 * @param bulkRequestType the bulk request information
 	 * @return success response
 	 */
-	public BulkResponseType createSuccessResponse(final BulkRequestType bulkRequestType) {
-				
-		final BulkResponseType successResponse = new BulkResponseType();
-		final HeaderType header =  bulkRequestType.getHeader();
-		final StatusType status = new StatusType();
-				
-		status.setCode(StatusCodeType.OK);
-				
-		successResponse.setCustomerReference(header.getCustomerReference());
-		successResponse.setRequestCount(header.getRequestCount());
-		successResponse.setStatus(status);
-		successResponse.setSubmittedDate(Calendar.getInstance());	
-        successResponse.setSdtBulkReference ("COMMISSIONING-12345678");
-		
-		return successResponse;
-		
-	}
-
+	BulkResponseType createSuccessResponse(BulkRequestType bulkRequestType);
+	
 	/**
 	 * Return a failure response type.
 	 * 
@@ -89,26 +60,6 @@ public class ResponseFactory implements IResponseFactory {
 	 * @param b the bulk request information
 	 * @return failed response
 	 */
-	public BulkResponseType createFailResponse (final BulkResponseFailure f, final BulkRequestType b) {
-		final BulkResponseType failureResponse = new BulkResponseType();
-		final HeaderType header =  b.getHeader();
-		final StatusType status = new StatusType();
-		final ErrorType errorType = new ErrorType();
-		
-		errorType.setCode(f.getErrorCode());
-		errorType.setDescription(f.getErrorDescription());
-		status.setCode(StatusCodeType.ERROR);
-		status.setError(errorType);
-		
-		failureResponse.setCustomerReference(header.getCustomerReference());
-		failureResponse.setRequestCount(header.getRequestCount());
-		failureResponse.setStatus(status);
-		failureResponse.setSubmittedDate(Calendar.getInstance());	
-        failureResponse.setSdtBulkReference ("COMMISSIONING-12345678");
+	BulkResponseType createFailResponse (final BulkResponseFailure f, final BulkRequestType b);
 
-        LOGGER.debug ("Returning failure response code[" + f.getErrorCode () 
-                + "] message[" + f.getErrorDescription () +  "]");
-		return failureResponse;
-		
-	}
 }

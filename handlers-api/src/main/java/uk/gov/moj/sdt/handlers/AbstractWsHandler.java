@@ -128,5 +128,4 @@ public abstract class AbstractWsHandler
         statusType.setError (errorType);
         statusType.setCode (statusCodeType);
     }
-
 }

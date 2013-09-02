@@ -24,41 +24,12 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-
-package uk.gov.moj.sdt.producers.sdtws;
-
-import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
-
+ * $Id: package-info.java 16924 2013-08-26 18:00:02Z compstonr $
+ * $LastChangedRevision: 16924 $
+ * $LastChangedDate: 2013-08-26 19:00:02 +0100 (Mon, 26 Aug 2013) $
+ * $LastChangedBy: compstonr $ */
 
 /**
- * Generates a success or fail bulk response type.
- * 
- * @author d130680
- *
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public interface IResponseFactory {
-	
-	
-	/**
-	 * Generates a successful response.
-	 * 
-	 * @param bulkRequestType the bulk request information
-	 * @return success response
-	 */
-	BulkResponseType createSuccessResponse(BulkRequestType bulkRequestType);
-	
-	/**
-	 * Return a failure response type.
-	 * 
-	 * @param f the type of failure to return
-	 * @param b the bulk request information
-	 * @return failed response
-	 */
-	BulkResponseType createFailResponse (final BulkResponseFailure f, final BulkRequestType b);
-
-}
+package uk.gov.moj.sdt.producers.sdtws.api;

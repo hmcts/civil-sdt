@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2010 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,12 +24,38 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
+package uk.gov.moj.sdt.transformers.api;
 
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * Transform JAXB object tree to domain object tree (for incoming SOAP
+ * messages), and domain object tree to JAXB object tree (for outgoing SOAP
+ * messages).
+ * 
+ * @param <InJaxbType> the type of the JAXB input parameter.
+ * @param <OutJaxbType> the type of the JAXB output parameter.
+ * @param <InDomainType> the type of the domain input parameter.
+ * @param <OutDomainType> the type of the domain output parameter.
+ * @author Pankaj Parmar.
  */
-package uk.gov.moj.sdt.producers.resolver;
+public interface ITransformer<InJaxbType, OutJaxbType, InDomainType, OutDomainType>
+{
+    /**
+     * Map JAXB object tree to domain object tree.
+     * 
+     * @param jaxbInstance the JAXB object to map.
+     * @return the domain object to map.
+     */
+    InDomainType transformJaxbToDomain (final InJaxbType jaxbInstance);
+
+    /**
+     * Map domain object tree to JAXB object tree.
+     * 
+     * @param domainObject the domain object to map.
+     * @return the mapped JAXB object.
+     */
+    OutJaxbType transformDomainToJaxb (final OutDomainType domainObject);
+}

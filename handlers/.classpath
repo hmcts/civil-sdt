@@ -8,5 +8,12 @@
 	<classpathentry kind="src" path="src/unit-test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/handlers-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/domain"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/producers-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/validators"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/services-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/transformers"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

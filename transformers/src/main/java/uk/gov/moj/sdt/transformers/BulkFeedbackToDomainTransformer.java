@@ -28,16 +28,20 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.producers.resolver;
+package uk.gov.moj.sdt.transformers;
 
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -55,32 +59,31 @@ import uk.gov.moj.sdt.ws.domain.BulkFeedbackRequest;
 import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
 
 /**
- * Maps jaxb object to domain object and vice versa.
+ * Maps bulk feedback JAXB object tree to domain object tree and vice versa.
  * 
  * @author d130680
  * 
  */
-public final class BulkFeedbackToDomainResolver
+public final class BulkFeedbackToDomainTransformer extends AbstractTransformer implements
+        ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission>
 {
+    /**
+     * Logger instance.
+     */
+    private static final Log LOGGER = LogFactory.getLog (BulkRequestToDomainTransformer.class);
 
     /**
      * Private constructor.
      */
-    private BulkFeedbackToDomainResolver ()
+    private BulkFeedbackToDomainTransformer ()
     {
-
     }
 
-    /**
-     * Maps the JAXB submit query type object to a bulk feedback domain object.
-     * 
-     * @param jaxbRequest bulk feedback request jaxb object
-     * @return submit query domain object
-     */
-    public static IBulkFeedbackRequest mapToBulkFeedbackRequest (final BulkFeedbackRequestType jaxbRequest)
+    @Override
+    public IBulkFeedbackRequest transformJaxbToDomain (final BulkFeedbackRequestType bulkFeedbackRequest)
     {
         // Grab the request details from the header
-        final HeaderType header = jaxbRequest.getHeader ();
+        final HeaderType header = bulkFeedbackRequest.getHeader ();
         final IBulkFeedbackRequest bulkFeedback = new BulkFeedbackRequest ();
 
         bulkFeedback.setSdtBulkReference (header.getSdtBulkReference ());
@@ -89,31 +92,27 @@ public final class BulkFeedbackToDomainResolver
         return bulkFeedback;
     }
 
-    /**
-     * Maps the domain submit query response object to a JAXB submit query response type.
-     * 
-     * @param domainResponse domain object
-     * @param sdtComxService SDT Commissiong Service Id
-     * @return jaxb object
-     */
-    public static BulkFeedbackResponseType mapToBulkFeedbackResponseType (final IBulkSubmission domainResponse,
-                                                                          final String sdtComxService)
+    @Override
+    public BulkFeedbackResponseType transformDomainToJaxb (final IBulkSubmission bulkSubmission)
     {
+        // Create target JAXB response object.
         final BulkFeedbackResponseType bulkFeedbackResponseType = new BulkFeedbackResponseType ();
+
+        // Create target status JAXB object.
         final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType ();
 
         // Set bulk status information
-        bulkRequestStatusType.setRequestCount (BigInteger.valueOf (domainResponse.getNumberOfRequest ()));
-        bulkRequestStatusType.setSdtBulkReference (domainResponse.getSdtBulkReference ());
-        bulkRequestStatusType.setSdtService (sdtComxService);
-        bulkRequestStatusType.setCustomerReference (domainResponse.getCustomerReference ());
+        bulkRequestStatusType.setRequestCount (BigInteger.valueOf (bulkSubmission.getNumberOfRequest ()));
+        bulkRequestStatusType.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
+        bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_COMX_SERVICE);
+        bulkRequestStatusType.setCustomerReference (bulkSubmission.getCustomerReference ());
         final Calendar createdDate = Calendar.getInstance ();
-        createdDate.setTime (domainResponse.getCreatedDate ().toDate ());
+        createdDate.setTime (bulkSubmission.getCreatedDate ().toDate ());
         bulkRequestStatusType.setSubmittedDate (createdDate);
 
         // Set bulk status type
         final BulkStatusType bulkStatusType = new BulkStatusType ();
-        bulkStatusType.setCode (BulkStatusCodeType.fromValue (domainResponse.getSubmissionStatus ()));
+        bulkStatusType.setCode (BulkStatusCodeType.fromValue (bulkSubmission.getSubmissionStatus ()));
         bulkRequestStatusType.setBulkStatus (bulkStatusType);
 
         bulkFeedbackResponseType.setBulkRequestStatus (bulkRequestStatusType);
@@ -123,7 +122,7 @@ public final class BulkFeedbackToDomainResolver
         final McolResponsesType mcolResponses = new McolResponsesType ();
 
         // Map individual request domain object(s) to the response(s)
-        final List<IndividualRequest> individualRequestList = domainResponse.getIndividualRequests ();
+        final List<IndividualRequest> individualRequestList = bulkSubmission.getIndividualRequests ();
 
         McolResponseType mcolResponseType = null;
         for (IndividualRequest individualRequest : individualRequestList)
@@ -159,8 +158,7 @@ public final class BulkFeedbackToDomainResolver
         // Set the individual request responses
         responsesType.setMcolResponses (mcolResponses);
         bulkFeedbackResponseType.setResponses (responsesType);
+
         return bulkFeedbackResponseType;
-
     }
-
 }

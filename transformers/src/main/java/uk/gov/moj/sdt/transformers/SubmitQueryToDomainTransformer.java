@@ -28,11 +28,12 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.producers.resolver;
+package uk.gov.moj.sdt.transformers;
 
 import java.math.BigInteger;
 
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.McolResultsType;
@@ -43,18 +44,19 @@ import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryResponse;
 
 /**
- * Maps jaxb object to domain object and vice versa.
+ * Maps bulk request JAXB object tree to domain object tree and vice versa.
  * 
  * @author d130680
  * 
  */
-public final class SubmitQueryToDomainResolver
+public final class SubmitQueryToDomainTransformer extends AbstractTransformer implements
+        ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryResponse>
 {
 
     /**
      * Private constructor.
      */
-    private SubmitQueryToDomainResolver ()
+    private SubmitQueryToDomainTransformer ()
     {
 
     }
@@ -82,10 +84,10 @@ public final class SubmitQueryToDomainResolver
     }
 
     /**
-     * Maps the domain submit query response object to a JAXB submit query response type.
+     * Maps the domain submit query response object to a submit query JAXB response type.
      * 
      * @param domainResponse domain object
-     * @return jaxb object
+     * @return submit query JAXB response object
      */
     public static SubmitQueryResponseType mapToSubmitQueryResponseType (final ISubmitQueryResponse domainResponse)
     {
@@ -104,4 +106,17 @@ public final class SubmitQueryToDomainResolver
         return jaxbResponse;
     }
 
+    @Override
+    public ISubmitQueryRequest transformJaxbToDomain (final SubmitQueryRequestType jaxbInstance)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public SubmitQueryResponseType transformDomainToJaxb (final ISubmitQueryResponse domainObject)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
