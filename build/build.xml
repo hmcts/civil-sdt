@@ -26,11 +26,11 @@
         <file name="../producers-api/build.xml" />
     	<file name="../validators/build.xml" />
     	<file name="../interceptors/build.xml" />
+        <file name="../services-api/build.xml" />
+        <file name="../services/build.xml" />       
+        <file name="../transformers/build.xml" />
     	<file name="../handlers-api/build.xml" />
     	<file name="../handlers/build.xml" />
-    	<file name="../services-api/build.xml" />
-        <file name="../services/build.xml" />    	
-    	<file name="../transformers/build.xml" />
         <file name="../producers/build.xml" />
         <file name="../producers-commissioning/build.xml" />
         <file name="../consumers/build.xml" />    	
