@@ -28,45 +28,102 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.domain;
 
-package uk.gov.moj.sdt.ws.domain.api;
-
-import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 
 /**
- * Interface for bulk feedback request.
+ * Defendant object as returned by MCOL.
  * 
  * @author d130680
  * 
  */
-public interface IBulkFeedbackRequest extends IDomainObject
+public class SubmitQueryResponse extends AbstractDomainObject implements ISubmitQueryResponse
 {
 
     /**
-     * Get SDT Customer Id.
-     * 
-     * @return SDT Customer Id
+     * SDT customer Id.
      */
-    String getSdtCustomerId ();
+    private long sdtCustomerId;
 
     /**
-     * Set SDT Customer Id.
-     * 
-     * @param sdtCustomerId SDT Customer Id
+     * Target application to send the request to, e.g. mcol.
      */
-    void setSdtCustomerId (final String sdtCustomerId);
+    private TargetApplication targetApplication;
 
     /**
-     * Get SDT Bulk reference.
-     * 
-     * @return SDT Bulk reference
+     * The total count of the results from the query.
      */
-    String getSdtBulkReference ();
+    private int resultCount;
 
     /**
-     * Set SDT Bulk reference.
-     * 
-     * @param sdtBulkReference SDT Bulk reference
+     * Stores either OK or ERROR.
      */
-    void setSdtBulkReference (String sdtBulkReference);
+    private String status;
+
+    /**
+     * Stores the error message when the status is ERROR.
+     */
+    private IErrorMessage errorMessage;
+
+    @Override
+    public long getSdtCustomerId ()
+    {
+        return sdtCustomerId;
+    }
+
+    @Override
+    public void setSdtCustomerId (final long sdtCustomerId)
+    {
+        this.sdtCustomerId = sdtCustomerId;
+    }
+
+    @Override
+    public TargetApplication getTargetApplication ()
+    {
+        return targetApplication;
+    }
+
+    @Override
+    public void setTargetApplication (final TargetApplication targetApplication)
+    {
+        this.targetApplication = targetApplication;
+    }
+
+    @Override
+    public int getResultCount ()
+    {
+        return resultCount;
+    }
+
+    @Override
+    public void setResultCount (final int resultCount)
+    {
+        this.resultCount = resultCount;
+    }
+
+    @Override
+    public String getStatus ()
+    {
+        return status;
+    }
+
+    @Override
+    public void setStatus (final String status)
+    {
+        this.status = status;
+    }
+
+    @Override
+    public IErrorMessage getErrorMessage ()
+    {
+        return errorMessage;
+    }
+
+    @Override
+    public void setErrorMessage (final IErrorMessage errorMessage)
+    {
+        this.errorMessage = errorMessage;
+    }
 }

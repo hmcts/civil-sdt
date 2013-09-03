@@ -33,9 +33,9 @@ package uk.gov.moj.sdt.validators;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
 
 /**
  * Submit Query Request domain validator.

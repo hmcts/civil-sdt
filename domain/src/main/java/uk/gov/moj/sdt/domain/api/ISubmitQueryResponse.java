@@ -28,8 +28,86 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.domain.api;
+
+import uk.gov.moj.sdt.domain.TargetApplication;
 
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * Interface for submit query response domain object.
+ * 
+ * @author d130680
+ * 
  */
-package uk.gov.moj.sdt.ws.domain.api;
+public interface ISubmitQueryResponse extends IDomainObject
+{
+
+    /**
+     * Get SDT customer Id.
+     * 
+     * @return SDT customer Id
+     */
+    long getSdtCustomerId ();
+
+    /**
+     * Set SDT customer Id.
+     * 
+     * @param sdtCustomerId SDT customer Id
+     */
+    void setSdtCustomerId (final long sdtCustomerId);
+
+    /**
+     * Get target application.
+     * 
+     * @return target application
+     */
+    TargetApplication getTargetApplication ();
+
+    /**
+     * Set target application.
+     * 
+     * @param targetApplication target application
+     */
+    void setTargetApplication (final TargetApplication targetApplication);
+
+    /**
+     * Get result count.
+     * 
+     * @return result count
+     */
+    int getResultCount ();
+
+    /**
+     * Set result count.
+     * 
+     * @param resultCount result count
+     */
+    void setResultCount (final int resultCount);
+
+    /**
+     * Get status.
+     * 
+     * @return status
+     */
+    String getStatus ();
+
+    /**
+     * Set status.
+     * 
+     * @param status status
+     */
+    void setStatus (final String status);
+
+    /**
+     * Get error message.
+     * 
+     * @return error message
+     */
+    IErrorMessage getErrorMessage ();
+
+    /**
+     * Set error message.
+     * 
+     * @param errorMessage error message
+     */
+    void setErrorMessage (final IErrorMessage errorMessage);
+}

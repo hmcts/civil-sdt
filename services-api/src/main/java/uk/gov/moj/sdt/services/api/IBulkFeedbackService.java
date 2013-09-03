@@ -31,8 +31,8 @@
 
 package uk.gov.moj.sdt.services.api;
 
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
 
 /**
  * Interface for Get Bulk Feedback services.

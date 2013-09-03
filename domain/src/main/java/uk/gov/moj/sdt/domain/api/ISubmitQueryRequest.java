@@ -28,10 +28,9 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.ws.domain.api;
+package uk.gov.moj.sdt.domain.api;
 
 import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IDomainObject;
 
 /**
  * Submit query request domain object.

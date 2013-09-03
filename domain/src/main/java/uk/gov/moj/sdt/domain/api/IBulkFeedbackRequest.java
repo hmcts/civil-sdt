@@ -29,51 +29,43 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
-package uk.gov.moj.sdt.ws.domain;
+package uk.gov.moj.sdt.domain.api;
 
-import uk.gov.moj.sdt.domain.AbstractDomainObject;
-import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
 
 /**
- * Get Bulk Feedback request domain object.
+ * Interface for bulk feedback request.
  * 
  * @author d130680
  * 
  */
-public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFeedbackRequest
+public interface IBulkFeedbackRequest extends IDomainObject
 {
 
     /**
-     * SDT Customer Id.
+     * Get SDT Customer Id.
+     * 
+     * @return SDT Customer Id
      */
-    private String sdtCustomerId;
+    String getSdtCustomerId ();
 
     /**
-     * SDT Bulk reference.
+     * Set SDT Customer Id.
+     * 
+     * @param sdtCustomerId SDT Customer Id
      */
-    private String sdtBulkReference;
+    void setSdtCustomerId (final String sdtCustomerId);
 
-    @Override
-    public String getSdtCustomerId ()
-    {
-        return sdtCustomerId;
-    }
+    /**
+     * Get SDT Bulk reference.
+     * 
+     * @return SDT Bulk reference
+     */
+    String getSdtBulkReference ();
 
-    @Override
-    public void setSdtCustomerId (final String sdtCustomerId)
-    {
-        this.sdtCustomerId = sdtCustomerId;
-    }
-
-    @Override
-    public String getSdtBulkReference ()
-    {
-        return sdtBulkReference;
-    }
-
-    @Override
-    public void setSdtBulkReference (final String sdtBulkReference)
-    {
-        this.sdtBulkReference = sdtBulkReference;
-    }
+    /**
+     * Set SDT Bulk reference.
+     * 
+     * @param sdtBulkReference SDT Bulk reference
+     */
+    void setSdtBulkReference (String sdtBulkReference);
 }

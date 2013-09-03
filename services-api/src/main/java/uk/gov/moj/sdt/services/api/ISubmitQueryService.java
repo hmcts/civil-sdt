@@ -30,8 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.api;
 
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryResponse;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 
 /**
  * Interface for Submit Query services.

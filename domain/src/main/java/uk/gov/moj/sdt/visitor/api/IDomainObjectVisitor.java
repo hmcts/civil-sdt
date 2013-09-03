@@ -31,14 +31,14 @@
 package uk.gov.moj.sdt.visitor.api;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
-import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
 
 /**
  * An interface to implement the visitor pattern for visitor capable of visiting a domain object.

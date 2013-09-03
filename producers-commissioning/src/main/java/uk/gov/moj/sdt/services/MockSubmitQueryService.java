@@ -30,13 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import uk.gov.moj.sdt.domain.SubmitQueryResponse;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
-import uk.gov.moj.sdt.ws.domain.SubmitQueryResponse;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryResponse;
 
 /**
  * Implementation for mocking of SDT Submit Query service.

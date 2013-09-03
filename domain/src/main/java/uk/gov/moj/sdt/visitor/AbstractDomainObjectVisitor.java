@@ -31,14 +31,14 @@
 package uk.gov.moj.sdt.visitor;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.visitor.api.IDomainObjectVisitor;
-import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
 
 /**
  * Implement default visit methods. These should never be called and therefore raise exceptions. In each case the

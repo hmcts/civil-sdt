@@ -33,6 +33,8 @@ package uk.gov.moj.sdt.handlers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer;
@@ -43,8 +45,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryResponse;
 
 /**
  * Implementation for handling submit query flow.

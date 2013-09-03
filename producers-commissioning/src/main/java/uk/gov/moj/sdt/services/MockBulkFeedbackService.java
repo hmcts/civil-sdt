@@ -35,10 +35,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.dao.MockGenericDao;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
-import uk.gov.moj.sdt.ws.domain.api.IBulkFeedbackRequest;
 
 /**
  * Implementation for mocking of SDT Get Bulk Feedback service.

@@ -29,7 +29,50 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 
+package uk.gov.moj.sdt.domain;
+
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
+
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * Get Bulk Feedback request domain object.
+ * 
+ * @author d130680
+ * 
  */
-package uk.gov.moj.sdt.ws.domain;
+public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFeedbackRequest
+{
+
+    /**
+     * SDT Customer Id.
+     */
+    private String sdtCustomerId;
+
+    /**
+     * SDT Bulk reference.
+     */
+    private String sdtBulkReference;
+
+    @Override
+    public String getSdtCustomerId ()
+    {
+        return sdtCustomerId;
+    }
+
+    @Override
+    public void setSdtCustomerId (final String sdtCustomerId)
+    {
+        this.sdtCustomerId = sdtCustomerId;
+    }
+
+    @Override
+    public String getSdtBulkReference ()
+    {
+        return sdtBulkReference;
+    }
+
+    @Override
+    public void setSdtBulkReference (final String sdtBulkReference)
+    {
+        this.sdtBulkReference = sdtBulkReference;
+    }
+}

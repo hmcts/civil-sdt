@@ -28,20 +28,17 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.ws.domain;
+package uk.gov.moj.sdt.domain;
 
-import uk.gov.moj.sdt.domain.AbstractDomainObject;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.ws.domain.api.ISubmitQueryResponse;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 
 /**
- * Defendant object as returned by MCOL.
+ * Interface for submit query request domain object.
  * 
  * @author d130680
  * 
  */
-public class SubmitQueryResponse extends AbstractDomainObject implements ISubmitQueryResponse
+public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQueryRequest
 {
 
     /**
@@ -53,21 +50,6 @@ public class SubmitQueryResponse extends AbstractDomainObject implements ISubmit
      * Target application to send the request to, e.g. mcol.
      */
     private TargetApplication targetApplication;
-
-    /**
-     * The total count of the results from the query.
-     */
-    private int resultCount;
-
-    /**
-     * Stores either OK or ERROR.
-     */
-    private String status;
-
-    /**
-     * Stores the error message when the status is ERROR.
-     */
-    private IErrorMessage errorMessage;
 
     @Override
     public long getSdtCustomerId ()
@@ -93,39 +75,4 @@ public class SubmitQueryResponse extends AbstractDomainObject implements ISubmit
         this.targetApplication = targetApplication;
     }
 
-    @Override
-    public int getResultCount ()
-    {
-        return resultCount;
-    }
-
-    @Override
-    public void setResultCount (final int resultCount)
-    {
-        this.resultCount = resultCount;
-    }
-
-    @Override
-    public String getStatus ()
-    {
-        return status;
-    }
-
-    @Override
-    public void setStatus (final String status)
-    {
-        this.status = status;
-    }
-
-    @Override
-    public IErrorMessage getErrorMessage ()
-    {
-        return errorMessage;
-    }
-
-    @Override
-    public void setErrorMessage (final IErrorMessage errorMessage)
-    {
-        this.errorMessage = errorMessage;
-    }
 }
