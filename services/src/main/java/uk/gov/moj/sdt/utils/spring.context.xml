@@ -8,7 +8,7 @@
 		this is not ambiguous) and all classes should have an interface. -->
 
 	<!-- Sdt Bulk Reference number generator. -->
-	<bean id="uk.gov.moj.sdt.utils.SdtBulkReferenceGenerator" class="uk.gov.moj.sdt.utils.SdtBulkReferenceGenerator">
+	<bean id="uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator" class="uk.gov.moj.sdt.utils.SdtBulkReferenceGenerator">
 		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
 	</bean>
 
