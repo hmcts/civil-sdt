@@ -31,8 +31,13 @@
 
 package uk.gov.moj.sdt.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
+import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Mock Target Application DAO class used in commissioning project.
@@ -40,20 +45,26 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  * @author d130680
  * 
  */
-public class MockTargetApplicationDao implements ITargetApplicationDao
+public class MockTargetApplicationDao extends MockGenericDao implements ITargetApplicationDao
 {
 
-
-
-    /**
-     * Checks to see whether a bulk customer has access to a particular target application.     
-     * 
-     * @param bulkCustomer bulk customer
-     * @param targetApplicationCode target application code
-     * @return true or false
-     */
-    public boolean hasAccess (final IBulkCustomer bulkCustomer, final String targetApplicationCode)
+    @Override
+    public List<ITargetApplication> getTargetApplication (final IBulkCustomer bulkCustomer)
     {
-        return true;
+        final List<ITargetApplication> targetApplications = new ArrayList<ITargetApplication> ();
+        // Add mcol to the list
+        final ITargetApplication mcol = new TargetApplication ();
+        mcol.setTargetApplicationCode ("mcol");
+        mcol.setTargetApplicationName ("MCOL");
+        targetApplications.add (mcol);
+
+        // Add pcol to the list
+        final ITargetApplication pcol = new TargetApplication ();
+        pcol.setTargetApplicationCode ("pcol");
+        pcol.setTargetApplicationName ("PCOL");
+        targetApplications.add (pcol);
+
+        return targetApplications;
+
     }
 }

@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
@@ -65,7 +66,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     /**
      * Target application dao.
      */
-    private ITargetApplicationDao targetApplicationtDao;
+    private ITargetApplicationDao targetApplicationDao;
 
     /**
      * Check that the bulk customer exists has access to the target application.
@@ -81,10 +82,11 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
 
         assert bulkCustomer != null;
 
-        List<String> replacements = null;
+        final List<ITargetApplication> targetApplications = targetApplicationDao.getTargetApplication (bulkCustomer);
 
-        if ( !targetApplicationtDao.hasAccess (bulkCustomer, targetApplicationCode))
+        if ( !this.hasAccess (targetApplicationCode, targetApplications))
         {
+            List<String> replacements = null;
             replacements = new ArrayList<String> ();
             replacements.add (targetApplicationCode);
             throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
@@ -99,6 +101,27 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         // "The Bulk Customer organisation does not have a Customer Reference set up for {0}. "
         // + "Please contact <TBC> for assistance", replacements);
 
+    }
+
+    /**
+     * Checks whether a target application code exists in the list.
+     * 
+     * @param targetApplicationCode target application code
+     * @param targetApplications list of target applications
+     * @return true or false
+     */
+    private boolean hasAccess (final String targetApplicationCode, final List<ITargetApplication> targetApplications)
+    {
+
+        for (ITargetApplication targetApplication : targetApplications)
+        {
+            if (targetApplicationCode.equals (targetApplication.getTargetApplicationCode ()))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -124,11 +147,11 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     /**
      * Set target application dao.
      * 
-     * @param targetApplicationtDao target application dao
+     * @param targetApplicationDao target application dao
      */
-    public void setTargetApplicationtDao (final ITargetApplicationDao targetApplicationtDao)
+    public void setTargetApplicationDao (final ITargetApplicationDao targetApplicationDao)
     {
-        this.targetApplicationtDao = targetApplicationtDao;
+        this.targetApplicationDao = targetApplicationDao;
     }
 
 }

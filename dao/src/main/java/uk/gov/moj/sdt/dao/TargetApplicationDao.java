@@ -30,12 +30,15 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Implements specific DAO functionality based on {@link ITargetApplicationDao}. This is a derived DAO extending
@@ -62,9 +65,9 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
     }
 
     @Override
-    public boolean hasAccess (final IBulkCustomer bulkCustomer, final String targetApplicationCode)
-        throws DataAccessException
+    public List<ITargetApplication> getTargetApplication (final IBulkCustomer bulkCustomer) throws DataAccessException
     {
-        return true;
+        // TODO - Implement this method.
+        return null;
     }
 }
