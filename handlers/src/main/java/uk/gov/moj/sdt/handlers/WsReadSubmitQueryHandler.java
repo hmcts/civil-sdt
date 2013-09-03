@@ -37,7 +37,6 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
-import uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
@@ -69,48 +68,48 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
     /**
      * The transformer associated with this handler.
      */
-    private ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, 
-            ISubmitQueryResponse> transformer;
+    private ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, 
+        ISubmitQueryRequest, ISubmitQueryResponse> transformer;
 
     @Override
-    public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType requestType)
+    public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequestType)
     {
-
         LOGGER.info ("[submitQuery] started");
-        // Initialise response
-        SubmitQueryResponseType response = new SubmitQueryResponseType ();
-        response.setStatus (new StatusType ());
+
+        // Initialise response.
+        SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
+        submitQueryResponseType.setStatus (new StatusType ());
 
         try
         {
 
-            // Transform to domain object
+            // Transform to domain object.
             final ISubmitQueryRequest submitQueryRequest =
-                    SubmitQueryToDomainTransformer.mapToSubmitQueryRequest (requestType);
+                    getTransformer ().transformJaxbToDomain (submitQueryRequestType);
 
-            // Validate domain
+            // Validate domain.
             validateDomain (submitQueryRequest);
 
-            // Process validated request
-            response = processSubmitQuery (submitQueryRequest);
+            // Process validated request.
+            submitQueryResponseType = processSubmitQuery (submitQueryRequest);
 
         }
         catch (final AbstractBusinessException be)
         {
-            handleBusinessException (be, response.getStatus ());
+            handleBusinessException (be, submitQueryResponseType.getStatus ());
         }
         // CHECKSTYLE:OFF
         catch (final Exception e)
         // CHECKSTYLE:ON
         {
-            handleException (e, response.getStatus ());
+            handleException (e, submitQueryResponseType.getStatus ());
         }
         finally
         {
             LOGGER.info ("[submitQuery] completed");
         }
 
-        return response;
+        return submitQueryResponseType;
 
     }
 
@@ -139,8 +138,8 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
 
         final ISubmitQueryResponse domainResponse = submitQueryService.submitQuery (request);
 
-        final SubmitQueryResponseType response =
-                SubmitQueryToDomainTransformer.mapToSubmitQueryResponseType (domainResponse);
+        // TODO move following back out to calling method in line with other handlers.
+        final SubmitQueryResponseType response = getTransformer ().transformDomainToJaxb (domainResponse);
 
         // Set the sdt service to show the response was sent from the commissioning poject
         response.setSdtService (AbstractWsHandler.SDT_COMX_SERVICE);

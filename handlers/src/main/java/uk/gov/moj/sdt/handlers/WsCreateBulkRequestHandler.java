@@ -83,7 +83,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
                     .getHeader ().getTargetApplicationId ().toString ()));
 
             // Transform web service object to domain object(s)
-            final IBulkSubmission bulkSubmission = transformToDomainType (bulkRequestType);
+            final IBulkSubmission bulkSubmission = getTransformer ().transformJaxbToDomain (bulkRequestType);
 
             // Validate domain
             validateDomain (bulkSubmission);
@@ -143,19 +143,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         status.setCode (StatusCodeType.OK);
 
         return response;
-    }
-
-    /**
-     * Transform Web service object to Domain object.
-     * 
-     * @param bulkRequest The JAXB object tree to be transformed into domain object tree
-     * @return {@link IBulkSubmission}
-     */
-    private IBulkSubmission transformToDomainType (final BulkRequestType bulkRequest)
-    {
-        LOGGER.debug ("transform to domain type");
-
-        return (IBulkSubmission) getTransformer ().transformJaxbToDomain (bulkRequest);
     }
 
     /**

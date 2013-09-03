@@ -7,9 +7,9 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 
-	<!-- Implementation of SubmitQueryToDomainTransformer -->
-	<bean id="uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer"
-		class="uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer">
+	<!-- Implementation of BulkRequestToDomainTransformer -->
+	<bean id="uk.gov.moj.sdt.transformers.BulkRequestToDomainTransformer"
+		class="uk.gov.moj.sdt.transformers.BulkRequestToDomainTransformer">
 	</bean>
 
 	<!-- Implementation of BulkFeedbackToDomainTransformer -->
@@ -17,9 +17,9 @@
 		class="uk.gov.moj.sdt.transformers.BulkFeedbackToDomainTransformer">
 	</bean>
 
-	<!-- Implementation of BulkRequestToDomainTransformer -->
-	<bean id="uk.gov.moj.sdt.transformers.BulkRequestToDomainTransformer"
-		class="uk.gov.moj.sdt.transformers.BulkRequestToDomainTransformer">
+	<!-- Implementation of SubmitQueryToDomainTransformer -->
+	<bean id="uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer"
+		class="uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer">
 	</bean>
 
 </beans>

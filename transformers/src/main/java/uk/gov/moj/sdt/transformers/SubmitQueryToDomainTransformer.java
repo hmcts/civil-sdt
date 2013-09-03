@@ -61,62 +61,37 @@ public final class SubmitQueryToDomainTransformer extends AbstractTransformer im
 
     }
 
-    /**
-     * Maps the JAXB submit query type object to a submit query domain object.
-     * 
-     * @param jaxbRequest submit query request jaxb object
-     * @return submit query domain object
-     */
-    public static ISubmitQueryRequest mapToSubmitQueryRequest (final SubmitQueryRequestType jaxbRequest)
+    @Override
+    public ISubmitQueryRequest transformJaxbToDomain (final SubmitQueryRequestType submitQueryRequestType)
     {
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
+        final HeaderType header = submitQueryRequestType.getHeader ();
 
-        final ISubmitQueryRequest domainRequest = new SubmitQueryRequest ();
-        final HeaderType header = jaxbRequest.getHeader ();
-
-        domainRequest.setSdtCustomerId (header.getSdtCustomerId ().intValue ());
+        submitQueryRequest.setSdtCustomerId (header.getSdtCustomerId ().intValue ());
 
         // Map the target application
         final TargetApplication targetApplication = new TargetApplication ();
         targetApplication.setTargetApplicationCode (header.getTargetApplicationId ().value ());
-        domainRequest.setTargetApplication (targetApplication);
+        submitQueryRequest.setTargetApplication (targetApplication);
 
-        return domainRequest;
+        return submitQueryRequest;
     }
 
-    /**
-     * Maps the domain submit query response object to a submit query JAXB response type.
-     * 
-     * @param domainResponse domain object
-     * @return submit query JAXB response object
-     */
-    public static SubmitQueryResponseType mapToSubmitQueryResponseType (final ISubmitQueryResponse domainResponse)
+    @Override
+    public SubmitQueryResponseType transformDomainToJaxb (final ISubmitQueryResponse submitQueryResponse)
     {
+        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
 
-        final SubmitQueryResponseType jaxbResponse = new SubmitQueryResponseType ();
-        // Maps some values
-        jaxbResponse.setSdtCustomerId (BigInteger.valueOf (domainResponse.getSdtCustomerId ()));
-        jaxbResponse.setResultCount (BigInteger.valueOf (domainResponse.getResultCount ()));
+        // Maps some values.
+        submitQueryResponseType.setSdtCustomerId (BigInteger.valueOf (submitQueryResponse.getSdtCustomerId ()));
+        submitQueryResponseType.setResultCount (BigInteger.valueOf (submitQueryResponse.getResultCount ()));
 
-        // Set dummy results so the tags we need are written
+        // Set dummy results so the tags we need are written.
         final ResultsType resultsType = new ResultsType ();
         final McolResultsType mcolResultsType = new McolResultsType ();
         resultsType.setMcolResults (mcolResultsType);
-        jaxbResponse.setResults (resultsType);
+        submitQueryResponseType.setResults (resultsType);
 
-        return jaxbResponse;
-    }
-
-    @Override
-    public ISubmitQueryRequest transformJaxbToDomain (final SubmitQueryRequestType jaxbInstance)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public SubmitQueryResponseType transformDomainToJaxb (final ISubmitQueryResponse domainObject)
-    {
-        // TODO Auto-generated method stub
-        return null;
+        return submitQueryResponseType;
     }
 }
