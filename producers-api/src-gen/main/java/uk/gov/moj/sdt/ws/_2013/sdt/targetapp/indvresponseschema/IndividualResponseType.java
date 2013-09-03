@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import org.w3c.dom.Element;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 
 
@@ -25,7 +26,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;any/>
+ *                   &lt;any processContents='lax'/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -138,7 +139,7 @@ public class IndividualResponseType {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;any/>
+     *         &lt;any processContents='lax'/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -161,6 +162,7 @@ public class IndividualResponseType {
          * 
          * @return
          *     possible object is
+         *     {@link Element }
          *     {@link Object }
          *     
          */
@@ -173,6 +175,7 @@ public class IndividualResponseType {
          * 
          * @param value
          *     allowed object is
+         *     {@link Element }
          *     {@link Object }
          *     
          */

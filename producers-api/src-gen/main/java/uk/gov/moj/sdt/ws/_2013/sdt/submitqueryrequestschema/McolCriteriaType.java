@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlType;
+import org.w3c.dom.Element;
 
 
 /**
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;extension base="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema}criteria">
  *       &lt;choice>
- *         &lt;any/>
+ *         &lt;any processContents='lax'/>
  *       &lt;/choice>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -42,6 +43,7 @@ public class McolCriteriaType
      * 
      * @return
      *     possible object is
+     *     {@link Element }
      *     {@link Object }
      *     
      */
@@ -54,6 +56,7 @@ public class McolCriteriaType
      * 
      * @param value
      *     allowed object is
+     *     {@link Element }
      *     {@link Object }
      *     
      */

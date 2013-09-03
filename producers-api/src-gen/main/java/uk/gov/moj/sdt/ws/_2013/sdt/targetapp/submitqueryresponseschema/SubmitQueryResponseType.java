@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import org.w3c.dom.Element;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 
 
@@ -30,7 +31,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;choice>
- *                   &lt;any maxOccurs="unbounded" minOccurs="0"/>
+ *                   &lt;any processContents='lax' maxOccurs="unbounded" minOccurs="0"/>
  *                 &lt;/choice>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -171,7 +172,7 @@ public class SubmitQueryResponseType {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;choice>
-     *         &lt;any maxOccurs="unbounded" minOccurs="0"/>
+     *         &lt;any processContents='lax' maxOccurs="unbounded" minOccurs="0"/>
      *       &lt;/choice>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -207,6 +208,7 @@ public class SubmitQueryResponseType {
          * 
          * <p>
          * Objects of the following type(s) are allowed in the list
+         * {@link Element }
          * {@link Object }
          * 
          * 
