@@ -67,7 +67,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
     {
         final SdtBulkReferenceGenerator referenceGenerator =
                 (SdtBulkReferenceGenerator) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.utils.SdtBulkReferenceGenerator");
+                        .getBean ("uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator");
 
         // Negative Test 1 - Supply blank application name
         try
