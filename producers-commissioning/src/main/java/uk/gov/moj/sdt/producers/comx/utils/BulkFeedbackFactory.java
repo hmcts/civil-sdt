@@ -32,7 +32,9 @@
 package uk.gov.moj.sdt.producers.comx.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -41,6 +43,7 @@ import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Custom class used to generate bulk submissions and individual requests.
@@ -78,9 +81,24 @@ public class BulkFeedbackFactory
     private static final int REJECTION_DESCRIPTION = 4;
 
     /**
+     * String index for target response.
+     */
+    private static final int TARGET_RESPONSE = 5;
+
+    /**
      * The bulk submission.
      */
     private IBulkSubmission bulkSubmission;
+
+    /**
+     * The system specific target response defined in the spring context xml.
+     */
+    private String targetResponse;
+
+    /**
+     * Map to store whether the individual request should have the target response injected or not.
+     */
+    private Map<String, String> targetResponseMap = new HashMap<String, String> ();
 
     /**
      * Constructor.
@@ -102,10 +120,11 @@ public class BulkFeedbackFactory
      * @param requestStatus request status from individual request domain object
      * @param rejectionReasonCode error code from error message domain object
      * @param rejectionReasonDescription error text from error message domain object
+     * @param hasTargetResponse true is a target response should be populated
      */
     public void createIndividualRequest (final String customerRequestReference, final String requestType,
                                          final String requestStatus, final String rejectionReasonCode,
-                                         final String rejectionReasonDescription)
+                                         final String rejectionReasonDescription, final boolean hasTargetResponse)
     {
 
         // Create the individual request
@@ -129,12 +148,15 @@ public class BulkFeedbackFactory
             individualRequest.setErrorLog (errorLog);
         }
 
+        // In commissioning add the static response to the map for the outbound interceptor to use
+        targetResponseMap.put (customerRequestReference, targetResponse);
+
         // Add to the list
         bulkSubmission.getIndividualRequests ().add (individualRequest);
     }
 
     /**
-     * Create a list of individual request and add it the list. 
+     * Create a list of individual request and add it the list.
      * This method is called from the spring configuration files with the list of params passed in.
      * 
      * 
@@ -147,17 +169,21 @@ public class BulkFeedbackFactory
         for (List<String> individualRequestList : params)
         {
 
-            //Get the strings based of the index
+            // Get the strings based of the index
             final String customerRequestReference = individualRequestList.get (CUSTOMER_REFERENCE);
             final String requestType = individualRequestList.get (REQUEST_TYPE);
             final String requestStatus = individualRequestList.get (REQUEST_STATUS);
             final String rejectionReasonCode = individualRequestList.get (REJECTION_CODE);
             final String rejectionReasonDescription = individualRequestList.get (REJECTION_DESCRIPTION);
+            final Boolean targetResponse = Boolean.valueOf (individualRequestList.get (TARGET_RESPONSE));
 
-            //Create the individual request
+            // Create the individual request
             createIndividualRequest (customerRequestReference, requestType, requestStatus, rejectionReasonCode,
-                    rejectionReasonDescription);
+                    rejectionReasonDescription, targetResponse.booleanValue ());
         }
+
+        // Set the target response map in threadlocal for the outbound interceptor to pick up
+        SdtContext.getContext ().setRawXmlMap (targetResponseMap);
     }
 
     /**
@@ -178,6 +204,16 @@ public class BulkFeedbackFactory
     public void setBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         this.bulkSubmission = bulkSubmission;
+    }
+
+    /**
+     * Set the target response.
+     * 
+     * @param targetResponse target response
+     */
+    public void setTargetResponse (final String targetResponse)
+    {
+        this.targetResponse = targetResponse;
     }
 
 }

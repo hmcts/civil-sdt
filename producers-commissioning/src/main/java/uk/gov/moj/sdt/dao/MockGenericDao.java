@@ -46,34 +46,9 @@ public class MockGenericDao
 {
 
     /**
-     * SDT Bulk reference used to return feedback for validated request.
-     */
-    public static final String SDT_FEEDBACK_VALIDATED = "MCOL_20130722_A00000001";
-
-    /**
-     * SDT Bulk reference used to return feedback for validated and uploaded request.
-     */
-    public static final String SDT_FEEDBACK_UPLOADED = "MCOL_20130722_B00000001";
-
-    /**
-     * SDT Bulk reference used to return feedback for successfully completed request.
-     */
-    public static final String SDT_FEEDBACK_COMPLETED = "MCOL_20130722_B00000002";
-
-    /**
-     * SDT Bulk reference used to return feedback with all defined error messages.
-     */
-    public static final String SDT_FEEDBACK_ERROR = "MCOL_20130722_C00000001";
-
-    /**
      * Pre-defined values for valid customer references.
      */
     private static final List<String> DUPLICATE_REFERENCE;
-
-    /**
-     * Pre-defined values for valid bulk references.
-     */
-    private static final List<String> BULK_REFERENCE;
 
     static
     {
@@ -81,13 +56,6 @@ public class MockGenericDao
         // Invalid customer reference
         DUPLICATE_REFERENCE = new ArrayList<String> ();
         DUPLICATE_REFERENCE.add ("duplicate");
-
-        // Valid SDT bulk references
-        BULK_REFERENCE = new ArrayList<String> ();
-        BULK_REFERENCE.add (SDT_FEEDBACK_VALIDATED);
-        BULK_REFERENCE.add (SDT_FEEDBACK_UPLOADED);
-        BULK_REFERENCE.add (SDT_FEEDBACK_COMPLETED);
-        BULK_REFERENCE.add (SDT_FEEDBACK_ERROR);
 
     }
 
@@ -103,14 +71,4 @@ public class MockGenericDao
         return !DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ());
     }
 
-    /**
-     * Check the bulk reference is valid for a bulk feedback request against a static list.
-     * 
-     * @param bulkReference bulk reference
-     * @return true or false
-     */
-    protected boolean isBulkReferenceValid (final String bulkReference)
-    {
-        return BULK_REFERENCE.contains (bulkReference);
-    }
 }

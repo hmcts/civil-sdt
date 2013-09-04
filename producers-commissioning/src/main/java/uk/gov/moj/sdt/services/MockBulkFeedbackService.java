@@ -31,10 +31,11 @@
 
 package uk.gov.moj.sdt.services;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.dao.MockGenericDao;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory;
@@ -55,49 +56,18 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
     private static final Log LOGGER = LogFactory.getLog (MockBulkFeedbackService.class);
 
     /**
-     * Injected sample feedback for validated bulk submission.
+     * Map of bulk feedback factories.
      */
-    private BulkFeedbackFactory bulkFeedbackValidated;
-
-    /**
-     * Injected sample feedback for uploaded bulk submission.
-     */
-    private BulkFeedbackFactory bulkFeedbackUploaded;
-
-    /**
-     * Injected sample feedback for completed bulk submission.
-     */
-    private BulkFeedbackFactory bulkFeedbackCompleted;
-
-    /**
-     * Injected sample feedback for error bulk submission.
-     */
-    private BulkFeedbackFactory bulkFeedbackError;
+    private Map<String, BulkFeedbackFactory> bulkFeedbackFactoryMap;
 
     @Override
     public IBulkSubmission getBulkFeedback (final IBulkFeedbackRequest bulkFeedbackRequest)
     {
         // Determine which feedback sample to return based on the SDT bulk reference
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
-        if (MockGenericDao.SDT_FEEDBACK_VALIDATED.equals (sdtBulkReference))
-        {
+        final BulkFeedbackFactory bulkFeedbackFactory = bulkFeedbackFactoryMap.get (sdtBulkReference);
 
-            return populateBulkSubmission (bulkFeedbackValidated, sdtBulkReference);
-        }
-        else if (MockGenericDao.SDT_FEEDBACK_UPLOADED.equals (sdtBulkReference))
-        {
-            return populateBulkSubmission (bulkFeedbackUploaded, sdtBulkReference);
-        }
-        else if (MockGenericDao.SDT_FEEDBACK_COMPLETED.equals (sdtBulkReference))
-        {
-            return populateBulkSubmission (bulkFeedbackCompleted, sdtBulkReference);
-        }
-        else
-        {
-            // Return this as the default, BulkFeedbackRequestValidator will throw
-            // an error if the bulk reference does not match
-            return populateBulkSubmission (bulkFeedbackError, sdtBulkReference);
-        }
+        return populateBulkSubmission (bulkFeedbackFactory, sdtBulkReference);
 
     }
 
@@ -119,43 +89,13 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
     }
 
     /**
-     * Inject bulk feedback factory containing bulk submission with validated individual request.
+     * Set bulk feedback factory map.
      * 
-     * @param bulkFeedbackValidated bulk feedback factory
+     * @param bulkFeedbackFactoryMap bulk feedback factory map
      */
-    public void setBulkFeedbackValidated (final BulkFeedbackFactory bulkFeedbackValidated)
+    public void setBulkFeedbackFactoryMap (final Map<String, BulkFeedbackFactory> bulkFeedbackFactoryMap)
     {
-        this.bulkFeedbackValidated = bulkFeedbackValidated;
-    }
-
-    /**
-     * Inject bulk feedback factory containing bulk submission with uploaded individual request.
-     * 
-     * @param bulkFeedbackUploaded bulk feedback factory
-     */
-    public void setBulkFeedbackUploaded (final BulkFeedbackFactory bulkFeedbackUploaded)
-    {
-        this.bulkFeedbackUploaded = bulkFeedbackUploaded;
-    }
-
-    /**
-     * Inject bulk feedback factory containing bulk submission with completed individual request.
-     * 
-     * @param bulkFeedbackCompleted bulk feedback factory
-     */
-    public void setBulkFeedbackCompleted (final BulkFeedbackFactory bulkFeedbackCompleted)
-    {
-        this.bulkFeedbackCompleted = bulkFeedbackCompleted;
-    }
-
-    /**
-     * Inject bulk feedback factory containing bulk submission with error individual request.
-     * 
-     * @param bulkFeedbackError bulk feedback factory
-     */
-    public void setBulkFeedbackError (final BulkFeedbackFactory bulkFeedbackError)
-    {
-        this.bulkFeedbackError = bulkFeedbackError;
+        this.bulkFeedbackFactoryMap = bulkFeedbackFactoryMap;
     }
 
 }

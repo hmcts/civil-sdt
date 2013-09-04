@@ -17,6 +17,15 @@
 		
 	<bean id="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" 
 		class="uk.gov.moj.sdt.dao.MockBulkSubmissionDao">
+		<!-- Inject list of valid SDT bulk references, these also appear in the services sprint context xml -->
+        <property name="bulkReferenceList">
+     		<list>     				     	
+	       		<value>MCOL_20130722_A00000001</value>
+	       		<value>MCOL_20130722_B00000001</value>
+	       		<value>MCOL_20130722_B00000002</value>
+	       		<value>MCOL_20130722_C00000001</value>
+	    	</list>
+	    </property>	       			
 	</bean>
 	 
 	<bean id="uk.gov.moj.sdt.dao.api.IIndividualRequestDao" 

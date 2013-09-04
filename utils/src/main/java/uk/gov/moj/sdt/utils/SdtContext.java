@@ -30,6 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class holding all thread specific context that needs to be passed around in SDT.
  * 
@@ -51,6 +54,11 @@ public final class SdtContext
      * The raw outbound XML handled by CXF and stored for application use in thread local memory.
      */
     private String rawOutXml;
+
+    /**
+     * Map to store the raw xml along with a key as to where the xml should be inserted.
+     */
+    private Map<String, String> rawXmlMap = new HashMap<String, String> ();
 
     /**
      * Constructor for {@link ThreadContext}.
@@ -114,5 +122,25 @@ public final class SdtContext
         }
 
         return sdtContext;
+    }
+
+    /**
+     * Get raw xml map.
+     * 
+     * @return raw xml map
+     */
+    public Map<String, String> getRawXmlMap ()
+    {
+        return rawXmlMap;
+    }
+
+    /**
+     * Set raw xml map.
+     * 
+     * @param rawXmlMap raw xml map
+     */
+    public void setRawXmlMap (final Map<String, String> rawXmlMap)
+    {
+        this.rawXmlMap = rawXmlMap;
     }
 }

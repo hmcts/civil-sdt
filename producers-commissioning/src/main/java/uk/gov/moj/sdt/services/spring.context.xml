@@ -9,15 +9,25 @@
         class="uk.gov.moj.sdt.services.MockSubmitQueryService">        
     </bean>
 
+  
+  	<!-- Mock implementation of Bulk Submission DAO -->
+    <bean id="uk.gov.moj.sdt.dao.MockBulkSubmissionDao" 
+        class="uk.gov.moj.sdt.dao.MockBulkSubmissionDao">
+    </bean>
+
+
     <!-- Mock implementation for Bulk Feedback Service -->        
     <bean id="uk.gov.moj.sdt.services.api.IBulkFeedbackService" 
         class="uk.gov.moj.sdt.services.MockBulkFeedbackService">
         
-        <property name="bulkFeedbackValidated" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryValidated" />
-        <property name="bulkFeedbackUploaded" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryUploaded" />        
-        <property name="bulkFeedbackCompleted" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted" />
-        <property name="bulkFeedbackError" ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError" />         
-                
-    </bean>
-	
+        <property name="bulkFeedbackFactoryMap">
+        	<map>
+        		<!-- These keys also appear in MockBulkSubmissionDao.java for the SDT bulk reference check -->
+        		<entry key="MCOL_20130722_A00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryValidated"/>
+        		<entry key="MCOL_20130722_B00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryUploaded"/>
+        		<entry key="MCOL_20130722_B00000002" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted"/>        		
+        		<entry key="MCOL_20130722_C00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError"/> 
+        	</map>
+        </property>                
+    </bean>	
 </beans>

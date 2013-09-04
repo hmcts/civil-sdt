@@ -18,7 +18,7 @@
 	
 	<!-- Bulk Submission definition -->
 	<bean id="uk.gov.moj.sdt.domain.api.IBulkSumissionError" class="uk.gov.moj.sdt.domain.BulkSubmission">                
-        <property name="customerReference" value="USER_FILE_REFERENCE_C1"/>
+        <property name="customerReference" value="USER_FILE_REFERENCE_c1"/>
         <property name="createdDate" ref="org.joda.time.LocalDateTime.submissionDateError" />
         <property name="numberOfRequest" value="123"/>
         <property name="submissionStatus" value="Completed"/>
@@ -27,6 +27,1044 @@
     <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
     <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
     	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionError"/>
+    	<!-- Define the system specific response -->
+    	<property name="targetResponse">
+    		<value>
+    			<![CDATA[
+				<mcolResponseDetail>
+                    <claimNumber>12345678</claimNumber>
+                    <issueDate>2012-11-11</issueDate>
+                    <serviceDate>2012-11-11</serviceDate>
+                    <warrantNumber>12345678</warrantNumber>
+                    <enforcingCourtCode>123</enforcingCourtCode>
+                    <enforcingCourtName>enforcing_court_name</enforcingCourtName>
+                    <fee>9999</fee>
+                </mcolResponseDetail>
+                ]]>
+			</value>
+    	</property>    	
     </bean>    
 
+    <!-- Create the individual requests via method invocation -->   	
+ 	<bean id="createIndividualRequestError" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+ 		<property name="targetObject"><ref local="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError"/></property>   		
+   		<property name="targetMethod" value="createIndividualRequest"/>
+   		<property name="arguments">
+     		<list>
+     			<list>
+	     			<!-- Unique  Request Identifier-->
+	       			<value>USER_REQUEST_ID_c1</value>
+	       			<!-- Request Type -->
+	       			<value>mcolClaim</value>
+	       			<!-- Request Status -->
+	       			<value>Rejected</value>
+	       			<!-- Rejection Reason Code -->
+	       			<value>7</value>
+	       			<!-- Rejection Reason Description -->
+	       			<value>Direct debit facility is not available.</value>
+	       			<!-- Target response -->
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c1</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>9</value>	       			
+	       			<value>Claimant name provided in error.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c2</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>9</value>	       			
+	       			<value>Claimant name provided in error.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c3</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>10</value>	       			
+	       			<value>Claimant name is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c4</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>12</value>	       			
+	       			<value>Claimant name is missing but other claimant details are specified.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c5</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>13</value>	       			
+	       			<value>First line of claimant address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c6</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>15</value>	       			
+	       			<value>Second line of claimant address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c7</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	 	       			
+	       			<value>18</value>	       			
+	       			<value>Fourth line of claimant address is specified when the third line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c8</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	 	       				       			
+	       			<value>21</value>	       			
+	       			<value>Claimant correspondence name provided in error.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c9</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>23</value>	       			
+	       			<value>Claimant correspondence name is missing but other correspondence details are specified.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c10</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>24</value>	       			
+	       			<value>First line of claimant correspondence address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c11</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>26</value>	       			
+	       			<value>Second line of claimant correspondence address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c12</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>
+	       			<value>29</value>	       			
+	       			<value>First defendant's name is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c13</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>31</value>	       			
+	       			<value>First defendant's first line of address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c14</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>33</value>	       			
+	       			<value>First defendant's second line of address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c15</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>35</value>	       			
+	       			<value>First defendant's third line of address is too long.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c16</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>36</value>	       			
+	       			<value>First defendant's fourth line of address is specified when the third line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c17</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>38</value>	       			
+	       			<value>First defendant's postcode is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c18</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>39</value>	       			
+	       			<value>First defendant's postcode is not in England or Wales.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c19</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>40</value>	       			
+	       			<value>Second defendant's name is missing but other defendant details for the second defendant are specified.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c20</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>42</value>	       			
+	       			<value>Second defendant cannot have an identical name to the first defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c21</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>43</value>	       			
+	       			<value>Second defendant's first line of address is missing.</value>
+	       			<value>true</value>
+	       		</list><list>	     			
+	       			<value>USER_REQUEST_ID_c22</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>45</value>	       			
+	       			<value>Second defendant's second line of address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c23</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>48</value>	       			
+	       			<value>Second defendant's fourth line of address is specified when third line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c24</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>50</value>	       			
+	       			<value>Second defendant's postcode is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c25</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>51</value>	       			
+	       			<value>Second defendant's postcode is not in England or Wales.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c26</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>54</value>	       			
+	       			<value>Date money became owed is only required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c27</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>56</value>	       			
+	       			<value>Date money became owed is required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c28</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>57</value>	       			
+	       			<value>Date money became owed is invalid – it must be in the past.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c29</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>58</value>	       			
+	       			<value>Date you are issuing the claim is only required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c30</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>   			
+	       			<value>60</value>	       			
+	       			<value>Date you are issuing the claim is required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c31</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>61</value>	       			
+	       			<value>Date you are issuing the claim must be after the date the money became owed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c32</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>62</value>	       			
+	       			<value>Claim amount (interest) is only required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c33</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>63</value>	       			
+	       			<value>Claim amount (interest) is required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c34</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>65</value>	       			
+	       			<value>Claim amount (interest) must be greater than zero and less than the maximum claim amount allowed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c35</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>66</value>	       			
+	       			<value>Daily rate of interest since judgment only required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c36</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>67</value>	       			
+	       			<value>Daily rate of interest since judgment required if the right to claim interest is reserved.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c37</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>69</value>	       			
+	       			<value>Daily rate of interest since judgment must be greater than zero and must not be greater than GBP 9,999.99.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c38</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>70</value>	       			
+	       			<value>Claim particulars are missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c39</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>71</value>	       			
+	       			<value>Maximum number of lines for the claim particulars exceeded.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c40</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>72</value>	       			
+	       			<value>Claim particulars line length exceeded.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c41</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>75</value>	       			
+	       			<value>Amount claimed must be greater than zero and less than the maximum claim amount allowed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c42</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>76</value>	       			
+	       			<value>Solicitor's costs can only be claimed by customers enrolled as a solicitor on MCOL.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c43</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>78</value>	       			
+	       			<value>Solicitor's costs must be greater than zero and less than the maximum solicitor's costs allowed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c44</value>	       			
+	       			<value>mcolClaim</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>79</value>	       			
+	       			<value>Solicitor's costs too high for the amount claimed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c45</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>86</value>	       			
+	       			<value>Specified claim does not exist on MCOL.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c46</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>87</value>	       			
+	       			<value>Specified claim does not belong to the requesting customer.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c47</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>88</value>	       			
+	       			<value>This judgment request is invalid on the referenced claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c48</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>90</value>	       			
+	       			<value>Joint judgment cannot be requested for a claim with only 1 defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c49</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>91</value>	       			
+	       			<value>Invalid defendant ID.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c50</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>92</value>	       			
+	       			<value>Defendant ID must not be specified on a joint judgment request.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c51</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>93</value>	       			
+	       			<value>Defendant 2 is specified but there is only 1 defendant on the claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c52</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>95</value>	       			
+	       			<value>Invalid judgment type.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c53</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>96</value>	       			
+	       			<value>Not enough days have passed since date of service to allow judgment by default.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c54</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>97</value>	       			
+	       			<value>Particulars of claim have not been sent separately as specified on the claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c55</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>98</value>	       			
+	       			<value>It was not specified on the claim that the particulars of claim would be sent separately.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c56</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>99</value>	       			
+	       			<value>First line of the defendant's address is missing but other address details are specified for the defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c57</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>101</value>	       			
+	       			<value>Second line of the defendant's address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c58</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>104</value>	       			
+	       			<value>Fourth line of the defendant's address is specified when the third line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c59</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>106</value>	       			
+	       			<value>Defendant's postcode is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c60</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>108</value>	       			
+	       			<value>Postcode for defendant is not in England or Wales.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c61</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>110</value>	       			
+	       			<value>Defendant's date of birth must be in the past.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c62</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>111</value>	       			
+	       			<value>Address for second defendant cannot be specified as there is only 1 defendant on the claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c63</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>112</value>	       			
+	       			<value>Address for second defendant cannot be specified as this is not a joint judgment request.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c64</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>114</value>	       			
+	       			<value>First line of the second defendant's address is missing but other address details are specified for the second defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c65</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>115</value>	       			
+	       			<value>Second defendant's second address line is missing.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c66</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>118</value>	       			
+	       			<value>Fourth line of the second defendant's address is specified when the third line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c67</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>120</value>	       			
+	       			<value>Postcode for second defendant is missing.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c68</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>122</value>	       			
+	       			<value>Postcode for second defendant is not in England or Wales.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c69</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>123</value>	       			
+	       			<value>Date of birth for second defendant cannot be specified as there is only 1 defendant on the claim.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c70</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>124</value>	       			
+	       			<value>Date of birth for second defendant cannot be specified as this is not a joint judgment request.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c71</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>126</value>	       			
+	       			<value>Second defendant's date of birth must be in the past.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c72</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>128</value>	       			
+	       			<value>Invalid payment frequency.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c73</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>129</value>	       			
+	       			<value>Installment amount specified but payment is not by installments.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c74</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>130</value>	       			
+	       			<value>Installment amount is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c75</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>132</value>	       			
+	       			<value>Installment amount must be greater than zero and less than the full claim amount.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c76</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>133</value>	       			
+	       			<value>Installment frequency specified but payment is not by installments.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c77</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>134</value>	       			
+	       			<value>Installment frequency is missing.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c78</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>135</value>	       			
+	       			<value>Invalid installment frequency.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c79</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>136</value>	       			
+	       			<value>Paid in full by date specified but payment is not on this basis.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c80</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>137</value>	       			
+	       			<value>Paid in full by date is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c81</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>138</value>	       			
+	       			<value>Invalid paid in full by date.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c82</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>139</value>	       			
+	       			<value>Paid in full date must be in the future but not tomorrow.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c83</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>140</value>	       			
+	       			<value>Interest specified but right to claim interest was not reserved on the claim.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c84</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>141</value>	       			
+	       			<value>Invalid interest since date of claim amount.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c85</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>142</value>	       			
+	       			<value>Interest since date of claim must be greater than zero and less than the maximum allowed.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c86</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>143</value>	       			
+	       			<value>Solicitor's costs can only be claimed by customers enrolled as a solicitor on MCOL.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c87</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>145</value>	       			
+	       			<value>Solicitor's costs must be greater than zero and less than the maximum allowed for the judgment type and amount claimed.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c88</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>147</value>	       			
+	       			<value>Deducted amount must be greater than zero and less than the maximum deduction allowed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c89</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>148</value>	       			
+	       			<value>Deducted amount results in negative judgment total.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c90</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>149</value>	       			
+	       			<value>Payee name is missing but other payee details are specified.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c91</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>151</value>	       			
+	       			<value>First line of payee address line is not specified.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c92</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>153</value>	       			
+	       			<value>Second line of payee address line is not specified.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c93</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>156</value>	       			
+	       			<value>Fourth line of the payee address is specified when the third line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+				<list>	     			
+	       			<value>USER_REQUEST_ID_c94</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>158</value>	       			
+	       			<value>Fifth line of the payee address is specified when the fourth line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c95</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>86</value>	       			
+	       			<value>Specified claim does not exist on MCOL.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c96</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>87</value>	       			
+	       			<value>Specified claim does not belong to the requesting customer.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c97</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>163</value>	       			
+	       			<value>This warrant request is invalid on the referenced claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c98</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>91</value>	       			
+	       			<value>Invalid defendant ID.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c99</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>93</value>	       			
+	       			<value>Defendant 2 is specified but there is only 1 defendant on the claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c100</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>165</value>	       			
+	       			<value>Warrant cannot be requested for this defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c101</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>99</value>	       			
+	       			<value>First line of the defendant's address is missing but other address details are specified for the defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c102</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>101</value>	       			
+	       			<value>Second line of the defendant's address is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c103</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>104</value>	       			
+	       			<value>Fourth line of the defendant's address is specified when the third line is blank.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c104</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>106</value>	       			
+	       			<value>Defendant's postcode is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c105</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>108</value>	       			
+	       			<value>Postcode for defendant is not in England or Wales.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c106</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>168</value>	       			
+	       			<value>Balance due at date of request must be greater than the minimum amount allowed and not greater than the maximum allowed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c107</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>169</value>	       			
+	       			<value>Balance due at date of request must not be greater than the judgment total.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c108</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>172</value>	       			
+	       			<value>Warrant amount must be less than the minimum warrant amount and not greater than the balance due at date of request.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c109</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>173</value>	       			
+	       			<value>Amount of warrant plus issue fee plus solicitor's costs are greater than the maximum total warrant allowed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c110</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>143</value>	       			
+	       			<value>Solicitor's costs can only be claimed by customers enrolled as a solicitor on MCOL.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c111</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>174</value>	       			
+	       			<value>Solicitor's costs can only be included on the warrant if they were included on the claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c112</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>176</value>	       			
+	       			<value>Solicitor's costs included on the warrant when the warrant amount is too small.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c113</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>177</value>	       			
+	       			<value>Solicitor's costs must be greater than zero and less than the maximum allowed.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c112</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>86</value>	       			
+	       			<value>Specified claim does not exist on MCOL.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c113</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>87</value>	       			
+	       			<value>Specified claim does not belong to the requesting customer.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c114</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>179</value>	       			
+	       			<value>This claim status update is invalid on the referenced claim.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c115</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>180</value>	       			
+	       			<value>Type of update is missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c116</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>181</value>	       			
+	       			<value>Invalid type of update specified.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c117</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>91</value>	       			
+	       			<value>Invalid defendant ID.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c118</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>182</value>	       			
+	       			<value>Defendant number specified for a claim with a single defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c119</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>183</value>	       			
+	       			<value>Defendant cannot be specified for an update type of Withdrawn.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c120</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>184</value>	       			
+	       			<value>Invalid status update requested for this defendant.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c121</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>185</value>	       			
+	       			<value>Paid in full date specified in error.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c122</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>186</value>	       			
+	       			<value>Paid in full date missing.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c123</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>188</value>	       			
+	       			<value>Paid in full date not in the future.</value>
+	       			<value>true</value>
+	       		</list>
+	       	</list>
+		</property>
+	</bean>
 </beans>

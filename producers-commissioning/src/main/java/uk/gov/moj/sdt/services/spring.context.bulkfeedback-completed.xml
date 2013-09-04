@@ -27,8 +27,23 @@
     <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
     <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
     	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionCompleted"/>
-    </bean>
-    
+    	<!-- Define the system specific response -->
+    	<property name="targetResponse">
+    		<value>
+    			<![CDATA[
+				<mcolResponseDetail>
+                    <claimNumber>12345678</claimNumber>
+                    <issueDate>2012-11-11</issueDate>
+                    <serviceDate>2012-11-11</serviceDate>
+                    <warrantNumber>12345678</warrantNumber>
+                    <enforcingCourtCode>123</enforcingCourtCode>
+                    <enforcingCourtName>enforcing_court_name</enforcingCourtName>
+                    <fee>9999</fee>
+                </mcolResponseDetail>
+                ]]>
+			</value>
+    	</property>
+    </bean>    
         
     <!-- Create the individual requests via method invocation -->   	
  	<bean id="createIndividualRequestCompleted" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
@@ -47,6 +62,8 @@
 	       			<value></value>
 	       			<!-- Rejection Reason Description -->
 	       			<value></value>
+	       			<!-- Target response -->
+	       			<value>true</value>
 	       		</list>
 	       		<list>	     				       		       		
 	       			<value>USER_REQUEST_ID_B1</value>	       			
@@ -54,6 +71,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>DUP_CUST_REQID</value>	       			
 	       			<value>Duplicate User Request Identifier submitted USER_REQUEST_ID_B1.</value>
+	       			<value>false</value>
 	       		</list>
 	       		<list>	       					
 	       			<value>USER_REQUEST_ID_B2</value>	       			
@@ -61,6 +79,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>39</value>	       			
 	       			<value>First defendant's postcode is not in England or Wales.</value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	  
 	       			<value>USER_REQUEST_ID_B3</value>	       			
@@ -68,6 +87,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value></value>	       			
 	       			<value>A bar on judgment/enforcement is in place.</value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	       		   			
 	       			<value>USER_REQUEST_ID_B4</value>	       			
@@ -75,6 +95,7 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	       		  			
 	       			<value>USER_REQUEST_ID_B5</value>	       			
@@ -82,6 +103,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>86</value>	       			
 	       			<value>Specified claim does not exist on MCOL.</value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	       		
 	       			<value>USER_REQUEST_ID_B6</value>	       			
@@ -89,6 +111,7 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>		       		     		
 	       			<value>USER_REQUEST_ID_B7</value>	       			
@@ -96,6 +119,7 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	  	       		   			
 	       			<value>USER_REQUEST_ID_B8</value>	       			
@@ -103,6 +127,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>179</value>	       			
 	       			<value>This claim status update is invalid on the referenced claim.</value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	   	       		  			
 	       			<value>USER_REQUEST_ID_B9</value>	       			
@@ -110,6 +135,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>87</value>	       			
 	       			<value>Specified claim does not belong to the requesting customer.</value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	  	       		   			
 	       			<value>USER_REQUEST_ID_B10</value>	       			
@@ -117,6 +143,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>96</value>	       			
 	       			<value>Not enough days have passed since date of service to allow judgment by default.</value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	     	       					
 	       			<value>USER_REQUEST_ID_B11</value>	       			
@@ -124,6 +151,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>SYS_ERR_VAL</value>	       			
 	       			<value>A system error has occurred. Please contact TBC for assistance.</value>
+	       			<value>false</value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B12</value>	       			
@@ -131,6 +159,7 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B13</value>	       			
@@ -138,6 +167,7 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 				<list>	     			
 	       			<value>USER_REQUEST_ID_B14</value>	       			
@@ -145,6 +175,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>SYS_ERR_INT</value>	       			
 	       			<value>A system error has occurred. Please contact TBC for assistance.</value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B15</value>	       			
@@ -152,6 +183,7 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
+	       			<value>true</value>
 	       		</list>	       		
 	       	</list>
 		</property>
