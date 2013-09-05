@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Implementation for mocking of SDT Get Bulk Feedback service.
@@ -66,6 +67,9 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
         // Determine which feedback sample to return based on the SDT bulk reference
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
         final BulkFeedbackFactory bulkFeedbackFactory = bulkFeedbackFactoryMap.get (sdtBulkReference);
+
+        // Set the target response map in threadlocal for the outbound interceptor to pick up
+        SdtContext.getContext ().setRawXmlMap (bulkFeedbackFactory.getTargetResponseMap ());
 
         return populateBulkSubmission (bulkFeedbackFactory, sdtBulkReference);
 

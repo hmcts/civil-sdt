@@ -43,7 +43,6 @@ import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Custom class used to generate bulk submissions and individual requests.
@@ -181,9 +180,6 @@ public class BulkFeedbackFactory
             createIndividualRequest (customerRequestReference, requestType, requestStatus, rejectionReasonCode,
                     rejectionReasonDescription, targetResponse.booleanValue ());
         }
-
-        // Set the target response map in threadlocal for the outbound interceptor to pick up
-        SdtContext.getContext ().setRawXmlMap (targetResponseMap);
     }
 
     /**
@@ -214,6 +210,16 @@ public class BulkFeedbackFactory
     public void setTargetResponse (final String targetResponse)
     {
         this.targetResponse = targetResponse;
+    }
+
+    /**
+     * Get the target response map.
+     * 
+     * @return target response map
+     */
+    public Map<String, String> getTargetResponseMap ()
+    {
+        return targetResponseMap;
     }
 
 }
