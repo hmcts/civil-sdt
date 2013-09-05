@@ -8,25 +8,17 @@
         <customerReference>customer_external_reference</customerReference>
     </header>
 	<requests>
-        <!-- Either PCOL or MCOL requests will be allowed -->
-        <mcolRequests>
-            <mcolRequest requestType="mcolClaim" requestId="request identifier">
-                <choice>
-                    <mcolClaim></mcolClaim>
-                    <mcolJudgment></mcolJudgment>
-                    <mcolWarrant></mcolWarrant>
-                    <mcolJudgmentWarrant></mcolJudgmentWarrant>
-                    <mcolClaimStatusUpdate></mcolClaimStatusUpdate>
-                </choice>
-            </mcolRequest>
-        </mcolRequests>
-        <pcolRequests customerId="1234">
-            <pcolRequest requestType="abc" requestId="request identifier">
-                <choice>
-                    <req1></req1>
-                    <req2></req2>
-                </choice>
-            </pcolRequest>
-        </pcolRequests>
+        <request requestType="mcolClaim" requestId="request identifier">
+        <!-- Only one type of request will be allowed -->
+            <mcolClaim></mcolClaim>
+            <mcolJudgment></mcolJudgment>
+            <mcolWarrant></mcolWarrant>
+            <mcolJudgmentWarrant></mcolJudgmentWarrant>
+            <mcolClaimStatusUpdate></mcolClaimStatusUpdate>
+            <pcolRequest></pcolRequest>
+        </request>
+        <request requestType="pcolClaim" requestId="request identifier">
+            <pcolClaim></pcolClaim>
+        </request>
 	</requests>
 </bulkRequest>

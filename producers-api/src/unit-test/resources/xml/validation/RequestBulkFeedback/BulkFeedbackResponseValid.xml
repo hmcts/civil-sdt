@@ -3,6 +3,12 @@
 xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" 
 xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema ../../../../../main/resources/xsd/RequestBulkFeedback/BulkFeedbackResponse.xsd ">
   <tns:bulkRequestStatus>
+      <base:status code="Ok">
+          <base:error>
+            <base:code>base:code</base:code>
+            <base:description>base:description</base:description>
+          </base:error>
+      </base:status>
       <tns:customerReference>tns:customerReference</tns:customerReference>
       <tns:sdtBulkReference>12345678901234567890123456789</tns:sdtBulkReference>
       <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
@@ -14,16 +20,9 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
             <base:description>base:description</base:description>
           </base:error>
       </tns:bulkStatus>
-      <tns:status code="Ok">
-          <base:error>
-            <base:code>base:code</base:code>
-            <base:description>base:description</base:description>
-          </base:error>
-      </tns:status>
   </tns:bulkRequestStatus>
   <tns:responses>
-    <tns:mcolResponses>
-      <tns:mcolResponse requestId="123" requestType="mcolClaim">
+      <tns:response requestId="123" requestType="mcolClaim">
       	<tns:mcolResponseDetail>
 	        <rdns:claimNumber>12345678</rdns:claimNumber>
 	        <rdns:issueDate>2001-01-01</rdns:issueDate>
@@ -39,7 +38,6 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
             <base:description>base:description</base:description>
           </base:error>
         </tns:status>
-      </tns:mcolResponse>
-    </tns:mcolResponses>
+      </tns:response>
   </tns:responses>
 </tns:bulkFeedbackResponse>

@@ -1,12 +1,10 @@
 
 package uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
 
 
 /**
@@ -20,7 +18,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="sdtCustomerId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtCustomerIdType"/>
- *         &lt;element name="targetApplicationId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}targetApplicationIdType"/>
+ *         &lt;element name="targetApplicationId" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,32 +34,23 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.TargetApplicationIdType;
 })
 public class HeaderType {
 
+    protected long sdtCustomerId;
     @XmlElement(required = true)
-    protected BigInteger sdtCustomerId;
-    @XmlElement(required = true)
-    protected TargetApplicationIdType targetApplicationId;
+    protected String targetApplicationId;
 
     /**
      * Gets the value of the sdtCustomerId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
      */
-    public BigInteger getSdtCustomerId() {
+    public long getSdtCustomerId() {
         return sdtCustomerId;
     }
 
     /**
      * Sets the value of the sdtCustomerId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
      */
-    public void setSdtCustomerId(BigInteger value) {
+    public void setSdtCustomerId(long value) {
         this.sdtCustomerId = value;
     }
 
@@ -70,10 +59,10 @@ public class HeaderType {
      * 
      * @return
      *     possible object is
-     *     {@link TargetApplicationIdType }
+     *     {@link String }
      *     
      */
-    public TargetApplicationIdType getTargetApplicationId() {
+    public String getTargetApplicationId() {
         return targetApplicationId;
     }
 
@@ -82,10 +71,10 @@ public class HeaderType {
      * 
      * @param value
      *     allowed object is
-     *     {@link TargetApplicationIdType }
+     *     {@link String }
      *     
      */
-    public void setTargetApplicationId(TargetApplicationIdType value) {
+    public void setTargetApplicationId(String value) {
         this.targetApplicationId = value;
     }
 

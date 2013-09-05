@@ -11,45 +11,35 @@
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" schemaLocation="../RootXSDs/McolResponseDetail.xsd"/>
     
     <xs:complexType name="bulkRequestStatusType">
-        <xs:sequence>
-            <xs:element name="customerReference" type="base:customerReferenceType" minOccurs="0"/>
-            <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
-            <xs:element name="submittedDate" type="xs:dateTime"  minOccurs="0"/>
-            <xs:element name="sdtService" type="xs:string"/>
-            <xs:element name="requestCount" type="base:requestCountType"  minOccurs="0"/>
-            <xs:element name="bulkStatus" type="base:bulkStatusType"  minOccurs="0"/>
-            <xs:element name="status" type="base:statusType" />
-        </xs:sequence>
-    </xs:complexType>
-    
-    <xs:complexType name="responsesType">
-        <xs:choice>
-            <xs:element name="mcolResponses" type="tns:mcolResponsesType"/>
-        </xs:choice>
-    </xs:complexType>
-    
-    <xs:complexType name="mcolResponsesType">
-        <xs:sequence>
-            <xs:element name="mcolResponse" type="tns:mcolResponseType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="responseType" abstract="true">
-        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
-        <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="mcolResponseType">
         <xs:complexContent>
-            <xs:extension base="tns:responseType">
+            <xs:extension base="base:abstractResponseType">
                 <xs:sequence>
-                    <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
-                    <xs:element name="status" type="base:individualStatusType"/>
+                    <xs:element name="customerReference" type="base:customerReferenceType" minOccurs="0"/>
+                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+                    <xs:element name="submittedDate" type="xs:dateTime"  minOccurs="0"/>
+                    <xs:element name="sdtService" type="xs:string"/>
+                    <xs:element name="requestCount" type="base:requestCountType"  minOccurs="0"/>
+                    <xs:element name="bulkStatus" type="base:bulkStatusType"  minOccurs="0"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     
+    <xs:complexType name="responsesType">
+        <xs:sequence>
+            <xs:element name="response" type="tns:responseType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="responseType">
+        <xs:sequence>
+            <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
+            <xs:element name="status" type="base:individualStatusType"/>
+        </xs:sequence>
+        <xs:attribute name="requestType" type="xs:string" use="required"/>
+        <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
+    </xs:complexType>
+
     <xs:complexType name="bulkFeedbackResponseType">
         <xs:sequence>
             <xs:element name="bulkRequestStatus" type="tns:bulkRequestStatusType"/>

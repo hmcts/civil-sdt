@@ -3,7 +3,7 @@
   <tns:header>
   </tns:header>
   <tns:criteria>
-    <tns:mcolCriteria>
-    </tns:mcolCriteria>
+    <tns:criterion>
+    </tns:criterion>
   </tns:criteria>
 </tns:submitQueryRequest>

@@ -9,14 +9,17 @@
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
     
     <xs:complexType name="bulkResponseType">
-        <xs:sequence>
-            <xs:element name="customerReference" type="base:customerReferenceType"/>
-            <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
-            <xs:element name="submittedDate" type="xs:dateTime"/>
-            <xs:element name="sdtService" type="xs:string"/>
-            <xs:element name="requestCount" type="base:requestCountType"/>
-            <xs:element name="status" type="base:statusType"/>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="base:abstractResponseType">
+                <xs:sequence>
+                    <xs:element name="customerReference" type="base:customerReferenceType"/>
+                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+                    <xs:element name="submittedDate" type="xs:dateTime"/>
+                    <xs:element name="sdtService" type="xs:string"/>
+                    <xs:element name="requestCount" type="base:requestCountType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     
     <xs:element name="bulkResponse" type="tns:bulkResponseType"/>

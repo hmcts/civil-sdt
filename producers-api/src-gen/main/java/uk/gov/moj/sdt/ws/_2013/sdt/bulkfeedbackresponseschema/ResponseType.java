@@ -3,10 +3,12 @@ package uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
+import org.w3c.dom.Element;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
 
 
 /**
@@ -18,7 +20,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
  * &lt;complexType name="responseType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="requestType" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestTypeType" />
+ *       &lt;sequence>
+ *         &lt;any processContents='lax'/>
+ *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}individualStatusType"/>
+ *       &lt;/sequence>
+ *       &lt;attribute name="requestType" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="requestId" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestIdType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -28,26 +34,80 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "responseType")
-@XmlSeeAlso({
-    McolResponseType.class
+@XmlType(name = "responseType", propOrder = {
+    "any",
+    "status"
 })
-public abstract class ResponseType {
+public class ResponseType {
 
+    @XmlAnyElement(lax = true)
+    protected Object any;
+    @XmlElement(required = true)
+    protected IndividualStatusType status;
     @XmlAttribute(name = "requestType", required = true)
-    protected RequestTypeType requestType;
+    protected String requestType;
     @XmlAttribute(name = "requestId", required = true)
     protected String requestId;
+
+    /**
+     * Gets the value of the any property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Element }
+     *     {@link Object }
+     *     
+     */
+    public Object getAny() {
+        return any;
+    }
+
+    /**
+     * Sets the value of the any property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Element }
+     *     {@link Object }
+     *     
+     */
+    public void setAny(Object value) {
+        this.any = value;
+    }
+
+    /**
+     * Gets the value of the status property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link IndividualStatusType }
+     *     
+     */
+    public IndividualStatusType getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the value of the status property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link IndividualStatusType }
+     *     
+     */
+    public void setStatus(IndividualStatusType value) {
+        this.status = value;
+    }
 
     /**
      * Gets the value of the requestType property.
      * 
      * @return
      *     possible object is
-     *     {@link RequestTypeType }
+     *     {@link String }
      *     
      */
-    public RequestTypeType getRequestType() {
+    public String getRequestType() {
         return requestType;
     }
 
@@ -56,10 +116,10 @@ public abstract class ResponseType {
      * 
      * @param value
      *     allowed object is
-     *     {@link RequestTypeType }
+     *     {@link String }
      *     
      */
-    public void setRequestType(RequestTypeType value) {
+    public void setRequestType(String value) {
         this.requestType = value;
     }
 

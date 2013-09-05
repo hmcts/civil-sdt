@@ -1,7 +1,6 @@
 
 package uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -35,32 +34,23 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class HeaderType {
 
-    @XmlElement(required = true)
-    protected BigInteger sdtCustomerId;
+    protected long sdtCustomerId;
     @XmlElement(required = true)
     protected String sdtBulkReference;
 
     /**
      * Gets the value of the sdtCustomerId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
      */
-    public BigInteger getSdtCustomerId() {
+    public long getSdtCustomerId() {
         return sdtCustomerId;
     }
 
     /**
      * Sets the value of the sdtCustomerId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
      */
-    public void setSdtCustomerId(BigInteger value) {
+    public void setSdtCustomerId(long value) {
         this.sdtCustomerId = value;
     }
 

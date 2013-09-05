@@ -20,6 +20,8 @@
 	<available filepath="." file="${src.dir}" type="dir" property="src.exists" />
 	<!-- Check if src-gen directory exists and set indicator property -->
 	<available filepath="." file="${src-gen.dir}" type="dir" property="src-gen.exists" />
+    <!-- Check if src-gen-work.dir directory exists and set indicator property -->
+    <available filepath="." file="${src-gen-work.dir}" type="dir" property="src-gen-work.exists" />
 	<!-- Check if resources directory exists and set indicator property -->
 	<available filepath="." file="${resources.dir}" type="dir" property="resources.exists" />
 	<!-- Check if resources directory exists and set indicator property -->
@@ -63,9 +65,9 @@
 	</target>
 
 	<!-- Delete the build and distribution folders -->
-	<target name="clean-src-gen" description="Cleanup the src-gen dirs">
-		<delete dir="${src-gen.dir}/uk" />
-        <delete dir="${src-gen.dir}/org" />
+	<target name="clean-src-gen-work" description="Cleanup the src-gen-work dirs">
+		<delete dir="${src-gen-work.dir}/uk" />
+        <delete dir="${src-gen-work.dir}/org" />
 	</target>
 
 	<!-- Copies <any name>.template files to <any name> substituting any matching properties in memory -->
@@ -93,11 +95,11 @@
 		</if>
 	</target>
 
-	<target name="generate-from-wsdl" if="wsdl.exists" depends="clean-src-gen" description="Generate CXF files from wsdl">
+	<target name="generate-from-wsdl" if="wsdl.exists" depends="clean-src-gen-work" description="Generate CXF files from wsdl">
 		<!-- TODO - find way of collecting up all wsdl files using wild card -->
         <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
             <arg value="-d" />
-            <arg value="${src-gen.dir}" />
+            <arg value="${src-gen-work.dir}" />
             <arg value="-frontend" />
             <arg value="jaxws21" />
             <arg value="-b" />
@@ -109,7 +111,7 @@
         </java>
         <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
             <arg value="-d" />
-            <arg value="${src-gen.dir}" />
+            <arg value="${src-gen-work.dir}" />
             <arg value="-frontend" />
             <arg value="jaxws21" />
             <arg value="-b" />
@@ -121,7 +123,7 @@
         </java>
         <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
             <arg value="-d" />
-            <arg value="${src-gen.dir}" />
+            <arg value="${src-gen-work.dir}" />
             <arg value="-frontend" />
             <arg value="jaxws21" />
             <arg value="-b" />
@@ -132,7 +134,6 @@
             </classpath>
         </java>
 	</target>
-
 
 	<!-- Compile all src/main/java source -->
 	<target name="-compile-src-gen" if="src-gen.exists" depends="init" description="Compile src directories">

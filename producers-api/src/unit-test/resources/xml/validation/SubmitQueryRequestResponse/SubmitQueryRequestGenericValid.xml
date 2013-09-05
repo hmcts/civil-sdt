@@ -5,7 +5,9 @@
     <tns:targetApplicationId>mcol</tns:targetApplicationId>
   </tns:header>
   <tns:criteria>
-    <tns:mcolCriteria>
-    </tns:mcolCriteria>
+    <tns:criterion criteriaType="mcolDefenceCriteria">
+        <tns:mcolCriteria>
+        </tns:mcolCriteria>
+    </tns:criterion>
   </tns:criteria>
 </tns:submitQueryRequest>

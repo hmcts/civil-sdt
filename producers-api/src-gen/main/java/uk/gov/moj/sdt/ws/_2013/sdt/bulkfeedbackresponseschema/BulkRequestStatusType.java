@@ -1,7 +1,6 @@
 
 package uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema;
 
-import java.math.BigInteger;
 import java.util.Calendar;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,8 +9,8 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.w3._2001.xmlschema.Adapter1;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 
 
 /**
@@ -22,7 +21,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
  * <pre>
  * &lt;complexType name="bulkRequestStatusType">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}abstractResponseType">
  *       &lt;sequence>
  *         &lt;element name="customerReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}customerReferenceType" minOccurs="0"/>
  *         &lt;element name="sdtBulkReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtBulkReferenceType"/>
@@ -30,9 +29,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
  *         &lt;element name="sdtService" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="requestCount" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestCountType" minOccurs="0"/>
  *         &lt;element name="bulkStatus" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}bulkStatusType" minOccurs="0"/>
- *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}statusType"/>
  *       &lt;/sequence>
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -46,10 +44,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
     "submittedDate",
     "sdtService",
     "requestCount",
-    "bulkStatus",
-    "status"
+    "bulkStatus"
 })
-public class BulkRequestStatusType {
+public class BulkRequestStatusType
+    extends AbstractResponseType
+{
 
     protected String customerReference;
     @XmlElement(required = true)
@@ -60,10 +59,8 @@ public class BulkRequestStatusType {
     protected Calendar submittedDate;
     @XmlElement(required = true)
     protected String sdtService;
-    protected BigInteger requestCount;
+    protected Long requestCount;
     protected BulkStatusType bulkStatus;
-    @XmlElement(required = true)
-    protected StatusType status;
 
     /**
      * Gets the value of the customerReference property.
@@ -166,10 +163,10 @@ public class BulkRequestStatusType {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public BigInteger getRequestCount() {
+    public Long getRequestCount() {
         return requestCount;
     }
 
@@ -178,10 +175,10 @@ public class BulkRequestStatusType {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public void setRequestCount(BigInteger value) {
+    public void setRequestCount(Long value) {
         this.requestCount = value;
     }
 
@@ -207,30 +204,6 @@ public class BulkRequestStatusType {
      */
     public void setBulkStatus(BulkStatusType value) {
         this.bulkStatus = value;
-    }
-
-    /**
-     * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StatusType }
-     *     
-     */
-    public StatusType getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusType }
-     *     
-     */
-    public void setStatus(StatusType value) {
-        this.status = value;
     }
 
 }

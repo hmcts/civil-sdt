@@ -22,28 +22,21 @@
 	<xs:complexType name="headerType">
 		<xs:sequence>
 			<xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
-			<xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
+			<xs:element name="targetApplicationId" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
     
 	<xs:complexType name="criteriaType">
-        <xs:choice>
-            <xs:element name="mcolCriteria" type="tns:mcolCriteriaType" />
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="criterion" type="tns:criterionType" />
+        </xs:sequence>
 	</xs:complexType>
     
-    <xs:complexType name="criteria" abstract="true">
-        <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
-    </xs:complexType>
-    
-    <xs:complexType name="mcolCriteriaType">
-        <xs:complexContent>
-            <xs:extension base="tns:criteria">
-                <xs:choice>
-                    <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
-                </xs:choice>
-            </xs:extension>
-        </xs:complexContent>
+    <xs:complexType name="criterionType">
+        <xs:choice>
+            <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
+        </xs:choice>
+        <xs:attribute name="criteriaType" type="xs:string" use="required"/>
     </xs:complexType>
 
 </xs:schema>

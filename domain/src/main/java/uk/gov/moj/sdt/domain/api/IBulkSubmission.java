@@ -121,14 +121,14 @@ public interface IBulkSubmission extends IDomainObject
      * 
      * @return number of request
      */
-    int getNumberOfRequest ();
+    long getNumberOfRequest ();
 
     /**
      * Set number of request.
      * 
      * @param numberOfRequest number of request
      */
-    void setNumberOfRequest (final int numberOfRequest);
+    void setNumberOfRequest (final long numberOfRequest);
 
     /**
      * Get submission status.

@@ -3,22 +3,25 @@ package uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
+import org.w3c.dom.Element;
 
 
 /**
- * <p>Java class for request complex type.
+ * <p>Java class for requestItemType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="request">
+ * &lt;complexType name="requestItemType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="requestType" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestTypeType" />
+ *       &lt;choice>
+ *         &lt;any processContents='lax'/>
+ *       &lt;/choice>
+ *       &lt;attribute name="requestType" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="requestId" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestIdType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -28,26 +31,53 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "request")
-@XmlSeeAlso({
-    McolRequestType.class
+@XmlType(name = "requestItemType", propOrder = {
+    "any"
 })
-public abstract class Request {
+public class RequestItemType {
 
+    @XmlAnyElement(lax = true)
+    protected Object any;
     @XmlAttribute(name = "requestType", required = true)
-    protected RequestTypeType requestType;
+    protected String requestType;
     @XmlAttribute(name = "requestId", required = true)
     protected String requestId;
+
+    /**
+     * Gets the value of the any property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Element }
+     *     {@link Object }
+     *     
+     */
+    public Object getAny() {
+        return any;
+    }
+
+    /**
+     * Sets the value of the any property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Element }
+     *     {@link Object }
+     *     
+     */
+    public void setAny(Object value) {
+        this.any = value;
+    }
 
     /**
      * Gets the value of the requestType property.
      * 
      * @return
      *     possible object is
-     *     {@link RequestTypeType }
+     *     {@link String }
      *     
      */
-    public RequestTypeType getRequestType() {
+    public String getRequestType() {
         return requestType;
     }
 
@@ -56,10 +86,10 @@ public abstract class Request {
      * 
      * @param value
      *     allowed object is
-     *     {@link RequestTypeType }
+     *     {@link String }
      *     
      */
-    public void setRequestType(RequestTypeType value) {
+    public void setRequestType(String value) {
         this.requestType = value;
     }
 

@@ -39,7 +39,6 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.McolResultsType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ResultsType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
@@ -67,11 +66,11 @@ public final class SubmitQueryToDomainTransformer extends AbstractTransformer im
         final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
         final HeaderType header = submitQueryRequestType.getHeader ();
 
-        submitQueryRequest.setSdtCustomerId (header.getSdtCustomerId ().intValue ());
+        submitQueryRequest.setSdtCustomerId (header.getSdtCustomerId ());
 
         // Map the target application
         final TargetApplication targetApplication = new TargetApplication ();
-        targetApplication.setTargetApplicationCode (header.getTargetApplicationId ().value ());
+        targetApplication.setTargetApplicationCode (header.getTargetApplicationId ());
         submitQueryRequest.setTargetApplication (targetApplication);
 
         return submitQueryRequest;
@@ -83,13 +82,11 @@ public final class SubmitQueryToDomainTransformer extends AbstractTransformer im
         final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
 
         // Maps some values.
-        submitQueryResponseType.setSdtCustomerId (BigInteger.valueOf (submitQueryResponse.getSdtCustomerId ()));
+        submitQueryResponseType.setSdtCustomerId (submitQueryResponse.getSdtCustomerId ());
         submitQueryResponseType.setResultCount (BigInteger.valueOf (submitQueryResponse.getResultCount ()));
 
         // Set dummy results so the tags we need are written.
         final ResultsType resultsType = new ResultsType ();
-        final McolResultsType mcolResultsType = new McolResultsType ();
-        resultsType.setMcolResults (mcolResultsType);
         submitQueryResponseType.setResults (resultsType);
 
         return submitQueryResponseType;

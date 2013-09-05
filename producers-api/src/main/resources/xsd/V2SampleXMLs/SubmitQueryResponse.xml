@@ -4,31 +4,28 @@
     <sdtCustomerId>1234</sdtCustomerId>
     <sdtService>SDT</sdtService>
     <resultCount>3</resultCount>
-    <sdtService>SDT</sdtService>
     <results>
-    	<mcolResults>
-    		<mcolDefenceDetail>
-    		  <claimNumber>12345678</claimNumber>
-              <defendant defendantId="1">
-                <filedDate>2001-12-31T12:00:00</filedDate>
-                <responseType>PA</responseType>
-              </defendant>
-    		</mcolDefenceDetail>
-            <mcolDefenceDetail>
-              <claimNumber>12345678</claimNumber>
-              <defendant defendantId="1">
-                <filedDate>2001-12-31T12:00:00</filedDate>
-                <responseType>PA</responseType>
-              </defendant>
-            </mcolDefenceDetail>
-            <mcolDefenceDetail>
-              <claimNumber>22345678</claimNumber>
-              <defendant defendantId="1">
-                <filedDate>2001-12-31T12:00:00</filedDate>
-                <responseType>PA</responseType>
-              </defendant>
-            </mcolDefenceDetail>
-    	</mcolResults>
+		<mcolDefenceDetail>
+		  <claimNumber>12345678</claimNumber>
+          <defendant defendantId="1">
+            <filedDate>2001-12-31T12:00:00</filedDate>
+            <responseType>PA</responseType>
+          </defendant>
+		</mcolDefenceDetail>
+        <mcolDefenceDetail>
+          <claimNumber>12345678</claimNumber>
+          <defendant defendantId="1">
+            <filedDate>2001-12-31T12:00:00</filedDate>
+            <responseType>PA</responseType>
+          </defendant>
+        </mcolDefenceDetail>
+        <mcolDefenceDetail>
+          <claimNumber>22345678</claimNumber>
+          <defendant defendantId="1">
+            <filedDate>2001-12-31T12:00:00</filedDate>
+            <responseType>PA</responseType>
+          </defendant>
+        </mcolDefenceDetail>
     </results>
     <status code="OK/Error">
         <error>

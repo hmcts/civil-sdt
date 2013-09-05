@@ -58,19 +58,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link McolRequestsType }
+     * Create an instance of {@link RequestItemType }
      * 
      */
-    public McolRequestsType createMcolRequestsType() {
-        return new McolRequestsType();
-    }
-
-    /**
-     * Create an instance of {@link McolRequestType }
-     * 
-     */
-    public McolRequestType createMcolRequestType() {
-        return new McolRequestType();
+    public RequestItemType createRequestItemType() {
+        return new RequestItemType();
     }
 
     /**

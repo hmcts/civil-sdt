@@ -94,15 +94,4 @@ public class SubmitQueryRequestTargetAppGenericXsdTest extends SdtXmlTestBase
         this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
     }
 
-    /**
-     * Tests that expected errors are reported for incorrect format of fields.
-     */
-    public void testInvalidXmlIncorrectFormat ()
-    {
-        final String condition = "IncorrectFormat";
-        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
-        final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
-
-        this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
-    }
 }

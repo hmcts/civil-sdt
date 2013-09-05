@@ -48,11 +48,9 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.misc.BulkRequestStatus;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.McolRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.McolRequestsType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
@@ -87,7 +85,7 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
     {
         final BulkCustomer bulkCustomer = new BulkCustomer ();
 
-        bulkCustomer.setSdtCustomerId (headerType.getSdtCustomerId ().intValue ());
+        bulkCustomer.setSdtCustomerId (headerType.getSdtCustomerId ());
         return bulkCustomer;
 
     }
@@ -103,26 +101,23 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
                                                                     final IBulkSubmission bulkSubmission)
     {
         IndividualRequest individualRequest = null;
-        final McolRequestsType mcolRequestsType = bulkRequestType.getRequests ().getMcolRequests ();
+        final List<RequestItemType> requests = bulkRequestType.getRequests ().getRequest ();
 
-        final List<McolRequestType> mcolRequestTypeList = mcolRequestsType.getMcolRequest ();
         final List<IndividualRequest> individualRequestList = new ArrayList<IndividualRequest> ();
 
         // Set the individual requests
         int lineNumber = 0;
-        for (McolRequestType mcolRequestType : mcolRequestTypeList)
+        for (RequestItemType request : requests)
         {
             individualRequest = new IndividualRequest ();
 
             // Set customer reference
-            individualRequest.setCustomerRequestReference (mcolRequestType.getRequestId ());
+            individualRequest.setCustomerRequestReference (request.getRequestId ());
 
             // Set line number
             individualRequest.setLineNumber (lineNumber++);
 
-            // Set request type
-            final RequestTypeType requestTypeType = mcolRequestType.getRequestType ();
-            individualRequest.setRequestType (mapToRequestType (requestTypeType));
+            individualRequest.setRequestType (mapToRequestType (request.getRequestType ()));
 
             // Set the initial status
             individualRequest.setRequestStatus (IndividualRequestStatus.SUBMITTED.getStatus ());
@@ -139,14 +134,14 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
     /**
      * Maps the request to a Request Type object.
      * 
-     * @param requestTypeType requesttype type
-     * @return request type
+     * @param requestTypeType request type
+     * @return domain request type
      */
-    private static IRequestType mapToRequestType (final RequestTypeType requestTypeType)
+    private static IRequestType mapToRequestType (final String requestTypeType)
     {
 
         final IRequestType requestType = new RequestType ();
-        requestType.setName (requestTypeType.name ());
+        requestType.setName (requestTypeType);
 
         return requestType;
 
@@ -163,9 +158,9 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
 
         // Set bulk submission fields from JAXB object.
         bulkSubmission.setCustomerReference (headerType.getCustomerReference ());
-        bulkSubmission.setNumberOfRequest (headerType.getRequestCount ().intValue ());
+        bulkSubmission.setNumberOfRequest (headerType.getRequestCount ());
 
-        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ().value ());
+        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ());
 
         bulkSubmission.setTargetApplication (targetApplication);
         bulkSubmission.setSubmissionStatus (BulkRequestStatus.UPLOADED.getStatus ());

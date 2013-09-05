@@ -3,7 +3,9 @@ package uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlType;
+import org.w3c.dom.Element;
 
 
 /**
@@ -16,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;choice>
- *         &lt;element name="mcolResults" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema}mcolResultsType"/>
+ *         &lt;any processContents='lax'/>
  *       &lt;/choice>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -27,34 +29,37 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "resultsType", propOrder = {
-    "mcolResults"
+    "any"
 })
 public class ResultsType {
 
-    protected McolResultsType mcolResults;
+    @XmlAnyElement(lax = true)
+    protected Object any;
 
     /**
-     * Gets the value of the mcolResults property.
+     * Gets the value of the any property.
      * 
      * @return
      *     possible object is
-     *     {@link McolResultsType }
+     *     {@link Element }
+     *     {@link Object }
      *     
      */
-    public McolResultsType getMcolResults() {
-        return mcolResults;
+    public Object getAny() {
+        return any;
     }
 
     /**
-     * Sets the value of the mcolResults property.
+     * Sets the value of the any property.
      * 
      * @param value
      *     allowed object is
-     *     {@link McolResultsType }
+     *     {@link Element }
+     *     {@link Object }
      *     
      */
-    public void setMcolResults(McolResultsType value) {
-        this.mcolResults = value;
+    public void setAny(Object value) {
+        this.any = value;
     }
 
 }

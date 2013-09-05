@@ -1,7 +1,6 @@
 
 package uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema;
 
-import java.math.BigInteger;
 import java.util.Calendar;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,7 +9,7 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.w3._2001.xmlschema.Adapter1;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 
 
 /**
@@ -21,16 +20,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
  * <pre>
  * &lt;complexType name="bulkResponseType">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}abstractResponseType">
  *       &lt;sequence>
  *         &lt;element name="customerReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}customerReferenceType"/>
  *         &lt;element name="sdtBulkReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtBulkReferenceType"/>
  *         &lt;element name="submittedDate" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="sdtService" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="requestCount" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestCountType"/>
- *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}statusType"/>
  *       &lt;/sequence>
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -43,10 +41,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
     "sdtBulkReference",
     "submittedDate",
     "sdtService",
-    "requestCount",
-    "status"
+    "requestCount"
 })
-public class BulkResponseType {
+public class BulkResponseType
+    extends AbstractResponseType
+{
 
     @XmlElement(required = true)
     protected String customerReference;
@@ -58,10 +57,7 @@ public class BulkResponseType {
     protected Calendar submittedDate;
     @XmlElement(required = true)
     protected String sdtService;
-    @XmlElement(required = true)
-    protected BigInteger requestCount;
-    @XmlElement(required = true)
-    protected StatusType status;
+    protected long requestCount;
 
     /**
      * Gets the value of the customerReference property.
@@ -162,49 +158,17 @@ public class BulkResponseType {
     /**
      * Gets the value of the requestCount property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
      */
-    public BigInteger getRequestCount() {
+    public long getRequestCount() {
         return requestCount;
     }
 
     /**
      * Sets the value of the requestCount property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
      */
-    public void setRequestCount(BigInteger value) {
+    public void setRequestCount(long value) {
         this.requestCount = value;
-    }
-
-    /**
-     * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StatusType }
-     *     
-     */
-    public StatusType getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusType }
-     *     
-     */
-    public void setStatus(StatusType value) {
-        this.status = value;
     }
 
 }

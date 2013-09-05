@@ -25,7 +25,7 @@
         <property name="createdDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="CREATED_DATE" />
         </property>
-        <property name="numberOfRequest" type="int">
+        <property name="numberOfRequest" type="long">
             <column name="NUMBER_OF_REQUESTS" />
         </property>
         <property name="submissionStatus" type="java.lang.String">

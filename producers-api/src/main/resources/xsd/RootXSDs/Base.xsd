@@ -5,7 +5,7 @@
 	elementFormDefault="qualified" version="1.0">
 
 	<xs:simpleType name="sdtCustomerIdType">
-        <xs:restriction base="xs:integer">
+        <xs:restriction base="xs:long">
             <xs:pattern value="[1-9][0-9]{7}" />
         </xs:restriction>
 	</xs:simpleType>
@@ -13,12 +13,6 @@
 	<xs:simpleType name="sdtBulkReferenceType">
 		<xs:restriction base="xs:string">
 			<xs:length value="29" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="targetApplicationIdType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="mcol" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -30,7 +24,7 @@
 	</xs:simpleType>
 
 	<xs:simpleType name="requestCountType">
-		<xs:restriction base="xs:integer">
+		<xs:restriction base="xs:long">
 			<xs:maxInclusive value="99999" />
 		</xs:restriction>
 	</xs:simpleType>
@@ -117,22 +111,6 @@
 			<xs:maxLength value="40" />
 		</xs:restriction>
 	</xs:simpleType>
-
-	<xs:simpleType name="requestTypeType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="mcolClaim" />
-			<xs:enumeration value="mcolJudgment" />
-			<xs:enumeration value="mcolJudgmentWarrant" />
-			<xs:enumeration value="mcolWarrant" />
-			<xs:enumeration value="mcolClaimStatusUpdate" />
-		</xs:restriction>
-	</xs:simpleType>
-
-    <xs:simpleType name="criteriaTypeType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="mcolDefenceCriteria" />
-        </xs:restriction>
-    </xs:simpleType>
 
 	<xs:simpleType name="statusCodeType">
 		<xs:restriction base="xs:string">
@@ -230,6 +208,12 @@
             <xs:element name="error" type="tns:errorType" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="code" type="tns:individualStatusCodeType" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="abstractResponseType" abstract="true">
+        <xs:sequence>
+            <xs:element name="status" type="tns:statusType"/>
+        </xs:sequence>
     </xs:complexType>
 
 </xs:schema>

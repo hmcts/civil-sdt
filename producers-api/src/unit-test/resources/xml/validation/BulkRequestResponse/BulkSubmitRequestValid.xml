@@ -7,8 +7,7 @@
     <tns:customerReference>tns:customerReference</tns:customerReference>
   </tns:header>
   <tns:requests>
-    <tns:mcolRequests>
-      <tns:mcolRequest requestId="1" requestType="mcolClaim">
+      <tns:request requestId="1" requestType="mcolClaim">
         <tns:mcolClaim>
           <tns2:defendant1>
             <tns2:name>tns2:name</tns2:name>
@@ -27,7 +26,6 @@
             <tns1:name>tns2:name</tns1:name>
           </tns2:sotSignature>
         </tns:mcolClaim>
-      </tns:mcolRequest>
-    </tns:mcolRequests>
+      </tns:request>
   </tns:requests>
 </tns:bulkRequest>

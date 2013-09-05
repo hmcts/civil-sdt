@@ -13,22 +13,19 @@
     <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
 
     <xs:complexType name="submitQueryResponseType">
-        <xs:sequence>
-            <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
-            <xs:element name="sdtService" type="xs:string"/>
-            <xs:element name="resultCount" type="xs:nonNegativeInteger" />
-            <xs:element name="results" type="tns:resultsType" />
-            <xs:element name="status" type="base:statusType" />
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="base:abstractResponseType">
+                <xs:sequence>
+                    <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
+                    <xs:element name="sdtService" type="xs:string"/>
+                    <xs:element name="resultCount" type="xs:nonNegativeInteger" />
+                    <xs:element name="results" type="tns:resultsType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     
     <xs:complexType name="resultsType">
-        <xs:choice>
-            <xs:element name="mcolResults" type="tns:mcolResultsType" />
-        </xs:choice>
-    </xs:complexType>
-    
-    <xs:complexType name="mcolResultsType">
         <xs:choice>
             <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>

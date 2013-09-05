@@ -1,28 +1,28 @@
 
-package uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema;
+package uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
+import org.w3c.dom.Element;
 
 
 /**
- * <p>Java class for mcolResponseType complex type.
+ * <p>Java class for criterionType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="mcolResponseType">
+ * &lt;complexType name="criterionType">
  *   &lt;complexContent>
- *     &lt;extension base="{http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema}responseType">
- *       &lt;sequence>
- *         &lt;any/>
- *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}individualStatusType"/>
- *       &lt;/sequence>
- *     &lt;/extension>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;choice>
+ *         &lt;any processContents='lax'/>
+ *       &lt;/choice>
+ *       &lt;attribute name="criteriaType" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -30,24 +30,22 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "mcolResponseType", propOrder = {
-    "any",
-    "status"
+@XmlType(name = "criterionType", propOrder = {
+    "any"
 })
-public class McolResponseType
-    extends ResponseType
-{
+public class CriterionType {
 
     @XmlAnyElement(lax = true)
     protected Object any;
-    @XmlElement(required = true)
-    protected IndividualStatusType status;
+    @XmlAttribute(name = "criteriaType", required = true)
+    protected String criteriaType;
 
     /**
      * Gets the value of the any property.
      * 
      * @return
      *     possible object is
+     *     {@link Element }
      *     {@link Object }
      *     
      */
@@ -60,6 +58,7 @@ public class McolResponseType
      * 
      * @param value
      *     allowed object is
+     *     {@link Element }
      *     {@link Object }
      *     
      */
@@ -68,27 +67,27 @@ public class McolResponseType
     }
 
     /**
-     * Gets the value of the status property.
+     * Gets the value of the criteriaType property.
      * 
      * @return
      *     possible object is
-     *     {@link IndividualStatusType }
+     *     {@link String }
      *     
      */
-    public IndividualStatusType getStatus() {
-        return status;
+    public String getCriteriaType() {
+        return criteriaType;
     }
 
     /**
-     * Sets the value of the status property.
+     * Sets the value of the criteriaType property.
      * 
      * @param value
      *     allowed object is
-     *     {@link IndividualStatusType }
+     *     {@link String }
      *     
      */
-    public void setStatus(IndividualStatusType value) {
-        this.status = value;
+    public void setCriteriaType(String value) {
+        this.criteriaType = value;
     }
 
 }

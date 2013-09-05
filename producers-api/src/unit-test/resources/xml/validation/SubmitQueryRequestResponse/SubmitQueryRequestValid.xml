@@ -8,11 +8,11 @@ xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" xmlns:xsi="http://ww
     <tns:targetApplicationId>mcol</tns:targetApplicationId>
   </tns:header>
   <tns:criteria>
-    <tns:mcolCriteria criteriaType="mcolDefenceCriteria">
+    <tns:criterion criteriaType="mcolDefenceCriteria">
       <tns:mcolDefenceCriteria>
         <mqry:fromDate>2001-01-01</mqry:fromDate>
         <mqry:toDate>2001-01-01</mqry:toDate>
       </tns:mcolDefenceCriteria>
-    </tns:mcolCriteria>
+    </tns:criterion>
   </tns:criteria>
 </tns:submitQueryRequest>

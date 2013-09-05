@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 
 
 /**
@@ -18,15 +18,14 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
  * <pre>
  * &lt;complexType name="submitQueryResponseType">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;extension base="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}abstractResponseType">
  *       &lt;sequence>
  *         &lt;element name="sdtCustomerId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtCustomerIdType"/>
  *         &lt;element name="sdtService" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="resultCount" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger"/>
  *         &lt;element name="results" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema}resultsType"/>
- *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}statusType"/>
  *       &lt;/sequence>
- *     &lt;/restriction>
+ *     &lt;/extension>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -38,13 +37,13 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
     "sdtCustomerId",
     "sdtService",
     "resultCount",
-    "results",
-    "status"
+    "results"
 })
-public class SubmitQueryResponseType {
+public class SubmitQueryResponseType
+    extends AbstractResponseType
+{
 
-    @XmlElement(required = true)
-    protected BigInteger sdtCustomerId;
+    protected long sdtCustomerId;
     @XmlElement(required = true)
     protected String sdtService;
     @XmlElement(required = true)
@@ -52,30 +51,20 @@ public class SubmitQueryResponseType {
     protected BigInteger resultCount;
     @XmlElement(required = true)
     protected ResultsType results;
-    @XmlElement(required = true)
-    protected StatusType status;
 
     /**
      * Gets the value of the sdtCustomerId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
      */
-    public BigInteger getSdtCustomerId() {
+    public long getSdtCustomerId() {
         return sdtCustomerId;
     }
 
     /**
      * Sets the value of the sdtCustomerId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
      */
-    public void setSdtCustomerId(BigInteger value) {
+    public void setSdtCustomerId(long value) {
         this.sdtCustomerId = value;
     }
 
@@ -149,30 +138,6 @@ public class SubmitQueryResponseType {
      */
     public void setResults(ResultsType value) {
         this.results = value;
-    }
-
-    /**
-     * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StatusType }
-     *     
-     */
-    public StatusType getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusType }
-     *     
-     */
-    public void setStatus(StatusType value) {
-        this.status = value;
     }
 
 }

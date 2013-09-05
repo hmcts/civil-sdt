@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
 
 
 /**
@@ -20,7 +19,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
  *       &lt;sequence>
  *         &lt;element name="sdtRequestId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtRequestIdType"/>
  *         &lt;element name="targetAppCustomerId" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="requestType" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestTypeType"/>
+ *         &lt;element name="requestType" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -42,7 +41,7 @@ public class HeaderType {
     @XmlElement(required = true)
     protected String targetAppCustomerId;
     @XmlElement(required = true)
-    protected RequestTypeType requestType;
+    protected String requestType;
 
     /**
      * Gets the value of the sdtRequestId property.
@@ -97,10 +96,10 @@ public class HeaderType {
      * 
      * @return
      *     possible object is
-     *     {@link RequestTypeType }
+     *     {@link String }
      *     
      */
-    public RequestTypeType getRequestType() {
+    public String getRequestType() {
         return requestType;
     }
 
@@ -109,10 +108,10 @@ public class HeaderType {
      * 
      * @param value
      *     allowed object is
-     *     {@link RequestTypeType }
+     *     {@link String }
      *     
      */
-    public void setRequestType(RequestTypeType value) {
+    public void setRequestType(String value) {
         this.requestType = value;
     }
 

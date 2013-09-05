@@ -3,11 +3,5 @@
   <tns:bulkRequestStatus>
   </tns:bulkRequestStatus>
   <tns:responses>
-    <tns:mcolResponses>	
-      <tns:mcolResponse>
-      	<tns:mcolResponseDetail>
-      	</tns:mcolResponseDetail>
-      </tns:mcolResponse>
-    </tns:mcolResponses>
   </tns:responses>
 </tns:bulkFeedbackResponse>

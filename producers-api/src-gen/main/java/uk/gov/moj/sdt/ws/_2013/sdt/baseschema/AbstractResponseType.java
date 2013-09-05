@@ -1,5 +1,5 @@
 
-package uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema;
+package uk.gov.moj.sdt.ws._2013.sdt.baseschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,16 +8,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for criteriaType complex type.
+ * <p>Java class for abstractResponseType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="criteriaType">
+ * &lt;complexType name="abstractResponseType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="criterion" type="{http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema}criterionType"/>
+ *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}statusType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -27,36 +27,36 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "criteriaType", propOrder = {
-    "criterion"
+@XmlType(name = "abstractResponseType", propOrder = {
+    "status"
 })
-public class CriteriaType {
+public abstract class AbstractResponseType {
 
     @XmlElement(required = true)
-    protected CriterionType criterion;
+    protected StatusType status;
 
     /**
-     * Gets the value of the criterion property.
+     * Gets the value of the status property.
      * 
      * @return
      *     possible object is
-     *     {@link CriterionType }
+     *     {@link StatusType }
      *     
      */
-    public CriterionType getCriterion() {
-        return criterion;
+    public StatusType getStatus() {
+        return status;
     }
 
     /**
-     * Sets the value of the criterion property.
+     * Sets the value of the status property.
      * 
      * @param value
      *     allowed object is
-     *     {@link CriterionType }
+     *     {@link StatusType }
      *     
      */
-    public void setCriterion(CriterionType value) {
-        this.criterion = value;
+    public void setStatus(StatusType value) {
+        this.status = value;
     }
 
 }

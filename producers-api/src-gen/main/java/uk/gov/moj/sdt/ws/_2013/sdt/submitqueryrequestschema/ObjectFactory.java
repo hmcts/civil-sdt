@@ -42,14 +42,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link McolCriteriaType }
-     * 
-     */
-    public McolCriteriaType createMcolCriteriaType() {
-        return new McolCriteriaType();
-    }
-
-    /**
      * Create an instance of {@link HeaderType }
      * 
      */
@@ -63,6 +55,14 @@ public class ObjectFactory {
      */
     public CriteriaType createCriteriaType() {
         return new CriteriaType();
+    }
+
+    /**
+     * Create an instance of {@link CriterionType }
+     * 
+     */
+    public CriterionType createCriterionType() {
+        return new CriterionType();
     }
 
     /**

@@ -11,39 +11,26 @@
     <xs:complexType name="headerType">
         <xs:sequence>
             <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
-            <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
+            <xs:element name="targetApplicationId" type="xs:string"/>
             <xs:element name="requestCount" type="base:requestCountType"/>
             <xs:element name="customerReference" type="base:customerReferenceType"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="request" abstract="true">
-        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
+    <xs:complexType name="requestItemType">
+        <xs:choice>
+            <xs:any processContents="lax"/>
+        </xs:choice>
+        <xs:attribute name="requestType" type="xs:string" use="required"/>
         <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
     </xs:complexType>
     
-    <xs:complexType name="mcolRequestType">
-        <xs:complexContent>
-            <xs:extension base="tns:request">
-                <xs:choice>
-                    <xs:any/>
-                </xs:choice>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="mcolRequestsType">
+    <xs:complexType name="requestsType">
         <xs:sequence>
-            <xs:element name="mcolRequest" type="tns:mcolRequestType" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="request" type="tns:requestItemType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-
-    <xs:complexType name="requestsType">
-        <xs:choice>
-            <xs:element name="mcolRequests" type="tns:mcolRequestsType"/>
-        </xs:choice>
-    </xs:complexType>
-
+    
     <xs:complexType name="bulkRequestType">
         <xs:sequence>
             <xs:element name="header" type="tns:headerType"/>

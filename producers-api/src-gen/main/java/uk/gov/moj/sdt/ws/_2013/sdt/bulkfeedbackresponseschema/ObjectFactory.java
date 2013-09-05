@@ -50,19 +50,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link McolResponseType }
+     * Create an instance of {@link ResponseType }
      * 
      */
-    public McolResponseType createMcolResponseType() {
-        return new McolResponseType();
-    }
-
-    /**
-     * Create an instance of {@link McolResponsesType }
-     * 
-     */
-    public McolResponsesType createMcolResponsesType() {
-        return new McolResponsesType();
+    public ResponseType createResponseType() {
+        return new ResponseType();
     }
 
     /**

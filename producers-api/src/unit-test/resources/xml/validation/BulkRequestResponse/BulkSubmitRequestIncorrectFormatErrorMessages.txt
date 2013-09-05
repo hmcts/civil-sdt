@@ -1,13 +1,9 @@
 cvc-pattern-valid: Value '1234567890123456789012345' is not facet-valid with respect to pattern '[1-9][0-9]{7}' for type 'sdtCustomerIdType'.
 cvc-type.3.1.3: The value '1234567890123456789012345' of element 'tns:sdtCustomerId' is not valid.
-cvc-type.3.1.3: The value 'mcol1' of element 'tns:targetApplicationId' is not valid.
 cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to maxLength '32' for type 'customerReferenceType'.
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'tns:customerReference' is not valid.
 cvc-elt.5.2.2.2.2: The value 'false' of element 'tns1:flag' does not match the {value constraint} value 'true'.
 cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to maxLength '30' for type '#AnonType_namesotSignatureType'.
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'tns1:name' is not valid.
 cvc-maxLength-valid: Value '1234567890123456789012345' with length = '25' is not facet-valid with respect to maxLength '24' for type 'requestIdType'.
-cvc-attribute.3: The value '1234567890123456789012345' of attribute 'requestId' on element 'tns:mcolRequest' is not valid with respect to its type, 'requestIdType'.
-cvc-enumeration-valid: Value 'mcolClaim1' is not facet-valid with respect to enumeration '[mcolClaim, mcolJudgment, mcolJudgmentWarrant, mcolWarrant, mcolClaimStatusUpdate]'. It must be a value from the enumeration.
-cvc-enumeration-valid: Value 'mcol1' is not facet-valid with respect to enumeration '[mcol]'. It must be a value from the enumeration.
-cvc-attribute.3: The value 'mcolClaim1' of attribute 'requestType' on element 'tns:mcolRequest' is not valid with respect to its type, 'requestTypeType'.
+cvc-attribute.3: The value '1234567890123456789012345' of attribute 'requestId' on element 'tns:request' is not valid with respect to its type, 'requestIdType'.

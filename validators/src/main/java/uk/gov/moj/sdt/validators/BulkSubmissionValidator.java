@@ -127,7 +127,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         {
             replacements = new ArrayList<String> ();
             replacements.add (Integer.valueOf (bulkSubmission.getIndividualRequests ().size ()).toString ());
-            replacements.add (Integer.valueOf (bulkSubmission.getNumberOfRequest ()).toString ());
+            replacements.add ("" + bulkSubmission.getNumberOfRequest ());
             replacements.add (bulkSubmission.getCustomerReference ());
             throw new RequestCountMismatchException (
                     AbstractBusinessException.ErrorCode.REQ_COUNT_MISMATCH.toString (),

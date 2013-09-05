@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.transformers;
 
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 
@@ -49,13 +48,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.RequestTypeType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.McolResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.McolResponsesType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
 
 /**
@@ -87,7 +84,7 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
         final IBulkFeedbackRequest bulkFeedback = new BulkFeedbackRequest ();
 
         bulkFeedback.setSdtBulkReference (header.getSdtBulkReference ());
-        bulkFeedback.setSdtCustomerId (header.getSdtCustomerId ().toString ());
+        bulkFeedback.setSdtCustomerId ("" + header.getSdtCustomerId ());
 
         return bulkFeedback;
     }
@@ -102,7 +99,7 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
         final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType ();
 
         // Set bulk status information
-        bulkRequestStatusType.setRequestCount (BigInteger.valueOf (bulkSubmission.getNumberOfRequest ()));
+        bulkRequestStatusType.setRequestCount (Long.valueOf (bulkSubmission.getNumberOfRequest ()));
         bulkRequestStatusType.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
         bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_COMX_SERVICE);
         bulkRequestStatusType.setCustomerReference (bulkSubmission.getCustomerReference ());
@@ -119,29 +116,26 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
 
         // Instantiate a new response
         final ResponsesType responsesType = new ResponsesType ();
-        final McolResponsesType mcolResponses = new McolResponsesType ();
 
         // Map individual request domain object(s) to the response(s)
-        final List<IndividualRequest> individualRequestList = bulkSubmission.getIndividualRequests ();
+        final List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
 
-        McolResponseType mcolResponseType = null;
-        for (IndividualRequest individualRequest : individualRequestList)
+        ResponseType responseType = null;
+        for (IndividualRequest individualRequest : individualRequests)
         {
-            mcolResponseType = new McolResponseType ();
+            responseType = new ResponseType ();
 
             // Set the customer request reference
-            mcolResponseType.setRequestId (individualRequest.getCustomerRequestReference ());
+            responseType.setRequestId (individualRequest.getCustomerRequestReference ());
 
             // Set the request type, e.g. mcolClaim, mcolJudgment etc.
             final IRequestType requestType = individualRequest.getRequestType ();
-            mcolResponseType.setRequestType (RequestTypeType.fromValue (requestType.getName ()));
+            responseType.setRequestType (requestType.getName ());
 
             // Set the individual request type
-            final IndividualStatusType status = new IndividualStatusType ();
-            status.setCode (IndividualStatusCodeType.fromValue (individualRequest.getRequestStatus ()));
-            mcolResponseType.setStatus (status);
-
-            mcolResponses.getMcolResponse ().add (mcolResponseType);
+            final IndividualStatusType statusType = new IndividualStatusType ();
+            statusType.setCode (IndividualStatusCodeType.fromValue (individualRequest.getRequestStatus ()));
+            responseType.setStatus (statusType);
 
             // Set errors if any
             final IErrorLog errorLog = individualRequest.getErrorLog ();
@@ -151,12 +145,12 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
                 final ErrorType errorType = new ErrorType ();
                 errorType.setCode (errorLog.getErrorMessage ().getErrorCode ());
                 errorType.setDescription (errorLog.getErrorMessage ().getErrorText ());
-                status.setError (errorType);
+                statusType.setError (errorType);
             }
+
+            responsesType.getResponse ().add (responseType);
         }
 
-        // Set the individual request responses
-        responsesType.setMcolResponses (mcolResponses);
         bulkFeedbackResponseType.setResponses (responsesType);
 
         return bulkFeedbackResponseType;

@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CriteriaTypeType;
 
 
 /**
@@ -19,7 +18,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CriteriaTypeType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="targetAppCustomerId" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="criteriaType" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}criteriaTypeType"/>
+ *         &lt;element name="criteriaType" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,7 +37,7 @@ public class HeaderType {
     @XmlElement(required = true)
     protected String targetAppCustomerId;
     @XmlElement(required = true)
-    protected CriteriaTypeType criteriaType;
+    protected String criteriaType;
 
     /**
      * Gets the value of the targetAppCustomerId property.
@@ -69,10 +68,10 @@ public class HeaderType {
      * 
      * @return
      *     possible object is
-     *     {@link CriteriaTypeType }
+     *     {@link String }
      *     
      */
-    public CriteriaTypeType getCriteriaType() {
+    public String getCriteriaType() {
         return criteriaType;
     }
 
@@ -81,10 +80,10 @@ public class HeaderType {
      * 
      * @param value
      *     allowed object is
-     *     {@link CriteriaTypeType }
+     *     {@link String }
      *     
      */
-    public void setCriteriaType(CriteriaTypeType value) {
+    public void setCriteriaType(String value) {
         this.criteriaType = value;
     }
 

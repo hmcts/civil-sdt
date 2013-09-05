@@ -4,24 +4,22 @@ xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
 xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" 
 xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"  
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema ../../../../../main/resources/xsd/SubmitQueryRequestResponse/SubmitQueryResponse.xsd ">
+  <tns1:status code="Ok">
+    <tns1:error>
+      <tns1:code>tns1:code</tns1:code>
+      <tns1:description>tns1:description</tns1:description>
+    </tns1:error>
+  </tns1:status>
   <tns:sdtCustomerId>12345678</tns:sdtCustomerId>
   <tns:sdtService>mcol</tns:sdtService>
   <tns:resultCount>0</tns:resultCount>
   <tns:results>
-    <tns:mcolResults>
-		<tns:mcolDefenceDetail>
+    <tns:mcolDefenceDetail>
       <mquer:claimNumber>13548968</mquer:claimNumber>
       <mquer:defendant defendantId="1">
           <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
           <mquer:responseType>DE</mquer:responseType>
       </mquer:defendant>
     </tns:mcolDefenceDetail>
-   	</tns:mcolResults>
   </tns:results>
-  <tns:status code="Ok">
-    <tns1:error>
-      <tns1:code>tns1:code</tns1:code>
-      <tns1:description>tns1:description</tns1:description>
-    </tns1:error>
-  </tns:status>
 </tns:submitQueryResponse>

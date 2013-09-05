@@ -79,7 +79,7 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     /**
      * The total number of requests expected to be contained within the Bulk Request.
      */
-    private int numberOfRequest;
+    private long numberOfRequest;
 
     /**
      * The status of the Bulk Request - one of "Uploaded", "Failed", "Validated", or "Completed"
@@ -181,13 +181,13 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     }
 
     @Override
-    public int getNumberOfRequest ()
+    public long getNumberOfRequest ()
     {
         return numberOfRequest;
     }
 
     @Override
-    public void setNumberOfRequest (final int numberOfRequest)
+    public void setNumberOfRequest (final long numberOfRequest)
     {
         this.numberOfRequest = numberOfRequest;
     }

@@ -42,14 +42,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link McolResultsType }
-     * 
-     */
-    public McolResultsType createMcolResultsType() {
-        return new McolResultsType();
-    }
-
-    /**
      * Create an instance of {@link ResultsType }
      * 
      */

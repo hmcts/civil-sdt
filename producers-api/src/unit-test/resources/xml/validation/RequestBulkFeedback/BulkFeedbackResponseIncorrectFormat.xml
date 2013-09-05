@@ -4,6 +4,12 @@ xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"
 xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema ../../../../../main/resources/xsd/RequestBulkFeedback/BulkFeedbackResponse.xsd ">
   <tns:bulkRequestStatus>
+      <base:status code="Ok">
+          <base:error>
+            <base:code>base:code</base:code>
+            <base:description>base:description</base:description>
+          </base:error>
+      </base:status>
       <tns:customerReference>123456789012345678901234567890123</tns:customerReference>
       <tns:sdtBulkReference>123456789012345678901234567890123</tns:sdtBulkReference>
       <tns:submittedDate>2001-12-31T12:00:001</tns:submittedDate>
@@ -15,16 +21,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
             <base:description>123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</base:description>
           </base:error>
       </tns:bulkStatus>
-      <tns:status code="Ok">
-          <base:error>
-            <base:code>base:code</base:code>
-            <base:description>base:description</base:description>
-          </base:error>
-      </tns:status>
   </tns:bulkRequestStatus>
   <tns:responses>
-    <tns:mcolResponses>
-      <tns:mcolResponse requestId="1234567890123456789012345" requestType="unknown">
+      <tns:response requestId="1234567890123456789012345" requestType="unknown">
       	<tns:mcolResponseDetail>
 	        <rdns:claimNumber>1234567890</rdns:claimNumber>
 	        <rdns:issueDate>2001-01-010</rdns:issueDate>
@@ -40,7 +39,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
             <base:description>123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</base:description>
           </base:error>
         </tns:status>
-      </tns:mcolResponse>
-    </tns:mcolResponses>
+      </tns:response>
   </tns:responses>
 </tns:bulkFeedbackResponse>

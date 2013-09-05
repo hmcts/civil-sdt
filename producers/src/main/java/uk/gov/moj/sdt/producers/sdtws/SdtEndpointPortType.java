@@ -31,23 +31,13 @@
 
 package uk.gov.moj.sdt.producers.sdtws;
 
-import java.math.BigInteger;
-
 import javax.jws.WebService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.McolResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.McolResponsesType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
@@ -60,10 +50,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author Saurabh Agarwal
  */
 
-@WebService (serviceName = "SdtEndpoint", portName = "SdtEndpointPort",
-        targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint",
-        wsdlLocation = "wsdl/SdtGatewayEndpoint.wsdl",
-        endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
+// CHECKSTYLE:OFF
+@WebService (serviceName = "SdtEndpoint", portName = "SdtEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", wsdlLocation = "wsdl/SdtGatewayEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
+// CHECKSTYLE:ON
 public class SdtEndpointPortType implements ISdtEndpointPortType
 {
     /**
@@ -77,32 +66,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         LOGGER.debug (this.getClass ().getName () + " endpoint called, getBulkFeedback=" +
                 bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
 
-        final BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
-        final BulkRequestStatusType bulkStatus = new BulkRequestStatusType ();
-        bulkStatus.setRequestCount (BigInteger.ONE);
-        bulkStatus.setSdtBulkReference ("sdtreference");
-        response.setBulkRequestStatus (bulkStatus);
-        response.setResponses (getResponses ());
-        return response;
-    }
-
-    /**
-     * Dummy impl.
-     * 
-     * @return responses
-     */
-    private ResponsesType getResponses ()
-    {
-        final ResponsesType responses = new ResponsesType ();
-        final McolResponsesType mcolResponses = new McolResponsesType ();
-        final McolResponseType r1 = new McolResponseType ();
-        final IndividualStatusType status = new IndividualStatusType ();
-        status.setCode (IndividualStatusCodeType.ACCEPTED);
-        // r1.setStatus (status);
-        mcolResponses.getMcolResponse ().add (r1);
-        responses.setMcolResponses (mcolResponses);
-
-        return responses;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -111,14 +76,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         LOGGER.debug (this.getClass ().getName () + " endpoint called, submitBulk=" +
                 bulkRequest.getHeader ().getSdtCustomerId ());
 
-        final BulkResponseType response = new BulkResponseType ();
-        response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
-        response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
-        response.setSdtBulkReference ("sdtreference");
-        final StatusType status = new StatusType ();
-        status.setCode (StatusCodeType.OK);
-        response.setStatus (status);
-        return response;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override

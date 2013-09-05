@@ -26,7 +26,7 @@
 	<xs:complexType name="headerType">
 		<xs:sequence>
 			<xs:element name="targetAppCustomerId" type="xs:string" />
-            <xs:element name="criteriaType" type="base:criteriaTypeType"/>
+            <xs:element name="criteriaType" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
     
