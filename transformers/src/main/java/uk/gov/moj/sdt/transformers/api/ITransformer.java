@@ -30,6 +30,8 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.transformers.api;
 
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+
 /**
  * Transform JAXB object tree to domain object tree (for incoming SOAP
  * messages), and domain object tree to JAXB object tree (for outgoing SOAP
@@ -41,7 +43,8 @@ package uk.gov.moj.sdt.transformers.api;
  * @param <OutDomainType> the type of the domain output parameter.
  * @author Pankaj Parmar.
  */
-public interface ITransformer<InJaxbType, OutJaxbType, InDomainType, OutDomainType>
+public interface ITransformer<InJaxbType, OutJaxbType, InDomainType extends IDomainObject, 
+    OutDomainType extends IDomainObject>
 {
     /**
      * Map JAXB object tree to domain object tree.
