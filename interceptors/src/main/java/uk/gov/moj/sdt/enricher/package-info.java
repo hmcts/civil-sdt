@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,49 +28,8 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.interceptors.out;
-
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.phase.Phase;
-
-import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 
 /**
- * Interceptor class which handles bulk submission message sent by SDT.
- * 
- * This interceptor is necessary in order to process the raw XML sent from SDT after CXF has produced it from JAXB
- * objects. Non generic XML content (which should be hidden from SDT) must NOT be represented by JAXB classes known to
- * SDT. Instead, this non generic XML is inserted as raw XML into the XML already produced by CXF and at the relevant
- * insertion point. This is because the XML sent by SDT should have non generic content (this is true both of the System
- * Gateway and the specific Case Managements Systems). This non generic XML is be stored in the database as a blob and
- * read via Hibernate and loaded into ThreadLocal memory from which this interceptor takes it in order to populate the
- * outgoing XML.
- * 
- * @author Robin Compston
- * 
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public class XmlOutboundInterceptor extends AbstractSdtInterceptor
-{
-    
-    /**
-     * Test interceptor to prove concept.
-     */
-    public XmlOutboundInterceptor ()
-    {
-        super (Phase.PRE_STREAM);
-        addBefore (LoggingOutInterceptor.class.getName());
-    }
-
-    @Override
-    public void handleMessage (final SoapMessage message) throws Fault
-    {       
-
-
-        //Write the given XML into the output stream in order to 
-        //enrich the generic XML with raw non-generic XML.
-        this.modifyMessage (message);
-    }
-           
-}
+package uk.gov.moj.sdt.enricher;

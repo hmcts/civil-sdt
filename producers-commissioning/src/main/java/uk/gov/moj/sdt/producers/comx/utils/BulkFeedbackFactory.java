@@ -147,8 +147,12 @@ public class BulkFeedbackFactory
             individualRequest.setErrorLog (errorLog);
         }
 
-        // In commissioning add the static response to the map for the outbound interceptor to use
-        targetResponseMap.put (customerRequestReference, targetResponse);
+        if (hasTargetResponse)
+        {
+            // In commissioning add the static response to the map for the outbound interceptor to use
+            // if there is one for the particular individual request
+            targetResponseMap.put (customerRequestReference, targetResponse);
+        }
 
         // Add to the list
         bulkSubmission.getIndividualRequests ().add (individualRequest);

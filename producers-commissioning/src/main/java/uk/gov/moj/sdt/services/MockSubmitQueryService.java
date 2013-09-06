@@ -87,16 +87,16 @@ public class MockSubmitQueryService implements ISubmitQueryService
     {
 
         final String result =
-                "<ns2:mcolDefenceDetail><ns2:claimNumber>12345678</ns2:claimNumber>"
-                        + "<ns2:defendant defendantId=\"1\"><ns2:filedDate>2001-12-31T12:00:00</ns2:filedDate>"
-                        + "<ns2:responseType>PA</ns2:responseType></ns2:defendant></ns2:mcolDefenceDetail>"
-                        + "<ns2:mcolDefenceDetail><ns2:claimNumber>12345678</ns2:claimNumber>"
-                        + "<ns2:defendant defendantId=\"2\"><ns2:filedDate>2001-12-31T12:00:00</ns2:filedDate>"
-                        + "<ns2:responseType>PA</ns2:responseType></ns2:defendant></ns2:mcolDefenceDetail>"
-                        + "<ns2:mcolDefenceDetail>"
-                        + "<ns2:claimNumber>22345678</ns2:claimNumber><ns2:defendant defendantId=\"1\">"
-                        + "<ns2:filedDate>2001-12-31T12:00:00</ns2:filedDate><ns2:responseType>PA</ns2:responseType>"
-                        + "</ns2:defendant></ns2:mcolDefenceDetail>";
+                "<ns3:mcolDefenceDetail><ns3:claimNumber>12345678</ns3:claimNumber>"
+                        + "<ns3:defendant defendantId=\"1\"><ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>"
+                        + "<ns3:responseType>PA</ns3:responseType></ns3:defendant></ns3:mcolDefenceDetail>"
+                        + "<ns3:mcolDefenceDetail><ns3:claimNumber>12345678</ns3:claimNumber>"
+                        + "<ns3:defendant defendantId=\"2\"><ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>"
+                        + "<ns3:responseType>PA</ns3:responseType></ns3:defendant></ns3:mcolDefenceDetail>"
+                        + "<ns3:mcolDefenceDetail>"
+                        + "<ns3:claimNumber>22345678</ns3:claimNumber><ns3:defendant defendantId=\"1\">"
+                        + "<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate><ns3:responseType>PA</ns3:responseType>"
+                        + "</ns3:defendant></ns3:mcolDefenceDetail>";
 
         SdtContext.getContext ().setRawOutXml (result);
     }

@@ -28,49 +28,25 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.interceptors.out;
 
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.phase.Phase;
-
-import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+package uk.gov.moj.sdt.enricher.api;
 
 /**
- * Interceptor class which handles bulk submission message sent by SDT.
+ * Interface for SDT enricher.
  * 
- * This interceptor is necessary in order to process the raw XML sent from SDT after CXF has produced it from JAXB
- * objects. Non generic XML content (which should be hidden from SDT) must NOT be represented by JAXB classes known to
- * SDT. Instead, this non generic XML is inserted as raw XML into the XML already produced by CXF and at the relevant
- * insertion point. This is because the XML sent by SDT should have non generic content (this is true both of the System
- * Gateway and the specific Case Managements Systems). This non generic XML is be stored in the database as a blob and
- * read via Hibernate and loaded into ThreadLocal memory from which this interceptor takes it in order to populate the
- * outgoing XML.
- * 
- * @author Robin Compston
- * 
+ * @author d130680
+ *
  */
-public class XmlOutboundInterceptor extends AbstractSdtInterceptor
+public interface ISdtEnricher
 {
-    
     /**
-     * Test interceptor to prove concept.
+     * Method to implement which will enrich the xml payload.
+     * 
+     * @param message original message
+     * @return enriched xml
      */
-    public XmlOutboundInterceptor ()
-    {
-        super (Phase.PRE_STREAM);
-        addBefore (LoggingOutInterceptor.class.getName());
-    }
+    String enrichXml(final String message);
 
-    @Override
-    public void handleMessage (final SoapMessage message) throws Fault
-    {       
+    
 
-
-        //Write the given XML into the output stream in order to 
-        //enrich the generic XML with raw non-generic XML.
-        this.modifyMessage (message);
-    }
-           
 }

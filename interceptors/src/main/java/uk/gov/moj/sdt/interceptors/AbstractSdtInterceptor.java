@@ -34,8 +34,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.helpers.IOUtils;
@@ -43,6 +45,9 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.io.CachedWriter;
 import org.apache.cxf.io.DelegatingInputStream;
+
+import uk.gov.moj.sdt.enricher.AbstractSdtEnricher;
+import uk.gov.moj.sdt.enricher.api.ISdtEnricher;
 
 /**
  * Abstract class holding common code for all SDT Interceptors.
@@ -52,6 +57,19 @@ import org.apache.cxf.io.DelegatingInputStream;
  */
 public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 {
+    
+    /**
+     * Logger instance.
+     */
+    private static final Log LOGGER = LogFactory.getLog (AbstractSdtInterceptor.class);
+    
+    /**
+     * List of enrichers to use.
+     */
+    //CHECKSTYLE:OFF
+    protected List<AbstractSdtEnricher> enricherList;
+    //CHECKSTYLE:ON
+    
     /**
      * Constructor for {@link AbstractSdtInterceptor}.
      * 
@@ -70,31 +88,22 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
      */
     protected String changeOutboundMessage (final String currentEnvelope)
     {
-        final String newCurrentEnvelope = currentEnvelope + "<this_has_been_hacked/>";
-        return newCurrentEnvelope;
-    }
-    
-    /**
-     * Change the raw XML in the outbound message.
-     * 
-     * @param currentEnvelope the raw outbound SOAP XML to be changed.
-     * @param xml the xml to insert.
-     * @param insertionTagName the tag to replace.
-     * @return the changed raw SOAP XML.
-     */
-    protected String changeOutboundMessage (final String currentEnvelope, final String xml, 
-                                            final String insertionTagName) 
-    {
-        //Create start and end tag
-        final String startTag = StringUtils.remove (insertionTagName,  "/");
-        final String endTag = startTag.replace ("<", "</");
-        
-        //Add the beginning and end tags for the xml to be inserted
-        final String newXml = startTag + xml + endTag; 
-        final String newCurrentEnvelope = currentEnvelope.replace (insertionTagName, newXml);  
-        return newCurrentEnvelope;
-    }
+        LOGGER.debug ("Start - running through list of enrichers");        
+        //Loop through the list of enrichers and hope one of them produces an enriched message.
+        //Enrichers will enrich messages where a parent tag can be found in the xml message 
+        //otherwise the message will not be updated.
+        String enrichedEnvelope = currentEnvelope;
+        for(ISdtEnricher enricher: enricherList) {
 
+            //Set the out bound message            
+            enrichedEnvelope = enricher.enrichXml (enrichedEnvelope);                        
+        }
+        LOGGER.debug ("completed - running through list of enrichers");
+        
+        return enrichedEnvelope;
+
+    }
+   
     /**
      * Change the raw XML in the inbound message.
      * 
@@ -110,13 +119,10 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     /**
      * Allow inbound or outbound raw XML to be changed in flight.
      * 
-     * @param message the message holding the output stream into which the XML is to be inserted.
-     * @param xml the raw non generic XML to be inserted into the output stream XML.
-     * @param insertionTagName the name of the tag in the generic XML into which the additional non generic XML is to be
-     *            inserted.
+     * @param message the message holding the output stream into which the XML is to be inserted.     * 
      * @throws Fault exception encountered while reading content.
      */
-    public void modifyMessage (final SoapMessage message, final String xml, final String insertionTagName)
+    public void modifyMessage (final SoapMessage message)
             throws Fault
     {
         // Work out if this message is inbound or outbound.
@@ -153,8 +159,8 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 csnew.flush ();
                 org.apache.commons.io.IOUtils.closeQuietly (csnew);
 
-                // Modify it if desired.
-                String res = changeOutboundMessage (currentEnvelopeMessage, xml, insertionTagName);
+                // Modify it if desired.                                
+                String res = changeOutboundMessage (currentEnvelopeMessage);
                 res = res != null ? res : currentEnvelopeMessage;
 
                 // Turn the modified data into a new input stream.
@@ -284,6 +290,16 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
         }
 
         return payload;
+    }
+    
+    /**
+     * Set enricher list.
+     * 
+     * @param enricherList enricher list
+     */
+    public void setEnricherList (final List<AbstractSdtEnricher> enricherList)
+    {
+        this.enricherList = enricherList;
     }
 
     /**

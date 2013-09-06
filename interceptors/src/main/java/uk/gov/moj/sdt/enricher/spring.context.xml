@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+	<!-- Abstract base class for enricher -->
+    <bean id="uk.gov.moj.sdt.enricher.AbstractSdtEnricher" abstract="true"
+        class="uk.gov.moj.sdt.enricher.AbstractSdtEnricher">                       
+    </bean>
+    
+    
+    <!-- Submit query enricher used to enrich outbound submit query messages -->
+    <bean id="uk.gov.moj.sdt.enricher.SubmitQueryEnricher" 
+		parent="uk.gov.moj.sdt.enricher.AbstractSdtEnricher"
+		class="uk.gov.moj.sdt.enricher.SubmitQueryEnricher">
+		<property name="parentTag" value="submitQueryResponse"/>
+		<property name="insertionTag" value="results"/>
+		<property name="namespace" value="TODO"/>
+		
+	</bean>
+	
+	<!-- Bulk feedback enricher used to enrich outbound bulk feedback messages -->
+    <bean id="uk.gov.moj.sdt.enricher.BulkFeedbackEnricher" 
+		parent="uk.gov.moj.sdt.enricher.AbstractSdtEnricher"
+		class="uk.gov.moj.sdt.enricher.BulkFeedbackEnricher">
+		<property name="parentTag" value="bulkFeedbackResponse"/>
+		<property name="insertionTag" value="responses"/>
+		<property name="namespace" value="TODO"/>
+		
+	</bean>
+</beans>
