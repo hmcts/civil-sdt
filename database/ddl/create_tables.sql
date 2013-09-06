@@ -20,7 +20,7 @@ define target_applications         = 'TABLESPACE users'
 
 CREATE TABLE bulk_customers
 (bulk_customer_id         INTEGER               -- synthetic pk
-,bulk_customer_case_code  CHAR(2)      
+--,bulk_customer_case_code  CHAR(2)      
 ,sdt_customer_id          NUMBER(8,0)           -- external id for customer identification, 10000000-99999999
 ,version_number           INTEGER DEFAULT 0     -- hiberate versioning column
 ) &bulk_customers
@@ -89,8 +89,8 @@ CREATE TABLE individual_requests
 --,case_number                VARCHAR2(32)
 ,request_status               VARCHAR2(32)
 --,issued_date                TIMESTAMP
-,sdt_bulk_reference           VARCHAR2(32)
-,request_retry_count          INTEGER           -- number of attempts made to submit request
+,sdt_bulk_reference           VARCHAR2(29)
+--,request_retry_count          INTEGER           -- number of attempts made to submit request
 ,line_number                  INTEGER
 ,sdt_request_reference        VARCHAR2(37)      -- fixed format
 ,created_date                 TIMESTAMP         -- date/time of record created
@@ -101,10 +101,10 @@ CREATE TABLE individual_requests
 --,enforcing_court_code       VARCHAR2(32)
 --,enforcing_court_name       VARCHAR2(255)
 --,fee                        NUMBER(8,2)
-,rejection_reason_code        VARCHAR2(32)
-,rejection_reason_description VARCHAR2(4000)
+--,rejection_reason_code        VARCHAR2(32)
+--,rejection_reason_description VARCHAR2(4000)
 ,forwarding_attempts          INTEGER
-,target_application_status    VARCHAR2(4000)
+--,target_application_status    VARCHAR2(4000)
 ,target_application_response  VARCHAR2(4000) 
 ,internal_system_error        VARCHAR2(4000)
 ,version_number               INTEGER DEFAULT 0  -- hiberate versioning column
