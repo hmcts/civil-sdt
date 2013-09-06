@@ -31,13 +31,10 @@
 
 package uk.gov.moj.sdt.messaging;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessagePostProcessor;
 
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 
@@ -52,7 +49,7 @@ public class MessageWriter implements IMessageWriter
     /**
      * Logger for this class.
      */
-    private final Log logger = LogFactory.getLog (getClass ());
+    private static final Log LOGGER = LogFactory.getLog (MessageWriter.class);
 
     /**
      * The JmsTemplate object from Spring framework.
@@ -77,24 +74,24 @@ public class MessageWriter implements IMessageWriter
     }
 
     @Override
-    public String queueMessage (final String message)
+    public void queueMessage (final String message)
     {
-        logger.debug ("Sending message");
+        LOGGER.debug ("Sending message [" + message + "] to queue [" + queueName + "]");
 
-        final String msgUniqueId = String.valueOf (System.currentTimeMillis ());
-        this.jmsTemplate.convertAndSend (queueName, message, new MessagePostProcessor ()
+        try
         {
+            this.jmsTemplate.convertAndSend (this.getQueueName (), message);
+        }
+        catch (final UncategorizedJmsException e)
+        {
+            // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
+            // periodically check the database and requeue any messages that are stuck on a state indicating that they
+            // have not been sent to the case management system.
+            LOGGER.error ("Failed to connect to the ActivceMQ queue [" + getQueueName () + "]", e);
+            throw e;
+        }
 
-            @Override
-            public Message postProcessMessage (final Message message) throws JMSException
-            {
-                message.setJMSCorrelationID (msgUniqueId);
-                return message;
-            }
-
-        });
-        logger.debug ("Message Sent");
-        return msgUniqueId;
+        return;
     }
 
     /**
@@ -102,7 +99,7 @@ public class MessageWriter implements IMessageWriter
      * 
      * @return the name of the queue that the messages are to be sent.
      */
-    public String getQueueName ()
+    private String getQueueName ()
     {
         return this.queueName;
     }

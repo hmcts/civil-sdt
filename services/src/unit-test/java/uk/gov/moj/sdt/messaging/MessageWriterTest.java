@@ -31,11 +31,10 @@
 
 package uk.gov.moj.sdt.messaging;
 
-import static org.easymock.EasyMock.createMockBuilder;
-import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
@@ -66,9 +65,8 @@ public class MessageWriterTest
     public void setUp ()
     {
         // Nicemock returns default values
-        jmsTemplate = createNiceMock (JmsTemplate.class);
-        messageWriter =
-                createMockBuilder (MessageWriter.class).withConstructor (jmsTemplate, "JMSUnitTestQ").createMock ();
+        jmsTemplate = EasyMock.createMock (JmsTemplate.class);
+        messageWriter = new MessageWriter (jmsTemplate, "JMSUnitTestQ");
     }
 
     /**
@@ -78,9 +76,17 @@ public class MessageWriterTest
     @Test
     public void testQueueMessage ()
     {
-        // Setup finished, now activate the mock
-        replay (messageWriter);
-        final String correlationId = messageWriter.queueMessage ("Test");
-        verify (messageWriter);
+        // Setup finished, now tell the mock what to expect.
+        jmsTemplate.convertAndSend ("JMSUnitTestQ", "Test");
+        EasyMock.expectLastCall ();
+
+        // Get ready to call the mock.
+        replay (jmsTemplate);
+
+        // Send the message.
+        messageWriter.queueMessage ("Test");
+
+        // Make sure the mock was called as expected.
+        verify (jmsTemplate);
     }
 }

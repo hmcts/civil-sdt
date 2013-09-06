@@ -38,10 +38,12 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -72,24 +74,82 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
     @Test
     public void testQueueMessage () throws JMSException
     {
+        // Get message writer from Spring.
         final MessageWriter messageWriter =
                 (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
-        final String strMessage = "TestMessage" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        final String corelationId = messageWriter.queueMessage (strMessage);
-        LOG.debug ("Correlation ID is " + corelationId);
 
         final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
-        final String selectorString = "JMSCorrelationID='" + corelationId + "'";
-        final Message message = jmsTemplate.receiveSelected (messageWriter.getQueueName (), selectorString);
-        if (message instanceof TextMessage)
+        // Clear any old messages off the queue.
+        jmsTemplate.setReceiveTimeout (1);
+        while (true)
         {
+            // Read any old messages.
+            final Message message = jmsTemplate.receive ("JMSTestQueue");
             final TextMessage txtmessage = (TextMessage) message;
-            LOG.debug ("Message Receieved -" + txtmessage.getText ());
-            assertTrue (txtmessage.getText ().equals (strMessage));
+            if (txtmessage == null)
+            {
+                break;
+            }
         }
 
+        // Send the first message.
+        final String strMessage1 =
+                "TestMessage1" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
+        messageWriter.queueMessage (strMessage1);
+
+        // Send the second message.
+        final String strMessage2 =
+                "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
+        messageWriter.queueMessage (strMessage2);
+
+        // Limit time on receive for the sake of the test to prevent it hanging.
+        jmsTemplate.setReceiveTimeout (5000);
+
+        // Read the two messages and ensure they are read back in the same order.
+        Message message = jmsTemplate.receive ("JMSTestQueue");
+        TextMessage txtmessage = (TextMessage) message;
+        if (txtmessage == null)
+        {
+            Assert.fail ("Test failed because JMS receive timed out.");
+        }
+        LOG.debug ("Message Receieved 1 - " + txtmessage.getText ());
+        assertTrue (txtmessage.getText ().equals (strMessage1));
+
+        message = jmsTemplate.receive ("JMSTestQueue");
+        txtmessage = (TextMessage) message;
+        LOG.debug ("Message Receieved2 - " + txtmessage.getText ());
+        assertTrue (txtmessage.getText ().equals (strMessage2));
+    }
+
+    /**
+     * Test method to test failure behaviour when ACTIVE MQ not running.
+     * 
+     * @throws JMSException exception
+     * 
+     */
+    @Test
+    public void testActiveMqDown () throws JMSException
+    {
+        // Get message writer from Spring.
+        final MessageWriter messageWriter =
+                (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriterBad");
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
+
+        // Send the message.
+        final String strMessage1 = "TestMessage" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
+        try
+        {
+            messageWriter.queueMessage (strMessage1);
+            Assert.fail ("Expected exception not thrown.");
+        }
+        catch (final UncategorizedJmsException e)
+        {
+            // Test has worked - swallow exception.
+            Assert.assertTrue (true);
+        }
     }
 }
