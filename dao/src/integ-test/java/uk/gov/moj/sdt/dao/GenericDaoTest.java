@@ -138,7 +138,6 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
         // bulkCustomer.setId (2);
         bulkCustomer.setSdtCustomerId (456);
-        bulkCustomer.setCustomerCaseCode ("GH");
 
         genericDao.persist (bulkCustomer);
     }

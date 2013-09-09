@@ -49,27 +49,11 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
      * The target applications that this customer can work with.e.g. 'MCOL'
      */
     private Set<TargetApplication> targetApplications;
-    /**
-     * Unique code for each Bulk Customer organisation.
-     */
-    private String customerCaseCode;
 
     /**
      * This is a manually allocated and maintained value.
      */
     private long sdtCustomerId;
-
-    @Override
-    public String getCustomerCaseCode ()
-    {
-        return customerCaseCode;
-    }
-
-    @Override
-    public void setCustomerCaseCode (final String customerCaseCode)
-    {
-        this.customerCaseCode = customerCaseCode;
-    }
 
     @Override
     public long getSdtCustomerId ()

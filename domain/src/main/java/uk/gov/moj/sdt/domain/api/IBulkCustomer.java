@@ -45,20 +45,6 @@ public interface IBulkCustomer extends IDomainObject
 {
 
     /**
-     * Get Customer case code.
-     * 
-     * @return customer case code
-     */
-    String getCustomerCaseCode ();
-
-    /**
-     * Set customer case code.
-     * 
-     * @param customerCaseCode customer case code
-     */
-    void setCustomerCaseCode (final String customerCaseCode);
-
-    /**
      * Get SDT customer id.
      * 
      * @return SDT customer id
