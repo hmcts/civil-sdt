@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.transformers;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -101,11 +100,10 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
         // Set bulk status information
         bulkRequestStatusType.setRequestCount (Long.valueOf (bulkSubmission.getNumberOfRequest ()));
         bulkRequestStatusType.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
-        bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_COMX_SERVICE);
+        bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_SERVICE);
         bulkRequestStatusType.setCustomerReference (bulkSubmission.getCustomerReference ());
-        final Calendar createdDate = Calendar.getInstance ();
-        createdDate.setTime (bulkSubmission.getCreatedDate ().toDate ());
-        bulkRequestStatusType.setSubmittedDate (createdDate);
+        bulkRequestStatusType.setSubmittedDate (AbstractTransformer.convertLocalDateTimeToCalendar (bulkSubmission
+                .getCreatedDate ()));
 
         // Set bulk status type
         final BulkStatusType bulkStatusType = new BulkStatusType ();

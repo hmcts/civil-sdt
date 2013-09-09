@@ -34,12 +34,12 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestTy
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
- * Interface for handling request defence details flow.
+ * Interface for handling submit query flow.
  * 
  * @author d130680
  * 
  */
-public interface IWsReadSubmitQueryHandler extends IWsReadHandler
+public interface IWsReadSubmitQueryHandler
 {
 
     /**

@@ -67,6 +67,11 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     private static final Log LOGGER = LogFactory.getLog (SdtEndpointPortType.class);
 
     /**
+     * Constant for commissioning SDT service.
+     */
+    private static final String SDT_COMX_SERVICE = "SDT Commissioning";
+
+    /**
      * Handles bulk submission request.
      */
     private IWsCreateBulkRequestHandler wsCreateBulkRequestHandler;
@@ -93,6 +98,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         // Measure response time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
         final BulkResponseType response = wsCreateBulkRequestHandler.submitBulk (bulkRequest);
+        response.setSdtService (SdtEndpointPortType.SDT_COMX_SERVICE);
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
         SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
 
@@ -111,6 +117,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         // Measure response time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
         final BulkFeedbackResponseType response = wsReadBulkRequestHandler.getBulkFeedback (bulkFeedbackRequest);
+        response.getBulkRequestStatus ().setSdtService (SdtEndpointPortType.SDT_COMX_SERVICE);
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
         SdtMetricsMBean.getSdtMetrics ().addBulkFeedbackTime (endTime - startTime);
 
@@ -129,6 +136,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         // Measure response time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
         final SubmitQueryResponseType response = wsReadSubmitQueryHandler.submitQuery (submitQueryRequest);
+        response.setSdtService (SdtEndpointPortType.SDT_COMX_SERVICE);
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
         SdtMetricsMBean.getSdtMetrics ().addSubmitQueryTime (endTime - startTime);
 

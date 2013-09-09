@@ -40,7 +40,6 @@ import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
@@ -51,7 +50,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d130680
  * 
  */
-public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements IWsReadSubmitQueryHandler
+public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsReadSubmitQueryHandler
 {
 
     /**
@@ -91,18 +90,20 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
             validateDomain (submitQueryRequest);
 
             // Process validated request.
-            submitQueryResponseType = processSubmitQuery (submitQueryRequest);
+            final ISubmitQueryResponse submitQueryResponse = processSubmitQuery (submitQueryRequest);
+
+            submitQueryResponseType = getTransformer ().transformDomainToJaxb (submitQueryResponse);
 
         }
         catch (final AbstractBusinessException be)
         {
-            handleBusinessException (be, submitQueryResponseType.getStatus ());
+            handleBusinessException (be, submitQueryResponseType);
         }
         // CHECKSTYLE:OFF
         catch (final Exception e)
         // CHECKSTYLE:ON
         {
-            handleException (e, submitQueryResponseType.getStatus ());
+            handleException (e, submitQueryResponseType);
         }
         finally
         {
@@ -132,23 +133,13 @@ public class WsReadSubmitQueryHandler extends AbstractWsReadHandler implements I
      * @param request submit query request
      * @return submit query response
      */
-    private SubmitQueryResponseType processSubmitQuery (final ISubmitQueryRequest request)
+    private ISubmitQueryResponse processSubmitQuery (final ISubmitQueryRequest request)
     {
         LOGGER.info ("Service call to submit query");
 
         final ISubmitQueryResponse domainResponse = submitQueryService.submitQuery (request);
 
-        // TODO move following back out to calling method in line with other handlers.
-        final SubmitQueryResponseType response = getTransformer ().transformDomainToJaxb (domainResponse);
-
-        // Set the sdt service to show the response was sent from the commissioning poject
-        response.setSdtService (AbstractWsHandler.SDT_COMX_SERVICE);
-
-        // Set the status
-        final StatusType status = new StatusType ();
-        response.setStatus (status);
-        status.setCode (StatusCodeType.OK);
-        return response;
+        return domainResponse;
     }
 
     /**

@@ -37,6 +37,8 @@ import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ResultsType;
@@ -88,6 +90,14 @@ public final class SubmitQueryToDomainTransformer extends AbstractTransformer im
         // Set dummy results so the tags we need are written.
         final ResultsType resultsType = new ResultsType ();
         submitQueryResponseType.setResults (resultsType);
+
+        // Set the sdt service to show the response was sent from the commissioning poject
+        submitQueryResponseType.setSdtService (AbstractTransformer.SDT_SERVICE);
+
+        // Set the status
+        final StatusType status = new StatusType ();
+        submitQueryResponseType.setStatus (status);
+        status.setCode (StatusCodeType.OK);
 
         return submitQueryResponseType;
     }

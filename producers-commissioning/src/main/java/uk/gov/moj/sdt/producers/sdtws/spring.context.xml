@@ -14,8 +14,4 @@
         <property name="wsReadSubmitQueryHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler"/>
 	</bean>
 	
-    <bean id="uk.gov.moj.sdt.producers.sdtws.api.IResponseFactory" 
-        class="uk.gov.moj.sdt.producers.sdtws.ResponseFactory">
-    </bean>
-
 </beans>

@@ -51,7 +51,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusT
  * @author d301488
  * 
  */
-public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler implements IWsReadBulkRequestHandler
+public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implements IWsReadBulkRequestHandler
 {
 
     /**
@@ -98,13 +98,13 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsReadHandler impl
         }
         catch (final AbstractBusinessException be)
         {
-            handleBusinessException (be, response.getBulkRequestStatus ().getStatus ());
+            handleBusinessException (be, response.getBulkRequestStatus ());
         }
         // CHECKSTYLE:OFF
         catch (final Exception e)
         // CHECKSTYLE:ON
         {
-            handleException (e, response.getBulkRequestStatus ().getStatus ());
+            handleException (e, response.getBulkRequestStatus ());
         }
         finally
         {

@@ -96,7 +96,7 @@ public class MockSdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
 
         final int totalArgs = 3;
         final Object[] args = new Object[totalArgs];
-        args[0] = targetApplication;
+        args[0] = targetApplication.toUpperCase ();
         args[1] = dateFormat.format (new Date (System.currentTimeMillis ()));
         args[2] = bulkId;
 

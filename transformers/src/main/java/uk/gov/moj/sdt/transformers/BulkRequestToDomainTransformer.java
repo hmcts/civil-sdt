@@ -36,6 +36,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -164,6 +165,7 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
 
         bulkSubmission.setTargetApplication (targetApplication);
         bulkSubmission.setSubmissionStatus (BulkRequestStatus.UPLOADED.getStatus ());
+        bulkSubmission.setCreatedDate (new LocalDateTime ());
 
         // Set bulk customer
         final BulkCustomer bulkCustomer = mapToBulkCustomer (headerType);

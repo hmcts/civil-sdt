@@ -39,7 +39,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
  * 
  * @author d276205
  */
-public interface IWsCreateBulkRequestHandler extends IWsCreateHandler
+public interface IWsCreateBulkRequestHandler
 {
 
     /**

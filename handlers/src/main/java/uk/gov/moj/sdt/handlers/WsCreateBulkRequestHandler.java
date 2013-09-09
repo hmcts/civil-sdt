@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
+import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
@@ -50,7 +51,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
  * @author d276205
  * 
  */
-public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implements IWsCreateBulkRequestHandler
+public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWsCreateBulkRequestHandler
 {
     /**
      * Logger instance.
@@ -77,13 +78,12 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
 
         try
         {
-
-            // Populate SDT Bulk reference in response.
-            bulkResponseType.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkRequestType
-                    .getHeader ().getTargetApplicationId ().toString ()));
-
             // Transform web service object to domain object(s)
             final IBulkSubmission bulkSubmission = getTransformer ().transformJaxbToDomain (bulkRequestType);
+
+            // Populate submission date in response.
+            bulkResponseType.setSubmittedDate (AbstractTransformer.convertLocalDateTimeToCalendar (bulkSubmission
+                    .getCreatedDate ()));
 
             // Validate domain
             validateDomain (bulkSubmission);
@@ -94,7 +94,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         }
         catch (final AbstractBusinessException be)
         {
-            handleBusinessException (be, bulkResponseType.getStatus ());
+            handleBusinessException (be, bulkResponseType);
 
         }
         // CHECKSTYLE:OFF
@@ -102,7 +102,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
         // CHECKSTYLE:ON
         {
 
-            handleException (e, bulkResponseType.getStatus ());
+            handleException (e, bulkResponseType);
         }
         finally
         {
@@ -135,9 +135,14 @@ public class WsCreateBulkRequestHandler extends AbstractWsCreateHandler implemen
 
         LOGGER.debug ("setup initial response");
         final BulkResponseType response = new BulkResponseType ();
-        response.setSdtService (AbstractWsHandler.SDT_COMX_SERVICE);
+        response.setSdtService (AbstractTransformer.SDT_SERVICE);
         response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
         response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
+
+        // Populate SDT Bulk reference.
+        response.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkRequest.getHeader ()
+                .getTargetApplicationId ()));
+
         final StatusType status = new StatusType ();
         response.setStatus (status);
         status.setCode (StatusCodeType.OK);

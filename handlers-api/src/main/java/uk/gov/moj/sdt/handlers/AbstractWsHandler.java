@@ -32,10 +32,10 @@ package uk.gov.moj.sdt.handlers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.spi.ErrorCode;
 
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -49,42 +49,19 @@ public abstract class AbstractWsHandler
 {
 
     /**
-     * Constant for production SDT service.
-     */
-    public static final String SDT_SERVICE = "SDT";
-
-    /**
-     * Constant for commissioning SDT service.
-     */
-    public static final String SDT_COMX_SERVICE = "SDT Commissioning";
-
-    /**
      * Logger instance.
      */
     private static final Log LOGGER = LogFactory.getLog (AbstractWsHandler.class);
 
     /**
-     * Constructs and returns new instance of <code>ErrorType</code> using giving error code and description.
-     * 
-     * @param errorCode error code
-     * @param description error description
-     * @return {@link ErrorType}
-     */
-    public ErrorType createErrorType (final ErrorCode errorCode, final String description)
-    {
-        final ErrorType errorType = new ErrorType ();
-        errorType.setCode (errorCode.toString ());
-        errorType.setDescription (description);
-        return errorType;
-    }
-
-    /**
      * Handle given exception by transforming into error type and setting on given status type.
      * 
      * @param exception exception to handle
-     * @param statusType status
+     * @param responseType response to be modified.
      */
-    public void handleException (final Exception exception, final StatusType statusType)
+    // CHECKSTYLE:OFF
+    protected void handleException (final Exception exception, final AbstractResponseType responseType)
+    // CHECKSTYLE:ON
     {
         LOGGER.error ("Unexpected error", exception);
 
@@ -94,17 +71,20 @@ public abstract class AbstractWsHandler
         errorType.setCode (AbstractBusinessException.ErrorCode.SDT_INT_ERR.toString ());
         errorType.setDescription ("A system error has occurred. Please contact TBC for assistance");
 
-        populateError (statusType, errorType, StatusCodeType.ERROR);
+        populateError (responseType.getStatus (), errorType);
 
     }
 
     /**
-     * Handle given business exception by transforming into error type and setting on given status type.
+     * Handle given business exception by transforming into error type and setting on given response type.
      * 
      * @param businessException business exception
-     * @param statusType status
+     * @param responseType response to be modified.
      */
-    public void handleBusinessException (final IBusinessException businessException, final StatusType statusType)
+    // CHECKSTYLE:OFF
+    protected void handleBusinessException (final IBusinessException businessException,
+                                         final AbstractResponseType responseType)
+    // CHECKSTYLE:ON
     {
         LOGGER.info ("Business error during request processing - " + businessException);
 
@@ -112,7 +92,7 @@ public abstract class AbstractWsHandler
         errorType.setCode (businessException.getErrorCode ());
         errorType.setDescription (businessException.getErrorDescription ());
 
-        populateError (statusType, errorType, StatusCodeType.ERROR);
+        populateError (responseType.getStatus (), errorType);
     }
 
     /**
@@ -120,12 +100,10 @@ public abstract class AbstractWsHandler
      * 
      * @param statusType status type.
      * @param errorType error.
-     * @param statusCodeType status code.
      */
-    public void populateError (final StatusType statusType, final ErrorType errorType,
-                               final StatusCodeType statusCodeType)
+    private void populateError (final StatusType statusType, final ErrorType errorType)
     {
         statusType.setError (errorType);
-        statusType.setCode (statusCodeType);
+        statusType.setCode (StatusCodeType.ERROR);
     }
 }
