@@ -69,7 +69,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     // private String caseNumber;
 
     /**
-     * The status of the Individual Request - one of "Submitted", "Held", "Rejected", "Initially Accepted" or
+     * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
      * "Accepted".
      */
     private String requestStatus;

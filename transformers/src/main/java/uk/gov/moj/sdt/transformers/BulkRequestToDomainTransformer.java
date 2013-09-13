@@ -121,7 +121,7 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
             individualRequest.setRequestType (mapToRequestType (request.getRequestType ()));
 
             // Set the initial status
-            individualRequest.setRequestStatus (IndividualRequestStatus.SUBMITTED.getStatus ());
+            individualRequest.setRequestStatus (IndividualRequestStatus.FORWARDED.getStatus ());
 
             // Set the bulk submission
             individualRequest.setBulkSubmission (bulkSubmission);

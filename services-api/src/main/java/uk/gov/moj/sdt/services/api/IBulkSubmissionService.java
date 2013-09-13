@@ -28,76 +28,27 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.misc;
+package uk.gov.moj.sdt.services.api;
+
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
- * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
- * "Accepted".
  * 
- * @author d130680
+ * Interface for the Bulk Submission Service.
+ * 
+ * @author Manoj Kulkarni
  * 
  */
-public enum IndividualRequestStatus
+public interface IBulkSubmissionService
 {
-
     /**
-     * Forwarded.
-     */
-    FORWARDED ("Forwarded"),
-
-    /**
-     * Received.
-     */
-    RECEIVED ("Received"),
-
-    /**
-     * Rejected.
-     */
-    REJECTED ("Rejected"),
-
-    /**
-     * Initially Accepted.
-     */
-    INITIALLY_ACCEPTED ("Initially Accepted"),
-
-    /**
-     * Accepted.
-     */
-    ACCEPTED ("Accepted");
-
-    /**
-     * Individual request status.
-     */
-    private String status;
-
-    /**
-     * Constructor.
+     * This method handles the task for persisting bulk submission
+     * and associated individual requests, validating individual requests and
+     * enqueue the valid individual request to the message queue.
      * 
-     * @param s status
+     * @param bulkSubmission the bulk submission domain object holding the
+     *            information about the bulk submission request.
      */
-    private IndividualRequestStatus (final String s)
-    {
+    void saveBulkSubmission (final IBulkSubmission bulkSubmission);
 
-        this.status = s;
-    }
-
-    /**
-     * Get the bulk request status.
-     * 
-     * @return bulk request status
-     */
-    public String getStatus ()
-    {
-        return status;
-    }
-
-    /**
-     * Set the bulk request status.
-     * 
-     * @param status bulk request status
-     */
-    public void setStatus (final String status)
-    {
-        this.status = status;
-    }
 }
