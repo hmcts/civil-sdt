@@ -38,7 +38,7 @@ import uk.gov.moj.sdt.enricher.api.ISdtEnricher;
  * Abstract class for xml enricher holding common code for SDT enrichers.
  * 
  * @author d130680
- *
+ * 
  */
 public abstract class AbstractSdtEnricher implements ISdtEnricher
 {
@@ -46,52 +46,55 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
      * Parent tag to search for set by child class.
      */
     private String parentTag;
-    
+
     /**
      * The response tag to inject into.
      */
     private String insertionTag;
-    
+
     /**
      * The name space to replace.
      */
     private String namespace;
-           
+
     /**
      * Try to find whether the parent tag exists in the message or not.
+     * 
      * @param message original xml message
      * @return true or false
      */
-    protected boolean findParentTag(final String message) {
+    protected boolean findParentTag (final String message)
+    {
         return message.contains (parentTag);
     }
-    
+
     /**
      * Works out the start tag for a single line tag e.g.
-     * <ns1:results/> becomes <ns1:results> 
+     * <ns1:results/> becomes <ns1:results>
      * 
      * @param tag single line tag
      * @return start tag
      */
-    protected String changeToStartTag(final String tag) {
+    protected String changeToStartTag (final String tag)
+    {
         return StringUtils.remove (tag, "/");
-        
     }
-    
+
     /**
-     * Works out the end tag for a single line tag. 
+     * Works out the end tag for a single line tag.
      * 
      * @param tag single line tag
      * @return end tag
      */
-    protected String changeToEndTag(final String tag) {
-        //First remove the '/'
-         final String s = StringUtils.remove (tag, "/");
-        //Then close the tag
-        return s.replace ("<", "</"); 
-        
+    protected String changeToEndTag (final String tag)
+    {
+        // First remove the '/'
+        final String s = StringUtils.remove (tag, "/");
+
+        // Then close the tag
+        return s.replace ("<", "</");
     }
-    
+
     /**
      * Get parent tag.
      * 
@@ -101,7 +104,7 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
     {
         return parentTag;
     }
-    
+
     /**
      * Set parent tag.
      * 
@@ -139,7 +142,7 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
      */
     public String getNamespace ()
     {
-        return namespace; 
+        return namespace;
     }
 
     /**
@@ -151,5 +154,4 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
     {
         this.namespace = namespace;
     }
-    
 }

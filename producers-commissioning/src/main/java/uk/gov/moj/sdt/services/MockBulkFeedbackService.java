@@ -69,7 +69,7 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
         final BulkFeedbackFactory bulkFeedbackFactory = bulkFeedbackFactoryMap.get (sdtBulkReference);
 
         // Set the target response map in threadlocal for the outbound interceptor to pick up
-        SdtContext.getContext ().setRawXmlMap (bulkFeedbackFactory.getTargetResponseMap ());
+        SdtContext.getContext ().setTargetApplicationResponseMap (bulkFeedbackFactory.getTargetResponseMap ());
 
         return populateBulkSubmission (bulkFeedbackFactory, sdtBulkReference);
 

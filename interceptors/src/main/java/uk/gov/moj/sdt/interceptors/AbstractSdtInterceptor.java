@@ -57,19 +57,20 @@ import uk.gov.moj.sdt.enricher.api.ISdtEnricher;
  */
 public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 {
-    
+
     /**
      * Logger instance.
      */
     private static final Log LOGGER = LogFactory.getLog (AbstractSdtInterceptor.class);
-    
+
     /**
-     * List of enrichers to use.
+     * List of enrichers to use. An enricher is a class which adds content to the outgoing XML before sending it.
      */
-    //CHECKSTYLE:OFF
+    // CHECKSTYLE:OFF
     protected List<AbstractSdtEnricher> enricherList;
-    //CHECKSTYLE:ON
-    
+
+    // CHECKSTYLE:ON
+
     /**
      * Constructor for {@link AbstractSdtInterceptor}.
      * 
@@ -88,22 +89,25 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
      */
     protected String changeOutboundMessage (final String currentEnvelope)
     {
-        LOGGER.debug ("Start - running through list of enrichers");        
-        //Loop through the list of enrichers and hope one of them produces an enriched message.
-        //Enrichers will enrich messages where a parent tag can be found in the xml message 
-        //otherwise the message will not be updated.
-        String enrichedEnvelope = currentEnvelope;
-        for(ISdtEnricher enricher: enricherList) {
+        LOGGER.debug ("Start - running through list of enrichers");
 
-            //Set the out bound message            
-            enrichedEnvelope = enricher.enrichXml (enrichedEnvelope);                        
+        // Loop through the list of enrichers and hope one of them produces an enriched message.
+        // Enrichers will enrich messages where a parent tag can be found in the xml message
+        // otherwise the message will not be updated.
+        String enrichedEnvelope = currentEnvelope;
+        for (ISdtEnricher enricher : enricherList)
+        {
+
+            // Set the out bound message
+            enrichedEnvelope = enricher.enrichXml (enrichedEnvelope);
         }
+
         LOGGER.debug ("completed - running through list of enrichers");
-        
+
         return enrichedEnvelope;
 
     }
-   
+
     /**
      * Change the raw XML in the inbound message.
      * 
@@ -119,11 +123,10 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     /**
      * Allow inbound or outbound raw XML to be changed in flight.
      * 
-     * @param message the message holding the output stream into which the XML is to be inserted.     * 
+     * @param message the message holding the output stream into which the XML is to be inserted. *
      * @throws Fault exception encountered while reading content.
      */
-    public void modifyMessage (final SoapMessage message)
-            throws Fault
+    public void modifyMessage (final SoapMessage message) throws Fault
     {
         // Work out if this message is inbound or outbound.
         boolean isOutbound = false;
@@ -134,8 +137,8 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
         if (isOutbound)
         {
             // Outbound message.
-            
-            // Get the original stream which is due to be written from the message. 
+
+            // Get the original stream which is due to be written from the message.
             final OutputStream os = message.getContent (OutputStream.class);
 
             // Create a cached stream which can capture any changes.
@@ -150,7 +153,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 // Flush the cached streqam after whatever the interceptors have done and close it.
                 cs.flush ();
                 org.apache.commons.io.IOUtils.closeQuietly (cs);
-                
+
                 // Get the cached stream put in the message earlier.
                 final CachedOutputStream csnew = (CachedOutputStream) message.getContent (OutputStream.class);
 
@@ -159,12 +162,13 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 csnew.flush ();
                 org.apache.commons.io.IOUtils.closeQuietly (csnew);
 
-                // Modify it if desired.                                
-                String res = changeOutboundMessage (currentEnvelopeMessage);
-                res = res != null ? res : currentEnvelopeMessage;
+                // Modify it if desired.
+                String modifiedMessage = changeOutboundMessage (currentEnvelopeMessage);
+                modifiedMessage = modifiedMessage != null ? modifiedMessage : currentEnvelopeMessage;
 
                 // Turn the modified data into a new input stream.
-                final InputStream replaceInStream = org.apache.commons.io.IOUtils.toInputStream (res, "UTF-8");
+                final InputStream replaceInStream =
+                        org.apache.commons.io.IOUtils.toInputStream (modifiedMessage, "UTF-8");
 
                 // Copy the new input stream to the output stream and close the input stream.
                 org.apache.commons.io.IOUtils.copy (replaceInStream, os);
@@ -188,7 +192,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
             {
                 // Get the input stream.
                 InputStream is = message.getContent (InputStream.class);
-                
+
                 // Read the message out of the stream and close it.
                 final String currentEnvelopeMessage = org.apache.commons.io.IOUtils.toString (is, "UTF-8");
                 org.apache.commons.io.IOUtils.closeQuietly (is);
@@ -199,7 +203,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 
                 // Write the modified data back to the input stream.
                 is = org.apache.commons.io.IOUtils.toInputStream (res, "UTF-8");
-                
+
                 // Put input stream in message and close it.
                 message.setContent (InputStream.class, is);
                 org.apache.commons.io.IOUtils.closeQuietly (is);
@@ -291,7 +295,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 
         return payload;
     }
-    
+
     /**
      * Set enricher list.
      * 

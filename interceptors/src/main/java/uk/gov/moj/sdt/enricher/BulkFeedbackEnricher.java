@@ -30,14 +30,21 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.enricher;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.utils.SdtContext;
+
 /**
- * Bulk feedback enricher used to enrich outbound messages for get bulk feedback. 
+ * Bulk feedback enricher used to enrich outbound messages for get bulk feedback.
  * 
  * @author d130680
- *
+ * 
  */
 public class BulkFeedbackEnricher extends AbstractSdtEnricher
 {
@@ -46,13 +53,69 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
      * Logger instance.
      */
     private static final Log LOGGER = LogFactory.getLog (BulkFeedbackEnricher.class);
-    
+
     @Override
     public String enrichXml (final String message)
     {
-        // TODO Implement this method
-        // TODO - need to manipulate the namespace declaration
-        return message;
-    }
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Message before enrichment [" + message + "]");
+        }
 
+        // Buffer to hold the developing result.
+        String newXml = message;
+
+        // Check to ensure the parent tag can be found in the message.
+        if (super.findParentTag (message))
+        {
+            // Get the map created by the service which contains the fragments of response to be inserted into the
+            // outgoing
+            // XML.
+            final Map<String, String> targetApplicationRespMap =
+                    SdtContext.getContext ().getTargetApplicationRespMap ();
+
+            // Get iterator so we can look for all keys. Since order is undetermined we can assume nothing about finding
+            // the
+            // requests in the same order and so must search the entire string each time.
+            final Iterator<String> iter = targetApplicationRespMap.keySet ().iterator ();
+
+            while (iter.hasNext ())
+            {
+                // Get the next request id.
+                final String requestId = iter.next ();
+
+                // Build a search pattern with this request id. Allow for any order of requestId and requestType
+                // attributes.
+                final Pattern pattern =
+                        Pattern.compile ("(<[\\w]+:response[ \\w\"=]*requestId=\"" + requestId +
+                                "[ \\w\"=]*>)\\s*(<[\\w]+:status)");
+
+                // Match it against the result of all previous match replacements.
+                final Matcher matcher = pattern.matcher (newXml);
+
+                if (matcher.find ())
+                {
+                    LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+
+                    // Form the replacement string from the matched groups and the extra XML.
+                    final String replacementXml =
+                            matcher.group (1) + targetApplicationRespMap.get (requestId) + matcher.group (2);
+
+                    LOGGER.debug ("Replacement string[" + replacementXml + "]");
+
+                    // Inject the system specific response into the current envelope
+                    newXml = matcher.replaceFirst (replacementXml);
+                }
+            }
+
+            // TODO - need to manipulate the namespace declaration
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Message after enrichment [" + newXml + "]");
+        }
+
+        return newXml;
+    }
 }

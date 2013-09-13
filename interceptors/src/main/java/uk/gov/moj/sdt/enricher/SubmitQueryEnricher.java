@@ -43,7 +43,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * Submit query xml enricher, used to enrich outbound messages related to submit query.
  * 
  * @author d130680
- *
+ * 
  */
 public class SubmitQueryEnricher extends AbstractSdtEnricher
 {
@@ -51,47 +51,56 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (SubmitQueryEnricher.class);   
-    
+    private static final Log LOGGER = LogFactory.getLog (SubmitQueryEnricher.class);
+
     @Override
     public String enrichXml (final String message)
     {
-        LOGGER.debug("[submitQueryEnricher] started");
-        String newXml = message; 
-        //Check to ensure the parent tag can be found in the message
-       if (super.findParentTag (message)) {
-           
-           //Get the system specific response from threadlocal to inject into the outbound message
-           String resultXml = SdtContext.getContext ().getRawOutXml ();
-                 
-           //Look for the pattern '<ns[1-99]:results/>'
-           //The regex will have to change if the name space does not begin
-           //with '<ns' and has a digit after of 1-99 after it followed by ':'
-           final Pattern pattern = Pattern.compile("\\<ns[1-99]:"+getInsertionTag ()+"/>");
-           final Matcher matcher = pattern.matcher(message);
-           
-           if (matcher.find()) {                     
-               LOGGER.info ("[submitQueryEnricher] Enriching response xml ");
-               
-               //Get the regex  matching search string
-               final String singleLineTag = matcher.group ();
-               //Add the start and end tag to the results xml
-               resultXml = changeToStartTag (singleLineTag) + resultXml + changeToEndTag (singleLineTag) ;
-               
-               //Inject the system specific response into the current envelope               
-               newXml = matcher.replaceAll (resultXml);
-                         
-           }
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Message before enrichment [" + message + "]");
+        }
 
-           //TODO - need to manipulate the namespace declaration           
-       
-       }
-       LOGGER.debug ("[submitQueryEnricher] completed");
-       
-       return newXml;
-       
+        String newXml = message;
+        
+        // Check to ensure the parent tag can be found in the message.
+        if (super.findParentTag (message))
+        {
+            // Get the system specific response from thread local to inject into the outbound message
+            String replacementXml = SdtContext.getContext ().getRawOutXml ();
+
+            // Look for the pattern '<ns[1-99]:results/>'
+            // The regex will have to change if the name space does not begin
+            // with '<ns' and has a digit after of 1-99 after it followed by ':'
+            final Pattern pattern = Pattern.compile ("\\<ns[1-99]:" + getInsertionTag () + "/>");
+            final Matcher matcher = pattern.matcher (message);
+
+            if (matcher.find ())
+            {
+                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+
+                // Get the string matching the regular expression.
+                final String singleLineTag = matcher.group ();
+                
+                // Add the start and end tag to the replacement xml.
+                replacementXml = changeToStartTag (singleLineTag) + replacementXml + changeToEndTag (singleLineTag);
+
+                LOGGER.debug ("Replacement string[" + replacementXml + "]");
+
+                // Inject the system specific response into the current envelope.
+                newXml = matcher.replaceFirst (replacementXml);
+            }
+
+            // TODO - need to manipulate the namespace declaration
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Message after enrichment [" + newXml + "]");
+        }
+
+        return newXml;
 
     }
-    
 
 }

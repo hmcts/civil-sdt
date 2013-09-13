@@ -56,9 +56,16 @@ public final class SdtContext
     private String rawOutXml;
 
     /**
-     * Map to store the raw xml along with a key as to where the xml should be inserted.
+     * Map to store the raw XML associated with the status of each individual request in a bulk submission. This XML is
+     * returned by the case management system and is specific to the case management system. SDT is a generic systems
+     * and must remain agnostic about the contents of this status and therefore deliberately treats it as raw XML. As a
+     * result, there are no JAXB classes corresponding to this status and the status must be received from the case
+     * management system and passed through the the bulk customer. This is done my extracting this XML from the
+     * notification received from the case management system, and storing it in the database, then on receiving a bulk
+     * feedback request, reading it out of the database, storing it in this map and then inserting it into the outbound
+     * XML.
      */
-    private Map<String, String> rawXmlMap = new HashMap<String, String> ();
+    private Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
 
     /**
      * Constructor for {@link ThreadContext}.
@@ -125,22 +132,23 @@ public final class SdtContext
     }
 
     /**
-     * Get raw xml map.
+     * Get map containing raw XML returned by the case management system for each request.
      * 
-     * @return raw xml map
+     * @return map containing raw XML returned by the case management system for each request.
      */
-    public Map<String, String> getRawXmlMap ()
+    public Map<String, String> getTargetApplicationRespMap ()
     {
-        return rawXmlMap;
+        return targetApplicationRespMap;
     }
 
     /**
-     * Set raw xml map.
+     * Set map containing raw XML returned by the case management system for each request (taken from the SDT database).
      * 
-     * @param rawXmlMap raw xml map
+     * @param targetApplicationRespMap value of map containing raw XML returned by the case management system for
+     *            each request
      */
-    public void setRawXmlMap (final Map<String, String> rawXmlMap)
+    public void setTargetApplicationRespMap (final Map<String, String> targetApplicationRespMap)
     {
-        this.rawXmlMap = rawXmlMap;
+        this.targetApplicationRespMap = targetApplicationRespMap;
     }
 }

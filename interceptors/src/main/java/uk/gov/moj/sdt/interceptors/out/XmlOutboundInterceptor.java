@@ -53,24 +53,21 @@ import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
  */
 public class XmlOutboundInterceptor extends AbstractSdtInterceptor
 {
-    
+
     /**
      * Test interceptor to prove concept.
      */
     public XmlOutboundInterceptor ()
     {
         super (Phase.PRE_STREAM);
-        addBefore (LoggingOutInterceptor.class.getName());
+        addBefore (LoggingOutInterceptor.class.getName ());
     }
 
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
-    {       
-
-
-        //Write the given XML into the output stream in order to 
-        //enrich the generic XML with raw non-generic XML.
+    {
+        // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
         this.modifyMessage (message);
     }
-           
+
 }
