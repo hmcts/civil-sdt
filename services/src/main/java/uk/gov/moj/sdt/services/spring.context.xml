@@ -13,6 +13,14 @@
 	<!-- Implementation for Submit Query Service -->        
     <bean id="uk.gov.moj.sdt.services.api.ISubmitQueryService" 
         class="uk.gov.moj.sdt.services.SubmitQueryService">
+        
+    </bean>    
+        
+    <!-- Implementation for Bulk Submission Service -->
+    <bean id="uk.gov.moj.sdt.services.api.IBulkSubmission" 
+    	class="uk.gov.moj.sdt.services.BulkSubmissionService">
+    	<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao"/>
+    	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
+    </bean>   
                           
-    </bean>
 </beans>
