@@ -20,7 +20,7 @@
 	<xs:complexType name="headerType">
 		<xs:sequence>
 			<xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
-			<xs:element name="targetApplicationId" type="xs:string" />
+			<xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
 		</xs:sequence>
 	</xs:complexType>
     

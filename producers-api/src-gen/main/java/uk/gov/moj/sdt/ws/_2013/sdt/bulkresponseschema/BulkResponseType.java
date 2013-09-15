@@ -23,7 +23,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
  *     &lt;extension base="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}abstractResponseType">
  *       &lt;sequence>
  *         &lt;element name="customerReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}customerReferenceType"/>
- *         &lt;element name="sdtBulkReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtBulkReferenceType"/>
+ *         &lt;element name="sdtBulkReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtBulkReferenceType" minOccurs="0"/>
  *         &lt;element name="submittedDate" type="{http://www.w3.org/2001/XMLSchema}dateTime"/>
  *         &lt;element name="sdtService" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="requestCount" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestCountType"/>
@@ -49,7 +49,6 @@ public class BulkResponseType
 
     @XmlElement(required = true)
     protected String customerReference;
-    @XmlElement(required = true)
     protected String sdtBulkReference;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter1 .class)

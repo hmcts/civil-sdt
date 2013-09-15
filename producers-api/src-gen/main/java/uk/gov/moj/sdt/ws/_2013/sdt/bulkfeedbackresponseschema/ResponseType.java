@@ -21,7 +21,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;any processContents='lax'/>
+ *         &lt;choice>
+ *           &lt;any processContents='lax' minOccurs="0"/>
+ *         &lt;/choice>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}individualStatusType"/>
  *       &lt;/sequence>
  *       &lt;attribute name="requestType" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />

@@ -10,6 +10,12 @@
         </xs:restriction>
 	</xs:simpleType>
 
+    <xs:simpleType name="targetApplicationIdType">
+        <xs:restriction base="xs:string">
+            <xs:length value="4" />
+        </xs:restriction>
+    </xs:simpleType>
+
 	<xs:simpleType name="sdtBulkReferenceType">
 		<xs:restriction base="xs:string">
 			<xs:length value="29" />

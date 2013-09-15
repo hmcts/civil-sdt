@@ -13,7 +13,7 @@
             <xs:extension base="base:abstractResponseType">
                 <xs:sequence>
                     <xs:element name="customerReference" type="base:customerReferenceType"/>
-                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+                    <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType" minOccurs="0"/>
                     <xs:element name="submittedDate" type="xs:dateTime"/>
                     <xs:element name="sdtService" type="xs:string"/>
                     <xs:element name="requestCount" type="base:requestCountType"/>

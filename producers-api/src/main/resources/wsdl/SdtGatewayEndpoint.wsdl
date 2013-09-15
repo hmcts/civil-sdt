@@ -23,6 +23,12 @@
                 </xs:restriction>
             </xs:simpleType>
         
+            <xs:simpleType name="targetApplicationIdType">
+                <xs:restriction base="xs:string">
+                    <xs:length value="4" />
+                </xs:restriction>
+            </xs:simpleType>
+
             <xs:simpleType name="sdtBulkReferenceType">
                 <xs:restriction base="xs:string">
                     <xs:length value="29" />
@@ -833,7 +839,7 @@
             <xs:complexType name="headerType">
                 <xs:sequence>
                     <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
-                    <xs:element name="targetApplicationId" type="xs:string"/>
+                    <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
                     <xs:element name="requestCount" type="base:requestCountType"/>
                     <xs:element name="customerReference" type="base:customerReferenceType"/>
                 </xs:sequence>
@@ -883,7 +889,7 @@
                     <xs:extension base="base:abstractResponseType">
                         <xs:sequence>
                             <xs:element name="customerReference" type="base:customerReferenceType"/>
-                            <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+                            <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"  minOccurs="0"/>
                             <xs:element name="submittedDate" type="xs:dateTime"/>
                             <xs:element name="sdtService" type="xs:string"/>
                             <xs:element name="requestCount" type="base:requestCountType"/>
@@ -957,7 +963,9 @@
             
             <xs:complexType name="responseType">
                 <xs:sequence>
-                    <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" />
+                    <xs:choice>
+                        <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" minOccurs="0"/>
+                    </xs:choice>
                     <xs:element name="status" type="base:individualStatusType"/>
                 </xs:sequence>
                 <xs:attribute name="requestType" type="xs:string" use="required"/>
@@ -998,7 +1006,7 @@
             <xs:complexType name="headerType">
                 <xs:sequence>
                     <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
-                    <xs:element name="targetApplicationId" type="xs:string" />
+                    <xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
                 </xs:sequence>
             </xs:complexType>
             
