@@ -9,7 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/services"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/validators"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/handlers"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/handlers-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/handlers"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
