@@ -69,14 +69,12 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
         if (super.findParentTag (message))
         {
             // Get the map created by the service which contains the fragments of response to be inserted into the
-            // outgoing
-            // XML.
+            // outgoing XML.
             final Map<String, String> targetApplicationRespMap =
                     SdtContext.getContext ().getTargetApplicationRespMap ();
 
             // Get iterator so we can look for all keys. Since order is undetermined we can assume nothing about finding
-            // the
-            // requests in the same order and so must search the entire string each time.
+            // the requests in the same order and so must search the entire string each time.
             final Iterator<String> iter = targetApplicationRespMap.keySet ().iterator ();
 
             while (iter.hasNext ())
@@ -95,16 +93,31 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
 
                 if (matcher.find ())
                 {
-                    LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+                    if (LOGGER.isDebugEnabled ())
+                    {
+                        LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+                    }
 
                     // Form the replacement string from the matched groups and the extra XML.
                     final String replacementXml =
                             matcher.group (1) + targetApplicationRespMap.get (requestId) + matcher.group (2);
 
-                    LOGGER.debug ("Replacement string[" + replacementXml + "]");
+                    if (LOGGER.isDebugEnabled ())
+                    {
+                        LOGGER.debug ("Replacement string[" + replacementXml + "]");
+                    }
 
                     // Inject the system specific response into the current envelope
                     newXml = matcher.replaceFirst (replacementXml);
+                }
+                else
+                {
+                    // Failure to find matching request in outgoing XML.
+                    LOGGER.error ("Failure to find matching reqeust in outgoing bulk feedback XML request id[" +
+                            requestId + "].");
+                    throw new UnsupportedOperationException (
+                            "Failure to find matching reqeust in outgoing bulk feedback XML request id[" + requestId +
+                                    "].");
                 }
             }
 
