@@ -11,8 +11,8 @@ define global_parameters           = 'TABLESPACE users'
 define individual_requests         = 'TABLESPACE users'
 define individual_requests_lob     = 'LOB (individual_payload) STORE AS is_lob(TABLESPACE users)'
 define message_logs                = 'TABLESPACE users'
-define request_types               = 'TABLESPACE users'
-define request_routings            = 'TABLESPACE users'
+define service_types               = 'TABLESPACE users'
+define service_routings            = 'TABLESPACE users'
 define service_requests            = 'TABLESPACE users'
 define target_applications         = 'TABLESPACE users'
 
@@ -84,7 +84,7 @@ CREATE TABLE global_parameters
 CREATE TABLE individual_requests
 (individual_request_id        INTEGER           -- pk
 ,bulk_submission_id           INTEGER           -- fk from bulk_submissions
-,request_type_id              INTEGER           -- fk from request_type
+--,request_type_id              INTEGER           -- fk from request_type
 ,customer_request_ref         VARCHAR2(32)      -- unique request ref
 --,case_number                VARCHAR2(32)
 ,request_status               VARCHAR2(32)
@@ -113,35 +113,20 @@ CREATE TABLE individual_requests
 &individual_requests 
 ;
 
-CREATE TABLE message_logs
-(message_log_id           INTEGER            -- pk
-,logged_event             VARCHAR2(3)        -- one of SBR, RBF, RDF
-,direction                CHAR(1)            -- one of I or O
-,bulk_submission_id       INTEGER            -- fk from bulk_submissions
-,sdt_bulk_reference       VARCHAR2(32)       -- effectively another FK from bulk_submissions
-,customer_reference       VARCHAR2(32)       -- external reference supplied by the submitting system
-,number_of_requests       NUMBER(5,0)        -- number of component requests in the bulk submission
-,created_date             TIMESTAMP
-,updated_date             TIMESTAMP
-,user_investigation       CHAR(1)            -- Y to indicate the record should be excluded from any purges
-,payload                  BLOB
-,version_number           INTEGER DEFAULT 0  -- hiberate versioning column
-) &message_logs
-;
 
-CREATE TABLE request_routings
-(request_type_id          INTEGER            -- pk, fk to request_types
+CREATE TABLE service_routings
+(service_type_id          INTEGER            -- pk, fk to service_types
 ,target_application_id    INTEGER            -- pk, fk to valid_services
 ,web_service_endpoint     VARCHAR2(255)
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column
 ) &request_routings
 ;
 
-CREATE TABLE request_types
-(request_type_id          INTEGER
-,request_type_name        VARCHAR2(50)
-,request_type_status      VARCHAR2(1)
-,request_type_description VARCHAR2(2000)
+CREATE TABLE service_types
+(service_type_id          INTEGER
+,service_type_name        VARCHAR2(50)
+,service_type_status      VARCHAR2(1)
+,service_type_description VARCHAR2(2000)
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column
 ) &request_types
 ;
@@ -157,6 +142,8 @@ CREATE TABLE service_requests
 ,sdt_customer_id          VARCHAR2(32)       -- should logically map bulk customers but not guaranteed
 ,sdt_bulk_reference       VARCHAR2(29)       -- should logically map bulk submissions but not guaranteed 
 ,internal_system_error    VARCHAR2(4000)     
+,target_application_id    INTEGER            
+,internal_system_error    VARCHAR2(4000)
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column 
 ) &service_requests
 ;
