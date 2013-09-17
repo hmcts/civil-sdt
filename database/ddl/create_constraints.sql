@@ -75,31 +75,19 @@ ALTER TABLE individual_requests           ADD CONSTRAINT ir_vn_nn  CHECK (versio
 
 
 --
--- message_logs
---
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_le_nn  CHECK (logged_event       IS NOT NULL);
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_d_nn   CHECK (direction          IS NOT NULL);
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_bsi_nn CHECK (bulk_submission_id IS NOT NULL);
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_sbr_nn CHECK (sdt_bulk_reference IS NOT NULL);
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_nor_nn CHECK (number_of_requests IS NOT NULL);
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_cd_nn  CHECK (created_date       IS NOT NULL);
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_p_nn   CHECK (payload            IS NOT NULL);
-ALTER TABLE message_logs                  ADD CONSTRAINT ml_vn_nn  CHECK (version_number     IS NOT NULL); 
-
---
--- request_routings
+-- service_routings
 --
 
-ALTER TABLE request_routings              ADD CONSTRAINT rr_wse_nn CHECK (web_service_endpoint IS NOT NULL);
-ALTER TABLE request_routings              ADD CONSTRAINT rr_vn_nn  CHECK (version_number       IS NOT NULL);
+ALTER TABLE service_routings              ADD CONSTRAINT sr_wse_nn CHECK (web_service_endpoint IS NOT NULL);
+ALTER TABLE service_routings              ADD CONSTRAINT sr_vn_nn  CHECK (version_number       IS NOT NULL);
 
 --
--- request_types
+-- service_types
 --
 
-ALTER TABLE request_types                 ADD CONSTRAINT rt_rtn_nn CHECK (request_type_name   IS NOT NULL);
-ALTER TABLE request_types                 ADD CONSTRAINT rt_rts_nn CHECK (request_type_status IS NOT NULL);
-ALTER TABLE request_types                 ADD CONSTRAINT rt_vn_nn  CHECK (version_number      IS NOT NULL);
+ALTER TABLE service_types                 ADD CONSTRAINT st_stn_nn CHECK (service_type_name   IS NOT NULL);
+ALTER TABLE service_types                 ADD CONSTRAINT st_sts_nn CHECK (service_type_status IS NOT NULL);
+ALTER TABLE service_types                 ADD CONSTRAINT st_vn_nn  CHECK (version_number      IS NOT NULL);
 
 ALTER TABLE request_types                 ADD CONSTRAINT rt_rtn_uni UNIQUE (request_type_name) ;
 
