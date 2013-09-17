@@ -37,13 +37,6 @@ NOT DEFERRABLE INITIALLY IMMEDIATE
 
 
 ALTER TABLE individual_requests
-ADD CONSTRAINT ir_request_type_fk
-FOREIGN KEY (request_type_id)
-REFERENCES request_types(request_type_id)
-NOT DEFERRABLE INITIALLY IMMEDIATE
-;
-
-ALTER TABLE individual_requests
 ADD CONSTRAINT ir_bulk_submission_fk
 FOREIGN KEY (sdt_bulk_reference)
 REFERENCES bulk_submissions(sdt_bulk_reference)
@@ -51,17 +44,17 @@ NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
 
-ALTER TABLE request_routings
-ADD CONSTRAINT rr_target_application_fk
+ALTER TABLE service_routings
+ADD CONSTRAINT sr_target_application_fk
 FOREIGN KEY (target_application_id)
 REFERENCES target_applications(target_application_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
-ALTER TABLE request_routings
-ADD CONSTRAINT rr_request_type_fk
-FOREIGN KEY (request_type_id)
-REFERENCES request_types(request_type_id)
+ALTER TABLE service_routings
+ADD CONSTRAINT sr_service_type_fk
+FOREIGN KEY (service_type_id)
+REFERENCES service_types(service_type_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
