@@ -8,9 +8,8 @@ define error_logs_pk                  = 'TABLESPACE users'
 define error_messages_pk              = 'TABLESPACE users'
 define global_parameters_pk           = 'TABLESPACE users'
 define individual_requests_pk         = 'TABLESPACE users'
-define message_logs_pk                = 'TABLESPACE users'
-define request_types_pk               = 'TABLESPACE users'
-define request_routings_pk            = 'TABLESPACE users'
+define service_types_pk               = 'TABLESPACE users'
+define service_routings_pk            = 'TABLESPACE users'
 define target_applications_pk         = 'TABLESPACE users'
 
 --
@@ -127,51 +126,35 @@ USING INDEX individual_requests_pk
 
 
 --
--- message_logs
+-- service_types
 --
 
-CREATE INDEX message_logs_pk
-ON message_logs
-(message_log_id)
-&message_logs_pk
+CREATE INDEX service_types_pk
+ON service_types
+( service_type_id ) 
+&service_types_pk
 ;
 
-ALTER TABLE message_logs
-ADD CONSTRAINT message_logs_pk
-PRIMARY KEY ( message_log_id )
-USING INDEX message_logs_pk
-;
-
---
--- request_types
---
-
-CREATE INDEX request_types_pk
-ON request_types
-( request_type_id ) 
-&request_types_pk
-;
-
-ALTER TABLE request_types
-ADD CONSTRAINT request_types_pk
-PRIMARY KEY ( request_type_id )
-USING INDEX request_types_pk
+ALTER TABLE service_types
+ADD CONSTRAINT service_types_pk
+PRIMARY KEY ( service_type_id )
+USING INDEX service_types_pk
 ;
 
 --
--- request_routings
+-- service_routings
 --
 
-CREATE INDEX request_routings_pk
-ON request_routings
-( request_type_id, target_application_id ) 
-&request_routings_pk
+CREATE INDEX service_routings_pk
+ON service_routings
+( service_type_id, target_application_id ) 
+&service_routings_pk
 ;
 
-ALTER TABLE request_routings
-ADD CONSTRAINT request_routings_pk
-PRIMARY KEY ( request_type_id, target_application_id )
-USING INDEX request_routings_pk
+ALTER TABLE service_routings
+ADD CONSTRAINT service_routings_pk
+PRIMARY KEY ( service_type_id, target_application_id )
+USING INDEX service_routings_pk
 ;
 
 
