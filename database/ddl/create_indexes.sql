@@ -3,7 +3,7 @@ alter session set current_schema=sdt_owner;
 
 DEFINE bs_sdt_bulk_reference_i       = 'TABLESPACE users'
 DEFINE ir_bulk_reference_i           = 'TABLESPACE users'
-DEFINE rt_request_type_name_i        = 'TABLESPACE users'
+DEFINE st_service_type_name_i        = 'TABLESPACE users'
 DEFINE ta_target_application_name_i  = 'TABLESPACE users'
 
 --
@@ -25,11 +25,11 @@ ON individual_requests ( sdt_bulk_reference )
 ;
 
 --
--- request_types
+-- service_types
 --
-CREATE INDEX rt_request_type_name
-ON request_types ( request_type_name )
-&rt_request_type_name_i
+CREATE INDEX st_service_type_name
+ON service_types ( service_type_name )
+&st_service_type_name_i
 ;
 
 -- 
