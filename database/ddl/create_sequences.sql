@@ -66,24 +66,12 @@ NOCACHE
 NOORDER
 ;
 
---
--- PK for message_logs
---
-
-CREATE SEQUENCE msg_log_seq
-MINVALUE 1
-MAXVALUE 999999999999999999999999999
-INCREMENT BY 1
-NOCYCLE
-NOCACHE
-NOORDER
-;
 
 --
--- Sequence to support request_types
+-- Sequence to support service_types
 --
 
-CREATE SEQUENCE req_typ_seq
+CREATE SEQUENCE ser_typ_seq
 MINVALUE 1
 MAXVALUE 999999999
 INCREMENT BY 1
