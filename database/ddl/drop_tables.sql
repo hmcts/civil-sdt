@@ -7,8 +7,8 @@ DROP TABLE error_logs;
 DROP TABLE error_messages;         
 DROP TABLE global_parameters;
 DROP TABLE individual_requests;   
-DROP TABLE message_logs; 
-DROP TABLE request_types;          
-DROP TABLE routing_table;         
-DROP TABLE valid_services;        
+DROP TABLE service_types;          
+DROP TABLE service_routings; 
+DROP TABLE service_requests;        
+DROP TABLE target_applications;        
 
