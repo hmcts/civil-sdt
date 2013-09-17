@@ -21,6 +21,9 @@
     	class="uk.gov.moj.sdt.services.BulkSubmissionService">
     	<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao"/>
     	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
+    	<property name="individualRequestsXmlparser" ref="uk.gov.moj.sdt.utils.IndividualRequestsXmlParser"/>
+    	<property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao"/>
+    	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
     </bean>   
                           
 </beans>

@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.dao;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -69,5 +70,21 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
     {
         // TODO - Implement this method.
         return null;
+    }
+
+    @Override
+    public ITargetApplication getTargetApplicationByCode (final String targetAppCode) throws DataAccessException
+    {
+        LOG.debug ("Get a target application matching the code " + targetAppCode);
+        final ITargetApplication[] targetApplication =
+                this.query (ITargetApplication.class, Restrictions.eq ("targetApplicationCode", targetAppCode));
+
+        // Should only return one or none at all
+        if (targetApplication == null || targetApplication.length == 0)
+        {
+            return null;
+        }
+
+        return targetApplication[0];
     }
 }

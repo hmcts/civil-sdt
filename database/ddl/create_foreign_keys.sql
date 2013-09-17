@@ -38,8 +38,8 @@ NOT DEFERRABLE INITIALLY IMMEDIATE
 
 ALTER TABLE individual_requests
 ADD CONSTRAINT ir_bulk_submission_fk
-FOREIGN KEY (sdt_bulk_reference)
-REFERENCES bulk_submissions(sdt_bulk_reference)
+FOREIGN KEY (bulk_submission_id)
+REFERENCES bulk_submissions(bulk_submission_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 

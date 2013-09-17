@@ -32,12 +32,20 @@ package uk.gov.moj.sdt.services;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
+import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -50,9 +58,29 @@ import uk.gov.moj.sdt.utils.SdtContext;
 public class BulkSubmissionService implements IBulkSubmissionService
 {
     /**
+     * Logger for debugging.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionService.class);
+
+    /**
      * Generic Dao property for doing the task of persisting the domain objects.
      */
     private IGenericDao genericDao;
+
+    /**
+     * Bulk Customer Dao property for looking up the bulk customer object.
+     */
+    private IBulkCustomerDao bulkCustomerDao;
+
+    /**
+     * Target Application Dao property for looking up the target application object.
+     */
+    private ITargetApplicationDao targetApplicationDao;
+
+    /**
+     * A parser to retrieve the raw XML for each request.
+     */
+    private IndividualRequestsXmlParser individualRequestsXmlParser;
 
     /**
      * Message writer for queueing messages to the messaging server.
@@ -66,24 +94,48 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
         bulkSubmission.setPayload (SdtContext.getContext ().getRawInXml ());
 
+        List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+
+        // Get the Bulk Customer from the customer dao for the SDT customer Id
+        final IBulkCustomer bulkCustomer =
+                this.getBulkCustomerDao ().getBulkCustomerBySdtId (
+                        bulkSubmission.getBulkCustomer ().getSdtCustomerId ());
+
+        if (bulkCustomer != null)
+        {
+            LOGGER.debug ("Bulk Customer found " + bulkCustomer.getId ());
+        }
+
+        bulkSubmission.setBulkCustomer (bulkCustomer);
+
+        // Get the Target Application from the target application dao
+        final ITargetApplication targetApplication =
+                this.getTargetApplicationDao ().getTargetApplicationByCode (
+                        bulkSubmission.getTargetApplication ().getTargetApplicationCode ());
+
+        if (targetApplication != null)
+        {
+            LOGGER.debug ("Target Application found " + targetApplication.getId ());
+        }
+
+        bulkSubmission.setTargetApplication (targetApplication);
+
+        // Populate the individual requests with the raw xml specific for that request.
+        individualRequests = individualRequestsXmlParser.getIndividualRequestsRawXmlMap (individualRequests);
+
         // Now persist the bulk submissions.
         this.getGenericDao ().persist (bulkSubmission);
 
+        // Persist the individual request with the payload.
+
         // Iterate through each of the individual request for the bulk submission
         // and set the raw xml from the interceptor.
-
-        // Persist the individual request with the payload.
-        final List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        for (IndividualRequest iRequest : individualRequests)
-        {
-            // TODO : Get the payload for individual request when the interface
-            // is ready.
-            iRequest.setPayload ("To be added");
-
-            // TODO : This method call is not efficient for inserts, need to
-            // investigate the bulk insertion mechanism for the GenericDao.
-            this.getGenericDao ().persist (iRequest);
-        }
+        // for (IndividualRequest iRequest : individualRequests)
+        // {
+        // // TODO : This method call is not efficient for inserts, need to
+        // // investigate the bulk insertion mechanism for the GenericDao.
+        // this.getGenericDao ().persist (iRequest);
+        // }
 
         // Enqueue the SDT request id of each individual request to the message
         // server.
@@ -116,6 +168,46 @@ public class BulkSubmissionService implements IBulkSubmissionService
     }
 
     /**
+     * Get the bulk customer DAO bean.
+     * 
+     * @return the Bulk Customer DAO.
+     */
+    public IBulkCustomerDao getBulkCustomerDao ()
+    {
+        return bulkCustomerDao;
+    }
+
+    /**
+     * Sets the Bulk Customer DAO object.
+     * 
+     * @param bulkCustomerDao the Bulk Customer Dao.
+     */
+    public void setBulkCustomerDao (final IBulkCustomerDao bulkCustomerDao)
+    {
+        this.bulkCustomerDao = bulkCustomerDao;
+    }
+
+    /**
+     * Get the Target Application Dao bean.
+     * 
+     * @return the target application Dao.
+     */
+    public ITargetApplicationDao getTargetApplicationDao ()
+    {
+        return targetApplicationDao;
+    }
+
+    /**
+     * Sets the Target Application DAO.
+     * 
+     * @param targetApplicationDao the target application DAO
+     */
+    public void setTargetApplicationDao (final ITargetApplicationDao targetApplicationDao)
+    {
+        this.targetApplicationDao = targetApplicationDao;
+    }
+
+    /**
      * 
      * @return the Message Writer
      */
@@ -133,4 +225,23 @@ public class BulkSubmissionService implements IBulkSubmissionService
         this.messageWriter = messageWriter;
     }
 
+    /**
+     * Get the individualRequestsXmlParser.
+     * 
+     * @return the individualRequestsXmlParser.
+     */
+    public IndividualRequestsXmlParser getIndividualRequestsXmlParser ()
+    {
+        return individualRequestsXmlParser;
+    }
+
+    /**
+     * Set the individualRequestsXmlParser.
+     * 
+     * @param individualRequestsXmlParser the individualRequestsXmlParser.
+     */
+    public void setIndividualRequestsXmlparser (final IndividualRequestsXmlParser individualRequestsXmlParser)
+    {
+        this.individualRequestsXmlParser = individualRequestsXmlParser;
+    }
 }

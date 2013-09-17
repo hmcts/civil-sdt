@@ -40,7 +40,7 @@
         <property name="payload" type="uk.gov.moj.sdt.domain.type.BlobType">
             <column name="BULK_PAYLOAD" />
         </property>
-        <list name="individualRequests" inverse="false" table="INDIVIDUAL_REQUESTS" lazy="true">
+        <list name="individualRequests" inverse="true" table="INDIVIDUAL_REQUESTS" lazy="true" cascade="all">
             <key>
                 <column name="BULK_SUBMISSION_ID" />
             </key>

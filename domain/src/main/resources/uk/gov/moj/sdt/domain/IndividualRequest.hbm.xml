@@ -19,25 +19,14 @@
         <property name="customerRequestReference" type="java.lang.String">
             <column name="CUSTOMER_REQUEST_REF" />
         </property>
-        <!-- 
-        <property name="caseNumber" type="java.lang.String">
-            <column name="CASE_NUMBER" />
-        </property>
-         -->
+        
         <property name="requestStatus" type="java.lang.String">
             <column name="REQUEST_STATUS" />
         </property>
-        <!-- 
-        <property name="issuedDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
-            <column name="ISSUED_DATE" />
-        </property>
-        -->
+        
         <property name="sdtBulkReference" type="java.lang.String">
             <column name="SDT_BULK_REFERENCE" />
         </property>
-        <property name="requestRetryCount" type="int">
-            <column name="REQUEST_RETRY_COUNT" />
-        </property>        
         <property name="lineNumber" type="int">
             <column name="LINE_NUMBER" />
         </property>
@@ -53,46 +42,14 @@
         <property name="completedDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="COMPLETED_DATE" />
         </property>
-        <!-- 
-        <property name="serviceDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
-            <column name="SERVICE_DATE" />
-        </property>
-        -->
-        <!--  
-        <property name="warrantNumber" type="int">
-            <column name="WARRANT_NUMBER" />
-        </property>
-        
-        <property name="enforcingCourtCode" type="java.lang.String">
-            <column name="ENFORCING_COURT_CODE" />
-        </property>
-        <property name="enforcingCourtName" type="java.lang.String">
-            <column name="ENFORCING_COURT_NAME" />
-        </property>
-        <property name="fee" type="java.math.BigDecimal">
-            <column name="FEE" />
-        </property>
-         -->   
-        <property name="rejectionReasonCode" type="java.lang.String">
-            <column name="REJECTION_REASON_CODE" />
-        </property>
-        <property name="rejectionReasonDescription" type="java.lang.String">
-            <column name="REJECTION_REASON_DESCRIPTION" />
-        </property>
         <property name="forwardingAttempts" type="int">
             <column name="FORWARDING_ATTEMPTS" />
-        </property>
-        <property name="targetApplicationStatus" type="java.lang.String">
-            <column name="TARGET_APPLICATION_STATUS" />
         </property>
         <property name="targetApplicationResponse" type="java.lang.String">
             <column name="TARGET_APPLICATION_RESPONSE" />
         </property>
-        <property name="payload" type="binary">
-            <column name="PAYLOAD" />
-        </property>        
-        <property name="internalSystemError" type="java.lang.String">
-            <column name="INTERNAL_SYSTEM_ERROR" />
-        </property>
+        <property name="payload" type="uk.gov.moj.sdt.domain.type.BlobType">
+            <column name="INDIVIDUAL_PAYLOAD" />
+        </property>   
     </class>
 </hibernate-mapping>

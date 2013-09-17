@@ -52,4 +52,13 @@ public interface ITargetApplicationDao
      * @throws DataAccessException Hibernate exception
      */
     List<ITargetApplication> getTargetApplication (final IBulkCustomer bulkCustomer) throws DataAccessException;
+
+    /**
+     * Get the target application matching the target application code supplied.
+     * 
+     * @param targetAppCode the target application code
+     * @return the target application
+     * @throws DataAccessException Hibernate exception
+     */
+    ITargetApplication getTargetApplicationByCode (final String targetAppCode) throws DataAccessException;
 }

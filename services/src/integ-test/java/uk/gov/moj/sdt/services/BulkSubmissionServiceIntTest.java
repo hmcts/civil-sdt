@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -38,17 +38,17 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.easymock.EasyMock;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
-import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -59,176 +59,89 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IRequestType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.misc.IndividualRequestStatus;
-import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
+import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 
 /**
- * Test class for BulkSubmissionService.
+ * Implementation of the integration test for BulkSubmissionService.
  * 
- * @author Manoj Kulkarni
+ * @author Manoj kulkarni
  * 
  */
-public class BulkSubmissionServiceTest
+@RunWith (SpringJUnit4ClassRunner.class)
+@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
+        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
+public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
-     * Logger for debugging.
+     * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionServiceTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionServiceIntTest.class);
 
     /**
-     * Bulk Submission Service for testing.
-     */
-    private BulkSubmissionService bulkSubmissionService;
-
-    /**
-     * Generic dao.
-     */
-    private IGenericDao mockGenericDao;
-
-    /**
-     * Message writer for queueing messages to the messaging server.
-     */
-    private IMessageWriter mockMessageWriter;
-
-    /**
-     * Individual requests xml parser for parsing the xml requests.
-     */
-    private IndividualRequestsXmlParser individualRequestsXmlParser;
-
-    /**
-     * Bulk Customer dao.
-     */
-    private IBulkCustomerDao mockBulkCustomerDao;
-
-    /**
-     * Target Application dao.
-     */
-    private ITargetApplicationDao mockTargetApplicationDao;
-
-    /**
-     * Setup of the mock dao and injection of other objects.
+     * Setup the test.
      */
     @Before
     public void setUp ()
     {
-        bulkSubmissionService = new BulkSubmissionService ();
-
-        mockGenericDao = EasyMock.createMock (IGenericDao.class);
-        bulkSubmissionService.setGenericDao (mockGenericDao);
-
-        mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
-        bulkSubmissionService.setMessageWriter (mockMessageWriter);
-
-        mockBulkCustomerDao = EasyMock.createMock (IBulkCustomerDao.class);
-        bulkSubmissionService.setBulkCustomerDao (mockBulkCustomerDao);
-
-        mockTargetApplicationDao = EasyMock.createMock (ITargetApplicationDao.class);
-        bulkSubmissionService.setTargetApplicationDao (mockTargetApplicationDao);
-
-        individualRequestsXmlParser = new IndividualRequestsXmlParser ();
-        bulkSubmissionService.setIndividualRequestsXmlparser (individualRequestsXmlParser);
+        LOG.debug ("Before SetUp");
+        DBUnitUtility.loadDatabase (this.getClass (), true);
+        LOG.debug ("After SetUp");
     }
 
     /**
-     * Test method for the saving of bulk submission.
+     * This method tests for persistence of a single submission.
      * 
-     * @throws IOException if there is any error in reading the file.
+     * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    public void saveBulkSubmission () throws IOException
+    public void saveSingleSubmission () throws IOException
     {
         final String rawXml = this.getRawXml ("testXMLValid2.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
 
-        // Activate Mock Generic Dao
+        final IBulkSubmissionService bulkSubmissionService =
+                (IBulkSubmissionService) this.applicationContext
+                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmission");
+
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
-        mockGenericDao.persist (bulkSubmission);
-
-        EasyMock.expectLastCall ();
-
-        final List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-
-        for (IndividualRequest request : individualRequests)
-        {
-            mockMessageWriter.queueMessage (request.getSdtRequestReference ());
-        }
-
-        EasyMock.expectLastCall ().anyTimes ();
-
-        // Replay the EasyMock
-        EasyMock.replay (mockGenericDao);
-        EasyMock.replay (mockMessageWriter);
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
 
-        Assert.assertTrue ("Expected to pass", true);
+        Assert.assertTrue ("Submission saved successfully.", true);
 
-        // Verify the Mock
-        EasyMock.verify (mockGenericDao);
-        EasyMock.verify (mockMessageWriter);
+        Assert.assertNotNull (bulkSubmission.getPayload ());
+
+        Assert.assertEquals (bulkSubmission.getNumberOfRequest (), 1L);
+
+        final List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        Assert.assertNotNull (individualRequests);
+        Assert.assertEquals (individualRequests.size (), 1);
+        for (IndividualRequest request : individualRequests)
+        {
+            Assert.assertNotNull (request.getPayload ());
+            LOG.debug ("Payload for request " + request.getId () + "is " + request.getPayload ());
+        }
 
     }
 
     /**
-     * This method tests bulk submission with multiple individual request containing
-     * 2 valid and 1 invalid request.
+     * This method tests for persistence of a submission containing multiple individual requests.
      * 
-     * @throws IOException if there is any issue
+     * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    public void testSubmissionWithMultipleRequests () throws IOException
+    public void saveMultipleSubmissions () throws IOException
     {
         final String rawXml = this.getRawXml ("testXMLValid3.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
 
-        // Activate Mock Generic Dao
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
-        final List<IndividualRequest> requests = bulkSubmission.getIndividualRequests ();
-        final IndividualRequest iRequest1 = this.getValidIndividualRequest ("SDT_test_2", "ICustReq124");
-        final IndividualRequest iRequest2 = this.getValidIndividualRequest ("SDT test 3", "ICustReq125");
-
-        LOGGER.debug ("Size of Individual Requests is " + requests.size ());
-        requests.add (iRequest1);
-        requests.add (iRequest2);
-        LOGGER.debug ("After adding requests, Size of Individual Requests is " + requests.size ());
-
-        bulkSubmission.setIndividualRequests (requests);
-
-        LOGGER.debug ("Size of Individual Requests in Bulk Submission is " +
-                bulkSubmission.getIndividualRequests ().size ());
-
-        mockGenericDao.persist (bulkSubmission);
-
-        EasyMock.expectLastCall ();
-
-        final List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        LOGGER.debug ("Individal Requests fetched number is " + individualRequests.size ());
-
-        for (IndividualRequest request : individualRequests)
-        {
-            if (request.getRequestStatus ().equals (IndividualRequestStatus.RECEIVED.getStatus ()))
-            {
-                mockMessageWriter.queueMessage (request.getSdtRequestReference ());
-                EasyMock.expectLastCall ();
-            }
-        }
-
-        // Replay the EasyMock
-        EasyMock.replay (mockGenericDao);
-        EasyMock.replay (mockMessageWriter);
-
-        // Call the bulk submission service
-        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
-
-        Assert.assertTrue ("Expected to pass", true);
-
-        // Verify the Mock
-        EasyMock.verify (mockGenericDao);
-        EasyMock.verify (mockMessageWriter);
+        final IBulkSubmissionService bulkSubmissionService =
+                (IBulkSubmissionService) this.applicationContext
+                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmission");
     }
 
     /**
@@ -241,9 +154,9 @@ public class BulkSubmissionServiceTest
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
         final ITargetApplication targetApp = new TargetApplication ();
 
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("mcol");
-        targetApp.setTargetApplicationName ("TEST_TargetApp");
+        targetApp.setId (10713L);
+        targetApp.setTargetApplicationCode ("MCOL");
+        targetApp.setTargetApplicationName ("MCOL");
         final Set<RequestRouting> requestRoutings = new HashSet<RequestRouting> ();
 
         final RequestRouting requestRouting = new RequestRouting ();
@@ -264,18 +177,15 @@ public class BulkSubmissionServiceTest
 
         bulkSubmission.setTargetApplication (targetApp);
 
-        bulkCustomer.setId (1L);
-        bulkCustomer.setSdtCustomerId (10L);
+        bulkCustomer.setSdtCustomerId (2L);
 
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
         bulkSubmission
                 .setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        bulkSubmission.setCustomerReference ("TEST_CUST_REF");
-        bulkSubmission.setId (1L);
-        bulkSubmission.setNumberOfRequest (2);
-        bulkSubmission.setPayload ("TEST_XML");
+        bulkSubmission.setCustomerReference ("10711");
+        bulkSubmission.setNumberOfRequest (1);
         bulkSubmission.setSdtBulkReference ("SDT_BULKREF_0001");
         bulkSubmission.setSubmissionStatus ("SUBMITTED");
         bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
@@ -288,10 +198,11 @@ public class BulkSubmissionServiceTest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         individualRequest.setCustomerRequestReference ("ICustReq123");
         individualRequest.setSdtRequestReference ("SDT_test_1");
-        individualRequest.setId (1L);
+        individualRequest.setSdtBulkReference ("SDT_BULKREF_0001");
         // individualRequest.setPayload ("IXML1");
         individualRequest.setRequestStatus ("Accepted");
         individualRequest.setRequestType (requestType);
+        individualRequest.setBulkSubmission (bulkSubmission);
         individualRequests.add (individualRequest);
 
         bulkSubmission.setIndividualRequests (individualRequests);
@@ -314,10 +225,8 @@ public class BulkSubmissionServiceTest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         individualRequest.setCustomerRequestReference (customerReference);
         individualRequest.setSdtRequestReference (sdtReference);
-        individualRequest.setId (1L);
         final IRequestType requestType = new RequestType ();
         requestType.setName ("mcolClaimStatusUpdate");
-        // individualRequest.setPayload ("IXML1");
         individualRequest.setRequestType (requestType);
         individualRequest.setRequestStatus ("Received");
 
@@ -338,7 +247,7 @@ public class BulkSubmissionServiceTest
 
         // XPathHandler xmlHandler = new XPathHandler ();
 
-        myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", fileName, false));
+        myFile = new File (Utilities.checkFileExists ("src/integ-test/resources/", fileName, false));
 
         message = FileUtils.readFileToString (myFile);
 
