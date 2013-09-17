@@ -21,17 +21,10 @@ vALUES ( 5,'MONITORING_INTERVAL',60
 ,'Time in seconds between ...');
 
 
-INSERT INTO request_types (request_type_id,request_type_name,request_type_status)
-VALUES (1,'NEW CLAIM','A');
-INSERT INTO request_types (request_type_id,request_type_name,request_type_status)
-VALUES (2,'JUDGEMENT','A');
-INSERT INTO request_types (request_type_id,request_type_name,request_type_status)
-VALUES (3,'WARRANT','A');
-INSERT INTO request_types (request_type_id,request_type_name,request_type_status)
-VALUES (4,'JUDGEMENT FORTHWITH','A');
-INSERT INTO request_types (request_type_id,request_type_name,request_type_status)
-VALUES (5,'PAID/WRITTEN OFF/DISCONTINUED/WITHDRAWN REQUESTS','A');
-
+INSERT INTO service_types (service_type_id,service_type_name,service_type_status)
+VALUES (1,'INDIVIDUAL REQUEST','A');
+INSERT INTO service_types (service_type_id,service_type_name,service_type_status)
+VALUES (2,'SUBMIT QUERY','A');
 
 
 INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
@@ -42,5 +35,11 @@ INSERT INTO target_applications ( target_application_id,target_application_code,
 VALUES (3,'C_MC','mcol commissioning service');
 INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
 VALUES (4,'C_PC','pcol commissioning service');
+
+INSERT INTO service_routings (service_type_id,target_application_id)
+VALUES (1,1);
+INSERT INTO service_routings (service_type_id,target_application_id)
+VALUES (2,1);
+
 
 COMMIT;
