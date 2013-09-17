@@ -65,7 +65,7 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
      */
     protected boolean findParentTag (final String message)
     {
-        return message.contains (parentTag);
+        return message.contains (this.getParentTag ());
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
      * 
      * @return parent tag
      */
-    public String getParentTag ()
+    protected String getParentTag ()
     {
         return parentTag;
     }
@@ -120,7 +120,7 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
      * 
      * @return insertion tag.
      */
-    public String getInsertionTag ()
+    protected String getInsertionTag ()
     {
         return insertionTag;
     }
