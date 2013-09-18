@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,63 +24,18 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-
-package uk.gov.moj.sdt.domain.api;
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
+package uk.gov.moj.sdt.validators.api;
 
 
 /**
- * Interface for classes implementing {@link IRequestRouting} .
+ * An interface to provide validation methods for ServiceType.
  * 
- * @author Manoj Kulkarni
- * 
+ * @author Saurabh Agarwal
  */
-public interface IRequestRouting extends IDomainObject
+public interface IServiceTypeValidator
 {
-
-    /**
-     * Get the Target Application.
-     * 
-     * @return target application
-     */
-    ITargetApplication getTargetApplication ();
-
-    /**
-     * Set the Target Application.
-     * 
-     * @param targetApplication target application
-     */
-    void setTargetApplication (final ITargetApplication targetApplication);
-
-    /**
-     * Get the Request Type.
-     * 
-     * @return request type
-     */
-    IRequestType getRequestType ();
-
-    /**
-     * Set the Request Type.
-     * 
-     * @param requestType request type
-     */
-    void setRequestType (final IRequestType requestType);
-
-    /**
-     * Get web service end point.
-     * 
-     * @return web service end point
-     */
-    String getWebServiceEndpoint ();
-
-    /**
-     * Set web service end point.
-     * 
-     * @param webServiceEndpoint web service end point
-     */
-    void setWebServiceEndpoint (final String webServiceEndpoint);
-
 }

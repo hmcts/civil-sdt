@@ -28,9 +28,9 @@
         <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" />                                       
     </bean>
 
-    <bean id="uk.gov.moj.sdt.validators.api.IRequestTypeValidator" 
+    <bean id="uk.gov.moj.sdt.validators.api.IServiceTypeValidator" 
     	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
-        class="uk.gov.moj.sdt.validators.RequestTypeValidator">
+        class="uk.gov.moj.sdt.validators.ServiceTypeValidator">
     </bean>
 
     <bean id="uk.gov.moj.sdt.validators.api.ITargetApplicationValidator" 

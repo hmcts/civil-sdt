@@ -36,10 +36,10 @@ VALUES (3,'C_MC','mcol commissioning service');
 INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
 VALUES (4,'C_PC','pcol commissioning service');
 
-INSERT INTO service_routings (service_type_id,target_application_id)
-VALUES (1,1);
-INSERT INTO service_routings (service_type_id,target_application_id)
-VALUES (2,1);
+INSERT INTO service_routings (service_type_id,target_application_id,web_service_endpoint)
+VALUES (1,1,'http://localhost:8888/mcol');
+INSERT INTO service_routings (service_type_id,target_application_id,web_service_endpoint)
+VALUES (2,1,'http://localhost:8888/pcol');
 
 
 COMMIT;

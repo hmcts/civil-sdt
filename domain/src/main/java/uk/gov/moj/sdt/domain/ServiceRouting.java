@@ -28,74 +28,71 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.validators.exception;
 
-import java.util.List;
+package uk.gov.moj.sdt.domain;
+
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
- * An invalid request type has been sent.
+ * SDT will maintain routing information for target applications based on the Request Type Tag.
  * 
  * @author d130680
  * 
  */
-public class InvalidRequestTypeException extends AbstractBusinessException
+public class ServiceRouting extends AbstractDomainObject implements IServiceRouting
 {
-    /**
-     * The Constant serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
 
     /**
-     * An invalid request type has been sent.
-     * 
-     * @param code error code
-     * @param description error description
+     * Target application.
      */
-    public InvalidRequestTypeException (final String code, final String description)
-    {
-        super (code, description);
-    }
+    private ITargetApplication targetApplication;
 
     /**
-     * An invalid request type has been sent.
-     * 
-     * @param code error code
-     * @param description error description
-     * @param replacements string replacements with tokens
+     * Service type.
      */
-    public InvalidRequestTypeException (final String code, final String description, final List<String> replacements)
-    {
-        super (code, description, replacements);
-    }
+    private IServiceType serviceType;
 
     /**
-     * An invalid request type has been sent.
-     * 
-     * @param s the s
+     * Web service endpoint.
      */
-    public InvalidRequestTypeException (final String s)
+    private String webServiceEndpoint;
+
+    @Override
+    public ITargetApplication getTargetApplication ()
     {
-        super (s);
+        return targetApplication;
     }
 
-    /**
-     * An invalid request type has been sent.
-     * 
-     * @param cause the cause
-     */
-    public InvalidRequestTypeException (final Throwable cause)
+    @Override
+    public void setTargetApplication (final ITargetApplication targetApplication)
     {
-        super (cause);
+        this.targetApplication = targetApplication;
     }
 
-    /**
-     * An invalid request type has been sent.
-     * 
-     * @param s the s
-     * @param cause the cause
-     */
-    public InvalidRequestTypeException (final String s, final Throwable cause)
+    @Override
+    public IServiceType getServiceType ()
     {
-        super (s, cause);
+        return serviceType;
     }
+
+    @Override
+    public void setServiceType (final IServiceType serviceType)
+    {
+        this.serviceType = serviceType;
+    }
+
+    @Override
+    public String getWebServiceEndpoint ()
+    {
+        return webServiceEndpoint;
+    }
+
+    @Override
+    public void setWebServiceEndpoint (final String webServiceEndpoint)
+    {
+        this.webServiceEndpoint = webServiceEndpoint;
+    }
+
 }

@@ -34,7 +34,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -63,7 +63,7 @@ public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implem
     }
 
     @Override
-    public void visit (final IRequestType requestType, final ITree tree)
+    public void visit (final IServiceType serviceType, final ITree tree)
     {
         throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }

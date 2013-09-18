@@ -10,7 +10,7 @@
 			<bul:header>
 				<bul:sdtCustomerId>12345678</bul:sdtCustomerId>
 				<bul:targetApplicationId>mcol</bul:targetApplicationId>
-				<bul:requestCount>1</bul:requestCount>
+				<bul:requestCount>3</bul:requestCount>
 				<bul:customerReference>abc1223456</bul:customerReference>
 			</bul:header>
 			<bul:requests>

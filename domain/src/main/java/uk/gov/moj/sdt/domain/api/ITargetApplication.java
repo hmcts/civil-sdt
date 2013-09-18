@@ -34,7 +34,7 @@ package uk.gov.moj.sdt.domain.api;
 import java.util.Set;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.RequestRouting;
+import uk.gov.moj.sdt.domain.ServiceRouting;
 
 /**
  * Interface for classes implementing {@link ITargetApplication} .
@@ -45,17 +45,20 @@ import uk.gov.moj.sdt.domain.RequestRouting;
 public interface ITargetApplication extends IDomainObject
 {
 
-	/**
-	 * Retrieve a set of all customers who can work against this application.
-	 * @return a set of bulk customers who can use this application.
-	 */
-	Set <BulkCustomer> getBulkCustomers ();
-	
-	/**
-	 * Set the list of customers who can work against this application.
-	 * @param bulkCustomers the list of all customers who can work on this application.
-	 */
-	void setBulkCustomers(Set <BulkCustomer> bulkCustomers);
+    /**
+     * Retrieve a set of all customers who can work against this application.
+     * 
+     * @return a set of bulk customers who can use this application.
+     */
+    Set<BulkCustomer> getBulkCustomers ();
+
+    /**
+     * Set the list of customers who can work against this application.
+     * 
+     * @param bulkCustomers the list of all customers who can work on this application.
+     */
+    void setBulkCustomers (Set<BulkCustomer> bulkCustomers);
+
     /**
      * Get target application code.
      * 
@@ -83,18 +86,19 @@ public interface ITargetApplication extends IDomainObject
      * @param targetApplicationName target application name
      */
     void setTargetApplicationName (final String targetApplicationName);
-    
-  
+
     /**
-	 * Retrieve a set of all customers who can work against this application.
-	 * @return a set of bulk customers who can use this application.
-	 */
-	Set <RequestRouting> getRequestRoutings ();
-	
-	/**
-	 * Set the list of request types which work with this application.
-	 * @param requestRoutings the list of all requestRoutings who can work with this application.
-	 */
-	void setRequestRoutings(Set <RequestRouting> requestRoutings);
+     * Retrieve a set of all customers who can work against this application.
+     * 
+     * @return a set of bulk customers who can use this application.
+     */
+    Set<ServiceRouting> getServiceRoutings ();
+
+    /**
+     * Set the list of service types which work with this application.
+     * 
+     * @param serviceRoutings the list of all serviceRoutings who can work with this application.
+     */
+    void setServiceRoutings (Set<ServiceRouting> serviceRoutings);
 
 }

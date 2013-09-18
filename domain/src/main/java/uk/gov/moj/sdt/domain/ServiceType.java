@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,45 +24,90 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id$
- * $LastChangedRevision$
- * $LastChangedDate$
- * $LastChangedBy$ */
-package uk.gov.moj.sdt.validators;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+package uk.gov.moj.sdt.domain;
 
-import uk.gov.moj.sdt.domain.api.IRequestType;
-import uk.gov.moj.sdt.utils.visitor.api.ITree;
-import uk.gov.moj.sdt.validators.api.IRequestTypeValidator;
+import java.util.Set;
+
+import uk.gov.moj.sdt.domain.api.IServiceType;
 
 /**
- * Implementation of {@link IRequestTypeValidator}.
+ * Each defined target application will have a set of associated Request Types.
+ * E.g. Claim,, Judgment, Warrant, JudgmentWarrant and ClaimUpate.
  * 
- * @author Saurabh Agarwal
+ * @author d130680
  * 
  */
-public class RequestTypeValidator extends AbstractSdtValidator implements IRequestTypeValidator
+public class ServiceType extends AbstractDomainObject implements IServiceType
 {
+	
+	/**
+	 * The target applications that this customer can work with.e.g. 'MCOL'
+	 */
+	private Set <TargetApplication> targetApplications;
+    /**
+     * Request type name.
+     */
+    private String name;
 
     /**
-     * Logger instance.
+     * Request type status.
      */
-    private static final Log LOGGER = LogFactory.getLog (RequestTypeValidator.class);
+    private String status;
 
     /**
-     * No-argument Constructor.
+     * Request type description.
      */
-    public RequestTypeValidator ()
+    private String description;
+
+    @Override
+    public String getName ()
     {
+        return name;
     }
 
     @Override
-    public void visit (final IRequestType requestType, final ITree tree)
+    public void setName (final String name)
     {
-        // TODO Do validation
-        LOGGER.info ("visit(requestType)");
+        this.name = name;
     }
+
+    @Override
+    public String getStatus ()
+    {
+        return status;
+    }
+
+    @Override
+    public void setStatus (final String status)
+    {
+        this.status = status;
+    }
+
+    @Override
+    public String getDescription ()
+    {
+        return description;
+    }
+
+    @Override
+    public void setDescription (final String description)
+    {
+        this.description = description;
+    }
+
+	@Override
+	public void setTargetApplications(final Set <TargetApplication> targetApplications) {
+		this.targetApplications = targetApplications;
+	}
+
+	@Override
+	public Set <TargetApplication> getTargetApplications() {
+		return targetApplications;
+	}
 
 }

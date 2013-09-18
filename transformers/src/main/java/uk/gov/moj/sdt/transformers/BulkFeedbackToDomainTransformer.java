@@ -40,7 +40,6 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.IRequestType;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
@@ -125,10 +124,6 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
 
             // Set the customer request reference
             responseType.setRequestId (individualRequest.getCustomerRequestReference ());
-
-            // Set the request type, e.g. mcolClaim, mcolJudgment etc.
-            final IRequestType requestType = individualRequest.getRequestType ();
-            responseType.setRequestType (requestType.getName ());
 
             // Set the individual request type
             final IndividualStatusType statusType = new IndividualStatusType ();

@@ -41,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestType;
+import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
@@ -132,9 +132,8 @@ public class BulkFeedbackFactory
         individualRequest.setRequestStatus (requestStatus);
 
         // Create the request type
-        final RequestType type = new RequestType ();
+        final ServiceType type = new ServiceType ();
         type.setName (requestType);
-        individualRequest.setRequestType (type);
 
         if (StringUtils.isNotBlank (rejectionReasonCode) && StringUtils.isNotBlank (rejectionReasonDescription))
         {

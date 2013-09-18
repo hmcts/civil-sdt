@@ -52,12 +52,12 @@ import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestRouting;
-import uk.gov.moj.sdt.domain.RequestType;
+import uk.gov.moj.sdt.domain.ServiceRouting;
+import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
@@ -244,23 +244,23 @@ public class BulkSubmissionServiceTest
         targetApp.setId (1L);
         targetApp.setTargetApplicationCode ("mcol");
         targetApp.setTargetApplicationName ("TEST_TargetApp");
-        final Set<RequestRouting> requestRoutings = new HashSet<RequestRouting> ();
+        final Set<ServiceRouting> serviceRoutings = new HashSet<ServiceRouting> ();
 
-        final RequestRouting requestRouting = new RequestRouting ();
-        requestRouting.setId (1L);
-        requestRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+        final ServiceRouting serviceRouting = new ServiceRouting ();
+        serviceRouting.setId (1L);
+        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
 
-        final IRequestType requestType = new RequestType ();
-        requestType.setId (1L);
-        requestType.setName ("RequestTest1");
-        requestType.setDescription ("RequestTestDesc1");
-        requestType.setStatus ("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType ();
+        serviceType.setId (1L);
+        serviceType.setName ("RequestTest1");
+        serviceType.setDescription ("RequestTestDesc1");
+        serviceType.setStatus ("RequestTestStatus");
 
-        requestRouting.setRequestType (requestType);
+        serviceRouting.setServiceType (serviceType);
 
-        requestRoutings.add (requestRouting);
+        serviceRoutings.add (serviceRouting);
 
-        targetApp.setRequestRoutings (requestRoutings);
+        targetApp.setServiceRoutings (serviceRoutings);
 
         bulkSubmission.setTargetApplication (targetApp);
 
@@ -291,7 +291,6 @@ public class BulkSubmissionServiceTest
         individualRequest.setId (1L);
         // individualRequest.setPayload ("IXML1");
         individualRequest.setRequestStatus ("Accepted");
-        individualRequest.setRequestType (requestType);
         individualRequests.add (individualRequest);
 
         bulkSubmission.setIndividualRequests (individualRequests);
@@ -315,10 +314,6 @@ public class BulkSubmissionServiceTest
         individualRequest.setCustomerRequestReference (customerReference);
         individualRequest.setSdtRequestReference (sdtReference);
         individualRequest.setId (1L);
-        final IRequestType requestType = new RequestType ();
-        requestType.setName ("mcolClaimStatusUpdate");
-        // individualRequest.setPayload ("IXML1");
-        individualRequest.setRequestType (requestType);
         individualRequest.setRequestStatus ("Received");
 
         return individualRequest;

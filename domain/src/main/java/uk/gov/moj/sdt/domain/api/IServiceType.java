@@ -28,71 +28,72 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.domain.api;
 
-package uk.gov.moj.sdt.domain;
+import java.util.Set;
 
-import uk.gov.moj.sdt.domain.api.IRequestRouting;
-import uk.gov.moj.sdt.domain.api.IRequestType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.TargetApplication;
 
 /**
- * SDT will maintain routing information for target applications based on the Request Type Tag.
+ * Interface for classes implementing {@link IRequesType}.
  * 
- * @author d130680
+ * @author Manoj Kulkarni
  * 
  */
-public class RequestRouting extends AbstractDomainObject implements IRequestRouting
+public interface IServiceType extends IDomainObject
 {
 
     /**
-     * Target application.
+     * Get name.
+     * 
+     * @return name
      */
-    private ITargetApplication targetApplication;
+    String getName ();
 
     /**
-     * Request type.
+     * Set name.
+     * 
+     * @param name name
      */
-    private IRequestType requestType;
+    void setName (final String name);
 
     /**
-     * Web service endpoint.
+     * Get status.
+     * 
+     * @return status
      */
-    private String webServiceEndpoint;
+    String getStatus ();
 
-    @Override
-    public ITargetApplication getTargetApplication ()
-    {
-        return targetApplication;
-    }
+    /**
+     * Set status.
+     * 
+     * @param status status
+     */
+    void setStatus (final String status);
 
-    @Override
-    public void setTargetApplication (final ITargetApplication targetApplication)
-    {
-        this.targetApplication = targetApplication;
-    }
+    /**
+     * Get description.
+     * 
+     * @return description
+     */
+    String getDescription ();
 
-    @Override
-    public IRequestType getRequestType ()
-    {
-        return requestType;
-    }
-
-    @Override
-    public void setRequestType (final IRequestType requestType)
-    {
-        this.requestType = requestType;
-    }
-
-    @Override
-    public String getWebServiceEndpoint ()
-    {
-        return webServiceEndpoint;
-    }
-
-    @Override
-    public void setWebServiceEndpoint (final String webServiceEndpoint)
-    {
-        this.webServiceEndpoint = webServiceEndpoint;
-    }
+    /**
+     * Set description.
+     * 
+     * @param description description
+     */
+    void setDescription (final String description);
+    /**
+     * Set the target applications.
+     * @param targetApplications the target applications that this customer can use.
+     */
+    void setTargetApplications (final Set <TargetApplication> targetApplications);
+    
+    /**
+     * Get the target applications.
+     * @return return target applications that this customer can work with.
+     */
+    Set <TargetApplication> getTargetApplications();
 
 }

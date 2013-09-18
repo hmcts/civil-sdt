@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,76 +24,45 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-package uk.gov.moj.sdt.domain.api;
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
+package uk.gov.moj.sdt.validators;
 
-import java.util.Set;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.utils.visitor.api.ITree;
+import uk.gov.moj.sdt.validators.api.IServiceTypeValidator;
 
 /**
- * Interface for classes implementing {@link IRequesType}.
+ * Implementation of {@link IServiceTypeValidator}.
  * 
- * @author Manoj Kulkarni
+ * @author Saurabh Agarwal
  * 
  */
-public interface IRequestType extends IDomainObject
+public class ServiceTypeValidator extends AbstractSdtValidator implements IServiceTypeValidator
 {
 
     /**
-     * Get name.
-     * 
-     * @return name
+     * Logger instance.
      */
-    String getName ();
+    private static final Log LOGGER = LogFactory.getLog (ServiceTypeValidator.class);
 
     /**
-     * Set name.
-     * 
-     * @param name name
+     * No-argument Constructor.
      */
-    void setName (final String name);
+    public ServiceTypeValidator ()
+    {
+    }
 
-    /**
-     * Get status.
-     * 
-     * @return status
-     */
-    String getStatus ();
-
-    /**
-     * Set status.
-     * 
-     * @param status status
-     */
-    void setStatus (final String status);
-
-    /**
-     * Get description.
-     * 
-     * @return description
-     */
-    String getDescription ();
-
-    /**
-     * Set description.
-     * 
-     * @param description description
-     */
-    void setDescription (final String description);
-    /**
-     * Set the target applications.
-     * @param targetApplications the target applications that this customer can use.
-     */
-    void setTargetApplications (final Set <TargetApplication> targetApplications);
-    
-    /**
-     * Get the target applications.
-     * @return return target applications that this customer can work with.
-     */
-    Set <TargetApplication> getTargetApplications();
+    @Override
+    public void visit (final IServiceType serviceType, final ITree tree)
+    {
+        // TODO Do validation
+        LOGGER.info ("visit(serviceType)");
+    }
 
 }

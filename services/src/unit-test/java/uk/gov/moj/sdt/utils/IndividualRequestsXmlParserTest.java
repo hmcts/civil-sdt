@@ -43,8 +43,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestType;
-import uk.gov.moj.sdt.domain.api.IRequestType;
 
 /**
  * Test class for the IndividualRequestsXmlParser.
@@ -88,21 +86,14 @@ public class IndividualRequestsXmlParserTest
 
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCustomerRequestReference ("1");
-        final IRequestType requestType = new RequestType ();
-        requestType.setName ("mcolClaimStatusUpdate");
-        individualRequest.setRequestType (requestType);
         individualRequest.setRequestStatus ("Forwarded");
 
         final IndividualRequest individualRequest2 = new IndividualRequest ();
         individualRequest2.setCustomerRequestReference ("2");
-        individualRequest2.setRequestType (requestType);
         individualRequest2.setRequestStatus ("Forwarded");
 
         final IndividualRequest individualRequest3 = new IndividualRequest ();
         individualRequest3.setCustomerRequestReference ("3");
-        final IRequestType requestType3 = new RequestType ();
-        requestType3.setName ("mcolClaim");
-        individualRequest3.setRequestType (requestType3);
         individualRequest3.setRequestStatus ("Forwarded");
 
         requests.add (individualRequest);

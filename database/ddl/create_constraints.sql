@@ -63,10 +63,8 @@ ALTER TABLE global_parameters             ADD CONSTRAINT gp_vn_nn  CHECK (versio
 --
 
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_bsi_nn CHECK (bulk_submission_id    IS NOT NULL);
-ALTER TABLE individual_requests           ADD CONSTRAINT ir_rti_nn CHECK (request_type_id       IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_rs_nn  CHECK (request_status        IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_sbr_nn CHECK (sdt_bulk_reference    IS NOT NULL);
-ALTER TABLE individual_requests           ADD CONSTRAINT ir_rrc_nn CHECK (request_retry_count   IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_ln_nn  CHECK (line_number           IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_srr_nn CHECK (sdt_request_reference IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_cd_nn  CHECK (created_date          IS NOT NULL);
@@ -89,7 +87,7 @@ ALTER TABLE service_types                 ADD CONSTRAINT st_stn_nn CHECK (servic
 ALTER TABLE service_types                 ADD CONSTRAINT st_sts_nn CHECK (service_type_status IS NOT NULL);
 ALTER TABLE service_types                 ADD CONSTRAINT st_vn_nn  CHECK (version_number      IS NOT NULL);
 
-ALTER TABLE request_types                 ADD CONSTRAINT rt_rtn_uni UNIQUE (request_type_name) ;
+ALTER TABLE service_types                 ADD CONSTRAINT rt_rtn_uni UNIQUE (service_type_name) ;
 
 
 --

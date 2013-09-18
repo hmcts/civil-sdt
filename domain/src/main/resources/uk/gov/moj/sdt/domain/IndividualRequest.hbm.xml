@@ -13,9 +13,6 @@
         <many-to-one name="bulkSubmission" class="uk.gov.moj.sdt.domain.BulkSubmission" fetch="join">
             <column name="BULK_SUBMISSION_ID" />
         </many-to-one>
-        <many-to-one name="requestType" class="uk.gov.moj.sdt.domain.RequestType" fetch="join">
-            <column name="REQUEST_TYPE_ID" />
-        </many-to-one>
         <property name="customerRequestReference" type="java.lang.String">
             <column name="CUSTOMER_REQUEST_REF" />
         </property>

@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,18 +24,62 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id$
- * $LastChangedRevision$
- * $LastChangedDate$
- * $LastChangedBy$ */
-package uk.gov.moj.sdt.validators.api;
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
 
+package uk.gov.moj.sdt.domain.api;
 
 /**
- * An interface to provide validation methods for {@link RequestType}.
+ * Interface for classes implementing {@link IServiceRouting} .
  * 
- * @author Saurabh Agarwal
+ * @author Manoj Kulkarni
+ * 
  */
-public interface IRequestTypeValidator
+public interface IServiceRouting extends IDomainObject
 {
+
+    /**
+     * Get the Target Application.
+     * 
+     * @return target application
+     */
+    ITargetApplication getTargetApplication ();
+
+    /**
+     * Set the Target Application.
+     * 
+     * @param targetApplication target application
+     */
+    void setTargetApplication (final ITargetApplication targetApplication);
+
+    /**
+     * Get the Service Type.
+     * 
+     * @return service type
+     */
+    IServiceType getServiceType ();
+
+    /**
+     * Set the Service Type.
+     * 
+     * @param serviceType service type
+     */
+    void setServiceType (final IServiceType serviceType);
+
+    /**
+     * Get web service end point.
+     * 
+     * @return web service end point
+     */
+    String getWebServiceEndpoint ();
+
+    /**
+     * Set web service end point.
+     * 
+     * @param webServiceEndpoint web service end point
+     */
+    void setWebServiceEndpoint (final String webServiceEndpoint);
+
 }

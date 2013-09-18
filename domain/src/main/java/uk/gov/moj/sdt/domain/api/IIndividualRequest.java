@@ -60,20 +60,6 @@ public interface IIndividualRequest extends IDomainObject
     void setBulkSubmission (final IBulkSubmission bulkSubmission);
 
     /**
-     * Get the Request Type.
-     * 
-     * @return request type
-     */
-    IRequestType getRequestType ();
-
-    /**
-     * Set the Request Type.
-     * 
-     * @param requestType request type
-     */
-    void setRequestType (final IRequestType requestType);
-
-    /**
      * Get customer request reference.
      * 
      * @return customer request reference

@@ -35,7 +35,6 @@ import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IRequestType;
 
 /**
  * When processing an Individual Request within the Bulk Request, the SDT application records
@@ -50,11 +49,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * Bulk submission.
      */
     private IBulkSubmission bulkSubmission;
-
-    /**
-     * Request type.
-     */
-    private IRequestType requestType;
 
     /**
      * Identifier defined by End User to uniquely (unique for the End User within
@@ -208,18 +202,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void setBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         this.bulkSubmission = bulkSubmission;
-    }
-
-    @Override
-    public IRequestType getRequestType ()
-    {
-        return requestType;
-    }
-
-    @Override
-    public void setRequestType (final IRequestType requestType)
-    {
-        this.requestType = requestType;
     }
 
     @Override

@@ -28,86 +28,74 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.validators.exception;
 
-package uk.gov.moj.sdt.domain;
-
-import java.util.Set;
-
-import uk.gov.moj.sdt.domain.api.IRequestType;
+import java.util.List;
 
 /**
- * Each defined target application will have a set of associated Request Types.
- * E.g. Claim,, Judgment, Warrant, JudgmentWarrant and ClaimUpate.
+ * An invalid service type has been sent.
  * 
  * @author d130680
  * 
  */
-public class RequestType extends AbstractDomainObject implements IRequestType
+public class InvalidServiceTypeException extends AbstractBusinessException
 {
-	
-	/**
-	 * The target applications that this customer can work with.e.g. 'MCOL'
-	 */
-	private Set <TargetApplication> targetApplications;
     /**
-     * Request type name.
+     * The Constant serialVersionUID.
      */
-    private String name;
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Request type status.
+     * An invalid service type has been sent.
+     * 
+     * @param code error code
+     * @param description error description
      */
-    private String status;
+    public InvalidServiceTypeException (final String code, final String description)
+    {
+        super (code, description);
+    }
 
     /**
-     * Request type description.
+     * An invalid service type has been sent.
+     * 
+     * @param code error code
+     * @param description error description
+     * @param replacements string replacements with tokens
      */
-    private String description;
-
-    @Override
-    public String getName ()
+    public InvalidServiceTypeException (final String code, final String description, final List<String> replacements)
     {
-        return name;
+        super (code, description, replacements);
     }
 
-    @Override
-    public void setName (final String name)
+    /**
+     * An invalid service type has been sent.
+     * 
+     * @param s the s
+     */
+    public InvalidServiceTypeException (final String s)
     {
-        this.name = name;
+        super (s);
     }
 
-    @Override
-    public String getStatus ()
+    /**
+     * An invalid service type has been sent.
+     * 
+     * @param cause the cause
+     */
+    public InvalidServiceTypeException (final Throwable cause)
     {
-        return status;
+        super (cause);
     }
 
-    @Override
-    public void setStatus (final String status)
+    /**
+     * An invalid service type has been sent.
+     * 
+     * @param s the s
+     * @param cause the cause
+     */
+    public InvalidServiceTypeException (final String s, final Throwable cause)
     {
-        this.status = status;
+        super (s, cause);
     }
-
-    @Override
-    public String getDescription ()
-    {
-        return description;
-    }
-
-    @Override
-    public void setDescription (final String description)
-    {
-        this.description = description;
-    }
-
-	@Override
-	public void setTargetApplications(final Set <TargetApplication> targetApplications) {
-		this.targetApplications = targetApplications;
-	}
-
-	@Override
-	public Set <TargetApplication> getTargetApplications() {
-		return targetApplications;
-	}
-
 }

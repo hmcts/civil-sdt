@@ -3,20 +3,20 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 03-Jul-2013 15:00:42 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="uk.gov.moj.sdt.domain.RequestType" lazy="false" table="REQUEST_TYPES">
-    <id name="id" column="REQUEST_TYPE_ID" >  
+    <class name="uk.gov.moj.sdt.domain.ServiceType" lazy="false" table="SERVICE_TYPES">
+    <id name="id" column="SERVICE_TYPE_ID" >  
                   <generator class="sequence" >
-                  	<param name="sequence">req_typ_seq</param>
+                  	<param name="sequence">ser_typ_seq</param>
                   </generator>
         </id><version name="version" access="field" column="VERSION_NUMBER"/>
         <property name="name" type="java.lang.String">
-            <column name="REQUEST_TYPE_NAME" />
+            <column name="SERVICE_TYPE_NAME" />
         </property>
         <property name="status" type="java.lang.String">
-            <column name="REQUEST_TYPE_STATUS" />
+            <column name="SERVICE_TYPE_STATUS" />
         </property>
         <property name="description" type="java.lang.String">
-            <column name="REQUEST_TYPE_DESCRIPTION" />
+            <column name="SERVICE_TYPE_DESCRIPTION" />
         </property>
     </class>
 </hibernate-mapping>

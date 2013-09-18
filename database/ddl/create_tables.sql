@@ -119,7 +119,7 @@ CREATE TABLE service_routings
 ,target_application_id    INTEGER            -- pk, fk to valid_services
 ,web_service_endpoint     VARCHAR2(255)
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column
-) &request_routings
+) &service_routings
 ;
 
 CREATE TABLE service_types
@@ -128,7 +128,7 @@ CREATE TABLE service_types
 ,service_type_status      VARCHAR2(1)
 ,service_type_description VARCHAR2(2000)
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column
-) &request_types
+) &service_types
 ;
 
 CREATE TABLE service_requests
@@ -143,7 +143,6 @@ CREATE TABLE service_requests
 ,sdt_bulk_reference       VARCHAR2(29)       -- should logically map bulk submissions but not guaranteed 
 ,internal_system_error    VARCHAR2(4000)     
 ,target_application_id    INTEGER            
-,internal_system_error    VARCHAR2(4000)
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column 
 ) &service_requests
 ;

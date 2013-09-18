@@ -41,10 +41,10 @@ import org.joda.time.LocalDateTime;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.RequestType;
+import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.misc.BulkRequestStatus;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
@@ -118,8 +118,6 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
             // Set line number
             individualRequest.setLineNumber (lineNumber++);
 
-            individualRequest.setRequestType (mapToRequestType (request.getRequestType ()));
-
             // Set the initial status
             individualRequest.setRequestStatus (IndividualRequestStatus.FORWARDED.getStatus ());
 
@@ -138,13 +136,13 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
      * @param requestTypeType request type
      * @return domain request type
      */
-    private static IRequestType mapToRequestType (final String requestTypeType)
+    private static IServiceType mapToRequestType (final String requestTypeType)
     {
 
-        final IRequestType requestType = new RequestType ();
-        requestType.setName (requestTypeType);
+        final IServiceType serviceType = new ServiceType ();
+        serviceType.setName (requestTypeType);
 
-        return requestType;
+        return serviceType;
 
     }
 

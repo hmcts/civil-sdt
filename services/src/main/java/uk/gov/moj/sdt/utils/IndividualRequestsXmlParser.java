@@ -65,6 +65,13 @@ public class IndividualRequestsXmlParser
         // Get iterator so we can traverse the list of requests and the payload (raw XML) to each one.
         final Iterator<IndividualRequest> iter = individualRequests.iterator ();
 
+        // Match it against the result of all previous match replacements.
+        String rawXml = SdtContext.getContext ().getRawInXml ();
+
+        // Remove linefeeds as they stop the regular expression working.
+        rawXml = rawXml.replace ('\n', ' ');
+        rawXml = rawXml.replace ('\r', ' ');
+
         while (iter.hasNext ())
         {
             // Get the next request.
@@ -77,19 +84,11 @@ public class IndividualRequestsXmlParser
                 continue;
             }
 
-            // Build a search pattern with this request id. Allow for any order of requestId and requestType
+            // Build a search pattern with this request id. Allow for any order of requestId
             // attributes.
             final Pattern pattern =
-                    Pattern.compile ("<[\\w]+:request requestType=\"" + individualRequest.getRequestType ().getName () +
-                            "\" requestId=\"" + individualRequest.getCustomerRequestReference () +
-                            "\">(.*?)</[\\w]+:request>");
-
-            // Match it against the result of all previous match replacements.
-            String rawXml = SdtContext.getContext ().getRawInXml ();
-
-            // Remove linefeeds as they stop the regular expression working.
-            rawXml = rawXml.replace ('\n', ' ');
-            rawXml = rawXml.replace ('\r', ' ');
+                    Pattern.compile ("<[\\w]+:request [\\w]+=\"[\\w]+\" requestId=\"" +
+                            individualRequest.getCustomerRequestReference () + "\">(.*?)</[\\w]+:request>");
 
             LOGGER.debug ("Raw Xml after linefeed stripping is " + rawXml);
 

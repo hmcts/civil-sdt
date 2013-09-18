@@ -34,7 +34,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IRequestType;
+import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -67,10 +67,10 @@ public interface IDomainObjectVisitor extends IVisitor
     /**
      * Visit the domain object.
      * 
-     * @param requestType domain object to be visited.
+     * @param serviceType domain object to be visited.
      * @param tree tree being walked.
      */
-    void visit (IRequestType requestType, ITree tree);
+    void visit (IServiceType serviceType, ITree tree);
 
     /**
      * Visit the domain object.

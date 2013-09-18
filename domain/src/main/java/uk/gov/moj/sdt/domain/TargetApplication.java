@@ -43,14 +43,14 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  */
 public class TargetApplication extends AbstractDomainObject implements ITargetApplication
 {
-	/**
-	 * A collection of all request types that can be used with this target application.
-	 */
-	private Set <RequestRouting> requestRoutings;
-	/**
-	 * A collection of all customers who can work with this target application.
-	 */
-	private Set <BulkCustomer> bulkCustomers;
+    /**
+     * A collection of all service types that can be used with this target application.
+     */
+    private Set<ServiceRouting> serviceRoutings;
+    /**
+     * A collection of all customers who can work with this target application.
+     */
+    private Set<BulkCustomer> bulkCustomers;
 
     /**
      * Target application code.
@@ -86,25 +86,29 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
         this.targetApplicationName = targetApplicationName;
     }
 
-	@Override
-	public Set <BulkCustomer> getBulkCustomers() {
-		return bulkCustomers;
-	}
+    @Override
+    public Set<BulkCustomer> getBulkCustomers ()
+    {
+        return bulkCustomers;
+    }
 
-	@Override
-	public void setBulkCustomers(final Set <BulkCustomer> bulkCustomers) {
-		this.bulkCustomers = bulkCustomers;
-		
-	}
+    @Override
+    public void setBulkCustomers (final Set<BulkCustomer> bulkCustomers)
+    {
+        this.bulkCustomers = bulkCustomers;
 
-	@Override
-	public Set <RequestRouting> getRequestRoutings() {
-		return requestRoutings;
-	}
+    }
 
-	@Override
-	public void setRequestRoutings(final Set <RequestRouting> requestRoutings) {
-		this.requestRoutings = requestRoutings;		
-	}
+    @Override
+    public Set<ServiceRouting> getServiceRoutings ()
+    {
+        return serviceRoutings;
+    }
+
+    @Override
+    public void setServiceRoutings (final Set<ServiceRouting> serviceRoutings)
+    {
+        this.serviceRoutings = serviceRoutings;
+    }
 
 }
