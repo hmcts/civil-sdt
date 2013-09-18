@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -64,6 +65,9 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
 
         // Buffer to hold the developing result.
         String newXml = message;
+
+        newXml = newXml.replace ('\n', ' ');
+        newXml = newXml.replace ('\r', ' ');
 
         // Check to ensure the parent tag can be found in the message.
         if (super.findParentTag (message))
@@ -99,13 +103,16 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                     }
 
                     // Form the replacement string from the matched groups and the extra XML.
-                    final String replacementXml =
+                    String replacementXml =
                             matcher.group (1) + targetApplicationRespMap.get (requestId) + matcher.group (2);
 
                     if (LOGGER.isDebugEnabled ())
                     {
                         LOGGER.debug ("Replacement string[" + replacementXml + "]");
                     }
+
+                    replacementXml = replacementXml.replace ('\n', ' ');
+                    replacementXml = replacementXml.replace ('\r', ' ');
 
                     // Inject the system specific response into the current envelope
                     newXml = matcher.replaceFirst (replacementXml);
@@ -138,15 +145,21 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
         }
 
         // Now check that there are no responses without case management specific content inserted.
-        final Pattern pattern = Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w\"=]*>\\s*<[\\w]+:status");
+        final Pattern pattern =
+                Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w\"=]*>\\s*"
+                        + "<[\\w]+:status = code\"([\\w]+)\"");
         final Matcher matcher = pattern.matcher (newXml);
         if (matcher.find ())
         {
-            // We found a response which has not been enriched. Failure to find matching request in outgoing XML.
-            LOGGER.error ("Detected unenriched response tag[" + matcher.group () +
-                    "] within bulk feedback response XML.");
-            throw new UnsupportedOperationException ("Detected unenriched response tag[" + matcher.group () +
-                    "] within bulk feedback response XML.");
+            // Ignore rejected responses which do not need to be enhanced.
+            if ( !matcher.group (1).equals (IndividualRequestStatus.REJECTED.getStatus ()))
+            {
+                // We found a response which has not been enriched. Failure to find matching request in outgoing XML.
+                LOGGER.error ("Detected unenriched response tag[" + matcher.group () +
+                        "] within bulk feedback response XML.");
+                throw new UnsupportedOperationException ("Detected unenriched response tag[" + matcher.group () +
+                        "] within bulk feedback response XML.");
+            }
         }
 
         return newXml;
