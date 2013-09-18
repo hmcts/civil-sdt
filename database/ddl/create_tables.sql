@@ -133,7 +133,7 @@ CREATE TABLE service_types
 
 CREATE TABLE service_requests
 (service_request_id       INTEGER            -- synthetic pk
-,service_request_header   VARCHAR2(4000)     
+--,service_request_header   VARCHAR2(4000)     
 ,request_payload          BLOB               -- the full incoming message including headers 
 ,request_timestamp        TIMESTAMP          -- date/time of request receipt
 ,response_payload         BLOB               -- the full outgoing message including headers
