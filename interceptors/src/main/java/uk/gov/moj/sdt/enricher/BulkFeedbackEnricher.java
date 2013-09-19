@@ -106,13 +106,13 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                     String replacementXml =
                             matcher.group (1) + targetApplicationRespMap.get (requestId) + matcher.group (2);
 
+                    replacementXml = replacementXml.replace ('\n', ' ');
+                    replacementXml = replacementXml.replace ('\r', ' ');
+
                     if (LOGGER.isDebugEnabled ())
                     {
                         LOGGER.debug ("Replacement string[" + replacementXml + "]");
                     }
-
-                    replacementXml = replacementXml.replace ('\n', ' ');
-                    replacementXml = replacementXml.replace ('\r', ' ');
 
                     // Inject the system specific response into the current envelope
                     newXml = matcher.replaceFirst (replacementXml);
@@ -146,8 +146,8 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
 
         // Now check that there are no responses without case management specific content inserted.
         final Pattern pattern =
-                Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w\"=]*>\\s*"
-                        + "<[\\w]+:status = code\"([\\w]+)\"");
+                Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w]*\">\\s*"
+                        + "<[\\w]+:status code=\"([ \\w]+)\"");
         final Matcher matcher = pattern.matcher (newXml);
         if (matcher.find ())
         {
