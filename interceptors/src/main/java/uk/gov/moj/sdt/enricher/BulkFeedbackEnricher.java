@@ -128,38 +128,36 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                 }
             }
 
+            // Now check that there are no responses without case management specific content inserted.
+            final Pattern pattern =
+                    Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w]*\">\\s*"
+                            + "<[\\w]+:status code=\"([ \\w]+)\"");
+            final Matcher matcher = pattern.matcher (newXml);
+            if (matcher.find ())
+            {
+                // Ignore rejected responses which do not need to be enhanced.
+                if ( !matcher.group (1).equals (IndividualRequestStatus.REJECTED.getStatus ()))
+                {
+                    // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
+                    LOGGER.error ("Detected unenriched response tag[" + matcher.group () +
+                            "] within bulk feedback response XML.");
+                    throw new UnsupportedOperationException ("Detected unenriched response tag[" + matcher.group () +
+                            "] within bulk feedback response XML.");
+                }
+            }
+
             // TODO - need to manipulate the namespace declaration
         }
         else
         {
             // Failure to find matching request in outgoing XML.
-            LOGGER.error ("Failure to find parent tag [" + this.getParentTag () +
-                    "] within bulk feedback response XML.");
-            throw new UnsupportedOperationException ("Failure to find parent tag [" + this.getParentTag () +
-                    "] within bulk feedback response XML.");
+            LOGGER.debug("Parent tag [" + this.getParentTag () +
+                    "] not found...skipping enrichment.");
         }
 
         if (LOGGER.isDebugEnabled ())
         {
             LOGGER.debug ("Message after enrichment [" + newXml + "]");
-        }
-
-        // Now check that there are no responses without case management specific content inserted.
-        final Pattern pattern =
-                Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w]*\">\\s*"
-                        + "<[\\w]+:status code=\"([ \\w]+)\"");
-        final Matcher matcher = pattern.matcher (newXml);
-        if (matcher.find ())
-        {
-            // Ignore rejected responses which do not need to be enhanced.
-            if ( !matcher.group (1).equals (IndividualRequestStatus.REJECTED.getStatus ()))
-            {
-                // We found a response which has not been enriched. Failure to find matching request in outgoing XML.
-                LOGGER.error ("Detected unenriched response tag[" + matcher.group () +
-                        "] within bulk feedback response XML.");
-                throw new UnsupportedOperationException ("Detected unenriched response tag[" + matcher.group () +
-                        "] within bulk feedback response XML.");
-            }
         }
 
         return newXml;
