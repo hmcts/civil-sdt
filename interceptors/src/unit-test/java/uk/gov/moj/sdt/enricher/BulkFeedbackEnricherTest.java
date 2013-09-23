@@ -75,7 +75,7 @@ public class BulkFeedbackEnricherTest
     /**
      * Test enrichment of single response with no error.
      */
-    @Test
+    @Test  
     public void testSingleResponse ()
     {
         // Create map to hold fake responses from MCOL.
@@ -207,45 +207,6 @@ public class BulkFeedbackEnricherTest
                             + "id[USER_REQUEST_ID_B3]."))
             {
                 Assert.fail ("Failed to throw expected UnsupportedOperationException for missing request id.");
-            }
-        }
-    }
-
-    /**
-     * Test enrichment of XML which lacks the parent tag.
-     */
-    @Test
-    public void testMissingParentTag ()
-    {
-        // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
-        // CHECKSTYLE:OFF Line length is acceptable
-        targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B1",
-                        "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
-
-        // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
-        // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
-
-        // Setup the XML to be enriched.
-        final String inXml =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:badParentTag xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:badParentTag></soap:Body></soap:Envelope>";
-        // CHECKSTYLE:ON
-
-        try
-        {
-            // Call the enricher.
-            final String result = enricher.enrichXml (inXml);
-
-            Assert.fail ("Failed to throw expected UnsupportedOperationException for missing parent tag.");
-        }
-        catch (final UnsupportedOperationException e)
-        {
-            if ( !e.getMessage ().equals (
-                    "Failure to find parent tag [bulkFeedbackResponse] within bulk feedback response XML."))
-            {
-                Assert.fail ("Failed to throw expected UnsupportedOperationException for missing parent tag.");
             }
         }
     }
