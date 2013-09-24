@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,80 +28,55 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.messaging;
 
-package uk.gov.moj.sdt.utils;
-
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.TextMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
+import uk.gov.moj.sdt.messaging.api.IMessageDrivenBean;
 
 /**
- * This class is the implementation of the ISdtBulkReferenceGenerator interface.
+ * Implementation of the IMessageReader interface.
+ * This class is implemented using the Spring JMS 1.1 support and is invoked by the
+ * MessageListenerAdapter class that is registered with the DefaultMessageListener.
  * 
  * @author Manoj Kulkarni
  * 
  */
 @Transactional (propagation = Propagation.REQUIRED)
-public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
+public class IndividualRequestMdb implements IMessageDrivenBean
 {
-
     /**
-     * Logger object.
+     * Logger for logging messages.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (SdtBulkReferenceGenerator.class);
-
-    /**
-     * DAO to retrieve error messages.
-     */
-    private IGenericDao genericDao;
+    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestMdb.class);
 
     @Override
-    @Transactional
-    public String getSdtBulkReference (final String targetApplication)
+    public void readMessage (final Message message)
     {
-        final int targetAppLength = 4;
-
-        if (targetApplication == null || targetApplication.length () != targetAppLength)
+        if (message instanceof TextMessage)
         {
-            throw new IllegalArgumentException ("The target application length is expected to be 4 characters.");
+
+            String sdtReference = null;
+            try
+            {
+                sdtReference = ((TextMessage) message).getText ();
+            }
+            catch (final JMSException e)
+            {
+                LOGGER.error (e.getMessage (), e);
+                throw new RuntimeException (e);
+            }
+            LOGGER.debug ("Received message " + sdtReference);
+
         }
 
-        final String refNumberFormat = "{0}-{1}-{2}";
-        final SimpleDateFormat dateFormat = new SimpleDateFormat ();
-        dateFormat.applyLocalizedPattern ("yyyyMMddHHmmss");
-
-        final long bulkId = genericDao.getNextSequenceValue ("SDT_REF_SEQ");
-
-        final int totalArgs = 3;
-        final Object[] args = new Object[totalArgs];
-        args[0] = targetApplication;
-        args[1] = dateFormat.format (new Date (System.currentTimeMillis ()));
-        // Pad the bulk id to make it 9 chars
-        args[2] = String.format ("%09d", bulkId);
-
-        // Fill in the reference according to the reference format.
-        final String refNumber = MessageFormat.format (refNumberFormat, args[0], args[1], args[2]);
-
-        return refNumber;
-
-    }
-
-    /**
-     * Setter method for the generic Dao.
-     * 
-     * @param genericDao The generic Dao
-     */
-    public void setGenericDao (final IGenericDao genericDao)
-    {
-        this.genericDao = genericDao;
     }
 
 }

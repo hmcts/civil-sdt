@@ -38,50 +38,66 @@ import javax.jms.QueueBrowser;
 import javax.jms.Session;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
+
 /**
- * IntegrationTest class for testing the MessageWriter implementation.
+ * IntegrationTest class for testing the MessageReader implementation.
  * 
  * @author Manoj Kulkarni
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
-        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
-public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
+        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/messaging/spring.hibernate.test.xml",
+        "/uk/gov/moj/sdt/messaging/spring.context.test.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
+public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (MessageWriterIntTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger (IndividualRequestMdbIntTest.class);
 
     /**
-     * Test method to test the sending of message.
+     * Setup the test.
+     */
+    @Before
+    public void setUp ()
+    {
+        LOG.debug ("Before SetUp");
+        DBUnitUtility.loadDatabase (this.getClass (), true);
+        LOG.debug ("After SetUp");
+    }
+
+    /**
+     * This method tests the read message.
      * 
-     * @throws JMSException exception
-     * @throws InterruptedException exception
-     * 
+     * @throws InterruptedException if the thread call is interrupted
      */
     @Test
-    public void testQueueMessage () throws JMSException, InterruptedException
+    public void testReadMessage () throws InterruptedException
     {
+        // The context configuration declared at class level would start-up the
+        // message driven bean ready for reading messages.
+
+        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
+
+        // 1st we call the message writer to write a message
         // Get message writer from Spring.
         final MessageWriter messageWriter =
                 (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
-
-        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
         // Send the first message.
         final String strMessage1 =
@@ -113,34 +129,6 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
             }
 
         });
-    }
 
-    /**
-     * Test method to test failure behaviour when ACTIVE MQ not running.
-     * 
-     * @throws JMSException exception
-     * 
-     */
-    @Test
-    public void testActiveMqDown () throws JMSException
-    {
-        // Get message writer from Spring.
-        final MessageWriter messageWriter =
-                (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriterBad");
-
-        final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
-
-        // Send the message.
-        final String strMessage1 = "TestMessage" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        try
-        {
-            messageWriter.queueMessage (strMessage1);
-            Assert.fail ("Expected exception not thrown.");
-        }
-        catch (final UncategorizedJmsException e)
-        {
-            // Test has worked - swallow exception.
-            Assert.assertTrue (true);
-        }
     }
 }

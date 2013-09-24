@@ -36,6 +36,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
@@ -48,6 +50,7 @@ import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
  * @author Manoj Kulkarni/Robin Compston
  * 
  */
+@Transactional (propagation = Propagation.SUPPORTS)
 public final class GlobalParametersCache extends AbstractCacheControl
 {
     /**
@@ -76,6 +79,7 @@ public final class GlobalParametersCache extends AbstractCacheControl
     }
 
     @Override
+    @Transactional (propagation = Propagation.REQUIRED)
     protected <DomainType extends IDomainObject> DomainType getSpecificValue (final Class<DomainType> domainType,
                                                                               final String paramName)
     {
@@ -115,6 +119,7 @@ public final class GlobalParametersCache extends AbstractCacheControl
     }
 
     @Override
+    @Transactional (propagation = Propagation.REQUIRED)
     protected void loadCache ()
     {
         // This object should be a singleton but play safe and only let one instance at a time refresh the cache.

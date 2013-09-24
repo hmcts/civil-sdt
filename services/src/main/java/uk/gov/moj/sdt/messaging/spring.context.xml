@@ -23,10 +23,35 @@
 		<constructor-arg ref="connectionFactory"/>
 	</bean>
 	
+	 <!--  ActiveMQ Destination  -->
+    <amq:queue id="destination" physicalName="JMSTestQueue" />
+	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriter" 
 		class="uk.gov.moj.sdt.messaging.MessageWriter">
 		<constructor-arg ref="jmsTemplate"/>
         <constructor-arg value="JMSTestQueue"/>
 	</bean>
-				
+	
+	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+			<bean class="uk.gov.moj.sdt.messaging.IndividualRequestMdb"/>
+		</constructor-arg>
+		<property name="defaultListenerMethod" value="readMessage"/>
+		<property name="messageConverter"><null/></property>
+	</bean>
+	
+	<bean id="messageListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer"
+		depends-on="transactionManager">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="destination" />
+		<property name="messageListener" ref="messageListener" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="concurrentConsumers" value="1"/>
+		<property name="maxConcurrentConsumers" value="5"/>
+		<property name="receiveTimeout" value="30000"/>
+		<property name="idleTaskExecutionLimit" value="10"/>
+		<property name="idleConsumerLimit" value="5"/>
+	</bean>
+
 </beans>

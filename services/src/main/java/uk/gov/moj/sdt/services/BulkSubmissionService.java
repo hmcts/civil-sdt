@@ -34,6 +34,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -55,6 +57,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author Manoj Kulkarni
  * 
  */
+@Transactional (propagation = Propagation.SUPPORTS)
 public class BulkSubmissionService implements IBulkSubmissionService
 {
     /**
@@ -88,6 +91,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
     private IMessageWriter messageWriter;
 
     @Override
+    @Transactional (propagation = Propagation.REQUIRED)
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
     {
 
@@ -125,17 +129,6 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
         // Now persist the bulk submissions.
         this.getGenericDao ().persist (bulkSubmission);
-
-        // Persist the individual request with the payload.
-
-        // Iterate through each of the individual request for the bulk submission
-        // and set the raw xml from the interceptor.
-        // for (IndividualRequest iRequest : individualRequests)
-        // {
-        // // TODO : This method call is not efficient for inserts, need to
-        // // investigate the bulk insertion mechanism for the GenericDao.
-        // this.getGenericDao ().persist (iRequest);
-        // }
 
         // Enqueue the SDT request id of each individual request to the message
         // server.

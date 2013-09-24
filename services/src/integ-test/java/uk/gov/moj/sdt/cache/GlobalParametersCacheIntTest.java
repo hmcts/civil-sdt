@@ -34,8 +34,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +42,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
@@ -58,6 +58,8 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
+@TransactionConfiguration (defaultRollback = true)
+@Transactional
 public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
@@ -78,6 +80,7 @@ public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTes
      * Test method for the getValue method.
      */
     @Test
+    @Transactional
     public void testGetValue ()
     {
         final ICacheable cacheable =
@@ -95,29 +98,6 @@ public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTes
         final IGlobalParameter globalParameter2 = cacheable.getValue (IGlobalParameter.class, "SDTS_DATA_RETENTION");
 
         assertNull (globalParameter2);
-    }
-
-    /**
-     * Tests the un-cache method of the GlobalParametersCache.
-     */
-    @Test
-    public void testUncache ()
-    {
-        final GlobalParametersCache cache =
-                (GlobalParametersCache) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.GlobalParametersCache");
-
-        final ICacheable cacheable =
-                (ICacheable) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.GlobalParametersCache");
-
-        final IGlobalParameter globalParameter = cacheable.getValue (IGlobalParameter.class, "SDT_DATA_RETENTION");
-
-        assertNotNull (globalParameter);
-
-        cache.uncache ();
-
-        final Map<String, IGlobalParameter> parameters = cache.getGlobalParameters ();
-
-        assertTrue (parameters.size () == 0);
     }
 
 }

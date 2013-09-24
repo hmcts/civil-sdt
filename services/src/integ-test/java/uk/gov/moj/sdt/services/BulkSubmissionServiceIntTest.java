@@ -45,9 +45,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -73,6 +76,8 @@ import uk.gov.moj.sdt.utils.Utilities;
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
+@TransactionConfiguration (defaultRollback = true)
+@Transactional
 public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
@@ -97,6 +102,8 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
+    @Transactional
+    @Rollback (true)
     public void saveSingleSubmission () throws IOException
     {
         final String rawXml = this.getRawXml ("testXMLValid2.xml");
@@ -200,7 +207,7 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
         individualRequest.setSdtRequestReference ("SDT_test_1");
         individualRequest.setSdtBulkReference ("SDT_BULKREF_0001");
         // individualRequest.setPayload ("IXML1");
-        individualRequest.setRequestStatus ("Accepted");
+        individualRequest.setRequestStatus ("Received");
         individualRequest.setBulkSubmission (bulkSubmission);
         individualRequests.add (individualRequest);
 

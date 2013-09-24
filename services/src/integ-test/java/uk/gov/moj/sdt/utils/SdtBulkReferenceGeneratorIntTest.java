@@ -43,6 +43,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
+
 /**
  * Test class for SdtBulkReferenceGenerator.
  * 
@@ -65,8 +67,8 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
     @Test
     public void testGetSdtBulkReference ()
     {
-        final SdtBulkReferenceGenerator referenceGenerator =
-                (SdtBulkReferenceGenerator) this.applicationContext
+        final ISdtBulkReferenceGenerator referenceGenerator =
+                (ISdtBulkReferenceGenerator) this.applicationContext
                         .getBean ("uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator");
 
         // Negative Test 1 - Supply blank application name

@@ -32,6 +32,8 @@ package uk.gov.moj.sdt.domain.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
@@ -43,7 +45,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  * @author Robin Compston
  * 
  */
-
+@Transactional (propagation = Propagation.SUPPORTS)
 public abstract class AbstractCacheControl implements ICacheable
 {
     /**
@@ -57,6 +59,7 @@ public abstract class AbstractCacheControl implements ICacheable
     private int localCacheResetControl;
 
     @Override
+    @Transactional (propagation = Propagation.REQUIRED)
     public final <DomainType extends IDomainObject> DomainType getValue (final Class<DomainType> domainType,
                                                                          final String key)
     {

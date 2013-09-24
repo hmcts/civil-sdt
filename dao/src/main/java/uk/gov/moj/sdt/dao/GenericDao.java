@@ -44,7 +44,6 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
@@ -64,7 +63,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  * @author Robin Compston
  */
 // @Transactional (propagation = Propagation.MANDATORY)
-@Transactional
+// @Transactional
 public class GenericDao implements IGenericDao
 {
     /**
