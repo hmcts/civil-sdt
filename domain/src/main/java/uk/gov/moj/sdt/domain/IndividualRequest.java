@@ -34,6 +34,7 @@ package uk.gov.moj.sdt.domain;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
@@ -146,7 +147,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * 
      * Error log.
      */
-    private ErrorLog errorLog;
+    private IErrorLog errorLog;
 
     /**
      * XML payload.
@@ -363,13 +364,13 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
-    public ErrorLog getErrorLog ()
+    public IErrorLog getErrorLog ()
     {
         return errorLog;
     }
 
     @Override
-    public void setErrorLog (final ErrorLog errorLog)
+    public void setErrorLog (final IErrorLog errorLog)
     {
         this.errorLog = errorLog;
     }

@@ -47,5 +47,7 @@
             <list-index></list-index>
             <one-to-many class="uk.gov.moj.sdt.domain.IndividualRequest" />
         </list>
+        <one-to-one name="errorLog" class="uk.gov.moj.sdt.domain.ErrorLog" cascade="all">
+        </one-to-one>
     </class>
 </hibernate-mapping>
