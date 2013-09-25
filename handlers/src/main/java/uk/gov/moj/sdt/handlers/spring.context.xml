@@ -10,19 +10,19 @@
     <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler" 
         class="uk.gov.moj.sdt.handlers.WsCreateBulkRequestHandler">
         <property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator"/>
-        <property name="transformer" ref="uk.gov.moj.sdt.transformers.BulkRequestToDomainTransformer"/>
+        <property name="transformer" ref="uk.gov.moj.sdt.transformers.BulkRequestTransformer"/>
     </bean>
 
     <bean id="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler" 
         class="uk.gov.moj.sdt.handlers.WsReadBulkFeedbackRequestHandler">
         <property name="bulkFeedbackService" ref="uk.gov.moj.sdt.services.api.IBulkFeedbackService"/>
-        <property name="transformer" ref="uk.gov.moj.sdt.transformers.BulkFeedbackToDomainTransformer"/>
+        <property name="transformer" ref="uk.gov.moj.sdt.transformers.BulkFeedbackTransformer"/>
     </bean>
                 
     <bean id="uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler" 
         class="uk.gov.moj.sdt.handlers.WsReadSubmitQueryHandler">
         <property name="submitQueryService" ref="uk.gov.moj.sdt.services.api.ISubmitQueryService"/>
-        <property name="transformer" ref="uk.gov.moj.sdt.transformers.SubmitQueryToDomainTransformer"/>
+        <property name="transformer" ref="uk.gov.moj.sdt.transformers.SubmitQueryTransformer"/>
     </bean>        
         
 </beans>
