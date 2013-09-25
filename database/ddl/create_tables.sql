@@ -38,6 +38,7 @@ CREATE TABLE bulk_submissions
 (bulk_submission_id       INTEGER               -- pk
 ,bulk_customer_id         INTEGER               -- fk from bulk_customers
 ,target_application_id    INTEGER               -- fk from target_applications
+,service_request_id       INTEGER               -- fk from service_requests
 ,sdt_bulk_reference       VARCHAR2(29)          -- fixed format 
 ,customer_reference       VARCHAR2(32)
 ,created_date             TIMESTAMP             -- date/time of record created
@@ -107,6 +108,7 @@ CREATE TABLE individual_requests
 --,target_application_status    VARCHAR2(4000)
 ,target_application_response  VARCHAR2(4000) 
 ,internal_system_error        VARCHAR2(4000)
+,request_type                 VARCHAR2(250)
 ,version_number               INTEGER DEFAULT 0  -- hiberate versioning column
 ,individual_payload           BLOB
 ) &individual_requests_lob 
@@ -141,8 +143,6 @@ CREATE TABLE service_requests
 ,request_type             VARCHAR2(32)       -- the type of request
 ,sdt_customer_id          VARCHAR2(32)       -- should logically map bulk customers but not guaranteed
 ,sdt_bulk_reference       VARCHAR2(29)       -- should logically map bulk submissions but not guaranteed 
-,internal_system_error    VARCHAR2(4000)     
-,target_application_id    INTEGER            
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column 
 ) &service_requests
 ;
