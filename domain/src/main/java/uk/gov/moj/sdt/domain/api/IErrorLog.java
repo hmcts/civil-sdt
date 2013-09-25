@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.domain.api;
 
 import org.joda.time.LocalDateTime;
 
-
 /**
  * Interface for all classes implementing {@link IErrorLog}.
  * 
@@ -72,20 +71,6 @@ public interface IErrorLog extends IDomainObject
     void setIndividualRequest (final IIndividualRequest individualRequest);
 
     /**
-     * Get the Error Message.
-     * 
-     * @return error message
-     */
-    IErrorMessage getErrorMessage ();
-
-    /**
-     * Set the Error Message.
-     * 
-     * @param errorMessage error message
-     */
-    void setErrorMessage (final IErrorMessage errorMessage);
-
-    /**
      * Get created date.
      * 
      * @return created date
@@ -114,17 +99,31 @@ public interface IErrorLog extends IDomainObject
     void setUpdatedDate (final LocalDateTime updatedDate);
 
     /**
-     * Get error Text.
+     * Get error text.
      * 
      * @return error text
      */
     String getErrorText ();
 
     /**
-     * Set error Text.
+     * Set error text.
      * 
      * @param errorText error text
      */
     void setErrorText (final String errorText);
+
+    /**
+     * Get error code.
+     * 
+     * @return error code
+     */
+    String getErrorCode ();
+
+    /**
+     * Set error code.
+     * 
+     * @param errorCode error code
+     */
+    void setErrorCode (final String errorCode);
 
 }

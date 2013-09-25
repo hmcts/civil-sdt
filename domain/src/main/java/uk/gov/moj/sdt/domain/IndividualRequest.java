@@ -113,39 +113,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     private LocalDateTime completedDate;
 
     /**
-     * Where the request type is claim and the request has been successfully processed by
-     * the online case management system this field will be populated.
-     * In all other instances this field will be blank. Formatted as DDMMYYYY.
-     */
-    // private LocalDateTime serviceDate;
-
-    /**
-     * Warrant Number associated to Request if applicable. Warrant Numbers for new warrant requests will
-     * be allocated by the online Case Management application (MCOL) for Warrant Requests only.
-     */
-    // private int warrantNumber;
-
-    /**
-     * Where the request type is warrant and the request has been successfully processed by the court case
-     * management system this field will be populated. Where a warrant request is rejected the enforcing court
-     * code field will be blank.
-     */
-    // private String enforcingCourtCode;
-
-    /**
-     * Where the request type is warrant and the request has been successfully processed
-     * by the court case management system this field will be populated. Where a warrant request is rejected
-     * the enforcing court code field will be blank.
-     */
-    // private String enforcingCourtName;
-
-    /**
-     * Fee associated to Request if applicable. This is calculated by the Online Case Management application
-     * (MCOL) and passed back to SDT.
-     */
-    // private BigDecimal fee;
-
-    /**
      * Error code associated with Rejection Reason Description.
      * Note: this can be populated following initial SDT Service processing or subsequent
      * Target Application processing.
@@ -176,7 +143,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     private String targetApplicationResponse;
 
     /**
-     * TODO - Find out whether this should be used instead of rejection reason code and description.
      * 
      * Error log.
      */
@@ -216,18 +182,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         this.customerRequestReference = customerRequestReference;
     }
 
-    // @Override
-    // public String getCaseNumber ()
-    // {
-    // return caseNumber;
-    // }
-
-    // @Override
-    // public void setCaseNumber (final String caseNumber)
-    // {
-    // this.caseNumber = caseNumber;
-    // }
-
     @Override
     public String getRequestStatus ()
     {
@@ -239,18 +193,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     {
         this.requestStatus = requestStatus;
     }
-
-    // @Override
-    // public LocalDateTime getIssuedDate ()
-    // {
-    // return issuedDate;
-    // }
-
-    // @Override
-    // public void setIssuedDate (final LocalDateTime issuedDate)
-    // {
-    // this.issuedDate = issuedDate;
-    // }
 
     @Override
     public String getSdtBulkReference ()
@@ -323,66 +265,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     {
         this.completedDate = completedDate;
     }
-
-    // @Override
-    // public LocalDateTime getServiceDate ()
-    // {
-    // return serviceDate;
-    // }
-
-    // @Override
-    // public void setServiceDate (final LocalDateTime serviceDate)
-    // {
-    // this.serviceDate = serviceDate;
-    // }
-
-    // @Override
-    // public int getWarrantNumber ()
-    // {
-    // return warrantNumber;
-    // }
-
-    // @Override
-    // public void setWarrantNumber (final int warrantNumber)
-    // {
-    // this.warrantNumber = warrantNumber;
-    // }
-
-    // @Override
-    // public String getEnforcingCourtCode ()
-    // {
-    // return enforcingCourtCode;
-    // }
-
-    // @Override
-    // public void setEnforcingCourtCode (final String enforcingCourtCode)
-    // {
-    // this.enforcingCourtCode = enforcingCourtCode;
-    // }
-
-    // @Override
-    // public String getEnforcingCourtName ()
-    // {
-    // return enforcingCourtName;
-    // }
-
-    // @Override
-    // public void setEnforcingCourtName (final String enforcingCourtName)
-    // {
-    // this.enforcingCourtName = enforcingCourtName;
-    // }
-
-    // @Override
-    // public BigDecimal getFee ()
-    // {
-    // return fee;
-    // }
-
-    // @Override
-    // public void setFee (final BigDecimal fee)
-    // {
-    // this.fee = fee;
-    // }
 
     @Override
     public String getPayload ()

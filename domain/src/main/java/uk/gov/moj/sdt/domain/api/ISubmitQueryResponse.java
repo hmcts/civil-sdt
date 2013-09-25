@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain.api;
 
-import uk.gov.moj.sdt.domain.TargetApplication;
 
 /**
  * Interface for submit query response domain object.
@@ -60,14 +59,14 @@ public interface ISubmitQueryResponse extends IDomainObject
      * 
      * @return target application
      */
-    TargetApplication getTargetApplication ();
+    ITargetApplication getTargetApplication ();
 
     /**
      * Set target application.
      * 
      * @param targetApplication target application
      */
-    void setTargetApplication (final TargetApplication targetApplication);
+    void setTargetApplication (final ITargetApplication targetApplication);
 
     /**
      * Get result count.

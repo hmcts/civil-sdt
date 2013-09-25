@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Defendant object as returned by MCOL.
@@ -50,7 +51,7 @@ public class SubmitQueryResponse extends AbstractDomainObject implements ISubmit
     /**
      * Target application to send the request to, e.g. mcol.
      */
-    private TargetApplication targetApplication;
+    private ITargetApplication targetApplication;
 
     /**
      * The total count of the results from the query.
@@ -80,13 +81,13 @@ public class SubmitQueryResponse extends AbstractDomainObject implements ISubmit
     }
 
     @Override
-    public TargetApplication getTargetApplication ()
+    public ITargetApplication getTargetApplication ()
     {
         return targetApplication;
     }
 
     @Override
-    public void setTargetApplication (final TargetApplication targetApplication)
+    public void setTargetApplication (final ITargetApplication targetApplication)
     {
         this.targetApplication = targetApplication;
     }

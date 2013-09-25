@@ -74,20 +74,6 @@ public interface IIndividualRequest extends IDomainObject
     void setCustomerRequestReference (final String customerRequestReference);
 
     /**
-     * Get case number.
-     * 
-     * @return case number
-     */
-    // String getCaseNumber ();
-
-    /**
-     * Set case number.
-     * 
-     * @param caseNumber case number
-     */
-    // void setCaseNumber (final String caseNumber);
-
-    /**
      * Get request status.
      * 
      * @return request status
@@ -100,20 +86,6 @@ public interface IIndividualRequest extends IDomainObject
      * @param requestStatus request status
      */
     void setRequestStatus (final String requestStatus);
-
-    /**
-     * Get issued date.
-     * 
-     * @return issued date
-     */
-    // LocalDateTime getIssuedDate ();
-
-    /**
-     * Set issued date.
-     * 
-     * @param issuedDate issued date
-     */
-    // void setIssuedDate (final LocalDateTime issuedDate);
 
     /**
      * Get SDT bulk reference.
@@ -198,76 +170,6 @@ public interface IIndividualRequest extends IDomainObject
      * @param completedDate completed date
      */
     void setCompletedDate (final LocalDateTime completedDate);
-
-    /**
-     * Get service date.
-     * 
-     * @return service date
-     */
-    // LocalDateTime getServiceDate ();
-
-    /**
-     * Set service date.
-     * 
-     * @param serviceDate service date
-     */
-    // void setServiceDate (final LocalDateTime serviceDate);
-
-    /**
-     * Get warrant number.
-     * 
-     * @return warrant number
-     */
-    // int getWarrantNumber ();
-
-    /**
-     * Set warrant number.
-     * 
-     * @param warrantNumber warrant number
-     */
-    // void setWarrantNumber (final int warrantNumber);
-
-    /**
-     * Get enforcing court code.
-     * 
-     * @return enforcing court code
-     */
-    // String getEnforcingCourtCode ();
-
-    /**
-     * Set enforcing court code.
-     * 
-     * @param enforcingCourtCode enforcing court code
-     */
-    // void setEnforcingCourtCode (final String enforcingCourtCode);
-
-    /**
-     * Get enforcing court name.
-     * 
-     * @return enforcing court name
-     */
-    // String getEnforcingCourtName ();
-
-    /**
-     * Set enforcing court name.
-     * 
-     * @param enforcingCourtName enforcing court name
-     */
-    // void setEnforcingCourtName (final String enforcingCourtName);
-
-    /**
-     * Get fee.
-     * 
-     * @return fee
-     */
-    // BigDecimal getFee ();
-
-    /**
-     * Set fee.
-     * 
-     * @param fee fee
-     */
-    // void setFee (final BigDecimal fee);
 
     /**
      * Get the XML payload.

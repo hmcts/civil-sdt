@@ -16,14 +16,14 @@
         <many-to-one name="individualRequest" class="uk.gov.moj.sdt.domain.IndividualRequest" fetch="join">
             <column name="INDIVIDUAL_REQUEST_ID" />
         </many-to-one>
-        <many-to-one name="errorMessage" class="uk.gov.moj.sdt.domain.ErrorMessage" fetch="join">
-            <column name="ERROR_MESSAGE" />
-        </many-to-one>
         <property name="createdDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="CREATED_DATE" />
         </property>
         <property name="updatedDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
             <column name="UPDATED_DATE" />
+        </property>
+        <property name="errorCode" type="java.lang.String">
+            <column name="ERROR_CODE" />
         </property>
         <property name="errorText" type="java.lang.String">
             <column name="ERROR_TEXT" />

@@ -33,8 +33,6 @@ package uk.gov.moj.sdt.domain.api;
 
 import org.joda.time.LocalDateTime;
 
-import uk.gov.moj.sdt.domain.BulkSubmission;
-
 /**
  * Interface for classes implementing {@link IMessageLog} .
  * 
@@ -77,14 +75,14 @@ public interface IMessageLog extends IDomainObject
      * 
      * @return bulk submission
      */
-    BulkSubmission getBulkSubmission ();
+    IBulkSubmission getBulkSubmission ();
 
     /**
      * Set bulk submission.
      * 
      * @param bulkSubmission bulk submission
      */
-    void setBulkSubmission (final BulkSubmission bulkSubmission);
+    void setBulkSubmission (final IBulkSubmission bulkSubmission);
 
     /**
      * Get SDT bulk reference.

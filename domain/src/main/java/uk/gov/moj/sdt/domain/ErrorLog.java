@@ -35,7 +35,6 @@ import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
@@ -57,11 +56,6 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
     private IIndividualRequest individualRequest;
 
     /**
-     * Error message.
-     */
-    private IErrorMessage errorMessage;
-
-    /**
      * Date record was created.
      */
     private LocalDateTime createdDate;
@@ -70,6 +64,11 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
      * Date record was updated.
      */
     private LocalDateTime updatedDate;
+
+    /**
+     * The error code.
+     */
+    private String errorCode;
 
     /**
      * The error text.
@@ -98,18 +97,6 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
     public void setIndividualRequest (final IIndividualRequest individualRequest)
     {
         this.individualRequest = individualRequest;
-    }
-
-    @Override
-    public IErrorMessage getErrorMessage ()
-    {
-        return errorMessage;
-    }
-
-    @Override
-    public void setErrorMessage (final IErrorMessage errorMessage)
-    {
-        this.errorMessage = errorMessage;
     }
 
     @Override
@@ -146,6 +133,18 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
     public void setErrorText (final String errorText)
     {
         this.errorText = errorText;
+    }
+
+    @Override
+    public String getErrorCode ()
+    {
+        return errorCode;
+    }
+
+    @Override
+    public void setErrorCode (final String errorCode)
+    {
+        this.errorCode = errorCode;
     }
 
 }

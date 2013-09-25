@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Interface for submit query request domain object.
@@ -49,7 +50,7 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     /**
      * Target application to send the request to, e.g. mcol.
      */
-    private TargetApplication targetApplication;
+    private ITargetApplication targetApplication;
 
     @Override
     public long getSdtCustomerId ()
@@ -64,13 +65,13 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     }
 
     @Override
-    public TargetApplication getTargetApplication ()
+    public ITargetApplication getTargetApplication ()
     {
         return targetApplication;
     }
 
     @Override
-    public void setTargetApplication (final TargetApplication targetApplication)
+    public void setTargetApplication (final ITargetApplication targetApplication)
     {
         this.targetApplication = targetApplication;
     }

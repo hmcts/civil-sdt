@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.domain;
 
 import org.joda.time.LocalDateTime;
 
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IMessageLog;
 
 /**
@@ -61,7 +62,7 @@ public class MessageLog extends AbstractDomainObject implements IMessageLog
     /**
      * Bulk Submission.
      */
-    private BulkSubmission bulkSubmission;
+    private IBulkSubmission bulkSubmission;
 
     /**
      * Effectively another FK from bulk_submissions.
@@ -123,13 +124,13 @@ public class MessageLog extends AbstractDomainObject implements IMessageLog
     }
 
     @Override
-    public BulkSubmission getBulkSubmission ()
+    public IBulkSubmission getBulkSubmission ()
     {
         return bulkSubmission;
     }
 
     @Override
-    public void setBulkSubmission (final BulkSubmission bulkSubmission)
+    public void setBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         this.bulkSubmission = bulkSubmission;
     }

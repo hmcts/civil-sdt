@@ -37,6 +37,8 @@ import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
@@ -105,12 +107,12 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     /**
      * List of individual requests.
      */
-    private List<IndividualRequest> individualRequests;
+    private List<IIndividualRequest> individualRequests;
 
     /**
      * Error log.
      */
-    private ErrorLog errorLog;
+    private IErrorLog errorLog;
 
     /**
      * Constructor for {@link BulkSubmission}.
@@ -241,25 +243,25 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     }
 
     @Override
-    public List<IndividualRequest> getIndividualRequests ()
+    public List<IIndividualRequest> getIndividualRequests ()
     {
         return individualRequests;
     }
 
     @Override
-    public void setIndividualRequests (final List<IndividualRequest> individualRequests)
+    public void setIndividualRequests (final List<IIndividualRequest> individualRequests)
     {
         this.individualRequests = individualRequests;
     }
 
     @Override
-    public ErrorLog getErrorLog ()
+    public IErrorLog getErrorLog ()
     {
         return errorLog;
     }
 
     @Override
-    public void setErrorLog (final ErrorLog errorLog)
+    public void setErrorLog (final IErrorLog errorLog)
     {
         this.errorLog = errorLog;
     }

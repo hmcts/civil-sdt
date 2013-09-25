@@ -45,7 +45,7 @@ public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFe
     /**
      * SDT Customer Id.
      */
-    private String sdtCustomerId;
+    private long sdtCustomerId;
 
     /**
      * SDT Bulk reference.
@@ -53,13 +53,13 @@ public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFe
     private String sdtBulkReference;
 
     @Override
-    public String getSdtCustomerId ()
+    public long getSdtCustomerId ()
     {
         return sdtCustomerId;
     }
 
     @Override
-    public void setSdtCustomerId (final String sdtCustomerId)
+    public void setSdtCustomerId (final long sdtCustomerId)
     {
         this.sdtCustomerId = sdtCustomerId;
     }

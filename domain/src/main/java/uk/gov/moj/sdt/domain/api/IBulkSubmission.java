@@ -35,9 +35,6 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
-import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-
 /**
  * Interface for all classes implementing {@link IBulkSubmission}.
  * 
@@ -191,27 +188,27 @@ public interface IBulkSubmission extends IDomainObject
      * 
      * @return list of individual requests
      */
-    List<IndividualRequest> getIndividualRequests ();
+    List<IIndividualRequest> getIndividualRequests ();
 
     /**
      * Set list of individual request.
      * 
      * @param individualRequests list of individual request
      */
-    void setIndividualRequests (final List<IndividualRequest> individualRequests);
+    void setIndividualRequests (final List<IIndividualRequest> individualRequests);
 
     /**
      * Get error log.
      * 
      * @return error log
      */
-    ErrorLog getErrorLog ();
+    IErrorLog getErrorLog ();
 
     /**
      * Set error log.
      * 
      * @param errorLog error log
      */
-    void setErrorLog (final ErrorLog errorLog);
+    void setErrorLog (final IErrorLog errorLog);
 
 }
