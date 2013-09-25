@@ -108,7 +108,7 @@ CREATE TABLE individual_requests
 --,target_application_status    VARCHAR2(4000)
 ,target_application_response  VARCHAR2(4000) 
 ,internal_system_error        VARCHAR2(4000)
-,request_type                 VARCHAR2(250)
+,request_type                 VARCHAR2(50)
 ,version_number               INTEGER DEFAULT 0  -- hiberate versioning column
 ,individual_payload           BLOB
 ) &individual_requests_lob 
