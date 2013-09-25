@@ -16,7 +16,7 @@
                     <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType" minOccurs="0"/>
                     <xs:element name="submittedDate" type="xs:dateTime"/>
                     <xs:element name="sdtService" type="xs:string"/>
-                    <xs:element name="requestCount" type="base:requestCountType"/>
+                    <xs:element name="requestCount" type="xs:long"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

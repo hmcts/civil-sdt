@@ -12,7 +12,7 @@
         <xs:sequence>
             <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
             <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
-            <xs:element name="requestCount" type="base:requestCountType"/>
+            <xs:element name="requestCount" type="xs:long"/>
             <xs:element name="customerReference" type="base:customerReferenceType"/>
         </xs:sequence>
     </xs:complexType>
@@ -21,7 +21,7 @@
         <xs:choice>
             <xs:any processContents="lax"/>
         </xs:choice>
-        <xs:attribute name="requestType" type="xs:string" use="required"/>
+        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
         <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
     </xs:complexType>
     

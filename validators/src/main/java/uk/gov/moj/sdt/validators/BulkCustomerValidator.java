@@ -67,6 +67,7 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
         final IBulkCustomer bulkCustomerFound =
                 getBulkCustomerDao ().getBulkCustomerBySdtId (bulkCustomer.getSdtCustomerId ());
 
+        // TODO Replace assert with Exception
         assert bulkCustomerFound != null;
 
         LOGGER.debug ("completed visit(BulkCustomer)");

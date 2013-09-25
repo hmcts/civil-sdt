@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
  *       &lt;choice>
  *         &lt;any processContents='lax'/>
  *       &lt;/choice>
- *       &lt;attribute name="requestType" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="requestType" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestTypeType" />
  *       &lt;attribute name="requestId" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestIdType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -48,8 +48,8 @@ public class RequestItemType {
      * 
      * @return
      *     possible object is
-     *     {@link Element }
      *     {@link Object }
+     *     {@link Element }
      *     
      */
     public Object getAny() {
@@ -61,8 +61,8 @@ public class RequestItemType {
      * 
      * @param value
      *     allowed object is
-     *     {@link Element }
      *     {@link Object }
+     *     {@link Element }
      *     
      */
     public void setAny(Object value) {

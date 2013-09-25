@@ -26,7 +26,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
  *         &lt;/choice>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}individualStatusType"/>
  *       &lt;/sequence>
- *       &lt;attribute name="requestType" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="requestType" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestTypeType" />
  *       &lt;attribute name="requestId" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestIdType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -56,8 +56,8 @@ public class ResponseType {
      * 
      * @return
      *     possible object is
-     *     {@link Element }
      *     {@link Object }
+     *     {@link Element }
      *     
      */
     public Object getAny() {
@@ -69,8 +69,8 @@ public class ResponseType {
      * 
      * @param value
      *     allowed object is
-     *     {@link Element }
      *     {@link Object }
+     *     {@link Element }
      *     
      */
     public void setAny(Object value) {

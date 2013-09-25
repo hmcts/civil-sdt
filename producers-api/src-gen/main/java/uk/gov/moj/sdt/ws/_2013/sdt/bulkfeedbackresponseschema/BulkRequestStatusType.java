@@ -27,7 +27,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
  *         &lt;element name="sdtBulkReference" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtBulkReferenceType"/>
  *         &lt;element name="submittedDate" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/>
  *         &lt;element name="sdtService" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="requestCount" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestCountType" minOccurs="0"/>
+ *         &lt;element name="requestCount" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="bulkStatus" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}bulkStatusType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>

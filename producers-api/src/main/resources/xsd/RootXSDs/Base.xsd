@@ -16,6 +16,12 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="requestTypeType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+        </xs:restriction>
+    </xs:simpleType>
+
 	<xs:simpleType name="sdtBulkReferenceType">
 		<xs:restriction base="xs:string">
 			<xs:length value="29" />
@@ -26,12 +32,6 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1" />
 			<xs:maxLength value="32" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="requestCountType">
-		<xs:restriction base="xs:long">
-			<xs:maxInclusive value="99999" />
 		</xs:restriction>
 	</xs:simpleType>
 

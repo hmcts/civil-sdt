@@ -77,6 +77,7 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
             return null;
         }
 
+        // TODO Replace assert with Exception
         assert bulkCustomers.length == 1;
         return bulkCustomers[0];
     }

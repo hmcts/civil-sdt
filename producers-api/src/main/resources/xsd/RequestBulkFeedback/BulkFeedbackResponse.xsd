@@ -18,7 +18,7 @@
                     <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
                     <xs:element name="submittedDate" type="xs:dateTime"  minOccurs="0"/>
                     <xs:element name="sdtService" type="xs:string"/>
-                    <xs:element name="requestCount" type="base:requestCountType"  minOccurs="0"/>
+                    <xs:element name="requestCount" type="xs:long"  minOccurs="0"/>
                     <xs:element name="bulkStatus" type="base:bulkStatusType"  minOccurs="0"/>
                 </xs:sequence>
             </xs:extension>
@@ -38,7 +38,7 @@
             </xs:choice>
             <xs:element name="status" type="base:individualStatusType"/>
         </xs:sequence>
-        <xs:attribute name="requestType" type="xs:string" use="required"/>
+        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
         <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
     </xs:complexType>
 

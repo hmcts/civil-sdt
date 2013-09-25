@@ -12,7 +12,7 @@
         <xs:sequence>
             <xs:element name="sdtRequestId" type="base:sdtRequestIdType"/>
             <xs:element name="targetAppCustomerId" type="xs:string"/>
-            <xs:element name="requestType" type="xs:string"/>
+            <xs:element name="requestType" type="base:requestTypeType"/>
         </xs:sequence>
     </xs:complexType>
     
