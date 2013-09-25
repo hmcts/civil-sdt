@@ -177,6 +177,7 @@
 				<include name="**/*.properties" />
 				<include name="**/*.template" />
 				<include name="**/*.dtd" />
+                <exclude name="**/*rebel*.xml" />
 			</fileset>
 		</copy>
 	</target>
