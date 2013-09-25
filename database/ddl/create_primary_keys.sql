@@ -9,6 +9,7 @@ define error_messages_pk              = 'TABLESPACE users'
 define global_parameters_pk           = 'TABLESPACE users'
 define individual_requests_pk         = 'TABLESPACE users'
 define service_types_pk               = 'TABLESPACE users'
+define service_requests_pk            = 'TABLESPACE users'
 define service_routings_pk            = 'TABLESPACE users'
 define target_applications_pk         = 'TABLESPACE users'
 
@@ -140,6 +141,23 @@ ADD CONSTRAINT service_types_pk
 PRIMARY KEY ( service_type_id )
 USING INDEX service_types_pk
 ;
+
+--
+-- service_requests
+--
+
+CREATE INDEX service_requests_pk
+ON service_requests
+( service_request_id ) 
+&service_requests_pk
+;
+
+ALTER TABLE service_requests
+ADD CONSTRAINT service_requests_pk
+PRIMARY KEY ( service_request_id )
+USING INDEX service_requests_pk
+;
+
 
 --
 -- service_routings
