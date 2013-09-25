@@ -35,6 +35,12 @@
                 </xs:restriction>
             </xs:simpleType>
 
+            <xs:simpleType name="criteriaTypeType">
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                </xs:restriction>
+            </xs:simpleType>
+        
             <xs:simpleType name="sdtBulkReferenceType">
                 <xs:restriction base="xs:string">
                     <xs:length value="29" />
@@ -1026,7 +1032,7 @@
                 <xs:choice>
                     <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
                 </xs:choice>
-                <xs:attribute name="criteriaType" type="xs:string" use="required"/>
+                <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
             </xs:complexType>
         
         </xs:schema>        

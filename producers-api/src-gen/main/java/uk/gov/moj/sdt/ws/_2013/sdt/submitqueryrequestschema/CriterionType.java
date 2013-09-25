@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
  *       &lt;choice>
  *         &lt;any processContents='lax'/>
  *       &lt;/choice>
- *       &lt;attribute name="criteriaType" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="criteriaType" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}criteriaTypeType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -45,8 +45,8 @@ public class CriterionType {
      * 
      * @return
      *     possible object is
-     *     {@link Object }
      *     {@link Element }
+     *     {@link Object }
      *     
      */
     public Object getAny() {
@@ -58,8 +58,8 @@ public class CriterionType {
      * 
      * @param value
      *     allowed object is
-     *     {@link Object }
      *     {@link Element }
+     *     {@link Object }
      *     
      */
     public void setAny(Object value) {
