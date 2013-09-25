@@ -39,6 +39,7 @@ import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Mock Bulk Customer DAO class used in commissioning project.
@@ -64,8 +65,8 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
         bulkCustomer.setId (sdtCustomerId);
 
         // Mock the Target Application
-        final Set<TargetApplication> targetApplications = new HashSet<TargetApplication> ();
-        final TargetApplication targetApplication = new TargetApplication ();
+        final Set<ITargetApplication> targetApplications = new HashSet<ITargetApplication> ();
+        final ITargetApplication targetApplication = new TargetApplication ();
         targetApplication.setTargetApplicationCode ("mcol");
         targetApplication.setTargetApplicationName ("mcol");
 

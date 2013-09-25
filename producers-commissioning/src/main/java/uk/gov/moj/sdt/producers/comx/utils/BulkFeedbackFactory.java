@@ -39,10 +39,10 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Custom class used to generate bulk submissions and individual requests.
@@ -108,7 +108,7 @@ public class BulkFeedbackFactory
     {
         this.bulkSubmission = bulkSubmission;
         // Initialise the individual requests
-        bulkSubmission.setIndividualRequests (new ArrayList<IndividualRequest> ());
+        bulkSubmission.setIndividualRequests (new ArrayList<IIndividualRequest> ());
     }
 
     /**
@@ -139,10 +139,8 @@ public class BulkFeedbackFactory
         {
             // Create the error and associate with the individual request
             final ErrorLog errorLog = new ErrorLog ();
-            final ErrorMessage errorMessage = new ErrorMessage ();
-            errorMessage.setErrorCode (rejectionReasonCode);
-            errorMessage.setErrorText (rejectionReasonDescription);
-            errorLog.setErrorMessage (errorMessage);
+            errorLog.setErrorCode (rejectionReasonCode);
+            errorLog.setErrorText (rejectionReasonDescription);
             individualRequest.setErrorLog (errorLog);
         }
 
