@@ -40,9 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
-import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
@@ -98,7 +98,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
         bulkSubmission.setPayload (SdtContext.getContext ().getRawInXml ());
 
-        List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
 
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =
@@ -132,7 +132,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
         // Enqueue the SDT request id of each individual request to the message
         // server.
-        for (IndividualRequest iRequest : individualRequests)
+        for (IIndividualRequest iRequest : individualRequests)
         {
             if (iRequest.getRequestStatus ().equals (IndividualRequestStatus.RECEIVED.getStatus ()))
             {

@@ -43,6 +43,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Test class for the IndividualRequestsXmlParser.
@@ -82,17 +83,17 @@ public class IndividualRequestsXmlParserTest
         final String rawXml = this.getRawXml ();
         SdtContext.getContext ().setRawInXml (rawXml);
 
-        List<IndividualRequest> requests = new ArrayList<IndividualRequest> ();
+        List<IIndividualRequest> requests = new ArrayList<IIndividualRequest> ();
 
-        final IndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCustomerRequestReference ("1");
         individualRequest.setRequestStatus ("Forwarded");
 
-        final IndividualRequest individualRequest2 = new IndividualRequest ();
+        final IIndividualRequest individualRequest2 = new IndividualRequest ();
         individualRequest2.setCustomerRequestReference ("2");
         individualRequest2.setRequestStatus ("Forwarded");
 
-        final IndividualRequest individualRequest3 = new IndividualRequest ();
+        final IIndividualRequest individualRequest3 = new IndividualRequest ();
         individualRequest3.setCustomerRequestReference ("3");
         individualRequest3.setRequestStatus ("Forwarded");
 
@@ -104,7 +105,7 @@ public class IndividualRequestsXmlParserTest
 
         Assert.assertTrue (requests.size () == 3);
 
-        for (IndividualRequest request : requests)
+        for (IIndividualRequest request : requests)
         {
             LOGGER.debug ("Request id is " + request.getCustomerRequestReference ());
             LOGGER.debug ("Request payload is " + request.getPayload ());

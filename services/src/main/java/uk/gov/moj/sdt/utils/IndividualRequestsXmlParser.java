@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 
 /**
@@ -60,10 +60,10 @@ public class IndividualRequestsXmlParser
      * @param individualRequests the individual requests to be populated with data from the raw XML.
      * @return list of individual requests populated with the raw xml request.
      */
-    public List<IndividualRequest> getIndividualRequestsRawXmlMap (final List<IndividualRequest> individualRequests)
+    public List<IIndividualRequest> getIndividualRequestsRawXmlMap (final List<IIndividualRequest> individualRequests)
     {
         // Get iterator so we can traverse the list of requests and the payload (raw XML) to each one.
-        final Iterator<IndividualRequest> iter = individualRequests.iterator ();
+        final Iterator<IIndividualRequest> iter = individualRequests.iterator ();
 
         // Match it against the result of all previous match replacements.
         String rawXml = SdtContext.getContext ().getRawInXml ();
@@ -75,7 +75,7 @@ public class IndividualRequestsXmlParser
         while (iter.hasNext ())
         {
             // Get the next request.
-            final IndividualRequest individualRequest = iter.next ();
+            final IIndividualRequest individualRequest = iter.next ();
 
             if (individualRequest.getRequestStatus ().equals (IndividualRequestStatus.REJECTED.getStatus ()))
             {

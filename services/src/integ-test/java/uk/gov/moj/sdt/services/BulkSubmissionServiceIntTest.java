@@ -60,6 +60,8 @@ import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
@@ -124,10 +126,10 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
 
         Assert.assertEquals (bulkSubmission.getNumberOfRequest (), 1L);
 
-        final List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
         Assert.assertNotNull (individualRequests);
         Assert.assertEquals (individualRequests.size (), 1);
-        for (IndividualRequest request : individualRequests)
+        for (IIndividualRequest request : individualRequests)
         {
             Assert.assertNotNull (request.getPayload ());
             LOG.debug ("Payload for request " + request.getId () + "is " + request.getPayload ());
@@ -164,9 +166,9 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
         targetApp.setId (10713L);
         targetApp.setTargetApplicationCode ("MCOL");
         targetApp.setTargetApplicationName ("MCOL");
-        final Set<ServiceRouting> serviceRoutings = new HashSet<ServiceRouting> ();
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
 
-        final ServiceRouting serviceRouting = new ServiceRouting ();
+        final IServiceRouting serviceRouting = new ServiceRouting ();
         serviceRouting.setId (1L);
         serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
 
@@ -197,7 +199,7 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
         bulkSubmission.setSubmissionStatus ("SUBMITTED");
         bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
-        final List<IndividualRequest> individualRequests = new ArrayList<IndividualRequest> ();
+        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
                 .currentTimeMillis ())));
