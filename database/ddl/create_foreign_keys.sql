@@ -28,6 +28,13 @@ REFERENCES bulk_customers(bulk_customer_id)
 NOT DEFERRABLE INITIALLY IMMEDIATE
 ;
 
+ALTER TABLE bulk_submissions
+ADD CONSTRAINT bs_service_request_id_fk
+FOREIGN KEY (service_request_id)
+REFERENCES service_requests(service_request_id)
+NOT DEFERRABLE INITIALLY IMMEDIATE
+;
+
 ALTER TABLE error_logs
 ADD CONSTRAINT el_individual_request_fk
 FOREIGN KEY (individual_request_id)
