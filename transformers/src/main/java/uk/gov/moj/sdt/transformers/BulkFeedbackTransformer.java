@@ -36,10 +36,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
-import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
@@ -59,18 +59,18 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
  * @author d130680
  * 
  */
-public final class BulkFeedbackToDomainTransformer extends AbstractTransformer implements
+public final class BulkFeedbackTransformer extends AbstractTransformer implements
         ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission>
 {
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkRequestToDomainTransformer.class);
+    private static final Log LOGGER = LogFactory.getLog (BulkRequestTransformer.class);
 
     /**
      * Private constructor.
      */
-    private BulkFeedbackToDomainTransformer ()
+    private BulkFeedbackTransformer ()
     {
     }
 
@@ -82,7 +82,7 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
         final IBulkFeedbackRequest bulkFeedback = new BulkFeedbackRequest ();
 
         bulkFeedback.setSdtBulkReference (header.getSdtBulkReference ());
-        bulkFeedback.setSdtCustomerId ("" + header.getSdtCustomerId ());
+        bulkFeedback.setSdtCustomerId (header.getSdtCustomerId ());
 
         return bulkFeedback;
     }
@@ -115,10 +115,10 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
         final ResponsesType responsesType = new ResponsesType ();
 
         // Map individual request domain object(s) to the response(s)
-        final List<IndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
 
         ResponseType responseType = null;
-        for (IndividualRequest individualRequest : individualRequests)
+        for (IIndividualRequest individualRequest : individualRequests)
         {
             responseType = new ResponseType ();
 
@@ -128,7 +128,6 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
             // Set the individual request type
             final IndividualStatusType statusType = new IndividualStatusType ();
             statusType.setCode (IndividualStatusCodeType.fromValue (individualRequest.getRequestStatus ()));
-            responseType.setStatus (statusType);
 
             // Set errors if any
             final IErrorLog errorLog = individualRequest.getErrorLog ();
@@ -136,11 +135,12 @@ public final class BulkFeedbackToDomainTransformer extends AbstractTransformer i
             {
                 // Required for rejected cases
                 final ErrorType errorType = new ErrorType ();
-                errorType.setCode (errorLog.getErrorMessage ().getErrorCode ());
-                errorType.setDescription (errorLog.getErrorMessage ().getErrorText ());
+                errorType.setCode (errorLog.getErrorCode ());
+                errorType.setDescription (errorLog.getErrorText ());
                 statusType.setError (errorType);
             }
 
+            responseType.setStatus (statusType);
             responsesType.getResponse ().add (responseType);
         }
 

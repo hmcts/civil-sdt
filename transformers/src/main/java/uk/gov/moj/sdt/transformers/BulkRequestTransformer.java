@@ -44,6 +44,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.misc.BulkRequestStatus;
@@ -60,18 +61,18 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
  * @author d130680
  * 
  */
-public final class BulkRequestToDomainTransformer extends AbstractTransformer implements
+public final class BulkRequestTransformer extends AbstractTransformer implements
         ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission>
 {
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkRequestToDomainTransformer.class);
+    private static final Log LOGGER = LogFactory.getLog (BulkRequestTransformer.class);
 
     /**
      * Private constructor.
      */
-    private BulkRequestToDomainTransformer ()
+    private BulkRequestTransformer ()
     {
 
     }
@@ -98,16 +99,16 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
      * @param bulkSubmission bulk submission
      * @return list of individual requests
      */
-    private static List<IndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
-                                                                    final IBulkSubmission bulkSubmission)
+    private static List<IIndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
+                                                                     final IBulkSubmission bulkSubmission)
     {
         IndividualRequest individualRequest = null;
         final List<RequestItemType> requests = bulkRequestType.getRequests ().getRequest ();
 
-        final List<IndividualRequest> individualRequestList = new ArrayList<IndividualRequest> ();
+        final List<IIndividualRequest> individualRequestList = new ArrayList<IIndividualRequest> ();
 
         // Set the individual requests
-        int lineNumber = 0;
+        int lineNumber = 1;
         for (RequestItemType request : requests)
         {
             individualRequest = new IndividualRequest ();
@@ -170,7 +171,7 @@ public final class BulkRequestToDomainTransformer extends AbstractTransformer im
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
         // Set individual requests
-        final List<IndividualRequest> individualRequests = mapToIndividualRequests (bulkRequest, bulkSubmission);
+        final List<IIndividualRequest> individualRequests = mapToIndividualRequests (bulkRequest, bulkSubmission);
         bulkSubmission.setIndividualRequests (individualRequests);
 
         return bulkSubmission;

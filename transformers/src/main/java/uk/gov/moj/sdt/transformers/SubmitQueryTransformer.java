@@ -50,14 +50,14 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d130680
  * 
  */
-public final class SubmitQueryToDomainTransformer extends AbstractTransformer implements
+public final class SubmitQueryTransformer extends AbstractTransformer implements
         ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryResponse>
 {
 
     /**
      * Private constructor.
      */
-    private SubmitQueryToDomainTransformer ()
+    private SubmitQueryTransformer ()
     {
 
     }
