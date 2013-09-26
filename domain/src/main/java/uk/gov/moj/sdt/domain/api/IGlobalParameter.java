@@ -82,4 +82,51 @@ public interface IGlobalParameter extends IDomainObject
      */
     void setDescription (final String description);
 
+    /**
+     * Enum of global parameter cache keys.
+     * 
+     * @author d130680
+     * 
+     */
+    public enum ParameterKey
+    {
+        /**
+         * Duration in days, to retain data in the tables subject to a prescribed purge.
+         */
+        DATA_RETENTION_PERIOD,
+
+        /**
+         * Period in seconds, to wait for an acknowledgement of receipt from MCOL.
+         */
+        MCOL_ACKNOWLEDGEMENT_TIMEOUT,
+
+        /**
+         * Number of forwarding attempts made to transmit an individual request to target application.
+         */
+        MAX_FORWARDING_ATTEMPTS,
+
+        /**
+         * Used by the SDT Service to determine the maximum number of concurrent Individual Requests that can be
+         * forwarded to MCOL.
+         */
+        MCOL_MAX_CONCURRENT_INDV_REQ,
+
+        /**
+         * Used by the SDT Service to determine the time delay before processing the next Individual Request that can be
+         * forwarded to MCOL.
+         */
+        MCOL_INDV_REQ_DELAY,
+
+        /**
+         * Used by the SDT Service to determine the maximum number of concurrent Submit Query Requests that can be
+         * forwarded to MCOL.
+         */
+        MCOL_MAX_CONCURRENT_QUERY_REQ,
+
+        /**
+         * Used by SDT to hold the current contact details for outgoing SDT application messages to Bulk Customer
+         * System.
+         */
+        CONTACT_DETAILS
+    }
 }
