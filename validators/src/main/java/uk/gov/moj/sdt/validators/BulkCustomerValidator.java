@@ -30,12 +30,17 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
+import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
+import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 
 /**
  * Implementation of bulk customer validation.
@@ -61,17 +66,18 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
     @Override
     public void visit (final IBulkCustomer bulkCustomer, final ITree tree)
     {
-
-        LOGGER.info ("started visit(BulkCustomer)");
+        LOGGER.debug ("Bulk customer is " + bulkCustomer.getSdtCustomerId ());
 
         final IBulkCustomer bulkCustomerFound =
                 getBulkCustomerDao ().getBulkCustomerBySdtId (bulkCustomer.getSdtCustomerId ());
 
-        // TODO Replace assert with Exception
-        assert bulkCustomerFound != null;
-
-        LOGGER.debug ("completed visit(BulkCustomer)");
-
+        if (bulkCustomerFound == null)
+        {
+            // Setup values for placeholder in message and construct business exception.
+            final List<String> parameters = new ArrayList<String> ();
+            parameters.add (Long.toString (bulkCustomer.getSdtCustomerId ()));
+            throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
+                    "Bulk customer [{0}] not setup.", parameters);
+        }
     }
-
 }
