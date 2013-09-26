@@ -14,19 +14,19 @@ VALUES ( 3,'MAX_FORWARDING_ATTEMPTS',3
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
 VALUES ( 4,'MCOL_MAX_CONCURRENT_INDV_REQ',5
-,'Used by the SDT Service to determine the maximum number of concurrent Individual Requests that can be forwarded to MCOL');
+,'Maximum number of concurrent Individual Requests that can be forwarded to MCOL');
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
 VALUES ( 5,'MCOL_INDV_REQ_DELAY',10
-,'Used by the SDT Service to determine the time delay before processing the next Individual Request that can be forwarded to MCOL');
+,'Time delay in milliseconds before processing the next Individual Request that can be forwarded to MCOL');
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
 VALUES ( 6,'MCOL_MAX_CONCURRENT_QUERY_REQ',5
-,'Used by the SDT Service to determine the maximum number of concurrent Submit Query Requests that can be forwarded to MCOL');
+,'Maximum number of concurrent Submit Query Requests that can be forwarded to MCOL');
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
 VALUES ( 7,'CONTACT_DETAILS','tbc'
-,'Used by SDT to hold the current contact details for outgoing SDT application messages to Bulk Customer System');
+,'Current contact details for outgoing SDT application messages to Bulk Customer System');
 
 
 INSERT INTO service_types (service_type_id,service_type_name,service_type_status, service_type_description)
