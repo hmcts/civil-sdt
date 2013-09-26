@@ -32,4 +32,4 @@
 /**
  * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-package uk.gov.moj.sdt.producers.sdtws;
+package uk.gov.moj.sdt.producers.comx.sdtws;

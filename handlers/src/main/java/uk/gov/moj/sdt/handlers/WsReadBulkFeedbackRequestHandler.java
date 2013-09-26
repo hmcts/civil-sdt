@@ -32,6 +32,8 @@ package uk.gov.moj.sdt.handlers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -51,6 +53,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusT
  * @author d301488
  * 
  */
+@Transactional (propagation = Propagation.REQUIRED)
 public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implements IWsReadBulkRequestHandler
 {
 

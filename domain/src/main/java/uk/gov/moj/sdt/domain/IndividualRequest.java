@@ -150,14 +150,19 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     private IErrorLog errorLog;
 
     /**
-     * XML payload.
+     * XML request payload.
      */
-    private String payload;
+    private String requestPayload;
 
     /**
      * Internal system error.
      */
     private String internalSystemError;
+
+    /**
+     * Request type like mcolClaim, mcolJudgment etc.
+     */
+    private String requestType;
 
     @Override
     public IBulkSubmission getBulkSubmission ()
@@ -268,51 +273,15 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
-    public String getPayload ()
+    public String getRequestPayload ()
     {
-        return payload;
+        return requestPayload;
     }
 
     @Override
-    public void setPayload (final String payload)
+    public void setRequestPayload (final String requestPayload)
     {
-        this.payload = payload;
-    }
-
-    @Override
-    public int getRequestRetryCount ()
-    {
-        return requestRetryCount;
-    }
-
-    @Override
-    public void setRequestRetryCount (final int requestRetryCount)
-    {
-        this.requestRetryCount = requestRetryCount;
-    }
-
-    @Override
-    public String getRejectionReasonCode ()
-    {
-        return rejectionReasonCode;
-    }
-
-    @Override
-    public void setRejectionReasonCode (final String rejectionReasonCode)
-    {
-        this.rejectionReasonCode = rejectionReasonCode;
-    }
-
-    @Override
-    public String getRejectionReasonDescription ()
-    {
-        return rejectionReasonDescription;
-    }
-
-    @Override
-    public void setRejectionReasonDescription (final String rejectionReasonDescription)
-    {
-        this.rejectionReasonDescription = rejectionReasonDescription;
+        this.requestPayload = requestPayload;
     }
 
     @Override
@@ -325,18 +294,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void setForwardingAttempts (final int forwardingAttempts)
     {
         this.forwardingAttempts = forwardingAttempts;
-    }
-
-    @Override
-    public String getTargetApplicationStatus ()
-    {
-        return targetApplicationStatus;
-    }
-
-    @Override
-    public void setTargetApplicationStatus (final String targetApplicationStatus)
-    {
-        this.targetApplicationStatus = targetApplicationStatus;
     }
 
     @Override
@@ -373,6 +330,19 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void setErrorLog (final IErrorLog errorLog)
     {
         this.errorLog = errorLog;
+    }
+
+    @Override
+    public String getRequestType ()
+    {
+        return requestType;
+    }
+
+    @Override
+    public void setRequestType (final String requestType)
+    {
+        this.requestType = requestType;
+
     }
 
 }

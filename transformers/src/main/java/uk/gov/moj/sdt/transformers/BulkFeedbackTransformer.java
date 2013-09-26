@@ -65,7 +65,7 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkRequestTransformer.class);
+    private static final Log LOGGER = LogFactory.getLog (BulkFeedbackTransformer.class);
 
     /**
      * Private constructor.
@@ -77,6 +77,8 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
     @Override
     public IBulkFeedbackRequest transformJaxbToDomain (final BulkFeedbackRequestType bulkFeedbackRequest)
     {
+        LOGGER.debug ("transform BulkFeedbackRequestType to IBulkFeebackRequest");
+
         // Grab the request details from the header
         final HeaderType header = bulkFeedbackRequest.getHeader ();
         final IBulkFeedbackRequest bulkFeedback = new BulkFeedbackRequest ();
@@ -90,6 +92,8 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
     @Override
     public BulkFeedbackResponseType transformDomainToJaxb (final IBulkSubmission bulkSubmission)
     {
+        LOGGER.debug ("transform IBulkSubmission to BulkFeedbackResponseType");
+
         // Create target JAXB response object.
         final BulkFeedbackResponseType bulkFeedbackResponseType = new BulkFeedbackResponseType ();
 

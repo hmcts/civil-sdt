@@ -30,9 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators.exception;
 
+import java.text.MessageFormat;
 import java.util.List;
 
-import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 
 /**
@@ -70,7 +70,7 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
      */
     public AbstractBusinessException (final String code, final String description)
     {
-        super ("The following exception occured [" + code + "] message[" + description + "]");
+        super ("Failed with code [" + code + "]; message [" + description + "]");
         this.errorCode = code;
         this.errorDescription = description;
     }
@@ -84,10 +84,10 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
      */
     public AbstractBusinessException (final String code, final String description, final List<String> replacements)
     {
-        super ("The following exception occured [" + code + "] message[" +
-                Utilities.replaceTokens (description, replacements) + "]");
+        super ("Failed with code [" + code + "]; message[" +
+                MessageFormat.format (description, replacements.toArray ()) + "]");
         this.errorCode = code;
-        this.errorDescription = Utilities.replaceTokens (description, replacements);
+        this.errorDescription = MessageFormat.format (description, replacements.toArray ());
 
     }
 

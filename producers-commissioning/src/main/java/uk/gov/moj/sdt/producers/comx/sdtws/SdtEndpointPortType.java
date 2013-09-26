@@ -29,7 +29,7 @@
  * $LastChangedDate$
  * $LastChangedBy$ */
 
-package uk.gov.moj.sdt.producers.sdtws;
+package uk.gov.moj.sdt.producers.comx.sdtws;
 
 import java.util.GregorianCalendar;
 
@@ -89,9 +89,11 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequest)
     {
-        LOGGER.debug (this.getClass ().getName () + " endpoint called, submitBulk=" +
-                bulkRequest.getHeader ().getSdtCustomerId ());
-
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("endpoint called for method [submitBulk] by customer [" +
+                    bulkRequest.getHeader ().getSdtCustomerId () + "]");
+        }
         // Update mbean stats.
         SdtMetricsMBean.getSdtMetrics ().upBulkSubmitCounts ();
 
@@ -108,8 +110,11 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     @Override
     public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
     {
-        LOGGER.debug (this.getClass ().getName () + " endpoint called, getBulkFeedback=" +
-                bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("endpoint called for method [getBulkFeedback] by customer [" +
+                    bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+        }
 
         // Update mbean stats.
         SdtMetricsMBean.getSdtMetrics ().upBulkFeedbackCounts ();
@@ -127,8 +132,11 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     @Override
     public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequest)
     {
-        LOGGER.debug (this.getClass ().getName () + " endpoint called, submitQuery=" +
-                submitQueryRequest.getHeader ().getSdtCustomerId ());
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("endpoint called for method [submitQuery] by customer [" +
+                    submitQueryRequest.getHeader ().getSdtCustomerId ());
+        }
 
         // Update mbean stats.
         SdtMetricsMBean.getSdtMetrics ().upSubmitQueryCounts ();

@@ -131,8 +131,8 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
         Assert.assertEquals (individualRequests.size (), 1);
         for (IIndividualRequest request : individualRequests)
         {
-            Assert.assertNotNull (request.getPayload ());
-            LOG.debug ("Payload for request " + request.getId () + "is " + request.getPayload ());
+            Assert.assertNotNull (request.getRequestPayload ());
+            LOG.debug ("Payload for request " + request.getId () + "is " + request.getRequestPayload ());
         }
 
     }

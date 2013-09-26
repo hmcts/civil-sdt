@@ -31,11 +31,17 @@
 
 package uk.gov.moj.sdt.producers.sdtws;
 
+import java.util.GregorianCalendar;
+
 import javax.jws.WebService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
+import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
+import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
@@ -60,30 +66,106 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
      */
     private static final Log LOGGER = LogFactory.getLog (SdtEndpointPortType.class);
 
-    @Override
-    public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
-    {
-        LOGGER.debug (this.getClass ().getName () + " endpoint called, getBulkFeedback=" +
-                bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+    /**
+     * Handles bulk submission request.
+     */
+    private IWsCreateBulkRequestHandler wsCreateBulkRequestHandler;
 
-        // TODO Auto-generated method stub
-        return null;
-    }
+    /**
+     * Handles bulk feedback submission request.
+     */
+    private IWsReadBulkRequestHandler wsReadBulkRequestHandler;
+
+    /**
+     * Handles submit query details.
+     */
+    private IWsReadSubmitQueryHandler wsReadSubmitQueryHandler;
 
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequest)
     {
-        LOGGER.debug (this.getClass ().getName () + " endpoint called, submitBulk=" +
-                bulkRequest.getHeader ().getSdtCustomerId ());
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("endpoint called for method [submitBulk] by customer [" +
+                    bulkRequest.getHeader ().getSdtCustomerId () + "]");
+        }
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBulkSubmitCounts ();
 
-        // TODO Auto-generated method stub
-        return null;
+        // Measure response time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final BulkResponseType response = wsCreateBulkRequestHandler.submitBulk (bulkRequest);
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
+
+        return response;
+    }
+
+    @Override
+    public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
+    {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("endpoint called for method [getBulkFeedback] by customer [" +
+                    bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+        }
+
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBulkFeedbackCounts ();
+
+        // Measure response time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final BulkFeedbackResponseType response = wsReadBulkRequestHandler.getBulkFeedback (bulkFeedbackRequest);
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addBulkFeedbackTime (endTime - startTime);
+
+        return response;
     }
 
     @Override
     public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequest)
     {
-        // TODO Auto-generated method stub
-        return null;
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("endpoint called for method [submitQuery] by customer [" +
+                    submitQueryRequest.getHeader ().getSdtCustomerId ());
+        }
+
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upSubmitQueryCounts ();
+
+        // Measure response time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final SubmitQueryResponseType response = wsReadSubmitQueryHandler.submitQuery (submitQueryRequest);
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addSubmitQueryTime (endTime - startTime);
+
+        return response;
+
     }
+
+    /**
+     * @param wsCreateBulkRequestHandler the wsCreateBulkRequestHandler to set
+     */
+    public void setWsCreateBulkRequestHandler (final IWsCreateBulkRequestHandler wsCreateBulkRequestHandler)
+    {
+        this.wsCreateBulkRequestHandler = wsCreateBulkRequestHandler;
+    }
+
+    /**
+     * @param wsReadBulkRequestHandler the wsReadBulkRequestHandler to set
+     */
+    public void setWsReadBulkRequestHandler (final IWsReadBulkRequestHandler wsReadBulkRequestHandler)
+    {
+        this.wsReadBulkRequestHandler = wsReadBulkRequestHandler;
+    }
+
+    /**
+     * @param wsReadSubmitQueryHandler the wsReadSubmitQueryHandler to set
+     */
+    public void setWsReadSubmitQueryHandler (final IWsReadSubmitQueryHandler wsReadSubmitQueryHandler)
+    {
+        this.wsReadSubmitQueryHandler = wsReadSubmitQueryHandler;
+    }
+
 }

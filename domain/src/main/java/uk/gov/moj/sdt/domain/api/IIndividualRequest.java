@@ -170,60 +170,18 @@ public interface IIndividualRequest extends IDomainObject
     void setCompletedDate (final LocalDateTime completedDate);
 
     /**
-     * Get the XML payload.
+     * Get the request XML payload.
      * 
      * @return xml payload
      */
-    String getPayload ();
+    String getRequestPayload ();
 
     /**
-     * Set the XML payload.
+     * Set the request XML payload.
      * 
-     * @param payload xml payload
+     * @param requestPayload xml payload
      */
-    void setPayload (final String payload);
-
-    /**
-     * Set request retry count.
-     * 
-     * @return request retry count
-     */
-    int getRequestRetryCount ();
-
-    /**
-     * Set request retry count.
-     * 
-     * @param requestRetryCount request retry count
-     */
-    void setRequestRetryCount (final int requestRetryCount);
-
-    /**
-     * Get reason rejection code.
-     * 
-     * @return reason rejection code
-     */
-    String getRejectionReasonCode ();
-
-    /**
-     * Set reason rejection code.
-     * 
-     * @param rejectionReasonCode reason rejection code
-     */
-    void setRejectionReasonCode (final String rejectionReasonCode);
-
-    /**
-     * Get reason rejection description.
-     * 
-     * @return reason rejection description
-     */
-    String getRejectionReasonDescription ();
-
-    /**
-     * Set reason rejection description.
-     * 
-     * @param rejectionReasonDescription reason rejection description
-     */
-    void setRejectionReasonDescription (final String rejectionReasonDescription);
+    void setRequestPayload (final String requestPayload);
 
     /**
      * Get forwarding attempts.
@@ -238,20 +196,6 @@ public interface IIndividualRequest extends IDomainObject
      * @param forwardingAttempts forwarding attempts
      */
     void setForwardingAttempts (final int forwardingAttempts);
-
-    /**
-     * Get target application status.
-     * 
-     * @return target application status
-     */
-    String getTargetApplicationStatus ();
-
-    /**
-     * Set target application status.
-     * 
-     * @param targetApplicationStatus target application status
-     */
-    void setTargetApplicationStatus (final String targetApplicationStatus);
 
     /**
      * Get target application response.
@@ -294,5 +238,19 @@ public interface IIndividualRequest extends IDomainObject
      * @param errorLog error log
      */
     void setErrorLog (final IErrorLog errorLog);
+
+    /**
+     * Get request type.
+     * 
+     * @return request type
+     */
+    String getRequestType ();
+
+    /**
+     * Set request type.
+     * 
+     * @param requestType request type
+     */
+    void setRequestType (final String requestType);
 
 }

@@ -16,11 +16,9 @@
         <property name="customerRequestReference" type="java.lang.String">
             <column name="CUSTOMER_REQUEST_REF" />
         </property>
-        
         <property name="requestStatus" type="java.lang.String">
             <column name="REQUEST_STATUS" />
         </property>
-        
         <property name="sdtBulkReference" type="java.lang.String">
             <column name="SDT_BULK_REFERENCE" />
         </property>
@@ -45,10 +43,16 @@
         <property name="targetApplicationResponse" type="java.lang.String">
             <column name="TARGET_APPLICATION_RESPONSE" />
         </property>
-        <property name="payload" type="uk.gov.moj.sdt.domain.type.BlobType">
+        <property name="requestPayload" type="uk.gov.moj.sdt.domain.type.BlobType">
             <column name="INDIVIDUAL_PAYLOAD" />
         </property>   
         <one-to-one name="errorLog" class="uk.gov.moj.sdt.domain.ErrorLog" cascade="all">
         </one-to-one>
+        <property name="internalSystemError" type="java.lang.String">
+            <column name="INTERNAL_SYSTEM_ERROR" />
+        </property>
+        <property name="requestType" type="java.lang.String">
+            <column name="REQUEST_TYPE" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -108,8 +108,8 @@ public class IndividualRequestsXmlParserTest
         for (IIndividualRequest request : requests)
         {
             LOGGER.debug ("Request id is " + request.getCustomerRequestReference ());
-            LOGGER.debug ("Request payload is " + request.getPayload ());
-            Assert.assertNotNull (request.getPayload ());
+            LOGGER.debug ("Request payload is " + request.getRequestPayload ());
+            Assert.assertNotNull (request.getRequestPayload ());
         }
 
     }

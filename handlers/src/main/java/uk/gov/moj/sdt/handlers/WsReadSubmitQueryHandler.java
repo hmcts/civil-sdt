@@ -32,6 +32,8 @@ package uk.gov.moj.sdt.handlers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
@@ -50,6 +52,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d130680
  * 
  */
+@Transactional (propagation = Propagation.REQUIRED)
 public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsReadSubmitQueryHandler
 {
 

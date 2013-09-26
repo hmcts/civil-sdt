@@ -106,28 +106,13 @@ public class BulkRequestTransformerTest extends TestCase
         final RequestsType requestsType = new RequestsType ();
 
         // Individual request 1
-        final RequestItemType item1 = new RequestItemType ();
-        final String item1requestId = "request 1";
-        final String item1requestType = "mcolClaimStatusUpdate";
-        item1.setRequestId (item1requestId);
-        item1.setRequestType (item1requestType);
-        requestsType.getRequest ().add (item1);
+        requestsType.getRequest ().add (createRequestItem ("request 1", "mcolClaimStatusUpdate"));
 
         // Individual request 2
-        final RequestItemType item2 = new RequestItemType ();
-        final String item2requestId = "request 2";
-        final String item2requestType = "mcolClaim";
-        item2.setRequestId (item2requestId);
-        item2.setRequestType (item2requestType);
-        requestsType.getRequest ().add (item2);
+        requestsType.getRequest ().add (createRequestItem ("request 2", "mcolClaim"));
 
         // Individual request 3
-        final RequestItemType item3 = new RequestItemType ();
-        final String item3requestId = "request 3";
-        final String item3requestType = "mcolWarrant";
-        item3.setRequestId (item3requestId);
-        item3.setRequestType (item3requestType);
-        requestsType.getRequest ().add (item3);
+        requestsType.getRequest ().add (createRequestItem ("request 3", "mcolWarrant"));
 
         jaxb.setRequests (requestsType);
 
@@ -141,36 +126,45 @@ public class BulkRequestTransformerTest extends TestCase
         Assert.assertEquals ("Individual request list size does not match", requestsType.getRequest ().size (), domain
                 .getIndividualRequests ().size ());
 
-        // Extract individual request 1 and assert
-        final IIndividualRequest individualRequest1 = domain.getIndividualRequests ().get (0);
-        // Test initial status is forwarded
-        Assert.assertEquals ("Customer reference does not match", individualRequest1.getRequestStatus (),
-                IndividualRequestStatus.FORWARDED.getStatus ());
-        Assert.assertEquals ("Request id for individual request 1 does not match",
-                individualRequest1.getCustomerRequestReference (), item1requestId);
-        Assert.assertEquals ("Line number for individual request 1 does not match",
-                individualRequest1.getLineNumber (), 1);
+        int index = 0;
+        for (RequestItemType item : requestsType.getRequest ())
+        {
+            verify (item, domain.getIndividualRequests ().get (index), ++index);
+        }
 
-        // Extract individual request 2 and assert
-        final IIndividualRequest individualRequest2 = domain.getIndividualRequests ().get (1);
-        // Test initial status is forwarded
-        Assert.assertEquals ("Customer reference does not match", individualRequest2.getRequestStatus (),
-                IndividualRequestStatus.FORWARDED.getStatus ());
-        Assert.assertEquals ("Request id for individual request 2 does not match",
-                individualRequest2.getCustomerRequestReference (), item2requestId);
-        Assert.assertEquals ("Line number for individual request 2 does not match",
-                individualRequest2.getLineNumber (), 2);
+    }
 
-        // Extract individual request 3 and assert
-        final IIndividualRequest individualRequest3 = domain.getIndividualRequests ().get (2);
-        // Test initial status is forwarded
-        Assert.assertEquals ("Customer reference does not match", individualRequest3.getRequestStatus (),
-                IndividualRequestStatus.FORWARDED.getStatus ());
-        Assert.assertEquals ("Request id for individual request 3 does not match",
-                individualRequest3.getCustomerRequestReference (), item3requestId);
-        Assert.assertEquals ("Line number for individual request 3 does not match",
-                individualRequest3.getLineNumber (), 3);
+    /**
+     * Creates an instance of RequestItemType with given values.
+     * 
+     * @param id request id
+     * @param type request type
+     * @return RequestItemType
+     */
+    private RequestItemType createRequestItem (final String id, final String type)
+    {
+        final RequestItemType requestItem = new RequestItemType ();
+        requestItem.setRequestId (id);
+        requestItem.setRequestType (type);
+        return requestItem;
+    }
 
+    /**
+     * Verifies that individual request contains expected values.
+     * 
+     * @param expected request item type
+     * @param actual individual request
+     * @param row record number
+     */
+    private void verify (final RequestItemType expected, final IIndividualRequest actual, final int row)
+    {
+        Assert.assertNotNull (actual.getBulkSubmission ());
+        Assert.assertEquals ("Customer reference does not match", IndividualRequestStatus.RECEIVED.getStatus (),
+                actual.getRequestStatus ());
+        Assert.assertEquals ("Request id for individual request 3 does not match", expected.getRequestId (),
+                actual.getCustomerRequestReference ());
+        Assert.assertEquals ("Line number for individual request 3 does not match", row, actual.getLineNumber ());
+        Assert.assertEquals ("Request type mismatch", expected.getRequestType (), actual.getRequestType ());
     }
 
     /**

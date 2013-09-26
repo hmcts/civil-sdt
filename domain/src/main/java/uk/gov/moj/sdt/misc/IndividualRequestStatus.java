@@ -41,14 +41,14 @@ public enum IndividualRequestStatus
 {
 
     /**
-     * Forwarded.
-     */
-    FORWARDED ("Forwarded"),
-
-    /**
      * Received.
      */
     RECEIVED ("Received"),
+
+    /**
+     * Forwarded.
+     */
+    FORWARDED ("Forwarded"),
 
     /**
      * Rejected.

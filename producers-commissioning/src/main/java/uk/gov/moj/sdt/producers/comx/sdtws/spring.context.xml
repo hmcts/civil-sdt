@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<bean id="uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType"
-		class="uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType">
+		class="uk.gov.moj.sdt.producers.comx.sdtws.SdtEndpointPortType">
         <property name="wsCreateBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler"/>
         <property name="wsReadBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler"/>
         <property name="wsReadSubmitQueryHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler"/>

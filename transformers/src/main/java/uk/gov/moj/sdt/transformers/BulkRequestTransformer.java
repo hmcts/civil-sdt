@@ -41,11 +41,9 @@ import org.joda.time.LocalDateTime;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.misc.BulkRequestStatus;
 import uk.gov.moj.sdt.misc.IndividualRequestStatus;
@@ -83,7 +81,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
      * @param headerType header type
      * @return bulk customer
      */
-    private static BulkCustomer mapToBulkCustomer (final HeaderType headerType)
+    private BulkCustomer mapToBulkCustomer (final HeaderType headerType)
     {
         final BulkCustomer bulkCustomer = new BulkCustomer ();
 
@@ -99,8 +97,8 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
      * @param bulkSubmission bulk submission
      * @return list of individual requests
      */
-    private static List<IIndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
-                                                                     final IBulkSubmission bulkSubmission)
+    private List<IIndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
+                                                              final IBulkSubmission bulkSubmission)
     {
         IndividualRequest individualRequest = null;
         final List<RequestItemType> requests = bulkRequestType.getRequests ().getRequest ();
@@ -120,7 +118,10 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
             individualRequest.setLineNumber (lineNumber++);
 
             // Set the initial status
-            individualRequest.setRequestStatus (IndividualRequestStatus.FORWARDED.getStatus ());
+            individualRequest.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
+
+            // Set request type
+            individualRequest.setRequestType (request.getRequestType ());
 
             // Set the bulk submission
             individualRequest.setBulkSubmission (bulkSubmission);
@@ -131,25 +132,11 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         return individualRequestList;
     }
 
-    /**
-     * Maps the request to a Request Type object.
-     * 
-     * @param requestTypeType request type
-     * @return domain request type
-     */
-    private static IServiceType mapToRequestType (final String requestTypeType)
-    {
-
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setName (requestTypeType);
-
-        return serviceType;
-
-    }
-
     @Override
     public IBulkSubmission transformJaxbToDomain (final BulkRequestType bulkRequest)
     {
+        LOGGER.debug ("transform BulkRequestType to IBulkSubmission");
+
         final HeaderType headerType = bulkRequest.getHeader ();
 
         // Create target domain object.
@@ -180,6 +167,8 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
     @Override
     public BulkResponseType transformDomainToJaxb (final IBulkSubmission bulkSubmission)
     {
+        LOGGER.debug ("transform IBulkSubmission to BulkResponseType");
+
         // TODOs Auto-generated method stub
         return null;
     }

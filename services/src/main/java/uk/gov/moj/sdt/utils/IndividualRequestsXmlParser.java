@@ -104,7 +104,7 @@ public class IndividualRequestsXmlParser
                 // Form the replacement string from the matched groups and the extra XML.
                 LOGGER.debug ("Individual requewst raw XML[" + individualRequestRawXml + "]");
 
-                individualRequest.setPayload (individualRequestRawXml);
+                individualRequest.setRequestPayload (individualRequestRawXml);
             }
         }
 

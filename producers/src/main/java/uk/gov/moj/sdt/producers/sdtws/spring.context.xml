@@ -9,6 +9,9 @@
 
 	<bean id="uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType"
 		class="uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType">
-	</bean>
+        <property name="wsCreateBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler"/>
+        <property name="wsReadBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler"/>
+        <property name="wsReadSubmitQueryHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler"/>
+    </bean>
 
 </beans>

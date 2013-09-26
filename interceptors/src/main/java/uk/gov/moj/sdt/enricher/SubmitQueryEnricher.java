@@ -93,6 +93,13 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
 
             // TODO - need to manipulate the namespace declaration
         }
+        else
+        {
+            // Failure to find matching request in outgoing XML.
+            LOGGER.debug("Parent tag [" + this.getParentTag () +
+                    "] not found...skipping enrichment.");
+        }
+
 
         if (LOGGER.isDebugEnabled ())
         {
