@@ -88,11 +88,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     private int lineNumber;
 
     /**
-     * Number of attempts made to submit request.
-     */
-    private int requestRetryCount;
-
-    /**
      * SDT request reference.
      */
     private String sdtRequestReference;
@@ -114,29 +109,10 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     private LocalDateTime completedDate;
 
     /**
-     * Error code associated with Rejection Reason Description.
-     * Note: this can be populated following initial SDT Service processing or subsequent
-     * Target Application processing.
-     */
-    private String rejectionReasonCode;
-
-    /**
-     * Text description of Request Status, e.g. Request error description for a request with status
-     * "Rejected". Note: this can be populated following initial SDT Service processing or subsequent
-     * Target Application processing.
-     */
-    private String rejectionReasonDescription;
-
-    /**
      * An Individual Request can be forwarded for up to the defined maximum forwarding attempts.
      * This value indicates the number of attempts to forward the Individual Request to date.
      */
     private int forwardingAttempts;
-
-    /**
-     * Target Application status for Individual Request processing.
-     */
-    private String targetApplicationStatus;
 
     /**
      * Target Application Response for Individual Request processing.
