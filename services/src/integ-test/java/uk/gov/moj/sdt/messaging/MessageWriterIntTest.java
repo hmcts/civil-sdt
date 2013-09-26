@@ -93,8 +93,8 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
                 "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
         messageWriter.queueMessage (strMessage2);
 
-        // Wait for 5 seconds before checking the queue.
-        Thread.sleep (5000);
+        // Wait for 10 seconds before checking the queue.
+        Thread.sleep (10000);
 
         jmsTemplate.browse ("JMSTestQueue", new BrowserCallback<Object> ()
         {
