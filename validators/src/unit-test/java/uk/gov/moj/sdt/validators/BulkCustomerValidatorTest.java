@@ -142,10 +142,9 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
         }
         catch (final CustomerNotSetupException e)
         {
-            Assert.assertEquals ("Unexpected message in exception",
-
-            "The following exception occured [CUST_NOT_SETUP] message[Bulk customer [12345] not setup.]",
-                    e.getMessage ());
+            // [^\[]*\[CUST_NOT_SETUP\][^\[]*\[12345\].*
+            Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("CUST_NOT_SETUP"));
+            Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("12345"));
         }
     }
 }
