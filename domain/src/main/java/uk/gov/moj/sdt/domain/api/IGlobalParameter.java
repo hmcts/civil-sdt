@@ -98,34 +98,31 @@ public interface IGlobalParameter extends IDomainObject
         /**
          * Period in seconds, to wait for an acknowledgement of receipt from MCOL.
          */
-        MCOL_ACKNOWLEDGEMENT_TIMEOUT,
+        ACKNOWLEDGEMENT_TIMEOUT,
 
         /**
          * Number of forwarding attempts made to transmit an individual request to target application.
          */
-        MAX_FORWARDING_ATTEMPTS,
+        FORWARDING_ATTEMPTS,
 
         /**
-         * Used by the SDT Service to determine the maximum number of concurrent Individual Requests that can be
-         * forwarded to MCOL.
+         * Maximum number of concurrent Individual Requests that can be forwarded to target application.
          */
-        MCOL_MAX_CONCURRENT_INDV_REQ,
+        MAX_CONCURRENT_INDV_REQ,
 
         /**
-         * Used by the SDT Service to determine the time delay before processing the next Individual Request that can be
-         * forwarded to MCOL.
+         * Time delay in milliseconds before processing the next Individual Request that can be forwarded to target
+         * application.
          */
-        MCOL_INDV_REQ_DELAY,
+        INDV_REQ_DELAY,
 
         /**
-         * Used by the SDT Service to determine the maximum number of concurrent Submit Query Requests that can be
-         * forwarded to MCOL.
+         * Maximum number of concurrent Submit Query Requests that can be forwarded to target application.
          */
-        MCOL_MAX_CONCURRENT_QUERY_REQ,
+        MAX_CONCURRENT_QUERY_REQ,
 
         /**
-         * Used by SDT to hold the current contact details for outgoing SDT application messages to Bulk Customer
-         * System.
+         * Current contact details for outgoing SDT application messages to Bulk Customer System.
          */
         CONTACT_DETAILS
     }
