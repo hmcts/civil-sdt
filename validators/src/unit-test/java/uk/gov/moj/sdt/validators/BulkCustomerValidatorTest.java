@@ -116,6 +116,7 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
 
         // Validate the bulk customer.
         bulkCustomer.accept (validator, null);
+        EasyMock.verify (mockIBulkCustomerDao);
     }
 
     /**
@@ -142,6 +143,8 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
         }
         catch (final CustomerNotSetupException e)
         {
+            EasyMock.verify (mockIBulkCustomerDao);
+
             // [^\[]*\[CUST_NOT_SETUP\][^\[]*\[12345\].*
             Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("CUST_NOT_SETUP"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("12345"));
