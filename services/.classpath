@@ -13,5 +13,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/services-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dao"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/consumers"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -47,12 +47,39 @@ public interface ITargetApplicationSubmissionService
      * @param sdtRequestReference the unique SDT Request Reference associated with individual request
      * @return IndividualRequest object associated with the matching individual request
      */
-    IIndividualRequest getRequestsToSubmit (final String sdtRequestReference);
+    IIndividualRequest getRequestToSubmit (final String sdtRequestReference);
 
     /**
+     * Update the request object. This method is to be called to update the request object
+     * to bring it in the request status state of FORWARDED
      * 
-     * @param status status
-     * @param request request
+     * @param individualRequest the IndividualRequest object that contains the
+     *            response payload from the target application.
      */
-    void updateRequestStatus (final String status, final IIndividualRequest request);
+    void updateForwardingRequest (final IIndividualRequest individualRequest);
+
+    /**
+     * Update the request object. This method is to be called to update the request object on
+     * completion i.e. successful response is received from the target application.
+     * 
+     * @param individualRequest the individual request to be marked as completed
+     */
+    void updateCompletedRequest (final IIndividualRequest individualRequest);
+
+    /**
+     * Updates the request object. This method is called when the send request to the target application
+     * times out.
+     * 
+     * @param individualRequest the individual request to be marked with reason as not acknowledged
+     */
+    void updateRequestNotAcknowledged (final IIndividualRequest individualRequest);
+
+    /**
+     * Updates the request object. This method is called when the send request to target application
+     * returns an server error.
+     * 
+     * @param individualRequest the individual request to be marked with reason as not responding
+     */
+    void updateRequestNotResponding (final IIndividualRequest individualRequest);
+
 }

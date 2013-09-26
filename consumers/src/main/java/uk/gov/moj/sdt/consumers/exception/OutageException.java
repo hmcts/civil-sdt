@@ -28,37 +28,67 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
-
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+package uk.gov.moj.sdt.consumers.exception;
 
 /**
- * Interface for all classes implementing {@link IBulkSubmissionDao}.
  * 
- * @author d130680
+ * Outage exception can be thrown by the consumer if the target application does not respond at all.
+ * 
+ * @author Manoj Kulkarni
+ * 
  */
-public interface IBulkSubmissionDao extends IGenericDao
+public class OutageException extends RuntimeException
 {
     /**
-     * Check the customer reference is unique across data retention period.
-     * 
-     * @param customerReference customer reference
-     * @param bulkCustomer bulk customer
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
+     * The Constant serialVersionUID.
      */
-    boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException;
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Checks that the bulk reference is valid.
-     * 
-     * @param bulkReference bulk reference
-     * @throws DataAccessException Hibernate exception
-     * @return true or false
+     * Error code.
      */
-    boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException;
+    // CHECKSTYLE:OFF
+
+    private String errorCode;
+
+    /**
+     * Error description.
+     */
+    private String errorDescription;
+
+    // CHECKSTYLE:ON
+
+    /**
+     * Constructor for non tokenised description.
+     * 
+     * @param code code for the error message
+     * @param description for the error message
+     */
+    public OutageException (final String code, final String description)
+    {
+        super ("The following exception occured [" + code + "] message[" + description + "]");
+        this.errorCode = code;
+        this.errorDescription = description;
+    }
+
+    /**
+     * Get the error code.
+     * 
+     * @return error code
+     */
+    public String getErrorCode ()
+    {
+        return errorCode;
+    }
+
+    /**
+     * Get the error description.
+     * 
+     * @return error description
+     */
+    public String getErrorDescription ()
+    {
+        return errorDescription;
+    }
 
 }

@@ -93,8 +93,8 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
                 "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
         messageWriter.queueMessage (strMessage2);
 
-        // Wait for 2 seconds before checking the queue.
-        Thread.sleep (2000);
+        // Wait for 5 seconds before checking the queue.
+        Thread.sleep (5000);
 
         jmsTemplate.browse ("JMSTestQueue", new BrowserCallback<Object> ()
         {
@@ -102,6 +102,7 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
             @Override
             public Object doInJms (final Session session, final QueueBrowser browser) throws JMSException
             {
+
                 @SuppressWarnings ("rawtypes") final Enumeration enumeration = browser.getEnumeration ();
                 if (enumeration.hasMoreElements ())
                 {
@@ -113,6 +114,7 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
             }
 
         });
+
     }
 
     /**

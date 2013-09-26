@@ -34,12 +34,22 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
+import jline.internal.Log;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.messaging.api.IMessageDrivenBean;
+import uk.gov.moj.sdt.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Implementation of the IMessageReader interface.
@@ -56,6 +66,21 @@ public class IndividualRequestMdb implements IMessageDrivenBean
      * Logger for logging messages.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestMdb.class);
+
+    /**
+     * Target Application Submission Service.
+     */
+    private ITargetApplicationSubmissionService targetAppSubmissionService;
+
+    /**
+     * The variable holding the global parameters cache bean.
+     */
+    private ICacheable globalParametersCache;
+
+    /**
+     * This variable holding the message writer reference.
+     */
+    private IMessageWriter messageWriter;
 
     @Override
     public void readMessage (final Message message)
@@ -75,7 +100,280 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             }
             LOGGER.debug ("Received message " + sdtReference);
 
+            // Get the Individual Request matching the SDT Request Reference
+            IIndividualRequest individualRequest = this.findIndividualRequest (sdtReference);
+
+            // Proceed ahead if the Individual Request is found
+            if (individualRequest != null)
+            {
+
+                // Check the configurable delay from system parameter and
+                // delay the consumer call for that time.
+
+                LOGGER.debug ("Delay request processing for the configured time");
+
+                this.delayRequestProcessing (individualRequest);
+
+                LOGGER.debug ("Resume request processing");
+
+                SdtContext.getContext ().setRawOutXml (individualRequest.getRequestPayload ());
+
+                LOGGER.debug ("Individual Request Payload is set in SdtContext");
+
+                // Update the status of the requested to Forwarded before calling the consumer
+                this.updateAndMarkRequestForwarded (individualRequest);
+
+                LOGGER.debug ("Updated the request status as Forwarded");
+
+                // Make call to consumer to submit the request to target application.
+                try
+                {
+                    LOGGER.debug ("Calling the consumer to call the target application");
+
+                    individualRequest = this.forwardToTargetApplication (individualRequest);
+
+                    LOGGER.debug ("Consumer returned the call from target application");
+
+                    this.updateAndMarkRequestCompleted (individualRequest);
+
+                    LOGGER.debug ("Calling service to update and mark the request for completion");
+
+                }
+                catch (final TimeoutException e)
+                {
+                    Log.error ("Timeout exception received with message " + e.getMessage ());
+
+                    // Update the individual request with the reason code for error REQ_NOT_ACK
+                    this.updateRequestNotAcknowledged (individualRequest);
+
+                    LOGGER.debug ("Updating the individual request with reason code for not acknowledged");
+
+                    // Re-queue message again
+                    this.reQueueRequest (individualRequest);
+
+                    LOGGER.debug ("Re-queued the request");
+                }
+                catch (final OutageException e)
+                {
+                    Log.error ("Outage exception received with message " + e.getMessage ());
+
+                    // Update the individual request with reason code for not responding
+                    this.updateRequestNotResponding (individualRequest);
+
+                    LOGGER.debug ("Updating the individual request with reason code for not responding");
+
+                    // Re-queue message again
+                    this.reQueueRequest (individualRequest);
+
+                    LOGGER.debug ("Re-queued the request");
+                }
+
+                LOGGER.debug ("Individual request " + sdtReference + " processing completed.");
+
+            }
+
         }
+
+    }
+
+    /**
+     * 
+     * @return the target application submission service.
+     */
+    public ITargetApplicationSubmissionService getTargetAppSubmissionService ()
+    {
+        return targetAppSubmissionService;
+    }
+
+    /**
+     * 
+     * @param targetAppSubmissionService the target submission service
+     */
+    public void setTargetAppSubmissionService (final ITargetApplicationSubmissionService targetAppSubmissionService)
+    {
+        this.targetAppSubmissionService = targetAppSubmissionService;
+    }
+
+    /**
+     * 
+     * @return cacheable interface representing the GlobalParametersCache object
+     */
+    public ICacheable getGlobalParametersCache ()
+    {
+        return globalParametersCache;
+    }
+
+    /**
+     * 
+     * @param globalParametersCache the cache for the global parameters.
+     */
+    public void setGlobalParametersCache (final ICacheable globalParametersCache)
+    {
+        this.globalParametersCache = globalParametersCache;
+    }
+
+    /**
+     * 
+     * @return messageWriter the MessageWriter for the messaging API.
+     */
+    public IMessageWriter getMessageWriter ()
+    {
+        return messageWriter;
+    }
+
+    /**
+     * 
+     * @param messageWriter the message writer.
+     */
+    public void setMessageWriter (final IMessageWriter messageWriter)
+    {
+        this.messageWriter = messageWriter;
+    }
+
+    /**
+     * 
+     * @param sdtRequestReference the SDT request reference
+     * @return an Individual Request matching the SDT request reference.
+     */
+    private IIndividualRequest findIndividualRequest (final String sdtRequestReference)
+    {
+        return this.getTargetAppSubmissionService ().getRequestToSubmit (sdtRequestReference);
+    }
+
+    /**
+     * 
+     * @param individualRequest the individual request object.
+     * @return the individualRequest object from the response of the consumer.
+     * @throws TimeoutException the consumer may throw a timeout exception.
+     */
+    private IIndividualRequest forwardToTargetApplication (final IIndividualRequest individualRequest)
+        throws TimeoutException
+    {
+        // TODO - Call the consumer with the IndividualRequest object.
+
+        // At the moment, until the consumer is ready we are just returning back the individual request parameter
+        return individualRequest;
+    }
+
+    /**
+     * 
+     * @param individualRequest the individualrequest object to be updated.
+     */
+    private void updateAndMarkRequestForwarded (final IIndividualRequest individualRequest)
+    {
+        this.getTargetAppSubmissionService ().updateForwardingRequest (individualRequest);
+    }
+
+    /**
+     * 
+     * @param individualRequest the individual request to be marked as completed
+     */
+    private void updateAndMarkRequestCompleted (final IIndividualRequest individualRequest)
+    {
+        this.getTargetAppSubmissionService ().updateCompletedRequest (individualRequest);
+    }
+
+    /**
+     * 
+     * @param individualRequest the individual request to be marked as request no acknowledged
+     */
+    private void updateRequestNotAcknowledged (final IIndividualRequest individualRequest)
+    {
+        this.getTargetAppSubmissionService ().updateRequestNotAcknowledged (individualRequest);
+    }
+
+    /**
+     * 
+     * @param individualRequest the individual request to be marked as request not responding
+     */
+    private void updateRequestNotResponding (final IIndividualRequest individualRequest)
+    {
+        this.getTargetAppSubmissionService ().updateRequestNotResponding (individualRequest);
+    }
+
+    /**
+     * 
+     * @param individualRequest the individual request object.
+     * @return true if the request forwarding attempts is less than the maximum forwarding attempts parameter.
+     */
+    private boolean canRequestBeRequeued (final IIndividualRequest individualRequest)
+    {
+        // Get the max forwarding attempts system parameter.
+        final String maxForwardingAttemptStr =
+                this.getSystemParameter (IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name ());
+
+        if (individualRequest.getForwardingAttempts () <= Integer.valueOf (maxForwardingAttemptStr))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param individualRequest the individual request.
+     */
+    private void reQueueRequest (final IIndividualRequest individualRequest)
+    {
+        // Check the forwarding attempts has not exceeded the max forwarding attempts count.
+        if (this.canRequestBeRequeued (individualRequest))
+        {
+            this.getMessageWriter ().queueMessage (individualRequest.getSdtRequestReference ());
+        }
+        else
+        {
+            Log.error ("Maximum forwarding attempts exceeded for request " +
+                    individualRequest.getSdtRequestReference ());
+        }
+    }
+
+    /**
+     * 
+     * @param parameterName the name of the parameter.
+     * @return value of the parameter name as stored in the database.
+     */
+    private String getSystemParameter (final String parameterName)
+    {
+        final IGlobalParameter globalParameter =
+                this.getGlobalParametersCache ().getValue (IGlobalParameter.class, parameterName);
+
+        return globalParameter.getValue ();
+
+    }
+
+    /**
+     * Reads an system parameter to add delay to the request processing if the
+     * system parameter has non null value.
+     * 
+     * @param request IndividualRequest object
+     */
+    private void delayRequestProcessing (final IIndividualRequest request)
+    {
+        // Get the target Application code.
+        final String targetApplication =
+                request.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
+        // Pre-fix the target application code to the global parameter key for the request delay
+        final String delayParamName =
+                targetApplication.toUpperCase () + "_" + IGlobalParameter.ParameterKey.INDV_REQ_DELAY.name ();
+
+        // Get the global parameter for the individual request delay
+        final String individualReqProcessingDelay = this.getSystemParameter (delayParamName);
+
+        if (individualReqProcessingDelay != null)
+        {
+            // If the global parameter is available, proceed with delaying the request processing
+            final long delay = Long.valueOf (individualReqProcessingDelay);
+            try
+            {
+                Thread.sleep (delay);
+            }
+            catch (final InterruptedException ie)
+            {
+                LOGGER.warn ("Delay operation interrupted by interrupt exception " + ie.getMessage ());
+            }
+        }
+
+        return;
 
     }
 

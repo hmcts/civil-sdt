@@ -42,7 +42,7 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  * 
  * @author d130680
  */
-public interface ITargetApplicationDao
+public interface ITargetApplicationDao extends IGenericDao
 {
     /**
      * Get all the target applications for a particular bulk customer.

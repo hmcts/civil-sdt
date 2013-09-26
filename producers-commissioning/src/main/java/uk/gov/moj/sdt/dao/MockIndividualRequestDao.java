@@ -34,8 +34,11 @@ package uk.gov.moj.sdt.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.DataAccessException;
+
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Mock Individual Request DAO class used in commissioning project.
@@ -70,5 +73,12 @@ public class MockIndividualRequestDao extends MockGenericDao implements IIndivid
     public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
     {
         return !DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ());
+    }
+
+    @Override
+    public IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException
+    {
+        // This method is implemented for the producers application only.
+        return null;
     }
 }

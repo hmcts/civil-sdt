@@ -7,37 +7,9 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<!-- Define client-side proxy to access web service -->
-	<bean id="greetingsEndpointPort"
-		class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
-
-		<!-- 'serviceInterface' should name the interface which the service implementation 
-			class implements -->
-		<property name="serviceInterface"
-			value="uk.gov.moj.sdt.producers.prototype.greetingendpoint.IGreetingEndpointPortType" />
-
-		<!-- 'wsdlDocumentUrl' should find a WSDL relative to the webapp WEB-INF/classes 
-			directory -->
-		<property name="wsdlDocumentUrl" value="classpath:wsdl/GreetingEndpoint.wsdl" />
-
-		<!-- 'serviceName' should match the service name of the service in the 
-			WSDL -->
-		<property name="serviceName" value="GreetingEndpoint" />
-
-		<!-- 'portName' should match the port name of the service in the WSDL -->
-		<property name="portName" value="GreetingEndpointPort" />
-
-		<!-- Following namespace must agree with targetNamespace of WSDL -->
-		<property name="namespaceUri"
-			value="http://prototype.producers.sdt.moj.gov.uk/GreetingEndpoint" />
-
-		<!-- Delay checking service until 1st access - avoids problem in Tomcat 
-			because Tomcat initialisation is not complete and the WSDL cannot be seen. -->
-		<property name="lookupServiceOnStartup" value="false" />
-	</bean>
+	
 
 	<bean id="uk.gov.moj.sdt.consumers.Consumer" class="uk.gov.moj.sdt.consumers.Consumer">
-		<property name="greetingEndpointPortType" ref="greetingsEndpointPort" />
 	</bean>
 
 	<!-- Publish the service endpoints. How does it know what these are? -->

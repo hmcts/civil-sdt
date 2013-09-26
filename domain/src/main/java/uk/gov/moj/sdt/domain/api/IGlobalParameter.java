@@ -103,7 +103,7 @@ public interface IGlobalParameter extends IDomainObject
         /**
          * Number of forwarding attempts made to transmit an individual request to target application.
          */
-        FORWARDING_ATTEMPTS,
+        MAX_FORWARDING_ATTEMPTS,
 
         /**
          * Maximum number of concurrent Individual Requests that can be forwarded to target application.

@@ -31,5 +31,11 @@
     	<property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao"/>
     	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
     </bean>   
+    
+    <!-- Implementation for Target Application Submission Service -->
+    <bean id="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"
+    	class="uk.gov.moj.sdt.services.TargetApplicationSubmissionService">
+    	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+    </bean>
                           
 </beans>

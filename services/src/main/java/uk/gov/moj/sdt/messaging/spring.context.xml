@@ -34,7 +34,11 @@
 	
 	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
 		<constructor-arg>
-			<bean class="uk.gov.moj.sdt.messaging.IndividualRequestMdb"/>
+			<bean class="uk.gov.moj.sdt.messaging.IndividualRequestMdb">
+				<property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>
+				<property name="globalParametersCache" ref="uk.gov.moj.sdt.cache.GlobalParametersCache"/>
+				<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
+			</bean>
 		</constructor-arg>
 		<property name="defaultListenerMethod" value="readMessage"/>
 		<property name="messageConverter"><null/></property>

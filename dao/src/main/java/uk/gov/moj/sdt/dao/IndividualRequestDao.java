@@ -30,12 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Implements specific DAO functionality based on {@link IIndividualRequestDao}. This is a derived DAO extending
@@ -67,5 +69,29 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     {
         // TODO - Need to implement this
         return true;
+    }
+
+    @Override
+    public IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException
+    {
+        LOG.debug ("Get a Individual Request matching the Sdt Request Reference");
+
+        // Call the generic dao to do this query.
+        final IIndividualRequest[] individualRequests =
+                this.query (IIndividualRequest.class, Restrictions.eq ("sdtRequestReference", sdtReferenceId));
+
+        // Should only return one or none at all
+        if (individualRequests == null || individualRequests.length == 0)
+        {
+            return null;
+        }
+
+        if (individualRequests.length > 1)
+        {
+            throw new IllegalStateException ("Multiple Individual Requests found for the Sdt Request Reference " +
+                    sdtReferenceId);
+        }
+
+        return individualRequests[0];
     }
 }

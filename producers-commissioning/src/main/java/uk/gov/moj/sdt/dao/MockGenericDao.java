@@ -34,6 +34,12 @@ package uk.gov.moj.sdt.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
+import org.springframework.dao.DataAccessException;
+
+import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+
 /**
  * Base class for Mock DAO classes containing helper methods for mock dao sub classes.
  * 
@@ -42,7 +48,7 @@ import java.util.List;
  * @author d130680
  * 
  */
-public class MockGenericDao
+public class MockGenericDao implements IGenericDao
 {
 
     /**
@@ -69,6 +75,33 @@ public class MockGenericDao
     protected boolean isCustomerReferenceValid (final String customerReference)
     {
         return !DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ());
+    }
+
+    @Override
+    public <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final long id)
+        throws DataAccessException
+    {
+        return null;
+    }
+
+    @Override
+    public <DomainType extends IDomainObject> DomainType[] query (final Class<DomainType> domainType,
+                                                                  final Criterion... restrictions)
+        throws DataAccessException
+    {
+        return null;
+    }
+
+    @Override
+    public void persist (final Object domainObject) throws DataAccessException
+    {
+
+    }
+
+    @Override
+    public long getNextSequenceValue (final String sequenceName) throws DataAccessException
+    {
+        return 0;
     }
 
 }

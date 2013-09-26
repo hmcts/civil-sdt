@@ -33,13 +33,14 @@ package uk.gov.moj.sdt.dao.api;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Interface for all classes implementing {@link IIndividualRequestDao}.
  * 
  * @author d130680
  */
-public interface IIndividualRequestDao
+public interface IIndividualRequestDao extends IGenericDao
 {
     /**
      * Check the customer reference is unique across data retention period.
@@ -51,4 +52,13 @@ public interface IIndividualRequestDao
      */
     boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
         throws DataAccessException;
+
+    /**
+     * Returns the individual request object for the given Sdt Reference Id.
+     * 
+     * @param sdtReferenceId the unique SDT reference Id
+     * @return the Individual Request object associated with the Sdt reference Id.
+     * @throws DataAccessException Hibernate exception
+     */
+    IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException;
 }

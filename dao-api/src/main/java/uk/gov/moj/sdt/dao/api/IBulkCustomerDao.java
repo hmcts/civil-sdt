@@ -39,7 +39,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  * 
  * @author Robin Compston
  */
-public interface IBulkCustomerDao
+public interface IBulkCustomerDao extends IGenericDao
 {
     /**
      * Retrieve a {@link IBulkCustomer} object from Hibernate matching the given SDT ID.
