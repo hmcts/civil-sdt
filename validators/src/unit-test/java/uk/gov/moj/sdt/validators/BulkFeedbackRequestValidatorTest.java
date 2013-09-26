@@ -83,7 +83,7 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
     /**
      * The string reference for our bulk request.
      */
-    private String reference = " Bulk reference in request ";
+    private String reference = "12345678";
 
     /**
      * Constructor for test.
@@ -127,6 +127,8 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
 
         // Validate the bulk customer.
         bulkFeedbackRequest.accept (validator, null);
+
+        EasyMock.verify (mockIBulkSubmissionDao);
     }
 
     /**
@@ -154,11 +156,10 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         }
         catch (final InvalidBulkReferenceException e)
         {
-            // LOGGER.debug (e.getMessage ());
-            Assert.assertEquals ("Unexpected message in exception",
-                    "The following exception occured [BULK_REF_INVALID] message"
-                            + "[There is no Bulk Request submission associated with your account "
-                            + "for the supplied SDT Bulk Reference  " + "Bulk reference in request ]", e.getMessage ());
+            EasyMock.verify (mockIBulkSubmissionDao);
+
+            Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("BULK_REF_INVALID"));
+            Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("12345678"));
         }
     }
 }
