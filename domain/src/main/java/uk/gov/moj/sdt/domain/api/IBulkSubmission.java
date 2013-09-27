@@ -211,4 +211,61 @@ public interface IBulkSubmission extends IDomainObject
      */
     void setErrorLog (final IErrorLog errorLog);
 
+    /**
+     * The status of the Bulk Request - one of "Uploaded", "Failed", "
+     * Validated", or "Completed" to reflect the current status of SDT processing. Maintained by SDT.
+     * 
+     * @author d130680
+     * 
+     */
+    public enum BulkRequestStatus
+    {
+
+        /**
+         * Uploaded.
+         */
+        UPLOADED ("Uploaded"),
+
+        /**
+         * Failed.
+         */
+        FAILED ("Failed"),
+
+        /**
+         * Validated.
+         */
+        VALIDATED ("Validated"),
+
+        /**
+         * Completed.
+         */
+        COMPLETED ("Completed");
+
+        /**
+         * Bulk request status.
+         */
+        private String status;
+
+        /**
+         * Constructor.
+         * 
+         * @param s status
+         */
+        private BulkRequestStatus (final String s)
+        {
+
+            this.status = s;
+        }
+
+        /**
+         * Get the bulk request status.
+         * 
+         * @return bulk request status
+         */
+        public String getStatus ()
+        {
+            return status;
+        }
+    }
+
 }

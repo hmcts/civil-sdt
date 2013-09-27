@@ -313,16 +313,6 @@ public interface IIndividualRequest extends IDomainObject
         {
             return status;
         }
-
-        /**
-         * Set the bulk request status.
-         * 
-         * @param status bulk request status
-         */
-        public void setStatus (final String status)
-        {
-            this.status = status;
-        }
     }
 
 }
