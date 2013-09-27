@@ -30,6 +30,7 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +38,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
-import uk.gov.moj.sdt.validators.exception.DuplicateUserFileReferenceException;
 
 /**
  * Implementation of {@link IIndividualRequestValidator}.
@@ -86,12 +88,18 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
 
         if (invalidIndividualRequest != null)
         {
+            // Set the error in the error log and continue rather than throw an exception
+            final IErrorLog errorLog = new ErrorLog ();
             final List<String> replacements = new ArrayList<String> ();
+            final String description = "Duplicate Unique Request Identifier submitted {0}.";
             replacements.add (String.valueOf (customerRequestReference));
 
-            throw new DuplicateUserFileReferenceException (
-                    AbstractBusinessException.ErrorCode.DUP_CUST_REQID.toString (),
-                    "Duplicate Unique Request Identifier submitted {0}.", replacements);
+            errorLog.setErrorCode (AbstractBusinessException.ErrorCode.DUP_CUST_REQID.name ());
+            errorLog.setErrorText (MessageFormat.format (description, replacements.toArray ()));
+            invalidIndividualRequest.setErrorLog (errorLog);
+            // Change the status to rejected
+            invalidIndividualRequest
+                    .setRequestStatus (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ());
 
         }
         LOGGER.debug ("completed visit(individualRequest)");
