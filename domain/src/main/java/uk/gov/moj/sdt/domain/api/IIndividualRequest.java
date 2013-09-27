@@ -253,4 +253,76 @@ public interface IIndividualRequest extends IDomainObject
      */
     void setRequestType (final String requestType);
 
+    /**
+     * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
+     * "Accepted".
+     * 
+     * @author d130680
+     * 
+     */
+    public enum IndividualRequestStatus
+    {
+
+        /**
+         * Received.
+         */
+        RECEIVED ("Received"),
+
+        /**
+         * Forwarded.
+         */
+        FORWARDED ("Forwarded"),
+
+        /**
+         * Rejected.
+         */
+        REJECTED ("Rejected"),
+
+        /**
+         * Initially Accepted.
+         */
+        INITIALLY_ACCEPTED ("Initially Accepted"),
+
+        /**
+         * Accepted.
+         */
+        ACCEPTED ("Accepted");
+
+        /**
+         * Individual request status.
+         */
+        private String status;
+
+        /**
+         * Constructor.
+         * 
+         * @param s status
+         */
+        private IndividualRequestStatus (final String s)
+        {
+
+            this.status = s;
+        }
+
+        /**
+         * Get the bulk request status.
+         * 
+         * @return bulk request status
+         */
+        public String getStatus ()
+        {
+            return status;
+        }
+
+        /**
+         * Set the bulk request status.
+         * 
+         * @param status bulk request status
+         */
+        public void setStatus (final String status)
+        {
+            this.status = status;
+        }
+    }
+
 }
