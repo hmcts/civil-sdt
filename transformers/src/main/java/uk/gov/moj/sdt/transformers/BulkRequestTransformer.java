@@ -42,11 +42,10 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.misc.BulkRequestStatus;
-import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
@@ -118,7 +117,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
             individualRequest.setLineNumber (lineNumber++);
 
             // Set the initial status
-            individualRequest.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
+            individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ());
 
             // Set request type
             individualRequest.setRequestType (request.getRequestType ());
@@ -150,7 +149,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ());
 
         bulkSubmission.setTargetApplication (targetApplication);
-        bulkSubmission.setSubmissionStatus (BulkRequestStatus.UPLOADED.getStatus ());
+        bulkSubmission.setSubmissionStatus (IBulkFeedbackRequest.BulkRequestStatus.UPLOADED.getStatus ());
         bulkSubmission.setCreatedDate (new LocalDateTime ());
 
         // Set bulk customer
