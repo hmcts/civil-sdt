@@ -9,7 +9,7 @@ define error_logs                  = 'TABLESPACE users'
 define error_messages              = 'TABLESPACE users'
 define global_parameters           = 'TABLESPACE users'
 define individual_requests         = 'TABLESPACE users'
-define individual_requests_lob     = 'LOB (individual_payload) STORE AS is_lob(TABLESPACE users)'
+define individual_requests_lob     = 'LOB (individual_payload,target_application_response) STORE AS (TABLESPACE users)'
 define message_logs                = 'TABLESPACE users'
 define service_types               = 'TABLESPACE users'
 define service_routings            = 'TABLESPACE users'
@@ -85,28 +85,16 @@ CREATE TABLE global_parameters
 CREATE TABLE individual_requests
 (individual_request_id        INTEGER           -- pk
 ,bulk_submission_id           INTEGER           -- fk from bulk_submissions
---,request_type_id              INTEGER           -- fk from request_type
 ,customer_request_ref         VARCHAR2(32)      -- unique request ref
---,case_number                VARCHAR2(32)
 ,request_status               VARCHAR2(32)
---,issued_date                TIMESTAMP
 ,sdt_bulk_reference           VARCHAR2(29)
---,request_retry_count          INTEGER           -- number of attempts made to submit request
 ,line_number                  INTEGER
 ,sdt_request_reference        VARCHAR2(37)      -- fixed format
 ,created_date                 TIMESTAMP         -- date/time of record created
 ,updated_date                 TIMESTAMP         -- date/time of last change to record
 ,completed_date               TIMESTAMP
---,service_date               TIMESTAMP
---,warrant_number             INTEGER
---,enforcing_court_code       VARCHAR2(32)
---,enforcing_court_name       VARCHAR2(255)
---,fee                        NUMBER(8,2)
---,rejection_reason_code        VARCHAR2(32)
---,rejection_reason_description VARCHAR2(4000)
 ,forwarding_attempts          INTEGER
---,target_application_status    VARCHAR2(4000)
-,target_application_response  VARCHAR2(4000) 
+,target_application_response  BLOB 
 ,internal_system_error        VARCHAR2(4000)
 ,request_type                 VARCHAR2(50)
 ,version_number               INTEGER DEFAULT 0  -- hiberate versioning column
