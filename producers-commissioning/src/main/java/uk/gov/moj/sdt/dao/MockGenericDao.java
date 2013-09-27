@@ -38,6 +38,7 @@ import org.hibernate.criterion.Criterion;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 
 /**
@@ -70,11 +71,18 @@ public class MockGenericDao implements IGenericDao
      * 
      * @param customerReference customer reference
      * 
-     * @return true or false
+     * @return BulkSubmission if not valid null otherwise
      */
-    protected boolean isCustomerReferenceValid (final String customerReference)
+    protected BulkSubmission getBulkSubmission (final String customerReference)
     {
-        return !DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ());
+        if (DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ()))
+        {
+            return new BulkSubmission ();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     @Override

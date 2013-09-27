@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,61 +28,38 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.cache;
 
-package uk.gov.moj.sdt.dao;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.cache.api.IGlobalParametersCache;
+import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
 /**
- * Mock Individual Request DAO class used in commissioning project.
+ * Mock implementation of the GlobalParametersCache.
  * 
  * @author d130680
  * 
  */
-public class MockIndividualRequestDao extends MockGenericDao implements IIndividualRequestDao
+public class MockGlobalParametersCache implements ICacheable, IGlobalParametersCache
 {
 
-    /**
-     * Pre-defined values for valid customer references.
-     */
-    private static final List<String> DUPLICATE_REFERENCE;
-
-    static
-    {
-
-        DUPLICATE_REFERENCE = new ArrayList<String> ();
-
-        DUPLICATE_REFERENCE.add ("duplicate");
-
-    }
-
     @Override
-    public IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
-                                                    final long dataRetention)
+    public <DomainType extends IDomainObject> DomainType
+            getValue (final Class<DomainType> domainType, final String key)
     {
-        if (DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ()))
+
+        if (key.equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()))
         {
-            return new IndividualRequest ();
-        }
-        else
-        {
-            return null;
+            final IGlobalParameter globalParameter = new GlobalParameter ();
+            globalParameter.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+            globalParameter.setValue ("90");
+
+            return (DomainType) globalParameter;
         }
 
-    }
-
-    @Override
-    public IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException
-    {
-        // This method is implemented for the producers application only.
         return null;
     }
+
 }

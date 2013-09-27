@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,65 +24,12 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-
-package uk.gov.moj.sdt.dao;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+ * $Id: package-info.java 16448 2013-06-05 16:25:58Z agarwals $
+ * $LastChangedRevision: 16448 $
+ * $LastChangedDate: 2013-06-05 17:25:58 +0100 (Wed, 05 Jun 2013) $
+ * $LastChangedBy: agarwals $ */
 
 /**
- * Mock Individual Request DAO class used in commissioning project.
- * 
- * @author d130680
- * 
+ * This is used to create package declarations, package annotations, package comments and Javadoc tags.
  */
-public class MockIndividualRequestDao extends MockGenericDao implements IIndividualRequestDao
-{
-
-    /**
-     * Pre-defined values for valid customer references.
-     */
-    private static final List<String> DUPLICATE_REFERENCE;
-
-    static
-    {
-
-        DUPLICATE_REFERENCE = new ArrayList<String> ();
-
-        DUPLICATE_REFERENCE.add ("duplicate");
-
-    }
-
-    @Override
-    public IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
-                                                    final long dataRetention)
-    {
-        if (DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ()))
-        {
-            return new IndividualRequest ();
-        }
-        else
-        {
-            return null;
-        }
-
-    }
-
-    @Override
-    public IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException
-    {
-        // This method is implemented for the producers application only.
-        return null;
-    }
-}
+package uk.gov.moj.sdt.cache;

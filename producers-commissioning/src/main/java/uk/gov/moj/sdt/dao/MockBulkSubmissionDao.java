@@ -34,6 +34,7 @@ package uk.gov.moj.sdt.dao;
 import java.util.List;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 /**
@@ -51,15 +52,24 @@ public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmis
     private List<String> bulkReferenceList;
 
     @Override
-    public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
+    public BulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
+                                             final long dataRetention)
     {
-        return isCustomerReferenceValid (customerReference);
+        return super.getBulkSubmission (customerReference);
     }
 
     @Override
-    public boolean isBulkReferenceValid (final String bulkReference)
+    public BulkSubmission getBulkSubmission (final String bulkReference)
     {
-        return bulkReferenceList.contains (bulkReference);
+        if (bulkReferenceList.contains (bulkReference))
+        {
+            return new BulkSubmission ();
+        }
+        else
+        {
+            return null;
+        }
+
     }
 
     /**

@@ -69,6 +69,7 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
         final ITargetApplication targetApplication = new TargetApplication ();
         targetApplication.setTargetApplicationCode ("mcol");
         targetApplication.setTargetApplicationName ("mcol");
+        targetApplications.add (targetApplication);
 
         bulkCustomer.setTargetApplications (targetApplications);
 
