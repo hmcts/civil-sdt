@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.misc.IndividualRequestStatus;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -136,7 +136,7 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             if (matcher.find ())
             {
                 // Ignore rejected responses which do not need to be enhanced.
-                if ( !matcher.group (1).equals (IndividualRequestStatus.REJECTED.getStatus ()))
+                if ( !matcher.group (1).equals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()))
                 {
                     // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
                     LOGGER.error ("Detected unenriched response tag[" + matcher.group () +
