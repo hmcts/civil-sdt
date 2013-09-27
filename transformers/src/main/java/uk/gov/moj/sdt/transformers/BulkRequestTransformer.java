@@ -42,7 +42,6 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -149,7 +148,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ());
 
         bulkSubmission.setTargetApplication (targetApplication);
-        bulkSubmission.setSubmissionStatus (IBulkFeedbackRequest.BulkRequestStatus.UPLOADED.getStatus ());
+        bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
         bulkSubmission.setCreatedDate (new LocalDateTime ());
 
         // Set bulk customer
