@@ -63,11 +63,11 @@ public class SubmitQueryRequestValidator extends AbstractSdtValidator implements
     {
 
         // Validate customer exists and can access target application
-        checkCustomerHasAccess (submitQueryRequest.getSdtCustomerId (), submitQueryRequest.getTargetApplication ()
-                .getTargetApplicationCode ());
+        checkCustomerHasAccess (submitQueryRequest.getBulkCustomer ().getSdtCustomerId (), submitQueryRequest
+                .getTargetApplication ().getTargetApplicationCode ());
 
-        LOGGER.info ("Submit Query SDT Customer id [" + submitQueryRequest.getSdtCustomerId () + "].");
+        LOGGER.info ("Submit Query SDT Customer id [" + submitQueryRequest.getBulkCustomer ().getSdtCustomerId () +
+                "].");
 
     }
-
 }

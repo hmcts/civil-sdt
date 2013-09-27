@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.transformers;
 
 import java.math.BigInteger;
 
+import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -66,13 +67,14 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
     public ISubmitQueryRequest transformJaxbToDomain (final SubmitQueryRequestType submitQueryRequestType)
     {
         final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
-        final HeaderType header = submitQueryRequestType.getHeader ();
+        final HeaderType headerType = submitQueryRequestType.getHeader ();
 
-        submitQueryRequest.setSdtCustomerId (header.getSdtCustomerId ());
+        // Map customer
+        submitQueryRequest.setBulkCustomer (mapToBulkCustomer (headerType));
 
         // Map the target application
         final TargetApplication targetApplication = new TargetApplication ();
-        targetApplication.setTargetApplicationCode (header.getTargetApplicationId ());
+        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ());
         submitQueryRequest.setTargetApplication (targetApplication);
 
         return submitQueryRequest;
@@ -84,7 +86,7 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
         final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
 
         // Maps some values.
-        submitQueryResponseType.setSdtCustomerId (submitQueryResponse.getSdtCustomerId ());
+        submitQueryResponseType.setSdtCustomerId (submitQueryResponse.getBulkCustomer ().getSdtCustomerId ());
         submitQueryResponseType.setResultCount (BigInteger.valueOf (submitQueryResponse.getResultCount ()));
 
         // Set dummy results so the tags we need are written.
@@ -101,4 +103,20 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
 
         return submitQueryResponseType;
     }
+
+    /**
+     * Maps the header to a Bulk Customer object.
+     * 
+     * @param headerType header type
+     * @return bulk customer
+     */
+    private BulkCustomer mapToBulkCustomer (final HeaderType headerType)
+    {
+        final BulkCustomer bulkCustomer = new BulkCustomer ();
+
+        bulkCustomer.setSdtCustomerId (headerType.getSdtCustomerId ());
+        return bulkCustomer;
+
+    }
+
 }

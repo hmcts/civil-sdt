@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain.api;
 
-
 /**
  * Submit query request domain object.
  * 
@@ -41,18 +40,18 @@ public interface ISubmitQueryRequest extends IDomainObject
 {
 
     /**
-     * Get SDT customer Id.
+     * Get the Bulk Customer.
      * 
-     * @return SDT customer Id
+     * @return bulk customer
      */
-    long getSdtCustomerId ();
+    IBulkCustomer getBulkCustomer ();
 
     /**
-     * Set SDT customer Id.
+     * Set the Bulk Customer.
      * 
-     * @param sdtCustomerId SDT customer Id
+     * @param bulkCustomer bulk customer
      */
-    void setSdtCustomerId (final long sdtCustomerId);
+    void setBulkCustomer (final IBulkCustomer bulkCustomer);
 
     /**
      * Get target application.

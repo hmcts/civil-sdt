@@ -31,7 +31,6 @@
 package uk.gov.moj.sdt.services;
 
 import uk.gov.moj.sdt.domain.SubmitQueryResponse;
-import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
@@ -59,18 +58,12 @@ public class MockSubmitQueryService implements ISubmitQueryService
     {
 
         final ISubmitQueryResponse response = new SubmitQueryResponse ();
-        final TargetApplication targetApplication = new TargetApplication ();
-        response.setSdtCustomerId (request.getSdtCustomerId ());
+
+        response.setBulkCustomer (request.getBulkCustomer ());
         // CHECKSTYLE:OFF
         response.setResultCount (3);
-        targetApplication.setId (1);
         // CHECKSTYLE:ON
 
-        // Create a dummy target application
-        targetApplication.setTargetApplicationCode ("mcol");
-        targetApplication.setTargetApplicationName ("mcol");
-
-        response.setTargetApplication (targetApplication);
         response.setStatus (StatusCodeType.OK.value ());
         response.setErrorMessage (null);
 

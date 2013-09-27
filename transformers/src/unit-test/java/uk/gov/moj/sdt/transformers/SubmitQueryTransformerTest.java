@@ -38,7 +38,9 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryResponse;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -103,7 +105,8 @@ public class SubmitQueryTransformerTest extends TestCase
         final ISubmitQueryRequest domain = transformer.transformJaxbToDomain (jaxb);
 
         // Test the jaxb object has been transformed domain object
-        Assert.assertEquals ("SDT Customer ID does not match", sdtCustomerId, domain.getSdtCustomerId ());
+        Assert.assertEquals ("SDT Customer ID does not match", sdtCustomerId, domain.getBulkCustomer ()
+                .getSdtCustomerId ());
         Assert.assertEquals ("Target Application ID does not match", targetApplicationId, domain
                 .getTargetApplication ().getTargetApplicationCode ());
 
@@ -121,7 +124,11 @@ public class SubmitQueryTransformerTest extends TestCase
 
         // Create the domain object
         final ISubmitQueryResponse domain = new SubmitQueryResponse ();
-        domain.setSdtCustomerId (sdtCustomerId);
+
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        bulkCustomer.setSdtCustomerId (sdtCustomerId);
+
+        domain.setBulkCustomer (bulkCustomer);
         domain.setResultCount (resultCount);
         domain.setStatus (StatusCodeType.OK.toString ());
 

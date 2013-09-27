@@ -30,9 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Defendant object as returned by MCOL.
@@ -44,14 +44,9 @@ public class SubmitQueryResponse extends AbstractDomainObject implements ISubmit
 {
 
     /**
-     * SDT customer Id.
+     * Bulk customer.
      */
-    private long sdtCustomerId;
-
-    /**
-     * Target application to send the request to, e.g. mcol.
-     */
-    private ITargetApplication targetApplication;
+    private IBulkCustomer bulkCustomer;
 
     /**
      * The total count of the results from the query.
@@ -69,27 +64,15 @@ public class SubmitQueryResponse extends AbstractDomainObject implements ISubmit
     private IErrorMessage errorMessage;
 
     @Override
-    public long getSdtCustomerId ()
+    public IBulkCustomer getBulkCustomer ()
     {
-        return sdtCustomerId;
+        return bulkCustomer;
     }
 
     @Override
-    public void setSdtCustomerId (final long sdtCustomerId)
+    public void setBulkCustomer (final IBulkCustomer bulkCustomer)
     {
-        this.sdtCustomerId = sdtCustomerId;
-    }
-
-    @Override
-    public ITargetApplication getTargetApplication ()
-    {
-        return targetApplication;
-    }
-
-    @Override
-    public void setTargetApplication (final ITargetApplication targetApplication)
-    {
-        this.targetApplication = targetApplication;
+        this.bulkCustomer = bulkCustomer;
     }
 
     @Override

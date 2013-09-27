@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain;
 
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
@@ -43,9 +44,9 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
 {
 
     /**
-     * SDT customer Id.
+     * Bulk customer.
      */
-    private long sdtCustomerId;
+    private IBulkCustomer bulkCustomer;
 
     /**
      * Target application to send the request to, e.g. mcol.
@@ -53,15 +54,15 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     private ITargetApplication targetApplication;
 
     @Override
-    public long getSdtCustomerId ()
+    public IBulkCustomer getBulkCustomer ()
     {
-        return sdtCustomerId;
+        return bulkCustomer;
     }
 
     @Override
-    public void setSdtCustomerId (final long sdtCustomerId)
+    public void setBulkCustomer (final IBulkCustomer bulkCustomer)
     {
-        this.sdtCustomerId = sdtCustomerId;
+        this.bulkCustomer = bulkCustomer;
     }
 
     @Override
