@@ -45,7 +45,6 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -134,7 +133,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // server.
         for (IIndividualRequest iRequest : individualRequests)
         {
-            if (iRequest.getRequestStatus ().equals (IndividualRequestStatus.RECEIVED.getStatus ()))
+            if (iRequest.getRequestStatus ().equals (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()))
             {
                 this.getMessageWriter ().queueMessage (iRequest.getSdtRequestReference ());
             }

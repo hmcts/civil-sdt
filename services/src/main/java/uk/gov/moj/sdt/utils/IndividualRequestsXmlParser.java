@@ -39,7 +39,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 
 /**
  * This class reads a bulk submission xml and parses it into individual raw xml requests.
@@ -77,7 +76,8 @@ public class IndividualRequestsXmlParser
             // Get the next request.
             final IIndividualRequest individualRequest = iter.next ();
 
-            if (individualRequest.getRequestStatus ().equals (IndividualRequestStatus.REJECTED.getStatus ()))
+            if (individualRequest.getRequestStatus ().equals (
+                    IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()))
             {
                 // Do not get the payload for this one as it may have a duplicate customer reference and does not need
                 // to be sent to the case management system.

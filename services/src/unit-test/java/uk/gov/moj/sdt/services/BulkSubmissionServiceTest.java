@@ -62,7 +62,6 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -212,7 +211,7 @@ public class BulkSubmissionServiceTest
 
         for (IIndividualRequest request : individualRequests)
         {
-            if (request.getRequestStatus ().equals (IndividualRequestStatus.RECEIVED.getStatus ()))
+            if (request.getRequestStatus ().equals (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()))
             {
                 mockMessageWriter.queueMessage (request.getSdtRequestReference ());
                 EasyMock.expectLastCall ();

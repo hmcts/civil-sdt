@@ -40,7 +40,6 @@ import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.misc.IndividualRequestStatus;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 
 /**
@@ -84,7 +83,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     @Override
     public void updateForwardingRequest (final IIndividualRequest individualRequest)
     {
-        individualRequest.setRequestStatus (IndividualRequestStatus.FORWARDED.getStatus ());
+        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
         individualRequest.setForwardingAttempts (individualRequest.getForwardingAttempts () + 1);
         individualRequest
                 .setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
@@ -95,10 +94,12 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     public void updateCompletedRequest (final IIndividualRequest individualRequest)
     {
         final String requestStatus = individualRequest.getRequestStatus ();
-        final IndividualRequestStatus requestStatusEnum = IndividualRequestStatus.valueOf (requestStatus);
 
-        if (requestStatusEnum == IndividualRequestStatus.REJECTED ||
-                requestStatusEnum == IndividualRequestStatus.ACCEPTED)
+        final IIndividualRequest.IndividualRequestStatus requestStatusEnum =
+                IIndividualRequest.IndividualRequestStatus.valueOf (requestStatus);
+
+        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.REJECTED ||
+                requestStatusEnum == IIndividualRequest.IndividualRequestStatus.ACCEPTED)
         {
             // Set the completed date only if the status is rejected or accepted.
             individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
@@ -111,7 +112,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
 
         // If the status is rejected, check if the rejection code is one of the SDT exceptions.
 
-        if (requestStatusEnum == IndividualRequestStatus.REJECTED)
+        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.REJECTED)
         {
 
             // Check if the Error message is defined as an internal system error
@@ -176,7 +177,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
                 .setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
         // Set the status to Received
-        individualRequest.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
+        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ());
 
         // Forwarding attempts have already been incremented.
 
