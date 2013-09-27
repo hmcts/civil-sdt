@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.domain.api;
 
+
 /**
  * Interface for bulk feedback request.
  * 
@@ -41,18 +42,18 @@ public interface IBulkFeedbackRequest extends IDomainObject
 {
 
     /**
-     * Get SDT Customer Id.
+     * Get bulk customer.
      * 
-     * @return SDT Customer Id
+     * @return bulk customer
      */
-    long getSdtCustomerId ();
+    IBulkCustomer getBulkCustomer ();
 
     /**
-     * Set SDT Customer Id.
+     * Set bulk customer.
      * 
-     * @param sdtCustomerId SDT Customer Id
+     * @param bulkCustomer bulk customer
      */
-    void setSdtCustomerId (final long sdtCustomerId);
+    void setBulkCustomer (final IBulkCustomer bulkCustomer);
 
     /**
      * Get SDT Bulk reference.
