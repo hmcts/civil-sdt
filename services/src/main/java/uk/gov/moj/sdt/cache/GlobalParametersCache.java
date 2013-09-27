@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import uk.gov.moj.sdt.cache.api.IGlobalParametersCache;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
@@ -51,7 +52,7 @@ import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
  * 
  */
 @Transactional (propagation = Propagation.SUPPORTS)
-public final class GlobalParametersCache extends AbstractCacheControl
+public final class GlobalParametersCache extends AbstractCacheControl implements IGlobalParametersCache
 {
     /**
      * Logger object.

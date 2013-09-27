@@ -9,13 +9,13 @@
 
 	<!-- Global store of all error messages. -->
 	 
-	<bean id="uk.gov.moj.sdt.cache.ErrorMessagesCache" class="uk.gov.moj.sdt.cache.ErrorMessagesCache" lazy-init="true">
+	<bean id="uk.gov.moj.sdt.cache.api.IErrorMessagesCache" class="uk.gov.moj.sdt.cache.ErrorMessagesCache" lazy-init="true">
 		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
 	</bean>
 	 
 
 	<!-- Global store of all global parameters. -->
-	<bean id="uk.gov.moj.sdt.cache.GlobalParametersCache" class="uk.gov.moj.sdt.cache.GlobalParametersCache" lazy-init="true">
+	<bean id="uk.gov.moj.sdt.cache.api.IGlobalParametersCache" class="uk.gov.moj.sdt.cache.GlobalParametersCache" lazy-init="true">
 		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
 	</bean>
 

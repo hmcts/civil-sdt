@@ -36,6 +36,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.cache.api.IErrorMessagesCache;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -47,7 +48,7 @@ import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
  * @author d301488/Robin Compston
  * 
  */
-public class ErrorMessagesCache extends AbstractCacheControl
+public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMessagesCache
 {
     /**
      * Logger object.

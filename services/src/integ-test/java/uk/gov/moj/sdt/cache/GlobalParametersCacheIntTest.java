@@ -84,13 +84,15 @@ public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTes
     public void testGetValue ()
     {
         final ICacheable cacheable =
-                (ICacheable) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.GlobalParametersCache");
+                (ICacheable) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.api.IGlobalParametersCache");
 
-        final IGlobalParameter globalParameter = cacheable.getValue (IGlobalParameter.class, "SDT_DATA_RETENTION");
+        final IGlobalParameter globalParameter =
+                cacheable
+                        .getValue (IGlobalParameter.class, IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
 
         assertNotNull (globalParameter);
 
-        assertTrue (globalParameter.getName ().equals ("SDT_DATA_RETENTION"));
+        assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
 
         LOG.debug ("Global Parameter value is " + globalParameter.getValue ());
 
@@ -99,5 +101,4 @@ public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTes
 
         assertNull (globalParameter2);
     }
-
 }
