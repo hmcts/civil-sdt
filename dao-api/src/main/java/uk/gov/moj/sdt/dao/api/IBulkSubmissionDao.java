@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.dao.api;
 
 import org.springframework.dao.DataAccessException;
 
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 /**
@@ -42,23 +43,25 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 public interface IBulkSubmissionDao extends IGenericDao
 {
     /**
-     * Check the customer reference is unique across data retention period.
+     * Check the customer reference is unique across data retention period. Return the bulk submission if the check
+     * fails or null if it succeeds.
      * 
-     * @param customerReference customer reference
      * @param bulkCustomer bulk customer
+     * @param customerReference customer reference
+     * @param dataRetention the data retention period to use
      * @throws DataAccessException Hibernate exception
-     * @return true or false
+     * @return null if the bulk submission is unique or the non unique bulk submission object
      */
-    boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException;
+    BulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
+                                      final long dataRetention) throws DataAccessException;
 
     /**
-     * Checks that the bulk reference is valid.
+     * Checks that the bulk reference is valid. Return the bulk submission if the check
+     * valid or null if it fails.
      * 
      * @param bulkReference bulk reference
      * @throws DataAccessException Hibernate exception
-     * @return true or false
+     * @return valid bulk submission or null
      */
-    boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException;
-
+    BulkSubmission getBulkSubmission (final String bulkReference) throws DataAccessException;
 }

@@ -43,15 +43,17 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 public interface IIndividualRequestDao extends IGenericDao
 {
     /**
-     * Check the customer reference is unique across data retention period.
+     * Check the customer reference is unique across data retention period. Return the individual request if the check
+     * fails or null if it succeeds.
      * 
      * @param bulkCustomer bulk customer
      * @param customerReference customer reference
-     * @return true or false
+     * @param dataRetention the data retention period to use
+     * @return null if the individual request is unique or the non unique individual request object
      * @throws DataAccessException Hibernate exception
      */
-    boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException;
+    IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
+                                             final long dataRetention) throws DataAccessException;
 
     /**
      * Returns the individual request object for the given Sdt Reference Id.
