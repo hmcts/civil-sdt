@@ -40,7 +40,7 @@
         <property name="forwardingAttempts" type="int">
             <column name="FORWARDING_ATTEMPTS" />
         </property>
-        <property name="targetApplicationResponse" type="java.lang.String">
+        <property name="targetApplicationResponse" type="uk.gov.moj.sdt.domain.type.BlobType">
             <column name="TARGET_APPLICATION_RESPONSE" />
         </property>
         <property name="requestPayload" type="uk.gov.moj.sdt.domain.type.BlobType">

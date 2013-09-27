@@ -111,6 +111,10 @@ public class BlobType implements UserType
     @Override
     public Object deepCopy (final Object value) throws HibernateException
     {
+        if (value == null)
+        {
+            return null;
+        }
         final String in = (String) value;
         final int len = in.length ();
         final char[] buf = new char[len];
