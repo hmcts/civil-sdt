@@ -88,7 +88,13 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         // Validate customer reference is unique across data retention period for bulk submission
         final String sdtCustomerReference = bulkSubmission.getCustomerReference ();
         List<String> replacements = null;
-        if ( !bulkSubmissionDao.isCustomerReferenceUnique (bulkCustomer, sdtCustomerReference))
+
+        // Get the data retention period
+        final long dataRetention = super.getDataRetentionPeriod ();
+        final IBulkSubmission invalidBulkSubmission =
+                bulkSubmissionDao.getBulkSubmission (bulkCustomer, sdtCustomerReference, dataRetention);
+
+        if (invalidBulkSubmission != null)
         {
             replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (sdtCustomerReference));
@@ -99,28 +105,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
                     "Duplicate User File Reference {0} supplied.", replacements);
             // CHECKSTYLE:ON
         }
-
-        // Validate customer reference is within the list of individual requests
-        // final Set<String> customerReferenceSet = new HashSet<String> ();
-        //
-        // for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests ())
-        // {
-        //
-        // final String customerRequestReference = individualRequest.getCustomerRequestReference ();
-        // final boolean success = customerReferenceSet.add (customerRequestReference);
-        // // Check that the user file reference is unique within the current list of individual requests
-        // if ( !success)
-        // {
-        // replacements = new ArrayList<String> ();
-        // replacements.add (customerRequestReference);
-        //
-        // // CHECKSTYLE:OFF
-        // throw new DuplicateUserFileReferenceException (AbstractBusinessException.ErrorCode.DUP_CUST_REQID.toString
-        // (),
-        // "Duplicate Unique Request Identifier submitted {0}.", replacements);
-        // // // CHECKSTYLE:ON
-        // }
-        // }
 
         // Check the request count matches
         if (bulkSubmission.getNumberOfRequest () != bulkSubmission.getIndividualRequests ().size ())
@@ -133,7 +117,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
                     AbstractBusinessException.ErrorCode.REQ_COUNT_MISMATCH.toString (),
                     "Unexpected Total Number of Requests identified. {0} requested identified, "
                             + "{1} requests expected in Bulk Request {2}.", replacements);
-
         }
 
         LOGGER.debug ("finished visit(BulkSubmission)");

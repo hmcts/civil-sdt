@@ -15,6 +15,7 @@
         class="uk.gov.moj.sdt.validators.AbstractSdtValidator">        
         <property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" />                               
         <property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao" />        
+        <property name="globalParameterCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache" />
     </bean>
 
 	<bean id="uk.gov.moj.sdt.validators.api.IBulkCustomerValidator" 

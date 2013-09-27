@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.validators;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,7 +41,9 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
@@ -69,6 +72,11 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     private ITargetApplicationDao targetApplicationDao;
 
     /**
+     * Global parameter cache to retrieve data retention period.
+     */
+    private ICacheable globalParameterCache;
+
+    /**
      * Check that the bulk customer exists has access to the target application.
      * 
      * @param sdtCustomerId bulk customer
@@ -83,7 +91,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         // TODO Replace assert with Exception
         assert bulkCustomer != null;
 
-        final List<ITargetApplication> targetApplications = targetApplicationDao.getTargetApplication (bulkCustomer);
+        final Set<ITargetApplication> targetApplications = bulkCustomer.getTargetApplications ();
 
         if ( !this.hasAccess (targetApplicationCode, targetApplications))
         {
@@ -94,14 +102,6 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
                     "The Bulk Customer organisation is not set up to send Service Request messages to the {0}. "
                             + "Please contact <TBC> for assistance.", replacements);
         }
-
-        // TODO Check that Target Application reference is setup.
-        // replacements = new ArrayList<String> ();
-        // replacements.add (targetApplicationCode);
-        // throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_REF_MISSING.toString (),
-        // "The Bulk Customer organisation does not have a Customer Reference set up for {0}. "
-        // + "Please contact <TBC> for assistance", replacements);
-
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
      * @param targetApplications list of target applications
      * @return true or false
      */
-    private boolean hasAccess (final String targetApplicationCode, final List<ITargetApplication> targetApplications)
+    private boolean hasAccess (final String targetApplicationCode, final Set<ITargetApplication> targetApplications)
     {
 
         for (ITargetApplication targetApplication : targetApplications)
@@ -123,6 +123,22 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         }
 
         return false;
+    }
+
+    /**
+     * Get the data retention period from the global parameters cache.
+     * 
+     * @return data retention period
+     */
+    public long getDataRetentionPeriod ()
+    {
+        final IGlobalParameter globalParameter =
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+        final long dataRetention = Long.parseLong (globalParameter.getValue ());
+
+        return dataRetention;
+
     }
 
     /**
@@ -153,6 +169,16 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     public void setTargetApplicationDao (final ITargetApplicationDao targetApplicationDao)
     {
         this.targetApplicationDao = targetApplicationDao;
+    }
+
+    /**
+     * Set the global parameter cache.
+     * 
+     * @param globalParameterCache global parameter cache
+     */
+    public void setGlobalParameterCache (final ICacheable globalParameterCache)
+    {
+        this.globalParameterCache = globalParameterCache;
     }
 
 }

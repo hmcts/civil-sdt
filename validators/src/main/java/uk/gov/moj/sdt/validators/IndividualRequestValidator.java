@@ -78,7 +78,13 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
 
         // Validate user file reference is unique across data retention period for individual request
         final String customerRequestReference = individualRequest.getCustomerRequestReference ();
-        if ( !individualRequestDao.isCustomerReferenceUnique (bulkCustomer, customerRequestReference))
+
+        // Get the data retention period
+        final long dataRetention = super.getDataRetentionPeriod ();
+        final IIndividualRequest invalidIndividualRequest =
+                individualRequestDao.getIndividualRequest (bulkCustomer, customerRequestReference, dataRetention);
+
+        if (invalidIndividualRequest != null)
         {
             final List<String> replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (customerRequestReference));

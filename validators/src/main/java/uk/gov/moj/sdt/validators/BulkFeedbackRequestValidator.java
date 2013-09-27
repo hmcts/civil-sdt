@@ -38,6 +38,7 @@ import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
@@ -77,7 +78,8 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
 
         // Validate the bulk reference, throw an exception if it doesn't exist
-        if ( !bulkSubmissionDao.isBulkReferenceValid (sdtBulkReference))
+        final IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmission (sdtBulkReference);
+        if (bulkSubmission == null)
         {
             final List<String> replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (sdtBulkReference));
