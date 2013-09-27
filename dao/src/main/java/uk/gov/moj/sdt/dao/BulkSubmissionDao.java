@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 /**
@@ -62,17 +63,18 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     }
 
     @Override
-    public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException
+    public BulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
+                                             final long dataRetention) throws DataAccessException
     {
         // TODO - Need to implement this
-        return true;
+        return null;
     }
 
     @Override
-    public boolean isBulkReferenceValid (final String bulkReference) throws DataAccessException
+    public BulkSubmission getBulkSubmission (final String bulkReference) throws DataAccessException
+
     {
         // TODO - Need to implement this
-        return true;
+        return null;
     }
 }

@@ -64,11 +64,12 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     }
 
     @Override
-    public boolean isCustomerReferenceUnique (final IBulkCustomer bulkCustomer, final String customerReference)
-        throws DataAccessException
+    public IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
+                                                    final long dataRetention) throws DataAccessException
     {
         // TODO - Need to implement this
-        return true;
+        return null;
+
     }
 
     @Override
