@@ -161,9 +161,10 @@ public class BulkRequestTransformerTest extends TestCase
         Assert.assertNotNull (actual.getBulkSubmission ());
         Assert.assertEquals ("Customer reference does not match", IndividualRequestStatus.RECEIVED.getStatus (),
                 actual.getRequestStatus ());
-        Assert.assertEquals ("Request id for individual request 3 does not match", expected.getRequestId (),
+        Assert.assertEquals ("Request id for individual request " + row + " does not match", expected.getRequestId (),
                 actual.getCustomerRequestReference ());
-        Assert.assertEquals ("Line number for individual request 3 does not match", row, actual.getLineNumber ());
+        Assert.assertEquals ("Line number for individual request " + row + " does not match", row,
+                actual.getLineNumber ());
         Assert.assertEquals ("Request type mismatch", expected.getRequestType (), actual.getRequestType ());
     }
 

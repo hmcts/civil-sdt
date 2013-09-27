@@ -109,7 +109,8 @@ public class BulkFeedbackTransformerTest extends TestCase
 
         // Do the transformation
         final IBulkFeedbackRequest domain = transformer.transformJaxbToDomain (jaxb);
-        Assert.assertEquals ("SDT Customer ID does not match", sdtCustomerId, domain.getSdtCustomerId ());
+        Assert.assertEquals ("SDT Customer ID does not match", sdtCustomerId, domain.getBulkCustomer ()
+                .getSdtCustomerId ());
         Assert.assertEquals ("SDT Bulk Reference does not match", sdtBulkReference, domain.getSdtBulkReference ());
 
     }

@@ -35,7 +35,9 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -84,7 +86,10 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
         final IBulkFeedbackRequest bulkFeedback = new BulkFeedbackRequest ();
 
         bulkFeedback.setSdtBulkReference (header.getSdtBulkReference ());
-        bulkFeedback.setSdtCustomerId (header.getSdtCustomerId ());
+
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        bulkCustomer.setSdtCustomerId (header.getSdtCustomerId ());
+        bulkFeedback.setBulkCustomer (bulkCustomer);
 
         return bulkFeedback;
     }
