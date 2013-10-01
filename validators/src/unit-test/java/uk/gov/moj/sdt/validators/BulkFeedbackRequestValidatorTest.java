@@ -164,10 +164,9 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         catch (final InvalidBulkReferenceException e)
         {
 
-            Assert.assertEquals ("Unexpected message in exception",
-                    "The following exception occured [BULK_REF_INVALID] message"
-                            + "[There is no Bulk Request submission associated with your account "
-                            + "for the supplied SDT Bulk Reference  " + "Bulk reference in request ]", e.getMessage ());
+            Assert.assertEquals ("Unexpected message in exception", "Failed with code [BULK_REF_INVALID]; message"
+                    + "[There is no Bulk Request submission associated with your account "
+                    + "for the supplied SDT Bulk Reference  " + "Bulk reference in request ]", e.getMessage ());
         }
     }
 }
