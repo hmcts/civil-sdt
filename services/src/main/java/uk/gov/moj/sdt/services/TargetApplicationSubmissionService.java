@@ -83,58 +83,97 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     @Override
     public void updateForwardingRequest (final IIndividualRequest individualRequest)
     {
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
-        individualRequest.setForwardingAttempts (individualRequest.getForwardingAttempts () + 1);
-        individualRequest
-                .setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        individualRequest.incrementForwardingAttempts ();
         this.getIndividualRequestDao ().persist (individualRequest);
     }
 
     @Override
     public void updateCompletedRequest (final IIndividualRequest individualRequest)
     {
+        LOG.debug ("Updating completed request " + individualRequest.getSdtRequestReference ());
         final String requestStatus = individualRequest.getRequestStatus ();
-
+        LOG.debug ("Request status is " + requestStatus);
         final IIndividualRequest.IndividualRequestStatus requestStatusEnum =
-                IIndividualRequest.IndividualRequestStatus.valueOf (requestStatus);
+                IIndividualRequest.IndividualRequestStatus.valueOf (requestStatus.toUpperCase ());
 
-        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.REJECTED ||
-                requestStatusEnum == IIndividualRequest.IndividualRequestStatus.ACCEPTED)
+        LOG.debug ("Request status is " + requestStatusEnum.name ());
+
+        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.ACCEPTED)
         {
-            // Set the completed date only if the status is rejected or accepted.
-            individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
-                    .currentTimeMillis ())));
+            this.updateAcceptedRequest (individualRequest);
         }
 
-        // Set the updated date
-        individualRequest
-                .setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-
-        // If the status is rejected, check if the rejection code is one of the SDT exceptions.
+        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED)
+        {
+            this.updateInitiallyAcceptedRequest (individualRequest);
+        }
 
         if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.REJECTED)
         {
-
-            // Check if the Error message is defined as an internal system error
-            final IErrorMessage[] errorMessages =
-                    this.getIndividualRequestDao ().query (IErrorMessage.class,
-                            Restrictions.eq ("errorCode", individualRequest.getErrorLog ().getErrorCode ()));
-            IErrorMessage errorMessage = null;
-            if (errorMessages != null)
-            {
-                // We got an internal system error, so assign it to the error message that
-                // should be recorded
-                errorMessage = errorMessages[0];
-
-                // Now set the error description from the standard error
-                individualRequest.getErrorLog ().setErrorText (errorMessage.getErrorText ());
-            }
-
+            this.updateRejectedRequest (individualRequest);
         }
 
         // now persist the request.
+        LOG.debug ("Persisting the Individual Request " + individualRequest.getSdtRequestReference ());
         this.getIndividualRequestDao ().persist (individualRequest);
+        LOG.debug ("Now Persisted the Individual Request " + individualRequest.getSdtRequestReference ());
 
+    }
+
+    /**
+     * Mark the request with status as "Accepted".
+     * 
+     * @param individualRequest the individual request object.
+     */
+    private void updateAcceptedRequest (final IIndividualRequest individualRequest)
+    {
+        individualRequest.markRequestAsAccepted ();
+
+        LOG.debug ("Request completed date is set to " + individualRequest.getCompletedDate ());
+
+        LOG.debug ("Request updated date is set to " + individualRequest.getUpdatedDate ());
+    }
+
+    /**
+     * Mark the request with status as "Rejected".
+     * 
+     * @param individualRequest the individual request object.
+     */
+    private void updateRejectedRequest (final IIndividualRequest individualRequest)
+    {
+        individualRequest.markRequestAsRejected ();
+
+        LOG.debug ("Request completed date is set to " + individualRequest.getCompletedDate ());
+
+        LOG.debug ("Request updated date is set to " + individualRequest.getUpdatedDate ());
+
+        // Check if the Error message is defined as an internal system error
+        final IErrorMessage[] errorMessages =
+                this.getIndividualRequestDao ().query (IErrorMessage.class,
+                        Restrictions.eq ("errorCode", individualRequest.getErrorLog ().getErrorCode ()));
+        IErrorMessage errorMessage = null;
+        if (errorMessages != null)
+        {
+            // We got an internal system error, so assign it to the error message that
+            // should be recorded
+            errorMessage = errorMessages[0];
+
+            // Now set the error description from the standard error
+            individualRequest.getErrorLog ().setErrorText (errorMessage.getErrorText ());
+        }
+
+    }
+
+    /**
+     * Mark the request as initially accepted.
+     * 
+     * @param individualRequest - the individual request object.
+     */
+    private void updateInitiallyAcceptedRequest (final IIndividualRequest individualRequest)
+    {
+        individualRequest.markRequestAsInitiallyAccepted ();
+
+        LOG.debug ("Request updated date is set to " + individualRequest.getUpdatedDate ());
     }
 
     @Override

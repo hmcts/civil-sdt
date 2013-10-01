@@ -252,7 +252,31 @@ public interface IIndividualRequest extends IDomainObject
      * @param requestType request type
      */
     void setRequestType (final String requestType);
+    
+    /**
+     * This method will increment the forwarding attempts, set the updated date to current date and the status to
+     * FORWARDED.
+     */
+    void incrementForwardingAttempts ();
 
+    /**
+     * This method will mark the individual request object with Accepted status
+     * and set the completed and updated dates.
+     */
+    void markRequestAsAccepted ();
+
+    /**
+     * This method will mark the individual request object with "Rejected" status
+     * and set the completed and updated dates.
+     */
+    void markRequestAsRejected ();
+
+    /**
+     * This method will mark the individual request object with "Initially Accepted" status
+     * and set the updated date.
+     */
+    void markRequestAsInitiallyAccepted ();
+    
     /**
      * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
      * "Accepted".
@@ -314,5 +338,6 @@ public interface IIndividualRequest extends IDomainObject
             return status;
         }
     }
+
 
 }

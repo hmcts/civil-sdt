@@ -59,7 +59,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author Manoj Kulkarni
  * 
  */
-@Transactional (propagation = Propagation.REQUIRED)
+@Transactional (propagation = Propagation.REQUIRES_NEW)
 public class IndividualRequestMdb implements IMessageDrivenBean
 {
     /**
@@ -83,14 +83,16 @@ public class IndividualRequestMdb implements IMessageDrivenBean
     private IMessageWriter messageWriter;
 
     @Override
+    @Transactional (propagation = Propagation.REQUIRES_NEW)
     public void readMessage (final Message message)
     {
         if (message instanceof TextMessage)
         {
-
             String sdtReference = null;
             try
             {
+                final boolean isMessageReDelivered = message.getJMSRedelivered ();
+                LOGGER.debug ("Is the message re-delivered " + isMessageReDelivered);
                 sdtReference = ((TextMessage) message).getText ();
             }
             catch (final JMSException e)
@@ -136,7 +138,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
 
                     this.updateAndMarkRequestCompleted (individualRequest);
 
-                    LOGGER.debug ("Calling service to update and mark the request for completion");
+                    LOGGER.debug ("Finished service to update and mark the request for completion");
 
                 }
                 catch (final TimeoutException e)
@@ -170,6 +172,10 @@ public class IndividualRequestMdb implements IMessageDrivenBean
 
                 LOGGER.debug ("Individual request " + sdtReference + " processing completed.");
 
+            }
+            else
+            {
+                LOGGER.debug ("Individual request " + sdtReference + " not found");
             }
 
         }
@@ -252,6 +258,8 @@ public class IndividualRequestMdb implements IMessageDrivenBean
         // TODO - Call the consumer with the IndividualRequest object.
 
         // At the moment, until the consumer is ready we are just returning back the individual request parameter
+        // with updated status as accepted
+        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
         return individualRequest;
     }
 
@@ -337,6 +345,10 @@ public class IndividualRequestMdb implements IMessageDrivenBean
         final IGlobalParameter globalParameter =
                 this.getGlobalParametersCache ().getValue (IGlobalParameter.class, parameterName);
 
+        if (globalParameter == null)
+        {
+            return null;
+        }
         return globalParameter.getValue ();
 
     }

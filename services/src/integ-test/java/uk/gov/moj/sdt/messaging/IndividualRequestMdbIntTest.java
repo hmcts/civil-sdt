@@ -30,13 +30,20 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.messaging;
 
-import java.text.SimpleDateFormat;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.jms.JMSException;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
 
+import org.apache.commons.io.FileUtils;
+import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,11 +52,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.ServiceRouting;
+import uk.gov.moj.sdt.domain.ServiceType;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.Utilities;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.
@@ -60,7 +85,10 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/messaging/spring.hibernate.test.xml",
-        "/uk/gov/moj/sdt/messaging/spring.context.test.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
+        "/uk/gov/moj/sdt/messaging/spring.context.test.xml", "/uk/gov/moj/sdt/cache/spring.context.xml",
+        "/uk/gov/moj/sdt/dao/spring*.xml"})
+@TransactionConfiguration (defaultRollback = true)
+@Transactional
 public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
@@ -83,34 +111,47 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
      * This method tests the read message.
      * 
      * @throws InterruptedException if the thread call is interrupted
+     * @throws IOException if there is any problem when reading the file
      */
     @Test
-    public void testReadMessage () throws InterruptedException
+    @Transactional
+    @Rollback (true)
+    public void testReadMessage () throws InterruptedException, IOException
     {
         // The context configuration declared at class level would start-up the
         // message driven bean ready for reading messages.
 
         final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
-        // 1st we call the message writer to write a message
-        // Get message writer from Spring.
-        final MessageWriter messageWriter =
-                (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
+        final String rawXml = this.getRawXml ("testXMLValid4.xml");
+        SdtContext.getContext ().setRawInXml (rawXml);
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
+        final IBulkSubmissionService bulkSubmissionService =
+                (IBulkSubmissionService) this.applicationContext
+                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmission");
 
-        // Send the first message.
-        final String strMessage1 =
-                "TestMessage1" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        messageWriter.queueMessage (strMessage1);
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
 
-        // Send the second message.
-        final String strMessage2 =
-                "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        messageWriter.queueMessage (strMessage2);
+        // Call the bulk submission service to submit the request and queue the message.
+        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
 
-        // Wait for 2 seconds before checking the queue.
-        Thread.sleep (2000);
+        Assert.assertTrue ("Submission saved successfully.", true);
+
+        Assert.assertNotNull (bulkSubmission.getPayload ());
+
+        Assert.assertEquals (bulkSubmission.getNumberOfRequest (), 1L);
+
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        Assert.assertNotNull (individualRequests);
+        Assert.assertEquals (individualRequests.size (), 1);
+        for (IIndividualRequest request : individualRequests)
+        {
+            Assert.assertNotNull (request.getRequestPayload ());
+            LOG.debug ("Payload for request " + request.getId () + "is " + request.getRequestPayload ());
+        }
+
+        // Wait for 10 seconds before checking the queue.
+        Thread.sleep (10000);
 
         jmsTemplate.browse ("JMSTestQueue", new BrowserCallback<Object> ()
         {
@@ -118,6 +159,7 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
             @Override
             public Object doInJms (final Session session, final QueueBrowser browser) throws JMSException
             {
+
                 @SuppressWarnings ("rawtypes") final Enumeration enumeration = browser.getEnumeration ();
                 if (enumeration.hasMoreElements ())
                 {
@@ -131,4 +173,110 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
         });
 
     }
+
+    /**
+     * 
+     * @return Bulk Submission object for the testing.
+     */
+    private IBulkSubmission createBulkSubmission ()
+    {
+        final IBulkSubmission bulkSubmission = new BulkSubmission ();
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        final ITargetApplication targetApp = new TargetApplication ();
+
+        targetApp.setId (10713L);
+        targetApp.setTargetApplicationCode ("MCOL");
+        targetApp.setTargetApplicationName ("MCOL");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+
+        final IServiceRouting serviceRouting = new ServiceRouting ();
+        serviceRouting.setId (1L);
+        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+
+        final IServiceType serviceType = new ServiceType ();
+        serviceType.setId (1L);
+        serviceType.setName ("RequestTest1");
+        serviceType.setDescription ("RequestTestDesc1");
+        serviceType.setStatus ("RequestTestStatus");
+
+        serviceRouting.setServiceType (serviceType);
+
+        serviceRoutings.add (serviceRouting);
+
+        targetApp.setServiceRoutings (serviceRoutings);
+
+        bulkSubmission.setTargetApplication (targetApp);
+
+        bulkCustomer.setSdtCustomerId (2L);
+
+        bulkSubmission.setBulkCustomer (bulkCustomer);
+
+        bulkSubmission
+                .setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        bulkSubmission.setCustomerReference ("10711");
+        bulkSubmission.setNumberOfRequest (1);
+        final String sdtBulkReference = String.valueOf (System.currentTimeMillis ());
+        bulkSubmission.setSdtBulkReference (sdtBulkReference);
+        bulkSubmission.setSubmissionStatus ("SUBMITTED");
+
+        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
+        final IndividualRequest individualRequest = new IndividualRequest ();
+        individualRequest
+                .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        individualRequest.setCustomerRequestReference ("ICustReq124");
+        individualRequest.setSdtRequestReference ("SDT_test_" + System.currentTimeMillis ());
+        individualRequest.setSdtBulkReference (sdtBulkReference);
+        // individualRequest.setPayload ("IXML1");
+        individualRequest.setRequestStatus ("Received");
+        individualRequest.setBulkSubmission (bulkSubmission);
+        individualRequests.add (individualRequest);
+
+        bulkSubmission.setIndividualRequests (individualRequests);
+
+        return bulkSubmission;
+    }
+
+    /**
+     * 
+     * @param sdtReference the unique sdt reference number
+     * @param customerReference the customer reference number
+     * @return a valid individual request object
+     */
+    private IndividualRequest getValidIndividualRequest (final String sdtReference, final String customerReference)
+    {
+        final IndividualRequest individualRequest = new IndividualRequest ();
+        individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
+                .currentTimeMillis ())));
+        individualRequest
+                .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        individualRequest.setCustomerRequestReference (customerReference);
+        individualRequest.setSdtRequestReference (sdtReference);
+        individualRequest.setRequestStatus ("Received");
+
+        return individualRequest;
+    }
+
+    /**
+     * 
+     * @return rax xml from a test file
+     * @param fileName the name of the file to load
+     * @throws IOException during the read operations
+     */
+    private String getRawXml (final String fileName) throws IOException
+    {
+        // Read the test xml file.
+        File myFile;
+        String message = "";
+
+        // XPathHandler xmlHandler = new XPathHandler ();
+
+        myFile = new File (Utilities.checkFileExists ("src/integ-test/resources/", fileName, false));
+
+        message = FileUtils.readFileToString (myFile);
+
+        return message;
+
+    }
+
 }

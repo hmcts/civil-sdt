@@ -321,4 +321,45 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     }
 
+    @Override
+    public void incrementForwardingAttempts ()
+    {
+        this.setRequestStatus (IndividualRequestStatus.FORWARDED.getStatus ());
+        this.setForwardingAttempts (this.getForwardingAttempts () + 1);
+        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+    }
+
+    @Override
+    public void markRequestAsAccepted ()
+    {
+        this.setRequestStatus (IndividualRequestStatus.ACCEPTED.getStatus ());
+        // Set the completed date only if the status is rejected or accepted.
+        this.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+        // Set the updated date
+        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+    }
+
+    @Override
+    public void markRequestAsRejected ()
+    {
+        this.setRequestStatus (IndividualRequestStatus.REJECTED.getStatus ());
+        // Set the completed date only if the status is rejected or accepted.
+        this.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+        // Set the updated date
+        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+    }
+
+    @Override
+    public void markRequestAsInitiallyAccepted ()
+    {
+        this.setRequestStatus (IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus ());
+        // Set the updated date
+        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+    }
+
 }
