@@ -40,10 +40,8 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
@@ -58,9 +56,7 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
-@TransactionConfiguration (defaultRollback = true)
-@Transactional
-public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTests
+public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
      * Logger object.
@@ -68,37 +64,49 @@ public class GlobalParametersCacheIntTest extends AbstractJUnit4SpringContextTes
     private static final Logger LOG = LoggerFactory.getLogger (GlobalParametersCacheIntTest.class);
 
     /**
+     * Test subject.
+     */
+    private ICacheable globalParameterCache;
+
+    /**
      * Setup the test.
      */
     @Before
     public void setUp ()
     {
-        DBUnitUtility.loadDatabase (this.getClass (), false);
+        DBUnitUtility.loadDatabase (this.getClass (), true);
+        globalParameterCache =
+                (ICacheable) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.api.IGlobalParametersCache");
+
     }
 
     /**
-     * Test method for the getValue method.
+     * Test getValue method where parameter is found.
      */
     @Test
-    @Transactional
-    public void testGetValue ()
+    public void testGetValueSuccess ()
     {
-        final ICacheable cacheable =
-                (ICacheable) this.applicationContext.getBean ("uk.gov.moj.sdt.cache.api.IGlobalParametersCache");
-
         final IGlobalParameter globalParameter =
-                cacheable
-                        .getValue (IGlobalParameter.class, IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
 
         assertNotNull (globalParameter);
 
         assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
 
         LOG.debug ("Global Parameter value is " + globalParameter.getValue ());
-
-        // Negative test
-        final IGlobalParameter globalParameter2 = cacheable.getValue (IGlobalParameter.class, "SDTS_DATA_RETENTION");
-
-        assertNull (globalParameter2);
     }
+
+    /**
+     * Test getValue method where parameter is not found.
+     */
+    @Test
+    public void testGetValueNotFound ()
+    {
+        // Negative test
+        final IGlobalParameter globalParameter = globalParameterCache.getValue (IGlobalParameter.class, "NO_PARAMETER");
+
+        assertNull (globalParameter);
+    }
+
 }
