@@ -31,16 +31,22 @@
 
 package uk.gov.moj.sdt.validators;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.utils.SdtUnitTestBase;
+import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
 /**
  * Tests for {@link BulkCustomerValidatorTest}.
@@ -73,12 +79,18 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
      * 
      */
 
+    private BulkSubmission bulkSubmission;
+
+    /**
+     * The Dao.
+     * 
+     */
     private IBulkSubmissionDao mockIBulkSubmissionDao;
 
     /**
      * The string reference for our bulk request.
      */
-    private String reference = "12345678";
+    private String reference = " Bulk reference in request ";
 
     /**
      * Constructor for test.
@@ -102,6 +114,10 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         // Create mocks needed for this test.
         mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
         bulkFeedbackRequest = new BulkFeedbackRequest ();
+        bulkSubmission = new BulkSubmission ();
+        bulkSubmission.setSdtBulkReference (reference);
+        // Setup bulk request for test.
+        bulkFeedbackRequest.setSdtBulkReference (reference);
     }
 
     /**
@@ -110,20 +126,17 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
     @Test
     public void testBulkReferenceFound ()
     {
-        // // Setup bulk request for test.
-        // bulkFeedbackRequest.setSdtBulkReference (reference);
-        //
-        // // Tell the mock dao to return this request
+
+        // Tell the mock dao to return this request
         // expect (mockIBulkSubmissionDao.isBulkReferenceValid (reference)).andReturn (true);
-        // replay (mockIBulkSubmissionDao);
-        //
-        // // Inject the mock dao into the validator.
-        // validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
-        //
-        // // Validate the bulk customer.
-        // bulkFeedbackRequest.accept (validator, null);
-        //
-        // EasyMock.verify (mockIBulkSubmissionDao);
+        expect (mockIBulkSubmissionDao.getBulkSubmission (reference)).andReturn (bulkSubmission);
+        replay (mockIBulkSubmissionDao);
+
+        // Inject the mock dao into the validator.
+        validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
+
+        // Validate the bulk customer.
+        bulkFeedbackRequest.accept (validator, null);
     }
 
     /**
@@ -132,29 +145,29 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
     @Test
     public void testBulkReferenceNotFound ()
     {
-        // // Setup bulk request for test.
-        // bulkFeedbackRequest.setSdtBulkReference (reference);
-        //
-        // // Tell the mock dao to return this request
+
+        // Tell the mock dao to return this request
         // expect (mockIBulkSubmissionDao.isBulkReferenceValid (reference)).andReturn (false);
-        // replay (mockIBulkSubmissionDao);
-        //
-        // // Inject the mock dao into the validator.
-        // validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
-        //
-        // try
-        // {
-        // // Validate the request
-        // bulkFeedbackRequest.accept (validator, null);
-        //
-        // Assert.fail ("Test failed to throw InvalidBulkReferenceException.");
-        // }
-        // catch (final InvalidBulkReferenceException e)
-        // {
-        // EasyMock.verify (mockIBulkSubmissionDao);
-        //
-        // Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("BULK_REF_INVALID"));
-        // Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("12345678"));
-        // }
+        expect (mockIBulkSubmissionDao.getBulkSubmission (reference)).andReturn (null);
+        replay (mockIBulkSubmissionDao);
+
+        // Inject the mock dao into the validator.
+        validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
+
+        try
+        {
+            // Validate the request
+            bulkFeedbackRequest.accept (validator, null);
+
+            Assert.fail ("Test failed to throw InvalidBulkReferenceException.");
+        }
+        catch (final InvalidBulkReferenceException e)
+        {
+
+            Assert.assertEquals ("Unexpected message in exception",
+                    "The following exception occured [BULK_REF_INVALID] message"
+                            + "[There is no Bulk Request submission associated with your account "
+                            + "for the supplied SDT Bulk Reference  " + "Bulk reference in request ]", e.getMessage ());
+        }
     }
 }
