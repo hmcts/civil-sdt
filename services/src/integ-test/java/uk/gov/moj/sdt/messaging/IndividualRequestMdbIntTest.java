@@ -184,7 +184,7 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
         final ITargetApplication targetApp = new TargetApplication ();
 
-        targetApp.setId (10713L);
+        targetApp.setId (1L);
         targetApp.setTargetApplicationCode ("MCOL");
         targetApp.setTargetApplicationName ("MCOL");
         final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
