@@ -49,8 +49,10 @@ import org.junit.Assert;
 /**
  * Test class for end to end web service tests..
  * 
- * @param <JaxbRequestType> the type of the JAXB top level object to create.
- * @param <EndpointPortType> the type of the endpoint to be called.
+ * @param <JaxbRequestType>
+ *            the type of the JAXB top level object to create.
+ * @param <EndpointPortType>
+ *            the type of the endpoint to be called.
  * @author Robin Compston
  */
 public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends TestCase
@@ -73,8 +75,9 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     }
 
     /**
-     * Turn the XML file for this test into a JAXB object tree. The expected XML lives in the same package as the test
-     * with the name: <class name>.<method name>.request.xml.
+     * Turn the XML file for this test into a JAXB object tree. The expected XML
+     * lives in the same package as the test with the name: <class name>.<method
+     * name>.request.xml.
      * 
      * @return the JAXB object loaded with XML associated with this test class.
      */
@@ -91,7 +94,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             // Assume that test method is three stacks deep.
             String methodName = stackTraceElements[3].getMethodName ();
 
-            // Open a stream to the resource holding the XML for this class method which is to be converted to JAXB.
+            // Open a stream to the resource holding the XML for this class
+            // method which is to be converted to JAXB.
             String resourceName = this.getClass ().getCanonicalName ();
             // Adjust format for a resource name.
             resourceName = resourceName.replace ('.', '/');
@@ -115,10 +119,12 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     }
 
     /**
-     * Turn the JAXB object tree into an XML string and check that it is what we expected for this test. The expected
-     * XML lives in the same package as the test with the name: <class name>.<method name>.response.xml.
+     * Turn the JAXB object tree into an XML string and check that it is what we
+     * expected for this test. The expected XML lives in the same package as the
+     * test with the name: <class name>.<method name>.response.xml.
      * 
-     * @param response the JAXB object returned by the web service.
+     * @param response
+     *            the JAXB object returned by the web service.
      * @return the XML corresponding to the given JAXB object tree.
      */
     @SuppressWarnings ("unchecked")
@@ -163,7 +169,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             // Assume that test method is three stacks deep.
             String methodName = stackTraceElements[3].getMethodName ();
 
-            // Open a stream to the resource holding the XML for this class method which is to be converted to JAXB.
+            // Open a stream to the resource holding the XML for this class
+            // method which is to be converted to JAXB.
             String resourceName = this.getClass ().getCanonicalName ();
             // Adjust format for a resource name.
             resourceName = resourceName.replace ('.', '/');
@@ -172,11 +179,14 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             InputStream inputStream = this.getClass ().getClassLoader ().getResourceAsStream (resourceName);
             String expectedXml = IOUtils.toString (inputStream, "UTF-8");
 
-            // Blank out the sdt bulk reference and submitted date since these will not match otherwise.
+            // Blank out the sdt bulk reference and submitted date since these
+            // will not match otherwise.
             expectedXml = removeVariantText (expectedXml, "sdtBulkReference");
             expectedXml = removeVariantText (expectedXml, "submittedDate");
+            expectedXml = removeLineFeeds (expectedXml);
             actualXml = removeVariantText (actualXml, "sdtBulkReference");
             actualXml = removeVariantText (actualXml, "submittedDate");
+            actualXml = removeLineFeeds (actualXml);
 
             // Check xml.
             Assert.assertEquals ("Expected XML [" + resourceName + "] does not match, ", expectedXml, actualXml);
@@ -190,10 +200,46 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     }
 
     /**
-     * Utility to remove the variant text to allow non variant text to be matched.
+     * Utility to remove carriage return (\r) and linefeeds (\n) otherwise the
+     * test for equality does not work.
      * 
-     * @param xml the XML to remove text from.
-     * @param tag the tag whose content is to be removed.
+     * @param xml
+     *            the XML to remove text from.
+     * @return the modified XML.
+     */
+    private String removeLineFeeds (final String xml)
+    {
+        // Get characters from String.
+        char[] inChars = xml.toCharArray ();
+
+        // Make array big enough for all given String.
+        char[] outChars = new char[inChars.length];
+
+        int i1 = 0;
+        int i2 = 0;
+
+        // Exclude line feeds and carriage returns.
+        while (i1 < inChars.length)
+        {
+            if (inChars[i1] != '\n' && inChars[i1] != '\r')
+            {
+                outChars[i2++] = inChars[i1];
+            }
+            i1++;
+        }
+
+        // Convert back to String.
+        return new String (outChars, 0, i2);
+    }
+
+    /**
+     * Utility to remove the variant text to allow non variant text to be
+     * matched.
+     * 
+     * @param xml
+     *            the XML to remove text from.
+     * @param tag
+     *            the tag whose content is to be removed.
      * @return the modified XML.
      */
     private String removeVariantText (final String xml, final String tag)
@@ -217,7 +263,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     /**
      * Call the required web service for this test.
      * 
-     * @param request A request JAXB object tree.
+     * @param request
+     *            A request JAXB object tree.
      * @return a response JAXB object.
      */
     protected abstract JaxbResponseType callTestWebService (final JaxbRequestType request);

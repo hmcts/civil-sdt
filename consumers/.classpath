@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/unit-test/java"/>
+	<classpathentry kind="src" path="src/end-to-end-test/java"/>
+	<classpathentry kind="src" path="src/end-to-end-test/resources"/>
+	<classpathentry kind="src" path="src/integ-test/resources"/>
+	<classpathentry kind="src" path="src/unit-test/resources"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/integ-test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/producers-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dao"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

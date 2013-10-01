@@ -1,21 +1,25 @@
-
 package uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema;
 
 import java.util.Calendar;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter1;
+
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 
-
 /**
- * <p>Java class for bulkResponseType complex type.
+ * <p>
+ * Java class for bulkResponseType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="bulkResponseType">
@@ -35,26 +39,21 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "bulkResponseType", propOrder = {
-    "customerReference",
-    "sdtBulkReference",
-    "submittedDate",
-    "sdtService",
-    "requestCount"
-})
-public class BulkResponseType
-    extends AbstractResponseType
+@XmlAccessorType (XmlAccessType.FIELD)
+@XmlRootElement
+@XmlType (name = "bulkResponseType", propOrder = {"customerReference", "sdtBulkReference", "submittedDate",
+        "sdtService", "requestCount"})
+public class BulkResponseType extends AbstractResponseType
 {
 
-    @XmlElement(required = true)
+    @XmlElement (required = true)
     protected String customerReference;
     protected String sdtBulkReference;
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
-    @XmlSchemaType(name = "dateTime")
+    @XmlElement (required = true, type = String.class)
+    @XmlJavaTypeAdapter (Adapter1.class)
+    @XmlSchemaType (name = "dateTime")
     protected Calendar submittedDate;
-    @XmlElement(required = true)
+    @XmlElement (required = true)
     protected String sdtService;
     protected long requestCount;
 
@@ -62,11 +61,11 @@ public class BulkResponseType
      * Gets the value of the customerReference property.
      * 
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *         possible object is {@link String }
+     * 
      */
-    public String getCustomerReference() {
+    public String getCustomerReference ()
+    {
         return customerReference;
     }
 
@@ -74,11 +73,11 @@ public class BulkResponseType
      * Sets the value of the customerReference property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
-    public void setCustomerReference(String value) {
+    public void setCustomerReference (String value)
+    {
         this.customerReference = value;
     }
 
@@ -86,11 +85,11 @@ public class BulkResponseType
      * Gets the value of the sdtBulkReference property.
      * 
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *         possible object is {@link String }
+     * 
      */
-    public String getSdtBulkReference() {
+    public String getSdtBulkReference ()
+    {
         return sdtBulkReference;
     }
 
@@ -98,11 +97,11 @@ public class BulkResponseType
      * Sets the value of the sdtBulkReference property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
-    public void setSdtBulkReference(String value) {
+    public void setSdtBulkReference (String value)
+    {
         this.sdtBulkReference = value;
     }
 
@@ -110,11 +109,11 @@ public class BulkResponseType
      * Gets the value of the submittedDate property.
      * 
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *         possible object is {@link String }
+     * 
      */
-    public Calendar getSubmittedDate() {
+    public Calendar getSubmittedDate ()
+    {
         return submittedDate;
     }
 
@@ -122,11 +121,11 @@ public class BulkResponseType
      * Sets the value of the submittedDate property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
-    public void setSubmittedDate(Calendar value) {
+    public void setSubmittedDate (Calendar value)
+    {
         this.submittedDate = value;
     }
 
@@ -134,11 +133,11 @@ public class BulkResponseType
      * Gets the value of the sdtService property.
      * 
      * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *         possible object is {@link String }
+     * 
      */
-    public String getSdtService() {
+    public String getSdtService ()
+    {
         return sdtService;
     }
 
@@ -146,11 +145,11 @@ public class BulkResponseType
      * Sets the value of the sdtService property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
-    public void setSdtService(String value) {
+    public void setSdtService (String value)
+    {
         this.sdtService = value;
     }
 
@@ -158,7 +157,8 @@ public class BulkResponseType
      * Gets the value of the requestCount property.
      * 
      */
-    public long getRequestCount() {
+    public long getRequestCount ()
+    {
         return requestCount;
     }
 
@@ -166,7 +166,8 @@ public class BulkResponseType
      * Sets the value of the requestCount property.
      * 
      */
-    public void setRequestCount(long value) {
+    public void setRequestCount (long value)
+    {
         this.requestCount = value;
     }
 
