@@ -113,6 +113,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         catch (Exception e)
         {
             e.printStackTrace ();
+            Assert.fail ("Failure to unmarshall request from web service [" + requestClass.toString () + "]");
         }
 
         return request;
@@ -157,8 +158,10 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
                 }
             };
 
+            JAXBElement<JaxbResponseType> jaxbResponse = this.wrapJaxbObject (response);
+
             // Convert the JAXB object tree into XML.
-            jaxbMarshaller.marshal (response, out);
+            jaxbMarshaller.marshal (jaxbResponse, out);
 
             // Get the XML out of the output stream.
             String actualXml = out.toString ();
@@ -194,6 +197,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         catch (Exception e)
         {
             e.printStackTrace ();
+            Assert.fail ("Failure to marshall response from web service [" + response.toString () + "]");
         }
 
         return;
@@ -268,4 +272,14 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      * @return a response JAXB object.
      */
     protected abstract JaxbResponseType callTestWebService (final JaxbRequestType request);
+
+    /**
+     * Wrap the JAXB object in a JAXB context object so that when it is marshalled it has an @XmlRootElement and does
+     * not throw an exception.
+     * 
+     * @param response
+     *            A request response JAXB object tree.
+     * @return a wrapped response JAXB object.
+     */
+    protected abstract JAXBElement<JaxbResponseType> wrapJaxbObject (final JaxbResponseType response);
 }

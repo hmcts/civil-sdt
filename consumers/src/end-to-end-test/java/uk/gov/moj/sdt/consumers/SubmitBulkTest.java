@@ -31,15 +31,17 @@
 
 package uk.gov.moj.sdt.consumers;
 
+import javax.xml.bind.JAXBElement;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.gov.moj.sdt.consumers.AbstractWebServiceTest;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
@@ -73,5 +75,13 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
         return client.submitBulk (request);
+    }
+
+    @Override
+    protected JAXBElement<BulkResponseType> wrapJaxbObject (final BulkResponseType response)
+    {
+        // Use the provided factor to create a wrapped instance of the response.
+        ObjectFactory objectFactory = new ObjectFactory ();
+        return objectFactory.createBulkResponse (response);
     }
 }
