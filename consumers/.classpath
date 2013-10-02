@@ -12,7 +12,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/producers-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dao"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dao-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -51,7 +51,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/consumers/spring*.xml",
+        "classpath*:uk/gov/moj/sdt/utils/spring*.xml"})
 public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType>
 {
 
