@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,41 +28,53 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
+package uk.gov.moj.sdt.services;
 
-import org.springframework.dao.DataAccessException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
+import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 
 /**
- * Interface for all classes implementing {@link IBulkSubmissionDao}.
+ * Mock Bulk Submission Service, this class is only here so the commissioning app can start up without throwing an
+ * error due to missing implementation. Since we are mocking at DAO level and this class doesn't return anything there
+ * is nothing to do.
  * 
  * @author d130680
+ * 
  */
-public interface IBulkSubmissionDao extends IGenericDao
+public class MockBulkSubmissionService implements IBulkSubmissionService
 {
     /**
-     * Check the customer reference is unique across data retention period. Return the bulk submission if the check
-     * fails or null if it succeeds.
-     * 
-     * @param bulkCustomer bulk customer
-     * @param customerReference customer reference
-     * @param dataRetention the data retention period to use
-     * @throws DataAccessException Hibernate exception
-     * @return null if the bulk submission is unique or the non unique bulk submission object
+     * Logger instance.
      */
-    IBulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
-                                       final int dataRetention) throws DataAccessException;
+    private static final Log LOG = LogFactory.getLog (MockBulkSubmissionService.class);
 
     /**
-     * Checks that the bulk reference is valid. Return the bulk submission if the check
-     * valid or null if it fails.
-     * 
-     * @param bulkReference bulk reference
-     * @throws DataAccessException Hibernate exception
-     * @return valid bulk submission or null
+     * SDT Bulk reference generator.
      */
-    BulkSubmission getBulkSubmission (final String bulkReference) throws DataAccessException;
+    private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
+
+    @Override
+    public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
+    {
+        // Set the SDT Bulk Reference for the handler's transformer to use
+        bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
+                .getTargetApplication ().getTargetApplicationCode ()));
+        LOG.debug ("[saveBulkSubmission] completed");
+
+    }
+
+    /**
+     * Set SDT Bulk Reference Generator.
+     * 
+     * @param sdtBulkReferenceGenerator sdt bulk reference generator
+     */
+    public void setSdtBulkReferenceGenerator (final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator)
+    {
+        this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
+    }
+
 }

@@ -130,12 +130,12 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
      * 
      * @return data retention period
      */
-    public long getDataRetentionPeriod ()
+    public int getDataRetentionPeriod ()
     {
         final IGlobalParameter globalParameter =
                 globalParameterCache.getValue (IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
-        final long dataRetention = Long.parseLong (globalParameter.getValue ());
+        final int dataRetention = Integer.parseInt (globalParameter.getValue ());
 
         return dataRetention;
 

@@ -53,7 +53,7 @@ public interface IIndividualRequestDao extends IGenericDao
      * @throws DataAccessException Hibernate exception
      */
     IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
-                                             final long dataRetention) throws DataAccessException;
+                                             final int dataRetention) throws DataAccessException;
 
     /**
      * Returns the individual request object for the given Sdt Reference Id.

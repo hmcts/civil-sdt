@@ -30,7 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import org.apache.commons.lang.time.DateUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -65,10 +72,34 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
 
     @Override
     public IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
-                                                    final long dataRetention) throws DataAccessException
+                                                    final int dataRetention) throws DataAccessException
     {
-        // TODO - Need to implement this
-        return null;
+        LOG.debug ("Get a Individual Request matching the Bulk Customer, "
+                + "Customer Request Reference and the Data Retention Period");
+
+        // Create the criteria
+        final Session session = getSessionFactory ().getCurrentSession ();
+        final Criteria criteria =
+                session.createCriteria (IIndividualRequest.class).createAlias ("bulkSubmission", "bs")
+                        .createAlias ("bs.bulkCustomer", "bc");
+
+        criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
+        criteria.add (Restrictions.eq ("customerRequestReference", customerReference));
+
+        // Only bring back individual requests within the data retention period, truncating the time part
+        // Use the round function to get the ceiling of todays date, i.e. the start of the next day
+        final Date end = DateUtils.round (new Date (), Calendar.DATE);
+
+        // Subtract the retention period from todays date and truncate the time part to get the floor of the date
+        final Date start = DateUtils.addDays (DateUtils.truncate (end, Calendar.DATE), dataRetention * -1);
+
+        // Add date criteria and convert to LocalDateTime
+        criteria.add (Restrictions.between ("createdDate", LocalDateTime.fromDateFields (start),
+                LocalDateTime.fromDateFields (end)));
+
+        final IIndividualRequest individualRequest = (IIndividualRequest) criteria.uniqueResult ();
+
+        return individualRequest;
 
     }
 

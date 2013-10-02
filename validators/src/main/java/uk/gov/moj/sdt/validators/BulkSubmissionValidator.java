@@ -90,7 +90,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         List<String> replacements = null;
 
         // Get the data retention period
-        final long dataRetention = super.getDataRetentionPeriod ();
+        final int dataRetention = super.getDataRetentionPeriod ();
         final IBulkSubmission invalidBulkSubmission =
                 bulkSubmissionDao.getBulkSubmission (bulkCustomer, sdtCustomerReference, dataRetention);
 

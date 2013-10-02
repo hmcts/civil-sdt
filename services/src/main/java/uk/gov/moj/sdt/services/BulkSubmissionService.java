@@ -30,8 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -48,6 +50,7 @@ import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -89,6 +92,11 @@ public class BulkSubmissionService implements IBulkSubmissionService
      */
     private IMessageWriter messageWriter;
 
+    /**
+     * SDT Bulk reference generator.
+     */
+    private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
+
     @Override
     @Transactional (propagation = Propagation.REQUIRED)
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
@@ -126,6 +134,14 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // Populate the individual requests with the raw xml specific for that request.
         individualRequests = individualRequestsXmlParser.getIndividualRequestsRawXmlMap (individualRequests);
 
+        // Set the SDT Bulk Reference
+        bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
+                .getTargetApplication ().getTargetApplicationCode ()));
+
+        // Set the SDT Request Reference on the Individual Requests
+        individualRequests = processIndividualRequests (bulkSubmission.getSdtBulkReference (), individualRequests);
+        bulkSubmission.setIndividualRequests (individualRequests);
+
         // Now persist the bulk submissions.
         this.getGenericDao ().persist (bulkSubmission);
 
@@ -138,6 +154,56 @@ public class BulkSubmissionService implements IBulkSubmissionService
                 this.getMessageWriter ().queueMessage (iRequest.getSdtRequestReference ());
             }
         }
+
+    }
+
+    /**
+     * Extract the individual request and set the SDT Request Reference and SDT Bulk Reference.
+     * 
+     * @param sdtBulkReference sdt bulk reference
+     * @param individualRequests list of individual requests
+     * @return processed individual requests
+     */
+    private List<IIndividualRequest> processIndividualRequests (final String sdtBulkReference,
+                                                                final List<IIndividualRequest> individualRequests)
+    {
+
+        final List<IIndividualRequest> newList = new ArrayList<IIndividualRequest> ();
+
+        // Loop through the list of individual requests and set the sdt request reference
+        for (IIndividualRequest iRequest : individualRequests)
+        {
+            // Generate and set the SDT Request Reference
+            final String sdtRequestReference =
+                    this.generateSdtRequestReference (sdtBulkReference, iRequest.getLineNumber ());
+            iRequest.setSdtRequestReference (sdtRequestReference);
+
+            // Set the SDT Bulk Reference
+            iRequest.setSdtBulkReference (sdtBulkReference);
+            newList.add (iRequest);
+
+        }
+
+        return newList;
+    }
+
+    /**
+     * Generate the SDT Request Reference from the SDT Bulk Reference.
+     * 
+     * @param sdtBulkReference sdt bulk Reference
+     * @param lineNumber individual request line number
+     * @return sdt request reference
+     */
+    private String generateSdtRequestReference (final String sdtBulkReference, final int lineNumber)
+    {
+
+        // Left padd the line number with 0 to a maximum of 7 characters
+        final String paddedLineNumber = StringUtils.leftPad (String.valueOf (lineNumber), 7, "0");
+
+        // SDT Request Reference consists of <SDT Bulk Reference>-<zero padded line number>
+        final String sdtRequestReference = sdtBulkReference + "-" + paddedLineNumber;
+
+        return sdtRequestReference;
 
     }
 
@@ -235,5 +301,15 @@ public class BulkSubmissionService implements IBulkSubmissionService
     public void setIndividualRequestsXmlparser (final IndividualRequestsXmlParser individualRequestsXmlParser)
     {
         this.individualRequestsXmlParser = individualRequestsXmlParser;
+    }
+
+    /**
+     * Set the sdtBulkReferenceGenerator.
+     * 
+     * @param sdtBulkReferenceGenerator SDT Bulk Reference Generator
+     */
+    public void setSdtBulkReferenceGenerator (final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator)
+    {
+        this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
     }
 }

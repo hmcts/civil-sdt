@@ -342,9 +342,15 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
-    public void markRequestAsRejected ()
+    public void markRequestAsRejected (final IErrorLog errorLog)
     {
         this.setRequestStatus (IndividualRequestStatus.REJECTED.getStatus ());
+        // Set the error log if there is one
+        if (errorLog != null)
+        {
+            this.setErrorLog (errorLog);
+        }
+
         // Set the completed date only if the status is rejected or accepted.
         this.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 

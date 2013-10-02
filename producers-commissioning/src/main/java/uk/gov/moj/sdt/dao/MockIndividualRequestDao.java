@@ -66,7 +66,7 @@ public class MockIndividualRequestDao extends MockGenericDao implements IIndivid
 
     @Override
     public IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
-                                                    final long dataRetention)
+                                                    final int dataRetention)
     {
         if (DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ()))
         {

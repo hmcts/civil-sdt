@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.visitor;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -88,6 +89,12 @@ public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implem
 
     @Override
     public void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree)
+    {
+        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    }
+
+    @Override
+    public void visit (final IErrorLog errorLog, final ITree tree)
     {
         throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
     }

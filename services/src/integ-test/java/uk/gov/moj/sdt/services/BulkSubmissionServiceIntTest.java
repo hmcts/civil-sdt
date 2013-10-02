@@ -113,7 +113,7 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
 
         final IBulkSubmissionService bulkSubmissionService =
                 (IBulkSubmissionService) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmission");
+                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
 
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
 
@@ -126,11 +126,16 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
 
         Assert.assertEquals (bulkSubmission.getNumberOfRequest (), 1L);
 
+        Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+
         final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
         Assert.assertNotNull (individualRequests);
         Assert.assertEquals (individualRequests.size (), 1);
         for (IIndividualRequest request : individualRequests)
         {
+
+            Assert.assertNotNull (request.getSdtBulkReference ());
+            Assert.assertNotNull (request.getSdtRequestReference ());
             Assert.assertNotNull (request.getRequestPayload ());
             LOG.debug ("Payload for request " + request.getId () + "is " + request.getRequestPayload ());
         }
@@ -150,7 +155,7 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
 
         final IBulkSubmissionService bulkSubmissionService =
                 (IBulkSubmissionService) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmission");
+                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
     }
 
     /**
@@ -195,7 +200,7 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
         bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         bulkSubmission.setCustomerReference ("10711");
         bulkSubmission.setNumberOfRequest (1);
-        bulkSubmission.setSdtBulkReference ("SDT_BULKREF_0001");
+
         bulkSubmission.setSubmissionStatus ("SUBMITTED");
         bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
@@ -206,11 +211,9 @@ public class BulkSubmissionServiceIntTest extends AbstractJUnit4SpringContextTes
         individualRequest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         individualRequest.setCustomerRequestReference ("ICustReq123");
-        individualRequest.setSdtRequestReference ("SDT_test_1");
-        individualRequest.setSdtBulkReference ("SDT_BULKREF_0001");
-        // individualRequest.setPayload ("IXML1");
         individualRequest.setRequestStatus ("Received");
         individualRequest.setBulkSubmission (bulkSubmission);
+        individualRequest.setLineNumber (1);
         individualRequests.add (individualRequest);
 
         bulkSubmission.setIndividualRequests (individualRequests);

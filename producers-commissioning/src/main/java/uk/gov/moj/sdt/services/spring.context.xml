@@ -7,19 +7,17 @@
     <!-- Mock implementation for Submit Query Service -->        
     <bean id="uk.gov.moj.sdt.services.api.ISubmitQueryService" 
         class="uk.gov.moj.sdt.services.MockSubmitQueryService">        
+    </bean> 
+	
+    <!-- Mock implementation for Bulk Submission Service -->        
+    <bean id="uk.gov.moj.sdt.services.api.IBulkSubmissionService" 
+        class="uk.gov.moj.sdt.services.MockBulkSubmissionService">
+        <property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator"/>
     </bean>
-
-  
-  	<!-- Mock implementation of Bulk Submission DAO -->
-    <bean id="uk.gov.moj.sdt.dao.MockBulkSubmissionDao" 
-        class="uk.gov.moj.sdt.dao.MockBulkSubmissionDao">
-    </bean>
-
 
     <!-- Mock implementation for Bulk Feedback Service -->        
     <bean id="uk.gov.moj.sdt.services.api.IBulkFeedbackService" 
-        class="uk.gov.moj.sdt.services.MockBulkFeedbackService">
-        
+        class="uk.gov.moj.sdt.services.MockBulkFeedbackService">       
         <property name="bulkFeedbackFactoryMap">
         	<map>
         		<!-- These keys also appear in MockBulkSubmissionDao.java for the SDT bulk reference check -->

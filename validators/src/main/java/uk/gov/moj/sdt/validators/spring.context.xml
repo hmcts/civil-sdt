@@ -59,5 +59,8 @@
 
 	<bean id="uk.gov.moj.sdt.validators.api.IDateValidator" class="uk.gov.moj.sdt.validators.DateValidator">
 	</bean>
+	
+	<bean id="uk.gov.moj.sdt.validators.api.IErrorLogValidator" class="uk.gov.moj.sdt.validators.ErrorLogValidator">
+	</bean>
 
 </beans>

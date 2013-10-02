@@ -141,7 +141,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      */
     private void updateRejectedRequest (final IIndividualRequest individualRequest)
     {
-        individualRequest.markRequestAsRejected ();
+        individualRequest.markRequestAsRejected (null);
 
         LOG.debug ("Request completed date is set to " + individualRequest.getCompletedDate ());
 

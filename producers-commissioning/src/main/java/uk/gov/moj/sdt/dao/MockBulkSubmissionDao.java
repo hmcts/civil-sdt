@@ -36,6 +36,7 @@ import java.util.List;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
  * Mock Bulk Submission DAO class used in commissioning project.
@@ -52,8 +53,8 @@ public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmis
     private List<String> bulkReferenceList;
 
     @Override
-    public BulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
-                                             final long dataRetention)
+    public IBulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
+                                              final int dataRetention)
     {
         return super.getBulkSubmission (customerReference);
     }

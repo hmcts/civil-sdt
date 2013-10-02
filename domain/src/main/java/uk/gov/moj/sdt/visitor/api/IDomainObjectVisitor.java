@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.visitor.api;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -103,4 +104,13 @@ public interface IDomainObjectVisitor extends IVisitor
      * @param tree tree being walked.
      */
     void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree);
+
+    /**
+     * Visit the Error Log.
+     * 
+     * @param errorLog domain object to be visited.
+     * @param tree tree being walked.
+     */
+    void visit (final IErrorLog errorLog, final ITree tree);
+
 }

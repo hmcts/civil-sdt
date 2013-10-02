@@ -82,7 +82,7 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
         final String customerRequestReference = individualRequest.getCustomerRequestReference ();
 
         // Get the data retention period
-        final long dataRetention = super.getDataRetentionPeriod ();
+        final int dataRetention = super.getDataRetentionPeriod ();
         final IIndividualRequest invalidIndividualRequest =
                 individualRequestDao.getIndividualRequest (bulkCustomer, customerRequestReference, dataRetention);
 
@@ -96,10 +96,9 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
 
             errorLog.setErrorCode (AbstractBusinessException.ErrorCode.DUP_CUST_REQID.name ());
             errorLog.setErrorText (MessageFormat.format (description, replacements.toArray ()));
-            invalidIndividualRequest.setErrorLog (errorLog);
+
             // Change the status to rejected
-            invalidIndividualRequest
-                    .setRequestStatus (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ());
+            individualRequest.markRequestAsRejected (errorLog);
 
         }
         LOGGER.debug ("completed visit(individualRequest)");

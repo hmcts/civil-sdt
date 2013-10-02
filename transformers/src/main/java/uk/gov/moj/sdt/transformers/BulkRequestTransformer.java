@@ -124,6 +124,8 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
             // Set the bulk submission
             individualRequest.setBulkSubmission (bulkSubmission);
 
+            individualRequest.setCreatedDate (new LocalDateTime ());
+
             individualRequestList.add (individualRequest);
         }
 

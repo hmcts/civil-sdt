@@ -39,6 +39,7 @@ import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 
 /**
@@ -73,7 +74,7 @@ public class MockGenericDao implements IGenericDao
      * 
      * @return BulkSubmission if not valid null otherwise
      */
-    protected BulkSubmission getBulkSubmission (final String customerReference)
+    protected IBulkSubmission getBulkSubmission (final String customerReference)
     {
         if (DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ()))
         {

@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
+import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
@@ -63,8 +64,14 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
 
     /**
      * SDT Bulk reference generator.
+     * TODO - remove this when it's moved to the BulkSubmissionService/MockBulkSubmissionService
      */
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
+
+    /**
+     * Bulk Submission service.
+     */
+    private IBulkSubmissionService bulkSubmissionService;
 
     /**
      * The transformer associated with this handler.
@@ -124,6 +131,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     private void processBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         LOGGER.info ("Service called to persist bulk request details");
+        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
     }
 
     /**
@@ -143,6 +151,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
 
         // Populate SDT Bulk reference.
+        // TODO - Remove this, as it will be set in the domain to jaxb transformer
         response.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkRequest.getHeader ()
                 .getTargetApplicationId ()));
 
@@ -193,11 +202,22 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      * 
      * @param transformer the transformer to be associated with this class.
      */
+    // CHECKSTYLE:OFF
     public
             void
-            setTransformer (final ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, 
-                            IBulkSubmission> transformer)
+            setTransformer (final ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer)
+    // CHECKSTYLE:ON
     {
         this.transformer = transformer;
+    }
+
+    /**
+     * Setter for bulk submission service.
+     * 
+     * @param bulkSubmissionService bulk submission service
+     */
+    public void setBulkSubmissionService (final IBulkSubmissionService bulkSubmissionService)
+    {
+        this.bulkSubmissionService = bulkSubmissionService;
     }
 }

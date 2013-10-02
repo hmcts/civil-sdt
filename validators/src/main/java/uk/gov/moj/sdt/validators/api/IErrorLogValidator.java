@@ -24,45 +24,18 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao.api;
-
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+ * $Id: IServiceTypeValidator.java 17075 2013-09-18 14:58:39Z kulkarnim $
+ * $LastChangedRevision: 17075 $
+ * $LastChangedDate: 2013-09-18 15:58:39 +0100 (Wed, 18 Sep 2013) $
+ * $LastChangedBy: kulkarnim $ */
+package uk.gov.moj.sdt.validators.api;
 
 /**
- * Interface for all classes implementing {@link IBulkSubmissionDao}.
+ * An empty interface for ErrorLog, no validation is required for this domain object. But an empty class is necessary so
+ * the visitor classes do not throw an error.
  * 
- * @author d130680
+ * @author Son Loi
  */
-public interface IBulkSubmissionDao extends IGenericDao
+public interface IErrorLogValidator
 {
-    /**
-     * Check the customer reference is unique across data retention period. Return the bulk submission if the check
-     * fails or null if it succeeds.
-     * 
-     * @param bulkCustomer bulk customer
-     * @param customerReference customer reference
-     * @param dataRetention the data retention period to use
-     * @throws DataAccessException Hibernate exception
-     * @return null if the bulk submission is unique or the non unique bulk submission object
-     */
-    IBulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
-                                       final int dataRetention) throws DataAccessException;
-
-    /**
-     * Checks that the bulk reference is valid. Return the bulk submission if the check
-     * valid or null if it fails.
-     * 
-     * @param bulkReference bulk reference
-     * @throws DataAccessException Hibernate exception
-     * @return valid bulk submission or null
-     */
-    BulkSubmission getBulkSubmission (final String bulkReference) throws DataAccessException;
 }
