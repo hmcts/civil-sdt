@@ -65,6 +65,7 @@ import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 
 /**
  * Test class for BulkSubmissionService.
@@ -110,6 +111,11 @@ public class BulkSubmissionServiceTest
     private ITargetApplicationDao mockTargetApplicationDao;
 
     /**
+     * SDT Bulk Reference Generator.
+     */
+    private ISdtBulkReferenceGenerator mockSdtBulkReferenceGenerator;
+
+    /**
      * Setup of the mock dao and injection of other objects.
      */
     @Before
@@ -131,6 +137,9 @@ public class BulkSubmissionServiceTest
 
         individualRequestsXmlParser = new IndividualRequestsXmlParser ();
         bulkSubmissionService.setIndividualRequestsXmlparser (individualRequestsXmlParser);
+
+        mockSdtBulkReferenceGenerator = EasyMock.createMock (ISdtBulkReferenceGenerator.class);
+        bulkSubmissionService.setSdtBulkReferenceGenerator (mockSdtBulkReferenceGenerator);
     }
 
     /**
@@ -189,8 +198,8 @@ public class BulkSubmissionServiceTest
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
         final List<IIndividualRequest> requests = bulkSubmission.getIndividualRequests ();
-        final IndividualRequest iRequest1 = this.getValidIndividualRequest ("SDT_test_2", "ICustReq124");
-        final IndividualRequest iRequest2 = this.getValidIndividualRequest ("SDT test 3", "ICustReq125");
+        final IndividualRequest iRequest1 = this.getValidIndividualRequest ("null-0000000", "ICustReq124");
+        final IndividualRequest iRequest2 = this.getValidIndividualRequest ("null-0000000", "ICustReq125");
 
         LOGGER.debug ("Size of Individual Requests is " + requests.size ());
         requests.add (iRequest1);

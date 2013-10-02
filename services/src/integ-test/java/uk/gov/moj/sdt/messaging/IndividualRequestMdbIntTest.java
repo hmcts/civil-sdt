@@ -128,7 +128,7 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
 
         final IBulkSubmissionService bulkSubmissionService =
                 (IBulkSubmissionService) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmission");
+                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
 
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
 

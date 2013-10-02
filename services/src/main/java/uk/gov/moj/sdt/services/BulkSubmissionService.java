@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -119,6 +118,13 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
+        // Set the SDT Bulk Reference
+        bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
+                .getTargetApplication ().getTargetApplicationCode ()));
+
+        // Set the SDT Request Reference on the Individual Requests
+        processIndividualRequests (bulkSubmission.getSdtBulkReference (), individualRequests);
+
         // Get the Target Application from the target application dao
         final ITargetApplication targetApplication =
                 this.getTargetApplicationDao ().getTargetApplicationByCode (
@@ -133,14 +139,6 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
         // Populate the individual requests with the raw xml specific for that request.
         individualRequests = individualRequestsXmlParser.getIndividualRequestsRawXmlMap (individualRequests);
-
-        // Set the SDT Bulk Reference
-        bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
-                .getTargetApplication ().getTargetApplicationCode ()));
-
-        // Set the SDT Request Reference on the Individual Requests
-        individualRequests = processIndividualRequests (bulkSubmission.getSdtBulkReference (), individualRequests);
-        bulkSubmission.setIndividualRequests (individualRequests);
 
         // Now persist the bulk submissions.
         this.getGenericDao ().persist (bulkSubmission);
@@ -162,14 +160,10 @@ public class BulkSubmissionService implements IBulkSubmissionService
      * 
      * @param sdtBulkReference sdt bulk reference
      * @param individualRequests list of individual requests
-     * @return processed individual requests
      */
-    private List<IIndividualRequest> processIndividualRequests (final String sdtBulkReference,
-                                                                final List<IIndividualRequest> individualRequests)
+    private void processIndividualRequests (final String sdtBulkReference,
+                                            final List<IIndividualRequest> individualRequests)
     {
-
-        final List<IIndividualRequest> newList = new ArrayList<IIndividualRequest> ();
-
         // Loop through the list of individual requests and set the sdt request reference
         for (IIndividualRequest iRequest : individualRequests)
         {
@@ -180,11 +174,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
             // Set the SDT Bulk Reference
             iRequest.setSdtBulkReference (sdtBulkReference);
-            newList.add (iRequest);
-
         }
-
-        return newList;
     }
 
     /**
