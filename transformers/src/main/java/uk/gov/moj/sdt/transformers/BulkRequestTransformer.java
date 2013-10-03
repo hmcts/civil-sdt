@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.transformers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -93,15 +92,11 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
      * 
      * @param bulkRequestType bulk request
      * @param bulkSubmission bulk submission
-     * @return list of individual requests
      */
-    private List<IIndividualRequest> mapToIndividualRequests (final BulkRequestType bulkRequestType,
-                                                              final IBulkSubmission bulkSubmission)
+    private void mapToIndividualRequests (final BulkRequestType bulkRequestType, final IBulkSubmission bulkSubmission)
     {
         IndividualRequest individualRequest = null;
         final List<RequestItemType> requests = bulkRequestType.getRequests ().getRequest ();
-
-        final List<IIndividualRequest> individualRequestList = new ArrayList<IIndividualRequest> ();
 
         // Set the individual requests
         int lineNumber = 1;
@@ -109,27 +104,18 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         {
             individualRequest = new IndividualRequest ();
 
-            // Set customer reference
             individualRequest.setCustomerRequestReference (request.getRequestId ());
 
-            // Set line number
             individualRequest.setLineNumber (lineNumber++);
 
-            // Set the initial status
             individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ());
 
-            // Set request type
             individualRequest.setRequestType (request.getRequestType ());
-
-            // Set the bulk submission
-            individualRequest.setBulkSubmission (bulkSubmission);
 
             individualRequest.setCreatedDate (new LocalDateTime ());
 
-            individualRequestList.add (individualRequest);
+            bulkSubmission.addIndividualRequest (individualRequest);
         }
-
-        return individualRequestList;
     }
 
     @Override
@@ -158,8 +144,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
         // Set individual requests
-        final List<IIndividualRequest> individualRequests = mapToIndividualRequests (bulkRequest, bulkSubmission);
-        bulkSubmission.setIndividualRequests (individualRequests);
+        mapToIndividualRequests (bulkRequest, bulkSubmission);
 
         return bulkSubmission;
     }

@@ -175,7 +175,6 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         errorLog.setCreatedDate (LocalDateTime.fromDateFields (currentDate));
         errorLog.setErrorCode (errorMessage.getErrorCode ());
         errorLog.setErrorText (errorMessage.getErrorText ());
-        errorLog.setIndividualRequest (individualRequest);
 
         // Set the error log in the individual request
         individualRequest.setErrorLog (errorLog);
@@ -211,7 +210,6 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         errorLog.setCreatedDate (LocalDateTime.fromDateFields (currentDate));
         errorLog.setErrorCode (errorMessage.getErrorCode ());
         errorLog.setErrorText (errorMessage.getErrorText ());
-        errorLog.setIndividualRequest (individualRequest);
 
         individualRequest.setErrorLog (errorLog);
 

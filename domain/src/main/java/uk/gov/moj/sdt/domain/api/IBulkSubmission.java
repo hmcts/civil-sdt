@@ -198,6 +198,13 @@ public interface IBulkSubmission extends IDomainObject
     void setIndividualRequests (final List<IIndividualRequest> individualRequests);
 
     /**
+     * Add given individual request.
+     * 
+     * @param individualRequest individual request
+     */
+    void addIndividualRequest (final IIndividualRequest individualRequest);
+
+    /**
      * Get error log.
      * 
      * @return error log

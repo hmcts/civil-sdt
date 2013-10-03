@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDateTime;
@@ -107,7 +108,7 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     /**
      * List of individual requests.
      */
-    private List<IIndividualRequest> individualRequests;
+    private List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
 
     /**
      * Error log.
@@ -264,6 +265,13 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     public void setErrorLog (final IErrorLog errorLog)
     {
         this.errorLog = errorLog;
+    }
+
+    @Override
+    public void addIndividualRequest (final IIndividualRequest individualRequest)
+    {
+        individualRequest.setBulkSubmission (this);
+        this.individualRequests.add (individualRequest);
     }
 
 }

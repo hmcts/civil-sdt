@@ -41,35 +41,6 @@ import org.joda.time.LocalDateTime;
  */
 public interface IErrorLog extends IDomainObject
 {
-
-    /**
-     * Get the Bulk Submission.
-     * 
-     * @return bulk submission
-     */
-    IBulkSubmission getBulkSubmission ();
-
-    /**
-     * Set the Bulk Submission.
-     * 
-     * @param bulkSubmission bulk submission
-     */
-    void setBulkSubmission (final IBulkSubmission bulkSubmission);
-
-    /**
-     * Get the Individual Request.
-     * 
-     * @return individual request
-     */
-    IIndividualRequest getIndividualRequest ();
-
-    /**
-     * Set the Individual Request.
-     * 
-     * @param individualRequest individual request
-     */
-    void setIndividualRequest (final IIndividualRequest individualRequest);
-
     /**
      * Get created date.
      * 

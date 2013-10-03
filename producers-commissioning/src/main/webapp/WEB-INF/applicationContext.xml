@@ -13,7 +13,6 @@
         http://cxf.apache.org/schemas/jaxws.xsd
         http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
-
 	<!-- Configures CXF component. Enables logging of request and response payload. -->
 	<cxf:bus>
 		<cxf:inInterceptors>
@@ -36,5 +35,17 @@
 			<entry key="schema-validation-enabled" value="false" />
 		</jaxws:properties>
 	</jaxws:endpoint>
-
+    
+     <aop:aspectj-autoproxy />
+    
+    <bean id="performanceMonitor" class="org.springframework.aop.interceptor.PerformanceMonitorInterceptor">
+        <property name="useDynamicLogger" value="true"/>
+    </bean>
+ 
+     <aop:config>
+          <aop:pointcut id="allMethods" expression="execution(* uk.gov.moj.sdt.handlers.*.*(..))" />
+          <aop:advisor pointcut-ref="allMethods" advice-ref="performanceMonitor" order="2" />
+     </aop:config>
+ 
 </beans>
+

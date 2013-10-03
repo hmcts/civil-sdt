@@ -32,10 +32,8 @@ package uk.gov.moj.sdt.messaging;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.jms.JMSException;
@@ -65,7 +63,6 @@ import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -193,7 +190,6 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
         bulkSubmission.setSdtBulkReference (sdtBulkReference);
         bulkSubmission.setSubmissionStatus ("SUBMITTED");
 
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
@@ -202,10 +198,8 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
         individualRequest.setSdtBulkReference (sdtBulkReference);
         // individualRequest.setPayload ("IXML1");
         individualRequest.setRequestStatus ("Received");
-        individualRequest.setBulkSubmission (bulkSubmission);
-        individualRequests.add (individualRequest);
 
-        bulkSubmission.setIndividualRequests (individualRequests);
+        bulkSubmission.addIndividualRequest (individualRequest);
 
         return bulkSubmission;
     }
