@@ -30,15 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import java.util.List;
-
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
@@ -63,13 +60,6 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
     public TargetApplicationDao ()
     {
         super ();
-    }
-
-    @Override
-    public List<ITargetApplication> getTargetApplication (final IBulkCustomer bulkCustomer) throws DataAccessException
-    {
-        // TODO - Implement this method.
-        return null;
     }
 
     @Override

@@ -30,11 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao.api;
 
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
 
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
@@ -44,15 +41,6 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  */
 public interface ITargetApplicationDao extends IGenericDao
 {
-    /**
-     * Get all the target applications for a particular bulk customer.
-     * 
-     * @param bulkCustomer bulk customer
-     * @return list of target applications
-     * @throws DataAccessException Hibernate exception
-     */
-    List<ITargetApplication> getTargetApplication (final IBulkCustomer bulkCustomer) throws DataAccessException;
-
     /**
      * Get the target application matching the target application code supplied.
      * 

@@ -89,7 +89,7 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
         final Date end = DateUtils.round (new Date (), Calendar.DATE);
 
         // Subtract the retention period from todays date and truncate the time part to get the floor of the date
-        final Date start = DateUtils.addDays (DateUtils.truncate (end, Calendar.DATE), dataRetention * -1);
+        final Date start = DateUtils.addDays (DateUtils.truncate (new Date (), Calendar.DATE), dataRetention * -1);
 
         // Add date criteria and convert to LocalDateTime
         criteria.add (Restrictions.between ("createdDate", LocalDateTime.fromDateFields (start),

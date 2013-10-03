@@ -32,9 +32,15 @@ package uk.gov.moj.sdt.dao;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Date;
+
+import junit.framework.Assert;
+
+import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -43,7 +49,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.TargetApplication;
@@ -68,12 +74,41 @@ public class BulkSubmissionsDaoTest extends AbstractTransactionalJUnit4SpringCon
     private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionsDaoTest.class);
 
     /**
-     * Default constructor.
+     * Bulk Submission DAO.
      */
-    public BulkSubmissionsDaoTest ()
+    private IBulkSubmissionDao bulkSubmissionDao;
+
+    /**
+     * Bulk Customer to use for the test.
+     */
+    private IBulkCustomer bulkCustomer;
+
+    /**
+     * Target Application to use.
+     */
+    private ITargetApplication targetApplication;
+
+    /**
+     * Data retention period.
+     */
+    private int dataRetentionPeriod;
+
+    /**
+     * Setup the test.
+     */
+    @Before
+    public void setUp ()
     {
-        super ();
-        DBUnitUtility.loadDatabase (this.getClass (), false);
+        LOG.debug ("Before SetUp");
+        DBUnitUtility.loadDatabase (this.getClass (), true);
+
+        bulkSubmissionDao =
+                (IBulkSubmissionDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkSubmissionDao");
+        bulkCustomer = bulkSubmissionDao.fetch (BulkCustomer.class, 10711);
+        targetApplication = bulkSubmissionDao.fetch (TargetApplication.class, 10713L);
+        dataRetentionPeriod = 90;
+
+        LOG.debug ("After SetUp");
     }
 
     /**
@@ -82,22 +117,14 @@ public class BulkSubmissionsDaoTest extends AbstractTransactionalJUnit4SpringCon
     @Test
     public void testInsert ()
     {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
 
         final IBulkSubmission bulkSubmission = new BulkSubmission ();
 
-        final IBulkCustomer bulkCustomer = genericDao.fetch (BulkCustomer.class, 10711);
-
         LOG.debug ("Bulk Customer is " + bulkCustomer);
-
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
         LOG.debug ("Bulk Customer's target applications are " + bulkCustomer.getTargetApplications ());
-
-        final ITargetApplication targetApp = genericDao.fetch (TargetApplication.class, 10713L);
-
-        bulkSubmission.setTargetApplication (targetApp);
+        bulkSubmission.setTargetApplication (targetApplication);
 
         bulkSubmission.setCreatedDate (LocalDateTime.now ());
         bulkSubmission.setCustomerReference ("REF1");
@@ -105,14 +132,14 @@ public class BulkSubmissionsDaoTest extends AbstractTransactionalJUnit4SpringCon
         final String xmlToLoad = "<Payload>2</Payload>";
         bulkSubmission.setPayload (xmlToLoad);
         bulkSubmission.setSdtBulkReference ("MCOL-10012013010101-100000009");
-        bulkSubmission.setSubmissionStatus ("PENDING");
+        bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
 
-        genericDao.persist (bulkSubmission);
+        bulkSubmissionDao.persist (bulkSubmission);
 
         LOG.debug ("Persisted successfully");
 
         final Criterion criterion = Restrictions.eq ("sdtBulkReference", "MCOL-10012013010101-100000009");
-        final IBulkSubmission[] submissions = genericDao.query (BulkSubmission.class, criterion);
+        final IBulkSubmission[] submissions = bulkSubmissionDao.query (BulkSubmission.class, criterion);
 
         LOG.debug ("submissions length is " + submissions.length);
 
@@ -124,4 +151,84 @@ public class BulkSubmissionsDaoTest extends AbstractTransactionalJUnit4SpringCon
 
         assertEquals (submissions[0].getCustomerReference (), "REF1");
     }
+
+    /**
+     * Test the upper limit of the data retention period, i.e. today
+     */
+    @Test
+    public void testGetBulkSubmissionUpper ()
+    {
+        final String customerReference = "customer reference 1";
+        createBulkSubmission (customerReference, LocalDateTime.now ());
+        final IBulkSubmission bulkSubmission =
+                bulkSubmissionDao.getBulkSubmission (bulkCustomer, customerReference, dataRetentionPeriod);
+        Assert.assertNotNull (bulkSubmission);
+        Assert.assertEquals (bulkSubmission.getCustomerReference (), customerReference);
+
+    }
+
+    /**
+     * Test the upper limit of the data retention period, i.e. 90 days ago.
+     */
+    @Test
+    public void testGetBulkSubmissionLower ()
+    {
+        final String customerReference = "customer reference 2";
+        // Set the date to be 90 days ago
+        Date d = new Date ();
+        d = DateUtils.addDays (d, dataRetentionPeriod * -1);
+
+        createBulkSubmission (customerReference, LocalDateTime.fromDateFields (d));
+        final IBulkSubmission bulkSubmission =
+                bulkSubmissionDao.getBulkSubmission (bulkCustomer, customerReference, dataRetentionPeriod);
+        Assert.assertNotNull (bulkSubmission);
+        Assert.assertEquals (bulkSubmission.getCustomerReference (), customerReference);
+
+    }
+
+    /**
+     * Test with a bulk submission past 90 days ago and use an old customer reference.
+     */
+    @Test
+    public void testGetBulkSubmissionPastRetention ()
+    {
+        final String customerReference = "customer reference 1";
+        // Set the date to be 90 days ago
+        Date d = new Date ();
+        d = DateUtils.addDays (d, (dataRetentionPeriod + 1) * -1);
+
+        createBulkSubmission (customerReference, LocalDateTime.fromDateFields (d));
+        final IBulkSubmission bulkSubmission =
+                bulkSubmissionDao.getBulkSubmission (bulkCustomer, customerReference, dataRetentionPeriod);
+        Assert.assertNull (bulkSubmission);
+
+    }
+
+    /**
+     * Create a bulk submission.
+     * 
+     * @param customerReference customer reference
+     * @param date created date
+     */
+    private void createBulkSubmission (final String customerReference, final LocalDateTime date)
+    {
+        final IBulkSubmission bulkSubmission = new BulkSubmission ();
+
+        bulkSubmission.setBulkCustomer (bulkCustomer);
+        bulkSubmission.setTargetApplication (targetApplication);
+
+        bulkSubmission.setCreatedDate (date);
+        bulkSubmission.setCustomerReference (customerReference);
+        bulkSubmission.setNumberOfRequest (1);
+        final String xmlToLoad = "<Payload>2</Payload>";
+        bulkSubmission.setPayload (xmlToLoad);
+        bulkSubmission.setSdtBulkReference ("MCOL-10012013010101-100000009");
+        bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
+
+        bulkSubmissionDao.persist (bulkSubmission);
+
+        LOG.debug ("Bulk Submission persisted successfully");
+
+    }
+
 }

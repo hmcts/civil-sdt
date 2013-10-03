@@ -31,14 +31,10 @@
 
 package uk.gov.moj.sdt.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
@@ -49,26 +45,6 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  */
 public class MockTargetApplicationDao extends MockGenericDao implements ITargetApplicationDao
 {
-
-    @Override
-    public List<ITargetApplication> getTargetApplication (final IBulkCustomer bulkCustomer)
-    {
-        final List<ITargetApplication> targetApplications = new ArrayList<ITargetApplication> ();
-        // Add mcol to the list
-        final ITargetApplication mcol = new TargetApplication ();
-        mcol.setTargetApplicationCode ("mcol");
-        mcol.setTargetApplicationName ("MCOL");
-        targetApplications.add (mcol);
-
-        // Add pcol to the list
-        final ITargetApplication pcol = new TargetApplication ();
-        pcol.setTargetApplicationCode ("pcol");
-        pcol.setTargetApplicationName ("PCOL");
-        targetApplications.add (pcol);
-
-        return targetApplications;
-
-    }
 
     @Override
     public ITargetApplication getTargetApplicationByCode (final String targetAppCode) throws DataAccessException
