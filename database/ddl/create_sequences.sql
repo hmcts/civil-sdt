@@ -14,6 +14,18 @@ NOCACHE
 NOORDER
 ;
 
+--
+-- PK for bulk_customer_applications
+--
+
+CREATE SEQUENCE bulk_cust_app_seq
+MINVALUE 1
+MAXVALUE 999999999999999999999999999
+INCREMENT BY 1
+NOCYCLE
+NOCACHE
+NOORDER
+;
 
 --
 -- PK for bulk_submissions
@@ -42,6 +54,20 @@ NOORDER
 ;
 
 --
+-- PK for error_messages
+--
+
+CREATE SEQUENCE err_mesg_seq
+MINVALUE 1
+MAXVALUE 999999999999999999999999999
+INCREMENT BY 1
+NOCYCLE
+NOCACHE
+NOORDER
+;
+
+
+--
 -- Sequence to support global parameters
 --
 
@@ -66,6 +92,19 @@ NOCACHE
 NOORDER
 ;
 
+
+--
+-- Sequence to support service_routings
+--
+
+CREATE SEQUENCE ser_rou_seq
+MINVALUE 1
+MAXVALUE 999999999
+INCREMENT BY 1
+CYCLE
+NOCACHE
+NOORDER
+;
 
 --
 -- Sequence to support service_types
