@@ -41,10 +41,10 @@ import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
-import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 
 /**
  * Implementation of {@link IIndividualRequestValidator}.
@@ -94,7 +94,7 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
             final String description = "Duplicate Unique Request Identifier submitted {0}.";
             replacements.add (String.valueOf (customerRequestReference));
 
-            errorLog.setErrorCode (AbstractBusinessException.ErrorCode.DUP_CUST_REQID.name ());
+            errorLog.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
             errorLog.setErrorText (MessageFormat.format (description, replacements.toArray ()));
 
             // Change the status to rejected

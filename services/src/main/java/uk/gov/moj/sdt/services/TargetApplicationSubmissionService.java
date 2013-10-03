@@ -41,6 +41,7 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Service class that implements the TargetApplicationSubmissionService.
@@ -54,12 +55,8 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (TargetApplicationSubmissionService.class);
-
-    /**
-     * Standard error code if the request is not acknowledged.
-     */
-    private static final String ERROR_CODE_REQ_NOT_ACK = "REQ_NOT_ACK";
+    @SuppressWarnings ("unused")
+    private static final Logger LOGGER = LoggerFactory.getLogger (TargetApplicationSubmissionService.class);
 
     /**
      * Individual Request Dao to perform operations on the individual request object.
@@ -72,11 +69,6 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         final IIndividualRequest individualRequest =
                 this.getIndividualRequestDao ().getRequestBySdtReference (sdtRequestReference);
 
-        if (individualRequest == null)
-        {
-            LOG.error ("No Individual Request found for SDT Request Reference Id " + sdtRequestReference);
-        }
-
         return individualRequest;
     }
 
@@ -85,39 +77,32 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     {
         individualRequest.incrementForwardingAttempts ();
         this.getIndividualRequestDao ().persist (individualRequest);
+
+        // Setup raw XML associated with a single request so that it can be picked up by the outbound
+        // interceptor and injected into the outbound XML.
+        SdtContext.getContext ().setRawOutXml (individualRequest.getRequestPayload ());
     }
 
     @Override
     public void updateCompletedRequest (final IIndividualRequest individualRequest)
     {
-        LOG.debug ("Updating completed request " + individualRequest.getSdtRequestReference ());
         final String requestStatus = individualRequest.getRequestStatus ();
-        LOG.debug ("Request status is " + requestStatus);
-        final IIndividualRequest.IndividualRequestStatus requestStatusEnum =
-                IIndividualRequest.IndividualRequestStatus.valueOf (requestStatus.toUpperCase ());
 
-        LOG.debug ("Request status is " + requestStatusEnum.name ());
-
-        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.ACCEPTED)
+        if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.ACCEPTED))
         {
             this.updateAcceptedRequest (individualRequest);
         }
-
-        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED)
+        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED))
         {
             this.updateInitiallyAcceptedRequest (individualRequest);
         }
-
-        if (requestStatusEnum == IIndividualRequest.IndividualRequestStatus.REJECTED)
+        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.REJECTED))
         {
             this.updateRejectedRequest (individualRequest);
         }
 
         // now persist the request.
-        LOG.debug ("Persisting the Individual Request " + individualRequest.getSdtRequestReference ());
         this.getIndividualRequestDao ().persist (individualRequest);
-        LOG.debug ("Now Persisted the Individual Request " + individualRequest.getSdtRequestReference ());
-
     }
 
     /**
@@ -128,10 +113,6 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     private void updateAcceptedRequest (final IIndividualRequest individualRequest)
     {
         individualRequest.markRequestAsAccepted ();
-
-        LOG.debug ("Request completed date is set to " + individualRequest.getCompletedDate ());
-
-        LOG.debug ("Request updated date is set to " + individualRequest.getUpdatedDate ());
     }
 
     /**
@@ -143,25 +124,20 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     {
         individualRequest.markRequestAsRejected (null);
 
-        LOG.debug ("Request completed date is set to " + individualRequest.getCompletedDate ());
-
-        LOG.debug ("Request updated date is set to " + individualRequest.getUpdatedDate ());
-
         // Check if the Error message is defined as an internal system error
+        // TODO use cached error message
         final IErrorMessage[] errorMessages =
                 this.getIndividualRequestDao ().query (IErrorMessage.class,
                         Restrictions.eq ("errorCode", individualRequest.getErrorLog ().getErrorCode ()));
-        IErrorMessage errorMessage = null;
         if (errorMessages != null)
         {
             // We got an internal system error, so assign it to the error message that
             // should be recorded
-            errorMessage = errorMessages[0];
+            final IErrorMessage errorMessage = errorMessages[0];
 
             // Now set the error description from the standard error
             individualRequest.getErrorLog ().setErrorText (errorMessage.getErrorText ());
         }
-
     }
 
     /**
@@ -172,12 +148,10 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     private void updateInitiallyAcceptedRequest (final IIndividualRequest individualRequest)
     {
         individualRequest.markRequestAsInitiallyAccepted ();
-
-        LOG.debug ("Request updated date is set to " + individualRequest.getUpdatedDate ());
     }
 
     @Override
-    public void updateRequestNotAcknowledged (final IIndividualRequest individualRequest)
+    public void updateRequestTimeOut (final IIndividualRequest individualRequest)
     {
         // Set the updated date .
         // We've already incremented the forwarding attempts and set the status to forwarded so
@@ -185,15 +159,17 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         individualRequest
                 .setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
-        // Get the Error message for the code ERROR_CODE_REQ_NOT_ACK
+        // Get the Error message to indicate that call to target application has timed out
+        // TODO use cached error code
         final IErrorMessage[] errorMessages =
                 this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", ERROR_CODE_REQ_NOT_ACK));
+                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK));
 
+        // Assume that there is only one error message
+        assert errorMessages.length == 1;
         final IErrorMessage errorMessage = errorMessages[0];
 
-        // Now create an ErrorLog object with the ErrorMessage object and the
-        // IndividualRequest object
+        // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
         final IErrorLog errorLog = new ErrorLog ();
         final java.util.Date currentDate = new java.util.Date (System.currentTimeMillis ());
         errorLog.setCreatedDate (LocalDateTime.fromDateFields (currentDate));
@@ -209,7 +185,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     }
 
     @Override
-    public void updateRequestNotResponding (final IIndividualRequest individualRequest)
+    public void updateTargetAppUnavailable (final IIndividualRequest individualRequest)
     {
         // Set the updated date .
         individualRequest
@@ -221,9 +197,10 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         // Forwarding attempts have already been incremented.
 
         // Get the Error message for the code ERROR_CODE_REQ_NOT_ACK
+        // TODO get error code from cache
         final IErrorMessage[] errorMessages =
                 this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", ERROR_CODE_REQ_NOT_ACK));
+                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK));
 
         final IErrorMessage errorMessage = errorMessages[0];
 
@@ -240,7 +217,6 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
 
         // now persist the request.
         this.getIndividualRequestDao ().persist (individualRequest);
-
     }
 
     /**

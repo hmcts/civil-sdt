@@ -39,10 +39,10 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
-import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 
@@ -100,8 +100,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             replacements.add (String.valueOf (sdtCustomerReference));
             // TODO Obtain error description from database. Similar changes might be required in other validators.
             // CHECKSTYLE:OFF
-            throw new CustomerReferenceNotUniqueException (
-                    AbstractBusinessException.ErrorCode.DUP_CUST_FILEID.toString (),
+            throw new CustomerReferenceNotUniqueException (IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString (),
                     "Duplicate User File Reference {0} supplied.", replacements);
             // CHECKSTYLE:ON
         }
@@ -113,8 +112,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             replacements.add (Integer.valueOf (bulkSubmission.getIndividualRequests ().size ()).toString ());
             replacements.add ("" + bulkSubmission.getNumberOfRequest ());
             replacements.add (bulkSubmission.getCustomerReference ());
-            throw new RequestCountMismatchException (
-                    AbstractBusinessException.ErrorCode.REQ_COUNT_MISMATCH.toString (),
+            throw new RequestCountMismatchException (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.toString (),
                     "Unexpected Total Number of Requests identified. {0} requested identified, "
                             + "{1} requests expected in Bulk Request {2}.", replacements);
         }

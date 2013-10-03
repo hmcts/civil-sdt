@@ -333,6 +333,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void markRequestAsAccepted ()
     {
         this.setRequestStatus (IndividualRequestStatus.ACCEPTED.getStatus ());
+
         // Set the completed date only if the status is rejected or accepted.
         this.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
@@ -345,6 +346,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void markRequestAsRejected (final IErrorLog errorLog)
     {
         this.setRequestStatus (IndividualRequestStatus.REJECTED.getStatus ());
+
         // Set the error log if there is one
         if (errorLog != null)
         {

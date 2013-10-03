@@ -40,8 +40,9 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 
@@ -54,7 +55,8 @@ import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
-public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContextTests
+@Transactional
+public class SdtBulkReferenceGeneratorIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
      * Logger object.
@@ -65,6 +67,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractJUnit4SpringContex
      * Test method for the SDT bulk reference generation.
      */
     @Test
+    @Transactional
     public void testGetSdtBulkReference ()
     {
         final ISdtBulkReferenceGenerator referenceGenerator =

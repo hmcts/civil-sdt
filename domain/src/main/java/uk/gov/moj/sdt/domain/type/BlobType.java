@@ -96,6 +96,10 @@ public class BlobType implements UserType
     {
         // First we get the byte array
         final byte[] byteStream = rs.getBytes (names[0]);
+        if (byteStream == null)
+        {
+            return null;
+        }
         return new String (byteStream);
     }
 

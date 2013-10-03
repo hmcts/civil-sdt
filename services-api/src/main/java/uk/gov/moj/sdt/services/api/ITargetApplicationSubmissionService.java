@@ -72,7 +72,7 @@ public interface ITargetApplicationSubmissionService
      * 
      * @param individualRequest the individual request to be marked with reason as not acknowledged
      */
-    void updateRequestNotAcknowledged (final IIndividualRequest individualRequest);
+    void updateRequestTimeOut (final IIndividualRequest individualRequest);
 
     /**
      * Updates the request object. This method is called when the send request to target application
@@ -80,6 +80,6 @@ public interface ITargetApplicationSubmissionService
      * 
      * @param individualRequest the individual request to be marked with reason as not responding
      */
-    void updateRequestNotResponding (final IIndividualRequest individualRequest);
+    void updateTargetAppUnavailable (final IIndividualRequest individualRequest);
 
 }

@@ -39,9 +39,9 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
-import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
 /**
@@ -86,7 +86,7 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
 
             // CHECKSTYLE:OFF
             throw new InvalidBulkReferenceException (
-                    AbstractBusinessException.ErrorCode.BULK_REF_INVALID.toString (),
+                    IErrorMessage.ErrorCode.BULK_REF_INVALID.toString (),
                     "There is no Bulk Request submission associated with your account for the supplied SDT Bulk Reference {0}",
                     replacements);
             // CHECKSTYLE:ON

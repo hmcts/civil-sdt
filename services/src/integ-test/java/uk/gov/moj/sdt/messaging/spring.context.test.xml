@@ -54,7 +54,7 @@
 	<!--  ActiveMQ Destination  -->
 	<amq:queue id="destination" physicalName="JMSTestQueue" name="JMSTestQueue" />
 
-	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter" lazy-init="true">
 		<constructor-arg>
 			<bean class="uk.gov.moj.sdt.messaging.IndividualRequestMdb">
 				<property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>
@@ -68,15 +68,16 @@
 	
 	<bean id="messageListenerContainer"
 		class="org.springframework.jms.listener.DefaultMessageListenerContainer"
-		depends-on="transactionManager">
+		depends-on="transactionManager" lazy-init="true">
 		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="cacheLevel" value="3"/>
 		<property name="destination" ref="destination" />
 		<property name="messageListener" ref="messageListener" />
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="concurrentConsumers" value="1"/>
-		<property name="maxConcurrentConsumers" value="5"/>
+		<property name="maxConcurrentConsumers" value="1"/>
 		<property name="receiveTimeout" value="30000"/>
-		<property name="idleTaskExecutionLimit" value="10"/>
+		<property name="idleTaskExecutionLimit" value="1"/>
 		<property name="idleConsumerLimit" value="1"/>
 	</bean>
 				

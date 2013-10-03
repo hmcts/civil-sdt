@@ -81,4 +81,52 @@ public interface IErrorMessage extends IDomainObject
      */
     void setErrorDescription (final String errorDescription);
 
+    /**
+     * Error code enums.
+     * 
+     * @author Son Loi
+     * 
+     */
+    public enum ErrorCode
+    {
+        /**
+         * Internal error.
+         */
+        SDT_INT_ERR,
+
+        /**
+         * Request count mismatch.
+         */
+        REQ_COUNT_MISMATCH,
+
+        /**
+         * Customer not configured with reference for target application.
+         */
+        CUST_REF_MISSING,
+
+        /**
+         * Customer not setup for target application.
+         */
+        CUST_NOT_SETUP,
+
+        /**
+         * Duplicate user file reference.
+         */
+        DUP_CUST_FILEID,
+
+        /**
+         * Duplicate unique request identifier.
+         */
+        DUP_CUST_REQID,
+
+        /**
+         * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
+         */
+        BULK_REF_INVALID,
+
+        /**
+         * Target system failed to respond to request and request timed out.
+         */
+        REQ_NOT_ACK
+    }
 }

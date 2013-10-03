@@ -52,12 +52,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -71,9 +69,8 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
+import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
-import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 
 /**
@@ -84,12 +81,10 @@ import uk.gov.moj.sdt.utils.Utilities;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
-        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/messaging/spring.hibernate.test.xml",
-        "/uk/gov/moj/sdt/messaging/spring.context.test.xml", "/uk/gov/moj/sdt/cache/spring.context.xml",
-        "/uk/gov/moj/sdt/dao/spring*.xml"})
-@TransactionConfiguration (defaultRollback = true)
-@Transactional
-public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTests
+        "/uk/gov/moj/sdt/messaging/spring.hibernate.test.xml", "/uk/gov/moj/sdt/messaging/spring.context.test.xml",
+        "/uk/gov/moj/sdt/cache/spring.context.xml", "/uk/gov/moj/sdt/dao/spring*.xml",
+        "/uk/gov/moj/sdt/services/spring.context.xml", "/uk/gov/moj/sdt/utils/spring.context.xml"})
+public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
      * Logger object.
@@ -102,8 +97,13 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
     @Before
     public void setUp ()
     {
+
         LOG.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
+        // Write a Message to the MDB
+        final IMessageWriter messageWriter =
+                (IMessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
+        messageWriter.queueMessage ("SDT_REQ_TEST_1");
         LOG.debug ("After SetUp");
     }
 
@@ -114,43 +114,14 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
      * @throws IOException if there is any problem when reading the file
      */
     @Test
-    @Transactional
-    @Rollback (true)
     public void testReadMessage () throws InterruptedException, IOException
     {
-        // The context configuration declared at class level would start-up the
-        // message driven bean ready for reading messages.
-
         final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
-        final String rawXml = this.getRawXml ("testXMLValid4.xml");
-        SdtContext.getContext ().setRawInXml (rawXml);
+        // Get reference to the MessageListener and that will start up the MessageReader MDB
+        final DefaultMessageListenerContainer msgListenerContainer =
+                (DefaultMessageListenerContainer) this.applicationContext.getBean ("messageListenerContainer");
 
-        final IBulkSubmissionService bulkSubmissionService =
-                (IBulkSubmissionService) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
-
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
-
-        // Call the bulk submission service to submit the request and queue the message.
-        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
-
-        Assert.assertTrue ("Submission saved successfully.", true);
-
-        Assert.assertNotNull (bulkSubmission.getPayload ());
-
-        Assert.assertEquals (bulkSubmission.getNumberOfRequest (), 1L);
-
-        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        Assert.assertNotNull (individualRequests);
-        Assert.assertEquals (individualRequests.size (), 1);
-        for (IIndividualRequest request : individualRequests)
-        {
-            Assert.assertNotNull (request.getRequestPayload ());
-            LOG.debug ("Payload for request " + request.getId () + "is " + request.getRequestPayload ());
-        }
-
-        // Wait for 10 seconds before checking the queue.
         Thread.sleep (10000);
 
         jmsTemplate.browse ("JMSTestQueue", new BrowserCallback<Object> ()
@@ -171,6 +142,8 @@ public class IndividualRequestMdbIntTest extends AbstractJUnit4SpringContextTest
             }
 
         });
+
+        Assert.assertTrue ("Submission read successfully.", true);
 
     }
 

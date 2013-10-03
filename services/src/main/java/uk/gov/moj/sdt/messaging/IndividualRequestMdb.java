@@ -49,7 +49,6 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.messaging.api.IMessageDrivenBean;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
-import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Implementation of the IMessageReader interface.
@@ -83,16 +82,17 @@ public class IndividualRequestMdb implements IMessageDrivenBean
     private IMessageWriter messageWriter;
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
+    @Transactional (propagation = Propagation.REQUIRED)
     public void readMessage (final Message message)
     {
+        // All expected messages are text messages written by the message writer.
         if (message instanceof TextMessage)
         {
             String sdtReference = null;
             try
             {
                 final boolean isMessageReDelivered = message.getJMSRedelivered ();
-                LOGGER.debug ("Is the message re-delivered " + isMessageReDelivered);
+                LOGGER.debug ("Message re-delivered status [" + isMessageReDelivered + "]");
                 sdtReference = ((TextMessage) message).getText ();
             }
             catch (final JMSException e)
@@ -100,7 +100,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
                 LOGGER.error (e.getMessage (), e);
                 throw new RuntimeException (e);
             }
-            LOGGER.debug ("Received message " + sdtReference);
+            LOGGER.debug ("Received message, SDT reference [" + sdtReference + "]");
 
             // Get the Individual Request matching the SDT Request Reference
             IIndividualRequest individualRequest = this.findIndividualRequest (sdtReference);
@@ -109,65 +109,40 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             if (individualRequest != null)
             {
 
-                // Check the configurable delay from system parameter and
-                // delay the consumer call for that time.
-
-                LOGGER.debug ("Delay request processing for the configured time");
-
+                // Check the configurable delay from system parameter and delay the consumer call for that time.
                 this.delayRequestProcessing (individualRequest);
-
-                LOGGER.debug ("Resume request processing");
-
-                SdtContext.getContext ().setRawOutXml (individualRequest.getRequestPayload ());
-
-                LOGGER.debug ("Individual Request Payload is set in SdtContext");
 
                 // Update the status of the requested to Forwarded before calling the consumer
                 this.updateAndMarkRequestForwarded (individualRequest);
 
-                LOGGER.debug ("Updated the request status as Forwarded");
-
                 // Make call to consumer to submit the request to target application.
                 try
                 {
-                    LOGGER.debug ("Calling the consumer to call the target application");
-
                     individualRequest = this.forwardToTargetApplication (individualRequest);
 
-                    LOGGER.debug ("Consumer returned the call from target application");
-
                     this.updateAndMarkRequestCompleted (individualRequest);
-
-                    LOGGER.debug ("Finished service to update and mark the request for completion");
-
                 }
                 catch (final TimeoutException e)
                 {
-                    Log.error ("Timeout exception received with message " + e.getMessage ());
+                    LOGGER.error ("Timeout exception for SDT reference " + individualRequest.getSdtRequestReference () +
+                            "]", e);
 
                     // Update the individual request with the reason code for error REQ_NOT_ACK
-                    this.updateRequestNotAcknowledged (individualRequest);
-
-                    LOGGER.debug ("Updating the individual request with reason code for not acknowledged");
+                    this.updateRequestTimeOut (individualRequest);
 
                     // Re-queue message again
                     this.reQueueRequest (individualRequest);
-
-                    LOGGER.debug ("Re-queued the request");
                 }
                 catch (final OutageException e)
                 {
-                    Log.error ("Outage exception received with message " + e.getMessage ());
+                    LOGGER.error ("Outage exception for SDT reference " + individualRequest.getSdtRequestReference () +
+                            "]", e);
 
                     // Update the individual request with reason code for not responding
-                    this.updateRequestNotResponding (individualRequest);
-
-                    LOGGER.debug ("Updating the individual request with reason code for not responding");
+                    this.updateTargetAppUnavailable (individualRequest);
 
                     // Re-queue message again
                     this.reQueueRequest (individualRequest);
-
-                    LOGGER.debug ("Re-queued the request");
                 }
 
                 LOGGER.debug ("Individual request " + sdtReference + " processing completed.");
@@ -175,11 +150,10 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             }
             else
             {
-                LOGGER.debug ("Individual request " + sdtReference + " not found");
+                LOGGER.error ("SDT Reference " + sdtReference +
+                        " read from message queue not found in database for individual request.");
             }
-
         }
-
     }
 
     /**
@@ -255,6 +229,9 @@ public class IndividualRequestMdb implements IMessageDrivenBean
     private IIndividualRequest forwardToTargetApplication (final IIndividualRequest individualRequest)
         throws TimeoutException
     {
+        LOGGER.debug ("Calling the consumer to call the target application for SDT reference [" +
+                individualRequest.getSdtRequestReference () + "]");
+
         // TODO - Call the consumer with the IndividualRequest object.
 
         // At the moment, until the consumer is ready we are just returning back the individual request parameter
@@ -269,6 +246,9 @@ public class IndividualRequestMdb implements IMessageDrivenBean
      */
     private void updateAndMarkRequestForwarded (final IIndividualRequest individualRequest)
     {
+        LOGGER.debug ("Updating the request status as 'Forwarded' for SDT reference [" +
+                individualRequest.getSdtRequestReference () + "]");
+
         this.getTargetAppSubmissionService ().updateForwardingRequest (individualRequest);
     }
 
@@ -278,6 +258,9 @@ public class IndividualRequestMdb implements IMessageDrivenBean
      */
     private void updateAndMarkRequestCompleted (final IIndividualRequest individualRequest)
     {
+        LOGGER.debug ("Marking the request as completed for SDT reference [" +
+                individualRequest.getSdtRequestReference () + "]");
+
         this.getTargetAppSubmissionService ().updateCompletedRequest (individualRequest);
     }
 
@@ -285,18 +268,24 @@ public class IndividualRequestMdb implements IMessageDrivenBean
      * 
      * @param individualRequest the individual request to be marked as request no acknowledged
      */
-    private void updateRequestNotAcknowledged (final IIndividualRequest individualRequest)
+    private void updateRequestTimeOut (final IIndividualRequest individualRequest)
     {
-        this.getTargetAppSubmissionService ().updateRequestNotAcknowledged (individualRequest);
+        LOGGER.debug ("Individual request timed out for SDT reference " + individualRequest.getSdtRequestReference () +
+                "]");
+
+        this.getTargetAppSubmissionService ().updateRequestTimeOut (individualRequest);
     }
 
     /**
      * 
      * @param individualRequest the individual request to be marked as request not responding
      */
-    private void updateRequestNotResponding (final IIndividualRequest individualRequest)
+    private void updateTargetAppUnavailable (final IIndividualRequest individualRequest)
     {
-        this.getTargetAppSubmissionService ().updateRequestNotResponding (individualRequest);
+        LOGGER.debug ("Failed to send individual request for SDT reference " +
+                individualRequest.getSdtRequestReference () + "]");
+
+        this.getTargetAppSubmissionService ().updateTargetAppUnavailable (individualRequest);
     }
 
     /**
@@ -314,6 +303,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
         {
             return true;
         }
+
         return false;
     }
 
@@ -326,6 +316,8 @@ public class IndividualRequestMdb implements IMessageDrivenBean
         // Check the forwarding attempts has not exceeded the max forwarding attempts count.
         if (this.canRequestBeRequeued (individualRequest))
         {
+            LOGGER.debug ("Re-queuing request for SDT reference [" + individualRequest.getSdtRequestReference () + "]");
+
             this.getMessageWriter ().queueMessage (individualRequest.getSdtRequestReference ());
         }
         else
@@ -336,6 +328,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
     }
 
     /**
+     * Return the named parameter value from global parameters.
      * 
      * @param parameterName the name of the parameter.
      * @return value of the parameter name as stored in the database.
@@ -349,6 +342,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
         {
             return null;
         }
+
         return globalParameter.getValue ();
 
     }
@@ -377,6 +371,8 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             final long delay = Long.valueOf (individualReqProcessingDelay);
             try
             {
+                LOGGER.debug ("Delay request processing for " + delay + " milliseconds.");
+
                 Thread.sleep (delay);
             }
             catch (final InterruptedException ie)

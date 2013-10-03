@@ -41,10 +41,10 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
@@ -98,7 +98,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
             List<String> replacements = null;
             replacements = new ArrayList<String> ();
             replacements.add (targetApplicationCode);
-            throw new CustomerNotSetupException (AbstractBusinessException.ErrorCode.CUST_NOT_SETUP.toString (),
+            throw new CustomerNotSetupException (IErrorMessage.ErrorCode.CUST_NOT_SETUP.toString (),
                     "The Bulk Customer organisation is not set up to send Service Request messages to the {0}. "
                             + "Please contact <TBC> for assistance.", replacements);
         }
