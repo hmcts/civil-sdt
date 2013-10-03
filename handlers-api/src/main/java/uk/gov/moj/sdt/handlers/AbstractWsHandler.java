@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.handlers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -68,7 +68,7 @@ public abstract class AbstractWsHandler
         final ErrorType errorType = new ErrorType ();
 
         // TODO Error description should be obtained from database.
-        errorType.setCode (AbstractBusinessException.ErrorCode.SDT_INT_ERR.toString ());
+        errorType.setCode (IErrorMessage.ErrorCode.SDT_INT_ERR.toString ());
         errorType.setDescription ("A system error has occurred. Please contact TBC for assistance");
 
         populateError (responseType.getStatus (), errorType);
@@ -83,7 +83,7 @@ public abstract class AbstractWsHandler
      */
     // CHECKSTYLE:OFF
     protected void handleBusinessException (final IBusinessException businessException,
-                                         final AbstractResponseType responseType)
+                                            final AbstractResponseType responseType)
     // CHECKSTYLE:ON
     {
         LOGGER.info ("Business error during request processing - " + businessException);
