@@ -50,9 +50,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -104,8 +102,8 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
 
         bulkSubmissionDao =
                 (IBulkSubmissionDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkSubmissionDao");
-        bulkCustomer = bulkSubmissionDao.fetch (BulkCustomer.class, 10711);
-        targetApplication = bulkSubmissionDao.fetch (TargetApplication.class, 10713L);
+        bulkCustomer = bulkSubmissionDao.fetch (IBulkCustomer.class, 10711);
+        targetApplication = bulkSubmissionDao.fetch (ITargetApplication.class, 10713L);
         dataRetentionPeriod = 90;
 
         LOG.debug ("After SetUp");
