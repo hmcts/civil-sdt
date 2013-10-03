@@ -133,7 +133,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         bulkSubmission.setCustomerReference (headerType.getCustomerReference ());
         bulkSubmission.setNumberOfRequest (headerType.getRequestCount ());
 
-        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ());
+        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ().toUpperCase ());
 
         bulkSubmission.setTargetApplication (targetApplication);
         bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
