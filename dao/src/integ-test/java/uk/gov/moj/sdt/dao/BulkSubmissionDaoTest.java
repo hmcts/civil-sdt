@@ -66,12 +66,12 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
-public class BulkSubmissionsDaoTest extends AbstractTransactionalJUnit4SpringContextTests
+public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionsDaoTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionDaoTest.class);
 
     /**
      * Bulk Submission DAO.
