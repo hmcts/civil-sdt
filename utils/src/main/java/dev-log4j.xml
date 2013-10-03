@@ -38,13 +38,18 @@
 
     <!-- Logger for hibernate code -->
     <logger name="org.hibernate" additivity="true">
-        <level value="error" />
+        <level value="warn" />
+        <appender-ref ref="rolling" />
+    </logger>
+
+    <logger name="org.hibernate.SQL" additivity="true">
+        <level value="debug" />
         <appender-ref ref="rolling" />
     </logger>
 
     <!-- Logger for spring code -->
     <logger name="org.springframework" additivity="true">
-        <level value="error" />
+        <level value="warn" />
         <appender-ref ref="rolling" />
     </logger>
 
