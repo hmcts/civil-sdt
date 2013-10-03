@@ -3,6 +3,10 @@
 
 	<classpath>
 		<dir name="${rebel.workspace.path}/consumers/bin">
+			<!-- Exclude this file because JRebel tries to create the beans in this file when producers.war -->
+			<!-- is deployed even though it's not part of the final deployed war. When CXF can't find the class -->
+			<!-- it defaults to SOAP 11 endpoint and causes incompatibility issues when sending SOAP 12 messages -->		
+			<exclude name="uk/gov/moj/sdt/consumers/spring.context.xml"/>
 		</dir>
 	</classpath>
 
