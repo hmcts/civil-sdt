@@ -24,6 +24,7 @@
 	
 	<bean id="jmsTemplateBad" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg ref="connectionFactoryBad"/>
+		<property name="defaultDestination" ref="destination"/>
 	</bean>
 	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriterBad" 
@@ -43,6 +44,7 @@
 	
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg ref="connectionFactory"/>
+		<property name="defaultDestination" ref="destination"/>
 	</bean>
 	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriter" 

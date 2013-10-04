@@ -13,6 +13,14 @@
 	
 	<amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:61616">
  	</amq:connectionFactory>
+ 	
+ 	<bean id="jndiAmqConnectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+ 		<property name="jndiName" value="java:comp/env/jms/mqConnectionFactory"/>
+ 	</bean>
+ 	
+ 	<bean id="jndiQueueName" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+ 		<property name="jndiName" value="java:comp/env/jms/jmsMqQueue"/>
+ 	</bean>
 	
 	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
 		<constructor-arg ref="amqConnectionFactory"/>
@@ -21,6 +29,8 @@
 	
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg ref="connectionFactory"/>
+		<!-- <property name="defaultDestination" ref="jndiQueueName"/> -->
+		<property name="defaultDestination" ref="destination"/>
 	</bean>
 	
 	 <!--  ActiveMQ Destination  -->

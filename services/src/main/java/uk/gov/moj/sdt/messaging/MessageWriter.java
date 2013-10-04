@@ -80,7 +80,7 @@ public class MessageWriter implements IMessageWriter
 
         try
         {
-            this.jmsTemplate.convertAndSend (this.getQueueName (), message);
+            this.jmsTemplate.convertAndSend (message);
         }
         catch (final UncategorizedJmsException e)
         {
