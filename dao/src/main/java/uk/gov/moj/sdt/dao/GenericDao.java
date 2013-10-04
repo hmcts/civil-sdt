@@ -350,6 +350,20 @@ public class GenericDao implements IGenericDao
                                                                         final Criterion... restrictions)
         throws DataAccessException
     {
+        // Get a list of results from Hibernate.
+        final List<?> domainObjects = queryAsList (domainType, restrictions);
+
+        @SuppressWarnings ("unchecked") final DomainType[] results =
+                (DomainType[]) Array.newInstance (domainType, domainObjects.size ());
+
+        return domainObjects.toArray (results);
+    }
+
+    @Override
+    public final <DomainType extends IDomainObject> List<DomainType> queryAsList (final Class<DomainType> domainType,
+                                                                                  final Criterion... restrictions)
+        throws DataAccessException
+    {
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
@@ -367,17 +381,14 @@ public class GenericDao implements IGenericDao
         }
 
         // Get a list of results from Hibernate.
-        final List<?> domainObjects = criteria.list ();
+        @SuppressWarnings ("unchecked") final List<DomainType> domainObjects = criteria.list ();
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
         SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
         SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
 
-        @SuppressWarnings ("unchecked") final DomainType[] results =
-                (DomainType[]) Array.newInstance (domainType, domainObjects.size ());
-
-        return domainObjects.toArray (results);
+        return domainObjects;
     }
 
     @Override
