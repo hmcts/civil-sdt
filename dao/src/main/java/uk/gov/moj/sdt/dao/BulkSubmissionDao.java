@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
@@ -89,10 +88,17 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     }
 
     @Override
-    public BulkSubmission getBulkSubmission (final String bulkReference) throws DataAccessException
-
+    public IBulkSubmission getBulkSubmission (final String sdtBulkReference) throws DataAccessException
     {
-        // TODO - Need to implement this
-        return null;
+        LOG.debug ("Get a bulk submission matching the sdt bulk reference" + sdtBulkReference);
+        final IBulkSubmission[] bulkSubmissions =
+                this.query (IBulkSubmission.class, Restrictions.eq ("sdtBulkReference", sdtBulkReference));
+
+        if (bulkSubmissions == null || bulkSubmissions.length == 0)
+        {
+            return null;
+        }
+        return bulkSubmissions[0];
+
     }
 }

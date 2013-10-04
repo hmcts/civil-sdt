@@ -30,15 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Date;
 
 import junit.framework.Assert;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,6 +88,11 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     private int dataRetentionPeriod;
 
     /**
+     * SDT Bulk Reference.
+     */
+    private String sdtBulkReference;
+
+    /**
      * Setup the test.
      */
     @Before
@@ -105,6 +106,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         bulkCustomer = bulkSubmissionDao.fetch (IBulkCustomer.class, 10711);
         targetApplication = bulkSubmissionDao.fetch (ITargetApplication.class, 10713L);
         dataRetentionPeriod = 90;
+        sdtBulkReference = "MCOL-10012013010101-100000009";
 
         LOG.debug ("After SetUp");
     }
@@ -129,25 +131,49 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         bulkSubmission.setNumberOfRequest (1);
         final String xmlToLoad = "<Payload>2</Payload>";
         bulkSubmission.setPayload (xmlToLoad);
-        bulkSubmission.setSdtBulkReference ("MCOL-10012013010101-100000009");
+        bulkSubmission.setSdtBulkReference (sdtBulkReference);
         bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
 
         bulkSubmissionDao.persist (bulkSubmission);
 
         LOG.debug ("Persisted successfully");
 
-        final Criterion criterion = Restrictions.eq ("sdtBulkReference", "MCOL-10012013010101-100000009");
-        final IBulkSubmission[] submissions = bulkSubmissionDao.query (BulkSubmission.class, criterion);
+        final IBulkSubmission submission = bulkSubmissionDao.getBulkSubmission (sdtBulkReference);
 
-        LOG.debug ("submissions length is " + submissions.length);
+        Assert.assertNotNull (submission);
 
-        assertEquals (submissions.length, 1);
+        LOG.debug ("payload for bulk submission is " + new String (submission.getPayload ()));
 
-        LOG.debug ("payload for bulk submission is " + new String (submissions[0].getPayload ()));
+        Assert.assertEquals (new String (submission.getPayload ()), xmlToLoad);
+        Assert.assertEquals (submission.getCustomerReference (), "REF1");
+    }
 
-        assertEquals (new String (submissions[0].getPayload ()), xmlToLoad);
+    /**
+     * Test get bulk submission by SDT bulk reference.
+     */
+    @Test
+    public void testGetBulkSubmissionBySdtBulkRef ()
+    {
+        final String sbr = "MCOL-10012013010101-100099999";
+        final String customerReference = "customer reference 1";
+        createBulkSubmission (customerReference, LocalDateTime.now (), sbr);
+        final IBulkSubmission submission = bulkSubmissionDao.getBulkSubmission (sbr);
 
-        assertEquals (submissions[0].getCustomerReference (), "REF1");
+        Assert.assertNotNull (submission);
+        Assert.assertEquals (submission.getSdtBulkReference (), sbr);
+    }
+
+    /**
+     * Test get bulk submission by SDT bulk reference not founds.
+     */
+    @Test
+    public void testGetBulkSubmissionBySdtBulkRefNotFound ()
+    {
+        final String sbr = "NO_SUCH_ID";
+        final IBulkSubmission submission = bulkSubmissionDao.getBulkSubmission (sbr);
+
+        Assert.assertNull (submission);
+
     }
 
     /**
@@ -157,7 +183,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     public void testGetBulkSubmissionUpper ()
     {
         final String customerReference = "customer reference 1";
-        createBulkSubmission (customerReference, LocalDateTime.now ());
+        createBulkSubmission (customerReference, LocalDateTime.now (), sdtBulkReference);
         final IBulkSubmission bulkSubmission =
                 bulkSubmissionDao.getBulkSubmission (bulkCustomer, customerReference, dataRetentionPeriod);
         Assert.assertNotNull (bulkSubmission);
@@ -176,7 +202,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         Date d = new Date ();
         d = DateUtils.addDays (d, dataRetentionPeriod * -1);
 
-        createBulkSubmission (customerReference, LocalDateTime.fromDateFields (d));
+        createBulkSubmission (customerReference, LocalDateTime.fromDateFields (d), sdtBulkReference);
         final IBulkSubmission bulkSubmission =
                 bulkSubmissionDao.getBulkSubmission (bulkCustomer, customerReference, dataRetentionPeriod);
         Assert.assertNotNull (bulkSubmission);
@@ -195,7 +221,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         Date d = new Date ();
         d = DateUtils.addDays (d, (dataRetentionPeriod + 1) * -1);
 
-        createBulkSubmission (customerReference, LocalDateTime.fromDateFields (d));
+        createBulkSubmission (customerReference, LocalDateTime.fromDateFields (d), sdtBulkReference);
         final IBulkSubmission bulkSubmission =
                 bulkSubmissionDao.getBulkSubmission (bulkCustomer, customerReference, dataRetentionPeriod);
         Assert.assertNull (bulkSubmission);
@@ -207,8 +233,9 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
      * 
      * @param customerReference customer reference
      * @param date created date
+     * @param sbr sdt bulk reference
      */
-    private void createBulkSubmission (final String customerReference, final LocalDateTime date)
+    private void createBulkSubmission (final String customerReference, final LocalDateTime date, final String sbr)
     {
         final IBulkSubmission bulkSubmission = new BulkSubmission ();
 
@@ -220,7 +247,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         bulkSubmission.setNumberOfRequest (1);
         final String xmlToLoad = "<Payload>2</Payload>";
         bulkSubmission.setPayload (xmlToLoad);
-        bulkSubmission.setSdtBulkReference ("MCOL-10012013010101-100000009");
+        bulkSubmission.setSdtBulkReference (sbr);
         bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
 
         bulkSubmissionDao.persist (bulkSubmission);

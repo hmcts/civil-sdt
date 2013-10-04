@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.dao.api;
 
 import org.springframework.dao.DataAccessException;
 
-import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
@@ -60,9 +59,9 @@ public interface IBulkSubmissionDao extends IGenericDao
      * Checks that the bulk reference is valid. Return the bulk submission if the check
      * valid or null if it fails.
      * 
-     * @param bulkReference bulk reference
+     * @param sdtBulkReference sdt bulk reference
      * @throws DataAccessException Hibernate exception
      * @return valid bulk submission or null
      */
-    BulkSubmission getBulkSubmission (final String bulkReference) throws DataAccessException;
+    IBulkSubmission getBulkSubmission (final String sdtBulkReference) throws DataAccessException;
 }
