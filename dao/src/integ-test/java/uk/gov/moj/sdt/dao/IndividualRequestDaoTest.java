@@ -51,7 +51,6 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
 
 /**
@@ -83,11 +82,6 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
      * Bulk Submission to use for the test.
      */
     private IBulkSubmission bulkSubmission;
-
-    /**
-     * Target Application to use.
-     */
-    private ITargetApplication targetApplication;
 
     /**
      * Data retention period.

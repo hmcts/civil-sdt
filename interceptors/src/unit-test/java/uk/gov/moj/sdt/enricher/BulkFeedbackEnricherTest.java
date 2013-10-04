@@ -196,7 +196,7 @@ public class BulkFeedbackEnricherTest
         try
         {
             // Call the enricher.
-            final String result = enricher.enrichXml (inXml);
+            enricher.enrichXml (inXml);
 
             Assert.fail ("Failed to throw expected UnsupportedOperationException for missing request id");
         }

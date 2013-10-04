@@ -61,8 +61,7 @@ public class ServiceTypeValidator extends AbstractSdtValidator implements IServi
     @Override
     public void visit (final IServiceType serviceType, final ITree tree)
     {
-        // TODO Do validation
-        LOGGER.info ("visit(serviceType)");
+        LOGGER.debug ("visit(serviceType)");
     }
 
 }
