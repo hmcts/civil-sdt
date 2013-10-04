@@ -32,15 +32,19 @@ package uk.gov.moj.sdt.dao;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -408,4 +412,32 @@ public class GenericDao implements IGenericDao
 
     }
 
+    /**
+     * Create a restriction for a date field that falls between two dates. We use the data retention period to work out
+     * the start and end of the date.
+     * 
+     * @param field date field
+     * @param dataRetentionPeriod data retention period
+     * @return hibernate restriction
+     */
+    protected Criterion createDateRestriction (final String field, final int dataRetentionPeriod)
+    {
+
+        // Get today's date
+        final Date today = new Date ();
+
+        // Subtract the retention period from todays date and truncate the time part to get the floor of the date
+        Date start = DateUtils.truncate (today, Calendar.DATE);
+        start = DateUtils.addDays (start, dataRetentionPeriod * -1);
+
+        // Truncate the time part then add 1 day to the ceiling of the date, i.e. the next day
+        Date end = DateUtils.truncate (today, Calendar.DATE);
+        end = DateUtils.addDays (end, 1);
+
+        // Add date criteria and convert to LocalDateTime
+
+        return Restrictions.between ("createdDate", LocalDateTime.fromDateFields (start),
+                LocalDateTime.fromDateFields (end));
+
+    }
 }

@@ -172,7 +172,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     public void testGetBulkSubmissionLower ()
     {
         final String customerReference = "customer reference 2";
-        // Set the date to be 90 days ago
+        // Set the created date to be 90 days ago
         Date d = new Date ();
         d = DateUtils.addDays (d, dataRetentionPeriod * -1);
 
@@ -191,7 +191,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     public void testGetBulkSubmissionPastRetention ()
     {
         final String customerReference = "customer reference 1";
-        // Set the date to be 90 days ago
+        // Set the created date to be 91 days ago
         Date d = new Date ();
         d = DateUtils.addDays (d, (dataRetentionPeriod + 1) * -1);
 

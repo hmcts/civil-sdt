@@ -30,14 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -86,16 +81,8 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
         criteria.add (Restrictions.eq ("customerRequestReference", customerReference));
 
-        // Only bring back individual requests within the data retention period, truncating the time part
-        // Use the round function to get the ceiling of todays date, i.e. the start of the next day
-        final Date end = DateUtils.round (new Date (), Calendar.DATE);
-
-        // Subtract the retention period from todays date and truncate the time part to get the floor of the date
-        final Date start = DateUtils.addDays (DateUtils.truncate (new Date (), Calendar.DATE), dataRetention * -1);
-
-        // Add date criteria and convert to LocalDateTime
-        criteria.add (Restrictions.between ("createdDate", LocalDateTime.fromDateFields (start),
-                LocalDateTime.fromDateFields (end)));
+        // Only bring back individual request within the data retention period
+        criteria.add (createDateRestriction ("createdDate", dataRetention));
 
         final IIndividualRequest individualRequest = (IIndividualRequest) criteria.uniqueResult ();
 

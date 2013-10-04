@@ -154,7 +154,7 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
     public void testGetBulkSubmissionLower ()
     {
         final String customerRequestReference = "customer request reference 2";
-        // Set the date to be 90 days ago
+        // Set the created date to be 90 days ago
         Date d = new Date ();
         d = DateUtils.addDays (d, dataRetentionPeriod * -1);
 
@@ -168,13 +168,13 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
     }
 
     /**
-     * Test with a individual past 90 days ago and use an old customer reference.
+     * Test with an individual request past 90 days ago and use an old customer reference.
      */
     @Test
     public void testGetIndividualRequestPastRetention ()
     {
         final String customerRequestReference = "customer request reference 1";
-        // Set the date to be 90 days ago
+        // Set the created date to be 91 days ago
         Date d = new Date ();
         d = DateUtils.addDays (d, (dataRetentionPeriod + 1) * -1);
 
