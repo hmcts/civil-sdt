@@ -77,7 +77,7 @@ public class MessageWriterTest
     public void testQueueMessage ()
     {
         // Setup finished, now tell the mock what to expect.
-        jmsTemplate.convertAndSend ("JMSUnitTestQ", "Test");
+        jmsTemplate.convertAndSend ("Test");
         EasyMock.expectLastCall ();
 
         // Get ready to call the mock.
