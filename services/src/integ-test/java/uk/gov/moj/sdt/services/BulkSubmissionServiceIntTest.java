@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -282,7 +281,6 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         // bulkSubmission.setSubmissionStatus ("SUBMITTED");
         bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
                 .currentTimeMillis ())));
@@ -292,9 +290,8 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         individualRequest.setRequestStatus ("Received");
         individualRequest.setBulkSubmission (bulkSubmission);
         individualRequest.setLineNumber (1);
-        individualRequests.add (individualRequest);
 
-        bulkSubmission.setIndividualRequests (individualRequests);
+        bulkSubmission.addIndividualRequest (individualRequest);
 
         return bulkSubmission;
     }

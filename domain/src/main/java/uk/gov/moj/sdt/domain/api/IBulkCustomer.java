@@ -69,4 +69,12 @@ public interface IBulkCustomer extends IDomainObject
      * @return return target applications that this customer can work with.
      */
     Set<ITargetApplication> getTargetApplications ();
+
+    /**
+     * Checks whether customer has access to target application.
+     * 
+     * @param targetApplicationCode target application code
+     * @return true or false
+     */
+    boolean hasAccess (String targetApplicationCode);
 }

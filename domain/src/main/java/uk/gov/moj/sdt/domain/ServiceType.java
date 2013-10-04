@@ -31,10 +31,7 @@
 
 package uk.gov.moj.sdt.domain;
 
-import java.util.Set;
-
 import uk.gov.moj.sdt.domain.api.IServiceType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Each defined target application will have a set of associated Request Types.
@@ -46,10 +43,6 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 public class ServiceType extends AbstractDomainObject implements IServiceType
 {
 
-    /**
-     * The target applications that this customer can work with.e.g. 'MCOL'
-     */
-    private Set<ITargetApplication> targetApplications;
     /**
      * Request type name.
      */
@@ -99,18 +92,6 @@ public class ServiceType extends AbstractDomainObject implements IServiceType
     public void setDescription (final String description)
     {
         this.description = description;
-    }
-
-    @Override
-    public void setTargetApplications (final Set<ITargetApplication> targetApplications)
-    {
-        this.targetApplications = targetApplications;
-    }
-
-    @Override
-    public Set<ITargetApplication> getTargetApplications ()
-    {
-        return targetApplications;
     }
 
 }

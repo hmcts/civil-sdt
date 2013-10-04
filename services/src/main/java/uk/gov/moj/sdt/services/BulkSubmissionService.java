@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.services;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -108,53 +107,28 @@ public class BulkSubmissionService implements IBulkSubmissionService
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
     {
 
-        // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
-        bulkSubmission.setPayload (SdtContext.getContext ().getRawInXml ());
+        enrich (bulkSubmission);
 
-        List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-
-        // Get the Bulk Customer from the customer dao for the SDT customer Id
-        final IBulkCustomer bulkCustomer =
-                this.getBulkCustomerDao ().getBulkCustomerBySdtId (
-                        bulkSubmission.getBulkCustomer ().getSdtCustomerId ());
-
-        if (bulkCustomer != null)
-        {
-            LOGGER.debug ("Bulk Customer found " + bulkCustomer.getId ());
-        }
-
-        bulkSubmission.setBulkCustomer (bulkCustomer);
-
-        // Set the SDT Bulk Reference
-        bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
-                .getTargetApplication ().getTargetApplicationCode ()));
-
-        // Set the SDT Request Reference on the Individual Requests
-        processIndividualRequests (bulkSubmission.getSdtBulkReference (), individualRequests);
-
-        // Get the Target Application from the target application dao
-        final ITargetApplication targetApplication =
-                this.getTargetApplicationDao ().getTargetApplicationByCode (
-                        bulkSubmission.getTargetApplication ().getTargetApplicationCode ());
-
-        if (targetApplication != null)
-        {
-            LOGGER.debug ("Target Application found " + targetApplication.getId ());
-        }
-
-        bulkSubmission.setTargetApplication (targetApplication);
-
-        // Populate the individual requests with the raw xml specific for that request.
-        individualRequests = individualRequestsXmlParser.getIndividualRequestsRawXmlMap (individualRequests);
+        enrich (bulkSubmission.getIndividualRequests ());
 
         // Now persist the bulk submissions.
         this.getGenericDao ().persist (bulkSubmission);
 
-        // Enqueue the SDT request id of each individual request to the message
-        // server.
+        enqueueValidRequests (bulkSubmission.getIndividualRequests ());
+
+    }
+
+    /**
+     * Enqueue the SDT request id of each valid individual request to the message
+     * server.
+     * 
+     * @param individualRequests collection of individual requests.
+     */
+    private void enqueueValidRequests (final List<IIndividualRequest> individualRequests)
+    {
         for (final IIndividualRequest iRequest : individualRequests)
         {
-            if (iRequest.getRequestStatus ().equals (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()))
+            if (iRequest.isEnqueueable ())
             {
                 this.getMessageSynchronizer ().execute (new Runnable ()
                 {
@@ -169,49 +143,60 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
             }
         }
-
     }
 
     /**
-     * Extract the individual request and set the SDT Request Reference and SDT Bulk Reference.
+     * Prepare individual requests for persistence.
      * 
-     * @param sdtBulkReference sdt bulk reference
-     * @param individualRequests list of individual requests
+     * @param individualRequests collection of individual requests
      */
-    private void processIndividualRequests (final String sdtBulkReference,
-                                            final List<IIndividualRequest> individualRequests)
+    private void enrich (final List<IIndividualRequest> individualRequests)
     {
-        // Loop through the list of individual requests and set the sdt request reference
+        LOGGER.debug ("enrich individual requests");
+
         for (IIndividualRequest iRequest : individualRequests)
         {
-            // Generate and set the SDT Request Reference
-            final String sdtRequestReference =
-                    this.generateSdtRequestReference (sdtBulkReference, iRequest.getLineNumber ());
-            iRequest.setSdtRequestReference (sdtRequestReference);
-
-            // Set the SDT Bulk Reference
-            iRequest.setSdtBulkReference (sdtBulkReference);
+            iRequest.populateReferences ();
         }
+
+        // Populate the individual requests with the raw xml specific for that request.
+        individualRequestsXmlParser.populateRawRequest (individualRequests);
+
     }
 
     /**
-     * Generate the SDT Request Reference from the SDT Bulk Reference.
+     * Enrich bulk submission instance to prepare for persistence.
      * 
-     * @param sdtBulkReference sdt bulk Reference
-     * @param lineNumber individual request line number
-     * @return sdt request reference
+     * @param bulkSubmission bulk submission
      */
-    private String generateSdtRequestReference (final String sdtBulkReference, final int lineNumber)
+    private void enrich (final IBulkSubmission bulkSubmission)
     {
+        LOGGER.debug ("enrich bulk submission instance");
 
-        // Left padd the line number with 0 to a maximum of 7 characters
-        final String paddedLineNumber = StringUtils.leftPad (String.valueOf (lineNumber), 7, "0");
+        // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
+        bulkSubmission.setPayload (SdtContext.getContext ().getRawInXml ());
 
-        // SDT Request Reference consists of <SDT Bulk Reference>-<zero padded line number>
-        final String sdtRequestReference = sdtBulkReference + "-" + paddedLineNumber;
+        // Get the Bulk Customer from the customer dao for the SDT customer Id
+        final IBulkCustomer bulkCustomer =
+                this.getBulkCustomerDao ().getBulkCustomerBySdtId (
+                        bulkSubmission.getBulkCustomer ().getSdtCustomerId ());
 
-        return sdtRequestReference;
+        bulkSubmission.setBulkCustomer (bulkCustomer);
 
+        // Set the SDT Bulk Reference
+        bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
+                .getTargetApplication ().getTargetApplicationCode ()));
+
+        // Get the Target Application from the target application dao
+        final ITargetApplication targetApplication =
+                this.getTargetApplicationDao ().getTargetApplicationByCode (
+                        bulkSubmission.getTargetApplication ().getTargetApplicationCode ());
+        if (targetApplication != null)
+        {
+            LOGGER.debug ("Target Application found " + targetApplication.getId ());
+        }
+
+        bulkSubmission.setTargetApplication (targetApplication);
     }
 
     /**

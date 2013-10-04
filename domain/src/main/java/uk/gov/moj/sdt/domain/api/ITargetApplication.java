@@ -43,20 +43,6 @@ public interface ITargetApplication extends IDomainObject
 {
 
     /**
-     * Retrieve a set of all customers who can work against this application.
-     * 
-     * @return a set of bulk customers who can use this application.
-     */
-    Set<IBulkCustomer> getBulkCustomers ();
-
-    /**
-     * Set the list of customers who can work against this application.
-     * 
-     * @param bulkCustomers the list of all customers who can work on this application.
-     */
-    void setBulkCustomers (Set<IBulkCustomer> bulkCustomers);
-
-    /**
      * Get target application code.
      * 
      * @return target application code

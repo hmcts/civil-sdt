@@ -82,7 +82,7 @@ public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
 
         final int totalArgs = 3;
         final Object[] args = new Object[totalArgs];
-        args[0] = targetApplication;
+        args[0] = targetApplication.toUpperCase ();
         args[1] = dateFormat.format (new Date (System.currentTimeMillis ()));
         // Pad the bulk id to make it 9 chars
         args[2] = String.format ("%09d", bulkId);

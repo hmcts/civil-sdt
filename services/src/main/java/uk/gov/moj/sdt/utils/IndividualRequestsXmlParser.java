@@ -54,12 +54,11 @@ public class IndividualRequestsXmlParser
     private static final Log LOGGER = LogFactory.getLog (IndividualRequestsXmlParser.class);
 
     /**
-     * Get a list of individual requests populated with the raw xml request.
+     * Populate individual requests with the raw xml request.
      * 
      * @param individualRequests the individual requests to be populated with data from the raw XML.
-     * @return list of individual requests populated with the raw xml request.
      */
-    public List<IIndividualRequest> getIndividualRequestsRawXmlMap (final List<IIndividualRequest> individualRequests)
+    public void populateRawRequest (final List<IIndividualRequest> individualRequests)
     {
         // Get iterator so we can traverse the list of requests and the payload (raw XML) to each one.
         final Iterator<IIndividualRequest> iter = individualRequests.iterator ();
@@ -108,6 +107,5 @@ public class IndividualRequestsXmlParser
             }
         }
 
-        return individualRequests;
     }
 }

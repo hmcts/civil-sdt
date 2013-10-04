@@ -83,7 +83,7 @@ public class IndividualRequestsXmlParserTest
         final String rawXml = this.getRawXml ();
         SdtContext.getContext ().setRawInXml (rawXml);
 
-        List<IIndividualRequest> requests = new ArrayList<IIndividualRequest> ();
+        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest> ();
 
         final IIndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCustomerRequestReference ("1");
@@ -101,7 +101,7 @@ public class IndividualRequestsXmlParserTest
         requests.add (individualRequest2);
         requests.add (individualRequest3);
 
-        requests = this.individualRequestsXmlParser.getIndividualRequestsRawXmlMap (requests);
+        this.individualRequestsXmlParser.populateRawRequest (requests);
 
         Assert.assertTrue (requests.size () == 3);
 

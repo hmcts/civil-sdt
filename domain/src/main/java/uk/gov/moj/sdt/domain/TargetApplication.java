@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.domain;
 
 import java.util.Set;
 
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
@@ -49,10 +48,6 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
      * A collection of all service types that can be used with this target application.
      */
     private Set<IServiceRouting> serviceRoutings;
-    /**
-     * A collection of all customers who can work with this target application.
-     */
-    private Set<IBulkCustomer> bulkCustomers;
 
     /**
      * Target application code.
@@ -86,19 +81,6 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
     public void setTargetApplicationName (final String targetApplicationName)
     {
         this.targetApplicationName = targetApplicationName;
-    }
-
-    @Override
-    public Set<IBulkCustomer> getBulkCustomers ()
-    {
-        return bulkCustomers;
-    }
-
-    @Override
-    public void setBulkCustomers (final Set<IBulkCustomer> bulkCustomers)
-    {
-        this.bulkCustomers = bulkCustomers;
-
     }
 
     @Override

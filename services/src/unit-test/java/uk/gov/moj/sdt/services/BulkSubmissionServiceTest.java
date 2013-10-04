@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,6 +57,7 @@ import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -159,8 +159,7 @@ public class BulkSubmissionServiceTest
     @Test
     public void saveBulkSubmission () throws IOException
     {
-        final String rawXml = this.getRawXml ("testXMLValid2.xml");
-        SdtContext.getContext ().setRawInXml (rawXml);
+        SdtContext.getContext ().setRawInXml (this.getRawXml ("testXMLValid2.xml"));
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
@@ -206,16 +205,8 @@ public class BulkSubmissionServiceTest
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
-        final List<IIndividualRequest> requests = bulkSubmission.getIndividualRequests ();
-        final IndividualRequest iRequest1 = this.getValidIndividualRequest ("null-0000000", "ICustReq124");
-        final IndividualRequest iRequest2 = this.getValidIndividualRequest ("null-0000000", "ICustReq125");
-
-        LOGGER.debug ("Size of Individual Requests is " + requests.size ());
-        requests.add (iRequest1);
-        requests.add (iRequest2);
-        LOGGER.debug ("After adding requests, Size of Individual Requests is " + requests.size ());
-
-        bulkSubmission.setIndividualRequests (requests);
+        addValidIndividualRequest (bulkSubmission, "ICustReq124");
+        addValidIndividualRequest (bulkSubmission, "ICustReq125");
 
         LOGGER.debug ("Size of Individual Requests in Bulk Submission is " +
                 bulkSubmission.getIndividualRequests ().size ());
@@ -305,35 +296,29 @@ public class BulkSubmissionServiceTest
         bulkSubmission.setId (1L);
         bulkSubmission.setNumberOfRequest (2);
         bulkSubmission.setPayload ("TEST_XML");
-        bulkSubmission.setSdtBulkReference ("SDT_BULKREF_0001");
         bulkSubmission.setSubmissionStatus ("SUBMITTED");
         bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
                 .currentTimeMillis ())));
         individualRequest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         individualRequest.setCustomerRequestReference ("ICustReq123");
-        individualRequest.setSdtRequestReference ("SDT_test_1");
         individualRequest.setId (1L);
-        // individualRequest.setPayload ("IXML1");
-        individualRequest.setRequestStatus ("Accepted");
-        individualRequests.add (individualRequest);
+        individualRequest.setRequestStatus ("Received");
 
-        bulkSubmission.setIndividualRequests (individualRequests);
+        bulkSubmission.addIndividualRequest (individualRequest);
 
         return bulkSubmission;
     }
 
     /**
      * 
-     * @param sdtReference the unique sdt reference number
      * @param customerReference the customer reference number
-     * @return a valid individual request object
+     * @param bulkSubmission bulk submission
      */
-    private IndividualRequest getValidIndividualRequest (final String sdtReference, final String customerReference)
+    private void addValidIndividualRequest (final IBulkSubmission bulkSubmission, final String customerReference)
     {
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
@@ -341,11 +326,10 @@ public class BulkSubmissionServiceTest
         individualRequest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         individualRequest.setCustomerRequestReference (customerReference);
-        individualRequest.setSdtRequestReference (sdtReference);
         individualRequest.setId (1L);
-        individualRequest.setRequestStatus ("Received");
+        individualRequest.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
 
-        return individualRequest;
+        bulkSubmission.addIndividualRequest (individualRequest);
     }
 
     /**

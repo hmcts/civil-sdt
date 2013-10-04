@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -367,6 +368,34 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         this.setRequestStatus (IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus ());
         // Set the updated date
         this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+    }
+
+    @Override
+    public boolean isEnqueueable ()
+    {
+        return IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ().equals (requestStatus);
+    }
+
+    @Override
+    public void populateReferences ()
+    {
+        // Set the SDT Bulk Reference
+        sdtBulkReference = bulkSubmission.getSdtBulkReference ();
+        populateSdtRequestReference ();
+    }
+
+    /**
+     * Populate SDT Request Reference from the SDT Bulk Reference.
+     */
+    private void populateSdtRequestReference ()
+    {
+
+        // Left padd the line number with 0 to a maximum of 7 characters
+        final String paddedLineNumber = StringUtils.leftPad (String.valueOf (lineNumber), 7, "0");
+
+        // SDT Request Reference consists of <SDT Bulk Reference>-<zero padded line number>
+        sdtRequestReference = sdtBulkReference + "-" + paddedLineNumber;
 
     }
 

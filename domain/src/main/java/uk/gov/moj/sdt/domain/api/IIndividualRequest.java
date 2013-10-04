@@ -280,6 +280,16 @@ public interface IIndividualRequest extends IDomainObject
     void markRequestAsInitiallyAccepted ();
 
     /**
+     * @return true if request can be enqueued else false.
+     */
+    boolean isEnqueueable ();
+
+    /**
+     * Populate reference related fields.
+     */
+    void populateReferences ();
+
+    /**
      * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
      * "Accepted".
      * 
