@@ -31,6 +31,7 @@
     	<property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao"/>
     	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
     	<property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator"/>
+    	<property name="messageSynchronizer" ref="uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer"/>
     </bean>   
     
     <!-- Implementation for Target Application Submission Service -->

@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -73,7 +75,8 @@ import uk.gov.moj.sdt.utils.Utilities;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
-        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml"})
+        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/utils/spring*.xml",
+        "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring*.xml"})
 public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
@@ -107,6 +110,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
+    @Rollback (false)
     public void saveSingleSubmission () throws IOException
     {
         final String rawXml = this.getRawXml ("testXMLValid2.xml");
@@ -136,6 +140,38 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         }
 
     }
+
+    /**
+     * This method tests the bulk submission with the intention of checking that
+     * the rollback of the database transaction does not send the message to the queue.
+     * 
+     * @throws IOException if there is any IO errors.
+     */
+    // @Test
+    // @Rollback (false)
+    // public void testSubmissionforRollback () throws IOException
+    // {
+    // final String rawXml = this.getRawXml ("testXMLValid2.xml");
+    // SdtContext.getContext ().setRawInXml (rawXml);
+
+    // final IBulkSubmissionService bulkSubmissionService =
+    // (IBulkSubmissionService) this.applicationContext
+    // .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
+
+    // final IBulkSubmission bulkSubmission = this.createInvalidBulkSubmission ();
+
+    // Call the bulk submission service
+    // try
+    // {
+    // bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+    // Assert.fail ("The test is not expected to be successfull commit in database.");
+    // }
+    // catch (final Exception e)
+    // {
+    // Assert.assertTrue ("The submission has rolled back", true);
+    // }
+
+    // }
 
     /**
      * This method tests for persistence of a submission containing multiple individual requests.
@@ -201,7 +237,69 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     }
 
     /**
-     * Create individual request.
+     * 
+     * @return an invalid Bulk Submission object for the testing.
+     */
+    private IBulkSubmission createInvalidBulkSubmission ()
+    {
+        final IBulkSubmission bulkSubmission = new BulkSubmission ();
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        final ITargetApplication targetApp = new TargetApplication ();
+
+        targetApp.setId (1L);
+        targetApp.setTargetApplicationCode ("MCOL");
+        targetApp.setTargetApplicationName ("MCOL");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+
+        final IServiceRouting serviceRouting = new ServiceRouting ();
+        serviceRouting.setId (1L);
+        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+
+        final IServiceType serviceType = new ServiceType ();
+        serviceType.setId (1L);
+        serviceType.setName ("RequestTest1");
+        serviceType.setDescription ("RequestTestDesc1");
+        serviceType.setStatus ("RequestTestStatus");
+
+        serviceRouting.setServiceType (serviceType);
+
+        serviceRoutings.add (serviceRouting);
+
+        targetApp.setServiceRoutings (serviceRoutings);
+
+        bulkSubmission.setTargetApplication (targetApp);
+
+        bulkCustomer.setSdtCustomerId (2L);
+
+        bulkSubmission.setBulkCustomer (bulkCustomer);
+
+        bulkSubmission
+                .setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        bulkSubmission.setCustomerReference ("10711");
+        bulkSubmission.setNumberOfRequest (1);
+
+        // bulkSubmission.setSubmissionStatus ("SUBMITTED");
+        bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
+        final IndividualRequest individualRequest = new IndividualRequest ();
+        individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
+                .currentTimeMillis ())));
+        individualRequest
+                .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        individualRequest.setCustomerRequestReference ("ICustReq123");
+        individualRequest.setRequestStatus ("Received");
+        individualRequest.setBulkSubmission (bulkSubmission);
+        individualRequest.setLineNumber (1);
+        individualRequests.add (individualRequest);
+
+        bulkSubmission.setIndividualRequests (individualRequests);
+
+        return bulkSubmission;
+    }
+
+    /**
      * 
      * @param bulkSubmission bulk submission record.
      * @param customerReference customer reference.

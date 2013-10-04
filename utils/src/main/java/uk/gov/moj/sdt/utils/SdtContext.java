@@ -30,7 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,6 +68,12 @@ public final class SdtContext
      * XML.
      */
     private Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+
+    /**
+     * List to store the synchronisation tasks (commands) that are be executed by
+     * the message synchroniser when the transaction is committed.
+     */
+    private List<Runnable> synchronisationTasks;
 
     /**
      * Constructor for {@link ThreadContext}.
@@ -151,4 +159,48 @@ public final class SdtContext
     {
         this.targetApplicationRespMap = targetApplicationRespMap;
     }
+
+    /**
+     * Adds an task for synchronisation to the synchronisation list.
+     * 
+     * @param command the runnable task for synchronisation.
+     * @return boolean - returns true if the synchronisation list is not already
+     *         initialized.
+     */
+    public boolean addSynchronisationTask (final Runnable command)
+    {
+        boolean returnValue = false;
+        if (this.synchronisationTasks == null)
+        {
+            this.synchronisationTasks = new ArrayList<Runnable> ();
+            returnValue = true;
+        }
+        this.synchronisationTasks.add (command);
+
+        return returnValue;
+    }
+
+    /**
+     * Clears the synchronisation task list after the thread no longer needs
+     * it.
+     */
+    public void clearSynchronisationTasks ()
+    {
+        if (this.synchronisationTasks != null)
+        {
+            this.synchronisationTasks.clear ();
+            this.synchronisationTasks = null;
+        }
+
+    }
+
+    /**
+     * 
+     * @return the list of the synchronisation tasks.
+     */
+    public List<Runnable> getSynchronisationTasks ()
+    {
+        return this.synchronisationTasks;
+    }
+
 }

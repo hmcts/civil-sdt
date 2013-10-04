@@ -50,6 +50,7 @@ import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
+import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -90,6 +91,12 @@ public class BulkSubmissionService implements IBulkSubmissionService
      * Message writer for queueing messages to the messaging server.
      */
     private IMessageWriter messageWriter;
+
+    /**
+     * Message synchroniser for synchronising the messages in the JMS with
+     * the hibernate transactions.
+     */
+    private IMessageSynchronizer messageSynchronizer;
 
     /**
      * SDT Bulk reference generator.
@@ -145,11 +152,21 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
         // Enqueue the SDT request id of each individual request to the message
         // server.
-        for (IIndividualRequest iRequest : individualRequests)
+        for (final IIndividualRequest iRequest : individualRequests)
         {
             if (iRequest.getRequestStatus ().equals (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()))
             {
-                this.getMessageWriter ().queueMessage (iRequest.getSdtRequestReference ());
+                this.getMessageSynchronizer ().execute (new Runnable ()
+                {
+
+                    @Override
+                    public void run ()
+                    {
+                        getMessageWriter ().queueMessage (iRequest.getSdtRequestReference ());
+                    }
+
+                });
+
             }
         }
 
@@ -301,5 +318,23 @@ public class BulkSubmissionService implements IBulkSubmissionService
     public void setSdtBulkReferenceGenerator (final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator)
     {
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
+    }
+
+    /**
+     * 
+     * @return the message synchronizer
+     */
+    public IMessageSynchronizer getMessageSynchronizer ()
+    {
+        return messageSynchronizer;
+    }
+
+    /**
+     * 
+     * @param messageSynchronizer the message synchronizer for synchronising the JMS message queue.
+     */
+    public void setMessageSynchronizer (final IMessageSynchronizer messageSynchronizer)
+    {
+        this.messageSynchronizer = messageSynchronizer;
     }
 }
