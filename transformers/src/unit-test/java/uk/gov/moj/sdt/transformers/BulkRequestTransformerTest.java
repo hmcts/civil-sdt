@@ -89,7 +89,7 @@ public class BulkRequestTransformerTest extends TestCase
         // Set up the jaxb object to transform
         final BulkRequestType jaxb = new BulkRequestType ();
         final long sdtCustomerId = 123;
-        final String targetApplicationId = "mcol";
+        final String targetApplicationId = "MCOL";
         final long resultCount = 20;
         final String customerReference = "A123546";
 
