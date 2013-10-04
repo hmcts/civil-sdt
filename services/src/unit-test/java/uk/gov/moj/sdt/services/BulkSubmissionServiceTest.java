@@ -66,6 +66,7 @@ import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
+import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 /**
  * Test class for BulkSubmissionService.
@@ -116,6 +117,11 @@ public class BulkSubmissionServiceTest
     private ISdtBulkReferenceGenerator mockSdtBulkReferenceGenerator;
 
     /**
+     * Message Synchroniser reference.
+     */
+    private IMessageSynchronizer mockMessageSynchronizer;
+
+    /**
      * Setup of the mock dao and injection of other objects.
      */
     @Before
@@ -140,6 +146,9 @@ public class BulkSubmissionServiceTest
 
         mockSdtBulkReferenceGenerator = EasyMock.createMock (ISdtBulkReferenceGenerator.class);
         bulkSubmissionService.setSdtBulkReferenceGenerator (mockSdtBulkReferenceGenerator);
+
+        mockMessageSynchronizer = EasyMock.createMock (IMessageSynchronizer.class);
+        bulkSubmissionService.setMessageSynchronizer (mockMessageSynchronizer);
     }
 
     /**
@@ -218,12 +227,22 @@ public class BulkSubmissionServiceTest
         final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
         LOGGER.debug ("Individal Requests fetched number is " + individualRequests.size ());
 
-        for (IIndividualRequest request : individualRequests)
+        for (final IIndividualRequest request : individualRequests)
         {
             if (request.getRequestStatus ().equals (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()))
             {
-                mockMessageWriter.queueMessage (request.getSdtRequestReference ());
-                EasyMock.expectLastCall ();
+                mockMessageSynchronizer.execute (new Runnable ()
+                {
+
+                    @Override
+                    public void run ()
+                    {
+                        mockMessageWriter.queueMessage (request.getSdtRequestReference ());
+                        EasyMock.expectLastCall ();
+                    }
+
+                });
+
             }
         }
 
