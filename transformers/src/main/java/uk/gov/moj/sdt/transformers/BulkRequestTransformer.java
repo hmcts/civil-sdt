@@ -42,9 +42,13 @@ import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
@@ -154,7 +158,34 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
     {
         LOGGER.debug ("transform IBulkSubmission to BulkResponseType");
 
-        // TODOs Auto-generated method stub
-        return null;
+        final BulkResponseType jaxb = new BulkResponseType ();
+        // Populate the generated SDT Bulk Reference in response
+        jaxb.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
+        jaxb.setCustomerReference (bulkSubmission.getCustomerReference ());
+        jaxb.setSdtService (AbstractTransformer.SDT_SERVICE);
+        jaxb.setRequestCount (bulkSubmission.getNumberOfRequest ());
+
+        // Populate submission date in response
+        jaxb.setSubmittedDate (AbstractTransformer.convertLocalDateTimeToCalendar (bulkSubmission.getCreatedDate ()));
+
+        // Initialise the status to OK
+        final StatusType statusType = new StatusType ();
+        statusType.setCode (StatusCodeType.OK);
+
+        // Set errors if any
+        final IErrorLog errorLog = bulkSubmission.getErrorLog ();
+        if (errorLog != null)
+        {
+            final ErrorType errorType = new ErrorType ();
+            errorType.setCode (errorLog.getErrorCode ());
+            errorType.setDescription (errorLog.getErrorText ());
+
+            statusType.setError (errorType);
+            statusType.setCode (StatusCodeType.ERROR);
+
+        }
+
+        jaxb.setStatus (statusType);
+        return jaxb;
     }
 }

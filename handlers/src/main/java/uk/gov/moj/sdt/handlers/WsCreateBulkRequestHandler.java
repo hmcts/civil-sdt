@@ -40,7 +40,6 @@ import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
-import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -63,12 +62,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     private static final Log LOGGER = LogFactory.getLog (WsCreateBulkRequestHandler.class);
 
     /**
-     * SDT Bulk reference generator.
-     * TODO - remove this when it's moved to the BulkSubmissionService/MockBulkSubmissionService
-     */
-    private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
-
-    /**
      * Bulk Submission service.
      */
     private IBulkSubmissionService bulkSubmissionService;
@@ -84,16 +77,12 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         LOGGER.info ("[submitBulk] started");
 
         // Initialise response;
-        final BulkResponseType bulkResponseType = intialiseResponse (bulkRequestType);
+        BulkResponseType bulkResponseType = intialiseResponse (bulkRequestType);
 
         try
         {
             // Transform web service object to domain object(s)
             final IBulkSubmission bulkSubmission = getTransformer ().transformJaxbToDomain (bulkRequestType);
-
-            // Populate submission date in response.
-            bulkResponseType.setSubmittedDate (AbstractTransformer.convertLocalDateTimeToCalendar (bulkSubmission
-                    .getCreatedDate ()));
 
             // Validate domain
             validateDomain (bulkSubmission);
@@ -101,6 +90,8 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
             // Process validated request
             processBulkSubmission (bulkSubmission);
 
+            // Get the jaxb response object from the bulk submission domain object
+            bulkResponseType = getTransformer ().transformDomainToJaxb (bulkSubmission);
         }
         catch (final AbstractBusinessException be)
         {
@@ -150,11 +141,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
         response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
 
-        // Populate SDT Bulk reference.
-        // TODO - Remove this, as it will be set in the domain to jaxb transformer
-        response.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkRequest.getHeader ()
-                .getTargetApplicationId ()));
-
         final StatusType status = new StatusType ();
         response.setStatus (status);
         status.setCode (StatusCodeType.OK);
@@ -176,15 +162,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
 
         VisitableTreeWalker.walk (bulkSubmission, "Validator");
 
-    }
-
-    /**
-     * @param sdtBulkReferenceGenerator
-     *            the sdtBulkReferenceGenerator to set
-     */
-    public void setSdtBulkReferenceGenerator (final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator)
-    {
-        this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
     }
 
     /**

@@ -9,7 +9,6 @@
     
     <bean id="uk.gov.moj.sdt.producers.api.IWsCreateBulkRequestHandler" 
         class="uk.gov.moj.sdt.handlers.WsCreateBulkRequestHandler">
-        <property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator"/>
         <property name="transformer" ref="uk.gov.moj.sdt.transformers.BulkRequestTransformer"/>
         <property name="bulkSubmissionService" ref="uk.gov.moj.sdt.services.api.IBulkSubmissionService"/>
         
