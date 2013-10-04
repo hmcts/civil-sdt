@@ -81,7 +81,7 @@ public class GenericDao implements IGenericDao
     private SessionFactory sessionFactory;
 
     /**
-     * Default constructor for {@link GenericDaoTest}.
+     * Default constructor for {@link GenericDao}.
      */
     public GenericDao ()
     {
@@ -350,6 +350,8 @@ public class GenericDao implements IGenericDao
                                                                         final Criterion... restrictions)
         throws DataAccessException
     {
+        GenericDao.LOG.debug ("query(): domainType=" + domainType);
+
         // Get a list of results from Hibernate.
         final List<?> domainObjects = queryAsList (domainType, restrictions);
 
@@ -364,6 +366,8 @@ public class GenericDao implements IGenericDao
                                                                                   final Criterion... restrictions)
         throws DataAccessException
     {
+        GenericDao.LOG.debug ("queryAsList(): domainType=" + domainType);
+
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
@@ -450,5 +454,37 @@ public class GenericDao implements IGenericDao
         return Restrictions.between ("createdDate", LocalDateTime.fromDateFields (start),
                 LocalDateTime.fromDateFields (end));
 
+    }
+
+    @Override
+    public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
+                                                                       final Criterion... restrictions)
+    {
+        GenericDao.LOG.debug ("uniqueResult(): domainType=" + domainType);
+
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        final Session session = this.getSessionFactory ().getCurrentSession ();
+
+        // Add any restrictions passed by caller.
+        final Criteria criteria = session.createCriteria (domainType);
+        for (final Criterion restriction : restrictions)
+        {
+            // Added condition to check for null, if restriction null then it should not be added to criteria.
+            if (restriction != null)
+            {
+                criteria.add (restriction);
+            }
+        }
+
+        // Get unique result from Hibernate.
+        @SuppressWarnings ("unchecked") final DomainType domainObject = (DomainType) criteria.uniqueResult ();
+
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+
+        return domainObject;
     }
 }

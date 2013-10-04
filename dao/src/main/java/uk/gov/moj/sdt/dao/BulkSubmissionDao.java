@@ -91,14 +91,10 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     public IBulkSubmission getBulkSubmission (final String sdtBulkReference) throws DataAccessException
     {
         LOG.debug ("Get a bulk submission matching the sdt bulk reference" + sdtBulkReference);
-        final IBulkSubmission[] bulkSubmissions =
-                this.query (IBulkSubmission.class, Restrictions.eq ("sdtBulkReference", sdtBulkReference));
+        final IBulkSubmission bulkSubmission =
+                this.uniqueResult (IBulkSubmission.class, Restrictions.eq ("sdtBulkReference", sdtBulkReference));
 
-        if (bulkSubmissions == null || bulkSubmissions.length == 0)
-        {
-            return null;
-        }
-        return bulkSubmissions[0];
+        return bulkSubmission;
 
     }
 }

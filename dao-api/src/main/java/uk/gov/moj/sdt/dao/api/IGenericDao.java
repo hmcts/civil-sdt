@@ -150,6 +150,27 @@ public interface IGenericDao
                                                                      final Criterion... restrictions);
 
     /**
+     * Returns unique domain object model hierarchy with a set of
+     * restrictions. This constructs a Hibernate query from the domainType and
+     * restrictions given and uses Session.createCriteria() to retrieve the
+     * persistent entity. Then the query is executed.
+     * 
+     * <p>
+     * This can be used to load a user by name, for example.
+     * </p>
+     * 
+     * @param <DomainType> of entity to load.
+     * @param domainType of entity to load.
+     * @param restrictions of the entities to load.
+     * @return business domain entity model hierarchy root object.
+     * 
+     * @throws DataAccessException
+     *             on any I/O related error.
+     */
+    <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
+                                                                final Criterion... restrictions);
+
+    /**
      * Stores a domainObject in the database, either doing an insert or an
      * update.
      * 
