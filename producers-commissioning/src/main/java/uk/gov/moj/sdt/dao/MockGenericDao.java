@@ -113,4 +113,18 @@ public class MockGenericDao implements IGenericDao
         return 0;
     }
 
+    @Override
+    public <DomainType extends IDomainObject> List<DomainType> queryAsList (final Class<DomainType> domainType,
+                                                                            final Criterion... restrictions)
+    {
+        return null;
+    }
+
+    @Override
+    public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
+                                                                       final Criterion... restrictions)
+    {
+        return null;
+    }
+
 }
