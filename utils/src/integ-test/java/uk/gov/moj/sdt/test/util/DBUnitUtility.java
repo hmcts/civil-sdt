@@ -112,25 +112,6 @@ public final class DBUnitUtility
     // }
 
     /**
-     * Prepare batch.
-     */
-    public static void prepareBatch ()
-    {
-        cleanDatabase ("MCOL_CCBC", true);
-        cleanDatabase ("MCOL_CPC", true);
-        cleanDatabase ("MCOL_BATCH", true);
-        loadDatabase ("MCOL", "/full/MCOL_Just_Users.xml", true);
-    }
-
-    /**
-     * loads db users.
-     */
-    public static void loadUser ()
-    {
-        loadDatabase ("MCOL", "/full/MCOL_full.xml", true, true);
-    }
-
-    /**
      * Generates a DBUnit DTD for the given schema.
      * 
      * @param targetSchema
@@ -276,8 +257,8 @@ public final class DBUnitUtility
         {
 
             // database connection
-            LOG.info ("Starting load for schema=" + targetSchema + ", filePath=" + filePath + ", reloadRefdata=" +
-                    reloadRefdata);
+            LOG.info ("Starting load for schema[" + targetSchema + "], filePath[" + filePath + "], reloadRefdata[" +
+                    reloadRefdata + "]");
             final IDatabaseConnection dbConnection = getConnectionInstance (targetSchema);
 
             // Create a DBUnit Dataset builder using the target schemas DTD
@@ -309,11 +290,11 @@ public final class DBUnitUtility
             }
 
             // If there's reference data insert it
-            final InputStream refDataStream =
-                    DBUnitUtility.class.getResourceAsStream ("/refdata/" + targetSchema + "_refdata.xml");
+            final String refDataPath = "/refdata/" + targetSchema + "_refdata.xml";
+            final InputStream refDataStream = DBUnitUtility.class.getResourceAsStream (refDataPath);
             if (refDataStream != null && reloadRefdata)
             {
-                LOG.info ("Inserting reference data");
+                LOG.info ("Inserting reference data from " + refDataPath);
                 final IDataSet referenceDataset = builder.build (refDataStream);
                 DatabaseOperation.INSERT.execute (dbConnection, referenceDataset);
                 dbConnection.getConnection ().commit ();
@@ -614,8 +595,7 @@ public final class DBUnitUtility
                 try
                 {
                     final File f = new File ("./src/integ-test/resources/dbunit.properties");
-                    System.out.println (f.getAbsolutePath ());
-                    System.out.println (f.exists ());
+                    LOG.info ("File [" + f.getAbsolutePath () + "] exists=" + f.exists ());
                     p.load (DBUnitUtility.class.getResourceAsStream ("/dbunit.properties"));
                     final String dbUrl = p.getProperty ("db.url");
                     final String username = p.getProperty ("db.system.user");
@@ -627,7 +607,7 @@ public final class DBUnitUtility
                     ds.setPassword (password);
 
                     final Connection connection = ds.getConnection ();
-                    LOG.debug ("Connection created for username: " + username + ", password: " + password + ", url: " +
+                    LOG.info ("Connection created for username: " + username + ", password: " + password + ", url: " +
                             dbUrl);
 
                     dbConnection = new DatabaseConnection (connection, schema);
@@ -640,17 +620,14 @@ public final class DBUnitUtility
                 catch (final DatabaseUnitException e)
                 {
                     LOG.error ("Unable to initialise DBUnit Connection: " + e);
-                    e.printStackTrace ();
                 }
                 catch (final IOException e)
                 {
                     LOG.error ("Unable to initialise DBUnit Connection: " + e);
-                    e.printStackTrace ();
                 }
                 catch (final SQLException e)
                 {
                     LOG.error ("Unable to initialise DBUnit Connection: " + e);
-                    e.printStackTrace ();
                 }
             }
         }
