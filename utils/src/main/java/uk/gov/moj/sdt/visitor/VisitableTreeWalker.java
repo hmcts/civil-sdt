@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,8 +88,27 @@ public final class VisitableTreeWalker extends AbstractTreeWalker
         // Is the current target an instance of IVisitable - if not, do not apply visitor to it.
         if (IVisitable.class.isAssignableFrom (target.getClass ()))
         {
-            // Get fully qualified class name of target.
-            final String targetClassName = target.getClass ().getSimpleName ();
+            // Get class name of target.
+            String targetClassName = null;
+            if (HibernateProxy.class.isInstance (target))
+            {
+                final HibernateProxy proxy = HibernateProxy.class.cast (target);
+                final LazyInitializer lazyInitializer = proxy.getHibernateLazyInitializer ();
+                final String nameOfClass = lazyInitializer.getEntityName ();
+                try
+                {
+                    targetClassName = Class.forName (nameOfClass).getSimpleName ();
+                }
+                catch (final ClassNotFoundException e)
+                {
+                    throw new UnsupportedOperationException (
+                            "Could not find class for entity name of Hibernate proxy [" + nameOfClass + "]");
+                }
+            }
+            else
+            {
+                targetClassName = target.getClass ().getSimpleName ();
+            }
 
             // Add suffix to form visitor class name.
             final String visitorClassName = targetClassName + visitorSuffix;
