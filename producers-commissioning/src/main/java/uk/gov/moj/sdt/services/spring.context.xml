@@ -6,7 +6,52 @@
 
     <!-- Mock implementation for Submit Query Service -->        
     <bean id="uk.gov.moj.sdt.services.api.ISubmitQueryService" 
-        class="uk.gov.moj.sdt.services.MockSubmitQueryService">        
+        class="uk.gov.moj.sdt.services.MockSubmitQueryService"> 
+        <property name="responseContentMap">
+        	<map>
+        		<entry key="mcolDefenceCriteria">
+        			<value>
+        				<![CDATA[
+							<ns3:mcolDefenceDetail>
+								<ns3:claimNumber>12345678</ns3:claimNumber>
+                        		<ns3:defendant defendantId="1">
+	                        		<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
+	                        		<ns3:responseType>PA</ns3:responseType>
+                        		</ns3:defendant>
+                        	</ns3:mcolDefenceDetail>
+                        	<ns3:mcolDefenceDetail>
+                        		<ns3:claimNumber>12345678</ns3:claimNumber>
+                        		<ns3:defendant defendantId="2">
+	                        		<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
+	                        		<ns3:responseType>PA</ns3:responseType>
+                        		</ns3:defendant>
+                        	</ns3:mcolDefenceDetail>
+                        	<ns3:mcolDefenceDetail>
+                        		<ns3:claimNumber>22345678</ns3:claimNumber>
+                        		<ns3:defendant defendantId="3">
+                        			<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
+                        			<ns3:responseType>PA</ns3:responseType>
+                        		</ns3:defendant>
+                        	</ns3:mcolDefenceDetail>
+                        	<ns3:mcolDefenceDetail>
+                        		<ns3:claimNumber>32345678</ns3:claimNumber>
+                        		<ns3:defendant defendantId="4">
+	                        		<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
+	                        		<ns3:responseType>PA</ns3:responseType>
+                        		</ns3:defendant>
+                        	</ns3:mcolDefenceDetail>
+                        	<ns3:mcolDefenceDetail>
+                        		<ns3:claimNumber>42345678</ns3:claimNumber>
+                        		<ns3:defendant defendantId="5">
+                        			<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
+                        			<ns3:responseType>PA</ns3:responseType>
+                        		</ns3:defendant>
+                        	</ns3:mcolDefenceDetail>
+                		]]>
+        			</value>
+        		</entry>
+        	</map>
+        </property>       
     </bean> 
 	
     <!-- Mock implementation for Bulk Submission Service -->        
@@ -21,7 +66,6 @@
         <property name="bulkFeedbackFactoryMap">
         	<map>
         		<!-- These keys also appear in MockBulkSubmissionDao.java for the SDT bulk reference check -->
-        		<entry key="MCOL_20130722_A00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryValidated"/>
         		<entry key="MCOL_20130722_B00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryUploaded"/>
         		<entry key="MCOL_20130722_B00000002" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted"/>        		
         		<entry key="MCOL_20130722_C00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError"/> 

@@ -53,31 +53,31 @@
      		<list>
      			<list>
 	     			<!-- Unique  Request Identifier-->
-	       			<value>USER_REQUEST_ID_B1</value>
+	       			<value>USER_REQUEST_ID_B1a</value>
 	       			<!-- Request Type -->
 	       			<value>mcolClaim</value>
 	       			<!-- Request Status -->
-	       			<value>Accepted</value>
+	       			<value>Rejected</value>
 	       			<!-- Rejection Reason Code -->
-	       			<value></value>
+	       			<value>DUP_CUST_REQID</value>
 	       			<!-- Rejection Reason Description -->
-	       			<value></value>
+	       			<value>Duplicate User Request Identifier submitted USER_REQUEST_ID_B1a.</value>
 	       			<!-- Target response -->
-	       			<value>true</value>
+	       			<value>false</value>
 	       		</list>
 	       		<list>	     				       		       		
-	       			<value>USER_REQUEST_ID_B1</value>	       			
-	       			<value>mcolClaim</value>	       			
+	       			<value>USER_REQUEST_ID_B1b</value>	       			
+	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>DUP_CUST_REQID</value>	       			
-	       			<value>Duplicate User Request Identifier submitted USER_REQUEST_ID_B1.</value>
+	       			<value>DUPLD_CUST_REQID</value>	       			
+	       			<value>Unique Request Identifier has been specified more than once within the originating Bulk Request</value>
 	       			<value>false</value>
 	       		</list>
 	       		<list>	       					
 	       			<value>USER_REQUEST_ID_B2</value>	       			
 	       			<value>mcolClaim</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>39</value>	       			
+	       			<value>8</value>	       			
 	       			<value>First defendant's postcode is not in England or Wales.</value>
 	       			<value>true</value>
 	       		</list>
@@ -85,8 +85,8 @@
 	       			<value>USER_REQUEST_ID_B3</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value></value>	       			
-	       			<value>A bar on judgment/enforcement is in place.</value>
+	       			<value>24</value>	       			
+	       			<value>This judgment request is invalid on the referenced claim.</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	       		   			
@@ -101,7 +101,7 @@
 	       			<value>USER_REQUEST_ID_B5</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>86</value>	       			
+	       			<value>22</value>	       			
 	       			<value>Specified claim does not exist on MCOL.</value>
 	       			<value>true</value>
 	       		</list>
@@ -125,7 +125,7 @@
 	       			<value>USER_REQUEST_ID_B8</value>	       			
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>179</value>	       			
+	       			<value>67</value>	       			
 	       			<value>This claim status update is invalid on the referenced claim.</value>
 	       			<value>true</value>
 	       		</list>
@@ -133,7 +133,7 @@
 	       			<value>USER_REQUEST_ID_B9</value>	       			
 	       			<value>mcolWarrant</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>87</value>	       			
+	       			<value>23</value>	       			
 	       			<value>Specified claim does not belong to the requesting customer.</value>
 	       			<value>true</value>
 	       		</list>
@@ -141,8 +141,8 @@
 	       			<value>USER_REQUEST_ID_B10</value>	       			
 	       			<value>mcolJudgmentWarrant</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>96</value>	       			
-	       			<value>Not enough days have passed since date of service to allow judgment by default.</value>
+	       			<value>22</value>	       			
+	       			<value>Specified claim does not exist on MCOL.</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     	       					

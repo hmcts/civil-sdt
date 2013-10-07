@@ -67,4 +67,16 @@ public interface ISubmitQueryRequest extends IDomainObject
      */
     void setTargetApplication (final ITargetApplication targetApplication);
 
+    /**
+     * 
+     * @return the criteria type associated with the submit query request.
+     */
+    String getCriteriaType ();
+
+    /**
+     * 
+     * @param criteriaType the criteria type associated with the submit query request.
+     */
+    void setCriteriaType (final String criteriaType);
+
 }

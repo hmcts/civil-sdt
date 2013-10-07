@@ -40,6 +40,8 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.CriteriaType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.CriterionType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ResultsType;
@@ -76,6 +78,9 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
         final TargetApplication targetApplication = new TargetApplication ();
         targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ());
         submitQueryRequest.setTargetApplication (targetApplication);
+
+        // Get the criteria type
+        submitQueryRequest.setCriteriaType (this.getCriterion (submitQueryRequestType.getCriteria ()));
 
         return submitQueryRequest;
     }
@@ -117,6 +122,22 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
         bulkCustomer.setSdtCustomerId (headerType.getSdtCustomerId ());
         return bulkCustomer;
 
+    }
+
+    /**
+     * 
+     * @param criteria the criteria type object contained in the SubmitQuery reqeuest type
+     * @return the string criterion associated with the criteria type.
+     */
+    private String getCriterion (final CriteriaType criteria)
+    {
+        if (criteria != null)
+        {
+            final CriterionType criterion = criteria.getCriterion ();
+            return criterion.getCriteriaType ();
+        }
+
+        return null;
     }
 
 }

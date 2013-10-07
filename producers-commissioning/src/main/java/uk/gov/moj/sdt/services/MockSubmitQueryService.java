@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.Map;
+
 import uk.gov.moj.sdt.domain.SubmitQueryResponse;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
@@ -48,6 +50,11 @@ public class MockSubmitQueryService implements ISubmitQueryService
 {
 
     /**
+     * Map of the response content by the criteria type as key.
+     */
+    private Map<String, String> responseContentMap;
+
+    /**
      * Mock service will return a static response.
      * 
      * @param request request going to MCOL
@@ -59,38 +66,58 @@ public class MockSubmitQueryService implements ISubmitQueryService
 
         final ISubmitQueryResponse response = new SubmitQueryResponse ();
 
+        final String criteriaType = request.getCriteriaType ();
+
         response.setBulkCustomer (request.getBulkCustomer ());
         // CHECKSTYLE:OFF
-        response.setResultCount (3);
+        response.setResultCount (5);
         // CHECKSTYLE:ON
 
         response.setStatus (StatusCodeType.OK.value ());
         response.setErrorMessage (null);
 
         // Write the result xml to threadlocal so the outbound interceptor can pick it up
-        writeToThreadLocal ();
+        writeToThreadLocal (criteriaType);
 
         return response;
     }
 
     /**
-     * Write the static result to thread local.
+     * Write the result to thread local - the result is obtained from the
+     * responseContentMap.
+     * 
+     * @param criteriaType the criteria of the submit request
      */
-    private void writeToThreadLocal ()
+    private void writeToThreadLocal (final String criteriaType)
     {
+        String response = this.getResponseContentMap ().get (criteriaType);
 
-        final String result =
-                "<ns3:mcolDefenceDetail><ns3:claimNumber>12345678</ns3:claimNumber>"
-                        + "<ns3:defendant defendantId=\"1\"><ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>"
-                        + "<ns3:responseType>PA</ns3:responseType></ns3:defendant></ns3:mcolDefenceDetail>"
-                        + "<ns3:mcolDefenceDetail><ns3:claimNumber>12345678</ns3:claimNumber>"
-                        + "<ns3:defendant defendantId=\"2\"><ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>"
-                        + "<ns3:responseType>PA</ns3:responseType></ns3:defendant></ns3:mcolDefenceDetail>"
-                        + "<ns3:mcolDefenceDetail>"
-                        + "<ns3:claimNumber>22345678</ns3:claimNumber><ns3:defendant defendantId=\"1\">"
-                        + "<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate><ns3:responseType>PA</ns3:responseType>"
-                        + "</ns3:defendant></ns3:mcolDefenceDetail>";
+        if (response == null)
+        {
+            // If the criteria type is not one of the recognised type, then
+            // get the response for the default criteria.
+            response = this.getResponseContentMap ().get ("mcolDefenceCriteria");
+        }
 
-        SdtContext.getContext ().setRawOutXml (result);
+        SdtContext.getContext ().setRawOutXml (response);
+    }
+
+    /**
+     * 
+     * @return the response content map with the key as the criteria type
+     */
+    public Map<String, String> getResponseContentMap ()
+    {
+        return responseContentMap;
+    }
+
+    /**
+     * Setter for the response content map.
+     * 
+     * @param responseContentMap the response content map.
+     */
+    public void setResponseContentMap (final Map<String, String> responseContentMap)
+    {
+        this.responseContentMap = responseContentMap;
     }
 }

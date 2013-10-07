@@ -53,6 +53,11 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
      */
     private ITargetApplication targetApplication;
 
+    /**
+     * The criteria type of the Submit Query Request.
+     */
+    private String criteriaType;
+
     @Override
     public IBulkCustomer getBulkCustomer ()
     {
@@ -75,6 +80,18 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     public void setTargetApplication (final ITargetApplication targetApplication)
     {
         this.targetApplication = targetApplication;
+    }
+
+    @Override
+    public String getCriteriaType ()
+    {
+        return this.criteriaType;
+    }
+
+    @Override
+    public void setCriteriaType (final String criteriaType)
+    {
+        this.criteriaType = criteriaType;
     }
 
 }
