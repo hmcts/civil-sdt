@@ -135,17 +135,37 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
 
     private Set<IBulkCustomer> bulkCustomers;
 
+    /**
+     * The data retention period.
+     */
+
     private Long dataRetention = 12345L;
 
+    /**
+     * Parameter cache.
+     */
     private ICacheable globalParameterCache;
 
+    /**
+     * Global parameter.
+     */
     private IGlobalParameter globalParameter;
 
+    /**
+     * List of individual requests.
+     */
     private List<IIndividualRequest> individualRequests;
 
-    final long numberOfRequests = 1L;
+    /**
+     * The number of requests.
+     */
+    private final long numberOfRequests = 1L;
 
-    final long requestId = 20L;
+    /**
+     * Request id.
+     */
+
+    private final long requestId = 20L;
 
     /**
      * Constructor for test.
@@ -172,11 +192,19 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
 
     }
 
+    /**
+     * This method sets up a bulk submission and puts a domain object in there (bulk customer).
+     * 
+     * @param numberOfRequests the number of requests in this submission
+     * @param bulkCustomer the bulk customer
+     * @param individualRequests the list of individual requests
+     * @param application the application name for this bulk submission (MCOL, PCOL etc)
+     */
+
     private void createBulkSubmission (final long numberOfRequests, final IBulkCustomer bulkCustomer,
-                                       final List individualRequests, String application)
+                                       final List individualRequests, final String application)
     {
 
-        // setup a bulk submission and put a domain object in there (bulk customer)
         bulkSubmission = new BulkSubmission ();
         bulkSubmission.setBulkCustomer (bulkCustomer);
         bulkSubmission.setCustomerReference ("Customer Reference");
@@ -185,6 +213,12 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         bulkSubmission.setIndividualRequests (individualRequests);
     }
 
+    /**
+     * create a bulk customer.
+     * 
+     * @param applicationSet the set of ITargetApplication objects
+     * @return a bulk customer
+     */
     private IBulkCustomer createCustomer (final Set<ITargetApplication> applicationSet)
     {
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
@@ -194,24 +228,34 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         return bulkCustomer;
     }
 
-    // create me an application with a given name
-    private ITargetApplication createTargetApp (String targetApplicationCode)
+    /**
+     * create an application with a given name.
+     * 
+     * @param targetApplicationCode the code for the application, MCOL etc
+     * @return ITargetApplication
+     */
+    private ITargetApplication createTargetApp (final String targetApplicationCode)
     {
-        ITargetApplication application = new TargetApplication ();
+        final ITargetApplication application = new TargetApplication ();
         application.setTargetApplicationCode (targetApplicationCode);
         return application;
     }
 
-    // the list of applications for a customer
-    private Set<ITargetApplication> addAppToCustomerApplications (String applicationName)
+    /**
+     * the list of applications for a customer.
+     * 
+     * @param applicationName the application name
+     * @return the set of target applications for this customer
+     */
+    private Set<ITargetApplication> addAppToCustomerApplications (final String applicationName)
     {
-        Set<ITargetApplication> targetApplications = new HashSet<ITargetApplication> ();
+        final Set<ITargetApplication> targetApplications = new HashSet<ITargetApplication> ();
         targetApplications.add (createTargetApp (applicationName));
         return targetApplications;
     }
 
     /**
-     * The purpose of this test is to have a clean run through these three conditions
+     * The purpose of this test is to have a clean run through these three conditions.
      * 1) The customer has access to the target application
      * 2) No invalid bulk submission
      * 3) The individual requests matches the bulk submission requests
@@ -265,7 +309,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
 
     /**
      * 
-     * This test will fail on the check customer has access to MCOL application and catch the exception
+     * This test will fail on the check customer has access to MCOL application and catch the exception.
      */
 
     @Test
