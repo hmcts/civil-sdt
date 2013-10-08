@@ -32,8 +32,12 @@ package uk.gov.moj.sdt.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -184,4 +188,32 @@ public final class Utilities
 
         return textToReplace;
     }
+
+    /**
+     * Converts Joda {@link LocalDateTime} into {@link Calendar}.
+     * 
+     * @param localDateTime local date time instance.
+     * @return Calendar
+     */
+    public static Calendar convertLocalDateTimeToCalendar (final LocalDateTime localDateTime)
+    {
+        final Calendar calendar = Calendar.getInstance ();
+        calendar.setTime (localDateTime.toDate ());
+        return calendar;
+    }
+
+    /**
+     * Formats a LocalDateTime into a string.
+     * 
+     * @param localDateTime local date time object
+     * @return formatted date
+     */
+    public static String formatDateTimeForMessage (final LocalDateTime localDateTime)
+    {
+        final Date d = localDateTime.toDate ();
+        final SimpleDateFormat formatter = new SimpleDateFormat ("dd-MMM-yyyy HH:mm");
+        final String formattedDate = formatter.format (d);
+        return formattedDate;
+    }
+
 }
