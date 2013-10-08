@@ -100,11 +100,6 @@ public interface IErrorMessage extends IDomainObject
         REQ_COUNT_MISMATCH,
 
         /**
-         * Customer not configured with reference for target application.
-         */
-        CUST_REF_MISSING,
-
-        /**
          * Customer not setup for target application.
          */
         CUST_NOT_SETUP,
@@ -127,6 +122,12 @@ public interface IErrorMessage extends IDomainObject
         /**
          * Target system failed to respond to request and request timed out.
          */
-        REQ_NOT_ACK
+        REQ_NOT_ACK,
+
+        /**
+         * The Bulk Customer organisation is recognised by the SDT Service, but is not set up to send a Service Request
+         * message to the specified Target Application.
+         */
+        CUST_ID_INVALID
     }
 }
