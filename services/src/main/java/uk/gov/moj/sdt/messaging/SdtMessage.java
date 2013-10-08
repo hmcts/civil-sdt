@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,70 +28,83 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-
 package uk.gov.moj.sdt.messaging;
 
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import java.io.Serializable;
 
-import org.easymock.EasyMock;
 import org.joda.time.LocalDateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.jms.core.JmsTemplate;
 
 /**
- * Test class for testing the MessageWriter implementation.
+ * Message class that holds the actual message text and additional information
+ * to be put on the messaging queue.
  * 
  * @author Manoj Kulkarni
  * 
  */
-public class MessageWriterTest
+public class SdtMessage implements Serializable
 {
 
     /**
-     * JMS Template for mocking.
-     */
-    private JmsTemplate jmsTemplate;
-
-    /**
-     * MessageWriter for mocking.
-     */
-    private MessageWriter messageWriter;
-
-    /**
-     * Set up the variables.
-     */
-    @Before
-    public void setUp ()
-    {
-        // Nicemock returns default values
-        jmsTemplate = EasyMock.createMock (JmsTemplate.class);
-        messageWriter = new MessageWriter (jmsTemplate, "JMSUnitTestQ");
-    }
-
-    /**
-     * Test method to test the sending of message.
      * 
      */
-    @Test
-    public void testQueueMessage ()
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * This variable holds the sdtRequestReference of the individual request
+     * that is to be queued on the message queue for further processing.
+     */
+    private String sdtRequestReference;
+
+    /**
+     * This variable holds the date and time that the message is put on the queue.
+     * It is used for determining the rate at which messages are read back from
+     * the queue.
+     */
+    private LocalDateTime messageSentDate;
+
+    /**
+     * 
+     * @return the SDT request reference of the individual request.
+     */
+    public String getSdtRequestReference ()
     {
-        // Setup finished, now tell the mock what to expect.
-        final SdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("Test");
-        sdtMessage.setMessageSentDate (LocalDateTime.now ());
-
-        jmsTemplate.convertAndSend (sdtMessage);
-        EasyMock.expectLastCall ();
-
-        // Get ready to call the mock.
-        replay (jmsTemplate);
-
-        // Send the message.
-        messageWriter.queueMessage (sdtMessage);
-
-        // Make sure the mock was called as expected.
-        verify (jmsTemplate);
+        return sdtRequestReference;
     }
+
+    /**
+     * Sets the sdtRequestReference of the individual request
+     * that is to be queued on the message queue for further processing.
+     * 
+     * @param sdtRequestReference the SDT request reference
+     */
+    public void setSdtRequestReference (final String sdtRequestReference)
+    {
+        this.sdtRequestReference = sdtRequestReference;
+    }
+
+    /**
+     * 
+     * @return LocalDateTime - the date and time that the message is put on the queue.
+     */
+    public LocalDateTime getMessageSentDate ()
+    {
+        return messageSentDate;
+    }
+
+    /**
+     * Sets the date and time that the message is put on the queue.
+     * 
+     * @param messageSentDate - the date and time that the message is put on the queue.
+     */
+    public void setMessageSentDate (final LocalDateTime messageSentDate)
+    {
+        this.messageSentDate = messageSentDate;
+    }
+
+    @Override
+    public String toString ()
+    {
+        return "SdtMessage [sdtRequestReference=" + sdtRequestReference + ", messageSentDate=" + messageSentDate + "]";
+    }
+
 }

@@ -99,9 +99,12 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
         LOG.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
         // Write a Message to the MDB
+        final SdtMessage sdtMessage = new SdtMessage ();
+        sdtMessage.setSdtRequestReference ("SDT_REQ_TEST_1");
+        sdtMessage.setMessageSentDate (LocalDateTime.now ());
         final IMessageWriter messageWriter =
                 (IMessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
-        messageWriter.queueMessage ("SDT_REQ_TEST_1");
+        messageWriter.queueMessage (sdtMessage);
         LOG.debug ("After SetUp");
     }
 

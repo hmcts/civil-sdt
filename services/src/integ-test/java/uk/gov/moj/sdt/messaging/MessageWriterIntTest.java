@@ -37,6 +37,7 @@ import javax.jms.JMSException;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
 
+import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,14 +86,20 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
         final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
         // Send the first message.
+        final SdtMessage message1 = new SdtMessage ();
         final String strMessage1 =
                 "TestMessage1" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        messageWriter.queueMessage (strMessage1);
+        message1.setSdtRequestReference (strMessage1);
+        message1.setMessageSentDate (LocalDateTime.now ());
+        messageWriter.queueMessage (message1);
 
         // Send the second message.
+        final SdtMessage message2 = new SdtMessage ();
         final String strMessage2 =
                 "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        messageWriter.queueMessage (strMessage2);
+        message2.setSdtRequestReference (strMessage2);
+        message2.setMessageSentDate (LocalDateTime.now ());
+        messageWriter.queueMessage (message2);
 
         // Wait for 10 seconds before checking the queue.
         Thread.sleep (10000);

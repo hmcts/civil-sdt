@@ -74,13 +74,13 @@ public class MessageWriter implements IMessageWriter
     }
 
     @Override
-    public void queueMessage (final String message)
+    public void queueMessage (final Object messageObj)
     {
-        LOGGER.debug ("Sending message [" + message + "] to queue [" + queueName + "]");
+        LOGGER.debug ("Sending message [" + messageObj.toString () + "] to queue [" + queueName + "]");
 
         try
         {
-            this.jmsTemplate.convertAndSend (message);
+            this.jmsTemplate.convertAndSend (messageObj);
         }
         catch (final UncategorizedJmsException e)
         {

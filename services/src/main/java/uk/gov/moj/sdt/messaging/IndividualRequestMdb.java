@@ -32,7 +32,7 @@ package uk.gov.moj.sdt.messaging;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.TextMessage;
+import javax.jms.ObjectMessage;
 
 import jline.internal.Log;
 
@@ -85,15 +85,16 @@ public class IndividualRequestMdb implements IMessageDrivenBean
     @Transactional (propagation = Propagation.REQUIRED)
     public void readMessage (final Message message)
     {
-        // All expected messages are text messages written by the message writer.
-        if (message instanceof TextMessage)
+        // All expected messages are object messages written by the message writer.
+        if (message instanceof ObjectMessage)
         {
+            final ObjectMessage objectMessage = (ObjectMessage) message;
             String sdtReference = null;
             try
             {
                 final boolean isMessageReDelivered = message.getJMSRedelivered ();
                 LOGGER.debug ("Message re-delivered status [" + isMessageReDelivered + "]");
-                sdtReference = ((TextMessage) message).getText ();
+                sdtReference = ((SdtMessage) objectMessage.getObject ()).getSdtRequestReference ();
             }
             catch (final JMSException e)
             {

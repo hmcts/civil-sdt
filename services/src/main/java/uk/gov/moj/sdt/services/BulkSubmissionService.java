@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.services;
 
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -44,6 +45,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
@@ -136,7 +138,11 @@ public class BulkSubmissionService implements IBulkSubmissionService
                     @Override
                     public void run ()
                     {
-                        getMessageWriter ().queueMessage (iRequest.getSdtRequestReference ());
+                        final SdtMessage messageObj = new SdtMessage ();
+                        messageObj.setSdtRequestReference (iRequest.getSdtRequestReference ());
+                        messageObj.setMessageSentDate (LocalDateTime.now ());
+
+                        getMessageWriter ().queueMessage (messageObj);
                     }
 
                 });

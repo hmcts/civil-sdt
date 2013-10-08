@@ -61,6 +61,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -171,7 +172,10 @@ public class BulkSubmissionServiceTest
 
         for (IIndividualRequest request : individualRequests)
         {
-            mockMessageWriter.queueMessage (request.getSdtRequestReference ());
+            final SdtMessage sdtMessage = new SdtMessage ();
+            sdtMessage.setMessageSentDate (LocalDateTime.now ());
+            sdtMessage.setSdtRequestReference (request.getSdtRequestReference ());
+            mockMessageWriter.queueMessage (sdtMessage);
         }
 
         EasyMock.expectLastCall ().anyTimes ();
@@ -228,7 +232,11 @@ public class BulkSubmissionServiceTest
                     @Override
                     public void run ()
                     {
-                        mockMessageWriter.queueMessage (request.getSdtRequestReference ());
+                        final SdtMessage sdtMessage = new SdtMessage ();
+                        sdtMessage.setMessageSentDate (LocalDateTime.now ());
+                        sdtMessage.setSdtRequestReference (request.getSdtRequestReference ());
+
+                        mockMessageWriter.queueMessage (sdtMessage);
                         EasyMock.expectLastCall ();
                     }
 

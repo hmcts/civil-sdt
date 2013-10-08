@@ -40,10 +40,10 @@ package uk.gov.moj.sdt.messaging.api;
 public interface IMessageWriter
 {
     /**
-     * Writes a message to the message queue.
+     * Writes a object to the message queue.
      * 
-     * @param message the message to be written to the message queue
+     * @param messageObj the message object to be written to the message queue
      */
-    void queueMessage (String message);
+    void queueMessage (Object messageObj);
 
 }
