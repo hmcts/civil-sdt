@@ -94,7 +94,7 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
             final IErrorLog errorLog = new ErrorLog ();
             final List<String> replacements = new ArrayList<String> ();
             final String description = "Duplicate Unique Request Identifier submitted {0}.";
-            replacements.add (String.valueOf (customerRequestReference));
+            replacements.add (customerRequestReference);
 
             errorLog.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
             errorLog.setErrorText (MessageFormat.format (description, replacements.toArray ()));

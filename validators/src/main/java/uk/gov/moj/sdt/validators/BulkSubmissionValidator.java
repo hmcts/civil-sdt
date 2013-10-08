@@ -41,6 +41,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
@@ -98,10 +99,14 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         {
             replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (sdtCustomerReference));
+            replacements.add (Utilities.formatDateTimeForMessage (invalidBulkSubmission.getCreatedDate ()));
+            replacements.add (invalidBulkSubmission.getSdtBulkReference ());
             // TODO Obtain error description from database. Similar changes might be required in other validators.
             // CHECKSTYLE:OFF
-            throw new CustomerReferenceNotUniqueException (IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString (),
-                    "Duplicate User File Reference {0} supplied.", replacements);
+            throw new CustomerReferenceNotUniqueException (
+                    IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString (),
+                    "Duplicate User File Reference {0} supplied. This was previously used to Submit a Bulk Request on {1} and the SDT Bulk Reference {2} was allocated.",
+                    replacements);
             // CHECKSTYLE:ON
         }
 
