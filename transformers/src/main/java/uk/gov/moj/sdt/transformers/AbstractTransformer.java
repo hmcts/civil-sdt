@@ -30,9 +30,6 @@
  * $LastChangedBy: agarwals $ */
 package uk.gov.moj.sdt.transformers;
 
-import java.util.Calendar;
-
-import org.joda.time.LocalDateTime;
 
 /**
  * Base class for web service handlers that provides common methods for workflow.
@@ -46,16 +43,4 @@ public abstract class AbstractTransformer
      */
     public static final String SDT_SERVICE = "SDT";
 
-    /**
-     * Converts Joda {@link LocalDateTime} into {@link Calendar}.
-     * 
-     * @param localDateTime local date time instance.
-     * @return Calendar
-     */
-    public static Calendar convertLocalDateTimeToCalendar (final LocalDateTime localDateTime)
-    {
-        final Calendar calendar = Calendar.getInstance ();
-        calendar.setTime (localDateTime.toDate ());
-        return calendar;
-    }
 }

@@ -43,6 +43,7 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -110,7 +111,7 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
         bulkRequestStatusType.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
         bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_SERVICE);
         bulkRequestStatusType.setCustomerReference (bulkSubmission.getCustomerReference ());
-        bulkRequestStatusType.setSubmittedDate (AbstractTransformer.convertLocalDateTimeToCalendar (bulkSubmission
+        bulkRequestStatusType.setSubmittedDate (Utilities.convertLocalDateTimeToCalendar (bulkSubmission
                 .getCreatedDate ()));
 
         // Set bulk status type

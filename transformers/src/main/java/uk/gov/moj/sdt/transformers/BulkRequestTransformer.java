@@ -46,6 +46,7 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -166,7 +167,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         jaxb.setRequestCount (bulkSubmission.getNumberOfRequest ());
 
         // Populate submission date in response
-        jaxb.setSubmittedDate (AbstractTransformer.convertLocalDateTimeToCalendar (bulkSubmission.getCreatedDate ()));
+        jaxb.setSubmittedDate (Utilities.convertLocalDateTimeToCalendar (bulkSubmission.getCreatedDate ()));
 
         // Initialise the status to OK
         final StatusType statusType = new StatusType ();
