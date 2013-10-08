@@ -50,7 +50,6 @@ import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.GlobalParameter;
@@ -94,53 +93,17 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     /**
      * The bulk customer dao.
      */
-
     private IBulkCustomerDao mockIBulkCustomerDao;
-
-    /**
-     * The DAO.
-     */
-
-    private ITargetApplicationDao mockITargetApplicationDao;
 
     /**
      * bulk submission.
      */
-
     private BulkSubmission bulkSubmission;
 
     /**
      * The bulk customer.
      */
     private IBulkCustomer bulkCustomer;
-
-    /**
-     * The customer reference number.
-     */
-    private String customerReferenceId = " customerReference ";
-
-    /**
-     * Customer reference.
-     */
-
-    private String customerReference;
-
-    /**
-     * The bulk customer id number.
-     */
-    private Long sdtCustomerId;
-
-    /**
-     * IBulkSubmission dao.
-     */
-
-    private Set<IBulkCustomer> bulkCustomers;
-
-    /**
-     * The data retention period.
-     */
-
-    private Long dataRetention = 12345L;
 
     /**
      * Parameter cache.
@@ -226,7 +189,6 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
         bulkCustomer.setSdtCustomerId (12345L);
         bulkCustomer.setTargetApplications (applicationSet);
-
         return bulkCustomer;
     }
 
@@ -313,7 +275,6 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
      * 
      * This test will fail on the check customer has access to MCOL application and catch the exception.
      */
-
     @Test
     public void testCustomerDoesNotHaveAccess ()
     {
@@ -360,17 +321,12 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
      * 
      * This test will contain an invalid bulk submission and catch the exception.
      */
-
     @Test
     public void testInvalidBulkSubmission ()
     {
 
         try
         {
-
-            // set up the data we are going to use for this customer
-            // set up bulk customer with the application it can use
-
             // set up a bulk customer to use the PCOL application to make it error as the bulk submission sets MCOL.
             bulkCustomer = createCustomer (addAppToCustomerApplications ("MCOL"));
 
@@ -427,7 +383,6 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
      * 
      * This test will have an incorrect number of requests and catch the exception.
      */
-
     @Test
     public void testRequestCountdoesNotMatch ()
     {
