@@ -146,8 +146,11 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
             EasyMock.verify (mockIBulkCustomerDao);
 
             // [^\[]*\[CUST_NOT_SETUP\][^\[]*\[12345\].*
-            Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("CUST_NOT_SETUP"));
-            Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("12345"));
+            Assert.assertTrue ("Error code incorrect", e.getErrorCode ().contains ("CUST_ID_INVALID"));
+            // CHECKSTYLE:OFF
+            Assert.assertTrue ("Substitution value incorrect",
+                    e.getMessage ().contains ("The Bulk Customer organisation does not have a SDT Customer ID set up."));
+            // CHECKSTYLE:ON
         }
     }
 }

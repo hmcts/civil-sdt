@@ -44,6 +44,7 @@ import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easymock.EasyMock;
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -211,6 +212,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         bulkSubmission.setTargetApplication (createTargetApp (application));
         bulkSubmission.setNumberOfRequest (numberOfRequests);
         bulkSubmission.setIndividualRequests (individualRequests);
+        bulkSubmission.setCreatedDate (new LocalDateTime ());
     }
 
     /**
