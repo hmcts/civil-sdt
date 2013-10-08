@@ -68,7 +68,6 @@ ALTER TABLE individual_requests           ADD CONSTRAINT ir_sbr_nn CHECK (sdt_bu
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_ln_nn  CHECK (line_number           IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_srr_nn CHECK (sdt_request_reference IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_cd_nn  CHECK (created_date          IS NOT NULL);
-ALTER TABLE individual_requests           ADD CONSTRAINT ir_ip_nn  CHECK (individual_payload    IS NOT NULL);
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_vn_nn  CHECK (version_number        IS NOT NULL);
 
 
