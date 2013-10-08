@@ -67,8 +67,8 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
         // Mock the Target Application
         final Set<ITargetApplication> targetApplications = new HashSet<ITargetApplication> ();
         final ITargetApplication targetApplication = new TargetApplication ();
-        targetApplication.setTargetApplicationCode ("mcol");
-        targetApplication.setTargetApplicationName ("mcol");
+        targetApplication.setTargetApplicationCode ("MCOL");
+        targetApplication.setTargetApplicationName ("MCOL");
         targetApplications.add (targetApplication);
 
         bulkCustomer.setTargetApplications (targetApplications);
