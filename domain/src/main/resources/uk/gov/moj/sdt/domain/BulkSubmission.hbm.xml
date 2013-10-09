@@ -49,5 +49,8 @@
         </list>
         <one-to-one name="errorLog" class="uk.gov.moj.sdt.domain.ErrorLog" cascade="all">
         </one-to-one>
+        <many-to-one name="serviceRequest" class="uk.gov.moj.sdt.domain.ServiceRequest">
+            <column name="SERVICE_REQUEST_ID" />
+        </many-to-one>
     </class>
 </hibernate-mapping>

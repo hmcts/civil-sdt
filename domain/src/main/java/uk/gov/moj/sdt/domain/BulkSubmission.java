@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
@@ -114,6 +115,11 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
      * Error log.
      */
     private IErrorLog errorLog;
+
+    /**
+     * Service request is an audit log for incoming and outgoing request.
+     */
+    private IServiceRequest serviceRequest;
 
     /**
      * Constructor for {@link BulkSubmission}.
@@ -272,6 +278,18 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     {
         individualRequest.setBulkSubmission (this);
         this.individualRequests.add (individualRequest);
+    }
+
+    @Override
+    public IServiceRequest getServiceRequest ()
+    {
+        return serviceRequest;
+    }
+
+    @Override
+    public void setServiceRequest (final IServiceRequest serviceRequest)
+    {
+        this.serviceRequest = serviceRequest;
     }
 
 }
