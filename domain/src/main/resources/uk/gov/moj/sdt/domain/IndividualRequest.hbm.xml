@@ -45,14 +45,15 @@
         </property>
         <property name="requestPayload" type="uk.gov.moj.sdt.domain.type.BlobType">
             <column name="INDIVIDUAL_PAYLOAD" />
-        </property>   
-        <one-to-one name="errorLog" class="uk.gov.moj.sdt.domain.ErrorLog" cascade="all">
-        </one-to-one>
+        </property>           
         <property name="internalSystemError" type="java.lang.String">
             <column name="INTERNAL_SYSTEM_ERROR" />
         </property>
         <property name="requestType" type="java.lang.String">
             <column name="REQUEST_TYPE" />
-        </property>
+        </property>                
+        <one-to-one name="errorLog" class="uk.gov.moj.sdt.domain.ErrorLog" cascade="all">
+        </one-to-one>
+        
     </class>
 </hibernate-mapping>

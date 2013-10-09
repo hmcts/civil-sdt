@@ -5,9 +5,9 @@
 <hibernate-mapping>
     <class name="uk.gov.moj.sdt.domain.ErrorLog" lazy="false" table="ERROR_LOGS">
         <id name="id" column="ERROR_LOG_ID" >  
-                  <generator class="sequence" >
-                  	<param name="sequence">err_log_seq</param>
-                  </generator>
+        	<generator class="sequence" >
+            	<param name="sequence">err_log_seq</param>
+            </generator>
         </id>
         <version name="version" access="field" column="VERSION_NUMBER"/>
         <property name="createdDate" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime">
@@ -21,6 +21,10 @@
         </property>
         <property name="errorText" type="java.lang.String">
             <column name="ERROR_TEXT" />
-        </property>        
+        </property>
+		<!-- This is effectively a one to one mapping -->
+        <many-to-one name="individualRequest" class="uk.gov.moj.sdt.domain.IndividualRequest" not-null="true" cascade="all" unique="true">
+        	<column name="INDIVIDUAL_REQUEST_ID" />
+    	</many-to-one>
     </class>
 </hibernate-mapping>
