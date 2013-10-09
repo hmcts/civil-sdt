@@ -182,6 +182,20 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
     }
 
     /**
+     * Test get individual request not found.
+     */
+    @Test
+    public void testGetBulkSubmissionNotFound ()
+    {
+
+        final IIndividualRequest individualRequest =
+                individualRequestDao.getIndividualRequest (bulkCustomer, "NOT_FOUND", dataRetentionPeriod);
+
+        Assert.assertNull (individualRequest);
+
+    }
+
+    /**
      * Create a individual request.
      * 
      * @param customerReference customer reference

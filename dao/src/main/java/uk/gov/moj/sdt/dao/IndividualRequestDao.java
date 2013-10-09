@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -84,10 +86,15 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         // Only bring back individual request within the data retention period
         criteria.add (createDateRestriction ("createdDate", dataRetention));
 
-        final IIndividualRequest individualRequest = (IIndividualRequest) criteria.uniqueResult ();
+        final List<IIndividualRequest> individualRequests = (List<IIndividualRequest>) criteria.list ();
 
-        return individualRequest;
+        // Return null or the first individual request
+        if (individualRequests == null || individualRequests.size () == 0)
+        {
+            return null;
+        }
 
+        return individualRequests.get (0);
     }
 
     @Override
