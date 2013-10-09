@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -81,9 +83,15 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
         // Only bring back bulk submission within the data retention period
         criteria.add (createDateRestriction ("createdDate", dataRetention));
 
-        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult ();
+        final List<IBulkSubmission> bulkSubmissions = (List<IBulkSubmission>) criteria.list ();
 
-        return bulkSubmission;
+        // Return null or the first bulk submission
+        if (bulkSubmissions == null || bulkSubmissions.size () == 0)
+        {
+            return null;
+        }
+
+        return bulkSubmissions.get (0);
 
     }
 
