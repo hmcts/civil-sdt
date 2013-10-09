@@ -166,7 +166,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
      */
 
     private void createBulkSubmission (final long numberOfRequests, final IBulkCustomer bulkCustomer,
-                                       final List individualRequests, final String application)
+                                       final List<IIndividualRequest> individualRequests, final String application)
     {
 
         bulkSubmission = new BulkSubmission ();
@@ -219,6 +219,22 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     }
 
     /**
+     * Method to mock and test GlobalParameterCache.
+     */
+    private void setupGlobalParametersCache ()
+    {
+        globalParameter = new GlobalParameter ();
+        globalParameter.setName ("DATA_RETENTION_PERIOD");
+        globalParameter.setValue ("30");
+        globalParameterCache = EasyMock.createMock (ICacheable.class);
+        expect (globalParameterCache.getValue (IGlobalParameter.class, "DATA_RETENTION_PERIOD")).andReturn (
+                globalParameter);
+        replay (globalParameterCache);
+        validator.setGlobalParameterCache (globalParameterCache);
+
+    }
+
+    /**
      * The purpose of this test is to have a clean run through these three conditions.
      * 1) The customer has access to the target application
      * 2) No invalid bulk submission
@@ -259,16 +275,63 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
 
         validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
 
-        globalParameter = new GlobalParameter ();
-        globalParameter.setName ("DATA_RETENTION_PERIOD");
-        globalParameter.setValue ("30");
-        globalParameterCache = EasyMock.createMock (ICacheable.class);
-        expect (globalParameterCache.getValue (IGlobalParameter.class, "DATA_RETENTION_PERIOD")).andReturn (
-                globalParameter);
-        replay (globalParameterCache);
+        setupGlobalParametersCache ();
 
-        validator.setGlobalParameterCache (globalParameterCache);
         bulkSubmission.accept (validator, null);
+    }
+
+    /**
+     * The purpose of this test is to have a clean run through these three conditions.
+     * 1) The customer has access to the target application
+     * 2) No invalid bulk submission
+     * 3) The second individual request has a duplicate request id
+     * 
+     */
+    @Test
+    public void testDuplicateIndividualRequest ()
+    {
+
+        // set up a bulk customer to use the MCOL application
+        bulkCustomer = createCustomer (addAppToCustomerApplications ("MCOL"));
+
+        // create an individual request
+        individualRequests = new ArrayList<IIndividualRequest> ();
+        IIndividualRequest individualRequest = new IndividualRequest ();
+        individualRequest.setId (1);
+        individualRequest.setCustomerRequestReference ("Duplicate");
+        individualRequests.add (individualRequest);
+        // Set the duplicate request
+        individualRequest = new IndividualRequest ();
+        individualRequest.setId (2);
+        individualRequest.setCustomerRequestReference ("Duplicate");
+        individualRequests.add (individualRequest);
+
+        createBulkSubmission (individualRequests.size (), bulkCustomer, individualRequests, "MCOL");
+
+        // set up the mock objects
+        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (bulkCustomer);
+        replay (mockIBulkCustomerDao);
+
+        // inject the bulk customer into the validator
+        validator.setBulkCustomerDao (mockIBulkCustomerDao);
+
+        // create a mock Bulk Submission DAO and return true
+        mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
+
+        expect (mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (), 30))
+                .andReturn (null);
+        replay (mockIBulkSubmissionDao);
+
+        validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
+
+        setupGlobalParametersCache ();
+
+        bulkSubmission.accept (validator, null);
+
+        // Check the duplicate individual request has been rejected
+        Assert.assertEquals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus (), bulkSubmission
+                .getIndividualRequests ().get (1).getRequestStatus ());
+
     }
 
     /**
@@ -354,15 +417,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
 
             validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
 
-            globalParameter = new GlobalParameter ();
-            globalParameter.setName ("DATA_RETENTION_PERIOD");
-            globalParameter.setValue ("30");
-            globalParameterCache = EasyMock.createMock (ICacheable.class);
-            expect (globalParameterCache.getValue (IGlobalParameter.class, "DATA_RETENTION_PERIOD")).andReturn (
-                    globalParameter);
-            replay (globalParameterCache);
-
-            validator.setGlobalParameterCache (globalParameterCache);
+            setupGlobalParametersCache ();
 
             bulkSubmission.accept (validator, null);
             Assert.fail ("Test failed to throw CustomerReferenceNotUniqueException ");
@@ -417,15 +472,8 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
 
             validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
 
-            globalParameter = new GlobalParameter ();
-            globalParameter.setName ("DATA_RETENTION_PERIOD");
-            globalParameter.setValue ("30");
-            globalParameterCache = EasyMock.createMock (ICacheable.class);
-            expect (globalParameterCache.getValue (IGlobalParameter.class, "DATA_RETENTION_PERIOD")).andReturn (
-                    globalParameter);
-            replay (globalParameterCache);
+            setupGlobalParametersCache ();
 
-            validator.setGlobalParameterCache (globalParameterCache);
             bulkSubmission.accept (validator, null);
 
             Assert.fail ("Test failed to throw RequestCountMismatchException ");
