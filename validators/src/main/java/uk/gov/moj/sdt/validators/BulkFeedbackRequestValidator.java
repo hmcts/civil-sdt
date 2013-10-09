@@ -42,7 +42,6 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
-import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
 /**
  * Bulk Feedback Request domain validator.
@@ -83,14 +82,7 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
         {
             final List<String> replacements = new ArrayList<String> ();
             replacements.add (String.valueOf (sdtBulkReference));
-
-            // CHECKSTYLE:OFF
-            throw new InvalidBulkReferenceException (
-                    IErrorMessage.ErrorCode.BULK_REF_INVALID.toString (),
-                    "There is no Bulk Request submission associated with your account for the supplied SDT Bulk Reference {0}",
-                    replacements);
-            // CHECKSTYLE:ON
-
+            createValidationException (replacements, IErrorMessage.ErrorCode.BULK_REF_INVALID);
         }
 
         LOGGER.debug ("completed visit(BulkFeedbackRequest)");

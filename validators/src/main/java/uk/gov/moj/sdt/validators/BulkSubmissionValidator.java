@@ -52,8 +52,6 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
-import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
-import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 
 /**
  * Implementation of {@link IBulkSubmissionValidator}.
@@ -109,13 +107,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             replacements.add (String.valueOf (sdtCustomerReference));
             replacements.add (Utilities.formatDateTimeForMessage (invalidBulkSubmission.getCreatedDate ()));
             replacements.add (invalidBulkSubmission.getSdtBulkReference ());
-            // TODO Obtain error description from database. Similar changes might be required in other validators.
-            // CHECKSTYLE:OFF
-            throw new CustomerReferenceNotUniqueException (
-                    IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString (),
-                    "Duplicate User File Reference {0} supplied. This was previously used to Submit a Bulk Request on {1} and the SDT Bulk Reference {2} was allocated.",
-                    replacements);
-            // CHECKSTYLE:ON
+            createValidationException (replacements, IErrorMessage.ErrorCode.DUP_CUST_FILEID);
         }
 
         // Check the request count matches
@@ -125,9 +117,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             replacements.add (Integer.valueOf (bulkSubmission.getIndividualRequests ().size ()).toString ());
             replacements.add ("" + bulkSubmission.getNumberOfRequest ());
             replacements.add (bulkSubmission.getCustomerReference ());
-            throw new RequestCountMismatchException (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.toString (),
-                    "Unexpected Total Number of Requests identified. {0} requested identified, "
-                            + "{1} requests expected in Bulk Request {2}.", replacements);
+            createValidationException (replacements, IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH);
         }
 
         // Validate customer reference is unique within the list of individual requests

@@ -31,18 +31,28 @@
 
 package uk.gov.moj.sdt.validators;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
+import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
+import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
+import uk.gov.moj.sdt.validators.exception.DuplicateUserRequestIdentifierException;
+import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
+import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
@@ -64,9 +74,19 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     private IBulkCustomerDao bulkCustomerDao;
 
     /**
+     * Target application dao.
+     */
+    private ITargetApplicationDao targetApplicationDao;
+
+    /**
      * Global parameter cache to retrieve data retention period.
      */
     private ICacheable globalParameterCache;
+
+    /**
+     * Error messages cache.
+     */
+    private ICacheable errorMessagesCache;
 
     /**
      * Check that the bulk customer exists has access to the target application.
@@ -80,7 +100,6 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
                 targetApplicationCode + "]");
         final IBulkCustomer bulkCustomer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
 
-        // TODO Replace assert with Exception
         assert bulkCustomer != null;
 
         if ( !bulkCustomer.hasAccess (targetApplicationCode))
@@ -88,11 +107,30 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
             List<String> replacements = null;
             replacements = new ArrayList<String> ();
             replacements.add (targetApplicationCode);
-            throw new CustomerNotSetupException (IErrorMessage.ErrorCode.CUST_NOT_SETUP.toString (),
-                    "The Bulk Customer organisation is not set up to send Service Request messages to the {0}. "
-                            + "Please contact <TBC> for assistance.", replacements);
+            replacements.add (getContactDetails ());
+            createValidationException (replacements, IErrorMessage.ErrorCode.CUST_NOT_SETUP);
+        }
+    }
+
+    /**
+     * Checks whether a target application code exists in the list.
+     * 
+     * @param targetApplicationCode target application code
+     * @param targetApplications list of target applications
+     * @return true or false
+     */
+    private boolean hasAccess (final String targetApplicationCode, final Set<ITargetApplication> targetApplications)
+    {
+
+        for (ITargetApplication targetApplication : targetApplications)
+        {
+            if (targetApplicationCode.equals (targetApplication.getTargetApplicationCode ()))
+            {
+                return true;
+            }
         }
 
+        return false;
     }
 
     /**
@@ -108,6 +146,95 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         final int dataRetention = Integer.parseInt (globalParameter.getValue ());
 
         return dataRetention;
+
+    }
+
+    /**
+     * Get the contact Details from the global parameters cache.
+     * 
+     * @return contact details
+     */
+    public String getContactDetails ()
+    {
+        final IGlobalParameter globalParameter =
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+        final String contactDetails = globalParameter.getValue ();
+
+        return contactDetails;
+
+    }
+
+    /**
+     * get the error message from the error message cache, putting the placeholders into the message.
+     * 
+     * @param replacements a list of Strings containing the replacements to go into the error message.
+     * @param errorCode String, the error code of the exception to be thrown and the message to be reported.
+     * @return error message
+     */
+    public String getErrorMessage (final List<String> replacements, final IErrorMessage.ErrorCode errorCode)
+    {
+        final String errorString = errorCode.toString ();
+        final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorString);
+        final String errorText = MessageFormat.format (errorMessage.getErrorText (), replacements.toArray ());
+
+        return errorText;
+    }
+
+    /**
+     * Create and throw a validation error exception according to the errorCode passed in.
+     * 
+     * @param replacements a list of Strings containing the replacements to go into the error message.
+     * @param errorCode String, the error code of the exception to be thrown and the message to be reported.
+     * @throws AbstractBusinessException super class of the exception to be thrown.
+     */
+    public void createValidationException (final List<String> replacements, final IErrorMessage.ErrorCode errorCode)
+        throws AbstractBusinessException
+    {
+        final String errorCodeStr = errorCode.toString ();
+        switch (errorCode)
+        {
+            case SDT_INT_ERR:
+            {
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                break;
+            }
+            case CUST_NOT_SETUP:
+            {
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                throw new CustomerNotSetupException (errorCodeStr, errorMessage.getErrorText (), replacements);
+            }
+            case CUST_ID_INVALID:
+            {
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                throw new CustomerNotFoundException (errorCodeStr, errorMessage.getErrorText (), replacements);
+            }
+            case DUP_CUST_FILEID:
+            {
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                // CHECKSTYLE:OFF
+                throw new CustomerReferenceNotUniqueException (errorCodeStr, errorMessage.getErrorText (), replacements);
+                // CHECKSTYLE:ON
+            }
+            case REQ_COUNT_MISMATCH:
+            {
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                throw new RequestCountMismatchException (errorCodeStr, errorMessage.getErrorText (), replacements);
+            }
+            case BULK_REF_INVALID:
+            {
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                throw new InvalidBulkReferenceException (errorCodeStr, errorMessage.getErrorText (), replacements);
+            }
+            case DUP_CUST_REQID:
+            {
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                throw new DuplicateUserRequestIdentifierException (errorCodeStr, errorMessage.getErrorText (),
+                        replacements);
+            }
+            default:
+                break;
+        }
 
     }
 
@@ -132,6 +259,16 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     }
 
     /**
+     * Set target application dao.
+     * 
+     * @param targetApplicationDao target application dao
+     */
+    public void setTargetApplicationDao (final ITargetApplicationDao targetApplicationDao)
+    {
+        this.targetApplicationDao = targetApplicationDao;
+    }
+
+    /**
      * Set the global parameter cache.
      * 
      * @param globalParameterCache global parameter cache
@@ -141,4 +278,13 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         this.globalParameterCache = globalParameterCache;
     }
 
+    /**
+     * Set the error messages cache.
+     * 
+     * @param errorMessagesCache error messages cache
+     */
+    public void setErrorMessagesCache (final ICacheable errorMessagesCache)
+    {
+        this.errorMessagesCache = errorMessagesCache;
+    }
 }

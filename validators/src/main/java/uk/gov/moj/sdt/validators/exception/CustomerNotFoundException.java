@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,46 +28,74 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.cache;
+package uk.gov.moj.sdt.validators.exception;
 
-import uk.gov.moj.sdt.cache.api.IGlobalParametersCache;
-import uk.gov.moj.sdt.domain.GlobalParameter;
-import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import java.util.List;
 
 /**
- * Mock implementation of the GlobalParametersCache.
+ * SDT Customer has not been setup for target application.
  * 
  * @author d130680
  * 
  */
-public class MockGlobalParametersCache implements ICacheable, IGlobalParametersCache
+public class CustomerNotFoundException extends AbstractBusinessException
 {
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = 1L;
 
-    @Override
-    public <DomainType extends IDomainObject> DomainType
-            getValue (final Class<DomainType> domainType, final String key)
+    /**
+     * SDT Customer has not been setup for target application.
+     * 
+     * @param code error code
+     * @param description error description
+     */
+    public CustomerNotFoundException (final String code, final String description)
     {
-
-        if (key.equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()))
-        {
-            final IGlobalParameter globalParameter = new GlobalParameter ();
-            globalParameter.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
-            globalParameter.setValue ("90");
-
-            return (DomainType) globalParameter;
-        }
-        if (key.equals (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ()))
-        {
-            final IGlobalParameter globalParameter = new GlobalParameter ();
-            globalParameter.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
-            globalParameter.setValue ("TBD");
-
-            return (DomainType) globalParameter;
-        }
-
-        return null;
+        super (code, description);
     }
 
+    /**
+     * SDT Customer has not been setup for target application.
+     * 
+     * @param code code
+     * @param description description
+     * @param replacements string replacements with tokens
+     */
+    public CustomerNotFoundException (final String code, final String description, final List<String> replacements)
+    {
+        super (code, description, replacements);
+    }
+
+    /**
+     * SDT Customer has not been setup for target application.
+     * 
+     * @param s the s
+     */
+    public CustomerNotFoundException (final String s)
+    {
+        super (s);
+    }
+
+    /**
+     * SDT Customer has not been setup for target application.
+     * 
+     * @param cause the cause
+     */
+    public CustomerNotFoundException (final Throwable cause)
+    {
+        super (cause);
+    }
+
+    /**
+     * SDT Customer has not been setup for target application.
+     * 
+     * @param s the s
+     * @param cause the cause
+     */
+    public CustomerNotFoundException (final String s, final Throwable cause)
+    {
+        super (s, cause);
+    }
 }

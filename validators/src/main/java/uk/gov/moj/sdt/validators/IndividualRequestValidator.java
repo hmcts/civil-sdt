@@ -30,7 +30,6 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -93,11 +92,11 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
             // Set the error in the error log and continue rather than throw an exception
             final IErrorLog errorLog = new ErrorLog ();
             final List<String> replacements = new ArrayList<String> ();
-            final String description = "Duplicate Unique Request Identifier submitted {0}.";
             replacements.add (customerRequestReference);
+            final String description = getErrorMessage (replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
 
             errorLog.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
-            errorLog.setErrorText (MessageFormat.format (description, replacements.toArray ()));
+            errorLog.setErrorText (description);
             // Set the created date for new ErrorLog objects
             errorLog.setCreatedDate (LocalDateTime.fromDateFields (new Date (System.currentTimeMillis ())));
 

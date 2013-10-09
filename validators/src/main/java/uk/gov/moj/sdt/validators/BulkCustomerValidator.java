@@ -30,6 +30,9 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,7 +40,6 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
-import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 
 /**
  * Implementation of bulk customer validation.
@@ -70,10 +72,13 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
 
         if (bulkCustomerFound == null)
         {
-            // Setup values for placeholder in message and construct business exception.
-            throw new CustomerNotSetupException (IErrorMessage.ErrorCode.CUST_ID_INVALID.toString (),
-                    "The Bulk Customer organisation does not have a SDT Customer ID set up. "
-                            + "Please contact <SDT Contact Details> for assistance.");
+            // Setup values for placeholder in message and create business exception.
+            final List<String> parameters = new ArrayList<String> ();
+            parameters.add (Long.toString (bulkCustomer.getSdtCustomerId ()));
+            parameters.add (getContactDetails ());
+
+            createValidationException (parameters, IErrorMessage.ErrorCode.CUST_NOT_SETUP);
+
         }
     }
 }
