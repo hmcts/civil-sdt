@@ -178,6 +178,8 @@ public class IndividualRequestValidatorTest extends SdtUnitTestBase
                 "Error code",
                 individualRequest.getErrorLog ().getErrorText ()
                         .contains ("Duplicate Unique Request Identifier submitted"));
+        Assert.assertEquals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus (),
+                individualRequest.getRequestStatus ());
 
     }
 

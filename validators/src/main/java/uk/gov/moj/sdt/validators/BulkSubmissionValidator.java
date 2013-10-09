@@ -30,16 +30,24 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -120,6 +128,35 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             throw new RequestCountMismatchException (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.toString (),
                     "Unexpected Total Number of Requests identified. {0} requested identified, "
                             + "{1} requests expected in Bulk Request {2}.", replacements);
+        }
+
+        // Validate customer reference is unique within the list of individual requests
+        final Set<String> customerReferenceSet = new HashSet<String> ();
+
+        for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests ())
+        {
+
+            final String customerRequestReference = individualRequest.getCustomerRequestReference ();
+            final boolean success = customerReferenceSet.add (customerRequestReference);
+            // Check that the user file reference is unique within the current list of individual requests
+            if ( !success)
+            {
+                // Set the error in the error log and continue rather than throw an exception
+                final IErrorLog errorLog = new ErrorLog ();
+                replacements = new ArrayList<String> ();
+                final String description =
+                        "Unique Request Identifier has been specified more than "
+                                + "once within the originating Bulk Request.";
+                replacements.add (customerRequestReference);
+
+                errorLog.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
+                errorLog.setErrorText (MessageFormat.format (description, replacements.toArray ()));
+                // Set the created date for new ErrorLog objects
+                errorLog.setCreatedDate (LocalDateTime.fromDateFields (new Date (System.currentTimeMillis ())));
+
+                // Change the status to rejected
+                individualRequest.markRequestAsRejected (errorLog);
+            }
         }
 
         LOGGER.debug ("finished visit(BulkSubmission)");
