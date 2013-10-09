@@ -12,5 +12,12 @@
 	<bean id="uk.gov.moj.sdt.consumers.Consumer" class="uk.gov.moj.sdt.consumers.Consumer">
 	</bean>
 
+	<bean id="uk.gov.moj.sdt.consumers.api.IConsumerGateway" class="uk.gov.moj.sdt.consumers.ConsumerGateway">
+		<property name="individualRequestConsumer" ref="uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer"/>
+	</bean>
+	
+	<bean id="uk.gov.moj.sdt.consumer.api.IIndividualRequestConsumer" class="uk.gov.moj.sdt.consumers.IndividualRequestConsumer">
+		<property name="transformer" ref="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer"/>
+	</bean>
 	
 </beans>
