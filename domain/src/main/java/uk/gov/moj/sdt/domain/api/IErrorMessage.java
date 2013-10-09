@@ -110,6 +110,11 @@ public interface IErrorMessage extends IDomainObject
         DUP_CUST_FILEID,
 
         /**
+         * Unique Request Identifier has been specified more than once within the originating Bulk Request.
+         */
+        DUPLD_CUST_REQID,
+
+        /**
          * Duplicate unique request identifier.
          */
         DUP_CUST_REQID,

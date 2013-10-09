@@ -34,6 +34,7 @@ package uk.gov.moj.sdt.domain;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Error log.
@@ -43,6 +44,11 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
  */
 public class ErrorLog extends AbstractDomainObject implements IErrorLog
 {
+    /**
+     * Individual request, null for error raised on bulk file.
+     */
+    private IIndividualRequest individualRequest;
+
     /**
      * Date record was created.
      */
@@ -62,6 +68,18 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
      * The error text.
      */
     private String errorText;
+
+    @Override
+    public IIndividualRequest getIndividualRequest ()
+    {
+        return individualRequest;
+    }
+
+    @Override
+    public void setIndividualRequest (final IIndividualRequest individualRequest)
+    {
+        this.individualRequest = individualRequest;
+    }
 
     @Override
     public LocalDateTime getCreatedDate ()

@@ -360,6 +360,9 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         // Set the updated date
         this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
+        // Do the association to error log
+        errorLog.setIndividualRequest (this);
+
     }
 
     @Override

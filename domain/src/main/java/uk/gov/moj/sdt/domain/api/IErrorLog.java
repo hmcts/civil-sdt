@@ -42,6 +42,20 @@ import org.joda.time.LocalDateTime;
 public interface IErrorLog extends IDomainObject
 {
     /**
+     * Get the Individual Request.
+     * 
+     * @return individual request
+     */
+    IIndividualRequest getIndividualRequest ();
+
+    /**
+     * Set the Individual Request.
+     * 
+     * @param individualRequest individual request
+     */
+    void setIndividualRequest (final IIndividualRequest individualRequest);
+
+    /**
      * Get created date.
      * 
      * @return created date

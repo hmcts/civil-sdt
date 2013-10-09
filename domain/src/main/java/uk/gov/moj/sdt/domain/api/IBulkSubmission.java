@@ -219,6 +219,20 @@ public interface IBulkSubmission extends IDomainObject
     void setErrorLog (final IErrorLog errorLog);
 
     /**
+     * Get service request.
+     * 
+     * @return service request
+     */
+    IServiceRequest getServiceRequest ();
+
+    /**
+     * Set service request.
+     * 
+     * @param serviceRequest service request
+     */
+    void setServiceRequest (final IServiceRequest serviceRequest);
+
+    /**
      * The status of the Bulk Request - one of "Uploaded", "Failed", "
      * Validated", or "Completed" to reflect the current status of SDT processing. Maintained by SDT.
      * 
