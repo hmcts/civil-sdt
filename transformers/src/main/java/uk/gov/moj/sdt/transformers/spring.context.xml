@@ -22,5 +22,9 @@
 		class="uk.gov.moj.sdt.transformers.SubmitQueryTransformer">
 	</bean>
 
+    <bean id="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer"
+        class="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer">
+    </bean>
+
 </beans>
     
