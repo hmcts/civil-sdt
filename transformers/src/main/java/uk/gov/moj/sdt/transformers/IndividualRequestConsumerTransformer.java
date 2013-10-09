@@ -65,6 +65,7 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
     public void
             transformJaxbToDomain (final IndividualResponseType jaxbInstance, final IIndividualRequest domainObject)
     {
+        LOGGER.debug ("transform IndividualResponseType to IIndividualRequest");
         // TODO Auto-generated method stub
 
     }
@@ -72,6 +73,7 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
     @Override
     public IndividualRequestType transformDomainToJaxb (final IIndividualRequest domainObject)
     {
+        LOGGER.debug ("transform IIndividualRequest to IndividualRequestType");
         // TODO Auto-generated method stub
         return null;
     }
