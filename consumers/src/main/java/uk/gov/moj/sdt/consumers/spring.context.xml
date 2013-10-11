@@ -16,7 +16,7 @@
 		<property name="individualRequestConsumer" ref="uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer"/>
 	</bean>
 	
-	<bean id="uk.gov.moj.sdt.consumer.api.IIndividualRequestConsumer" class="uk.gov.moj.sdt.consumers.IndividualRequestConsumer">
+	<bean id="uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer" class="uk.gov.moj.sdt.consumers.IndividualRequestConsumer">
 		<property name="transformer" ref="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer"/>
 	</bean>
 	

@@ -93,4 +93,29 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
         }
 
     }
+
+    /**
+     * 
+     * @param transformer the transformer
+     */
+    // CHECKSTYLE:OFF
+    public
+            void
+            setTransformer (final IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer)
+    {
+        this.transformer = transformer;
+    }
+
+    // CHECKSTYLE:ON
+
+    /**
+     * 
+     * @return the transformer for IndividualRequestConsumer
+     */
+    public IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest>
+            getTransformer ()
+    {
+        return this.transformer;
+    }
+
 }
