@@ -32,7 +32,12 @@
 package uk.gov.moj.sdt.consumers;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.ws.BindingProvider;
 
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -72,6 +77,22 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         ISdtEndpointPortType client =
                 (ISdtEndpointPortType) SpringApplicationContext
                         .getBean ("uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType");
+
+        Client clientProxy = ClientProxy.getClient (client);
+
+        // Set endpoint address
+        BindingProvider provider = (BindingProvider) client;
+        provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                "http://localhost:8888/producers-comx/service/sdtapi");
+
+        HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
+        // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
+        // it times out
+        httpClientPolicy.setConnectionTimeout (300);
+        // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
+        httpClientPolicy.setReceiveTimeout (400);
+        httpConduit.setClient (httpClientPolicy);
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
