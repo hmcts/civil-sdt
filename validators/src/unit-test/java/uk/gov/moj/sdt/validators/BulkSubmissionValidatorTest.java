@@ -52,15 +52,18 @@ import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.SdtUnitTestBase;
+import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
@@ -111,9 +114,19 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     private ICacheable globalParameterCache;
 
     /**
-     * Global parameter.
+     * Parameter cache.
      */
-    private IGlobalParameter globalParameter;
+    private ICacheable errorMessagesCache;
+
+    /**
+     * Error message.
+     */
+    private IErrorMessage errorMessage;
+
+    /**
+     * Contact details for assistance.
+     */
+    private String contact = "THE MOJ";
 
     /**
      * List of individual requests.
@@ -130,6 +143,22 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
      */
 
     private final long requestId = 20L;
+
+    /**
+     * Data retention period.
+     * 
+     */
+    private final int dataRetentionPeriod = 90;
+
+    /**
+     * SDT Bulk reference.
+     */
+    private String sdtBulkReference = "sdtBulkReference";
+
+    /**
+     * Current date time.
+     */
+    private LocalDateTime now = new LocalDateTime ();
 
     /**
      * Constructor for test.
@@ -154,6 +183,8 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         // mock BulkCustomer object
         mockIBulkCustomerDao = EasyMock.createMock (IBulkCustomerDao.class);
 
+        globalParameterCache = EasyMock.createMock (ICacheable.class);
+
     }
 
     /**
@@ -175,7 +206,8 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         bulkSubmission.setTargetApplication (createTargetApp (application));
         bulkSubmission.setNumberOfRequest (numberOfRequests);
         bulkSubmission.setIndividualRequests (individualRequests);
-        bulkSubmission.setCreatedDate (new LocalDateTime ());
+        bulkSubmission.setCreatedDate (now);
+        bulkSubmission.setSdtBulkReference (sdtBulkReference);
     }
 
     /**
@@ -221,17 +253,38 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     /**
      * Method to mock and test GlobalParameterCache.
      */
-    private void setupGlobalParametersCache ()
+    private void setupDataRetentionCache ()
     {
-        globalParameter = new GlobalParameter ();
-        globalParameter.setName ("DATA_RETENTION_PERIOD");
-        globalParameter.setValue ("30");
-        globalParameterCache = EasyMock.createMock (ICacheable.class);
-        expect (globalParameterCache.getValue (IGlobalParameter.class, "DATA_RETENTION_PERIOD")).andReturn (
-                globalParameter);
+        // Setup data retention period
+        final IGlobalParameter globalParameterData = new GlobalParameter ();
+        globalParameterData.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+        globalParameterData.setValue ("90");
+
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameterData);
         replay (globalParameterCache);
+
         validator.setGlobalParameterCache (globalParameterCache);
 
+    }
+
+    /**
+     * Method to mock and test GlobalParameterCache.
+     */
+    private void setupContactDetailsCache ()
+    {
+
+        // Set up contact details
+        final IGlobalParameter globalParameterContact = new GlobalParameter ();
+        globalParameterContact.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+        globalParameterContact.setValue (contact);
+
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ())).andReturn (globalParameterContact);
+        replay (globalParameterCache);
+        validator.setGlobalParameterCache (globalParameterCache);
     }
 
     /**
@@ -269,13 +322,13 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         // create a mock Bulk Submission DAO and return true
         mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
 
-        expect (mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (), 30))
+        expect (mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (), 90))
                 .andReturn (null);
         replay (mockIBulkSubmissionDao);
 
         validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
 
-        setupGlobalParametersCache ();
+        setupDataRetentionCache ();
 
         bulkSubmission.accept (validator, null);
     }
@@ -318,13 +371,14 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         // create a mock Bulk Submission DAO and return true
         mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
 
-        expect (mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (), 30))
-                .andReturn (null);
+        expect (
+                mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (),
+                        dataRetentionPeriod)).andReturn (null);
         replay (mockIBulkSubmissionDao);
 
         validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
 
-        setupGlobalParametersCache ();
+        setupDataRetentionCache ();
 
         bulkSubmission.accept (validator, null);
 
@@ -364,6 +418,20 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
             individualRequests.add (individualRequest);
 
             createBulkSubmission (numberOfRequests, bulkCustomer, individualRequests, "MCOL");
+
+            setupContactDetailsCache ();
+
+            // Set up Error messages cache
+            errorMessage = new ErrorMessage ();
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.CUST_NOT_SETUP.name ());
+            errorMessage.setErrorText ("The Bulk Customer organisation is not setup to send Service "
+                    + "Request messages to the {0}. Please contact {1} for assistance.");
+            errorMessagesCache = EasyMock.createMock (ICacheable.class);
+            expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.CUST_NOT_SETUP.name ()))
+                    .andReturn (errorMessage);
+            replay (errorMessagesCache);
+            validator.setErrorMessagesCache (errorMessagesCache);
+
             bulkSubmission.accept (validator, null);
             Assert.fail ("Test failed to throw CustomerNotSetupException ");
 
@@ -373,9 +441,16 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
             LOGGER.debug (e.getMessage ().toString ());
             EasyMock.verify (mockIBulkCustomerDao);
 
-            Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("CUST_NOT_SETUP"));
-            Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains (
-                    "Bulk Customer organisation is not " + "set up to send Service Request messages to the MCOL"));
+            Assert.assertTrue ("Error code incorrect",
+                    e.getErrorCode ().equals (IErrorMessage.ErrorCode.CUST_NOT_SETUP.name ()));
+            // CHECKSTYLE:OFF
+            Assert.assertTrue (
+                    "Substitution value incorrect",
+                    e.getErrorDescription ()
+                            .equals (
+                                    "The Bulk Customer organisation is not setup to send Service Request messages to the MCOL. " +
+                                            "Please contact " + contact + " for assistance."));
+            // CHECKSTYLE:OFF
         }
 
     }
@@ -411,13 +486,26 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
             // create a mock Bulk Submission DAO and return true
             mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
 
-            expect (mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (), 30))
-                    .andReturn (bulkSubmission);
+            expect (
+                    mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (),
+                            dataRetentionPeriod)).andReturn (bulkSubmission);
             replay (mockIBulkSubmissionDao);
 
             validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
 
-            setupGlobalParametersCache ();
+            setupDataRetentionCache ();
+
+            // Set up Error messages cache
+            errorMessage = new ErrorMessage ();
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_FILEID.name ());
+            errorMessage.setErrorText ("Duplicate User File Reference {0} supplied. "
+                    + "This was previously used to submit a Bulk Request on {1} "
+                    + "and the SDT Bulk Reference {2} was allocated.");
+            errorMessagesCache = EasyMock.createMock (ICacheable.class);
+            expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.DUP_CUST_FILEID.name ()))
+                    .andReturn (errorMessage);
+            replay (errorMessagesCache);
+            validator.setErrorMessagesCache (errorMessagesCache);
 
             bulkSubmission.accept (validator, null);
             Assert.fail ("Test failed to throw CustomerReferenceNotUniqueException ");
@@ -425,11 +513,15 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         }
         catch (final CustomerReferenceNotUniqueException e)
         {
-            LOGGER.debug (e.getMessage ().toString ());
-
-            Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("DUP_CUST_FILEID"));
-            Assert.assertTrue ("Substitution value incorrect",
-                    e.getMessage ().contains ("Duplicate User File Reference Customer Reference supplied"));
+            Assert.assertTrue ("Error code incorrect",
+                    e.getErrorCode ().equals (IErrorMessage.ErrorCode.DUP_CUST_FILEID.name ()));
+            Assert.assertTrue (
+                    "Substitution value incorrect",
+                    e.getErrorDescription ().equals (
+                            "Duplicate User File Reference " + bulkSubmission.getCustomerReference () + " supplied. " +
+                                    "This was previously used to submit a Bulk Request on " +
+                                    Utilities.formatDateTimeForMessage (now) + " and the SDT Bulk Reference " +
+                                    sdtBulkReference + " was allocated."));
         }
 
     }
@@ -442,6 +534,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     public void testRequestCountdoesNotMatch ()
     {
 
+        final long mismatchTotal = 15;
         try
         {
 
@@ -454,7 +547,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
             individualRequests = new ArrayList<IIndividualRequest> ();
             individualRequests.add (individualRequest);
 
-            createBulkSubmission (15L, bulkCustomer, individualRequests, "MCOL");
+            createBulkSubmission (mismatchTotal, bulkCustomer, individualRequests, "MCOL");
 
             // set up the mock objects
             expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (bulkCustomer);
@@ -466,13 +559,26 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
             // create a mock Bulk Submission DAO and return true
             mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
 
-            expect (mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (), 30))
-                    .andReturn (null);
+            expect (
+                    mockIBulkSubmissionDao.getBulkSubmission (bulkCustomer, bulkSubmission.getCustomerReference (),
+                            dataRetentionPeriod)).andReturn (null);
             replay (mockIBulkSubmissionDao);
 
             validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
 
-            setupGlobalParametersCache ();
+            setupDataRetentionCache ();
+
+            // Set up Error messages cache
+            errorMessage = new ErrorMessage ();
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name ());
+            errorMessage
+                    .setErrorText ("Unexpected Total Number of Requests identified. {0} requested identified, {1} requests expected in Bulk Request {2}.");
+            errorMessagesCache = EasyMock.createMock (ICacheable.class);
+            expect (
+                    errorMessagesCache.getValue (IErrorMessage.class,
+                            IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name ())).andReturn (errorMessage);
+            replay (errorMessagesCache);
+            validator.setErrorMessagesCache (errorMessagesCache);
 
             bulkSubmission.accept (validator, null);
 
@@ -482,11 +588,15 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         {
             LOGGER.debug (e.getMessage ().toString ());
 
-            Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("REQ_COUNT_MISMATCH"));
-            Assert.assertTrue ("Substitution value incorrect",
-                    e.getMessage ().contains ("Unexpected Total Number of Requests identified"));
+            Assert.assertTrue ("Error code incorrect",
+                    e.getErrorCode ().equals (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name ()));
+            Assert.assertTrue (
+                    "Substitution value incorrect",
+                    e.getErrorDescription ().equals (
+                            "Unexpected Total Number of Requests identified. 1 requested identified, " + mismatchTotal +
+                                    " requests expected in Bulk Request " + bulkSubmission.getCustomerReference () +
+                                    "."));
         }
 
     }
-
 }
