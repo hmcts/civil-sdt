@@ -2,7 +2,11 @@ alter session set current_schema=sdt_owner;
 
 
 DEFINE bs_sdt_bulk_reference_i       = 'TABLESPACE users'
+DEFINE bca_bulk_customer_i           = 'TABLESPACE users'
+DEFINE bca_target_application_i      = 'TABLESPACE users'
 DEFINE ir_bulk_reference_i           = 'TABLESPACE users'
+DEFINE sr_service_type_i             = 'TABLESPACE users'
+DEFINE sr_target_application_i       = 'TABLESPACE users'
 DEFINE st_service_type_name_i        = 'TABLESPACE users'
 DEFINE ta_target_application_name_i  = 'TABLESPACE users'
 
@@ -16,6 +20,20 @@ ON bulk_submissions ( sdt_bulk_reference )
 ;
 
 --
+-- bulk_customer_applications
+--
+
+CREATE INDEX bca_bulk_customer_i
+ON bulk_customer_applications ( bulk_customer_id)
+&bca_bulk_customer_i
+;
+
+CREATE INDEX bca_target_application_i
+ON bulk_customer_applications ( target_application_id)
+&bca_target_application_i
+;
+
+--
 --individual_requests
 --
 
@@ -25,12 +43,27 @@ ON individual_requests ( sdt_bulk_reference )
 ;
 
 --
+-- service_routings
+--
+
+CREATE INDEX sr_service_type_i
+ON service_routings (service_type_id)
+&sr_service_type_i
+;
+
+CREATE INDEX sr_target_application_i
+ON service_routings ( target_application_id)
+&sr_target_application_i
+;
+
+--
 -- service_types
 --
 CREATE INDEX st_service_type_name
 ON service_types ( service_type_name )
 &st_service_type_name_i
 ;
+
 
 -- 
 -- target_applications
