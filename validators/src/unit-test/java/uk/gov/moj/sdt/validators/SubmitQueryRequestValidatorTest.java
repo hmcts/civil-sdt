@@ -47,10 +47,15 @@ import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.ErrorMessage;
+import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 
@@ -97,6 +102,31 @@ public class SubmitQueryRequestValidatorTest extends SdtUnitTestBase
     private IBulkCustomerDao mockIBulkCustomerDao;
 
     /**
+     * Parameter cache.
+     */
+    private ICacheable globalParameterCache;
+
+    /**
+     * Global parameter.
+     */
+    private IGlobalParameter globalParameter;
+
+    /**
+     * Contact details for assistance.
+     */
+    private String contact = "THE MOJ";
+
+    /**
+     * Error messages cache.
+     */
+    private ICacheable errorMessagesCache;
+
+    /**
+     * Error message.
+     */
+    private IErrorMessage errorMessage;
+
+    /**
      * Constructor for test.
      * 
      * @param testName name of this test class.
@@ -124,6 +154,18 @@ public class SubmitQueryRequestValidatorTest extends SdtUnitTestBase
 
         // mock BulkCustomer object
         mockIBulkCustomerDao = EasyMock.createMock (IBulkCustomerDao.class);
+
+        // Set up Global parameters cache
+        globalParameter = new GlobalParameter ();
+        globalParameter.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+        globalParameter.setValue (contact);
+        globalParameterCache = EasyMock.createMock (ICacheable.class);
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ())).andReturn (globalParameter);
+        replay (globalParameterCache);
+        validator.setGlobalParameterCache (globalParameterCache);
+
     }
 
     /**
@@ -181,13 +223,25 @@ public class SubmitQueryRequestValidatorTest extends SdtUnitTestBase
     @Test
     public void testCustomerDoesNotHaveAccess ()
     {
+        final String mcolCode = "MCOL CODE";
         try
         {
 
-            submitQueryRequest.setTargetApplication (createTargetApp ("MCOL CODE", "MCOL"));
+            submitQueryRequest.setTargetApplication (createTargetApp (mcolCode, "MCOL Description"));
             // set up the mock objects
             expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (bulkCustomer);
             replay (mockIBulkCustomerDao);
+
+            // Set up Error messages cache
+            errorMessage = new ErrorMessage ();
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.CUST_NOT_SETUP.name ());
+            errorMessage.setErrorText ("The Bulk Customer organisation is not setup to send Service "
+                    + "Request messages to the {0}. Please contact {1} for assistance.");
+            errorMessagesCache = EasyMock.createMock (ICacheable.class);
+            expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.CUST_NOT_SETUP.name ()))
+                    .andReturn (errorMessage);
+            replay (errorMessagesCache);
+            validator.setErrorMessagesCache (errorMessagesCache);
 
             // inject the bulk customer into the validator
             validator.setBulkCustomerDao (mockIBulkCustomerDao);
@@ -201,9 +255,12 @@ public class SubmitQueryRequestValidatorTest extends SdtUnitTestBase
             LOGGER.debug (e.getMessage ().toString ());
             EasyMock.verify (mockIBulkCustomerDao);
 
-            Assert.assertTrue ("Error code incorrect", e.getMessage ().contains ("CUST_NOT_SETUP"));
-            Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains (
-                    "Bulk Customer organisation is not " + "set up to send Service Request messages to the MCOL"));
+            Assert.assertEquals (e.getErrorCode (), IErrorMessage.ErrorCode.CUST_NOT_SETUP.name ());
+            // CHECKSTYLE:OFF
+            Assert.assertEquals (e.getErrorDescription (),
+                    "The Bulk Customer organisation is not setup to send Service Request messages to the " + mcolCode +
+                            ". Please contact " + contact + " for assistance.");
+            // CHECKSTYLE:OFF
         }
 
     }

@@ -90,7 +90,7 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
     private IGlobalParameter globalParameter;
 
     /**
-     * Parameter cache.
+     * Error messages cache.
      */
     private ICacheable errorMessagesCache;
 
