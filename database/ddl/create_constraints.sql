@@ -35,7 +35,7 @@ ALTER TABLE bulk_submissions              ADD CONSTRAINT bs_sbr_uni UNIQUE (sdt_
 -- error_logs
 --
 
-ALTER TABLE error_logs                    ADD CONSTRAINT el_bsi_nn CHECK (bulk_submission_id IS NOT NULL);
+ALTER TABLE error_logs                    ADD CONSTRAINT el_iri_nn CHECK (individual_request_id IS NOT NULL);
 ALTER TABLE error_logs                    ADD CONSTRAINT el_ec_nn  CHECK (error_code         IS NOT NULL);
 ALTER TABLE error_logs                    ADD CONSTRAINT el_cd_nn  CHECK (created_date       IS NOT NULL);
 ALTER TABLE error_logs                    ADD CONSTRAINT el_et_nn  CHECK (error_text         IS NOT NULL);
