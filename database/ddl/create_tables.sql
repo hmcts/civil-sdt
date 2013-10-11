@@ -27,10 +27,11 @@ CREATE TABLE bulk_customers
 ;
 
 CREATE TABLE bulk_customer_applications
-(bulk_customer_id         INTEGER               -- pk, fk from bulk_customers
-,target_application_id    INTEGER               -- pk, fk from target_applications
-,customer_application_id  VARCHAR2(32)   
-,version_number           INTEGER DEFAULT 0     -- hiberate versioning column
+(bulk_customer_applications_id INTEGER               -- synthetic pk
+,bulk_customer_id              INTEGER               -- fk from bulk_customers
+,target_application_id         INTEGER               -- fk from target_applications
+,customer_application_id       VARCHAR2(32)   
+,version_number                INTEGER DEFAULT 0     -- hiberate versioning column
 ) &bulk_customer_applications
 ;
 
@@ -46,6 +47,8 @@ CREATE TABLE bulk_submissions
 ,bulk_submission_status   VARCHAR2(20)
 ,completed_date           TIMESTAMP
 ,updated_date             TIMESTAMP             -- date/time of last change to record
+,error_code               VARCHAR2(32)         
+,error_text               VARCHAR2(1000)        -- error mesg with placeholder for context
 ,version_number           INTEGER DEFAULT 0     -- hiberate versioning column
 ,bulk_payload             BLOB
 ) &bulk_submissions_lob
@@ -54,9 +57,8 @@ CREATE TABLE bulk_submissions
 
 CREATE TABLE error_logs
 (error_log_id             INTEGER               -- pk, synthetic
-,bulk_submission_id       INTEGER               -- fk from bulk_submissions
 ,individual_request_id    INTEGER               -- fk from individual_requests, null for error raised on bulk file 
-,error_code               INTEGER               -- unimplemented fk from error_messages
+,error_code               VARCHAR2(32)          -- unimplemented fk from error_messages
 ,created_date             TIMESTAMP             -- date/time of record created
 ,updated_date             TIMESTAMP             -- date/time of last change to record
 ,version_number           INTEGER DEFAULT 0     -- hiberate versioning column
@@ -105,8 +107,9 @@ CREATE TABLE individual_requests
 
 
 CREATE TABLE service_routings
-(service_type_id          INTEGER            -- pk, fk to service_types
-,target_application_id    INTEGER            -- pk, fk to valid_services
+(service_routings_id      INTEGER            -- synthetic pk
+,service_type_id          INTEGER            -- fk to service_types
+,target_application_id    INTEGER            -- fk to valid_services
 ,web_service_endpoint     VARCHAR2(255)
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column
 ) &service_routings
