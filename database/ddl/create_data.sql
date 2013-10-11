@@ -44,10 +44,10 @@ VALUES (3,'C_MC','mcol commissioning service');
 INSERT INTO target_applications ( target_application_id,target_application_code,target_application_name) 
 VALUES (4,'C_PC','pcol commissioning service');
 
-INSERT INTO service_routings (service_type_id,target_application_id,web_service_endpoint)
-VALUES (1,1,'http://localhost:8888/mcol-webservices/service');
-INSERT INTO service_routings (service_type_id,target_application_id,web_service_endpoint)
-VALUES (2,1,'http://localhost:8888/mcol-webservices/service');
+INSERT INTO service_routings (service_routings_id, service_type_id,target_application_id,web_service_endpoint)
+VALUES (1,1,1,'http://localhost:8888/mcol-webservices/service');
+INSERT INTO service_routings (service_routings_id, service_type_id,target_application_id,web_service_endpoint)
+VALUES (2,2,1,'http://localhost:8888/mcol-webservices/service');
 
 INSERT INTO error_messages (error_message_id,error_code,error_text,error_description)
 VALUES (1,'SDT_INT_ERR','A system error has occurred. Please contact {0} for assistance.'
