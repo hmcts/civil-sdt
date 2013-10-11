@@ -42,9 +42,14 @@ import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.ErrorMessage;
+import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.SdtUnitTestBase;
-import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
+import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 
 /**
  * Tests for {@link BulkCustomerValidatorTest}.
@@ -75,6 +80,36 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
     private IBulkCustomer bulkCustomer;
 
     /**
+     * Parameter cache.
+     */
+    private ICacheable globalParameterCache;
+
+    /**
+     * Global parameter.
+     */
+    private IGlobalParameter globalParameter;
+
+    /**
+     * Parameter cache.
+     */
+    private ICacheable errorMessagesCache;
+
+    /**
+     * Error message.
+     */
+    private IErrorMessage errorMessage;
+
+    /**
+     * Contact details for assistance.
+     */
+    private String contact = "THE MOJ";
+
+    /**
+     * SDT Customer Id used for testing.
+     */
+    private long sdtCustomerId = 12345;
+
+    /**
      * Constructor for test.
      * 
      * @param testName name of this test class.
@@ -96,6 +131,29 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
         // Create mocks needed for this test.
         mockIBulkCustomerDao = EasyMock.createMock (IBulkCustomerDao.class);
         bulkCustomer = new BulkCustomer ();
+
+        // Set up Global parameters cache
+        globalParameter = new GlobalParameter ();
+        globalParameter.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+        globalParameter.setValue (contact);
+        globalParameterCache = EasyMock.createMock (ICacheable.class);
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ())).andReturn (globalParameter);
+        replay (globalParameterCache);
+        validator.setGlobalParameterCache (globalParameterCache);
+
+        // Set up Error messages cache
+        errorMessage = new ErrorMessage ();
+        errorMessage.setErrorCode (IErrorMessage.ErrorCode.CUST_ID_INVALID.name ());
+        errorMessage.setErrorText ("The Bulk Customer organisation does not have an SDT Customer ID set up. "
+                + "Please contact {1} for assistance.");
+        errorMessagesCache = EasyMock.createMock (ICacheable.class);
+        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.CUST_ID_INVALID.name ()))
+                .andReturn (errorMessage);
+        replay (errorMessagesCache);
+        validator.setErrorMessagesCache (errorMessagesCache);
+
     }
 
     /**
@@ -108,7 +166,7 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
         bulkCustomer.setSdtCustomerId (12345L);
 
         // Tell the mock dao to return the same bulk customer.
-        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (bulkCustomer);
+        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId)).andReturn (bulkCustomer);
         replay (mockIBulkCustomerDao);
 
         // Inject the mock dao into the validator.
@@ -117,6 +175,8 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
         // Validate the bulk customer.
         bulkCustomer.accept (validator, null);
         EasyMock.verify (mockIBulkCustomerDao);
+
+        Assert.assertEquals (bulkCustomer.getSdtCustomerId (), sdtCustomerId);
     }
 
     /**
@@ -128,7 +188,7 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
         bulkCustomer.setSdtCustomerId (12345L);
 
         // Tell the mock dao to return the same bulk customer.
-        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (null);
+        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId)).andReturn (null);
         replay (mockIBulkCustomerDao);
 
         // Inject the mock dao into the validator.
@@ -139,17 +199,21 @@ public class BulkCustomerValidatorTest extends SdtUnitTestBase
             // Validate the bulk customer.
             bulkCustomer.accept (validator, null);
 
-            Assert.fail ("Test failed to throw CustomerNotSetupException.");
+            Assert.fail ("Test failed to throw CustomerNotFoundException.");
         }
-        catch (final CustomerNotSetupException e)
+        catch (final CustomerNotFoundException e)
         {
             EasyMock.verify (mockIBulkCustomerDao);
 
             // [^\[]*\[CUST_NOT_SETUP\][^\[]*\[12345\].*
-            Assert.assertTrue ("Error code incorrect", e.getErrorCode ().contains ("CUST_ID_INVALID"));
+            Assert.assertTrue ("Error code incorrect",
+                    e.getErrorCode ().equals (IErrorMessage.ErrorCode.CUST_ID_INVALID.name ()));
             // CHECKSTYLE:OFF
-            Assert.assertTrue ("Substitution value incorrect",
-                    e.getMessage ().contains ("The Bulk Customer organisation does not have a SDT Customer ID set up."));
+            Assert.assertTrue (
+                    "Substitution value incorrect",
+                    e.getErrorDescription ().equals (
+                            "The Bulk Customer organisation does not have an SDT Customer ID set up. Please contact " +
+                                    contact + " for assistance."));
             // CHECKSTYLE:ON
         }
     }

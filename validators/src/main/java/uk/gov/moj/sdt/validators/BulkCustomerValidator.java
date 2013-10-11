@@ -77,7 +77,7 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
             parameters.add (Long.toString (bulkCustomer.getSdtCustomerId ()));
             parameters.add (getContactDetails ());
 
-            createValidationException (parameters, IErrorMessage.ErrorCode.CUST_NOT_SETUP);
+            createValidationException (parameters, IErrorMessage.ErrorCode.CUST_ID_INVALID);
 
         }
     }
