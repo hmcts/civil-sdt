@@ -44,7 +44,10 @@ import org.junit.Test;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
@@ -93,6 +96,16 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
     private String reference = " Bulk reference in request ";
 
     /**
+     * Error messages cache.
+     */
+    private ICacheable errorMessagesCache;
+
+    /**
+     * Error message.
+     */
+    private IErrorMessage errorMessage;
+
+    /**
      * Constructor for test.
      * 
      * @param testName name of this test class.
@@ -118,6 +131,18 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         bulkSubmission.setSdtBulkReference (reference);
         // Setup bulk request for test.
         bulkFeedbackRequest.setSdtBulkReference (reference);
+
+        // Set up Error messages cache
+        errorMessage = new ErrorMessage ();
+        errorMessage.setErrorCode (IErrorMessage.ErrorCode.BULK_REF_INVALID.name ());
+        errorMessage.setErrorText ("There is no Bulk Request submission associated with your account for "
+                + "the supplied SDT Bulk Reference {0}.");
+        errorMessagesCache = EasyMock.createMock (ICacheable.class);
+        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.BULK_REF_INVALID.name ()))
+                .andReturn (errorMessage);
+        replay (errorMessagesCache);
+        validator.setErrorMessagesCache (errorMessagesCache);
+
     }
 
     /**
@@ -164,9 +189,9 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         catch (final InvalidBulkReferenceException e)
         {
 
-            Assert.assertEquals ("Unexpected message in exception", "Failed with code [BULK_REF_INVALID]; message"
-                    + "[There is no Bulk Request submission associated with your account "
-                    + "for the supplied SDT Bulk Reference  " + "Bulk reference in request ]", e.getMessage ());
+            Assert.assertEquals (IErrorMessage.ErrorCode.BULK_REF_INVALID.name (), e.getErrorCode ());
+            Assert.assertEquals ("There is no Bulk Request submission associated with your account for the " +
+                    "supplied SDT Bulk Reference " + reference + ".", e.getErrorDescription ());
         }
     }
 }
