@@ -8,4 +8,6 @@
     <bean id="uk.gov.moj.sdt.cache.api.IGlobalParametersCache" 
         class="uk.gov.moj.sdt.cache.MockGlobalParametersCache">        
     </bean>  	
+    <bean id="uk.gov.moj.sdt.cache.api.IErrorMessagesCache" class="uk.gov.moj.sdt.cache.MockErrorMessagesCache">
+    </bean>
 </beans>
