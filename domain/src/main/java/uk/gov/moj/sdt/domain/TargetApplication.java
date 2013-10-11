@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
@@ -47,7 +48,7 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
     /**
      * A collection of all service types that can be used with this target application.
      */
-    private Set<IServiceRouting> serviceRoutings;
+    private Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
 
     /**
      * Target application code.

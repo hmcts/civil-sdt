@@ -35,9 +35,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -50,19 +48,15 @@ import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
@@ -76,7 +70,7 @@ import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
  * @author d120520
  * 
  */
-public class BulkSubmissionValidatorTest extends SdtUnitTestBase
+public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
 {
     /**
      * Logger.
@@ -211,46 +205,6 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     }
 
     /**
-     * create a bulk customer.
-     * 
-     * @param applicationSet the set of ITargetApplication objects
-     * @return a bulk customer
-     */
-    private IBulkCustomer createCustomer (final Set<ITargetApplication> applicationSet)
-    {
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setSdtCustomerId (12345L);
-        bulkCustomer.setTargetApplications (applicationSet);
-        return bulkCustomer;
-    }
-
-    /**
-     * create an application with a given name.
-     * 
-     * @param targetApplicationCode the code for the application, MCOL etc
-     * @return ITargetApplication
-     */
-    private ITargetApplication createTargetApp (final String targetApplicationCode)
-    {
-        final ITargetApplication application = new TargetApplication ();
-        application.setTargetApplicationCode (targetApplicationCode);
-        return application;
-    }
-
-    /**
-     * the list of applications for a customer.
-     * 
-     * @param applicationName the application name
-     * @return the set of target applications for this customer
-     */
-    private Set<ITargetApplication> addAppToCustomerApplications (final String applicationName)
-    {
-        final Set<ITargetApplication> targetApplications = new HashSet<ITargetApplication> ();
-        targetApplications.add (createTargetApp (applicationName));
-        return targetApplications;
-    }
-
-    /**
      * Method to mock and test GlobalParameterCache.
      */
     private void setupDataRetentionCache ()
@@ -302,7 +256,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     {
 
         // set up a bulk customer to use the MCOL application
-        bulkCustomer = createCustomer (addAppToCustomerApplications ("MCOL"));
+        bulkCustomer = createCustomer (createBulkCustomerApplications ("MCOL"));
 
         // create an individual request
         final IIndividualRequest individualRequest = new IndividualRequest ();
@@ -345,7 +299,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
     {
 
         // set up a bulk customer to use the MCOL application
-        bulkCustomer = createCustomer (addAppToCustomerApplications ("MCOL"));
+        bulkCustomer = createCustomer (createBulkCustomerApplications ("MCOL"));
 
         // create an individual request
         individualRequests = new ArrayList<IIndividualRequest> ();
@@ -402,7 +356,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
             // set up bulk customer with the application it can use
 
             // set up a bulk customer to use the PCOL application to make it error as the bulk submission sets MCOL.
-            bulkCustomer = createCustomer (addAppToCustomerApplications ("PCOL"));
+            bulkCustomer = createCustomer (createBulkCustomerApplications ("PCOL"));
 
             // set up the mock objects
             expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (bulkCustomer);
@@ -466,7 +420,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         try
         {
             // set up a bulk customer to use the PCOL application to make it error as the bulk submission sets MCOL.
-            bulkCustomer = createCustomer (addAppToCustomerApplications ("MCOL"));
+            bulkCustomer = createCustomer (createBulkCustomerApplications ("MCOL"));
 
             // set up the mock objects
             expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (bulkCustomer);
@@ -539,7 +493,7 @@ public class BulkSubmissionValidatorTest extends SdtUnitTestBase
         {
 
             // set up a bulk customer to use the MCOL application
-            bulkCustomer = createCustomer (addAppToCustomerApplications ("MCOL"));
+            bulkCustomer = createCustomer (createBulkCustomerApplications ("MCOL"));
 
             // create an individual request
             final IIndividualRequest individualRequest = new IndividualRequest ();

@@ -10,9 +10,9 @@
         </id>
         <version name="version" access="field" column="VERSION_NUMBER"/>
         <property name="sdtCustomerId" column="SDT_CUSTOMER_ID"/>
-        <set name="targetApplications" table="BULK_CUSTOMER_APPLICATIONS">
-        	<key column="BULK_CUSTOMER_ID"/>
-        	<many-to-many column="TARGET_APPLICATION_ID" class="uk.gov.moj.sdt.domain.TargetApplication"/>
-    	</set>       
+        <set name="bulkCustomerApplications" table="BULK_CUSTOMER_APPLICATIONS">
+            <key column="BULK_CUSTOMER_ID"/>
+            <one-to-many class="uk.gov.moj.sdt.domain.BulkCustomerApplication"/>
+        </set>
     </class>
 </hibernate-mapping>

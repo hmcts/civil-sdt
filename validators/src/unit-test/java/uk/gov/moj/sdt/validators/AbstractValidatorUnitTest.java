@@ -24,64 +24,84 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-package uk.gov.moj.sdt.dao;
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
+package uk.gov.moj.sdt.validators;
 
-import org.springframework.dao.DataAccessException;
+import java.util.HashSet;
+import java.util.Set;
 
-import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 
 /**
- * Mock Bulk Customer DAO class used in commissioning project.
+ * Base class for unit testing validators.
  * 
- * @author d130680
+ * @author d276205
  * 
  */
-public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomerDao
+public abstract class AbstractValidatorUnitTest extends SdtUnitTestBase
 {
+    /**
+     * Creates an instance.
+     * 
+     * @param testName name of test
+     */
+    public AbstractValidatorUnitTest (final String testName)
+    {
+        super (testName);
+
+    }
 
     /**
-     * Mock the behaviour of Bulk customer DAO, returns a static array of bulk customer.
+     * create a bulk customer.
      * 
-     * @param sdtCustomerId the SDT ID to match when retrieving the bulk customer.
-     * @return the bulk customer matching the given SDT ID.
-     * @throws DataAccessException Hibernate exception
+     * @param applications the set of IBulkCustomerApplication objects
+     * @return a bulk customer
      */
-    public IBulkCustomer getBulkCustomerBySdtId (final long sdtCustomerId) throws DataAccessException
+    protected IBulkCustomer createCustomer (final Set<IBulkCustomerApplication> applications)
     {
-
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setSdtCustomerId (sdtCustomerId);
-        bulkCustomer.setId (sdtCustomerId);
-
-        // Mock the Target Application
-        // TODO : Ensure that target app code is extracted to make it work for any future apps.
-        // final Set<ITargetApplication> targetApplications = new HashSet<ITargetApplication> ();
-        final ITargetApplication targetApplication = new TargetApplication ();
-        targetApplication.setTargetApplicationCode ("MCOL");
-        targetApplication.setTargetApplicationName ("MCOL");
-        // targetApplications.add (targetApplication);
-
-        // bulkCustomer.setTargetApplications (targetApplications);
-
-        final IBulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication ();
-        bulkCustomerApplication.setBulkCustomer (bulkCustomer);
-        bulkCustomerApplication.setTargetApplication (targetApplication);
-        bulkCustomerApplication.setCustomerApplicationId ("cust-id");
-
-        bulkCustomer.getBulkCustomerApplications ().add (bulkCustomerApplication);
-
+        bulkCustomer.setSdtCustomerId (12345L);
+        bulkCustomer.setBulkCustomerApplications (applications);
         return bulkCustomer;
+    }
 
+    /**
+     * create an application with a given name.
+     * 
+     * @param targetApplicationCode the code for the application, MCOL etc
+     * @return ITargetApplication
+     */
+    protected ITargetApplication createTargetApp (final String targetApplicationCode)
+    {
+        final ITargetApplication application = new TargetApplication ();
+        application.setTargetApplicationCode (targetApplicationCode);
+        return application;
+    }
+
+    /**
+     * the list of applications for a customer.
+     * 
+     * @param applicationName the application name
+     * @return the set of bulk customer applications for this customer
+     */
+    protected Set<IBulkCustomerApplication> createBulkCustomerApplications (final String applicationName)
+    {
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
+
+        final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication ();
+        bulkCustomerApp.setCustomerApplicationId ("appId");
+        bulkCustomerApp.setTargetApplication (createTargetApp (applicationName));
+        bulkCustomerApplications.add (bulkCustomerApp);
+        return bulkCustomerApplications;
     }
 
 }

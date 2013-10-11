@@ -96,9 +96,9 @@ public interface IGlobalParameter extends IDomainObject
         DATA_RETENTION_PERIOD,
 
         /**
-         * Period in seconds, to wait for an acknowledgement of receipt from MCOL.
+         * Period in seconds, to wait for an acknowledgement of receipt from target application.
          */
-        ACKNOWLEDGEMENT_TIMEOUT,
+        TARGET_APP_TIMEOUT,
 
         /**
          * Number of forwarding attempts made to transmit an individual request to target application.

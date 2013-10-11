@@ -57,24 +57,25 @@ public interface IBulkCustomer extends IDomainObject
     void setSdtCustomerId (final long sdtCustomerId);
 
     /**
-     * Set the target applications.
-     * 
-     * @param targetApplications the target applications that this customer can use.
-     */
-    void setTargetApplications (final Set<ITargetApplication> targetApplications);
-
-    /**
-     * Get the target applications.
-     * 
-     * @return return target applications that this customer can work with.
-     */
-    Set<ITargetApplication> getTargetApplications ();
-
-    /**
      * Checks whether customer has access to target application.
      * 
      * @param targetApplicationCode target application code
      * @return true or false
      */
     boolean hasAccess (String targetApplicationCode);
+
+    /**
+     * Set the bulk customer applications.
+     * 
+     * @param bulkCustomerApplications the target applications that this customer can use.
+     */
+    void setBulkCustomerApplications (final Set<IBulkCustomerApplication> bulkCustomerApplications);
+
+    /**
+     * Get the bulk customer applications.
+     * 
+     * @return return bulk customer applications that this customer can work with.
+     */
+    Set<IBulkCustomerApplication> getBulkCustomerApplications ();
+
 }

@@ -52,7 +52,6 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 
 /**
  * Tests for {@link IndividualRequestValidatorTest}.
@@ -63,13 +62,13 @@ import uk.gov.moj.sdt.utils.SdtUnitTestBase;
  * 
  */
 
-public class IndividualRequestValidatorTest extends SdtUnitTestBase
+public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
 {
 
     /**
      * Logger.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkSubmissionValidatorTest.class);
+    private static final Log LOGGER = LogFactory.getLog (IndividualRequestValidatorTest.class);
 
     /**
      * IndividualRequestValidator.

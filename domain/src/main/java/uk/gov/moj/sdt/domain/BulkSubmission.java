@@ -38,7 +38,6 @@ import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -102,6 +101,16 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     private LocalDateTime updatedDate;
 
     /**
+     * The error code.
+     */
+    private String errorCode;
+
+    /**
+     * The error text.
+     */
+    private String errorText;
+
+    /**
      * XML payload.
      */
     private String payload;
@@ -110,11 +119,6 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
      * List of individual requests.
      */
     private List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
-
-    /**
-     * Error log.
-     */
-    private IErrorLog errorLog;
 
     /**
      * Service request is an audit log for incoming and outgoing request.
@@ -262,18 +266,6 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     }
 
     @Override
-    public IErrorLog getErrorLog ()
-    {
-        return errorLog;
-    }
-
-    @Override
-    public void setErrorLog (final IErrorLog errorLog)
-    {
-        this.errorLog = errorLog;
-    }
-
-    @Override
     public void addIndividualRequest (final IIndividualRequest individualRequest)
     {
         individualRequest.setBulkSubmission (this);
@@ -290,6 +282,36 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     public void setServiceRequest (final IServiceRequest serviceRequest)
     {
         this.serviceRequest = serviceRequest;
+    }
+
+    @Override
+    public String getErrorText ()
+    {
+        return errorText;
+    }
+
+    @Override
+    public void setErrorText (final String errorText)
+    {
+        this.errorText = errorText;
+    }
+
+    @Override
+    public String getErrorCode ()
+    {
+        return errorCode;
+    }
+
+    @Override
+    public void setErrorCode (final String errorCode)
+    {
+        this.errorCode = errorCode;
+    }
+
+    @Override
+    public boolean hasError ()
+    {
+        return errorCode != null;
     }
 
 }

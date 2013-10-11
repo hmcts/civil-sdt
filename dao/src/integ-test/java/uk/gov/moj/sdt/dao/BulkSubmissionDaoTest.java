@@ -123,7 +123,6 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         LOG.debug ("Bulk Customer is " + bulkCustomer);
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
-        LOG.debug ("Bulk Customer's target applications are " + bulkCustomer.getTargetApplications ());
         bulkSubmission.setTargetApplication (targetApplication);
 
         bulkSubmission.setCreatedDate (LocalDateTime.now ());

@@ -34,17 +34,14 @@ package uk.gov.moj.sdt.validators;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
-import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
@@ -74,11 +71,6 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     private IBulkCustomerDao bulkCustomerDao;
 
     /**
-     * Target application dao.
-     */
-    private ITargetApplicationDao targetApplicationDao;
-
-    /**
      * Global parameter cache to retrieve data retention period.
      */
     private ICacheable globalParameterCache;
@@ -96,7 +88,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
      */
     public void checkCustomerHasAccess (final long sdtCustomerId, final String targetApplicationCode)
     {
-        LOGGER.info ("Validating SDT Customer ID [" + sdtCustomerId + "] and target application + [" +
+        LOGGER.info ("Validating SDT Customer ID [" + sdtCustomerId + "] and target application [" +
                 targetApplicationCode + "]");
         final IBulkCustomer bulkCustomer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
 
@@ -110,27 +102,6 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
             replacements.add (getContactDetails ());
             createValidationException (replacements, IErrorMessage.ErrorCode.CUST_NOT_SETUP);
         }
-    }
-
-    /**
-     * Checks whether a target application code exists in the list.
-     * 
-     * @param targetApplicationCode target application code
-     * @param targetApplications list of target applications
-     * @return true or false
-     */
-    private boolean hasAccess (final String targetApplicationCode, final Set<ITargetApplication> targetApplications)
-    {
-
-        for (ITargetApplication targetApplication : targetApplications)
-        {
-            if (targetApplicationCode.equals (targetApplication.getTargetApplicationCode ()))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -256,16 +227,6 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
     public IBulkCustomerDao getBulkCustomerDao ()
     {
         return bulkCustomerDao;
-    }
-
-    /**
-     * Set target application dao.
-     * 
-     * @param targetApplicationDao target application dao
-     */
-    public void setTargetApplicationDao (final ITargetApplicationDao targetApplicationDao)
-    {
-        this.targetApplicationDao = targetApplicationDao;
     }
 
     /**

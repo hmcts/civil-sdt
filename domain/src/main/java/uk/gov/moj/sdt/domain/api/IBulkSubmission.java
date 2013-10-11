@@ -205,20 +205,6 @@ public interface IBulkSubmission extends IDomainObject
     void addIndividualRequest (final IIndividualRequest individualRequest);
 
     /**
-     * Get error log.
-     * 
-     * @return error log
-     */
-    IErrorLog getErrorLog ();
-
-    /**
-     * Set error log.
-     * 
-     * @param errorLog error log
-     */
-    void setErrorLog (final IErrorLog errorLog);
-
-    /**
      * Get service request.
      * 
      * @return service request
@@ -231,6 +217,41 @@ public interface IBulkSubmission extends IDomainObject
      * @param serviceRequest service request
      */
     void setServiceRequest (final IServiceRequest serviceRequest);
+
+    /**
+     * Get error text.
+     * 
+     * @return error text
+     */
+    String getErrorText ();
+
+    /**
+     * Set error text.
+     * 
+     * @param errorText error text
+     */
+    void setErrorText (final String errorText);
+
+    /**
+     * Get error code.
+     * 
+     * @return error code
+     */
+    String getErrorCode ();
+
+    /**
+     * Set error code.
+     * 
+     * @param errorCode error code
+     */
+    void setErrorCode (final String errorCode);
+
+    /**
+     * Error status.
+     * 
+     * @return true if there are errors else false.
+     */
+    boolean hasError ();
 
     /**
      * The status of the Bulk Request - one of "Uploaded", "Failed", "

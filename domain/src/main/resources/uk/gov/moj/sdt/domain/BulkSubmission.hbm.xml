@@ -47,8 +47,12 @@
             <list-index></list-index>
             <one-to-many class="uk.gov.moj.sdt.domain.IndividualRequest" />
         </list>
-        <one-to-one name="errorLog" class="uk.gov.moj.sdt.domain.ErrorLog" cascade="all">
-        </one-to-one>
+        <property name="errorCode" type="java.lang.String">
+            <column name="ERROR_CODE" />
+        </property>
+        <property name="errorText" type="java.lang.String">
+            <column name="ERROR_TEXT" />
+        </property>
         <many-to-one name="serviceRequest" class="uk.gov.moj.sdt.domain.ServiceRequest">
             <column name="SERVICE_REQUEST_ID" />
         </many-to-one>

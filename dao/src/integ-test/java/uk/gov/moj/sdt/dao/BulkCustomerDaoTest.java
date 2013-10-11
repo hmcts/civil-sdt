@@ -63,7 +63,7 @@ public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContex
     public BulkCustomerDaoTest ()
     {
         super ();
-        DBUnitUtility.loadDatabase (this.getClass (), false);
+        DBUnitUtility.loadDatabase (this.getClass (), true);
     }
 
     /**
@@ -72,8 +72,6 @@ public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContex
     @Test
     public void testGetBulkCustomerBySdtId ()
     {
-        // final IBulkCustomerDao bulkCustomersDao =
-        // (IBulkCustomerDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
         final IBulkCustomerDao bulkCustomersDao =
                 (IBulkCustomerDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
 
@@ -82,6 +80,7 @@ public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContex
         {
             LOG.debug ("Retrieved bulk customer id [" + Long.toString (bulkCustomer.getId ()) + "]");
         }
+
         return;
     }
 }

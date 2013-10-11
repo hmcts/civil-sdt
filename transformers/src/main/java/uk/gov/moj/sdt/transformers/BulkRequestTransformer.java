@@ -42,7 +42,6 @@ import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
@@ -174,12 +173,11 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         statusType.setCode (StatusCodeType.OK);
 
         // Set errors if any
-        final IErrorLog errorLog = bulkSubmission.getErrorLog ();
-        if (errorLog != null)
+        if (bulkSubmission.hasError ())
         {
             final ErrorType errorType = new ErrorType ();
-            errorType.setCode (errorLog.getErrorCode ());
-            errorType.setDescription (errorLog.getErrorText ());
+            errorType.setCode (bulkSubmission.getErrorCode ());
+            errorType.setDescription (bulkSubmission.getErrorText ());
 
             statusType.setError (errorType);
             statusType.setCode (StatusCodeType.ERROR);

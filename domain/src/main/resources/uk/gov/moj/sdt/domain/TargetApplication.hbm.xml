@@ -5,9 +5,9 @@
 <hibernate-mapping>
     <class name="uk.gov.moj.sdt.domain.TargetApplication" lazy="false" table="TARGET_APPLICATIONS">
         <id name="id" column="TARGET_APPLICATION_ID" >  
-                  <generator class="sequence" >
-                  	<param name="sequence">tar_app_seq</param>
-                  </generator>
+              <generator class="sequence" >
+              	<param name="sequence">tar_app_seq</param>
+              </generator>
         </id>
         <version name="version" access="field" column="VERSION_NUMBER"/>
         <property name="targetApplicationCode" type="java.lang.String">

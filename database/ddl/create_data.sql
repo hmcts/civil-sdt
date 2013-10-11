@@ -5,8 +5,8 @@ VALUES ( 1,'DATA_RETENTION_PERIOD',90
 ,'Duration in days, to retain data in the tables subject to a prescribed purge');
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
-VALUES ( 2,'MCOL_ACKNOWLEDGEMENT_TIMEOUT',15
-,'Period in seconds, to wait for an acknowledgement of receipt from MCOL');
+VALUES ( 2,'TARGET_APP_TIMEOUT',15
+,'Period in seconds, to wait for response from target application');
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
 VALUES ( 3,'MAX_FORWARDING_ATTEMPTS',3

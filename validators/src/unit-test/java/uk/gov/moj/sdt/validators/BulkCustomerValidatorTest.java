@@ -48,7 +48,6 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 
 /**
@@ -57,7 +56,7 @@ import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
  * @author d120520
  * 
  */
-public class BulkCustomerValidatorTest extends SdtUnitTestBase
+public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest
 {
     /**
      * Logger.

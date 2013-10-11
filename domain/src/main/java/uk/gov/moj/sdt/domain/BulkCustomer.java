@@ -31,10 +31,11 @@
 
 package uk.gov.moj.sdt.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 
 /**
  * Bulk Customer Information manually set up and maintained
@@ -47,9 +48,9 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
 {
 
     /**
-     * The target applications that this customer can work with.e.g. 'MCOL'
+     * The bulk customer applications that this customer can work with.e.g. 'MCOL'
      */
-    private Set<ITargetApplication> targetApplications;
+    private Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
 
     /**
      * This is a manually allocated and maintained value.
@@ -69,29 +70,30 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     }
 
     @Override
-    public void setTargetApplications (final Set<ITargetApplication> targetApplications)
-    {
-        this.targetApplications = targetApplications;
-    }
-
-    @Override
-    public Set<ITargetApplication> getTargetApplications ()
-    {
-        return targetApplications;
-    }
-
-    @Override
     public boolean hasAccess (final String targetApplicationCode)
     {
-        for (ITargetApplication targetApplication : targetApplications)
+        for (IBulkCustomerApplication bulkCustomerApplication : bulkCustomerApplications)
         {
-            if (targetApplicationCode.equalsIgnoreCase (targetApplication.getTargetApplicationCode ()))
+            if (bulkCustomerApplication.getTargetApplication ().getTargetApplicationCode ()
+                    .equalsIgnoreCase (targetApplicationCode))
             {
                 return true;
             }
         }
-
         return false;
+    }
+
+    @Override
+    public void setBulkCustomerApplications (final Set<IBulkCustomerApplication> bulkCustomerApplications)
+    {
+        this.bulkCustomerApplications = bulkCustomerApplications;
+
+    }
+
+    @Override
+    public Set<IBulkCustomerApplication> getBulkCustomerApplications ()
+    {
+        return bulkCustomerApplications;
     }
 
 }
