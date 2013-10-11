@@ -35,13 +35,13 @@ USING INDEX bulk_customers_pk
 
 CREATE INDEX bulk_customer_applications_pk
 ON bulk_customer_applications
-(bulk_customer_id ,target_application_id ) 
+(bulk_customer_applications_id ) 
 &bulk_customer_applications_pk
 ;
 
 ALTER TABLE bulk_customer_applications
 ADD CONSTRAINT bulk_customer_applications_pk
-PRIMARY KEY (bulk_customer_id ,target_application_id )
+PRIMARY KEY (bulk_customer_applications_id )
 USING INDEX bulk_customer_applications_pk
 ;
 
@@ -165,13 +165,13 @@ USING INDEX service_requests_pk
 
 CREATE INDEX service_routings_pk
 ON service_routings
-( service_type_id, target_application_id ) 
+( service_routings_id ) 
 &service_routings_pk
 ;
 
 ALTER TABLE service_routings
 ADD CONSTRAINT service_routings_pk
-PRIMARY KEY ( service_type_id, target_application_id )
+PRIMARY KEY ( service_routings_id )
 USING INDEX service_routings_pk
 ;
 
