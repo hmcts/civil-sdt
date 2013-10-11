@@ -44,9 +44,11 @@ import org.junit.Test;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
@@ -112,6 +114,21 @@ public class IndividualRequestValidatorTest extends SdtUnitTestBase
     private IGlobalParameter globalParameter;
 
     /**
+     * Error Messages cache.
+     */
+    private ICacheable errorMessagesCache;
+
+    /**
+     * Error message.
+     */
+    private IErrorMessage errorMessage;
+
+    /**
+     * Data retention period.
+     */
+    private int dataRetentionPeriod = 90;
+
+    /**
      * Constructor for test.
      * 
      * @param testName name of this test class.
@@ -147,15 +164,27 @@ public class IndividualRequestValidatorTest extends SdtUnitTestBase
         individualRequest.setBulkSubmission (bulkSubmission);
         individualRequest.setCustomerRequestReference ("customerRequestReference");
 
+        // Setup global parameters cache
         globalParameter = new GlobalParameter ();
-        globalParameter.setName ("DATA_RETENTION_PERIOD");
-        globalParameter.setValue ("30");
+        globalParameter.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+        globalParameter.setValue (Integer.toString (dataRetentionPeriod));
         globalParameterCache = EasyMock.createMock (ICacheable.class);
-        expect (globalParameterCache.getValue (IGlobalParameter.class, "DATA_RETENTION_PERIOD")).andReturn (
-                globalParameter);
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameter);
         replay (globalParameterCache);
 
         validator.setGlobalParameterCache (globalParameterCache);
+
+        // Set up Error messages cache
+        errorMessage = new ErrorMessage ();
+        errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
+        errorMessage.setErrorText ("Duplicate Unique Request Identifier submitted {0}.");
+        errorMessagesCache = EasyMock.createMock (ICacheable.class);
+        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.DUP_CUST_REQID.name ()))
+                .andReturn (errorMessage);
+        replay (errorMessagesCache);
+        validator.setErrorMessagesCache (errorMessagesCache);
 
     }
 
@@ -168,16 +197,17 @@ public class IndividualRequestValidatorTest extends SdtUnitTestBase
 
         expect (
                 mockIndividualRequestDao.getIndividualRequest (bulkCustomer,
-                        individualRequest.getCustomerRequestReference (), 30)).andReturn (individualRequest);
+                        individualRequest.getCustomerRequestReference (), dataRetentionPeriod)).andReturn (
+                individualRequest);
         replay (mockIndividualRequestDao);
 
         // inject the bulk customer into the validator
         validator.setIndividualRequestDao (mockIndividualRequestDao);
         individualRequest.accept (validator, null);
-        Assert.assertTrue (
-                "Error code",
-                individualRequest.getErrorLog ().getErrorText ()
-                        .contains ("Duplicate Unique Request Identifier submitted"));
+        Assert.assertEquals (
+
+        individualRequest.getErrorLog ().getErrorText (), "Duplicate Unique Request Identifier submitted " +
+                individualRequest.getCustomerRequestReference () + ".");
         Assert.assertEquals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus (),
                 individualRequest.getRequestStatus ());
 
@@ -192,7 +222,7 @@ public class IndividualRequestValidatorTest extends SdtUnitTestBase
 
         expect (
                 mockIndividualRequestDao.getIndividualRequest (bulkCustomer,
-                        individualRequest.getCustomerRequestReference (), 30)).andReturn (null);
+                        individualRequest.getCustomerRequestReference (), dataRetentionPeriod)).andReturn (null);
         replay (mockIndividualRequestDao);
 
         // inject the bulk customer into the validator
