@@ -2,6 +2,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
+	
+	<bean
+		id="uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor"
+		class="uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor" lazy-init="true">
+		<property name="serviceRequestDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
+	</bean>
 	<!-- XML out bound interceptor to modify the outgoing message using a list of enricher classes -->
 	<bean id="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" 
 		class="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor">

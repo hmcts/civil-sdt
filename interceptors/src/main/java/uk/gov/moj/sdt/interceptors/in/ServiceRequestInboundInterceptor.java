@@ -36,21 +36,27 @@ import org.apache.cxf.phase.Phase;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
-import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
- * Class to intercept incoming and outgoing messages to audit them.
+ * Class to intercept incoming messages and log them to the database.
+ * 
+ * <p> Generates <code>ServiceDomain</code> domain objects and by means of
+ * a Thread Local <SdtContext> instance keeps track of the persisted entity.
+ * 
+ * Outbound message interceptors in the same thread can then access the persisted entity to update as required.
+ * </p>
  * 
  * @author d195274
  * 
  */
-public class ServiceRequestInboundInterceptor extends AbstractSdtInterceptor
+public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
 {
 
     /**
@@ -59,20 +65,10 @@ public class ServiceRequestInboundInterceptor extends AbstractSdtInterceptor
     private static final Logger LOG = LoggerFactory.getLogger (ServiceRequestInboundInterceptor.class);
 
     /**
-     * The persistence class for this interceptor.
-     */
-    private IGenericDao serviceRequestDao;
-
-    /**
-     * Domain object representing a service request.
+     * The service request.
      */
     private IServiceRequest serviceRequest;
-
-    /**
-     * The soap message as a String.
-     */
-    private String xmlMessage;
-
+    
     /**
      * Create.
      */
@@ -92,33 +88,18 @@ public class ServiceRequestInboundInterceptor extends AbstractSdtInterceptor
         super (phase);
     }
 
-    /**
-     * get.
-     * 
-     * @return the xml message representing the entire Soap message.
-     */
-    public String getMessage ()
-    {
-        return xmlMessage;
-    }
-
-    /**
-     * set.
-     * 
-     * @param xmlMessage the original Soap Message expressed as a String.
-     */
-    public void setMessage (final String xmlMessage)
-    {
-        this.xmlMessage = xmlMessage;
-    }
+   
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional
     public void handleMessage (final SoapMessage soapMessage) throws Fault
     {
-        xmlMessage = readInputMessage (soapMessage);
+        serviceRequest = new ServiceRequest ();
+        LOG.info("[ServiceRequestInboundInterceptor:handleMessage] incoming message being processed");
+        setMessage(readInputMessage (soapMessage));
         logMessage ();
-    }
+    }  
+   
 
     /**
      * log the message to the persistence target.
@@ -134,45 +115,18 @@ public class ServiceRequestInboundInterceptor extends AbstractSdtInterceptor
      */
     private void logMessage ()
     {
-        if (null != (Object) Storage.getId ())
-        {
-            logOutgoingMessage ();
-        }
-        else
-        {
-            logIncomingMessage ();
-        }
-    }
-
-    /**
-     * The message is incoming and needs to be added to the database.
-     * <p>
-     * There are three different types of incoming requests and they have different information available. In this
-     * method we try and record all information whether present or not.
-     * </p>
-     */
-    private void logIncomingMessage ()
-    {
-
+        final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
         serviceRequest.setBulkCustomerId (extractBulkCustomerId ());
-        serviceRequest.setRequestPayload (xmlMessage);
+        serviceRequest.setRequestPayload (this.getMessage ());
         serviceRequest.setRequestDateTime (new LocalDateTime ());
-        serviceRequest.setBulkReference (extractBulkReference ());
         serviceRequest.setRequestType (extractRequestType ());
         serviceRequestDao.persist (serviceRequest);
-        Storage.setId ((int) serviceRequest.getId ());
-    }
-
-    /**
-     * The message is outgoing and needs to be added to the existing incoming ServiceRequest record.
-     */
-    private void logOutgoingMessage ()
-    {
-        serviceRequest = serviceRequestDao.fetch (ServiceRequest.class, Storage.getId ());
-        serviceRequest.setBulkReference (extractBulkReference ());
-        serviceRequest.setResponsePayload (xmlMessage);
-        serviceRequest.setResponseDateTime (new LocalDateTime ());
-        serviceRequestDao.persist (serviceRequest);
+        final Long serviceRequestID = serviceRequest.getId ();
+        if (LOG.isInfoEnabled()) {
+            LOG.info("[ServiceRequestInboundInterceptor:logMessage] service request :"
+                    + serviceRequestID + " has been persisted");
+        }
+        SdtContext.getContext ().setServiceRequestId (serviceRequestID);
     }
 
     /**
@@ -183,17 +137,35 @@ public class ServiceRequestInboundInterceptor extends AbstractSdtInterceptor
     private String extractRequestType ()
     {
         String requestType = "";
-        final String body = ":Body>";
-        int startPos = xmlMessage.indexOf (body);
+        final String requestTypePattern = "requestType=\"";
+        final int startPos = this.getMessage ().indexOf (requestTypePattern);
         // the next node contains the request type
-        final String content = xmlMessage.substring (startPos + body.length ());
-        startPos = content.indexOf (":");
-        if (startPos != -1)
+        final String content = this.getMessage ().substring (startPos + requestTypePattern.length ());
+        
+        if (content.length ()>0)
         {
-            final int endPos = content.indexOf (">");
-            requestType = content.substring (startPos, endPos);
+            final int endPos = content.indexOf ("\" requestId");
+            requestType = content.substring (0, endPos);
         }
         return requestType;
+    }
+
+    /**
+     * Getter.
+     * @return the service request.
+     */
+    public IServiceRequest getServiceRequest ()
+    {
+        return serviceRequest;
+    }
+
+    /**
+     * The setter.
+     * @param serviceRequest the IServiceRequest.
+     */
+    public void setServiceRequest (final IServiceRequest serviceRequest)
+    {
+        this.serviceRequest = serviceRequest;
     }
 
     /**
@@ -207,86 +179,5 @@ public class ServiceRequestInboundInterceptor extends AbstractSdtInterceptor
     private String extractBulkCustomerId ()
     {
         return extractValue ("sdtCustomerId");
-    }
-
-    /**
-     * Extract the bulk reference.
-     * <p>
-     * Bulk reference is only applicable on certain requests:
-     * <ul>
-     * <li>Bulk submission - not available till response</li>
-     * <li>Submit Query - not applicable</li>
-     * <li>Bulk report - available on both request and response.</li>
-     * </ul>
-     * 
-     * @return the value of the bulk reference
-     */
-    private String extractBulkReference ()
-    {
-        return extractValue ("sdtBulkReference");
-    }
-
-    /**
-     * Simple method to extract a text value from this ServiceRequest's xmlMessage String.
-     * <p>
-     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses simple String
-     * functionality to locate and extract a String.
-     * </p>
-     * 
-     * @param nodeName The name of an xml node e.g. 'customerId'
-     * @return the content of the node or null
-     */
-    private String extractValue (final String nodeName)
-    {
-        String nodeContent = "";
-        final int startPos = xmlMessage.indexOf (nodeName);
-        if (startPos != -1)
-        {
-            nodeContent = xmlMessage.substring (startPos);
-            final int endPos = nodeContent.indexOf ("<");
-            nodeContent = nodeContent.substring (1, endPos);
-        }
-        return nodeContent;
-    }
-}
-
-/**
- * Used to store the id of the newly created Service Request.
- * 
- * @author d195274
- * 
- */
-final class Storage
-{
-    /**
-     * Contains the id.
-     */
-    private static ThreadLocal<Integer> holder;
-
-    /**
-     * Private constructor to keep checkstyle happy.
-     */
-    private Storage ()
-    {
-    }
-
-    /**
-     * Set id.
-     * 
-     * @param id to be saved
-     */
-    static void setId (final int id)
-    {
-        holder.set (id);
-    }
-
-    /**
-     * Retrieve id.
-     * 
-     * @return the id
-     */
-    static int getId ()
-    {
-        return holder.get ();
     }
 }
