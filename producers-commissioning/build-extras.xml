@@ -123,7 +123,6 @@
                 <include name="**/*.jar" />
                 <exclude name="**/consumers.jar" />
                 <exclude name="**/producers.jar" />
-				<exclude name="**/dao.jar" />
                 <exclude name="**/services.jar" />
 			</fileset>
 		</copy>
