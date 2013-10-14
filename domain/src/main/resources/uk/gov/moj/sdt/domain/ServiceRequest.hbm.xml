@@ -4,44 +4,37 @@
 <!-- Generated 17-Jul-2013 12:18:37 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
 	<class name="uk.gov.moj.sdt.domain.ServiceRequest" table="SERVICE_REQUESTS">
-		<id name="id" type="java.lang.String" access="field" column="REQUEST_TYPE_ID" >
+		<id name="id" column="SERVICE_REQUEST_ID" >
 			<generator class="sequence">
 				<param name="sequence">srv_req_seq</param>
 			</generator>
 		</id>
 		<property name="bulkCustomerId" type="java.lang.String"
-			access="field">
-			<column name="BULK_CUSTOMER_ID" />
+			>
+			<column name="SDT_CUSTOMER_ID" />
 		</property>
 		<property name="requestDateTime" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime"
-			access="field">
+			>
 			<column name="REQUEST_TIMESTAMP" />
 		</property>
 		<property name="responseDateTime" type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime"
-			access="field">
+			>
 			<column name="RESPONSE_TIMESTAMP" />
 		</property>
-		<property name="requestType" type="java.lang.String" access="field">
+		<property name="requestType" type="java.lang.String" >
 			<column name="REQUEST_TYPE" />
 		</property>
-		<property name="requestPayload" type="java.lang.String"
-			access="field">
+		<property name="requestPayload" type="uk.gov.moj.sdt.domain.type.BlobType"
+			>
 			<column name="REQUEST_PAYLOAD" />
 		</property>
-		<property name="responsePayload" type="java.lang.String"
-			access="field">
+		<property name="responsePayload" type="uk.gov.moj.sdt.domain.type.BlobType"
+			>
 			<column name="RESPONSE_PAYLOAD" />
 		</property>
 		<property name="bulkReference" type="java.lang.String"
-			access="field">
+			>
 			<column name="SDT_BULK_REFERENCE" />
-		</property>
-		<property name="serviceRequestHeader" type="java.lang.String">
-            <column name="SERVICE_REQUEST_HEADER" />
-        </property>		
-		<property name="internalSystemError" type="java.lang.String">
-            <column name="INTERNAL_SYSTEM_ERROR" />
-        </property>
-		
+		</property>		
 	</class>
 </hibernate-mapping>
