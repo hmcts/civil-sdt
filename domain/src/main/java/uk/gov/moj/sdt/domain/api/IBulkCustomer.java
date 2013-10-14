@@ -78,4 +78,11 @@ public interface IBulkCustomer extends IDomainObject
      */
     Set<IBulkCustomerApplication> getBulkCustomerApplications ();
 
+    /**
+     * Get the bulk customer applications for given target application code.
+     * 
+     * @param targetApplicationCode target application code
+     * @return return bulk customer application that this customer can work with.
+     */
+    IBulkCustomerApplication getBulkCustomerApplication (String targetApplicationCode);
 }

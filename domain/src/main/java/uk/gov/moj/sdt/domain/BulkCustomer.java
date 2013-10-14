@@ -96,4 +96,18 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
         return bulkCustomerApplications;
     }
 
+    @Override
+    public IBulkCustomerApplication getBulkCustomerApplication (final String targetApplicationCode)
+    {
+        for (IBulkCustomerApplication bulkCustomerApplication : bulkCustomerApplications)
+        {
+            if (bulkCustomerApplication.getTargetApplication ().getTargetApplicationCode ()
+                    .equalsIgnoreCase (targetApplicationCode))
+            {
+                return bulkCustomerApplication;
+            }
+        }
+        return null;
+    }
+
 }
