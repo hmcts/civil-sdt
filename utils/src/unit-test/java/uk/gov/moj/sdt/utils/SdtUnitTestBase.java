@@ -31,134 +31,192 @@
 
 package uk.gov.moj.sdt.utils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Class represents base class for all unit test cases.
  * 
  * @author Robin Compston
  */
-public class SdtUnitTestBase extends TestCase
-{
-    /**
-     * Static logging object.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger (SdtUnitTestBase.class);
+public class SdtUnitTestBase extends TestCase {
+	/**
+	 * Static logging object.
+	 */
+	private static final Logger LOG = LoggerFactory
+			.getLogger(SdtUnitTestBase.class);
 
-    /**
-     * Name of log4j configuration file (in classpath).
-     */
-    private static final String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
+	/**
+	 * Name of log4j configuration file (in classpath).
+	 */
+	private static final String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
 
-    /**
-     * Constructs a new {@link SdtUnitTestBase}.
-     * 
-     * @param testName name of test.
-     */
-    public SdtUnitTestBase (final String testName)
-    {
-        super (testName);
+	/**
+	 * Constructs a new {@link SdtUnitTestBase}.
+	 * 
+	 * @param testName
+	 *            name of test.
+	 */
+	public SdtUnitTestBase(final String testName) {
+		super(testName);
 
-        this.init ();
-    }
+		this.init();
+	}
 
-    /**
-     * Do one time initialization for this test class.
-     */
-    private void init ()
-    {
-        // // Now load the properties for this test.
-        // this.testProperties = new Properties ();
+	/**
+	 * Do one time initialization for this test class.
+	 */
+	private void init() {
+		// // Now load the properties for this test.
+		// this.testProperties = new Properties ();
 
-        // Initialize log4j for test purposes.
-        DOMConfigurator.configure (LOG4J_XML_FILE);
-    }
+		// Initialize log4j for test purposes.
+		DOMConfigurator.configure(LOG4J_XML_FILE);
+	}
 
-    /**
-     * Standard JUnit setUp method. Gets run before each test method.
-     * 
-     * @throws Exception
-     *             May throw runtime exception.
-     */
-    @Override
-    protected void setUp () throws Exception
-    {
-        super.setUp ();
+	/**
+	 * Standard JUnit setUp method. Gets run before each test method.
+	 * 
+	 * @throws Exception
+	 *             May throw runtime exception.
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        SdtUnitTestBase.LOG.debug ("Start Test: " + this.getClass ().getCanonicalName () + "." + this.getName ());
+		SdtUnitTestBase.LOG.debug("Start Test: "
+				+ this.getClass().getCanonicalName() + "." + this.getName());
 
-        // Local set up if we are running outside of the appserver.
-        this.setUpLocalTests ();
-    }
+		// Local set up if we are running outside of the appserver.
+		this.setUpLocalTests();
+	}
 
-    /**
-     * Method to be overridden in derived class to do test specific setup.
-     * 
-     * @throws Exception
-     *             general problem.
-     */
-    protected void setUpLocalTests () throws Exception
-    {
-    }
+	/**
+	 * Method to be overridden in derived class to do test specific setup.
+	 * 
+	 * @throws Exception
+	 *             general problem.
+	 */
+	protected void setUpLocalTests() throws Exception {
+	}
 
-    /**
-     * Convert windows String to UNIX by removing all Hex 0d.
-     * 
-     * @param in String from Windows platform.
-     * @return String for UNIX platrofm.
-     */
-    protected String dos2Unix (final String in)
-    {
-        // Array to hold input.
-        final char[] win = in.toCharArray ();
-        final int len = in.length ();
+	/**
+	 * Convert windows String to UNIX by removing all Hex 0d.
+	 * 
+	 * @param in
+	 *            String from Windows platform.
+	 * @return String for UNIX platrofm.
+	 */
+	protected String dos2Unix(final String in) {
+		// Array to hold input.
+		final char[] win = in.toCharArray();
+		final int len = in.length();
 
-        // Array to hold output.
-        final char[] unix = new char[len];
+		// Array to hold output.
+		final char[] unix = new char[len];
 
-        int pos2 = 0;
-        for (int pos1 = 0; pos1 < len; pos1++)
-        {
-            // Copy all but CARRIAGE RETURN.
-            if (win[pos1] != '\r')
-            {
-                unix[pos2++] = win[pos1];
-            }
-        }
+		int pos2 = 0;
+		for (int pos1 = 0; pos1 < len; pos1++) {
+			// Copy all but CARRIAGE RETURN.
+			if (win[pos1] != '\r') {
+				unix[pos2++] = win[pos1];
+			}
+		}
 
-        return new String (unix);
-    }
+		return new String(unix);
+	}
 
-//    /**
-//     * Returns a required property.
-//     * 
-//     * @param key
-//     *            The property key.
-//     * @return The property value - not null or empty.
-//     * @throws ConfigException
-//     *             If there is an exception accessing data.
-//     */
-//    protected String getRequiredProperty (final String key)
-//    {
-//        if (key == null || "".equals (key))
-//        {
-//            throw new IllegalStateException ("Key argument cannot be empty or null");
-//        }
-//        if (this.testProperties == null)
-//        {
-//            throw new NullPointerException ("Reference to properties file was unexpectedly null");
-//        }
-//        final String val = this.testProperties.getProperty (key);
-//        if (val == null || "".equals (val))
-//        {
-//            SdtTestBase.LOG.debug ("Test name = " + this.getName ());
-//
-//            throw new IllegalStateException ("Value with key '" + key + "' cannot be null or empty");
-//        }
-//        return val;
-//    }
+	/**
+	 * Retrieve a field in its accessible state.
+	 * 
+	 * <p>
+	 * Scenario: field exists without a getter and is protected or private. This
+	 * allows you to inspect that field's state e.g.
+	 * <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
+				ServiceRequest.class, "requestDateTime", LocalDateTime.class,
+				serviceRequest)</code>
+	 * </p>
+	 * 
+	 * @param clazzUnderTest
+	 *            This is the class that owns the field
+	 * @param fieldName
+	 *            this is the field name
+	 * @param clazzOfField
+	 *            this is the field type
+	 * @param target
+	 *            this is the object which has the variable
+	 * @return the field from the target object as an object.
+	 */
+	public Object getAccesibleField(final Class<?> clazzUnderTest,
+			final String fieldName, final Class<?> clazzOfField,
+			final Object target) {
+		Field field = ReflectionUtils.findField(clazzUnderTest, fieldName);
+		if (null == field) {
+			field = ReflectionUtils.findField(clazzUnderTest, fieldName,
+					clazzOfField);
+		}
+		ReflectionUtils.makeAccessible(field);
+		return ReflectionUtils.getField(field, target);
+	}
+
+	/**
+	 * Retrieve a field in its accessible state.
+	 * 
+	 * <p>
+	 * Scenario: field exists without a getter and is protected or private. This
+	 * allows you to inspect that field's state e.g.
+	 * <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
+				ServiceRequest.class, "requestDateTime", LocalDateTime.class,
+				serviceRequest)</code>
+	 * </p>
+	 * 
+	 * @param clazzUnderTest
+	 *            This is the class that owns the method
+	 * @param methodName
+	 *            this is the method name
+	 */
+	public void makeMethodAccesible(final Class<?> clazzUnderTest,
+			final String methodName) {
+		final Method method = ReflectionUtils.findMethod(clazzUnderTest,
+				methodName);
+		ReflectionUtils.makeAccessible(method);
+	}
+
+	// /**
+	// * Returns a required property.
+	// *
+	// * @param key
+	// * The property key.
+	// * @return The property value - not null or empty.
+	// * @throws ConfigException
+	// * If there is an exception accessing data.
+	// */
+	// protected String getRequiredProperty (final String key)
+	// {
+	// if (key == null || "".equals (key))
+	// {
+	// throw new IllegalStateException ("Key argument cannot be empty or null");
+	// }
+	// if (this.testProperties == null)
+	// {
+	// throw new NullPointerException
+	// ("Reference to properties file was unexpectedly null");
+	// }
+	// final String val = this.testProperties.getProperty (key);
+	// if (val == null || "".equals (val))
+	// {
+	// SdtTestBase.LOG.debug ("Test name = " + this.getName ());
+	//
+	// throw new IllegalStateException ("Value with key '" + key +
+	// "' cannot be null or empty");
+	// }
+	// return val;
+	// }
 }
