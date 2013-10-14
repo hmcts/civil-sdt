@@ -78,7 +78,7 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
         final Session session = getSessionFactory ().getCurrentSession ();
         final Criteria criteria = session.createCriteria (IBulkSubmission.class).createAlias ("bulkCustomer", "bc");
         criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
-        criteria.add (Restrictions.eq ("customerReference", customerReference));
+        criteria.add (Restrictions.eq ("customerReference", customerReference).ignoreCase ());
 
         // Only bring back bulk submission within the data retention period
         criteria.add (createDateRestriction ("createdDate", dataRetention));

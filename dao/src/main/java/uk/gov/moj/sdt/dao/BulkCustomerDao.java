@@ -68,17 +68,9 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
         LOG.debug ("Get a bulk customer matching sdtId [" + sdtCustomerId + "]");
 
         // Call the generic dao to perform this query.
-        final IBulkCustomer[] bulkCustomers =
-                this.query (IBulkCustomer.class, Restrictions.eq ("sdtCustomerId", sdtCustomerId));
+        final IBulkCustomer bulkCustomer =
+                this.uniqueResult (IBulkCustomer.class, Restrictions.eq ("sdtCustomerId", sdtCustomerId));
 
-        // Should only return one or none at all
-        if (bulkCustomers == null || bulkCustomers.length == 0)
-        {
-            return null;
-        }
-
-        // TODO Replace assert with Exception
-        assert bulkCustomers.length == 1;
-        return bulkCustomers[0];
+        return bulkCustomer;
     }
 }

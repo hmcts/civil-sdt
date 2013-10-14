@@ -81,7 +81,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                         .createAlias ("bs.bulkCustomer", "bc");
 
         criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
-        criteria.add (Restrictions.eq ("customerRequestReference", customerReference));
+        criteria.add (Restrictions.eq ("customerRequestReference", customerReference).ignoreCase ());
 
         // Only bring back individual request within the data retention period
         criteria.add (createDateRestriction ("createdDate", dataRetention));
