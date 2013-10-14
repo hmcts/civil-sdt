@@ -70,7 +70,7 @@
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>DUPLD_CUST_REQID</value>	       			
-	       			<value>Unique Request Identifier has been specified more than once within the originating Bulk Request</value>
+	       			<value>Unique Request Identifier has been specified more than once within the originating Bulk Request.</value>
 	       			<value>false</value>
 	       		</list>
 	       		<list>	       					

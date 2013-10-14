@@ -21,7 +21,6 @@
         <property name="bulkReferenceList">
      		<list>     				     	
 	       		<value>MCOL_20130722_A00000001</value>
-	       		<value>MCOL_20130722_B00000001</value>
 	       		<value>MCOL_20130722_B00000002</value>
 	       		<value>MCOL_20130722_C00000001</value>
 	    	</list>

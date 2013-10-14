@@ -125,6 +125,7 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
     }
 
     /**
+     * This method will return the string criterion for the given criteria type.
      * 
      * @param criteria the criteria type object contained in the SubmitQuery reqeuest type
      * @return the string criterion associated with the criteria type.

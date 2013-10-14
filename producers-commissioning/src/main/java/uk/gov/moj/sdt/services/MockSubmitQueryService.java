@@ -103,6 +103,8 @@ public class MockSubmitQueryService implements ISubmitQueryService
     }
 
     /**
+     * This method will return the map of the response content with the key as
+     * the criteria type.
      * 
      * @return the response content map with the key as the criteria type
      */
