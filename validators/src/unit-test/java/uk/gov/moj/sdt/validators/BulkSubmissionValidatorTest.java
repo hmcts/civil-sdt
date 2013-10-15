@@ -190,57 +190,6 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
      * @param application the application name for this bulk submission (MCOL, PCOL etc)
      */
 
-    private void createBulkSubmission (final long numberOfRequests, final IBulkCustomer bulkCustomer,
-                                       final List<IIndividualRequest> individualRequests, final String application)
-    {
-
-        bulkSubmission = new BulkSubmission ();
-        bulkSubmission.setBulkCustomer (bulkCustomer);
-        bulkSubmission.setCustomerReference ("Customer Reference");
-        bulkSubmission.setTargetApplication (createTargetApp (application));
-        bulkSubmission.setNumberOfRequest (numberOfRequests);
-        bulkSubmission.setIndividualRequests (individualRequests);
-        bulkSubmission.setCreatedDate (now);
-        bulkSubmission.setSdtBulkReference (sdtBulkReference);
-    }
-
-    /**
-     * Method to mock and test GlobalParameterCache.
-     */
-    private void setupDataRetentionCache ()
-    {
-        // Setup data retention period
-        final IGlobalParameter globalParameterData = new GlobalParameter ();
-        globalParameterData.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
-        globalParameterData.setValue ("90");
-
-        expect (
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameterData);
-        replay (globalParameterCache);
-
-        validator.setGlobalParameterCache (globalParameterCache);
-
-    }
-
-    /**
-     * Method to mock and test GlobalParameterCache.
-     */
-    private void setupContactDetailsCache ()
-    {
-
-        // Set up contact details
-        final IGlobalParameter globalParameterContact = new GlobalParameter ();
-        globalParameterContact.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
-        globalParameterContact.setValue (contact);
-
-        expect (
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ())).andReturn (globalParameterContact);
-        replay (globalParameterCache);
-        validator.setGlobalParameterCache (globalParameterCache);
-    }
-
     /**
      * The purpose of this test is to have a clean run through these three conditions.
      * 1) The customer has access to the target application
@@ -285,6 +234,11 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         setupDataRetentionCache ();
 
         bulkSubmission.accept (validator, null);
+
+        EasyMock.verify (mockIBulkCustomerDao);
+        EasyMock.verify (mockIBulkSubmissionDao);
+        EasyMock.verify (globalParameterCache);
+
     }
 
     /**
@@ -419,7 +373,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
 
         try
         {
-            // set up a bulk customer to use the PCOL application to make it error as the bulk submission sets MCOL.
+            // set up a bulk customer to use the MCOL application to make it error as the bulk submission sets MCOL.
             bulkCustomer = createCustomer (createBulkCustomerApplications ("MCOL"));
 
             // set up the mock objects
@@ -467,6 +421,8 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         }
         catch (final CustomerReferenceNotUniqueException e)
         {
+            EasyMock.verify (mockIBulkCustomerDao);
+            EasyMock.verify (mockIBulkSubmissionDao);
             Assert.assertTrue ("Error code incorrect",
                     e.getErrorCode ().equals (IErrorMessage.ErrorCode.DUP_CUST_FILEID.name ()));
             Assert.assertTrue (
@@ -542,6 +498,8 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         {
             LOGGER.debug (e.getMessage ().toString ());
 
+            EasyMock.verify (mockIBulkCustomerDao);
+            EasyMock.verify (mockIBulkSubmissionDao);
             Assert.assertTrue ("Error code incorrect",
                     e.getErrorCode ().equals (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name ()));
             Assert.assertTrue (
@@ -553,4 +511,56 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         }
 
     }
+
+    private void createBulkSubmission (final long numberOfRequests, final IBulkCustomer bulkCustomer,
+                                       final List<IIndividualRequest> individualRequests, final String application)
+    {
+
+        bulkSubmission = new BulkSubmission ();
+        bulkSubmission.setBulkCustomer (bulkCustomer);
+        bulkSubmission.setCustomerReference ("Customer Reference");
+        bulkSubmission.setTargetApplication (createTargetApp (application));
+        bulkSubmission.setNumberOfRequest (numberOfRequests);
+        bulkSubmission.setIndividualRequests (individualRequests);
+        bulkSubmission.setCreatedDate (now);
+        bulkSubmission.setSdtBulkReference (sdtBulkReference);
+    }
+
+    /**
+     * Method to mock and test GlobalParameterCache.
+     */
+    private void setupDataRetentionCache ()
+    {
+        // Setup data retention period
+        final IGlobalParameter globalParameterData = new GlobalParameter ();
+        globalParameterData.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+        globalParameterData.setValue ("90");
+
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameterData);
+        replay (globalParameterCache);
+
+        validator.setGlobalParameterCache (globalParameterCache);
+
+    }
+
+    /**
+     * Method to mock and test GlobalParameterCache.
+     */
+    private void setupContactDetailsCache ()
+    {
+
+        // Set up contact details
+        final IGlobalParameter globalParameterContact = new GlobalParameter ();
+        globalParameterContact.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+        globalParameterContact.setValue (contact);
+
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ())).andReturn (globalParameterContact);
+        replay (globalParameterCache);
+        validator.setGlobalParameterCache (globalParameterCache);
+    }
+
 }

@@ -176,6 +176,7 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest
         EasyMock.verify (mockIBulkCustomerDao);
 
         Assert.assertEquals (bulkCustomer.getSdtCustomerId (), sdtCustomerId);
+        Assert.assertTrue (true);
     }
 
     /**

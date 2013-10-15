@@ -162,6 +162,7 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
 
         // Validate the bulk customer.
         bulkFeedbackRequest.accept (validator, null);
+        Assert.assertTrue (true);
     }
 
     /**
@@ -189,9 +190,11 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         catch (final InvalidBulkReferenceException e)
         {
 
+            EasyMock.verify (mockIBulkSubmissionDao);
             Assert.assertEquals (IErrorMessage.ErrorCode.BULK_REF_INVALID.name (), e.getErrorCode ());
             Assert.assertEquals ("There is no Bulk Request submission associated with your account for the " +
                     "supplied SDT Bulk Reference " + reference + ".", e.getErrorDescription ());
         }
+        Assert.assertTrue (true);
     }
 }

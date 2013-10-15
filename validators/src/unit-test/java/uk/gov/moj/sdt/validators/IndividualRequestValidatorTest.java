@@ -203,6 +203,7 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
         // inject the bulk customer into the validator
         validator.setIndividualRequestDao (mockIndividualRequestDao);
         individualRequest.accept (validator, null);
+        EasyMock.verify (mockIndividualRequestDao);
         Assert.assertEquals (
 
         individualRequest.getErrorLog ().getErrorText (), "Duplicate Unique Request Identifier submitted " +
@@ -227,6 +228,7 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
         // inject the bulk customer into the validator
         validator.setIndividualRequestDao (mockIndividualRequestDao);
         individualRequest.accept (validator, null);
+        EasyMock.verify (mockIndividualRequestDao);
 
     }
 }
