@@ -92,6 +92,12 @@ public class MockErrorMessagesCache implements ICacheable, IErrorMessagesCache
             errorMessages.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ());
             errorMessages.setErrorText ("Duplicate Unique Request Identifier submitted {0}.");
         }
+        else if (key.equals (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.toString ()))
+        {
+            errorMessages.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ());
+            errorMessages.setErrorText ("Unique Request Identifier has been specified more than once "
+                    + "within the originating Bulk Request.");
+        }
         return (DomainType) errorMessages;
     }
 
