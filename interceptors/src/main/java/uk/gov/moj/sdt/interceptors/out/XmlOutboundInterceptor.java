@@ -59,7 +59,7 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
      */
     public XmlOutboundInterceptor ()
     {
-        super (Phase.PRE_STREAM);
+        super (Phase.POST_STREAM);
         addBefore (LoggingOutInterceptor.class.getName ());
     }
 
