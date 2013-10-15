@@ -133,6 +133,11 @@ public interface IErrorMessage extends IDomainObject
          * The Bulk Customer organisation is recognised by the SDT Service, but is not set up to send a Service Request
          * message to the specified Target Application.
          */
-        CUST_ID_INVALID
+        CUST_ID_INVALID,
+
+        /**
+         * The submitted Bulk Request does not contain valid Individual Requests.
+         */
+        NO_VALID_REQS
     }
 }

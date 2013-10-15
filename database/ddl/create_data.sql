@@ -85,7 +85,7 @@ INSERT INTO error_messages (error_message_id,error_code,error_text,error_descrip
 VALUES (10,'NO_VALID_REQS','The submitted Bulk Request {0} does not contain valid individual Requests.'
 ,'The Submit Bulk Request message does not contain Individual Requests deemed to be valid. The Individual Requests have all failed SDT format validation and been rejected and processing has been completed as far as possible.');
 INSERT INTO error_messages (error_message_id,error_code,error_text,error_description)
-VALUES (11,'DUPLD_CUST_REQID','Unique Request Identifier has been specified more than once within the originating Bulk Request'
+VALUES (11,'DUPLD_CUST_REQID','Unique Request Identifier has been specified more than once within the originating Bulk Request.'
 ,'SDT identifies that a Unique Request Identifier has been associated with more than one Individual Request within the same Bulk Request.');
 INSERT INTO error_messages (error_message_id,error_code,error_text,error_description)
 VALUES (12,'DUP_CUST_REQID','Duplicate Unique Request Identifier submitted {0}.'

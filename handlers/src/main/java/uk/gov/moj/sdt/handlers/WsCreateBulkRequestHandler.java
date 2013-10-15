@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -65,6 +66,11 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      * Bulk Submission service.
      */
     private IBulkSubmissionService bulkSubmissionService;
+
+    /**
+     * Bulk Submission Validator.
+     */
+    private IBulkSubmissionValidator bulkSubmissionValidator;
 
     /**
      * The transformer associated with this handler.
@@ -162,6 +168,10 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
 
         VisitableTreeWalker.walk (bulkSubmission, "Validator");
 
+        // This validation needs to be done after the first lot of validation
+        // because we need to check all individual requests
+        bulkSubmissionValidator.checkIndividualRequests (bulkSubmission);
+
     }
 
     /**
@@ -196,5 +206,15 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     public void setBulkSubmissionService (final IBulkSubmissionService bulkSubmissionService)
     {
         this.bulkSubmissionService = bulkSubmissionService;
+    }
+
+    /**
+     * Setter for bulk submission validator.
+     * 
+     * @param bulkSubmissionValidator bulk submission validator
+     */
+    public void setBulkSubmissionValidator (final IBulkSubmissionValidator bulkSubmissionValidator)
+    {
+        this.bulkSubmissionValidator = bulkSubmissionValidator;
     }
 }
