@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -51,18 +50,17 @@ import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.ServiceRouting;
 import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.messaging.SdtMessage;
-import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -95,7 +93,7 @@ public class BulkSubmissionServiceTest
     /**
      * Message writer for queueing messages to the messaging server.
      */
-    private IMessageWriter mockMessageWriter;
+    // private IMessageWriter mockMessageWriter;
 
     /**
      * Individual requests xml parser for parsing the xml requests.
@@ -133,8 +131,9 @@ public class BulkSubmissionServiceTest
         mockGenericDao = EasyMock.createMock (IGenericDao.class);
         bulkSubmissionService.setGenericDao (mockGenericDao);
 
-        mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
-        bulkSubmissionService.setMessageWriter (mockMessageWriter);
+        // This class cannot be easily mocked since it's within a Runnable block so it's been removed for clarity
+        // mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
+        // bulkSubmissionService.setMessageWriter (mockMessageWriter);
 
         mockBulkCustomerDao = EasyMock.createMock (IBulkCustomerDao.class);
         bulkSubmissionService.setBulkCustomerDao (mockBulkCustomerDao);
@@ -165,33 +164,25 @@ public class BulkSubmissionServiceTest
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
         mockGenericDao.persist (bulkSubmission);
-
         EasyMock.expectLastCall ();
 
-        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-
-        for (IIndividualRequest request : individualRequests)
-        {
-            final SdtMessage sdtMessage = new SdtMessage ();
-            sdtMessage.setMessageSentDate (LocalDateTime.now ());
-            sdtMessage.setSdtRequestReference (request.getSdtRequestReference ());
-            mockMessageWriter.queueMessage (sdtMessage);
-        }
-
-        EasyMock.expectLastCall ().anyTimes ();
+        // Mock the serviceRequest fetch
+        final IServiceRequest serviceRequest = new ServiceRequest ();
+        EasyMock.expect (mockGenericDao.fetch (IServiceRequest.class, 1)).andReturn (serviceRequest);
 
         // Replay the EasyMock
         EasyMock.replay (mockGenericDao);
-        EasyMock.replay (mockMessageWriter);
+
+        // Put a dummy value into the SdtContext
+        SdtContext.getContext ().setServiceRequestId (new Long (1));
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
 
-        Assert.assertTrue ("Expected to pass", true);
-
         // Verify the Mock
         EasyMock.verify (mockGenericDao);
-        EasyMock.verify (mockMessageWriter);
+
+        Assert.assertTrue ("Expected to pass", true);
 
     }
 
@@ -216,47 +207,25 @@ public class BulkSubmissionServiceTest
                 bulkSubmission.getIndividualRequests ().size ());
 
         mockGenericDao.persist (bulkSubmission);
-
         EasyMock.expectLastCall ();
 
-        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        LOGGER.debug ("Individal Requests fetched number is " + individualRequests.size ());
-
-        for (final IIndividualRequest request : individualRequests)
-        {
-            if (request.getRequestStatus ().equals (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()))
-            {
-                mockMessageSynchronizer.execute (new Runnable ()
-                {
-
-                    @Override
-                    public void run ()
-                    {
-                        final SdtMessage sdtMessage = new SdtMessage ();
-                        sdtMessage.setMessageSentDate (LocalDateTime.now ());
-                        sdtMessage.setSdtRequestReference (request.getSdtRequestReference ());
-
-                        mockMessageWriter.queueMessage (sdtMessage);
-                        EasyMock.expectLastCall ();
-                    }
-
-                });
-
-            }
-        }
+        // Mock the serviceRequest fetch
+        final IServiceRequest serviceRequest = new ServiceRequest ();
+        EasyMock.expect (mockGenericDao.fetch (IServiceRequest.class, 1)).andReturn (serviceRequest);
 
         // Replay the EasyMock
         EasyMock.replay (mockGenericDao);
-        EasyMock.replay (mockMessageWriter);
+
+        // Put a dummy value into the SdtContext
+        SdtContext.getContext ().setServiceRequestId (new Long (1));
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
 
-        Assert.assertTrue ("Expected to pass", true);
-
         // Verify the Mock
         EasyMock.verify (mockGenericDao);
-        EasyMock.verify (mockMessageWriter);
+
+        Assert.assertTrue ("Expected to pass", true);
     }
 
     /**
@@ -314,7 +283,7 @@ public class BulkSubmissionServiceTest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         individualRequest.setCustomerRequestReference ("ICustReq123");
         individualRequest.setId (1L);
-        individualRequest.setRequestStatus ("Received");
+        individualRequest.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
 
         bulkSubmission.addIndividualRequest (individualRequest);
 

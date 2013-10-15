@@ -117,6 +117,9 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
 
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
 
+        // Set the service request id so it can be retrieved in the saveBulkSubmission code
+        SdtContext.getContext ().setServiceRequestId (new Long (10800));
+
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
 
@@ -125,6 +128,8 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         Assert.assertEquals (1L, bulkSubmission.getNumberOfRequest ());
 
         Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+
+        Assert.assertNotNull (bulkSubmission.getServiceRequest ());
 
         final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
         Assert.assertNotNull (individualRequests);
