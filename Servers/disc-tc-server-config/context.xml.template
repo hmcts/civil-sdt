@@ -13,5 +13,8 @@
             -->
     <Loader loaderClass="com.springsource.insight.collection.tcserver.ltw.TomcatWeavingInsightClassLoader"/>
     <Listener className="com.springsource.insight.collection.tcserver.lifecycle.ApplicationLifecycleCollectionListener"/>
-    <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxActive="20" maxIdle="10" maxWait="-1" name="jdbc/SDTDB" password="${sdt.database.connection.password}" type="javax.sql.DataSource" url="jdbc:oracle:thin:@${db.hostname}:${db.port}/${db.sid}" username="${sdt.database.connection.user}"/> 
+	<!--
+	maxWait = The maximum number of milliseconds that the pool will wait (when there are no available connections) for a connection to be returned before throwing an exception
+	-->
+    <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxActive="10" initialSize="2" minIdle="2" maxIdle="2" maxWait="2000" name="jdbc/SDTDB" password="${sdt.database.connection.password}" type="javax.sql.DataSource" url="jdbc:oracle:thin:@${db.hostname}:${db.port}/${db.sid}" username="${sdt.database.connection.user}"/> 
 </Context>
