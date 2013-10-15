@@ -170,6 +170,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
 
         final String description = validator.getErrorMessage (replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
         LOG.debug ("testGetErrorMessage [" + description + "]");
+        EasyMock.verify (mockErrorMessagesCache);
         Assert.assertTrue ("Incorrect Message and/or substitution",
                 description.contains ("Duplicate Unique Request Identifier submitted MCOL0000012345."));
     }
@@ -185,6 +186,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
 
         final String contactDetails = validator.getContactDetails ();
         LOG.debug ("testGetContactDetails [" + contactDetails + "]");
+        EasyMock.verify (mockGlobalParameterCache);
         Assert.assertTrue ("Incorrect contact details", contactDetails.contains ("TBD"));
     }
 
@@ -212,6 +214,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
         catch (final CustomerReferenceNotUniqueException e)
         {
             LOG.debug (e.getMessage ());
+            EasyMock.verify (mockErrorMessagesCache);
             Assert.assertTrue ("Failed with code", e.getMessage ().contains ("DUP_CUST_FILEID"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("MCOL00001234"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("09/10/2013"));
@@ -242,6 +245,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
         catch (final RequestCountMismatchException e)
         {
             LOG.debug (e.getMessage ());
+            EasyMock.verify (mockErrorMessagesCache);
             Assert.assertTrue ("Failed with code", e.getMessage ().contains ("REQ_COUNT_MISMATCH"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("MCOL0000123"));
         }
@@ -269,6 +273,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
         catch (final CustomerNotSetupException e)
         {
             LOG.debug (e.getMessage ());
+            EasyMock.verify (mockErrorMessagesCache);
             Assert.assertTrue ("Failed with code", e.getMessage ().contains ("CUST_NOT_SETUP"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("MCOL"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("TBD"));
@@ -297,6 +302,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
         catch (final CustomerNotFoundException e)
         {
             LOG.debug (e.getMessage ());
+            EasyMock.verify (mockErrorMessagesCache);
             Assert.assertTrue ("Failed with code", e.getMessage ().contains ("CUST_ID_INVALID"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("TBD"));
         }
@@ -324,6 +330,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
         catch (final InvalidBulkReferenceException e)
         {
             LOG.debug (e.getMessage ());
+            EasyMock.verify (mockErrorMessagesCache);
             Assert.assertTrue ("Failed with code", e.getMessage ().contains ("BULK_REF_INVALID"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("MCOL000001234"));
         }
@@ -351,6 +358,7 @@ public class SdtValidatorTest extends SdtUnitTestBase
         catch (final DuplicateUserRequestIdentifierException e)
         {
             LOG.debug (e.getMessage ());
+            EasyMock.verify (mockErrorMessagesCache);
             Assert.assertTrue ("Failed with code", e.getMessage ().contains ("DUP_CUST_REQID"));
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("MCOL000009876"));
         }

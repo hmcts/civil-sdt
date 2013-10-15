@@ -50,55 +50,57 @@ public class MockErrorMessagesCache implements ICacheable, IErrorMessagesCache
     public <DomainType extends IDomainObject> DomainType
             getValue (final Class<DomainType> domainType, final String key)
     {
-        final IErrorMessage errorMessages = new ErrorMessage ();
+        final IErrorMessage errorMessage = new ErrorMessage ();
 
-        if (key.equals (IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ()))
+        if (IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ());
-            errorMessages.setErrorText ("Duplicate User File Reference {0} supplied. This was previously used to "
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ());
+            errorMessage.setErrorText ("Duplicate User File Reference {0} supplied. This was previously used to "
                     + "submit a Bulk Request on {1} and the SDT Bulk Reference {2} was allocated.");
         }
-        else if (key.equals (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.toString ()))
+        else if (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.toString ());
-            errorMessages.setErrorText ("Unexpected Total Number of Requests identified. {0} requested identified,"
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.toString ());
+            errorMessage.setErrorText ("Unexpected Total Number of Requests identified. {0} requested identified,"
                     + " {1} requests expected in Bulk Request {2}.");
         }
-        else if (key.equals (IErrorMessage.ErrorCode.SDT_INT_ERR.toString ()))
+        else if (IErrorMessage.ErrorCode.SDT_INT_ERR.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.SDT_INT_ERR.toString ());
-            errorMessages.setErrorText ("A system error has occurred. Please contact {0} for assistance.");
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.SDT_INT_ERR.toString ());
+            errorMessage.setErrorText ("A system error has occurred. Please contact {0} for assistance.");
         }
-        else if (key.equals (IErrorMessage.ErrorCode.CUST_NOT_SETUP.toString ()))
+        else if (IErrorMessage.ErrorCode.CUST_NOT_SETUP.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.CUST_NOT_SETUP.toString ());
-            errorMessages.setErrorText ("The Bulk Customer organisation is not setup to send Service Request "
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.CUST_NOT_SETUP.toString ());
+            errorMessage.setErrorText ("The Bulk Customer organisation is not setup to send Service Request "
                     + "messages to the {0}. Please contact {1} for assistance.");
         }
-        else if (key.equals (IErrorMessage.ErrorCode.CUST_ID_INVALID.toString ()))
+        else if (IErrorMessage.ErrorCode.CUST_ID_INVALID.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.CUST_ID_INVALID.toString ());
-            errorMessages.setErrorText ("The Bulk Customer organisation does not have an SDT Customer ID set up. "
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.CUST_ID_INVALID.toString ());
+            errorMessage.setErrorText ("The Bulk Customer organisation does not have an SDT Customer ID set up. "
                     + "Please contact {0} for assistance.");
         }
-        else if (key.equals (IErrorMessage.ErrorCode.BULK_REF_INVALID.toString ()))
+        else if (IErrorMessage.ErrorCode.BULK_REF_INVALID.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.BULK_REF_INVALID.toString ());
-            errorMessages.setErrorText ("There is no Bulk Request submission associated with your account for the"
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.BULK_REF_INVALID.toString ());
+            errorMessage.setErrorText ("There is no Bulk Request submission associated with your account for the"
                     + " supplied SDT Bulk Reference {0}.");
         }
-        else if (key.equals (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ()))
+        else if (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ());
-            errorMessages.setErrorText ("Duplicate Unique Request Identifier submitted {0}.");
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ());
+            errorMessage.setErrorText ("Duplicate Unique Request Identifier submitted {0}.");
         }
-        else if (key.equals (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.toString ()))
+
+        else if (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.toString ().equals (key))
         {
-            errorMessages.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ());
-            errorMessages.setErrorText ("Unique Request Identifier has been specified more than once "
+            errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.toString ());
+            errorMessage.setErrorText ("Unique Request Identifier has been specified more than once "
                     + "within the originating Bulk Request.");
         }
-        return (DomainType) errorMessages;
+        return (DomainType) errorMessage;
+
     }
 
 }

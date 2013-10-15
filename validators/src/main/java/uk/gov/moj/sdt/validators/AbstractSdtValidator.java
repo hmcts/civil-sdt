@@ -161,43 +161,39 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         throws AbstractBusinessException
     {
         final String errorCodeStr = errorCode.toString ();
+        final IErrorMessage errorMessage;
         switch (errorCode)
         {
-            case SDT_INT_ERR:
-            {
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
-                break;
-            }
             case CUST_NOT_SETUP:
             {
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new CustomerNotSetupException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case CUST_ID_INVALID:
             {
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new CustomerNotFoundException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case DUP_CUST_FILEID:
             {
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 // CHECKSTYLE:OFF
                 throw new CustomerReferenceNotUniqueException (errorCodeStr, errorMessage.getErrorText (), replacements);
                 // CHECKSTYLE:ON
             }
             case REQ_COUNT_MISMATCH:
             {
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new RequestCountMismatchException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case BULK_REF_INVALID:
             {
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new InvalidBulkReferenceException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case DUP_CUST_REQID:
             {
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new DuplicateUserRequestIdentifierException (errorCodeStr, errorMessage.getErrorText (),
                         replacements);
             }

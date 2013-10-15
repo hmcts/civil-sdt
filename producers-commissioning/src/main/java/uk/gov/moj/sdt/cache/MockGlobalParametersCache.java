@@ -50,7 +50,7 @@ public class MockGlobalParametersCache implements ICacheable, IGlobalParametersC
             getValue (final Class<DomainType> domainType, final String key)
     {
 
-        if (key.equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()))
+        if (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ().equals (key))
         {
             final IGlobalParameter globalParameter = new GlobalParameter ();
             globalParameter.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
@@ -58,7 +58,7 @@ public class MockGlobalParametersCache implements ICacheable, IGlobalParametersC
 
             return (DomainType) globalParameter;
         }
-        if (key.equals (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ()))
+        if (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ().equals (key))
         {
             final IGlobalParameter globalParameter = new GlobalParameter ();
             globalParameter.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
