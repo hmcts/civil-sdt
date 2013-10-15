@@ -49,10 +49,13 @@ import org.junit.Test;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -288,6 +291,17 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
 
         setupDataRetentionCache ();
 
+        // Set up Error messages cache
+        errorMessage = new ErrorMessage ();
+        errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
+        errorMessage.setErrorText ("Unique Request Identifier has been specified more "
+                + "than once within the originating Bulk Request.");
+        errorMessagesCache = EasyMock.createMock (ICacheable.class);
+        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ()))
+                .andReturn (errorMessage);
+        replay (errorMessagesCache);
+        validator.setErrorMessagesCache (errorMessagesCache);
+
         bulkSubmission.accept (validator, null);
 
         // Check the duplicate individual request has been rejected
@@ -510,6 +524,73 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
                                     "."));
         }
 
+    }
+
+    /**
+     * 
+     * This test the scenario where all individual requests of a bulk submission are rejected.
+     */
+    @Test
+    public void testIndividualRequestAllRejected ()
+    {
+        // set up the data we are going to use for this customer
+        // set up bulk customer with the application it can use
+        bulkCustomer = createCustomer (createBulkCustomerApplications ("MCOL"));
+
+        // set up the mock objects
+        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (12345L)).andReturn (bulkCustomer);
+        replay (mockIBulkCustomerDao);
+
+        // inject the bulk customer into the validator
+        validator.setBulkCustomerDao (mockIBulkCustomerDao);
+
+        // reset the list of individual request
+        individualRequests = new ArrayList<IIndividualRequest> ();
+
+        // Rejected error
+        IErrorLog errorLog = new ErrorLog ();
+        errorLog.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
+        errorLog.setErrorText ("Duplicate Unique Request Identifier submitted {0}");
+
+        // create an individual request 1
+        IIndividualRequest individualRequest = new IndividualRequest ();
+        individualRequest.setId (1);
+        individualRequest.markRequestAsRejected (errorLog);
+        individualRequests.add (individualRequest);
+
+        // create an individual request 2
+        individualRequest = new IndividualRequest ();
+        individualRequest.setId (2);
+        individualRequest.markRequestAsRejected (errorLog);
+        individualRequests.add (individualRequest);
+
+        // create an individual request 3
+        individualRequest = new IndividualRequest ();
+        individualRequest.setId (3);
+        individualRequest.markRequestAsRejected (errorLog);
+        individualRequests.add (individualRequest);
+
+        createBulkSubmission (3, bulkCustomer, individualRequests, "MCOL");
+
+        // Set up Error messages cache
+        final String errorText =
+                "Unique Request Identifier has been specified more than once within the originating Bulk Request.";
+
+        errorMessage = new ErrorMessage ();
+        errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
+        errorMessage.setErrorText (errorText);
+        errorMessagesCache = EasyMock.createMock (ICacheable.class);
+        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ()))
+                .andReturn (errorMessage);
+        replay (errorMessagesCache);
+        validator.setErrorMessagesCache (errorMessagesCache);
+
+        // Test the method
+        validator.checkIndividualRequests (bulkSubmission);
+
+        Assert.assertEquals (IBulkSubmission.BulkRequestStatus.FAILED.name (), bulkSubmission.getSubmissionStatus ());
+        Assert.assertEquals (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name (), bulkSubmission.getErrorCode ());
+        Assert.assertEquals (errorText, bulkSubmission.getErrorText ());
     }
 
     private void createBulkSubmission (final long numberOfRequests, final IBulkCustomer bulkCustomer,

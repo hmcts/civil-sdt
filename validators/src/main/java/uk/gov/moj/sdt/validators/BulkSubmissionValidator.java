@@ -30,7 +30,6 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -134,13 +133,10 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
                 // Set the error in the error log and continue rather than throw an exception
                 final IErrorLog errorLog = new ErrorLog ();
                 replacements = new ArrayList<String> ();
-                final String description =
-                        "Unique Request Identifier has been specified more than "
-                                + "once within the originating Bulk Request.";
                 replacements.add (customerRequestReference);
 
                 errorLog.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
-                errorLog.setErrorText (MessageFormat.format (description, replacements.toArray ()));
+                errorLog.setErrorText (getErrorMessage (replacements, IErrorMessage.ErrorCode.DUPLD_CUST_REQID));
                 // Set the created date for new ErrorLog objects
                 errorLog.setCreatedDate (LocalDateTime.fromDateFields (new Date (System.currentTimeMillis ())));
 
@@ -163,4 +159,35 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         this.bulkSubmissionDao = bulkSubmissionDao;
     }
 
+    @Override
+    public void checkIndividualRequests (final IBulkSubmission bulkSubmission)
+    {
+        // Keep a count of the rejected individual requests
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        final long numberOfRequests = bulkSubmission.getNumberOfRequest ();
+        long rejectedRequests = 0;
+        for (IIndividualRequest individualRequest : individualRequests)
+        {
+
+            if (individualRequest.getRequestStatus ().equals (
+                    IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()))
+            {
+                rejectedRequests++;
+            }
+        }
+
+        // If all the individual requests have been rejected then create an error log
+        if (rejectedRequests >= numberOfRequests)
+        {
+            final List<String> replacements = new ArrayList<String> ();
+            replacements.add (bulkSubmission.getCustomerReference ());
+
+            // Set the error continue rather than throw an exception
+            bulkSubmission.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
+            bulkSubmission.setErrorText (getErrorMessage (replacements, IErrorMessage.ErrorCode.DUPLD_CUST_REQID));
+            bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.FAILED.name ());
+
+        }
+
+    }
 }

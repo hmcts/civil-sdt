@@ -30,7 +30,7 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators.api;
 
-
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
  * An interface to provide validation methods for {@link uk.gov.moj.sdt.domain.BulkSubmission}.
@@ -40,4 +40,12 @@ package uk.gov.moj.sdt.validators.api;
  */
 public interface IBulkSubmissionValidator
 {
+
+    /**
+     * Check all individual requests are not rejected. This method is not part of the tree walking process since it
+     * needs to be done after all the domain objects have been validated.
+     * 
+     * @param bulkSubmission bulk submission to validate
+     */
+    void checkIndividualRequests (final IBulkSubmission bulkSubmission);
 }
