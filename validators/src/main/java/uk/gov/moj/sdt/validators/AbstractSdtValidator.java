@@ -161,39 +161,34 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
         throws AbstractBusinessException
     {
         final String errorCodeStr = errorCode.toString ();
-        final IErrorMessage errorMessage;
+        final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+
         switch (errorCode)
         {
             case CUST_NOT_SETUP:
             {
-                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new CustomerNotSetupException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case CUST_ID_INVALID:
             {
-                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new CustomerNotFoundException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case DUP_CUST_FILEID:
             {
-                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 // CHECKSTYLE:OFF
                 throw new CustomerReferenceNotUniqueException (errorCodeStr, errorMessage.getErrorText (), replacements);
                 // CHECKSTYLE:ON
             }
             case REQ_COUNT_MISMATCH:
             {
-                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new RequestCountMismatchException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case BULK_REF_INVALID:
             {
-                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new InvalidBulkReferenceException (errorCodeStr, errorMessage.getErrorText (), replacements);
             }
             case DUP_CUST_REQID:
             {
-                errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
                 throw new DuplicateUserRequestIdentifierException (errorCodeStr, errorMessage.getErrorText (),
                         replacements);
             }
