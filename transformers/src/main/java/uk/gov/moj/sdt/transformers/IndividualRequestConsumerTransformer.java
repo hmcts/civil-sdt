@@ -33,9 +33,18 @@ package uk.gov.moj.sdt.transformers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.LocalDateTime;
 
+import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
 
@@ -66,7 +75,30 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
             transformJaxbToDomain (final IndividualResponseType jaxbInstance, final IIndividualRequest domainObject)
     {
         LOGGER.debug ("transform IndividualResponseType to IIndividualRequest");
-        // TODO Auto-generated method stub
+
+        final LocalDateTime today = new LocalDateTime ();
+        final CreateStatusType status = jaxbInstance.getStatus ();
+        final CreateStatusCodeType statusCode = status.getCode ();
+
+        if (CreateStatusCodeType.ERROR.equals (statusCode) || CreateStatusCodeType.REJECTED.equals (statusCode))
+        {
+            final IErrorLog errorLog = new ErrorLog ();
+            final ErrorType errorType = status.getError ();
+            errorLog.setCreatedDate (today);
+            errorLog.setErrorCode (errorType.getCode ());
+            errorLog.setErrorText (errorType.getDescription ());
+            errorLog.setUpdatedDate (today);
+
+            domainObject.markRequestAsRejected (errorLog);
+        }
+        else if (CreateStatusCodeType.ACCEPTED.equals (statusCode))
+        {
+            domainObject.markRequestAsAccepted ();
+        }
+        else if (CreateStatusCodeType.INITIALLY_ACCEPTED.equals (statusCode))
+        {
+            domainObject.markRequestAsInitiallyAccepted ();
+        }
 
     }
 
@@ -74,7 +106,22 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
     public IndividualRequestType transformDomainToJaxb (final IIndividualRequest domainObject)
     {
         LOGGER.debug ("transform IIndividualRequest to IndividualRequestType");
-        // TODO Auto-generated method stub
-        return null;
+
+        final IndividualRequestType jaxb = new IndividualRequestType ();
+        final HeaderType header = new HeaderType ();
+
+        // Populate the header of the IndividualRequestType.
+        header.setRequestType (domainObject.getRequestType ());
+        header.setSdtRequestId (domainObject.getSdtRequestReference ());
+
+        final ITargetApplication targetApp = domainObject.getBulkSubmission ().getTargetApplication ();
+        final IBulkCustomerApplication bulkCustomerApplication =
+                domainObject.getBulkSubmission ().getBulkCustomer ()
+                        .getBulkCustomerApplication (targetApp.getTargetApplicationCode ());
+
+        header.setTargetAppCustomerId (bulkCustomerApplication.getCustomerApplicationId ());
+        jaxb.setHeader (header);
+
+        return jaxb;
     }
 }
