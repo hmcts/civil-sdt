@@ -134,9 +134,7 @@ public class BulkFeedbackFactory
         if (StringUtils.isNotBlank (rejectionReasonCode) && StringUtils.isNotBlank (rejectionReasonDescription))
         {
             // Create the error and associate with the individual request
-            final ErrorLog errorLog = new ErrorLog ();
-            errorLog.setErrorCode (rejectionReasonCode);
-            errorLog.setErrorText (rejectionReasonDescription);
+            final ErrorLog errorLog = new ErrorLog (rejectionReasonCode, rejectionReasonDescription);
             individualRequest.setErrorLog (errorLog);
         }
 

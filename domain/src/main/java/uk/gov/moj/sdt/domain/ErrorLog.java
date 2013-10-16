@@ -69,6 +69,26 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
      */
     private String errorText;
 
+    /**
+     * Creates an instance of ErrorLog.
+     */
+    public ErrorLog ()
+    {
+    }
+
+    /**
+     * Creates an instance of ErrorLog.
+     * 
+     * @param errorCode error code
+     * @param errorText error text
+     */
+    public ErrorLog (final String errorCode, final String errorText)
+    {
+        this.errorCode = errorCode;
+        this.errorText = errorText;
+        this.createdDate = LocalDateTime.now ();
+    }
+
     @Override
     public IIndividualRequest getIndividualRequest ()
     {

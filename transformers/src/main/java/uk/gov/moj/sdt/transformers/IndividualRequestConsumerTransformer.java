@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.transformers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
@@ -76,19 +75,13 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
     {
         LOGGER.debug ("transform IndividualResponseType to IIndividualRequest");
 
-        final LocalDateTime today = new LocalDateTime ();
         final CreateStatusType status = jaxbInstance.getStatus ();
         final CreateStatusCodeType statusCode = status.getCode ();
 
         if (CreateStatusCodeType.ERROR.equals (statusCode) || CreateStatusCodeType.REJECTED.equals (statusCode))
         {
-            final IErrorLog errorLog = new ErrorLog ();
             final ErrorType errorType = status.getError ();
-            errorLog.setCreatedDate (today);
-            errorLog.setErrorCode (errorType.getCode ());
-            errorLog.setErrorText (errorType.getDescription ());
-            errorLog.setUpdatedDate (today);
-
+            final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
             domainObject.markRequestAsRejected (errorLog);
         }
         else if (CreateStatusCodeType.ACCEPTED.equals (statusCode))

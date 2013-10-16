@@ -31,12 +31,10 @@
 package uk.gov.moj.sdt.validators;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
@@ -90,15 +88,11 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
         if (invalidIndividualRequest != null)
         {
             // Set the error in the error log and continue rather than throw an exception
-            final IErrorLog errorLog = new ErrorLog ();
             final List<String> replacements = new ArrayList<String> ();
             replacements.add (customerRequestReference);
             final String description = getErrorMessage (replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
 
-            errorLog.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
-            errorLog.setErrorText (description);
-            // Set the created date for new ErrorLog objects
-            errorLog.setCreatedDate (LocalDateTime.fromDateFields (new Date (System.currentTimeMillis ())));
+            final IErrorLog errorLog = new ErrorLog (IErrorMessage.ErrorCode.DUP_CUST_REQID.name (), description);
 
             // Change the status to rejected
             individualRequest.markRequestAsRejected (errorLog);

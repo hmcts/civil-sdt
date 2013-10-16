@@ -186,11 +186,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         final IErrorMessage errorMessage = errorMessages[0];
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog ();
-        final java.util.Date currentDate = new java.util.Date (System.currentTimeMillis ());
-        errorLog.setCreatedDate (LocalDateTime.fromDateFields (currentDate));
-        errorLog.setErrorCode (errorMessage.getErrorCode ());
-        errorLog.setErrorText (errorMessage.getErrorText ());
+        final IErrorLog errorLog = new ErrorLog (errorMessage.getErrorCode (), errorMessage.getErrorText ());
 
         // Set the error log in the individual request
         individualRequest.setErrorLog (errorLog);
@@ -221,11 +217,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
 
         // Now create an ErrorLog object with the ErrorMessage object and the
         // IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog ();
-        final java.util.Date currentDate = new java.util.Date (System.currentTimeMillis ());
-        errorLog.setCreatedDate (LocalDateTime.fromDateFields (currentDate));
-        errorLog.setErrorCode (errorMessage.getErrorCode ());
-        errorLog.setErrorText (errorMessage.getErrorText ());
+        final IErrorLog errorLog = new ErrorLog (errorMessage.getErrorCode (), errorMessage.getErrorText ());
 
         individualRequest.setErrorLog (errorLog);
 

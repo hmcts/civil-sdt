@@ -31,14 +31,12 @@
 package uk.gov.moj.sdt.validators;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
@@ -131,14 +129,11 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             if ( !success)
             {
                 // Set the error in the error log and continue rather than throw an exception
-                final IErrorLog errorLog = new ErrorLog ();
                 replacements = new ArrayList<String> ();
                 replacements.add (customerRequestReference);
-
-                errorLog.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
-                errorLog.setErrorText (getErrorMessage (replacements, IErrorMessage.ErrorCode.DUPLD_CUST_REQID));
-                // Set the created date for new ErrorLog objects
-                errorLog.setCreatedDate (LocalDateTime.fromDateFields (new Date (System.currentTimeMillis ())));
+                final IErrorLog errorLog =
+                        new ErrorLog (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name (), getErrorMessage (replacements,
+                                IErrorMessage.ErrorCode.DUPLD_CUST_REQID));
 
                 // Change the status to rejected
                 individualRequest.markRequestAsRejected (errorLog);

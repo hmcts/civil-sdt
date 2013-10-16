@@ -156,11 +156,9 @@ public class BulkFeedbackTransformerTest extends TestCase
         ir.setRequestStatus (IndividualStatusCodeType.REJECTED.value ());
 
         // Set the error log and message
-        final ErrorLog errorLog = new ErrorLog ();
         final String errorCode = "87";
         final String errorText = "Specified claim does not belong to the requesting customer.";
-        errorLog.setErrorCode (errorCode);
-        errorLog.setErrorText (errorText);
+        final ErrorLog errorLog = new ErrorLog (errorCode, errorText);
         ir.setErrorLog (errorLog);
         individualRequests.add (ir);
 

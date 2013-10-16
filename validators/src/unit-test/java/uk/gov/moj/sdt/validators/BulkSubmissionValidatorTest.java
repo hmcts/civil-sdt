@@ -548,9 +548,9 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         individualRequests = new ArrayList<IIndividualRequest> ();
 
         // Rejected error
-        IErrorLog errorLog = new ErrorLog ();
-        errorLog.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
-        errorLog.setErrorText ("Duplicate Unique Request Identifier submitted {0}");
+        IErrorLog errorLog =
+                new ErrorLog (IErrorMessage.ErrorCode.DUP_CUST_REQID.name (),
+                        "Duplicate Unique Request Identifier submitted {0}");
 
         // create an individual request 1
         IIndividualRequest individualRequest = new IndividualRequest ();

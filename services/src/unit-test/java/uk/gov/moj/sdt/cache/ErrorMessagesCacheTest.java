@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.cache;
 
+import static org.junit.Assert.fail;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
@@ -128,9 +129,17 @@ public class ErrorMessagesCacheTest
         EasyMock.expect (mockGenericDao.query (IErrorMessage.class)).andReturn (result);
         EasyMock.replay (mockGenericDao);
 
-        // Get some values
-        final IErrorMessage errorMessage = cache.getValue (IErrorMessage.class, "dont_exist");
-        Assert.assertNull (errorMessage);
+        IErrorMessage errorMessage = null;
+        try
+        {
+            // Get some values
+            errorMessage = cache.getValue (IErrorMessage.class, "dont_exist");
+            fail ("IllegalException should have been thrown");
+        }
+        catch (final IllegalStateException e)
+        {
+            Assert.assertNull (errorMessage);
+        }
 
         EasyMock.verify (mockGenericDao);
 
