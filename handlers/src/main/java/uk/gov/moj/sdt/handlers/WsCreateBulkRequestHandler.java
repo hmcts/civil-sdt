@@ -30,6 +30,8 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.handlers;
 
+import java.util.Calendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -146,6 +148,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         response.setSdtService (AbstractTransformer.SDT_SERVICE);
         response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
         response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
+        response.setSubmittedDate (Calendar.getInstance ());
 
         final StatusType status = new StatusType ();
         response.setStatus (status);

@@ -33,7 +33,7 @@
 		implementor="#uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType"
 		address="/sdtapi">
 		<jaxws:properties>
-			<entry key="schema-validation-enabled" value="false" />
+			<entry key="schema-validation-enabled" value="true" />
 		</jaxws:properties>
 	</jaxws:endpoint>
     

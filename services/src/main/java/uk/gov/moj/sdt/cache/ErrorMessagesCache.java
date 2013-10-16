@@ -85,15 +85,14 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
             loadCache ();
         }
 
-        LOG.debug ("Retrieving global parameter with key [" + errorMessageCode + "]");
+        LOG.debug ("Retrieving error message with key [" + errorMessageCode + "]");
 
         // Get the value of the named parameter.
         final Object someObject = this.getErrorMessages ().get (errorMessageCode);
 
         if (someObject == null)
         {
-            LOG.warn ("Error message with key [" + errorMessageCode + "] not found.");
-            return null;
+            throw new IllegalStateException ("Error message with key [" + errorMessageCode + "] not found.");
         }
 
         DomainType domainObject = null;

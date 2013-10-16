@@ -45,7 +45,7 @@
     <xs:complexType name="bulkFeedbackResponseType">
         <xs:sequence>
             <xs:element name="bulkRequestStatus" type="tns:bulkRequestStatusType"/>
-            <xs:element name="responses" type="tns:responsesType"/>
+            <xs:element name="responses" type="tns:responsesType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 

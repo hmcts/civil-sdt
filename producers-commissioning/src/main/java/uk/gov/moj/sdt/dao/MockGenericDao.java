@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.Criterion;
+import org.joda.time.LocalDateTime;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -78,7 +79,11 @@ public class MockGenericDao implements IGenericDao
     {
         if (DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ()))
         {
-            return new BulkSubmission ();
+            final IBulkSubmission bulkSubmission = new BulkSubmission ();
+            bulkSubmission.setCustomerReference (customerReference.toLowerCase ());
+            bulkSubmission.setSdtBulkReference ("MCOL_20130722000000_B00000001");
+            bulkSubmission.setCreatedDate (LocalDateTime.now ());
+            return bulkSubmission;
         }
         else
         {

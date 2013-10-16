@@ -49,6 +49,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
@@ -107,6 +109,9 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
         final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType ();
 
         // Set bulk status information
+        final StatusType status = new StatusType ();
+        status.setCode (StatusCodeType.OK);
+        bulkRequestStatusType.setStatus (status);
         bulkRequestStatusType.setRequestCount (Long.valueOf (bulkSubmission.getNumberOfRequest ()));
         bulkRequestStatusType.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
         bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_SERVICE);
@@ -131,6 +136,7 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
         for (IIndividualRequest individualRequest : individualRequests)
         {
             responseType = new ResponseType ();
+            responseType.setRequestType (individualRequest.getRequestType ());
 
             // Set the customer request reference
             responseType.setRequestId (individualRequest.getCustomerRequestReference ());

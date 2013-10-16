@@ -78,13 +78,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
     {
 
         LOGGER.info ("[getBulkFeedback] started");
-        // Create Response and initialise status
-        BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
-        final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType ();
-        final StatusType statusType = new StatusType ();
-        bulkRequestStatusType.setStatus (statusType);
-
-        response.setBulkRequestStatus (bulkRequestStatusType);
+        BulkFeedbackResponseType response = createResponse (bulkFeedbackRequest);
         try
         {
             // Transform Web service object to Domain object.
@@ -113,6 +107,24 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         {
             LOGGER.info ("[getBulkFeedback] completed");
         }
+        return response;
+    }
+
+    /**
+     * Create Response and initialise status.
+     * 
+     * @param bulkFeedbackRequest bulk feedback request.
+     * @return instance of BulkFeedbackResponseType
+     */
+    private BulkFeedbackResponseType createResponse (final BulkFeedbackRequestType bulkFeedbackRequest)
+    {
+        final BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
+        final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType ();
+        final StatusType statusType = new StatusType ();
+        bulkRequestStatusType.setStatus (statusType);
+        bulkRequestStatusType.setSdtBulkReference (bulkFeedbackRequest.getHeader ().getSdtBulkReference ());
+
+        response.setBulkRequestStatus (bulkRequestStatusType);
         return response;
     }
 

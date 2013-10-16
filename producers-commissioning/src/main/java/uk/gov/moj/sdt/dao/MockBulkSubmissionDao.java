@@ -33,6 +33,8 @@ package uk.gov.moj.sdt.dao;
 
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
+
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -60,11 +62,14 @@ public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmis
     }
 
     @Override
-    public BulkSubmission getBulkSubmission (final String bulkReference)
+    public IBulkSubmission getBulkSubmission (final String customerReference)
     {
-        if (bulkReferenceList.contains (bulkReference))
+        if (bulkReferenceList.contains (customerReference))
         {
-            return new BulkSubmission ();
+            final IBulkSubmission bulkSubmission = new BulkSubmission ();
+            bulkSubmission.setCustomerReference (customerReference);
+            bulkSubmission.setCreatedDate (LocalDateTime.now ());
+            return bulkSubmission;
         }
         else
         {
