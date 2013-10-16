@@ -30,16 +30,23 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.consumers;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 /**
  * Consumer for the Individual Request processing.
@@ -47,8 +54,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
  * @author Manoj Kulkarni
  * 
  */
+// CHECKSTYLE:OFF
 public class IndividualRequestConsumer extends AbstractWsConsumer implements IIndividualRequestConsumer
 {
+    // CHECKSTYLE:ON
 
     /**
      * Logger instance.
@@ -64,8 +73,8 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     // CHECKSTYLE:ON
 
     @Override
-    public void processIndividualRequest (final IIndividualRequest individualRequest)
-        throws OutageException, TimeoutException
+    public void processIndividualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
+                                          final long receiveTimeOut) throws OutageException, TimeoutException
     {
         LOGGER.info ("[processIndividualRequest] started");
 
@@ -76,21 +85,61 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                     this.transformer.transformDomainToJaxb (individualRequest);
 
             // Process and call the end point web service
-            final IndividualResponseType responseType = null;
+            final IndividualResponseType responseType =
+                    this.invokeTargetAppService (individualRequestType, individualRequest, connectionTimeOut,
+                            receiveTimeOut);
 
             this.transformer.transformJaxbToDomain (responseType, individualRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (final Exception e)
-        // CHECKSTYLE:ON
+        catch (final javax.xml.ws.WebServiceException f)
         {
-            // TODO: Handle the error
-            LOGGER.error ("Exception during consumer process individual request", e);
+            LOGGER.error (f);
+            if (f.getCause () instanceof ConnectException)
+            {
+                throw new OutageException ("OUTAGE_ERROR", "Could not send message as server cannot be reached.");
+            }
+            else if (f.getCause () instanceof SocketTimeoutException)
+            {
+                throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error");
+            }
+            else if (f.getCause () instanceof org.apache.cxf.binding.soap.SoapFault)
+            {
+                throw new SoapFaultException ("SOAP_FAULT", f.getMessage ());
+            }
+
         }
         finally
         {
             LOGGER.info ("[processIndividualRequest] completed");
         }
+
+    }
+
+    /**
+     * 
+     * @param request the individual request JAXB model
+     * @param iRequest the individual request domain object
+     * @param connectionTimeOut the connection time out from the global parameter value
+     * @param receiveTimeOut the receive time out from the global parameter value.
+     * @return the IndividualResponseType object after calling the web service of target app.
+     */
+    private IndividualResponseType invokeTargetAppService (final IndividualRequestType request,
+                                                           final IIndividualRequest iRequest,
+                                                           final long connectionTimeOut, final long receiveTimeOut)
+    {
+        final IServiceRouting serviceRouting =
+                iRequest.getBulkSubmission ().getTargetApplication ()
+                        .getServiceRouting (IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL);
+
+        final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint ();
+
+        // Get the client interface
+        final ITargetAppInternalEndpointPortType client =
+                super.createClient (webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+
+        // Call the specific business method for this text - note that a single test can only use one web service
+        // business method.
+        return client.submitIndividual (request);
 
     }
 

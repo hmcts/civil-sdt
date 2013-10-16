@@ -30,6 +30,15 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.consumers;
 
+import javax.xml.ws.BindingProvider;
+
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+
+import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
+
 /**
  * 
  * @author Manoj Kulkarni
@@ -37,5 +46,53 @@ package uk.gov.moj.sdt.consumers;
  */
 public abstract class AbstractWsConsumer
 {
+
+    /**
+     * 
+     * @param webServiceEndPoint the Web Service End Point URL
+     * @param connectionTimeOut the connection time out value
+     * @param receiveTimeOut the acknowledgement time out value
+     * @return the target application end point port bean i.e. the client interface.
+     */
+    public ITargetAppInternalEndpointPortType createClient (final String webServiceEndPoint,
+                                                            final long connectionTimeOut, final long receiveTimeOut)
+    {
+        // Get the SOAP proxy client.
+        final ITargetAppInternalEndpointPortType client = this.createTargetAppEndPoint ();
+
+        final Client clientProxy = ClientProxy.getClient (client);
+
+        // Set endpoint address
+        final BindingProvider provider = (BindingProvider) client;
+        provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY, webServiceEndPoint);
+
+        final HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
+        final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
+        // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
+        // it times out
+        httpClientPolicy.setConnectionTimeout (connectionTimeOut);
+        // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
+        httpClientPolicy.setReceiveTimeout (receiveTimeOut);
+        httpConduit.setClient (httpClientPolicy);
+
+        return client;
+
+    }
+
+    /**
+     * Method injection method that will be invoked by Spring container
+     * to give a new instance of the bean every time.
+     * 
+     * @return ITargetAppInternalEndpointPortType the end point interface.
+     */
+    protected ITargetAppInternalEndpointPortType createTargetAppEndPoint ()
+    {
+        // IMPORTANT: Please do not add any implementation here. The method intentionally returns null. At run-time,
+        // Spring will
+        // override this method with
+        // implementation code that will return an new instance of the end point bean when this method is called.
+
+        return null;
+    }
 
 }

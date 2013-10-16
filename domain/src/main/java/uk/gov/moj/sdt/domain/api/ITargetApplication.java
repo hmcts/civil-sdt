@@ -84,4 +84,13 @@ public interface ITargetApplication extends IDomainObject
      */
     void setServiceRoutings (Set<IServiceRouting> serviceRoutings);
 
+    /**
+     * Get the service routing specific to the service type name for this target
+     * application.
+     * 
+     * @param serviceTypeName the enum constant referring to the service type name.
+     * @return the IServiceRouting associated with the service type name.
+     */
+    IServiceRouting getServiceRouting (IServiceType.ServiceTypeName serviceTypeName);
+
 }

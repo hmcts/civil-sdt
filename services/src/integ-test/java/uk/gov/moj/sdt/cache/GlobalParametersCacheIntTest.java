@@ -55,6 +55,7 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
+        "/uk/gov/moj/sdt/consumers/spring.context.xml", "/uk/gov/moj/sdt/transformers/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/utils/spring*.xml",
         "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring*.xml"})
 public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4SpringContextTests

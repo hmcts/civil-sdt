@@ -15,9 +15,11 @@
 <project name="build-set-classpath" basedir=".">
 
 	<!-- Add directory containing all 3rd party jars to classpath -->
+	<!-- Exclude the XmlSchema-1.4.7.jar file as the consumer picks up the wrong class -->
 	<path id="3rd-party.dir">
 		<fileset dir="${3rd-party.dir}">
 			<include name="*.jar" />
+			<exclude name="XmlSchema-1.4.7.jar"/>
 		</fileset>
 	</path>
 	<path id="3rd-party.spring3.dir">

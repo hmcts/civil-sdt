@@ -74,6 +74,7 @@ import uk.gov.moj.sdt.utils.Utilities;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
+        "/uk/gov/moj/sdt/consumers/spring.context.xml", "/uk/gov/moj/sdt/transformers/spring.context.xml",
         "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/utils/spring*.xml",
         "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring*.xml"})
 public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4SpringContextTests
@@ -115,7 +116,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         final String rawXml = this.getRawXml ("testXMLValid2.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
 
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission (1);
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
         SdtContext.getContext ().setServiceRequestId (new Long (10800));
@@ -152,18 +153,18 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
      * @throws IOException if there is any IO errors.
      */
     // @Test
-    // @Rollback (false)
+    // @Rollback (true)
     // public void testSubmissionforRollback () throws IOException
     // {
     // final String rawXml = this.getRawXml ("testXMLValid2.xml");
     // SdtContext.getContext ().setRawInXml (rawXml);
-
+    //
     // final IBulkSubmissionService bulkSubmissionService =
     // (IBulkSubmissionService) this.applicationContext
     // .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
-
+    //
     // final IBulkSubmission bulkSubmission = this.createInvalidBulkSubmission ();
-
+    //
     // Call the bulk submission service
     // try
     // {
@@ -174,7 +175,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     // {
     // Assert.assertTrue ("The submission has rolled back", true);
     // }
-
+    //
     // }
 
     /**
@@ -182,18 +183,38 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
      * 
      * @throws IOException if there is any error reading from the test file.
      */
-    @Test
-    public void saveMultipleSubmissions () throws IOException
-    {
-        final String rawXml = this.getRawXml ("testXMLValid3.xml");
-        SdtContext.getContext ().setRawInXml (rawXml);
-    }
+    // @Test
+    // @Rollback (false)
+    // public void saveMultipleSubmissions () throws IOException
+    // {
+    // final String rawXml = this.getRawXml ("testXMLValid3.xml");
+    // SdtContext.getContext ().setRawInXml (rawXml);
+    //
+    // final IBulkSubmission bulkSubmission = this.createBulkSubmission (62);
+    //
+    // bulkSubmission.setNumberOfRequest (62L);
+    // Call the bulk submission service
+    // bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+
+    // Assert.assertNotNull (bulkSubmission.getPayload ());
+
+    // Assert.assertEquals (62L, bulkSubmission.getNumberOfRequest ());
+
+    // Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+
+    // final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+    // Assert.assertNotNull (individualRequests);
+    // Assert.assertEquals (62, individualRequests.size ());
+
+    // }
 
     /**
      * 
+     * @param numberOfRequests -the number of individual requests.
      * @return Bulk Submission object for the testing.
+     * 
      */
-    private IBulkSubmission createBulkSubmission ()
+    private IBulkSubmission createBulkSubmission (final int numberOfRequests)
     {
         final IBulkSubmission bulkSubmission = new BulkSubmission ();
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
@@ -235,7 +256,19 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         bulkSubmission.setSubmissionStatus ("SUBMITTED");
         bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
-        createIndividualRequest (bulkSubmission, "ICustReq123", "Received", 1);
+        if (numberOfRequests == 1)
+        {
+            createIndividualRequest (bulkSubmission, "ICustReq123", "Received", 1);
+        }
+        else
+        {
+            int k = 123;
+            for (int i = 0; i < 62; i++)
+            {
+                createIndividualRequest (bulkSubmission, "ICustReq" + k, "Received", i + 1);
+                k++;
+            }
+        }
 
         return bulkSubmission;
     }
@@ -283,7 +316,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         bulkSubmission.setCustomerReference ("10711");
         bulkSubmission.setNumberOfRequest (1);
 
-        // bulkSubmission.setSubmissionStatus ("SUBMITTED");
+        bulkSubmission.setSubmissionStatus ("SUBMITTEDSUBMITTEDSUBMITTEDSUBMITTED");
         bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
         final IndividualRequest individualRequest = new IndividualRequest ();

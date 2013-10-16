@@ -35,11 +35,16 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
+import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -62,6 +67,17 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      * Individual Request Dao to perform operations on the individual request object.
      */
     private IIndividualRequestDao individualRequestDao;
+
+    /**
+     * The consumer gateway that will perform the call to the target application
+     * web service.
+     */
+    private IConsumerGateway requestConsumer;
+
+    /**
+     * The ICacheable reference to the global parameters cache.
+     */
+    private ICacheable globalParametersCache;
 
     @Override
     public IIndividualRequest getRequestToSubmit (final String sdtRequestReference)
@@ -163,7 +179,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         // TODO use cached error code
         final IErrorMessage[] errorMessages =
                 this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK));
+                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK.name ()));
 
         // Assume that there is only one error message
         assert errorMessages.length == 1;
@@ -199,7 +215,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         // TODO get error code from cache
         final IErrorMessage[] errorMessages =
                 this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK));
+                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK.name ()));
 
         final IErrorMessage errorMessage = errorMessages[0];
 
@@ -212,6 +228,61 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         errorLog.setErrorText (errorMessage.getErrorText ());
 
         individualRequest.setErrorLog (errorLog);
+
+        // now persist the request.
+        this.getIndividualRequestDao ().persist (individualRequest);
+    }
+
+    @Override
+    public void sendRequestToTargetApp (final IIndividualRequest individualRequest)
+        throws OutageException, TimeoutException
+    {
+        final IGlobalParameter connectionTimeOutParam =
+                this.globalParametersCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.TARGET_APP_TIMEOUT.name ());
+        final IGlobalParameter requestTimeOutParam =
+                this.globalParametersCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
+
+        long requestTimeOut = 0;
+        long connectionTimeOut = 0;
+
+        if (requestTimeOutParam != null)
+        {
+            requestTimeOut = Long.valueOf (requestTimeOutParam.getValue ());
+        }
+
+        if (connectionTimeOutParam != null)
+        {
+            connectionTimeOut = Long.valueOf (connectionTimeOutParam.getValue ());
+        }
+
+        this.getRequestConsumer ().individualRequest (individualRequest, connectionTimeOut, requestTimeOut);
+    }
+
+    @Override
+    public void updateRequestSoapError (final IIndividualRequest individualRequest, final String soapFaultError)
+    {
+        final IErrorMessage[] errorMessages =
+                this.getIndividualRequestDao ().query (IErrorMessage.class,
+                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.SDT_INT_ERR.name ()));
+
+        final IErrorMessage errorMessage = errorMessages[0];
+
+        // Now create an ErrorLog object with the ErrorMessage object and the
+        // IndividualRequest object
+        final IErrorLog errorLog = new ErrorLog ();
+        final java.util.Date currentDate = new java.util.Date (System.currentTimeMillis ());
+        errorLog.setCreatedDate (LocalDateTime.fromDateFields (currentDate));
+        errorLog.setErrorCode (errorMessage.getErrorCode ());
+        errorLog.setErrorText (errorMessage.getErrorText ());
+
+        // Truncate the soap fault error to 1,000 characters to fit
+        // inside the database column of length varchar2(4,000 bytes)
+        // TODO to use global param to get the value below.
+        final int maxAllowedChars = 1000;
+        individualRequest.setInternalSystemError (soapFaultError.substring (0, maxAllowedChars));
+
+        individualRequest.markRequestAsRejected (errorLog);
 
         // now persist the request.
         this.getIndividualRequestDao ().persist (individualRequest);
@@ -233,6 +304,45 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     public void setIndividualRequestDao (final IIndividualRequestDao individualRequestDao)
     {
         this.individualRequestDao = individualRequestDao;
+    }
+
+    /**
+     * 
+     * @return the request consumer.
+     */
+    public IConsumerGateway getRequestConsumer ()
+    {
+        return requestConsumer;
+    }
+
+    /**
+     * Sets the consumer gateway.
+     * 
+     * @param requestConsumer the request consumer.
+     */
+    public void setRequestConsumer (final IConsumerGateway requestConsumer)
+    {
+        this.requestConsumer = requestConsumer;
+    }
+
+    /**
+     * Get the global parameters cache.
+     * 
+     * @return the ICacheable interface for the Global parameters
+     */
+    public ICacheable getGlobalParametersCache ()
+    {
+        return globalParametersCache;
+    }
+
+    /**
+     * Sets the global parameters cache.
+     * 
+     * @param globalParametersCache the global parameters cache.
+     */
+    public void setGlobalParametersCache (final ICacheable globalParametersCache)
+    {
+        this.globalParametersCache = globalParametersCache;
     }
 
 }

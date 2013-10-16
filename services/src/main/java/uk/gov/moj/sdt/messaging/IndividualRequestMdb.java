@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -104,7 +105,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             LOGGER.debug ("Received message, SDT reference [" + sdtReference + "]");
 
             // Get the Individual Request matching the SDT Request Reference
-            IIndividualRequest individualRequest = this.findIndividualRequest (sdtReference);
+            final IIndividualRequest individualRequest = this.findIndividualRequest (sdtReference);
 
             // Proceed ahead if the Individual Request is found
             if (individualRequest != null)
@@ -119,7 +120,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
                 // Make call to consumer to submit the request to target application.
                 try
                 {
-                    individualRequest = this.forwardToTargetApplication (individualRequest);
+                    this.forwardToTargetApplication (individualRequest);
 
                     this.updateAndMarkRequestCompleted (individualRequest);
                 }
@@ -144,6 +145,11 @@ public class IndividualRequestMdb implements IMessageDrivenBean
 
                     // Re-queue message again
                     this.reQueueRequest (individualRequest);
+                }
+                catch (final SoapFaultException e)
+                {
+                    // Update the individual request with the soap fault reason
+                    this.getTargetAppSubmissionService ().updateRequestSoapError (individualRequest, e.getMessage ());
                 }
 
                 LOGGER.debug ("Individual request " + sdtReference + " processing completed.");
@@ -222,23 +228,19 @@ public class IndividualRequestMdb implements IMessageDrivenBean
     }
 
     /**
+     * Forwards the individual request to target application and updates the
+     * same with the response pay-load from the target application.
      * 
      * @param individualRequest the individual request object.
-     * @return the individualRequest object from the response of the consumer.
      * @throws TimeoutException the consumer may throw a timeout exception.
      */
-    private IIndividualRequest forwardToTargetApplication (final IIndividualRequest individualRequest)
-        throws TimeoutException
+    private void forwardToTargetApplication (final IIndividualRequest individualRequest) throws TimeoutException
     {
         LOGGER.debug ("Calling the consumer to call the target application for SDT reference [" +
                 individualRequest.getSdtRequestReference () + "]");
 
-        // TODO - Call the consumer with the IndividualRequest object.
+        this.getTargetAppSubmissionService ().sendRequestToTargetApp (individualRequest);
 
-        // At the moment, until the consumer is ready we are just returning back the individual request parameter
-        // with updated status as accepted
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
-        return individualRequest;
     }
 
     /**

@@ -38,6 +38,8 @@
     <bean id="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"
     	class="uk.gov.moj.sdt.services.TargetApplicationSubmissionService">
     	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+    	<property name="requestConsumer" ref="uk.gov.moj.sdt.consumers.api.IConsumerGateway"/>
+    	<property name="globalParametersCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache"/>
     </bean>
                           
 </beans>

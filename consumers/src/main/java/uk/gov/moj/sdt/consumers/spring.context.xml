@@ -5,11 +5,23 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/aop
-		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 
-	
+	<bean id="jaxWsProxyFactory"  class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+        <property name="serviceClass" value="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"/>
+        <property name="address" value="http://localhost:8888/mcol/service/sdtapi"/>
+    </bean>
+    
+    
+    <bean id="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType" 
+        class="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"  
+        factory-bean="jaxWsProxyFactory" factory-method="create" scope="prototype"/>
 
 	<bean id="uk.gov.moj.sdt.consumers.Consumer" class="uk.gov.moj.sdt.consumers.Consumer">
+	</bean>
+	
+	<bean id="uk.gov.moj.sdt.consumers.AbstractWsConsumer" class="uk.gov.moj.sdt.consumers.AbstractWsConsumer" abstract="true">
+		<lookup-method name="createTargetAppEndPoint" bean="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"/>
 	</bean>
 
 	<bean id="uk.gov.moj.sdt.consumers.api.IConsumerGateway" class="uk.gov.moj.sdt.consumers.ConsumerGateway">
@@ -18,6 +30,7 @@
 	
 	<bean id="uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer" class="uk.gov.moj.sdt.consumers.IndividualRequestConsumer">
 		<property name="transformer" ref="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer"/>
+		<lookup-method name="createTargetAppEndPoint" bean="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"/>
 	</bean>
 	
 </beans>

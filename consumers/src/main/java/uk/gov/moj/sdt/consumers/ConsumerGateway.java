@@ -52,9 +52,11 @@ public class ConsumerGateway implements IConsumerGateway
     private IIndividualRequestConsumer individualRequestConsumer;
 
     @Override
-    public void individualRequest (final IIndividualRequest individualRequest) throws OutageException, TimeoutException
+    public void individualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
+                                   final long receiveTimeOut) throws OutageException, TimeoutException
     {
-        this.getIndividualRequestConsumer ().processIndividualRequest (individualRequest);
+        this.getIndividualRequestConsumer ().processIndividualRequest (individualRequest, connectionTimeOut,
+                receiveTimeOut);
     }
 
     @Override

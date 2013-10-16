@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain.api;
 
-
 /**
  * Interface for classes implementing {@link IRequesType}.
  * 
@@ -81,5 +80,24 @@ public interface IServiceType extends IDomainObject
      * @param description description
      */
     void setDescription (final String description);
+
+    /**
+     * Enum for the service type name.
+     * 
+     * @author Manoj Kulkarni
+     * 
+     */
+    public enum ServiceTypeName
+    {
+        /**
+         * Submit query service type name.
+         */
+        SUBMIT_QUERY,
+
+        /**
+         * Submit Individual request service type name.
+         */
+        SUBMIT_INDIVIDUAL
+    }
 
 }

@@ -31,10 +31,12 @@
 
 package uk.gov.moj.sdt.domain;
 
+import java.util.Iterator;
 import java.util.HashSet;
 import java.util.Set;
 
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType.ServiceTypeName;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
@@ -94,6 +96,23 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
     public void setServiceRoutings (final Set<IServiceRouting> serviceRoutings)
     {
         this.serviceRoutings = serviceRoutings;
+    }
+
+    @Override
+    public IServiceRouting getServiceRouting (final ServiceTypeName serviceTypeName)
+    {
+        final Set<IServiceRouting> serviceRoutings = this.getServiceRoutings ();
+        final Iterator<IServiceRouting> iterator = serviceRoutings.iterator ();
+        while (iterator.hasNext ())
+        {
+            final IServiceRouting serviceRouting = iterator.next ();
+            if (serviceRouting.getServiceType ().getName ().toUpperCase ().equals (serviceTypeName.name ()))
+            {
+                return serviceRouting;
+            }
+        }
+
+        return null;
     }
 
 }

@@ -46,9 +46,12 @@ public interface IIndividualRequestConsumer
      * 
      * @param individualRequest the Individual Request part of the
      *            submission request.
+     * @param connectionTimeOut - the connection time out parameter value for the target application.
+     * @param receiveTimeOut - the receive time out parameter value for the target application.
      * @throws OutageException if the target server is un-reachable.
      * @throws TimeoutException if the target server response cannot be obtained
      *             within the timeout period.
      */
-    void processIndividualRequest (final IIndividualRequest individualRequest) throws OutageException, TimeoutException;
+    void processIndividualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
+                                   final long receiveTimeOut) throws OutageException, TimeoutException;
 }

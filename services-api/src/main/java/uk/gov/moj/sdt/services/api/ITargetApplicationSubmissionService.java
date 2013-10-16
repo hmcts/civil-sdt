@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.api;
 
+import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
@@ -81,5 +83,23 @@ public interface ITargetApplicationSubmissionService
      * @param individualRequest the individual request to be marked with reason as not responding
      */
     void updateTargetAppUnavailable (final IIndividualRequest individualRequest);
+
+    /**
+     * Send the individual request to target application for submission.
+     * 
+     * @param individualRequest the individual request to be sent to target application.
+     * @throws OutageException when the target web service is not responding.
+     * @throws TimeoutException when the target web service does not respond back in time.
+     */
+    void sendRequestToTargetApp (final IIndividualRequest individualRequest) throws OutageException, TimeoutException;
+
+    /**
+     * Updates the request object. This method updates the request status to Rejected
+     * and sets the soap fault message in the internal error field of the request.
+     * 
+     * @param individualRequest the individual request to be marked.
+     * @param soapFaultError the soap fault message when the request has failed.
+     */
+    void updateRequestSoapError (final IIndividualRequest individualRequest, String soapFaultError);
 
 }

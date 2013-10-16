@@ -28,39 +28,68 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.consumers.api;
-
-import uk.gov.moj.sdt.consumers.exception.OutageException;
-import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+package uk.gov.moj.sdt.consumers.exception;
 
 /**
- * Interface for the consumers implementing the consumer gateway.
+ * SoapFaultException thrown by the Consumer when the target application
+ * returns an Soap Fault after invocation of the target web service.
  * 
  * @author Manoj Kulkarni
  * 
  */
-public interface IConsumerGateway
+public class SoapFaultException extends RuntimeException
 {
 
     /**
      * 
-     * @param individualRequest the Individual Request part of the
-     *            submission request.
-     * @param connectionTimeOut the connection timeout parameter value.
-     * @param receiveTimeOut the receive timeout parameter value.
-     * @throws OutageException if the target server is un-reachable.
-     * @throws TimeoutException if the target server response cannot be obtained
-     *             within the timeout period.
      */
-    void individualRequest (IIndividualRequest individualRequest, final long connectionTimeOut,
-                            final long receiveTimeOut) throws OutageException, TimeoutException;
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 
-     * @param submitQueryRequest the submit query request.
+     * Error code.
      */
-    void submitQuery (ISubmitQueryRequest submitQueryRequest);
+    // CHECKSTYLE:OFF
+
+    private String errorCode;
+
+    /**
+     * Error description.
+     */
+    private String errorDescription;
+
+    // CHECKSTYLE:ON
+
+    /**
+     * Constructor for non tokenised description.
+     * 
+     * @param code code for the error message
+     * @param description for the error message
+     */
+    public SoapFaultException (final String code, final String description)
+    {
+        super ("The following exception occured [" + code + "] message[" + description + "]");
+        this.errorCode = code;
+        this.errorDescription = description;
+    }
+
+    /**
+     * Get the error code.
+     * 
+     * @return error code
+     */
+    public String getErrorCode ()
+    {
+        return errorCode;
+    }
+
+    /**
+     * Get the error description.
+     * 
+     * @return error description
+     */
+    public String getErrorDescription ()
+    {
+        return errorDescription;
+    }
 
 }
