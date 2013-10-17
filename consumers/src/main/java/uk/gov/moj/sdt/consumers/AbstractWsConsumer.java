@@ -30,13 +30,19 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.consumers;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
+import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 /**
@@ -93,6 +99,39 @@ public abstract class AbstractWsConsumer
         // implementation code that will return an new instance of the end point bean when this method is called.
 
         return null;
+    }
+
+    /**
+     * This method does the exception handling process after a client submits the
+     * soap request.
+     * 
+     * @param rethrowOnFailureToConnect - true if the WebServiceException should be re-thrown on a connect failure i.e.
+     *            when the server is down.
+     * @param wsException - the WebServiceException caught by the client submit call.
+     * @param errorReferenceContext - optional parameter indicating the unique reference to identify the request.
+     * @throws WebServiceException - if there is a connection failure, the web service exception may be re-thrown.
+     * @throws TimeoutException - if there is a read timeout issue, throw the time out exception.
+     * @throws SoapFaultException - if the soap request resulted in an soap fault.
+     */
+    protected void handleClientErrors (final boolean rethrowOnFailureToConnect, final WebServiceException wsException,
+                                       final String errorReferenceContext)
+        throws WebServiceException, TimeoutException, SoapFaultException
+    {
+        // If the target application is unavailable continue trying to send message indefinitely.
+        if ((wsException.getCause () instanceof ConnectException) && rethrowOnFailureToConnect)
+        {
+            throw wsException;
+        }
+
+        if (wsException.getCause () instanceof SocketTimeoutException)
+        {
+            throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error sending [" + errorReferenceContext + "]");
+        }
+        else if (wsException.getCause () instanceof org.apache.cxf.binding.soap.SoapFault)
+        {
+            throw new SoapFaultException ("SOAP_FAULT", wsException.getMessage ());
+        }
+
     }
 
 }

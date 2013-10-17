@@ -30,9 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.consumers;
 
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.logging.Log;
@@ -40,7 +37,6 @@ import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
-import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
@@ -80,41 +76,17 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     {
         LOGGER.info ("[processIndividualRequest] started");
 
-        try
-        {
-            // Transform domain object to web service object
-            final IndividualRequestType individualRequestType =
-                    this.transformer.transformDomainToJaxb (individualRequest);
+        // Transform domain object to web service object
+        final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb (individualRequest);
 
-            // Process and call the end point web service
-            final IndividualResponseType responseType =
-                    this.invokeTargetAppService (individualRequestType, individualRequest, connectionTimeOut,
-                            receiveTimeOut);
+        // Process and call the end point web service
+        final IndividualResponseType responseType =
+                this.invokeTargetAppService (individualRequestType, individualRequest, connectionTimeOut,
+                        receiveTimeOut);
 
-            this.transformer.transformJaxbToDomain (responseType, individualRequest);
-        }
-        catch (final WebServiceException f)
-        {
-            LOGGER.error ("Error sending individual request [" + individualRequest.getSdtRequestReference () +
-                    "] to target application [" +
-                    individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () + "] ",
-                    f);
+        this.transformer.transformJaxbToDomain (responseType, individualRequest);
 
-            if (f.getCause () instanceof SocketTimeoutException)
-            {
-                throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error sending [" +
-                        individualRequest.getSdtRequestReference () + "]");
-            }
-            else if (f.getCause () instanceof org.apache.cxf.binding.soap.SoapFault)
-            {
-                throw new SoapFaultException ("SOAP_FAULT", f.getMessage ());
-            }
-
-        }
-        finally
-        {
-            LOGGER.info ("[processIndividualRequest] completed");
-        }
+        LOGGER.info ("[processIndividualRequest] completed");
 
     }
 
@@ -125,10 +97,13 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
      * @param connectionTimeOut the connection time out from the global parameter value
      * @param receiveTimeOut the receive time out from the global parameter value.
      * @return the IndividualResponseType object after calling the web service of target app.
+     * @throws OutageException if there is a service outage
+     * @throws TimeoutException if the read timed out within the time specified
      */
     private IndividualResponseType invokeTargetAppService (final IndividualRequestType request,
                                                            final IIndividualRequest iRequest,
                                                            final long connectionTimeOut, final long receiveTimeOut)
+        throws OutageException, TimeoutException
     {
         final IServiceRouting serviceRouting =
                 iRequest.getBulkSubmission ().getTargetApplication ()
@@ -153,13 +128,9 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
             {
                 LOGGER.error ("Target application [" +
                         iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () +
-                        "] unavailable while sending individual request [" + iRequest.getSdtRequestReference () + "]");
+                        "] error sending individual request [" + iRequest.getSdtRequestReference () + "]");
 
-                // If the target application is unavailable continue trying to send message indefinitely.
-                if ( !(f.getCause () instanceof ConnectException))
-                {
-                    throw f;
-                }
+                super.handleClientErrors (false, f, iRequest.getSdtRequestReference ());
             }
         }
     }
