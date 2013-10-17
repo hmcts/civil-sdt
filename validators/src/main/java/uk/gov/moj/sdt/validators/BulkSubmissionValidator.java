@@ -178,8 +178,8 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             replacements.add (bulkSubmission.getCustomerReference ());
 
             // Set the error continue rather than throw an exception
-            bulkSubmission.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
-            bulkSubmission.setErrorText (getErrorMessage (replacements, IErrorMessage.ErrorCode.DUPLD_CUST_REQID));
+            bulkSubmission.setErrorCode (IErrorMessage.ErrorCode.NO_VALID_REQS.name ());
+            bulkSubmission.setErrorText (getErrorMessage (replacements, IErrorMessage.ErrorCode.NO_VALID_REQS));
             bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.FAILED.name ());
 
         }
