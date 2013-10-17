@@ -121,7 +121,7 @@
 		<copy todir="${producers.target.dir}/WEB-INF/lib" overwrite="true">
 			<fileset dir="${lib.app.dir}" casesensitive="false">
 				<include name="**/*.jar" />
-                <exclude name="**/producer-commissioning.jar" />
+                <exclude name="**/producers-commissioning.jar" />
 			</fileset>
 		</copy>
 	</target>
