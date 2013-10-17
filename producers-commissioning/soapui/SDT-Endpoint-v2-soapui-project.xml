@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="SDT Endpoint v2" resourceRoot="" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="SdtEndpointHttpPortBinding" type="wsdl" bindingName="{http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint}SdtEndpointHttpPortBinding" soapVersion="1_2" anonymous="optional" definition="file:/C:/disc/workspaces/sdt/trunk/app/producers-api/src/main/resources/wsdl/SdtGatewayEndpoint.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:\C:\disc\workspaces\sdt\trunk\app\producers-api\src\main\resources\wsdl\SdtGatewayEndpoint.wsdl"><con:part><con:url>file:\C:\disc\workspaces\sdt\trunk\app\producers-api\src\main\resources\wsdl\SdtGatewayEndpoint.wsdl</con:url><con:content><![CDATA[<definitions name="SdtEndpoint" targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" xmlns:breq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:bresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" xmlns:bfreq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" xmlns:bfresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:qreq="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:qresp="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema">
+<con:soapui-project activeEnvironment="Default" name="SDT Endpoint v2" resourceRoot="" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="SdtEndpointHttpPortBinding" type="wsdl" bindingName="{http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint}SdtEndpointHttpPortBinding" soapVersion="1_2" anonymous="optional" definition="file:/C:/disc/workspaces/sdt/trunk/app/producers-api/src/main/resources/wsdl/SdtGatewayEndpoint.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/disc/workspaces/sdt/trunk/app/producers-api/src/main/resources/wsdl/SdtGatewayEndpoint.wsdl"><con:part><con:url>file:/C:/disc/workspaces/sdt/trunk/app/producers-api/src/main/resources/wsdl/SdtGatewayEndpoint.wsdl</con:url><con:content><![CDATA[<definitions name="SdtEndpoint" targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint" xmlns:breq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:bresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" xmlns:bfreq="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" xmlns:bfresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:qreq="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:qresp="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema">
   <types>
     <!--Base.xsd-->
     <xs:schema targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" elementFormDefault="qualified" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema">
       <xs:simpleType name="sdtCustomerIdType">
-        <xs:restriction base="xs:integer">
+        <xs:restriction base="xs:long">
           <xs:pattern value="[1-9][0-9]{7}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="targetApplicationIdType">
+        <xs:restriction base="xs:string">
+          <xs:length value="4"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="requestTypeType">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="criteriaTypeType">
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="sdtBulkReferenceType">
@@ -13,25 +28,10 @@
           <xs:length value="29"/>
         </xs:restriction>
       </xs:simpleType>
-      <xs:simpleType name="targetApplicationIdType">
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="mcol"/>
-        </xs:restriction>
-      </xs:simpleType>
       <xs:simpleType name="customerReferenceType">
         <xs:restriction base="xs:string">
           <xs:minLength value="1"/>
           <xs:maxLength value="32"/>
-        </xs:restriction>
-      </xs:simpleType>
-      <xs:simpleType name="requestCountType">
-        <xs:restriction base="xs:integer">
-          <xs:maxInclusive value="99999"/>
-        </xs:restriction>
-      </xs:simpleType>
-      <xs:simpleType name="mcolCustomerIdType">
-        <xs:restriction base="xs:string">
-          <xs:length value="12"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="claimNumberType">
@@ -106,38 +106,24 @@
           <xs:maxLength value="40"/>
         </xs:restriction>
       </xs:simpleType>
-      <xs:simpleType name="requestTypeType">
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="mcolClaim"/>
-          <xs:enumeration value="mcolJudgment"/>
-          <xs:enumeration value="mcolJudgmentWarrant"/>
-          <xs:enumeration value="mcolWarrant"/>
-          <xs:enumeration value="mcolClaimStatusUpdate"/>
-        </xs:restriction>
-      </xs:simpleType>
-      <xs:simpleType name="criteriaTypeType">
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="mcolDefenceCriteria"/>
-        </xs:restriction>
-      </xs:simpleType>
       <xs:simpleType name="statusCodeType">
         <xs:restriction base="xs:string">
-          <xs:enumeration value="OK"/>
-          <xs:enumeration value="ERROR"/>
+          <xs:enumeration value="Ok"/>
+          <xs:enumeration value="Error"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="createStatusCodeType">
         <xs:restriction base="xs:string">
-          <xs:enumeration value="ACCEPTED"/>
-          <xs:enumeration value="INITIALLY_ACCEPTED"/>
-          <xs:enumeration value="REJECTED"/>
-          <xs:enumeration value="ERROR"/>
+          <xs:enumeration value="Accepted"/>
+          <xs:enumeration value="Initially Accepted"/>
+          <xs:enumeration value="Rejected"/>
+          <xs:enumeration value="Error"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="updateStatusCodeType">
         <xs:restriction base="xs:string">
-          <xs:enumeration value="ACCEPTED"/>
-          <xs:enumeration value="REJECTED"/>
+          <xs:enumeration value="Accepted"/>
+          <xs:enumeration value="Rejected"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:complexType name="errorType">
@@ -180,19 +166,19 @@
       </xs:complexType>
       <xs:simpleType name="bulkStatusCodeType">
         <xs:restriction base="xs:string">
-          <xs:enumeration value="UPLOADED"/>
-          <xs:enumeration value="FAILED"/>
-          <xs:enumeration value="VALIDATED"/>
-          <xs:enumeration value="COMPLETED"/>
+          <xs:enumeration value="Uploaded"/>
+          <xs:enumeration value="Failed"/>
+          <xs:enumeration value="Validated"/>
+          <xs:enumeration value="Completed"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="individualStatusCodeType">
         <xs:restriction base="xs:string">
-          <xs:enumeration value="RECEIVED"/>
-          <xs:enumeration value="FORWARDED"/>
-          <xs:enumeration value="INITIALLY_ACCEPTED"/>
-          <xs:enumeration value="ACCEPTED"/>
-          <xs:enumeration value="REJECTED"/>
+          <xs:enumeration value="Received"/>
+          <xs:enumeration value="Forwarded"/>
+          <xs:enumeration value="Initially Accepted"/>
+          <xs:enumeration value="Accepted"/>
+          <xs:enumeration value="Rejected"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:complexType name="bulkStatusType">
@@ -206,6 +192,11 @@
           <xs:element name="error" type="tns:errorType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="code" type="tns:individualStatusCodeType" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="abstractResponseType" abstract="true">
+        <xs:sequence>
+          <xs:element name="status" type="tns:statusType"/>
+        </xs:sequence>
       </xs:complexType>
     </xs:schema>
     <!--Claim.xsd-->
@@ -711,40 +702,34 @@
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema"/>
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema"/>
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"/>
+      <xs:simpleType name="requestCountType">
+        <xs:restriction base="xs:long">
+          <xs:maxInclusive value="2000"/>
+        </xs:restriction>
+      </xs:simpleType>
       <xs:complexType name="headerType">
         <xs:sequence>
           <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
           <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
-          <xs:element name="requestCount" type="base:requestCountType"/>
+          <xs:element name="requestCount" type="tns:requestCountType"/>
           <xs:element name="customerReference" type="base:customerReferenceType"/>
         </xs:sequence>
       </xs:complexType>
-      <xs:complexType name="request" abstract="true">
-        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
+      <xs:complexType name="requestItemType">
+        <xs:choice>
+          <xs:element name="mcolClaim" type="clm:claimType"/>
+          <xs:element name="mcolJudgment" type="jud:mcolJudgmentType"/>
+          <xs:element name="mcolClaimStatusUpdate" type="clmupd:claimStatusUpdateType"/>
+          <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+          <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
+        </xs:choice>
+        <xs:attribute name="requestType" type="xs:string" use="required"/>
         <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
       </xs:complexType>
-      <xs:complexType name="mcolRequestType">
-        <xs:complexContent>
-          <xs:extension base="tns:request">
-            <xs:choice>
-              <xs:element name="mcolClaim" type="clm:claimType"/>
-              <xs:element name="mcolJudgment" type="jud:mcolJudgmentType"/>
-              <xs:element name="mcolClaimStatusUpdate" type="clmupd:claimStatusUpdateType"/>
-              <xs:element name="mcolWarrant" type="wnt:warrantType"/>
-              <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
-            </xs:choice>
-          </xs:extension>
-        </xs:complexContent>
-      </xs:complexType>
-      <xs:complexType name="mcolRequestsType">
-        <xs:sequence>
-          <xs:element name="mcolRequest" type="tns:mcolRequestType" minOccurs="1" maxOccurs="unbounded"/>
-        </xs:sequence>
-      </xs:complexType>
       <xs:complexType name="requestsType">
-        <xs:choice>
-          <xs:element name="mcolRequests" type="tns:mcolRequestsType"/>
-        </xs:choice>
+        <xs:sequence>
+          <xs:element name="request" type="tns:requestItemType" minOccurs="1" maxOccurs="2000"/>
+        </xs:sequence>
       </xs:complexType>
       <xs:complexType name="bulkRequestType">
         <xs:sequence>
@@ -758,14 +743,17 @@
     <xs:schema targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" elementFormDefault="qualified" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema">
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
       <xs:complexType name="bulkResponseType">
-        <xs:sequence>
-          <xs:element name="customerReference" type="base:customerReferenceType"/>
-          <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
-          <xs:element name="submittedDate" type="xs:dateTime"/>
-          <xs:element name="sdtService" type="xs:string"/>
-          <xs:element name="requestCount" type="base:requestCountType"/>
-          <xs:element name="status" type="base:statusType"/>
-        </xs:sequence>
+        <xs:complexContent>
+          <xs:extension base="base:abstractResponseType">
+            <xs:sequence>
+              <xs:element name="customerReference" type="base:customerReferenceType"/>
+              <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType" minOccurs="0"/>
+              <xs:element name="submittedDate" type="xs:dateTime"/>
+              <xs:element name="sdtService" type="xs:string"/>
+              <xs:element name="requestCount" type="xs:long"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
       </xs:complexType>
       <xs:element name="bulkResponse" type="tns:bulkResponseType"/>
     </xs:schema>
@@ -790,38 +778,33 @@
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema"/>
       <xs:complexType name="bulkRequestStatusType">
-        <xs:sequence>
-          <xs:element name="customerReference" type="base:customerReferenceType"/>
-          <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
-          <xs:element name="submittedDate" type="xs:dateTime"/>
-          <xs:element name="sdtService" type="xs:string"/>
-          <xs:element name="requestCount" type="base:requestCountType"/>
-          <xs:element name="bulkStatus" type="base:bulkStatusType"/>
-        </xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="responsesType">
-        <xs:choice>
-          <xs:element name="mcolResponses" type="tns:mcolResponsesType"/>
-        </xs:choice>
-      </xs:complexType>
-      <xs:complexType name="mcolResponsesType">
-        <xs:sequence>
-          <xs:element name="mcolResponse" type="tns:mcolResponseType" minOccurs="1" maxOccurs="unbounded"/>
-        </xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="responseType" abstract="true">
-        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
-        <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
-      </xs:complexType>
-      <xs:complexType name="mcolResponseType">
         <xs:complexContent>
-          <xs:extension base="tns:responseType">
+          <xs:extension base="base:abstractResponseType">
             <xs:sequence>
-              <xs:element name="mcolResponseDetail" type="mresp:responseDetailType"/>
-              <xs:element name="status" type="base:individualStatusType"/>
+              <xs:element name="customerReference" type="base:customerReferenceType" minOccurs="0"/>
+              <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+              <xs:element name="submittedDate" type="xs:dateTime" minOccurs="0"/>
+              <xs:element name="sdtService" type="xs:string"/>
+              <xs:element name="requestCount" type="xs:long" minOccurs="0"/>
+              <xs:element name="bulkStatus" type="base:bulkStatusType" minOccurs="0"/>
             </xs:sequence>
           </xs:extension>
         </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="responsesType">
+        <xs:sequence>
+          <xs:element name="response" type="tns:responseType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="responseType">
+        <xs:sequence>
+          <xs:choice>
+            <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" minOccurs="0"/>
+          </xs:choice>
+          <xs:element name="status" type="base:individualStatusType"/>
+        </xs:sequence>
+        <xs:attribute name="requestType" type="xs:string" use="required"/>
+        <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
       </xs:complexType>
       <xs:complexType name="bulkFeedbackResponseType">
         <xs:sequence>
@@ -849,21 +832,15 @@
         </xs:sequence>
       </xs:complexType>
       <xs:complexType name="criteriaType">
+        <xs:sequence>
+          <xs:element name="criterion" type="tns:criterionType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="criterionType">
         <xs:choice>
-          <xs:element name="mcolCriteria" type="tns:mcolCriteriaType"/>
+          <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
         </xs:choice>
-      </xs:complexType>
-      <xs:complexType name="criteria" abstract="true">
         <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
-      </xs:complexType>
-      <xs:complexType name="mcolCriteriaType">
-        <xs:complexContent>
-          <xs:extension base="tns:criteria">
-            <xs:choice>
-              <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
-            </xs:choice>
-          </xs:extension>
-        </xs:complexContent>
       </xs:complexType>
     </xs:schema>
     <!--SubmitQueryResponse.xsd-->
@@ -872,20 +849,18 @@
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"/>
       <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType"/>
       <xs:complexType name="submitQueryResponseType">
-        <xs:sequence>
-          <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
-          <xs:element name="sdtService" type="xs:string"/>
-          <xs:element name="resultCount" type="xs:nonNegativeInteger"/>
-          <xs:element name="results" type="tns:resultsType"/>
-          <xs:element name="status" type="base:statusType"/>
-        </xs:sequence>
+        <xs:complexContent>
+          <xs:extension base="base:abstractResponseType">
+            <xs:sequence>
+              <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
+              <xs:element name="sdtService" type="xs:string"/>
+              <xs:element name="resultCount" type="xs:nonNegativeInteger"/>
+              <xs:element name="results" type="tns:resultsType"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
       </xs:complexType>
       <xs:complexType name="resultsType">
-        <xs:choice>
-          <xs:element name="mcolResults" type="tns:mcolResultsType"/>
-        </xs:choice>
-      </xs:complexType>
-      <xs:complexType name="mcolResultsType">
         <xs:choice>
           <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
@@ -959,13 +934,13 @@
       <soap:address location="http://ws.sdt.moj.gov.uk/sdt/service"/>
     </port>
   </service>
-</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:endpoint>http://sdt.com/</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="getBulkFeedback" bindingOperationName="getBulkFeedback" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="getBulkFeedback" bindingOperationName="getBulkFeedback" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
    <soap:Header/>
    <soap:Body>
       <bul:bulkFeedbackRequest>
          <bul:header>
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
-            <bul:sdtBulkReference>MCOL_20130722_B00000001</bul:sdtBulkReference>
+            <bul:sdtBulkReference>MCOL_20130722000000_B00000001</bul:sdtBulkReference>
          </bul:header>
       </bul:bulkFeedbackRequest>
    </soap:Body>
@@ -975,17 +950,17 @@
       <bul:bulkFeedbackRequest>
          <bul:header>
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
-            <bul:sdtBulkReference>My ref</bul:sdtBulkReference>
+            <bul:sdtBulkReference>MCOL_20130722000000_B10000001</bul:sdtBulkReference>
          </bul:header>
       </bul:bulkFeedbackRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/getBulkFeedbackRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid (2)"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/getBulkFeedbackRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid (2)"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
    <soap:Header/>
    <soap:Body>
       <bul:bulkFeedbackRequest>
          <bul:header>
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
-            <bul:sdtBulkReference>MCOL_20130722_B00000002</bul:sdtBulkReference>
+            <bul:sdtBulkReference>MCOL_20130722000000_B00000002</bul:sdtBulkReference>
          </bul:header>
       </bul:bulkFeedbackRequest>
    </soap:Body>
@@ -1067,7 +1042,33 @@
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Invalid Message"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>a</bul:requestCount>
+            <bul:customerReference>abc1223456</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+               <!--1 or more repetitions:-->
+               <bul:request requestType="mcolClaimStatusUpdate" requestId="1">
+                  <!--You have a CHOICE of the next 5 items at this level-->
+                  <bul:mcolClaimStatusUpdate>
+                     <cla1:claimNumber>claim123</cla1:claimNumber>
+                     <!--Optional:-->
+                     <cla1:defendantId>1</cla1:defendantId>
+                     <cla1:notificationType>MP</cla1:notificationType>
+                     <!--Optional:-->
+                     <cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>
+                  </bul:mcolClaimStatusUpdate>
+               </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
       <sub:submitQueryRequest>
@@ -1078,8 +1079,8 @@
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01T12:00:00</quer:fromDate>
-                  <quer:toDate>2013-08-31T12:00:00</quer:toDate>
+                  <quer:fromDate>2013-08-01</quer:fromDate>
+                  <quer:toDate>2013-08-31</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>

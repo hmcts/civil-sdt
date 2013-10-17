@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="bulkRequestStatus" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema}bulkRequestStatusType"/>
- *         &lt;element name="responses" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema}responsesType"/>
+ *         &lt;element name="responses" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema}responsesType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,7 +36,6 @@ public class BulkFeedbackResponseType {
 
     @XmlElement(required = true)
     protected BulkRequestStatusType bulkRequestStatus;
-    @XmlElement(required = true)
     protected ResponsesType responses;
 
     /**
