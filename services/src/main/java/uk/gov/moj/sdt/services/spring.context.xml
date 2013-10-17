@@ -26,12 +26,12 @@
     <bean id="uk.gov.moj.sdt.services.api.IBulkSubmissionService" 
     	class="uk.gov.moj.sdt.services.BulkSubmissionService">
     	<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao"/>
-    	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
     	<property name="individualRequestsXmlparser" ref="uk.gov.moj.sdt.utils.IndividualRequestsXmlParser"/>
     	<property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao"/>
     	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
     	<property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator"/>
     	<property name="messageSynchronizer" ref="uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer"/>
+    	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
     </bean>   
     
     <!-- Implementation for Target Application Submission Service -->
@@ -40,6 +40,7 @@
     	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
     	<property name="requestConsumer" ref="uk.gov.moj.sdt.consumers.api.IConsumerGateway"/>
     	<property name="globalParametersCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache"/>
+    	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
     </bean>
                           
 </beans>

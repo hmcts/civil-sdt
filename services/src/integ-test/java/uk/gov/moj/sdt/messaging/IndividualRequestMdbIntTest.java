@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
 
@@ -100,6 +101,20 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
 
         LOG.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
+        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
+
+        // Clear any old messages off the queue.
+        jmsTemplate.setReceiveTimeout (1);
+        while (true)
+        {
+            // Read any old messages.
+            final Message message = jmsTemplate.receive ();
+            if (message == null)
+            {
+                break;
+            }
+        }
+
         // Write a Message to the MDB
         final SdtMessage sdtMessage = new SdtMessage ();
         sdtMessage.setSdtRequestReference ("SDT_REQ_TEST_1");

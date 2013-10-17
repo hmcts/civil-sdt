@@ -30,9 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.api;
 
-import uk.gov.moj.sdt.consumers.exception.OutageException;
-import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * This interface is for target application prior-submission and post-submission operations on
@@ -47,59 +44,7 @@ public interface ITargetApplicationSubmissionService
      * Returns the IndividualRequest for the given SDT Request Reference.
      * 
      * @param sdtRequestReference the unique SDT Request Reference associated with individual request
-     * @return IndividualRequest object associated with the matching individual request
      */
-    IIndividualRequest getRequestToSubmit (final String sdtRequestReference);
-
-    /**
-     * Update the request object. This method is to be called to update the request object
-     * to bring it in the request status state of FORWARDED
-     * 
-     * @param individualRequest the IndividualRequest object that contains the
-     *            response payload from the target application.
-     */
-    void updateForwardingRequest (final IIndividualRequest individualRequest);
-
-    /**
-     * Update the request object. This method is to be called to update the request object on
-     * completion i.e. successful response is received from the target application.
-     * 
-     * @param individualRequest the individual request to be marked as completed
-     */
-    void updateCompletedRequest (final IIndividualRequest individualRequest);
-
-    /**
-     * Updates the request object. This method is called when the send request to the target application
-     * times out.
-     * 
-     * @param individualRequest the individual request to be marked with reason as not acknowledged
-     */
-    void updateRequestTimeOut (final IIndividualRequest individualRequest);
-
-    /**
-     * Updates the request object. This method is called when the send request to target application
-     * returns an server error.
-     * 
-     * @param individualRequest the individual request to be marked with reason as not responding
-     */
-    void updateTargetAppUnavailable (final IIndividualRequest individualRequest);
-
-    /**
-     * Send the individual request to target application for submission.
-     * 
-     * @param individualRequest the individual request to be sent to target application.
-     * @throws OutageException when the target web service is not responding.
-     * @throws TimeoutException when the target web service does not respond back in time.
-     */
-    void sendRequestToTargetApp (final IIndividualRequest individualRequest) throws OutageException, TimeoutException;
-
-    /**
-     * Updates the request object. This method updates the request status to Rejected
-     * and sets the soap fault message in the internal error field of the request.
-     * 
-     * @param individualRequest the individual request to be marked.
-     * @param soapFaultError the soap fault message when the request has failed.
-     */
-    void updateRequestSoapError (final IIndividualRequest individualRequest, String soapFaultError);
+    void processRequestToSubmit (final String sdtRequestReference);
 
 }

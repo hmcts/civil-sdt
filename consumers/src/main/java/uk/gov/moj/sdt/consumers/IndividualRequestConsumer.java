@@ -33,6 +33,8 @@ package uk.gov.moj.sdt.consumers;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
+import javax.xml.ws.WebServiceException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -91,16 +93,17 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
             this.transformer.transformJaxbToDomain (responseType, individualRequest);
         }
-        catch (final javax.xml.ws.WebServiceException f)
+        catch (final WebServiceException f)
         {
-            LOGGER.error (f);
-            if (f.getCause () instanceof ConnectException)
+            LOGGER.error ("Error sending individual request [" + individualRequest.getSdtRequestReference () +
+                    "] to target application [" +
+                    individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () + "] ",
+                    f);
+
+            if (f.getCause () instanceof SocketTimeoutException)
             {
-                throw new OutageException ("OUTAGE_ERROR", "Could not send message as server cannot be reached.");
-            }
-            else if (f.getCause () instanceof SocketTimeoutException)
-            {
-                throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error");
+                throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error sending [" +
+                        individualRequest.getSdtRequestReference () + "]");
             }
             else if (f.getCause () instanceof org.apache.cxf.binding.soap.SoapFault)
             {
@@ -137,10 +140,28 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
         final ITargetAppInternalEndpointPortType client =
                 super.createClient (webServiceEndPoint, connectionTimeOut, receiveTimeOut);
 
-        // Call the specific business method for this text - note that a single test can only use one web service
-        // business method.
-        return client.submitIndividual (request);
+        // Loop until the target application becomes available.
+        while (true)
+        {
+            try
+            {
+                // Call the specific business method for this text - note that a single test can only use one web
+                // service business method.
+                return client.submitIndividual (request);
+            }
+            catch (final WebServiceException f)
+            {
+                LOGGER.error ("Target application [" +
+                        iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () +
+                        "] unavailable while sending individual request [" + iRequest.getSdtRequestReference () + "]");
 
+                // If the target application is unavailable continue trying to send message indefinitely.
+                if ( !(f.getCause () instanceof ConnectException))
+                {
+                    throw f;
+                }
+            }
+        }
     }
 
     /**
