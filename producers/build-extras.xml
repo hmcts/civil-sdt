@@ -141,6 +141,8 @@
 		<copy todir="${producers.target.dir}/WEB-INF/lib" overwrite="true">
 			<fileset dir="${3rd-party.spring3.dir}" casesensitive="false">
 				<include name="${antlr.jar}" />
+				<include name="${asm.jar}" />
+				<include name="${asm-attrs.jar}" />
 				<include name="${ehcache-core.jar}" />
 				<include name="${hibernate-commons-annotations.jar}" />
 				<include name="${hibernate-core.jar}" />
@@ -182,8 +184,6 @@
 				<include name="${annogen.jar}" />
 				<include name="${antlr.jar}" />
 				<include name="${aopalliance.jar}" />
-				<include name="${asm-attrs.jar}" />
-				<include name="${asm.jar}" />
 				<include name="${aspectjrt.jar}" />
 				<include name="${aspectjweaver.jar}" />
 				<include name="${c3p0.jar}" />
