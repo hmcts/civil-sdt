@@ -573,14 +573,13 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         createBulkSubmission (3, bulkCustomer, individualRequests, "MCOL");
 
         // Set up Error messages cache
-        final String errorText =
-                "Unique Request Identifier has been specified more than once within the originating Bulk Request.";
+        final String errorText = "The submitted Bulk Request does not contain valid individual Requests.";
 
         errorMessage = new ErrorMessage ();
-        errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ());
+        errorMessage.setErrorCode (IErrorMessage.ErrorCode.NO_VALID_REQS.name ());
         errorMessage.setErrorText (errorText);
         errorMessagesCache = EasyMock.createMock (ICacheable.class);
-        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name ()))
+        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.NO_VALID_REQS.name ()))
                 .andReturn (errorMessage);
         replay (errorMessagesCache);
         validator.setErrorMessagesCache (errorMessagesCache);
@@ -589,8 +588,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         validator.checkIndividualRequests (bulkSubmission);
 
         Assert.assertEquals (IBulkSubmission.BulkRequestStatus.FAILED.name (), bulkSubmission.getSubmissionStatus ());
-        Assert.assertEquals (IErrorMessage.ErrorCode.DUPLD_CUST_REQID.name (), bulkSubmission.getErrorCode ());
-        Assert.assertEquals (errorText, bulkSubmission.getErrorText ());
+        Assert.assertEquals (IErrorMessage.ErrorCode.NO_VALID_REQS.name (), bulkSubmission.getErrorCode ());
     }
 
     private void createBulkSubmission (final long numberOfRequests, final IBulkCustomer bulkCustomer,
