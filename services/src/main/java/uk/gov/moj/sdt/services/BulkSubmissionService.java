@@ -51,6 +51,7 @@ import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 /**
@@ -192,6 +193,9 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // Set the SDT Bulk Reference
         bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
                 .getTargetApplication ().getTargetApplicationCode ()));
+
+        // Update last seen bulk reference.
+        SdtMetricsMBean.getSdtMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
 
         // Get the Target Application from the target application dao
         final ITargetApplication targetApplication =

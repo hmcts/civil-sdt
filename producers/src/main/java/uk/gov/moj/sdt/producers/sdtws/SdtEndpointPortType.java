@@ -31,8 +31,6 @@
 
 package uk.gov.moj.sdt.producers.sdtws;
 
-import java.util.GregorianCalendar;
-
 import javax.jws.WebService;
 
 import org.apache.commons.logging.Log;
@@ -41,7 +39,6 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
@@ -89,14 +86,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
             LOGGER.debug ("endpoint called for method [submitBulk] by customer [" +
                     bulkRequest.getHeader ().getSdtCustomerId () + "]");
         }
-        // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBulkSubmitCounts ();
 
-        // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
         final BulkResponseType response = wsCreateBulkRequestHandler.submitBulk (bulkRequest);
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
 
         return response;
     }
@@ -110,14 +101,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
                     bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
         }
 
-        // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBulkFeedbackCounts ();
-
-        // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
         final BulkFeedbackResponseType response = wsReadBulkRequestHandler.getBulkFeedback (bulkFeedbackRequest);
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addBulkFeedbackTime (endTime - startTime);
 
         return response;
     }
@@ -131,14 +115,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
                     submitQueryRequest.getHeader ().getSdtCustomerId ());
         }
 
-        // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upSubmitQueryCounts ();
-
-        // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
         final SubmitQueryResponseType response = wsReadSubmitQueryHandler.submitQuery (submitQueryRequest);
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addSubmitQueryTime (endTime - startTime);
 
         return response;
 

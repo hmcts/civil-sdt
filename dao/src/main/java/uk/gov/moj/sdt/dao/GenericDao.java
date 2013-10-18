@@ -154,202 +154,14 @@ public class GenericDao implements IGenericDao
         return domainObject;
     }
 
-    // @Override
-    // public <DomainType extends IDomainObject> DomainType fetch (final DomainType domainObject,
-    // final String... properties) throws DataAccessException
-    // // CHECKSTYLE:ON
-    // {
-    // // Narrow the domain Object to define it as its particular domain type rather than a generic type.
-    // final Class<? extends IDomainObject> domainType =
-    // domainObject.getBusinessInterfaceType ().asSubclass (IDomainObject.class);
-    //
-    // GenericDaoTest.LOG
-    // .debug ("fetch(): domainType=" + domainType + ", for properties={" + properties.toString () + "}");
-    //
-    // try
-    // {
-    // // Use session as key to retrieve transaction time.
-    // final Session session = this.getSession (false);
-    //
-    // // Retrieve the doomain object to which eagerly fetched properties are to be attached. We expect this to
-    // // already be in Hibernate session.
-    // final DomainType sessionObject = (DomainType) (session.get (domainType, domainObject.getId ()));
-    //
-    // // Follow property links.
-    // try
-    // {
-    // // Get the list of property names known to Hibernate (not using reflection, since Hibernate may not know
-    // // about all the properties and we can only retrieve those which Hibernate can see).
-    // final String[] propertNames =
-    // this.getSession ().getSessionFactory ()
-    // .getClassMetadata (domainObject.getClass ().getSimpleName ()).getPropertyNames ();
-    //
-    // // Eagerly fetch and attach each given property.
-    // for (final String property : properties)
-    // {
-    // // Set the source of the property - rv or parent.
-    // final IPropertySupport source = inRV ? rvEntity : ((IBitemporalRvEntity) rvEntity).getParent ();
-    //
-    // // Retrieve the property value - accessing it via Hibernate proxy will cause Hibernate to fetch
-    // // it from database.
-    // final Object value = source.getPropertyValue (property);
-    // Object clone = this.transformToDomain (session, bsTime, value);
-    //
-    // // When domain does not expect a set and parent contains a set with just a single entry, convert
-    // // set into an instance of the type within the set and store in domain object.
-    // if ( !inRV && clone instanceof Set<?> &&
-    // !domainObject.getPropertyType (property).isInstance (clone))
-    // {
-    // // Unwrap sets of parents to plain references in business objects.
-    // final Set<?> set = (Set<?>) clone;
-    // final Iterator<?> iterator = set.iterator ();
-    // if ( !iterator.hasNext ())
-    // {
-    // clone = null;
-    // }
-    // else
-    // {
-    // clone = iterator.next ();
-    // if (iterator.hasNext ())
-    // {
-    // throw new IllegalStateException ("expected single object, but got " + set.size ());
-    // }
-    // }
-    // }
-    // domainObject.setPropertyValue (property, clone);
-    // }
-    // }
-    //
-    // if (IRunBasedRvEntity.class.isAssignableFrom (rvClass))
-    // {
-    // // run-based code
-    // @SuppressWarnings ("unchecked") final Class<? extends IRunBasedRvEntity> runbasedRvClass =
-    // (Class<? extends IRunBasedRvEntity>) rvClass;
-    //
-    // // Use session as key to retrieve relevant runs.
-    // final Session session = this.getSession (false);
-    // final Collection<Long> runOids = this.getState (session).getRunOids ();
-    //
-    // // construct key to retrieve rv object
-    // final Class<? extends IRunBasedParentEntity> runbasedParentClass =
-    // this.getMeta ().getParentImplementationType (domainType, IRunBasedParentEntity.class);
-    // final IRunBasedParentEntity parentKey = this.instantiate (session, domainObject, runbasedParentClass);
-    // final IRunBasedRvEntity rvKey = runbasedRvClass.newInstance ();
-    // rvKey.setParent (parentKey);
-    // rvKey.setRunOid (domainObject.getRunOid ());
-    //
-    // // Retrieve the rv object to which eagerly fetched properties are to be attached. We expect this to
-    // // already be in Hibernate session.
-    // final IRunBasedRvEntity rvEntity =
-    // runbasedRvClass.cast (session.get (runbasedRvClass.getSimpleName (), rvKey));
-    // if (rvEntity.getBusinessObject () != domainObject)
-    // {
-    // if (rvEntity.getBusinessObject () != null)
-    // {
-    // throw new IllegalStateException ();
-    // }
-    // else
-    // {
-    // rvEntity.setBusinessObject (domainObject);
-    // }
-    // }
-    //
-    // // Follow property links.
-    // Filter filter = null;
-    // try
-    // {
-    // final String[] propertNames =
-    // this.getSession ().getSessionFactory ().getClassMetadata (runbasedRvClass.getSimpleName ())
-    // .getPropertyNames ();
-    //
-    // final Set<String> rvProperties = new HashSet<String> (Arrays.asList (propertNames));
-    //
-    // // Eagerly fetch and attach each given property.
-    // for (final String property : properties)
-    // {
-    // // Check if property is in RV or in Parent and remove to ensure each property is only used once.
-    // final boolean inRV = rvProperties.remove (property);
-    //
-    // // Setup the run-based filter on first encountering a property in the parent record.
-    // if ( !inRV && filter == null)
-    // {
-    // // Enable filter restricting time of rv entity to be retrieved.
-    // filter = session.enableFilter ("runRead");
-    // filter.setParameterList ("runOids", runOids);
-    // }
-    //
-    // // Set the source of the property - rv or parent.
-    // final IPropertySupport source = inRV ? rvEntity : ((IBaseRvEntity) rvEntity).getParent ();
-    //
-    // // Retrieve the property value - accessing it via Hibernate proxy will cause Hibernate to fetch
-    // // it from database.
-    // final Object value = source.getPropertyValue (property);
-    // Object clone = this.transformToDomain (session, businessTime, value);
-    //
-    // // When domain does not expect a set and parent contains a set with just a single entry, convert
-    // // set into an instance of the type within the set and store in domain object.
-    // if ( !inRV && clone instanceof Set<?> &&
-    // !domainObject.getPropertyType (property).isInstance (clone))
-    // {
-    // // Unwrap sets of parents to plain references in business objects.
-    // final Set<?> set = (Set<?>) clone;
-    // final Iterator<?> iterator = set.iterator ();
-    // if ( !iterator.hasNext ())
-    // {
-    // clone = null;
-    // }
-    // else
-    // {
-    // clone = iterator.next ();
-    // if (iterator.hasNext ())
-    // {
-    // throw new IllegalStateException ("expected single object, but got " + set.size ());
-    // }
-    // }
-    // }
-    // domainObject.setPropertyValue (property, clone);
-    // }
-    // }
-    // finally
-    // {
-    // if (filter != null)
-    // {
-    // // Disable filter limiting time of reference.
-    // session.disableFilter (filter.getName ());
-    // filter = null;
-    // }
-    // }
-    // }
-    // else
-    // {
-    // // unsupported entity type
-    // throw new UnsupportedOperationException ();
-    // }
-    // return domainObject;
-    // }
-    // catch (final ClassNotFoundException x)
-    // {
-    // throw new UnsupportedOperationException (x);
-    // }
-    // catch (final IllegalAccessException x)
-    // {
-    // throw new UnsupportedOperationException (x);
-    // }
-    // catch (final java.lang.InstantiationException x)
-    // {
-    // throw new UnsupportedOperationException (x);
-    // }
-    // catch (final HibernateException x)
-    // {
-    // throw this.convertHibernateAccessException (x);
-    // }
-    // }
-
     @Override
     public final <DomainType extends IDomainObject> DomainType[] query (final Class<DomainType> domainType,
                                                                         final Criterion... restrictions)
         throws DataAccessException
     {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
         GenericDao.LOG.debug ("query(): domainType=" + domainType);
 
         // Get a list of results from Hibernate.
@@ -357,6 +169,11 @@ public class GenericDao implements IGenericDao
 
         @SuppressWarnings ("unchecked") final DomainType[] results =
                 (DomainType[]) Array.newInstance (domainType, domainObjects.size ());
+
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
 
         return domainObjects.toArray (results);
     }
@@ -366,10 +183,10 @@ public class GenericDao implements IGenericDao
                                                                                   final Criterion... restrictions)
         throws DataAccessException
     {
-        GenericDao.LOG.debug ("queryAsList(): domainType=" + domainType);
-
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        GenericDao.LOG.debug ("queryAsList(): domainType=" + domainType);
 
         final Session session = this.getSessionFactory ().getCurrentSession ();
 
@@ -413,6 +230,9 @@ public class GenericDao implements IGenericDao
     @Override
     public long getNextSequenceValue (final String sequenceName) throws DataAccessException
     {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
         LOG.debug ("Sequence generation for " + sequenceName);
 
         if (sequenceName == null || sequenceName.trim ().isEmpty ())
@@ -423,8 +243,13 @@ public class GenericDao implements IGenericDao
         final Session session = this.getSessionFactory ().getCurrentSession ();
         final Query query = session.createSQLQuery ("SELECT " + sequenceName + ".nextval FROM DUAL");
         final Object result = query.uniqueResult ();
-        return ((BigDecimal) result).longValue ();
 
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+
+        return ((BigDecimal) result).longValue ();
     }
 
     /**
@@ -460,9 +285,9 @@ public class GenericDao implements IGenericDao
     public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
                                                                        final Criterion... restrictions)
     {
-        GenericDao.LOG.debug ("uniqueResult(): domainType=" + domainType);
-
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        GenericDao.LOG.debug ("uniqueResult(): domainType=" + domainType);
 
         final Session session = this.getSessionFactory ().getCurrentSession ();
 

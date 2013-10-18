@@ -37,6 +37,20 @@ package uk.gov.moj.sdt.utils.mbeans.api;
  */
 public interface ISdtMetricsMBean
 {
+    /**
+     * Get the current time.
+     * 
+     * @return the formatted current time.
+     */
+    String getTime ();
+
+    /**
+     * Get the number of active customers using the system. Public because needed by handlers to reset unique customer
+     * map.
+     * 
+     * @return the number of active customers using the system.
+     */
+    long getActiveCustomers ();
 
     /**
      * Get summary of bulk submit statistics.
@@ -64,7 +78,7 @@ public interface ISdtMetricsMBean
      * 
      * @return summary of status statistics.
      */
-    String getStatusStats ();
+    String getStatusUpdateStats ();
 
     /**
      * Get the domain objects statistics.
@@ -109,11 +123,11 @@ public interface ISdtMetricsMBean
     String getRequestQueueStats ();
 
     /**
-     * Get the case management system response statistics.
+     * Get the target application response statistics.
      * 
-     * @return the case management system response statistics.
+     * @return the target application response statistics.
      */
-    String getCaseMgmtStats ();
+    String getTargetAppStats ();
 
     /**
      * Get the error and exception statistics.
@@ -278,21 +292,16 @@ public interface ISdtMetricsMBean
     void upRequestRequeues ();
 
     /**
-     * Add latest case management response time to total.
+     * Add latest target application response time to total.
      * 
-     * @param caseMgmtResponseTime latest case management response.
+     * @param targetAppResponseTime latest target application response.
      */
-    void addCaseMgmtResponseTime (final long caseMgmtResponseTime);
+    void addTargetAppResponseTime (final long targetAppResponseTime);
 
     /**
-     * Increment the case management response timeout count.
+     * Increment the target application response timeout count.
      */
-    void upCaseMgmtResponseTimeouts ();
-
-    /**
-     * Increment the errors count.
-     */
-    void upErrorsCount ();
+    void upTargetAppResponseTimeouts ();
 
     /**
      * Increment the XML validation failure count.
@@ -303,6 +312,13 @@ public interface ISdtMetricsMBean
      * Increment the business exception count.
      */
     void upBusinessExceptionCount ();
+
+    /**
+     * Set the last business exception encountered.
+     * 
+     * @param lastBusinessException the last business exception.
+     */
+    void setLastBusinessException (final String lastBusinessException);
 
     /**
      * Set the last bulk submit reference assigned by the system.

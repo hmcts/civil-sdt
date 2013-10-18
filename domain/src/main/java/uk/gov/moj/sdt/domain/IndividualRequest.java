@@ -37,6 +37,7 @@ import org.joda.time.LocalDateTime;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * When processing an Individual Request within the Bulk Request, the SDT application records
@@ -400,6 +401,8 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         // SDT Request Reference consists of <SDT Bulk Reference>-<zero padded line number>
         sdtRequestReference = sdtBulkReference + "-" + paddedLineNumber;
 
+        // Update last seen bulk reference.
+        SdtMetricsMBean.getSdtMetrics ().setLastBulkRequestRef (sdtRequestReference);
     }
 
 }

@@ -36,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Mock Bulk Submission Service, this class is only here so the commissioning app can start up without throwing an
@@ -63,8 +64,11 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
         // Set the SDT Bulk Reference for the handler's transformer to use
         bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
                 .getTargetApplication ().getTargetApplicationCode ()));
-        LOG.debug ("[saveBulkSubmission] completed");
 
+        // Update last seen bulk reference.
+        SdtMetricsMBean.getSdtMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
+
+        LOG.debug ("[saveBulkSubmission] completed");
     }
 
     /**

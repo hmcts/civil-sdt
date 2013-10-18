@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.handlers;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +43,7 @@ import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
@@ -83,7 +85,16 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
     {
         LOGGER.info ("[submitBulk] started");
+        
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBulkSubmitCounts ();
 
+        // Measure response time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        // Update number of customers using the system.
+        this.updateCustomerCount (bulkRequestType.getHeader ().getSdtCustomerId ());
+        
         // Initialise response;
         BulkResponseType bulkResponseType = intialiseResponse (bulkRequestType);
 
@@ -117,6 +128,10 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         {
             LOGGER.info ("[submitBulk] completed");
         }
+
+        // Measure total time spent in use case.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
 
         return bulkResponseType;
     }

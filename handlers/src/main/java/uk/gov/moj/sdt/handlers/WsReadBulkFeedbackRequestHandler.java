@@ -30,6 +30,8 @@
  * $LastChangedBy: compstonr $ */
 package uk.gov.moj.sdt.handlers;
 
+import java.util.GregorianCalendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,6 +42,7 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -78,6 +81,16 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
     {
 
         LOGGER.info ("[getBulkFeedback] started");
+        
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBulkFeedbackCounts ();
+
+        // Measure response time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        // Update number of customers using the system.
+        this.updateCustomerCount (bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+
         BulkFeedbackResponseType response = createResponse (bulkFeedbackRequest);
         try
         {
@@ -107,6 +120,11 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         {
             LOGGER.info ("[getBulkFeedback] completed");
         }
+        
+        // Measure total time spent in use case.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addBulkFeedbackTime (endTime - startTime);
+
         return response;
     }
 

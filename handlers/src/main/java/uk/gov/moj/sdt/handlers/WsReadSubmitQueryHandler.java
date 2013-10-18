@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.handlers;
 
+import java.util.GregorianCalendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,6 +42,7 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -78,6 +81,15 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
     {
         LOGGER.info ("[submitQuery] started");
 
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upSubmitQueryCounts ();
+
+        // Measure response time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        // Update number of customers using the system.
+        this.updateCustomerCount (submitQueryRequestType.getHeader ().getSdtCustomerId ());
+
         // Initialise response.
         SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
         submitQueryResponseType.setStatus (new StatusType ());
@@ -112,6 +124,10 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         {
             LOGGER.info ("[submitQuery] completed");
         }
+
+        // Measure total time spent in use case.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addSubmitQueryTime (endTime - startTime);
 
         return submitQueryResponseType;
 

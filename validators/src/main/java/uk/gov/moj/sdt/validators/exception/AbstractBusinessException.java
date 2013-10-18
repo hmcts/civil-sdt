@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.validators.exception;
 import java.text.MessageFormat;
 import java.util.List;
 
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 
 /**
@@ -73,6 +74,10 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         super ("Failed with code [" + code + "]; message [" + description + "]");
         this.errorCode = code;
         this.errorDescription = description;
+
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (this.errorDescription);
     }
 
     /**
@@ -89,6 +94,9 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         this.errorCode = code;
         this.errorDescription = MessageFormat.format (description, replacements.toArray ());
 
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (this.errorDescription);
     }
 
     /**
@@ -99,6 +107,10 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     public AbstractBusinessException (final String s)
     {
         super (s);
+
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (s);
     }
 
     /**
@@ -109,6 +121,10 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     public AbstractBusinessException (final Throwable cause)
     {
         super (cause);
+
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (cause.getMessage ());
     }
 
     /**
@@ -120,6 +136,10 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     public AbstractBusinessException (final String s, final Throwable cause)
     {
         super (s, cause);
+
+        // Update mbean stats.
+        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (s);
     }
 
     /**

@@ -30,10 +30,14 @@
  * $LastChangedBy: agarwals $ */
 package uk.gov.moj.sdt.handlers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -47,11 +51,20 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
  */
 public abstract class AbstractWsHandler
 {
-
     /**
      * Logger instance.
      */
     private static final Log LOGGER = LogFactory.getLog (AbstractWsHandler.class);
+
+    /**
+     * Map of unique customers seen by system.
+     */
+    private static Map<Long, Long> uniqueCustomers = new HashMap <Long, Long>();
+
+    /**
+     * Local store of unique customer count.
+     */
+    private static long uniqueCustomerCount;
 
     /**
      * Handle given exception by transforming into error type and setting on given status type.
@@ -105,5 +118,31 @@ public abstract class AbstractWsHandler
     {
         statusType.setError (errorType);
         statusType.setCode (StatusCodeType.ERROR);
+    }
+
+    /**
+     * Count the number of distinct customers using the system since last reset.
+     * 
+     * @param customer the unique identifier of the customer who called the web service.
+     */
+    protected synchronized void updateCustomerCount (final long customer)
+    {
+        // Have the SdtMetrics been reset?
+        if (SdtMetricsMBean.getSdtMetrics ().getActiveCustomers () < uniqueCustomerCount)
+        {
+            // Clear map.
+            uniqueCustomers = new HashMap <Long, Long>();
+        }
+        
+        if (!uniqueCustomers.containsKey (customer))
+        {
+            // Add this customer to the map, since we have not seen them before.
+            uniqueCustomers.put (customer, customer);
+            
+            // Update metrics.
+            SdtMetricsMBean.getSdtMetrics ().upActiveCustomers ();
+        }
+
+        uniqueCustomerCount = SdtMetricsMBean.getSdtMetrics ().getActiveCustomers ();
     }
 }

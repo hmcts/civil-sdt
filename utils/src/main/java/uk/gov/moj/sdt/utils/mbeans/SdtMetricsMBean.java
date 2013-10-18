@@ -30,6 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.mbeans;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +48,8 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
  * The following metrics are available:
  * 
  * service calls counts of each type,
+ * - last web service time
+ * - rate
  * - times,
  * - avg,
  * - max,
@@ -67,10 +75,10 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
  * status updates
  * on bulk
  * on requests,
- * errors count,
  * XML validation failure counts,
  * validation errors,
  * business exceptions,
+ * last business exception,
  * reset stats to zero on demand.
  * function to reload database global data on demand.
  * function to reload log4j config on demand.
@@ -92,6 +100,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private static SdtMetricsMBean thisBean;
 
     /**
+     * The singleton instance of this class created by Spring.
+     */
+    private static final double MILLISECONDS = 1000;
+
+    /**
      * Value which determines the current value of a flag which controls whether individual {@link AbstractCacheControl}
      * instances need to be uncached.
      */
@@ -101,6 +114,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      * Count of all bulk submits.
      */
     private long bulkSubmitCounts;
+
+    /**
+     * Time of last bulk submits web service call.
+     */
+    private long bulkSubmitLastTime;
 
     /**
      * Total processing time of all bulk submits.
@@ -123,6 +141,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long bulkFeedbackCounts;
 
     /**
+     * Time of last bulk Feedback web service call.
+     */
+    private long bulkFeedbackLastTime;
+
+    /**
      * Total processing time of all bulk feedbacks.
      */
     private long bulkFeedbackTime;
@@ -141,6 +164,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      * Count of all submit query.
      */
     private long submitQueryCounts;
+
+    /**
+     * Time of last submit query web service call.
+     */
+    private long submitQueryLastTime;
 
     /**
      * Total processing time of all submit querys.
@@ -163,7 +191,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long bulkStatusUpdateCount;
 
     /**
-     * Request status update count (from case management system).
+     * Request status update count (from target application).
      */
     private long requestStatusUpdateCount;
 
@@ -176,6 +204,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      * Number of requests in bulk submits.
      */
     private long requestCount;
+
+    /**
+     * Time of start or last reset.
+     */
+    private long resetTime;
 
     /**
      * Number of domain objects in existence.
@@ -248,7 +281,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long activeCustomers;
 
     /**
-     * Number of requests queued to case management system.
+     * Number of requests queued to target application.
      */
     private long requestQueuedCount;
 
@@ -283,34 +316,29 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long requestRequeues;
 
     /**
-     * Number of case management system responses.
+     * Number of target application responses.
      */
-    private long caseMgmtResponseCount;
+    private long targetAppResponseCount;
 
     /**
-     * Time for case management system to respond.
+     * Time for target application to respond.
      */
-    private long caseMgmtResponseTime;
+    private long targetAppResponseTime;
 
     /**
-     * Minimum time for case management system to respond.
+     * Minimum time for target application to respond.
      */
-    private long caseMgmtResponseTimeMin;
+    private long targetAppResponseTimeMin;
 
     /**
-     * Maximum time for case management system to respond.
+     * Maximum time for target application to respond.
      */
-    private long caseMgmtResponseTimeMax;
+    private long targetAppResponseTimeMax;
 
     /**
-     * Number of timeouts waiting for case management system to respond.
+     * Number of timeouts waiting for target application to respond.
      */
-    private long caseMgmtResponseTimeouts;
-
-    /**
-     * Number of errors encountered.
-     */
-    private long errorsCount;
+    private long targetAppResponseTimeouts;
 
     /**
      * Number of XML validation errors of incoming messages.
@@ -323,6 +351,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long businessExceptionCount;
 
     /**
+     * Last business exceptions code.
+     */
+    private String lastBusinessException;
+
+    /**
      * The last bulk submit reference assigned.
      */
     private String lastBulkSubmitRef;
@@ -333,11 +366,19 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private String lastBulkRequestRef;
 
     /**
+     * Date formatter for all dates.
+     */
+    private DateFormat formatter = new SimpleDateFormat ("yyyy.MM.dd_HH:mm:ss.SSS");
+
+    /**
      * Constructor for {@link SdtMetricsMBean}.
      */
     private SdtMetricsMBean ()
     {
         SdtMetricsMBean.thisBean = this;
+
+        // Set start time.
+        final long now = new GregorianCalendar ().getTimeInMillis ();
     }
 
     // BULK SUBMISSION
@@ -356,6 +397,8 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void upBulkSubmitCounts ()
     {
         this.bulkSubmitCounts += 1;
+
+        this.bulkSubmitLastTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
     /**
@@ -445,6 +488,8 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void upBulkFeedbackCounts ()
     {
         this.bulkFeedbackCounts += 1;
+
+        this.bulkFeedbackLastTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
     /**
@@ -505,10 +550,10 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         return this.bulkFeedbackTimeMax;
     }
 
-    // DEFENCE FEEDBACK
+    // SUBMIT QUERY
 
     /**
-     * Get current count of defences feedbacks since last reset.
+     * Get current count of submit queries since last reset.
      * 
      * @return count of submit querys.
      */
@@ -521,10 +566,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void upSubmitQueryCounts ()
     {
         this.submitQueryCounts += 1;
+
+        this.submitQueryLastTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
     /**
-     * Get total time for defences feedbacks since last reset.
+     * Get total time for submit queries since last reset.
      * 
      * @return total time (milliseconds) for submit querys.
      */
@@ -582,7 +629,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Number of bulk status updates from case management systems.
+     * Number of bulk status updates from target application.
      * 
      * @return number of bulk status updates.
      */
@@ -592,7 +639,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get the number of requests status updates (from case managament system).
+     * Get the number of requests status updates (from target application).
      * 
      * @return the number of requests status updates.
      */
@@ -602,7 +649,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get the number of completed bulk submits (all requests sent to case managment system).
+     * Get the number of completed bulk submits (all requests sent to target application).
      * 
      * @return the number of completed bulk submits.
      */
@@ -642,7 +689,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get average time for defences feedbacks since last reset.
+     * Get average time for submit queries since last reset.
      * 
      * @return average time (milliseconds) for submit querys.
      */
@@ -692,7 +739,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get average time for defences feedbacks since last reset.
+     * Get average time for submit queries since last reset.
      * 
      * @return average time (milliseconds) for submit querys.
      */
@@ -742,7 +789,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get average time for defences feedbacks since last reset.
+     * Get average time for submit queries since last reset.
      * 
      * @return average time (milliseconds) for submit querys.
      */
@@ -772,16 +819,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get the number of active customers using the system.
-     * 
-     * @return the number of active customers using the system.
-     */
-    private long getActiveCustomers ()
-    {
-        return this.activeCustomers;
-    }
-
-    /**
      * Get the number of requests queued.
      * 
      * @return the number of requests queued.
@@ -802,7 +839,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get average time for defences feedbacks since last reset.
+     * Get average time for submit queries since last reset.
      * 
      * @return average time (milliseconds) for submit querys.
      */
@@ -862,73 +899,63 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get the number of responses received from the case management system.
+     * Get the number of responses received from the target application.
      * 
-     * @return the number of responses received from the case management system.
+     * @return the number of responses received from the target application.
      */
-    private long getCaseMgmtResponseCount ()
+    private long getTargetAppResponseCount ()
     {
-        return this.caseMgmtResponseCount;
+        return this.targetAppResponseCount;
     }
 
     /**
-     * Get the total response time for the case management system.
+     * Get the total response time for the target application.
      * 
-     * @return the total response time for the case management system.
+     * @return the total response time for the target application.
      */
-    private long getCaseMgmtResponseTime ()
+    private long getTargetAppResponseTime ()
     {
-        return this.caseMgmtResponseTime;
+        return this.targetAppResponseTime;
     }
 
     /**
-     * Get average time for case management reponse since last reset.
+     * Get average time for target application response since last reset.
      * 
-     * @return average time for case management reponse.
+     * @return average time for target application response.
      */
-    private long getCaseMgmtResponseTimeAvg ()
+    private long getTargetAppResponseTimeAvg ()
     {
-        return (this.submitQueryCounts == 0) ? 0 : this.caseMgmtResponseTime / this.submitQueryCounts;
+        return (this.submitQueryCounts == 0) ? 0 : this.targetAppResponseTime / this.submitQueryCounts;
     }
 
     /**
-     * Get the minimum response time for the case management system.
+     * Get the minimum response time for the target application.
      * 
-     * @return the minimum response time for the case management system.
+     * @return the minimum response time for the target application.
      */
-    private long getCaseMgmtResponseTimeMin ()
+    private long getTartegAppResponseTimeMin ()
     {
-        return this.caseMgmtResponseTimeMin;
+        return this.targetAppResponseTimeMin;
     }
 
     /**
-     * Get the maximum response time for the case management system.
+     * Get the maximum response time for the target application.
      * 
-     * @return the maximum response time for the case management system.
+     * @return the maximum response time for the target application.
      */
-    private long getCaseMgmtResponseTimeMax ()
+    private long getTargetAppResponseTimeMax ()
     {
-        return this.caseMgmtResponseTimeMax;
+        return this.targetAppResponseTimeMax;
     }
 
     /**
-     * Get the number of case management response timeouts.
+     * Get the number of target application response timeouts.
      * 
-     * @return the number of case management response timeouts.
+     * @return the number of target application response timeouts.
      */
-    private long getCaseMgmtResponseTimeouts ()
+    private long getTargetAppResponseTimeouts ()
     {
-        return this.caseMgmtResponseTimeouts;
-    }
-
-    /**
-     * Get the number of errors.
-     * 
-     * @return the number of errors.
-     */
-    private long getErrorsCount ()
-    {
-        return this.errorsCount;
+        return this.targetAppResponseTimeouts;
     }
 
     /**
@@ -949,6 +976,53 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long getBusinessExceptionCount ()
     {
         return this.businessExceptionCount;
+    }
+
+    /**
+     * Get the number of seconds since start or the last reset.
+     * 
+     * @return the number of business exceptions.
+     */
+    private long getElapsedTime ()
+    {
+        // Get current time
+        final long now = new GregorianCalendar ().getTimeInMillis ();
+
+        return now - this.getResetTime ();
+    }
+
+    /**
+     * Get the number of seconds since start or the last reset.
+     * 
+     * @return the number of business exceptions.
+     */
+    private long getResetTime ()
+    {
+        return this.resetTime;
+    }
+
+    /**
+     * Get the formatted rate for the count over the elapsed time.
+     * 
+     * @param count the count during the the elapsed time.
+     * @param elapsedTime the period in which to measure the rate.
+     * @return the formatted rate for the count over the elapsed time.
+     */
+    private String getRate (final long count, final long elapsedTime)
+    {
+        final DecimalFormat df = new DecimalFormat ("#0.00000");
+
+        return df.format (count / (elapsedTime / MILLISECONDS));
+    }
+
+    /**
+     * Get the number of business exceptions.
+     * 
+     * @return the number of business exceptions.
+     */
+    private String getLastBusinessException ()
+    {
+        return this.lastBusinessException;
     }
 
     @Override
@@ -1126,33 +1200,27 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public void addCaseMgmtResponseTime (final long caseMgmtResponseTime)
+    public void addTargetAppResponseTime (final long targetAppResponseTime)
     {
-        this.caseMgmtResponseTime += caseMgmtResponseTime;
+        this.targetAppResponseTime += targetAppResponseTime;
 
         // Update the minimum if needed.
-        if (this.caseMgmtResponseTimeMin == 0 || caseMgmtResponseTime < this.caseMgmtResponseTimeMin)
+        if (this.targetAppResponseTimeMin == 0 || targetAppResponseTime < this.targetAppResponseTimeMin)
         {
-            this.caseMgmtResponseTimeMin = caseMgmtResponseTime;
+            this.targetAppResponseTimeMin = targetAppResponseTime;
         }
 
         // Update the maximum if needed.
-        if (this.caseMgmtResponseTimeMax == 0 || caseMgmtResponseTime > this.caseMgmtResponseTimeMax)
+        if (this.targetAppResponseTimeMax == 0 || targetAppResponseTime > this.targetAppResponseTimeMax)
         {
-            this.caseMgmtResponseTimeMax = caseMgmtResponseTime;
+            this.targetAppResponseTimeMax = targetAppResponseTime;
         }
     }
 
     @Override
-    public void upCaseMgmtResponseTimeouts ()
+    public void upTargetAppResponseTimeouts ()
     {
-        this.caseMgmtResponseTimeouts += 1;
-    }
-
-    @Override
-    public void upErrorsCount ()
-    {
-        this.errorsCount += 1;
+        this.targetAppResponseTimeouts += 1;
     }
 
     @Override
@@ -1165,6 +1233,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void upBusinessExceptionCount ()
     {
         this.businessExceptionCount += 1;
+    }
+
+    @Override
+    public void setLastBusinessException (final String lastBusinessException)
+    {
+        this.lastBusinessException = lastBusinessException;
     }
 
     @Override
@@ -1213,44 +1287,67 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.requestQueueLength = 0;
         this.requestQueueLengthMax = 0;
         this.requestRequeues = 0;
-        this.caseMgmtResponseCount = 0;
-        this.caseMgmtResponseTime = 0;
-        this.caseMgmtResponseTimeMin = 0;
-        this.caseMgmtResponseTimeMax = 0;
-        this.caseMgmtResponseTimeouts = 0;
-        this.errorsCount = 0;
+        this.targetAppResponseCount = 0;
+        this.targetAppResponseTime = 0;
+        this.targetAppResponseTimeMin = 0;
+        this.targetAppResponseTimeMax = 0;
+        this.targetAppResponseTimeouts = 0;
         this.xmlValidationFailureCount = 0;
         this.businessExceptionCount = 0;
+        this.lastBusinessException = "";
         this.lastBulkSubmitRef = "";
         this.lastBulkRequestRef = "";
+        this.resetTime = new GregorianCalendar ().getTimeInMillis ();
+    }
+
+    @Override
+    public long getActiveCustomers ()
+    {
+        return this.activeCustomers;
     }
 
     @Override
     public String getBulkSubmitStats ()
     {
-        return "Bulk submits: count[" + this.getBulkSubmitCounts () + "], requests[" + this.getRequestCount () +
-                "], time[" + this.getBulkSubmitTime () + "], average[" + this.getBulkSubmitTimeAvg () + "], minimum[" +
-                this.getBulkSubmitTimeMin () + "], maximum[" + this.getBulkSubmitTimeMax () + "]";
+
+        return "Bulk submits: count[" + this.getBulkSubmitCounts () + "], last[" +
+                this.formatter.format (bulkSubmitLastTime) + "], rate[" +
+                this.getRate (this.getBulkSubmitCounts (), this.getElapsedTime ()) + "], requests[" +
+                this.getRequestCount () + "], time[" + this.getBulkSubmitTime () + "], average[" +
+                this.getBulkSubmitTimeAvg () + "], minimum[" + this.getBulkSubmitTimeMin () + "], maximum[" +
+                this.getBulkSubmitTimeMax () + "]";
+    }
+
+    @Override
+    public String getTime ()
+    {
+        // Format time.
+        final Date date = new Date ();
+        return this.formatter.format (date);
     }
 
     @Override
     public String getBulkFeedbackStats ()
     {
-        return "Bulk feedbacks: count[" + this.getBulkFeedbackCounts () + "], time[" + this.getBulkFeedbackTime () +
-                "], average[" + this.getBulkFeedbackTimeAvg () + "], minimum[" + this.getBulkFeedbackTimeMin () +
-                "], maximum[" + this.getBulkFeedbackTimeMax () + "]";
+        return "Bulk feedbacks: count[" + this.getBulkFeedbackCounts () + "], last[" +
+                this.formatter.format (bulkFeedbackLastTime) + "], rate[" +
+                this.getRate (this.getBulkFeedbackCounts (), this.getElapsedTime ()) + "], time[" +
+                this.getBulkFeedbackTime () + "], average[" + this.getBulkFeedbackTimeAvg () + "], minimum[" +
+                this.getBulkFeedbackTimeMin () + "], maximum[" + this.getBulkFeedbackTimeMax () + "]";
     }
 
     @Override
     public String getSubmitQueryStats ()
     {
-        return "Defence feedback: count[" + this.getSubmitQueryCounts () + "], time[" + this.getSubmitQueryTime () +
-                "], average[" + this.getSubmitQueryTimeAvg () + "], minimum[" + this.getSubmitQueryTimeMin () +
-                "], maximum[" + this.getSubmitQueryTimeMax () + "]";
+        return "Submit queries: count[" + this.getSubmitQueryCounts () + "], last[" +
+                this.formatter.format (submitQueryLastTime) + "], rate[" +
+                this.getRate (this.getSubmitQueryCounts (), this.getElapsedTime ()) + "], time[" +
+                this.getSubmitQueryTime () + "], average[" + this.getSubmitQueryTimeAvg () + "], minimum[" +
+                this.getSubmitQueryTimeMin () + "], maximum[" + this.getSubmitQueryTimeMax () + "]";
     }
 
     @Override
-    public String getStatusStats ()
+    public String getStatusUpdateStats ()
     {
         return "Status update: bulk count[" + this.getBulkStatusUpdateCount () + "], request count[" +
                 this.getRequestStatusUpdateCount () + "], completed bulk count[" + this.getCompletedBulkSubmitCount () +
@@ -1305,20 +1402,20 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public String getCaseMgmtStats ()
+    public String getTargetAppStats ()
     {
-        return "Case Mgmt Response: count[" + this.getCaseMgmtResponseCount () + "], time[" +
-                this.getCaseMgmtResponseTime () + "], average[" + this.getCaseMgmtResponseTimeAvg () + "], minimum[" +
-                this.getCaseMgmtResponseTimeMin () + "], maximum[" + this.getCaseMgmtResponseTimeMax () +
-                "], timeouts[" + this.getCaseMgmtResponseTimeouts () + "]";
+        return "Target App Response: count[" + this.getTargetAppResponseCount () + "], time[" +
+                this.getTargetAppResponseTime () + "], average[" + this.getTargetAppResponseTimeAvg () + "], minimum[" +
+                this.getTartegAppResponseTimeMin () + "], maximum[" + this.getTargetAppResponseTimeMax () +
+                "], timeouts[" + this.getTargetAppResponseTimeouts () + "]";
     }
 
     @Override
     public String getErrorStats ()
     {
-        return "Errors and exceptions: error counts[" + this.getErrorsCount () + "], xml validation errors[" +
-                this.getXmlValidationFailureCount () + "], business exceptions[" + this.getBusinessExceptionCount () +
-                "]";
+        return "Errors and exceptions: xml validation errors[" + this.getXmlValidationFailureCount () +
+                "], business exceptions[" + this.getBusinessExceptionCount () + "], last business exceptions[" +
+                this.getLastBusinessException () + "]";
     }
 
     @Override
@@ -1361,5 +1458,4 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         }
         return SdtMetricsMBean.thisBean;
     }
-
 }
