@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,21 +28,47 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-
 package uk.gov.moj.sdt.messaging.api;
 
 /**
- * Interface for any classes wanting to implement the {@link IMessageWriter} interface.
+ * Interface for all classes capable of being written to a JMS queue.
  * 
- * @author Manoj Kulkarni
- * 
+ * @author Robin Compston
  */
-public interface IMessageWriter
+public interface ISdtMessage
 {
     /**
-     * Writes a message to the message queue.
      * 
-     * @param sdtMessage the message object to be written to the message queue
+     * @return the SDT request reference of the individual request.
      */
-    void queueMessage (ISdtMessage sdtMessage);
+    String getSdtRequestReference ();
+
+    /**
+     * Sets the sdtRequestReference of the individual request
+     * that is to be queued on the message queue for further processing.
+     * 
+     * @param sdtRequestReference the SDT request reference
+     */
+    void setSdtRequestReference (final String sdtRequestReference);
+
+    /**
+     * 
+     * @return LocalDateTime - the date and time that the message is put on the queue.
+     */
+    long getMessageSentTimestamp ();
+
+    /**
+     * Sets the timestamp that the message is put on the queue.
+     * 
+     * @param messageSentTimestamp - the date and time that the message is put on the queue.
+     */
+    void setMessageSentTimestamp (final long messageSentTimestamp);
+
+    /**
+     * Represent class as String.
+     * 
+     * @return class represented as String.
+     */
+    String toString ();
+
 }

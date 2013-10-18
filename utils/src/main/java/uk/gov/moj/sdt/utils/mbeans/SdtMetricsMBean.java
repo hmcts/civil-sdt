@@ -281,24 +281,24 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long activeCustomers;
 
     /**
-     * Number of requests queued to target application.
+     * Number of requests queue count to target application.
      */
-    private long requestQueuedCount;
+    private long requestQueueCount;
 
     /**
-     * Time queued waiting for request to be processed.
+     * Time on queue waiting for request to be processed.
      */
-    private long requestQueuedTime;
+    private long requestQueueTime;
 
     /**
-     * Maxiumum time queued waiting for request to be processed.
+     * Maxiumum time on queue waiting for request to be processed.
      */
-    private long requestQueuedTimeMin;
+    private long requestQueueTimeMin;
 
     /**
-     * Maxiumum time queued waiting for request to be processed.
+     * Maxiumum time on queue waiting for request to be processed.
      */
-    private long requestQueuedTimeMax;
+    private long requestQueueTimeMax;
 
     /**
      * Current request queue length.
@@ -378,7 +378,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         SdtMetricsMBean.thisBean = this;
 
         // Set start time.
-        final long now = new GregorianCalendar ().getTimeInMillis ();
+        this.resetTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
     // BULK SUBMISSION
@@ -819,23 +819,23 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get the number of requests queued.
+     * Get the request queue count.
      * 
-     * @return the number of requests queued.
+     * @return the request queue count.
      */
     private long getRequestQueueCount ()
     {
-        return this.requestQueuedCount;
+        return this.requestQueueCount;
     }
 
     /**
-     * Get the total time spent on request queued.
+     * Get the total time spent on request queue.
      * 
-     * @return the total time spent on request queued.
+     * @return the total time spent on request queue.
      */
     private long getRequestQueueTime ()
     {
-        return this.requestQueuedTime;
+        return this.requestQueueTime;
     }
 
     /**
@@ -845,27 +845,27 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private long getRequestQueueTimeAvg ()
     {
-        return (this.requestQueuedCount == 0) ? 0 : this.requestQueuedTime / this.requestQueuedCount;
+        return (this.requestQueueCount == 0) ? 0 : this.requestQueueTime / this.requestQueueCount;
     }
 
     /**
-     * Get the minimum time spent on request queued.
+     * Get the minimum time spent on request queue.
      * 
-     * @return the minimum time spent on request queued.
+     * @return the minimum time spent on request queue.
      */
     private long getRequestQueueTimeMin ()
     {
-        return this.requestQueuedTimeMin;
+        return this.requestQueueTimeMin;
     }
 
     /**
-     * Get the maximum time spent on request queued.
+     * Get the maximum time spent on request queue.
      * 
-     * @return the maximum time spent on request queued.
+     * @return the maximum time spent on request queue.
      */
     private long getRequestQueueTimeMax ()
     {
-        return this.requestQueuedTimeMax;
+        return this.requestQueueTimeMax;
     }
 
     /**
@@ -1153,26 +1153,31 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public void upRequestQueuedCount ()
+    public void upRequestQueueCount ()
     {
-        this.requestQueuedCount += 1;
+        this.requestQueueCount += 1;
     }
 
     @Override
-    public void addRequestQueuedTime (final long requestQueuedTime)
+    public void addRequestQueueTime (final long requestQueueWriteTime)
     {
-        this.requestQueuedTime = requestQueuedTime;
+        // Find how long the message has been on the queue.
+        final long requestQueueReadTime = new GregorianCalendar ().getTimeInMillis ();
+        final long elapsedTime = requestQueueReadTime - requestQueueWriteTime;
+
+        // Add to total time on queue of all messages.
+        this.requestQueueTime += elapsedTime;
 
         // Update the minimum if needed.
-        if (this.requestQueuedTimeMin == 0 || requestQueuedTime < this.requestQueuedTimeMin)
+        if (this.requestQueueTimeMin == 0 || elapsedTime < this.requestQueueTimeMin)
         {
-            this.requestQueuedTimeMin = requestQueuedTime;
+            this.requestQueueTimeMin = elapsedTime;
         }
 
         // Update the maximum if needed.
-        if (this.requestQueuedTimeMax == 0 || requestQueuedTime > this.requestQueuedTimeMax)
+        if (this.requestQueueTimeMax == 0 || elapsedTime > this.requestQueueTimeMax)
         {
-            this.requestQueuedTimeMax = requestQueuedTime;
+            this.requestQueueTimeMax = elapsedTime;
         }
     }
 
@@ -1280,10 +1285,10 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.databaseCallsTimeMin = 0;
         this.databaseCallsTimeMax = 0;
         this.activeCustomers = 0;
-        this.requestQueuedCount = 0;
-        this.requestQueuedTime = 0;
-        this.requestQueuedTimeMin = 0;
-        this.requestQueuedTimeMax = 0;
+        this.requestQueueCount = 0;
+        this.requestQueueTime = 0;
+        this.requestQueueTimeMin = 0;
+        this.requestQueueTimeMax = 0;
         this.requestQueueLength = 0;
         this.requestQueueLengthMax = 0;
         this.requestRequeues = 0;

@@ -267,14 +267,14 @@ public interface ISdtMetricsMBean
     /**
      * Increment the queued request count.
      */
-    void upRequestQueuedCount ();
+    void upRequestQueueCount ();
 
     /**
      * Add latest request queued time to total.
      * 
      * @param requestQueuedTime latest request queued time to total.
      */
-    void addRequestQueuedTime (final long requestQueuedTime);
+    void addRequestQueueTime (final long requestQueuedTime);
 
     /**
      * Increment request length.

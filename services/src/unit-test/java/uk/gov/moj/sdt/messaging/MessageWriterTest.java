@@ -35,10 +35,11 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.easymock.EasyMock;
-import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
+
+import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 
 /**
  * Test class for testing the MessageWriter implementation.
@@ -78,9 +79,8 @@ public class MessageWriterTest
     public void testQueueMessage ()
     {
         // Setup finished, now tell the mock what to expect.
-        final SdtMessage sdtMessage = new SdtMessage ();
+        final ISdtMessage sdtMessage = new SdtMessage ();
         sdtMessage.setSdtRequestReference ("Test");
-        sdtMessage.setMessageSentDate (LocalDateTime.now ());
 
         jmsTemplate.convertAndSend (sdtMessage);
         EasyMock.expectLastCall ();

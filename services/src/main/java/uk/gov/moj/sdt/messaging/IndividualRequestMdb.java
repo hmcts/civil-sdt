@@ -40,7 +40,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.messaging.api.IMessageDrivenBean;
+import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Implementation of the IMessageReader interface.
@@ -73,9 +75,16 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             final ObjectMessage objectMessage = (ObjectMessage) message;
             String sdtReference = null;
 
+            ISdtMessage sdtMessage = null;
+
             try
             {
-                sdtReference = ((SdtMessage) objectMessage.getObject ()).getSdtRequestReference ();
+                sdtMessage = (ISdtMessage) objectMessage.getObject ();
+                sdtReference = sdtMessage.getSdtRequestReference ();
+
+                // Update statistics.
+                SdtMetricsMBean.getSdtMetrics ().addRequestQueueTime (sdtMessage.getMessageSentTimestamp ());
+                SdtMetricsMBean.getSdtMetrics ().decrementRequestQueueLength ();
             }
             catch (final JMSException e)
             {
@@ -86,6 +95,10 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             LOGGER.debug ("Received message, SDT reference [" + sdtReference + "]");
 
             this.getTargetAppSubmissionService ().processRequestToSubmit (sdtReference);
+        }
+        else
+        {
+            LOGGER.error ("Invalid message type [" + message.getClass ().getCanonicalName () + "] read by MDB.");
         }
     }
 

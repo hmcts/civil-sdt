@@ -31,12 +31,16 @@
 
 package uk.gov.moj.sdt.messaging;
 
+import java.util.GregorianCalendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.core.JmsTemplate;
 
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Message writer that handles writing messages to a message queue.
@@ -50,6 +54,11 @@ public class MessageWriter implements IMessageWriter
      * Logger for this class.
      */
     private static final Log LOGGER = LogFactory.getLog (MessageWriter.class);
+
+    /**
+     * The last id used for a queued message.
+     */
+    private static long lastQueueId;
 
     /**
      * The JmsTemplate object from Spring framework.
@@ -74,13 +83,19 @@ public class MessageWriter implements IMessageWriter
     }
 
     @Override
-    public void queueMessage (final Object messageObj)
+    public void queueMessage (final ISdtMessage sdtMessage)
     {
-        LOGGER.debug ("Sending message [" + messageObj.toString () + "] to queue [" + queueName + "]");
+        LOGGER.debug ("Sending message [" + sdtMessage.toString () + "] to queue [" + queueName + "]");
+
+        // Set meta data in message.
+        sdtMessage.setMessageSentTimestamp (new GregorianCalendar ().getTimeInMillis ());
+
+        SdtMetricsMBean.getSdtMetrics ().upRequestQueueCount ();
+        SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
 
         try
         {
-            this.jmsTemplate.convertAndSend (messageObj);
+            this.jmsTemplate.convertAndSend (sdtMessage);
         }
         catch (final UncategorizedJmsException e)
         {
@@ -102,5 +117,16 @@ public class MessageWriter implements IMessageWriter
     private String getQueueName ()
     {
         return this.queueName;
+    }
+
+    /**
+     * Get the last queue id of a queued message.
+     * 
+     * @return the last queue id of a queued message.
+     */
+    public static synchronized long getLastQueueId ()
+    {
+        MessageWriter.lastQueueId++;
+        return MessageWriter.lastQueueId;
     }
 }

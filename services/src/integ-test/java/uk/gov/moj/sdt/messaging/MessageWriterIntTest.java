@@ -34,7 +34,6 @@ import java.text.SimpleDateFormat;
 
 import javax.jms.JMSException;
 
-import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +44,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -83,19 +84,17 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
         final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
         // Send the first message.
-        final SdtMessage message1 = new SdtMessage ();
+        final ISdtMessage message1 = new SdtMessage ();
         final String strMessage1 =
                 "TestMessage1" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
         message1.setSdtRequestReference (strMessage1);
-        message1.setMessageSentDate (LocalDateTime.now ());
         messageWriter.queueMessage (message1);
 
         // Send the second message.
-        final SdtMessage message2 = new SdtMessage ();
+        final ISdtMessage message2 = new SdtMessage ();
         final String strMessage2 =
                 "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
         message2.setSdtRequestReference (strMessage2);
-        message2.setMessageSentDate (LocalDateTime.now ());
         messageWriter.queueMessage (message2);
 
         // Wait for 10 seconds before checking the queue.
@@ -138,10 +137,12 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
         final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
 
         // Send the message.
-        final String strMessage1 = "TestMessage" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
+        final ISdtMessage message = new SdtMessage ();
+        message.setSdtRequestReference ("Test message");
+
         try
         {
-            messageWriter.queueMessage (strMessage1);
+            messageWriter.queueMessage (message);
             Assert.fail ("Expected exception not thrown.");
         }
         catch (final UncategorizedJmsException e)

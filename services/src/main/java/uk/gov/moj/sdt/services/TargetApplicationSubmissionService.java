@@ -46,9 +46,12 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Service class that implements the TargetApplicationSubmissionService.
@@ -493,7 +496,13 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         {
             LOGGER.debug ("Re-queuing request for SDT reference [" + individualRequest.getSdtRequestReference () + "]");
 
-            this.getMessageWriter ().queueMessage (individualRequest.getSdtRequestReference ());
+            // Create a new message to enqueue.
+            final ISdtMessage messageObj = new SdtMessage ();
+            messageObj.setSdtRequestReference (individualRequest.getSdtRequestReference ());
+
+            SdtMetricsMBean.getSdtMetrics ().upRequestRequeues ();
+
+            this.getMessageWriter ().queueMessage (messageObj);
         }
         else
         {

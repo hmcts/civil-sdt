@@ -32,7 +32,7 @@ package uk.gov.moj.sdt.messaging;
 
 import java.io.Serializable;
 
-import org.joda.time.LocalDateTime;
+import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 
 /**
  * Message class that holds the actual message text and additional information
@@ -41,9 +41,8 @@ import org.joda.time.LocalDateTime;
  * @author Manoj Kulkarni
  * 
  */
-public class SdtMessage implements Serializable
+public class SdtMessage implements Serializable, ISdtMessage
 {
-
     /**
      * 
      */
@@ -60,51 +59,36 @@ public class SdtMessage implements Serializable
      * It is used for determining the rate at which messages are read back from
      * the queue.
      */
-    private LocalDateTime messageSentDate;
+    private long messageSentTimestamp;
 
-    /**
-     * 
-     * @return the SDT request reference of the individual request.
-     */
+    @Override
     public String getSdtRequestReference ()
     {
         return sdtRequestReference;
     }
 
-    /**
-     * Sets the sdtRequestReference of the individual request
-     * that is to be queued on the message queue for further processing.
-     * 
-     * @param sdtRequestReference the SDT request reference
-     */
+    @Override
     public void setSdtRequestReference (final String sdtRequestReference)
     {
         this.sdtRequestReference = sdtRequestReference;
     }
 
-    /**
-     * 
-     * @return LocalDateTime - the date and time that the message is put on the queue.
-     */
-    public LocalDateTime getMessageSentDate ()
+    @Override
+    public long getMessageSentTimestamp ()
     {
-        return messageSentDate;
+        return messageSentTimestamp;
     }
 
-    /**
-     * Sets the date and time that the message is put on the queue.
-     * 
-     * @param messageSentDate - the date and time that the message is put on the queue.
-     */
-    public void setMessageSentDate (final LocalDateTime messageSentDate)
+    @Override
+    public void setMessageSentTimestamp (final long messageSentTimestamp)
     {
-        this.messageSentDate = messageSentDate;
+        this.messageSentTimestamp = messageSentTimestamp;
     }
 
     @Override
     public String toString ()
     {
-        return "SdtMessage [sdtRequestReference=" + sdtRequestReference + ", messageSentDate=" + messageSentDate + "]";
+        return "SdtMessage [sdtRequestReference=" + sdtRequestReference + ", messageSentTimestamp=" +
+                messageSentTimestamp + "]";
     }
-
 }
