@@ -70,6 +70,14 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
     // CHECKSTYLE:ON
 
+    /**
+     * A boolean flag to indicate if the WebServiceException is to be thrown back to the client
+     * when there is a failure to connect to the target application.
+     * The default value is false i.e. the error will not be thrown to the client and the
+     * consumer will keep trying to connect to the target application.
+     */
+    private boolean rethrowOnFailureToConnect;
+
     @Override
     public void processIndividualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
                                           final long receiveTimeOut) throws OutageException, TimeoutException
@@ -130,7 +138,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                         iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () +
                         "] error sending individual request [" + iRequest.getSdtRequestReference () + "]");
 
-                super.handleClientErrors (false, f, iRequest.getSdtRequestReference ());
+                super.handleClientErrors (getRethrowOnFailureToConnect (), f, iRequest.getSdtRequestReference ());
             }
         }
     }
@@ -157,6 +165,26 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
             getTransformer ()
     {
         return this.transformer;
+    }
+
+    /**
+     * Get the value for the rethrowOnFailureToConnect flag.
+     * 
+     * @return rethrowOnFailureToConnect flag
+     */
+    public boolean getRethrowOnFailureToConnect ()
+    {
+        return rethrowOnFailureToConnect;
+    }
+
+    /**
+     * Set the value for the rethrowOnFailureToConnect.
+     * 
+     * @param rethrowOnFailureToConnect - true will throw the connection fail error.
+     */
+    public void setRethrowOnFailureToConnect (final boolean rethrowOnFailureToConnect)
+    {
+        this.rethrowOnFailureToConnect = rethrowOnFailureToConnect;
     }
 
 }
