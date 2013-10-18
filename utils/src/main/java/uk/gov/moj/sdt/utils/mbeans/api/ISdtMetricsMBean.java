@@ -299,6 +299,16 @@ public interface ISdtMetricsMBean
     void addTargetAppResponseTime (final long targetAppResponseTime);
 
     /**
+     * Increment the number of calls to target applications.
+     */
+    void upTargetAppCallCount ();
+
+    /**
+     * Increment the number of times the target application was unavailable.
+     */
+    void upTargetAppUnavailable ();
+
+    /**
      * Increment the target application response timeout count.
      */
     void upTargetAppResponseTimeouts ();

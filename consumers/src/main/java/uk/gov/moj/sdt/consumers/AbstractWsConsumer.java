@@ -43,6 +43,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 /**
@@ -52,6 +53,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
  */
 public abstract class AbstractWsConsumer
 {
+    /**
+     * Thirty seconds in milliseconds.
+     */
+    protected static final long THIRTY_SECONDS = 30000;
 
     /**
      * 
@@ -120,12 +125,30 @@ public abstract class AbstractWsConsumer
         // If the target application is unavailable continue trying to send message indefinitely.
         if ((wsException.getCause () instanceof ConnectException) && rethrowOnFailureToConnect)
         {
+            // Target application must be unavailable - update stats.
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppResponseTimeouts ();
+
             throw wsException;
         }
+        // If the target application is unavailable continue trying to send message indefinitely.
+        else if (wsException.getCause () instanceof ConnectException)
+        // CHECKSTYLE:OFF
+        {
+            // Target application must be unavailable - update stats.
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppResponseTimeouts ();
+
+            // Do nothing - we want to carry on trying to connect.
+        }
+        // CHECKSTYLE:ON
+        // Timeout waiting for target application to respond.
         else if (wsException.getCause () instanceof SocketTimeoutException)
         {
+            // Target application must be unavailable - update stats.
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppResponseTimeouts ();
+
             throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error sending [" + errorReferenceContext + "]");
         }
+        // Request was badly formatted.
         else if (wsException.getCause () instanceof org.apache.cxf.binding.soap.SoapFault)
         {
             throw new SoapFaultException ("SOAP_FAULT", wsException.getMessage ());

@@ -71,6 +71,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
  * - max,
  * - min,
  * timeouts,
+ * target application unavailable,
  * requeues,
  * status updates
  * on bulk
@@ -128,7 +129,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Minimum processing time of all bulk submits.
      */
-    private long bulkSubmitTimeMin;
+    private long bulkSubmitTimeMin = Long.MAX_VALUE;
 
     /**
      * Maxiumum processing time of all bulk submits.
@@ -153,7 +154,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Minimum processing time of all bulk feedbacks.
      */
-    private long bulkFeedbackTimeMin;
+    private long bulkFeedbackTimeMin = Long.MAX_VALUE;
 
     /**
      * Maxiumum processing time of all bulk feedbacks.
@@ -178,7 +179,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Minimum processing time of all submit querys.
      */
-    private long submitQueryTimeMin;
+    private long submitQueryTimeMin = Long.MAX_VALUE;
 
     /**
      * Maxiumum processing time of all submit querys.
@@ -228,7 +229,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Maxiumum time calling database.
      */
-    private long databaseCallsTimeMin;
+    private long databaseCallsTimeMin = Long.MAX_VALUE;
 
     /**
      * Maxiumum time calling database.
@@ -248,7 +249,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Maxiumum time reading database.
      */
-    private long databaseReadsTimeMin;
+    private long databaseReadsTimeMin = Long.MAX_VALUE;
 
     /**
      * Maxiumum time reading database.
@@ -268,7 +269,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Maxiumum writing reading database.
      */
-    private long databaseWritesTimeMin;
+    private long databaseWritesTimeMin = Long.MAX_VALUE;
 
     /**
      * Maxiumum writing reading database.
@@ -293,7 +294,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Maxiumum time on queue waiting for request to be processed.
      */
-    private long requestQueueTimeMin;
+    private long requestQueueTimeMin = Long.MAX_VALUE;
 
     /**
      * Maxiumum time on queue waiting for request to be processed.
@@ -316,9 +317,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long requestRequeues;
 
     /**
-     * Number of target application responses.
+     * Number of calls to target applications.
      */
-    private long targetAppResponseCount;
+    private long targetAppCallCount;
 
     /**
      * Time for target application to respond.
@@ -328,12 +329,17 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Minimum time for target application to respond.
      */
-    private long targetAppResponseTimeMin;
+    private long targetAppResponseTimeMin = Long.MAX_VALUE;
 
     /**
      * Maximum time for target application to respond.
      */
     private long targetAppResponseTimeMax;
+
+    /**
+     * Number of times the target application was unavailable.
+     */
+    private long targetAppUnavailable;
 
     /**
      * Number of timeouts waiting for target application to respond.
@@ -430,13 +436,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.bulkSubmitTime += bulkSubmitTime;
 
         // Update the minimum if needed.
-        if (this.bulkSubmitTimeMin == 0 || bulkSubmitTime < this.bulkSubmitTimeMin)
+        if (bulkSubmitTime < this.bulkSubmitTimeMin)
         {
             this.bulkSubmitTimeMin = bulkSubmitTime;
         }
 
         // Update the maximum if needed.
-        if (this.bulkSubmitTimeMax == 0 || bulkSubmitTime > this.bulkSubmitTimeMax)
+        if (bulkSubmitTime > this.bulkSubmitTimeMax)
         {
             this.bulkSubmitTimeMax = bulkSubmitTime;
         }
@@ -508,13 +514,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.bulkFeedbackTime += bulkFeedbackTime;
 
         // Update the minimum if needed.
-        if (this.bulkFeedbackTimeMin == 0 || bulkFeedbackTime < this.bulkFeedbackTimeMin)
+        if (bulkFeedbackTime < this.bulkFeedbackTimeMin)
         {
             this.bulkFeedbackTimeMin = bulkFeedbackTime;
         }
 
         // Update the maximum if needed.
-        if (this.bulkFeedbackTimeMax == 0 || bulkFeedbackTime > this.bulkFeedbackTimeMax)
+        if (bulkFeedbackTime > this.bulkFeedbackTimeMax)
         {
             this.bulkFeedbackTimeMax = bulkFeedbackTime;
         }
@@ -586,13 +592,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.submitQueryTime += submitQueryTime;
 
         // Update the minimum if needed.
-        if (this.submitQueryTimeMin == 0 || submitQueryTime < this.submitQueryTimeMin)
+        if (submitQueryTime < this.submitQueryTimeMin)
         {
             this.submitQueryTimeMin = submitQueryTime;
         }
 
         // Update the maximum if needed.
-        if (this.submitQueryTimeMax == 0 || submitQueryTime > this.submitQueryTimeMax)
+        if (submitQueryTime > this.submitQueryTimeMax)
         {
             this.submitQueryTimeMax = submitQueryTime;
         }
@@ -899,13 +905,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get the number of responses received from the target application.
+     * Get the number of calls to target applications.
      * 
-     * @return the number of responses received from the target application.
+     * @return the number of calls to target applications.
      */
-    private long getTargetAppResponseCount ()
+    private long getTargetAppCallCount ()
     {
-        return this.targetAppResponseCount;
+        return this.targetAppCallCount;
     }
 
     /**
@@ -946,6 +952,16 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long getTargetAppResponseTimeMax ()
     {
         return this.targetAppResponseTimeMax;
+    }
+
+    /**
+     * Get the number of times the target application was unavailable.
+     * 
+     * @return the number of times the target application was unavailable.
+     */
+    private long getTargetAppUnavailable ()
+    {
+        return this.targetAppUnavailable;
     }
 
     /**
@@ -1069,13 +1085,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.databaseReadsTime += databaseReadsTime;
 
         // Update the minimum if needed.
-        if (this.databaseReadsTimeMin == 0 || databaseReadsTime < this.databaseReadsTimeMin)
+        if (databaseReadsTime < this.databaseReadsTimeMin)
         {
             this.databaseReadsTimeMin = databaseReadsTime;
         }
 
         // Update the maximum if needed.
-        if (this.databaseReadsTimeMax == 0 || databaseReadsTime > this.databaseReadsTimeMax)
+        if (databaseReadsTime > this.databaseReadsTimeMax)
         {
             this.databaseReadsTimeMax = databaseReadsTime;
         }
@@ -1083,13 +1099,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.databaseCallsTime += databaseCallsTime;
 
         // Update the minimum if needed.
-        if (this.databaseCallsTimeMin == 0 || databaseCallsTime < this.databaseCallsTimeMin)
+        if (databaseCallsTime < this.databaseCallsTimeMin)
         {
             this.databaseCallsTimeMin = databaseCallsTime;
         }
 
         // Update the maximum if needed.
-        if (this.databaseCallsTimeMax == 0 || databaseCallsTime > this.databaseCallsTimeMax)
+        if (databaseCallsTime > this.databaseCallsTimeMax)
         {
             this.databaseCallsTimeMax = databaseCallsTime;
         }
@@ -1108,13 +1124,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.databaseWritesTime += databaseWritesTime;
 
         // Update the minimum if needed.
-        if (this.databaseWritesTimeMin == 0 || databaseWritesTime < this.databaseWritesTimeMin)
+        if (databaseWritesTime < this.databaseWritesTimeMin)
         {
             this.databaseWritesTimeMin = databaseWritesTime;
         }
 
         // Update the maximum if needed.
-        if (this.databaseWritesTimeMax == 0 || databaseWritesTime > this.databaseWritesTimeMax)
+        if (databaseWritesTime > this.databaseWritesTimeMax)
         {
             this.databaseWritesTimeMax = databaseWritesTime;
         }
@@ -1122,13 +1138,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.databaseCallsTime += databaseCallsTime;
 
         // Update the minimum if needed.
-        if (this.databaseCallsTimeMin == 0 || databaseCallsTime < this.databaseCallsTimeMin)
+        if (databaseCallsTime < this.databaseCallsTimeMin)
         {
             this.databaseCallsTimeMin = databaseCallsTime;
         }
 
         // Update the maximum if needed.
-        if (this.databaseCallsTimeMax == 0 || databaseCallsTime > this.databaseCallsTimeMax)
+        if (databaseCallsTime > this.databaseCallsTimeMax)
         {
             this.databaseCallsTimeMax = databaseCallsTime;
         }
@@ -1169,13 +1185,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.requestQueueTime += elapsedTime;
 
         // Update the minimum if needed.
-        if (this.requestQueueTimeMin == 0 || elapsedTime < this.requestQueueTimeMin)
+        if (elapsedTime < this.requestQueueTimeMin)
         {
             this.requestQueueTimeMin = elapsedTime;
         }
 
         // Update the maximum if needed.
-        if (this.requestQueueTimeMax == 0 || elapsedTime > this.requestQueueTimeMax)
+        if (elapsedTime > this.requestQueueTimeMax)
         {
             this.requestQueueTimeMax = elapsedTime;
         }
@@ -1210,16 +1226,28 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.targetAppResponseTime += targetAppResponseTime;
 
         // Update the minimum if needed.
-        if (this.targetAppResponseTimeMin == 0 || targetAppResponseTime < this.targetAppResponseTimeMin)
+        if (targetAppResponseTime < this.targetAppResponseTimeMin)
         {
             this.targetAppResponseTimeMin = targetAppResponseTime;
         }
 
         // Update the maximum if needed.
-        if (this.targetAppResponseTimeMax == 0 || targetAppResponseTime > this.targetAppResponseTimeMax)
+        if (targetAppResponseTime > this.targetAppResponseTimeMax)
         {
             this.targetAppResponseTimeMax = targetAppResponseTime;
         }
+    }
+
+    @Override
+    public void upTargetAppCallCount ()
+    {
+        this.targetAppCallCount++;
+    }
+
+    @Override
+    public void upTargetAppUnavailable ()
+    {
+        this.targetAppResponseTimeouts += 1;
     }
 
     @Override
@@ -1265,15 +1293,15 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
 
         this.bulkSubmitCounts = 0;
         this.bulkSubmitTime = 0;
-        this.bulkSubmitTimeMin = 0;
+        this.bulkSubmitTimeMin = Long.MAX_VALUE;
         this.bulkSubmitTimeMax = 0;
         this.bulkFeedbackCounts = 0;
         this.bulkFeedbackTime = 0;
-        this.bulkFeedbackTimeMin = 0;
+        this.bulkFeedbackTimeMin = Long.MAX_VALUE;
         this.bulkFeedbackTimeMax = 0;
         this.submitQueryCounts = 0;
         this.submitQueryTime = 0;
-        this.submitQueryTimeMin = 0;
+        this.submitQueryTimeMin = Long.MAX_VALUE;
         this.submitQueryTimeMax = 0;
         this.bulkStatusUpdateCount = 0;
         this.requestStatusUpdateCount = 0;
@@ -1282,19 +1310,19 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.domainObjectsCount = 0;
         this.databaseCallsCount = 0;
         this.databaseCallsTime = 0;
-        this.databaseCallsTimeMin = 0;
+        this.databaseCallsTimeMin = Long.MAX_VALUE;
         this.databaseCallsTimeMax = 0;
         this.activeCustomers = 0;
         this.requestQueueCount = 0;
         this.requestQueueTime = 0;
-        this.requestQueueTimeMin = 0;
+        this.requestQueueTimeMin = Long.MAX_VALUE;
         this.requestQueueTimeMax = 0;
         this.requestQueueLength = 0;
         this.requestQueueLengthMax = 0;
         this.requestRequeues = 0;
-        this.targetAppResponseCount = 0;
+        this.targetAppCallCount = 0;
         this.targetAppResponseTime = 0;
-        this.targetAppResponseTimeMin = 0;
+        this.targetAppResponseTimeMin = Long.MAX_VALUE;
         this.targetAppResponseTimeMax = 0;
         this.targetAppResponseTimeouts = 0;
         this.xmlValidationFailureCount = 0;
@@ -1302,6 +1330,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.lastBusinessException = "";
         this.lastBulkSubmitRef = "";
         this.lastBulkRequestRef = "";
+        this.bulkSubmitLastTime = 0;
+        this.bulkFeedbackLastTime = 0;
+        this.submitQueryLastTime = 0;
         this.resetTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
@@ -1409,10 +1440,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getTargetAppStats ()
     {
-        return "Target App Response: count[" + this.getTargetAppResponseCount () + "], time[" +
+        return "Target App Calls: count[" + this.getTargetAppCallCount () + "], rate[" +
+                this.getRate (this.getTargetAppCallCount (), this.getElapsedTime ()) + "], time[" +
                 this.getTargetAppResponseTime () + "], average[" + this.getTargetAppResponseTimeAvg () + "], minimum[" +
                 this.getTartegAppResponseTimeMin () + "], maximum[" + this.getTargetAppResponseTimeMax () +
-                "], timeouts[" + this.getTargetAppResponseTimeouts () + "]";
+                "], timeouts[" + this.getTargetAppResponseTimeouts () + "], unavailable[" +
+                this.getTargetAppUnavailable () + "]";
     }
 
     @Override

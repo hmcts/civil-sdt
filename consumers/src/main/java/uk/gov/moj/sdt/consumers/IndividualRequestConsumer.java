@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.consumers;
 
+import java.util.GregorianCalendar;
+
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.logging.Log;
@@ -42,6 +44,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
@@ -128,9 +131,20 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
         {
             try
             {
+                SdtMetricsMBean.getSdtMetrics ().upTargetAppCallCount ();
+
+                // Measure response time.
+                final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
                 // Call the specific business method for this text - note that a single test can only use one web
                 // service business method.
-                return client.submitIndividual (request);
+                final IndividualResponseType individualResponseType = client.submitIndividual (request);
+
+                // Measure total time spent in target application.
+                final long endTime = new GregorianCalendar ().getTimeInMillis ();
+                SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
+
+                return individualResponseType;
             }
             catch (final WebServiceException f)
             {
@@ -138,7 +152,19 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                         iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () +
                         "] error sending individual request [" + iRequest.getSdtRequestReference () + "]");
 
+                // The following will throw a further exception unless we are here because the target application is
+                // unavailable.
                 super.handleClientErrors (getRethrowOnFailureToConnect (), f, iRequest.getSdtRequestReference ());
+
+                try
+                {
+                    // Delay before re-attempting to send to target application.
+                    Thread.sleep (connectionTimeOut);
+                }
+                catch (final InterruptedException e)
+                {
+                    // Ignore.
+                }
             }
         }
     }
