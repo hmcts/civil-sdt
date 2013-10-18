@@ -87,7 +87,17 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
                     bulkRequest.getHeader ().getSdtCustomerId () + "]");
         }
 
-        final BulkResponseType response = wsCreateBulkRequestHandler.submitBulk (bulkRequest);
+        BulkResponseType response = null;
+        try
+        {
+            response = wsCreateBulkRequestHandler.submitBulk (bulkRequest);
+        }
+        // CHECKSTYLE:OFF
+        catch (Throwable throwable)
+        // CHECKSTYLE:ON
+        {
+            handleThrowable (throwable);
+        }
 
         return response;
     }
@@ -101,8 +111,17 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
                     bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
         }
 
-        final BulkFeedbackResponseType response = wsReadBulkRequestHandler.getBulkFeedback (bulkFeedbackRequest);
-
+        BulkFeedbackResponseType response = null;
+        try
+        {
+            response = wsReadBulkRequestHandler.getBulkFeedback (bulkFeedbackRequest);
+        }
+        // CHECKSTYLE:OFF
+        catch (Throwable throwable)
+        // CHECKSTYLE:ON
+        {
+            handleThrowable (throwable);
+        }
         return response;
     }
 
@@ -115,10 +134,32 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
                     submitQueryRequest.getHeader ().getSdtCustomerId ());
         }
 
-        final SubmitQueryResponseType response = wsReadSubmitQueryHandler.submitQuery (submitQueryRequest);
+        SubmitQueryResponseType response = null;
+        try
+        {
+            response = wsReadSubmitQueryHandler.submitQuery (submitQueryRequest);
+        }
+        // CHECKSTYLE:OFF
+        catch (Throwable throwable)
+        // CHECKSTYLE:ON
+        {
+            handleThrowable (throwable);
+        }
 
         return response;
 
+    }
+
+    /**
+     * Handles throwable and re-throws runtime exception.
+     * 
+     * @param throwable exception to be handled
+     */
+    private void handleThrowable (final Throwable throwable)
+    {
+        LOGGER.error ("Unexpected error - ", throwable);
+        // TODO confirm message text.
+        throw new RuntimeException ("A system error has occurred. Please contact technical support for assistance");
     }
 
     /**

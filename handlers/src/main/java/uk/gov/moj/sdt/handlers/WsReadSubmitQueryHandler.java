@@ -114,12 +114,6 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         {
             handleBusinessException (be, submitQueryResponseType);
         }
-        // CHECKSTYLE:OFF
-        catch (final Exception e)
-        // CHECKSTYLE:ON
-        {
-            handleException (e, submitQueryResponseType);
-        }
         finally
         {
             LOGGER.info ("[submitQuery] completed");

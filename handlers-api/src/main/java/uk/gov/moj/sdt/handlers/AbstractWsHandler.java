@@ -36,7 +36,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
@@ -65,28 +64,6 @@ public abstract class AbstractWsHandler
      * Local store of unique customer count.
      */
     private static long uniqueCustomerCount;
-
-    /**
-     * Handle given exception by transforming into error type and setting on given status type.
-     * 
-     * @param exception exception to handle
-     * @param responseType response to be modified.
-     */
-    // CHECKSTYLE:OFF
-    protected void handleException (final Exception exception, final AbstractResponseType responseType)
-    // CHECKSTYLE:ON
-    {
-        LOGGER.error ("Unexpected error", exception);
-
-        final ErrorType errorType = new ErrorType ();
-
-        // TODO Error description should be obtained from database.
-        errorType.setCode (IErrorMessage.ErrorCode.SDT_INT_ERR.toString ());
-        errorType.setDescription ("A system error has occurred. Please contact TBC for assistance");
-
-        populateError (responseType.getStatus (), errorType);
-
-    }
 
     /**
      * Handle given business exception by transforming into error type and setting on given response type.

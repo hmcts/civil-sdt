@@ -110,12 +110,6 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         {
             handleBusinessException (be, response.getBulkRequestStatus ());
         }
-        // CHECKSTYLE:OFF
-        catch (final Exception e)
-        // CHECKSTYLE:ON
-        {
-            handleException (e, response.getBulkRequestStatus ());
-        }
         finally
         {
             LOGGER.info ("[getBulkFeedback] completed");

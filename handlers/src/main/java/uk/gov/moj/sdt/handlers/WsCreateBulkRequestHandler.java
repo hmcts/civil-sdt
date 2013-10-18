@@ -117,13 +117,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
             handleBusinessException (be, bulkResponseType);
 
         }
-        // CHECKSTYLE:OFF
-        catch (final Exception e)
-        // CHECKSTYLE:ON
-        {
-
-            handleException (e, bulkResponseType);
-        }
         finally
         {
             LOGGER.info ("[submitBulk] completed");
