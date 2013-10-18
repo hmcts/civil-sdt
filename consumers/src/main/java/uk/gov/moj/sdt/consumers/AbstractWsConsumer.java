@@ -122,14 +122,18 @@ public abstract class AbstractWsConsumer
         {
             throw wsException;
         }
-
-        if (wsException.getCause () instanceof SocketTimeoutException)
+        else if (wsException.getCause () instanceof SocketTimeoutException)
         {
             throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error sending [" + errorReferenceContext + "]");
         }
         else if (wsException.getCause () instanceof org.apache.cxf.binding.soap.SoapFault)
         {
             throw new SoapFaultException ("SOAP_FAULT", wsException.getMessage ());
+        }
+        else
+        {
+            // If is is any other exception, we can't handle it cleanly. So throw it back
+            throw wsException;
         }
 
     }
