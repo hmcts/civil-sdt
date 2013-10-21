@@ -1292,14 +1292,17 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         LOG.debug ("Resetting SDT metrics");
 
         this.bulkSubmitCounts = 0;
+        this.bulkSubmitLastTime = 0;
         this.bulkSubmitTime = 0;
         this.bulkSubmitTimeMin = Long.MAX_VALUE;
         this.bulkSubmitTimeMax = 0;
         this.bulkFeedbackCounts = 0;
+        this.bulkFeedbackLastTime = 0;
         this.bulkFeedbackTime = 0;
         this.bulkFeedbackTimeMin = Long.MAX_VALUE;
         this.bulkFeedbackTimeMax = 0;
         this.submitQueryCounts = 0;
+        this.submitQueryLastTime = 0;
         this.submitQueryTime = 0;
         this.submitQueryTimeMin = Long.MAX_VALUE;
         this.submitQueryTimeMax = 0;
@@ -1307,11 +1310,20 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.requestStatusUpdateCount = 0;
         this.completedBulkSubmitCount = 0;
         this.requestCount = 0;
+        this.resetTime = 0;
         this.domainObjectsCount = 0;
         this.databaseCallsCount = 0;
         this.databaseCallsTime = 0;
         this.databaseCallsTimeMin = Long.MAX_VALUE;
         this.databaseCallsTimeMax = 0;
+        this.databaseReadsCount = 0;
+        this.databaseReadsTime = 0;
+        this.databaseReadsTimeMin = Long.MAX_VALUE;
+        this.databaseReadsTimeMax = 0;
+        this.databaseWritesCount = 0;
+        this.databaseWritesTime = 0;
+        this.databaseWritesTimeMin = Long.MAX_VALUE;
+        this.databaseWritesTimeMax = 0;
         this.activeCustomers = 0;
         this.requestQueueCount = 0;
         this.requestQueueTime = 0;
@@ -1324,15 +1336,13 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.targetAppResponseTime = 0;
         this.targetAppResponseTimeMin = Long.MAX_VALUE;
         this.targetAppResponseTimeMax = 0;
+        this.targetAppUnavailable = 0;
         this.targetAppResponseTimeouts = 0;
         this.xmlValidationFailureCount = 0;
         this.businessExceptionCount = 0;
         this.lastBusinessException = "";
         this.lastBulkSubmitRef = "";
         this.lastBulkRequestRef = "";
-        this.bulkSubmitLastTime = 0;
-        this.bulkFeedbackLastTime = 0;
-        this.submitQueryLastTime = 0;
         this.resetTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
@@ -1359,7 +1369,8 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     {
         // Format time.
         final Date date = new Date ();
-        return this.formatter.format (date);
+        return "current time[" + this.formatter.format (date) + ", last reset time[" +
+                this.formatter.format (this.getResetTime ()) + "]";
     }
 
     @Override
