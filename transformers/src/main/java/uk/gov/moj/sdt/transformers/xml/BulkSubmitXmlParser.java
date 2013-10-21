@@ -86,7 +86,8 @@ public class BulkSubmitXmlParser implements IBulkSubmitXmlParser
         final List<String> requests = new ArrayList<String> ();
 
         // Get rid of line feeds in XML.
-        final String xml = rawXml.replace ('\n', ' ');
+        String xml = rawXml.replace ('\n', ' ');
+        xml = xml.replace ('\r', ' ');
 
         // Define pattern to match and extract portion of XML between given start and end tag name.
         final Pattern pattern = Pattern.compile ("<\\w+:" + tagName + "[ >].*</\\w+:" + tagName + ">");

@@ -64,11 +64,7 @@ public class IndividualRequestsXmlParser
         final Iterator<IIndividualRequest> iter = individualRequests.iterator ();
 
         // Match it against the result of all previous match replacements.
-        String rawXml = SdtContext.getContext ().getRawInXml ();
-
-        // Remove linefeeds as they stop the regular expression working.
-        rawXml = rawXml.replace ('\n', ' ');
-        rawXml = rawXml.replace ('\r', ' ');
+        final String rawXml = SdtContext.getContext ().getRawInXml ();
 
         while (iter.hasNext ())
         {

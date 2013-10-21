@@ -68,9 +68,13 @@ public class XmlInboundInterceptor extends AbstractSdtInterceptor
     public void handleMessage (final SoapMessage message) throws Fault
     {
         // Read contents of message, i.e. XML received from client.
-        final String xml = this.readInputMessage (message);
+        String rawXml = this.readInputMessage (message);
+
+        // Remove linefeeds as they stop the regular expression working.
+        rawXml = rawXml.replace ('\n', ' ');
+        rawXml = rawXml.replace ('\r', ' ');
 
         // Place entire XML in ThreadLocal from where other processing can extract it.
-        SdtContext.getContext ().setRawInXml (xml);
+        SdtContext.getContext ().setRawInXml (rawXml);
     }
 }
