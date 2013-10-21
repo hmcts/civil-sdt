@@ -1369,7 +1369,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     {
         // Format time.
         final Date date = new Date ();
-        return "current time[" + this.formatter.format (date) + ", last reset time[" +
+        return "Current time[" + this.formatter.format (date) + "], last reset time[" +
                 this.formatter.format (this.getResetTime ()) + "]";
     }
 
@@ -1442,9 +1442,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     {
         return "Request queue: count[" + this.getRequestQueueCount () + "], time[" + this.getRequestQueueTime () +
                 "], average[" + this.getRequestQueueTimeAvg () + "], minimum[" + this.getRequestQueueTimeMin () +
-                "], maximum[" + this.getRequestQueueTimeMax () + "], queue length[" + this.getRequestQueueLength () +
-                "], max queue length[" + this.getRequestQueueLengthMax () + "], requeues[" +
-                this.getRequestRequeues () + "]";
+                "], maximum[" + this.getRequestQueueTimeMax () + "], current queue length[" +
+                this.getRequestQueueLength () + "], max queue length[" + this.getRequestQueueLengthMax () +
+                "], requeues[" + this.getRequestRequeues () + "]";
 
     }
 
