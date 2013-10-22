@@ -155,8 +155,6 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     public void testGetBulkSubmissionBySdtBulkRef ()
     {
         final String sbr = "MCOL-10012013010101-100099999";
-        final String customerReference = "customer reference 1";
-        createBulkSubmission (customerReference, LocalDateTime.now (), sbr);
         final IBulkSubmission submission =
                 bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sbr, dataRetentionPeriod);
 
