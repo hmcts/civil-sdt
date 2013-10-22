@@ -39,11 +39,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.SubmitQueryResponse;
+import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
@@ -123,14 +121,13 @@ public class SubmitQueryTransformerTest extends TestCase
         final int resultCount = 15;
 
         // Create the domain object
-        final ISubmitQueryResponse domain = new SubmitQueryResponse ();
+        final ISubmitQueryRequest domain = new SubmitQueryRequest ();
 
         final IBulkCustomer bulkCustomer = new BulkCustomer ();
         bulkCustomer.setSdtCustomerId (sdtCustomerId);
 
         domain.setBulkCustomer (bulkCustomer);
         domain.setResultCount (resultCount);
-        domain.setStatus (StatusCodeType.OK.toString ());
 
         // Call the transformer
         final SubmitQueryResponseType jaxb = transformer.transformDomainToJaxb (domain);
@@ -138,7 +135,7 @@ public class SubmitQueryTransformerTest extends TestCase
         // Test the domain object has been transformed to a jaxb object
         Assert.assertEquals ("SDT Customer ID does not match", sdtCustomerId, jaxb.getSdtCustomerId ());
         Assert.assertEquals ("Result count does not match", resultCount, jaxb.getResultCount ().longValue ());
-        Assert.assertEquals ("Status does not match", AbstractTransformer.SDT_SERVICE, jaxb.getSdtService ());
+        Assert.assertEquals ("SDT Service does not match", AbstractTransformer.SDT_SERVICE, jaxb.getSdtService ());
         Assert.assertNotNull ("ResultsType should not be null", jaxb.getResults ());
     }
 }

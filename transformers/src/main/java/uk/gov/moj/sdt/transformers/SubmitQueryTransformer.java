@@ -36,8 +36,8 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.CriteriaType;
@@ -54,7 +54,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * 
  */
 public final class SubmitQueryTransformer extends AbstractTransformer implements
-        ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryResponse>
+        ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest>
 {
 
     /**
@@ -86,25 +86,33 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
     }
 
     @Override
-    public SubmitQueryResponseType transformDomainToJaxb (final ISubmitQueryResponse submitQueryResponse)
+    public SubmitQueryResponseType transformDomainToJaxb (final ISubmitQueryRequest submitQueryRequest)
     {
         final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
 
         // Maps some values.
-        submitQueryResponseType.setSdtCustomerId (submitQueryResponse.getBulkCustomer ().getSdtCustomerId ());
-        submitQueryResponseType.setResultCount (BigInteger.valueOf (submitQueryResponse.getResultCount ()));
+        submitQueryResponseType.setSdtCustomerId (submitQueryRequest.getBulkCustomer ().getSdtCustomerId ());
+        submitQueryResponseType.setResultCount (BigInteger.valueOf (submitQueryRequest.getResultCount ()));
 
         // Set dummy results so the tags we need are written.
         final ResultsType resultsType = new ResultsType ();
         submitQueryResponseType.setResults (resultsType);
 
-        // Set the sdt service to show the response was sent from the commissioning poject
         submitQueryResponseType.setSdtService (AbstractTransformer.SDT_SERVICE);
 
         // Set the status
         final StatusType status = new StatusType ();
         submitQueryResponseType.setStatus (status);
         status.setCode (StatusCodeType.OK);
+
+        if (submitQueryRequest.hasError ())
+        {
+            status.setCode (StatusCodeType.ERROR);
+            final ErrorType errorType = new ErrorType ();
+            errorType.setCode (submitQueryRequest.getErrorLog ().getErrorCode ());
+            errorType.setDescription (submitQueryRequest.getErrorLog ().getErrorText ());
+            status.setError (errorType);
+        }
 
         return submitQueryResponseType;
     }

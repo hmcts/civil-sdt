@@ -79,4 +79,95 @@ public interface ISubmitQueryRequest extends IDomainObject
      */
     void setCriteriaType (final String criteriaType);
 
+    /**
+     * Get result count.
+     * 
+     * @return result count
+     */
+    int getResultCount ();
+
+    /**
+     * Set result count.
+     * 
+     * @param resultCount result count
+     */
+    void setResultCount (final int resultCount);
+
+    /**
+     * Get status.
+     * 
+     * @return status
+     */
+    String getStatus ();
+
+    /**
+     * Set status.
+     * 
+     * @param status status
+     */
+    void setStatus (final String status);
+
+    /**
+     * Get error log.
+     * 
+     * @return error message
+     */
+    IErrorLog getErrorLog ();
+
+    /**
+     * Does request have error?
+     * 
+     * @return true if error else false
+     */
+    boolean hasError ();
+
+    /**
+     * Mark request as rejected with error log.
+     * 
+     * @param errorLog error log.
+     */
+    void reject (IErrorLog errorLog);
+
+    /**
+     * The status of the Query Request - one of "Ok" or "Error".
+     */
+    public enum Status
+    {
+        /**
+         * Ok.
+         */
+        OK ("Ok"),
+
+        /**
+         * Error.
+         */
+        Error ("Error");
+
+        /**
+         * request status.
+         */
+        private String status;
+
+        /**
+         * Constructor.
+         * 
+         * @param s status
+         */
+        private Status (final String s)
+        {
+
+            this.status = s;
+        }
+
+        /**
+         * Get the request status.
+         * 
+         * @return request status
+         */
+        public String getStatus ()
+        {
+            return status;
+        }
+    }
+
 }

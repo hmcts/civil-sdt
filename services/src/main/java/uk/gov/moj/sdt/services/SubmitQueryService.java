@@ -32,7 +32,6 @@
 package uk.gov.moj.sdt.services;
 
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 
 /**
@@ -45,10 +44,24 @@ public class SubmitQueryService implements ISubmitQueryService
 {
 
     @Override
-    public ISubmitQueryResponse submitQuery (final ISubmitQueryRequest request)
+    public void submitQuery (final ISubmitQueryRequest request)
     {
         // TODO - Implement this method
-        return null;
+
+        // Initialise request.getBulkCustomer ();
+
+        // Initialise request.getTargetApplication ();
+
+        // Read raw soap message from threadlocal and extract criteria element. Write to threadlocal for use by outbound
+        // interceptor.
+
+        // Concurrent and delay processing
+
+        // Read timeout and connection parameters.
+
+        // Call consumer gateway
+        // Delegate to Submit Query
+
     }
 
 }

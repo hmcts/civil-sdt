@@ -31,7 +31,6 @@
 package uk.gov.moj.sdt.services.api;
 
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 
 /**
  * Interface for Submit Query services.
@@ -43,10 +42,9 @@ public interface ISubmitQueryService
 {
 
     /**
-     * Deals with a query from SDT that will be passed on to MCOL.
+     * Deals with a query from SDT that will be passed on to target application.
      * 
-     * @param request request going to MCOL
-     * @return response from MCOL converted to domain
+     * @param request request going to target application.
      */
-    ISubmitQueryResponse submitQuery (final ISubmitQueryRequest request);
+    void submitQuery (final ISubmitQueryRequest request);
 }

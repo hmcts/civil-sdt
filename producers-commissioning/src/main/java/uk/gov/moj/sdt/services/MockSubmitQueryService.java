@@ -32,12 +32,9 @@ package uk.gov.moj.sdt.services;
 
 import java.util.Map;
 
-import uk.gov.moj.sdt.domain.SubmitQueryResponse;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 
 /**
  * Implementation for mocking of SDT Submit Query service.
@@ -54,32 +51,19 @@ public class MockSubmitQueryService implements ISubmitQueryService
      */
     private Map<String, String> responseContentMap;
 
-    /**
-     * Mock service will return a static response.
-     * 
-     * @param request request going to MCOL
-     * @return response from MCOL converted to domain
-     */
     @Override
-    public ISubmitQueryResponse submitQuery (final ISubmitQueryRequest request)
+    public void submitQuery (final ISubmitQueryRequest request)
     {
-
-        final ISubmitQueryResponse response = new SubmitQueryResponse ();
 
         final String criteriaType = request.getCriteriaType ();
 
-        response.setBulkCustomer (request.getBulkCustomer ());
         // CHECKSTYLE:OFF
-        response.setResultCount (5);
+        request.setResultCount (5);
         // CHECKSTYLE:ON
-
-        response.setStatus (StatusCodeType.OK.value ());
-        response.setErrorMessage (null);
 
         // Write the result xml to threadlocal so the outbound interceptor can pick it up
         writeToThreadLocal (criteriaType);
 
-        return response;
     }
 
     /**

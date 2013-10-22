@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
@@ -57,6 +58,29 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
      * The criteria type of the Submit Query Request.
      */
     private String criteriaType;
+
+    /**
+     * The total count of the results from the query.
+     */
+    private int resultCount;
+
+    /**
+     * Stores request status.
+     */
+    private String status;
+
+    /**
+     * Stores the error message.
+     */
+    private IErrorLog errorLog;
+
+    /**
+     * Constructs an instance of {@link SubmitQueryRequest}.
+     */
+    public SubmitQueryRequest ()
+    {
+        this.status = ISubmitQueryRequest.Status.OK.getStatus ();
+    }
 
     @Override
     public IBulkCustomer getBulkCustomer ()
@@ -92,6 +116,49 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     public void setCriteriaType (final String criteriaType)
     {
         this.criteriaType = criteriaType;
+    }
+
+    @Override
+    public int getResultCount ()
+    {
+        return resultCount;
+    }
+
+    @Override
+    public void setResultCount (final int resultCount)
+    {
+        this.resultCount = resultCount;
+    }
+
+    @Override
+    public String getStatus ()
+    {
+        return status;
+    }
+
+    @Override
+    public void setStatus (final String status)
+    {
+        this.status = status;
+    }
+
+    @Override
+    public IErrorLog getErrorLog ()
+    {
+        return errorLog;
+    }
+
+    @Override
+    public boolean hasError ()
+    {
+        return errorLog != null;
+    }
+
+    @Override
+    public void reject (final IErrorLog errorLog)
+    {
+        this.errorLog = errorLog;
+        this.status = ISubmitQueryRequest.Status.Error.getStatus ();
     }
 
 }

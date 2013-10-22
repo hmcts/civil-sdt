@@ -92,7 +92,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
                 targetApplicationCode + "]");
         final IBulkCustomer bulkCustomer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
 
-        if ( !bulkCustomer.hasAccess (targetApplicationCode))
+        if (bulkCustomer != null && !bulkCustomer.hasAccess (targetApplicationCode))
         {
             List<String> replacements = null;
             replacements = new ArrayList<String> ();

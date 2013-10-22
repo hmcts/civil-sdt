@@ -38,7 +38,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryResponse;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
@@ -73,8 +72,10 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
     /**
      * The transformer associated with this handler.
      */
-    private ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, 
-        ISubmitQueryRequest, ISubmitQueryResponse> transformer;
+    // CHECKSTYLE:OFF
+    private ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> transformer;
+
+    // CHECKSTYLE:ON
 
     @Override
     public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequestType)
@@ -105,9 +106,9 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
             validateDomain (submitQueryRequest);
 
             // Process validated request.
-            final ISubmitQueryResponse submitQueryResponse = processSubmitQuery (submitQueryRequest);
+            processSubmitQuery (submitQueryRequest);
 
-            submitQueryResponseType = getTransformer ().transformDomainToJaxb (submitQueryResponse);
+            submitQueryResponseType = getTransformer ().transformDomainToJaxb (submitQueryRequest);
 
         }
         catch (final AbstractBusinessException be)
@@ -144,15 +145,13 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
      * Process submit query.
      * 
      * @param request submit query request
-     * @return submit query response
      */
-    private ISubmitQueryResponse processSubmitQuery (final ISubmitQueryRequest request)
+    private void processSubmitQuery (final ISubmitQueryRequest request)
     {
         LOGGER.info ("Service call to submit query");
 
-        final ISubmitQueryResponse domainResponse = submitQueryService.submitQuery (request);
+        submitQueryService.submitQuery (request);
 
-        return domainResponse;
     }
 
     /**
@@ -170,7 +169,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
      * 
      * @return the transformer associated with this class.
      */
-    public ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryResponse>
+    public ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest>
             getTransformer ()
     {
         return transformer;
@@ -181,11 +180,12 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
      * 
      * @param transformer the transformer to be associated with this class.
      */
+    // CHECKSTYLE:OFF
     public
             void
-            setTransformer (final ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, 
-                            ISubmitQueryRequest, ISubmitQueryResponse> transformer)
+            setTransformer (final ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> transformer)
     {
         this.transformer = transformer;
     }
+    // CHECKSYTLE:ON
 }
