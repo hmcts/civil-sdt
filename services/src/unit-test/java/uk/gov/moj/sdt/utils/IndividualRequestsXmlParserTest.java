@@ -80,11 +80,15 @@ public class IndividualRequestsXmlParserTest
     @Test
     public void getIndividualRequestsRawXmlMap () throws Exception
     {
+        // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml = this.getRawXml ();
+
         SdtContext.getContext ().setRawInXml (rawXml);
 
         final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest> ();
 
+        // Create array list of individual requests as if these had been created by CXF in parsing the inbound SOAP
+        // message and then transformed into domain objects.
         final IIndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCustomerRequestReference ("1");
         individualRequest.setRequestStatus ("Forwarded");
@@ -101,17 +105,23 @@ public class IndividualRequestsXmlParserTest
         requests.add (individualRequest2);
         requests.add (individualRequest3);
 
+        // Now call the parser to add the xml fragments into the payload of the individual reauests.
         this.individualRequestsXmlParser.populateRawRequest (requests);
 
-        Assert.assertTrue (requests.size () == 3);
-
-        for (IIndividualRequest request : requests)
-        {
-            LOGGER.debug ("Request id is " + request.getCustomerRequestReference ());
-            LOGGER.debug ("Request payload is " + request.getRequestPayload ());
-            Assert.assertNotNull (request.getRequestPayload ());
-        }
-
+        // CHECKSTYLE:OFF
+        Assert.assertEquals (
+                "Failed to find correct payload for request 1",
+                "<bul:mcolClaimStatusUpdate><cla1:claimNumber>claim123</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
+                requests.get (0).getRequestPayload ().replaceAll ("\\s+", ""));
+        Assert.assertEquals (
+                "Failed to find correct payload for request 2",
+                "<bul:mcolClaimStatusUpdate><cla1:claimNumber>claim124</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-02-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
+                requests.get (1).getRequestPayload ().replaceAll ("\\s+", ""));
+        Assert.assertEquals (
+                "Failed to find correct payload for request 3",
+                "<bul:mcolClaim><cla1:claimNumber>claim125</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-03-01</cla1:paidInFullDate></bul:mcolClaim>",
+                requests.get (2).getRequestPayload ().replaceAll ("\\s+", ""));
+        // CHECKSTYLE:ON
     }
 
     /**
@@ -130,6 +140,10 @@ public class IndividualRequestsXmlParserTest
         myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", "testXMLValid.xml", false));
 
         message = FileUtils.readFileToString (myFile);
+
+        // Remove linefeeds as they stop the regular expression working.
+        message = message.replace ('\n', ' ');
+        message = message.replace ('\r', ' ');
 
         return message;
 
