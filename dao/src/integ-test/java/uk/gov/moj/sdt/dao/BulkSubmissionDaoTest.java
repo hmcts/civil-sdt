@@ -49,6 +49,7 @@ import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
 
@@ -155,11 +156,20 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     public void testGetBulkSubmissionBySdtBulkRef ()
     {
         final String sbr = "MCOL-10012013010101-100099999";
+
         final IBulkSubmission submission =
                 bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sbr, dataRetentionPeriod);
 
         Assert.assertNotNull (submission);
         Assert.assertEquals (submission.getSdtBulkReference (), sbr);
+
+        Assert.assertEquals ("Check individual request count", 1, submission.getIndividualRequests ().size ());
+
+        for (IIndividualRequest req : submission.getIndividualRequests ())
+        {
+            Assert.assertEquals (5, req.getId ());
+        }
+
     }
 
     /**

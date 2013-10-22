@@ -44,7 +44,7 @@
             <key>
                 <column name="BULK_SUBMISSION_ID" />
             </key>
-            <list-index></list-index>
+            <list-index column="LINE_NUMBER" base="1"/>
             <one-to-many class="uk.gov.moj.sdt.domain.IndividualRequest" />
         </list>
         <property name="errorCode" type="java.lang.String">
