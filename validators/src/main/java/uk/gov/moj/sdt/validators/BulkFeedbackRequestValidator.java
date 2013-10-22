@@ -77,7 +77,9 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
 
         // Validate the bulk reference, throw an exception if it doesn't exist
-        final IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmission (sdtBulkReference);
+        final IBulkSubmission bulkSubmission =
+                bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkFeedbackRequest.getBulkCustomer (), sdtBulkReference,
+                        super.getDataRetentionPeriod ());
         if (bulkSubmission == null)
         {
             final List<String> replacements = new ArrayList<String> ();

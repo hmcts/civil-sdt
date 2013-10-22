@@ -88,11 +88,22 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     }
 
     @Override
-    public IBulkSubmission getBulkSubmission (final String sdtBulkReference) throws DataAccessException
+    public IBulkSubmission getBulkSubmissionBySdtRef (final IBulkCustomer bulkCustomer, final String sdtBulkReference,
+                                                      final int dataRetention) throws DataAccessException
     {
-        LOG.debug ("Get a bulk submission matching the sdt bulk reference" + sdtBulkReference);
-        final IBulkSubmission bulkSubmission =
-                this.uniqueResult (IBulkSubmission.class, Restrictions.eq ("sdtBulkReference", sdtBulkReference));
+        LOG.debug ("Get a bulk submission matching the Bulk Customer, "
+                + "SDT bulk reference and the Data Retention Period ");
+
+        // Create the criteria
+        final Session session = getSessionFactory ().getCurrentSession ();
+        final Criteria criteria = session.createCriteria (IBulkSubmission.class).createAlias ("bulkCustomer", "bc");
+        criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
+        criteria.add (Restrictions.eq ("sdtBulkReference", sdtBulkReference).ignoreCase ());
+
+        // Only bring back bulk submission within the data retention period
+        criteria.add (createDateRestriction ("createdDate", dataRetention));
+
+        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult ();
 
         return bulkSubmission;
 

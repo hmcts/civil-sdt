@@ -62,7 +62,8 @@ public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmis
     }
 
     @Override
-    public IBulkSubmission getBulkSubmission (final String customerReference)
+    public IBulkSubmission getBulkSubmissionBySdtRef (final IBulkCustomer bulkCustomer, final String customerReference,
+                                                      final int dataRetention)
     {
         if (bulkReferenceList.contains (customerReference))
         {

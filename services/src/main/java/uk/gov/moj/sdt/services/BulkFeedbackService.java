@@ -31,9 +31,19 @@
 
 package uk.gov.moj.sdt.services;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Implementation class for bulk feedback service.
@@ -44,11 +54,77 @@ import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
 public class BulkFeedbackService implements IBulkFeedbackService
 {
 
+    /**
+     * Bulk Submission DAO property for looking up the bulk submission object.
+     */
+    private IBulkSubmissionDao bulkSubmissionDao;
+    /**
+     * Global parameter cache to retrieve data retention period.
+     */
+    private ICacheable globalParametersCache;
+
     @Override
     public IBulkSubmission getBulkFeedback (final IBulkFeedbackRequest bulkFeedbackRequest)
     {
-        // TODO - Implement this method
-        return null;
+        final IBulkCustomer bulkCustomer = bulkFeedbackRequest.getBulkCustomer ();
+        final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
+        final IBulkSubmission bulkSubmission;
+
+        // Call DAO to fetch domain details
+        bulkSubmission =
+                bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sdtBulkReference, getDataRetentionPeriod ());
+
+        // Map individual request domain object(s) to the response(s)
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+
+        for (IIndividualRequest individualRequest : individualRequests)
+        {
+            if (null == individualRequest.getErrorLog ())
+            {
+                // As Individual Request is valid, place in Target Application Response Map
+                targetApplicationRespMap.put (individualRequest.getCustomerRequestReference (),
+                        individualRequest.getTargetApplicationResponse ());
+            }
+        }
+
+        // Set the target response map in threadlocal for the outbound interceptor to pick up
+        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+
+        return bulkSubmission;
     }
 
+    /**
+     * Get the data retention period from the global parameters cache.
+     * 
+     * @return data retention period
+     */
+    private int getDataRetentionPeriod ()
+    {
+        final IGlobalParameter globalParameter =
+                globalParametersCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+        final int dataRetention = Integer.parseInt (globalParameter.getValue ());
+
+        return dataRetention;
+
+    }
+
+    /**
+     * @param bulkSubmissionDao IBulkSubmissionDao
+     */
+    public void setBulkSubmissionDao (final IBulkSubmissionDao bulkSubmissionDao)
+    {
+        this.bulkSubmissionDao = bulkSubmissionDao;
+    }
+
+    /**
+     * Set the global parameter cache.
+     * 
+     * @param globalParametersCache global parameter cache
+     */
+    public void setGlobalParametersCache (final ICacheable globalParametersCache)
+    {
+        this.globalParametersCache = globalParametersCache;
+    }
 }

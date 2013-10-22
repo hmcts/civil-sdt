@@ -137,7 +137,8 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
 
         LOG.debug ("Persisted successfully");
 
-        final IBulkSubmission submission = bulkSubmissionDao.getBulkSubmission (sdtBulkReference);
+        final IBulkSubmission submission =
+                bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sdtBulkReference, dataRetentionPeriod);
 
         Assert.assertNotNull (submission);
 
@@ -156,7 +157,8 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         final String sbr = "MCOL-10012013010101-100099999";
         final String customerReference = "customer reference 1";
         createBulkSubmission (customerReference, LocalDateTime.now (), sbr);
-        final IBulkSubmission submission = bulkSubmissionDao.getBulkSubmission (sbr);
+        final IBulkSubmission submission =
+                bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sbr, dataRetentionPeriod);
 
         Assert.assertNotNull (submission);
         Assert.assertEquals (submission.getSdtBulkReference (), sbr);
@@ -169,7 +171,8 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     public void testGetBulkSubmissionBySdtBulkRefNotFound ()
     {
         final String sbr = "NO_SUCH_ID";
-        final IBulkSubmission submission = bulkSubmissionDao.getBulkSubmission (sbr);
+        final IBulkSubmission submission =
+                bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sbr, dataRetentionPeriod);
 
         Assert.assertNull (submission);
 

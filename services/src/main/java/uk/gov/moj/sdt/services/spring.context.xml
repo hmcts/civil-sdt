@@ -12,7 +12,8 @@
     <!-- Implementation for Bulk Feedback Service -->        
     <bean id="uk.gov.moj.sdt.services.api.IBulkFeedbackService" 
         class="uk.gov.moj.sdt.services.BulkFeedbackService">
-                          
+        <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao"/>
+        <property name="globalParametersCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache"/>           
     </bean>
 	
 	<!-- Implementation for Submit Query Service -->        

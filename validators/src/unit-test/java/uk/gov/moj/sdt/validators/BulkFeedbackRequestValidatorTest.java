@@ -42,13 +42,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ErrorMessage;
+import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
 /**
@@ -58,7 +62,7 @@ import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
  * 
  */
 
-public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
+public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
 {
     /**
      * Logger.
@@ -82,7 +86,7 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
      * 
      */
 
-    private BulkSubmission bulkSubmission;
+    private IBulkSubmission bulkSubmission;
 
     /**
      * The Dao.
@@ -96,14 +100,34 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
     private String reference = " Bulk reference in request ";
 
     /**
+     * requestId.
+     */
+    private long requestId;
+
+    /**
      * Error messages cache.
      */
     private ICacheable errorMessagesCache;
 
     /**
+     * Global Parameter cache.
+     */
+    private ICacheable globalParameterCache;
+
+    /**
      * Error message.
      */
     private IErrorMessage errorMessage;
+
+    /**
+     * Bulk Customer to use for the test.
+     */
+    private IBulkCustomer bulkCustomer;
+
+    /**
+     * Data retention period.
+     */
+    private int dataRetentionPeriod;
 
     /**
      * Constructor for test.
@@ -126,11 +150,21 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
 
         // Create mocks needed for this test.
         mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
-        bulkFeedbackRequest = new BulkFeedbackRequest ();
+
+        // create a bulk customer
+        bulkCustomer = new BulkCustomer ();
+        bulkCustomer.setSdtCustomerId (12345L);
+
         bulkSubmission = new BulkSubmission ();
+        bulkSubmission.setBulkCustomer (bulkCustomer);
         bulkSubmission.setSdtBulkReference (reference);
+
+        bulkFeedbackRequest = new BulkFeedbackRequest ();
+
         // Setup bulk request for test.
+        bulkFeedbackRequest.setId (requestId);
         bulkFeedbackRequest.setSdtBulkReference (reference);
+        bulkFeedbackRequest.setBulkCustomer (bulkCustomer);
 
         // Set up Error messages cache
         errorMessage = new ErrorMessage ();
@@ -143,6 +177,17 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         replay (errorMessagesCache);
         validator.setErrorMessagesCache (errorMessagesCache);
 
+        final IGlobalParameter globalParameterData = new GlobalParameter ();
+        globalParameterData.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+        globalParameterData.setValue ("90");
+        globalParameterCache = EasyMock.createMock (ICacheable.class);
+        expect (
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameterData);
+        replay (globalParameterCache);
+        validator.setGlobalParameterCache (globalParameterCache);
+
+        dataRetentionPeriod = 90;
     }
 
     /**
@@ -151,10 +196,9 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
     @Test
     public void testBulkReferenceFound ()
     {
-
         // Tell the mock dao to return this request
-        // expect (mockIBulkSubmissionDao.isBulkReferenceValid (reference)).andReturn (true);
-        expect (mockIBulkSubmissionDao.getBulkSubmission (reference)).andReturn (bulkSubmission);
+        expect (mockIBulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, reference, dataRetentionPeriod))
+                .andReturn (bulkSubmission);
         replay (mockIBulkSubmissionDao);
 
         // Inject the mock dao into the validator.
@@ -162,7 +206,8 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
 
         // Validate the bulk customer.
         bulkFeedbackRequest.accept (validator, null);
-        Assert.assertTrue (true);
+        EasyMock.verify (mockIBulkSubmissionDao);
+
     }
 
     /**
@@ -173,8 +218,8 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
     {
 
         // Tell the mock dao to return this request
-        // expect (mockIBulkSubmissionDao.isBulkReferenceValid (reference)).andReturn (false);
-        expect (mockIBulkSubmissionDao.getBulkSubmission (reference)).andReturn (null);
+        expect (mockIBulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, reference, dataRetentionPeriod))
+                .andReturn (null);
         replay (mockIBulkSubmissionDao);
 
         // Inject the mock dao into the validator.
@@ -184,17 +229,17 @@ public class BulkFeedbackRequestValidatorTest extends SdtUnitTestBase
         {
             // Validate the request
             bulkFeedbackRequest.accept (validator, null);
+            EasyMock.verify (mockIBulkSubmissionDao);
+            Assert.fail ("Failed to throw expected InvalidBulkReferenceException");
 
-            Assert.fail ("Test failed to throw InvalidBulkReferenceException.");
         }
         catch (final InvalidBulkReferenceException e)
         {
+            LOGGER.debug (e.getMessage ());
 
-            EasyMock.verify (mockIBulkSubmissionDao);
-            Assert.assertEquals (IErrorMessage.ErrorCode.BULK_REF_INVALID.name (), e.getErrorCode ());
-            Assert.assertEquals ("There is no Bulk Request submission associated with your account for the " +
-                    "supplied SDT Bulk Reference " + reference + ".", e.getErrorDescription ());
+            Assert.assertTrue (true);
         }
-        Assert.assertTrue (true);
+
     }
+
 }

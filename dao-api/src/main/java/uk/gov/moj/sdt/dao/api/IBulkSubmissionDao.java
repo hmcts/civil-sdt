@@ -56,12 +56,15 @@ public interface IBulkSubmissionDao extends IGenericDao
                                        final int dataRetention) throws DataAccessException;
 
     /**
-     * Checks that the bulk reference is valid. Return the bulk submission if the check
-     * valid or null if it fails.
+     * Check the customer reference is unique across data retention period. Return the bulk submission if the check
+     * fails or null if it succeeds.
      * 
+     * @param bulkCustomer bulk customer
      * @param sdtBulkReference sdt bulk reference
+     * @param dataRetention the data retention period to use
      * @throws DataAccessException Hibernate exception
-     * @return valid bulk submission or null
+     * @return null if the bulk submission is unique or the non unique bulk submission object
      */
-    IBulkSubmission getBulkSubmission (final String sdtBulkReference) throws DataAccessException;
+    IBulkSubmission getBulkSubmissionBySdtRef (final IBulkCustomer bulkCustomer, final String sdtBulkReference,
+                                               final int dataRetention) throws DataAccessException;
 }
