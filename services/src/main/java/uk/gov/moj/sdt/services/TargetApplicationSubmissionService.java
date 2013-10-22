@@ -167,15 +167,15 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     {
         final String requestStatus = individualRequest.getRequestStatus ();
 
-        if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.ACCEPTED))
+        if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ()))
         {
             this.updateAcceptedRequest (individualRequest);
         }
-        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED))
+        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus ()))
         {
             this.updateInitiallyAcceptedRequest (individualRequest);
         }
-        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.REJECTED))
+        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()))
         {
             this.updateRejectedRequest (individualRequest);
         }
@@ -250,7 +250,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
                         Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK.name ()));
 
         // Assume that there is only one error message
-        assert errorMessages.length == 1;
+        // assert errorMessages.length == 1;
         final IErrorMessage errorMessage = errorMessages[0];
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object

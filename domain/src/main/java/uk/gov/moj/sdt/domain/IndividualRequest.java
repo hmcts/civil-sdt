@@ -362,7 +362,10 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
         // Do the association to error log
-        errorLog.setIndividualRequest (this);
+        if (errorLog != null)
+        {
+            errorLog.setIndividualRequest (this);
+        }
 
     }
 
