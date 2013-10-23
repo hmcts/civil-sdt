@@ -13,6 +13,11 @@
 	<!-- Configure the generic DAO as bean within the Spring's application context. -->
 	<bean id="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" 
 		class="uk.gov.moj.sdt.dao.MockBulkCustomerDao">
+        <property name="targetAppCodes">
+            <list>
+                <value>MCOL</value>
+            </list>
+        </property>
 	</bean>
 		
 	<bean id="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" 

@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import java.util.List;
+
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
@@ -48,6 +50,10 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  */
 public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomerDao
 {
+    /**
+     * Collection of target application codes to be associated with customer.
+     */
+    private List<String> targetAppCodes;
 
     /**
      * Mock the behaviour of Bulk customer DAO, returns a static array of bulk customer.
@@ -63,25 +69,48 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
         bulkCustomer.setSdtCustomerId (sdtCustomerId);
         bulkCustomer.setId (sdtCustomerId);
 
-        // Mock the Target Application
-        // TODO : Ensure that target app code is extracted to make it work for any future apps.
-        // final Set<ITargetApplication> targetApplications = new HashSet<ITargetApplication> ();
-        final ITargetApplication targetApplication = new TargetApplication ();
-        targetApplication.setTargetApplicationCode ("MCOL");
-        targetApplication.setTargetApplicationName ("MCOL");
-        // targetApplications.add (targetApplication);
+        for (String targetAppCode : targetAppCodes)
+        {
+            final IBulkCustomerApplication bulkCustomerApplication =
+                    createBulkCustomerApplication (bulkCustomer, targetAppCode);
+            bulkCustomer.getBulkCustomerApplications ().add (bulkCustomerApplication);
+        }
+        return bulkCustomer;
 
-        // bulkCustomer.setTargetApplications (targetApplications);
+    }
+
+    /**
+     * Creates an instance of {@link IBulkCustomerApplication} for given {@link IBulkCustomer} and target application
+     * code.
+     * 
+     * @param bulkCustomer bulk customer for which bulk customer application is created
+     * @param targetAppCode target application code
+     * @return IBulkCustomerApplication
+     */
+    private IBulkCustomerApplication createBulkCustomerApplication (final IBulkCustomer bulkCustomer,
+                                                                    final String targetAppCode)
+    {
+
+        final ITargetApplication targetApplication = new TargetApplication ();
+        targetApplication.setTargetApplicationCode (targetAppCode);
+        targetApplication.setTargetApplicationName (targetAppCode);
 
         final IBulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication ();
         bulkCustomerApplication.setBulkCustomer (bulkCustomer);
         bulkCustomerApplication.setTargetApplication (targetApplication);
-        bulkCustomerApplication.setCustomerApplicationId ("cust-id");
+        bulkCustomerApplication.setCustomerApplicationId (targetAppCode + "-id");
 
-        bulkCustomer.getBulkCustomerApplications ().add (bulkCustomerApplication);
+        return bulkCustomerApplication;
+    }
 
-        return bulkCustomer;
-
+    /**
+     * Setter for targetAppCodes property. Used to configure target applications for customer.
+     * 
+     * @param targetAppCodes target application codes.
+     */
+    public void setTargetAppCodes (final List<String> targetAppCodes)
+    {
+        this.targetAppCodes = targetAppCodes;
     }
 
 }

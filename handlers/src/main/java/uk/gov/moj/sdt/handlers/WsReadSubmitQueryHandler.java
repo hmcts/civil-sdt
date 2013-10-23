@@ -93,6 +93,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
 
         // Initialise response.
         SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
+        submitQueryResponseType.setSdtCustomerId (submitQueryRequestType.getHeader ().getSdtCustomerId ());
         submitQueryResponseType.setStatus (new StatusType ());
 
         try
