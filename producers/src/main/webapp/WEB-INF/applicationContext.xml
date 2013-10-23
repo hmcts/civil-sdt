@@ -13,24 +13,20 @@
         http://cxf.apache.org/schemas/jaxws.xsd
         http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
-    <!-- Configures CXF component. Enables logging of request and response payload. -->
-    <cxf:bus>
-        <cxf:inInterceptors>
-            <ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
-            <ref bean="uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor" />
-        </cxf:inInterceptors>
-        <cxf:outInterceptors>
-            <ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />
-        </cxf:outInterceptors>
-        <cxf:features>
-            <cxf:logging />
-        </cxf:features>
-    </cxf:bus>
-
     <!-- The # prefix, in implementor attribute, indicates bean of type ... The name of the interface which this endpoint must implement -->
     <jaxws:endpoint id="sdtapi" 
                 implementor="#uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType" 
                 address="/sdtapi">
+        <jaxws:inInterceptors>
+            <ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
+            <ref bean="uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor" />
+        </jaxws:inInterceptors>
+        <jaxws:outInterceptors>
+            <ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />               
+        </jaxws:outInterceptors>
+        <jaxws:features>
+            <bean class="org.apache.cxf.feature.LoggingFeature"/>
+        </jaxws:features>
         <jaxws:properties>
             <entry key="schema-validation-enabled" value="false"/>
         </jaxws:properties>

@@ -24,10 +24,10 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
 
 package uk.gov.moj.sdt.enricher;
 
@@ -40,18 +40,18 @@ import org.apache.commons.logging.LogFactory;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
- * Submit query xml enricher, used to enrich outbound messages related to submit query.
+ * Generic xml enricher, used to enrich outbound messages.
  * 
- * @author d130680
+ * @author d276205
  * 
  */
-public class SubmitQueryEnricher extends AbstractSdtEnricher
+public class GenericEnricher extends AbstractSdtEnricher
 {
 
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (SubmitQueryEnricher.class);
+    private static final Log LOGGER = LogFactory.getLog (GenericEnricher.class);
 
     @Override
     public String enrichXml (final String message)
@@ -110,5 +110,39 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
         return newXml;
 
     }
+    
+    //CHECKSTYLE:OFF
+    /**
+     * Parse. This is test code.
+     * @return string
+     */
+    public String parse () {
+        
+        String result="";
+        
+        // Match it against the result of all previous match replacements.
+        String rawXml = SdtContext.getContext ().getRawInXml ();
+
+        // Remove linefeeds as they stop the regular expression working.
+        rawXml = rawXml.replace ('\n', ' ');
+        rawXml = rawXml.replace ('\r', ' ');
+
+        //Build search pattern for insertion point.
+        final Pattern pattern = Pattern.compile ("<[\\w]+:" + getInsertionTag () + "(.*?)>(.*?)</[\\w]+:" + getInsertionTag () + ">");
+        final Matcher matcher = pattern.matcher (rawXml);
+
+        if (matcher.find ())
+        {
+            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+
+            // Get the string matching the regular expression...Not sure about group ID value.
+            result=matcher.group (2);
+            
+        }
+        
+        return result;
+
+    }
+    //CHECKSTYLE:ON
 
 }
