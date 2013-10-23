@@ -378,6 +378,9 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
 
         message = FileUtils.readFileToString (myFile);
 
+        // Remove linefeeds as they stop the regular expression working.
+        message = message.replace ('\n', ' ');
+        message = message.replace ('\r', ' ');
         return message;
 
     }
