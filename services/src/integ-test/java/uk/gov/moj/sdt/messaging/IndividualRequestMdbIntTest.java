@@ -68,12 +68,12 @@ import uk.gov.moj.sdt.utils.Utilities;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:**/applicationContext.xml",
-        "/uk/gov/moj/sdt/consumers/spring.context.test.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
+        "/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
         "/uk/gov/moj/sdt/messaging/spring.hibernate.test.xml", "/uk/gov/moj/sdt/messaging/spring.context.test.xml",
         "/uk/gov/moj/sdt/cache/spring.context.xml", "/uk/gov/moj/sdt/dao/spring*.xml",
         "/uk/gov/moj/sdt/services/spring.context.xml", "/uk/gov/moj/sdt/utils/spring.context.xml",
         "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring.context.xml",
-        "/uk/gov/moj/sdt/transformers/spring.context.xml"})
+        "/uk/gov/moj/sdt/transformers/spring.context.xml", "classpath*:/**/spring*.xml"})
 public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
