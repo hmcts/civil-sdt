@@ -253,12 +253,12 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         // Match it against the result of all previous match replacements.
         final Matcher matcher = pattern.matcher (xml);
 
-        String newXml = "";
+        String newXml = xml;
 
         if (matcher.find ())
         {
             // Inject the system specific response into the current envelope
-            newXml = matcher.replaceFirst (matcher.group (1) + matcher.group (1));
+            newXml = matcher.replaceFirst (matcher.group (1) + matcher.group (2));
         }
 
         return newXml;

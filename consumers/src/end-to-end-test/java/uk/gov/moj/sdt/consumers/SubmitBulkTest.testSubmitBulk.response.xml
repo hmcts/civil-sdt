@@ -7,7 +7,6 @@
         </error>
     </status>
     <ns2:customerReference>abc1223456</ns2:customerReference>
-    <ns2:sdtBulkReference>MCOL-20130926163802-000000004</ns2:sdtBulkReference>
     <ns2:submittedDate>2013-09-26T16:38:02.297+01:00</ns2:submittedDate>
     <ns2:sdtService>SDT Commissioning</ns2:sdtService>
     <ns2:requestCount>1</ns2:requestCount>

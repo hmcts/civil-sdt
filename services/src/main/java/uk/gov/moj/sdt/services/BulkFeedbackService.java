@@ -80,7 +80,7 @@ public class BulkFeedbackService implements IBulkFeedbackService
 
         for (IIndividualRequest individualRequest : individualRequests)
         {
-            if (null == individualRequest.getErrorLog ())
+            if (null != individualRequest.getTargetApplicationResponse ())
             {
                 // As Individual Request is valid, place in Target Application Response Map
                 targetApplicationRespMap.put (individualRequest.getCustomerRequestReference (),
