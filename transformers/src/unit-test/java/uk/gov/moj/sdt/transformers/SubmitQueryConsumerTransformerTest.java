@@ -41,7 +41,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
@@ -94,5 +96,37 @@ public class SubmitQueryConsumerTransformerTest extends TestCase {
 				jaxb.getStatus().getCode().value());
 		Assert.assertEquals("Incorrect result count", domain.getResultCount(),
 				jaxb.getResultCount().intValue());
+	}
+
+	/**
+	 * Test the transformation from jaxb (SubmitQueryResponseType) to domain
+	 * (ISubmitQuery) object with status Error.
+	 * 
+	 */
+	@Test
+	public void testTransformJaxbToDomainError() {
+		// Set up the jaxb object to transform
+		final SubmitQueryResponseType jaxb = new SubmitQueryResponseType();
+		final StatusType statusType = new StatusType();
+		statusType.setCode(StatusCodeType.ERROR);
+		jaxb.setStatus(statusType);
+
+		final ErrorType errorType = new ErrorType();
+		errorType.setCode("ERROR");
+		errorType
+				.setDescription("MCOL has found an error in processing the request");
+		statusType.setError(errorType);
+
+		final ISubmitQueryRequest domain = new SubmitQueryRequest();
+
+		transformer.transformJaxbToDomain(jaxb, domain);
+
+		final IErrorLog errorLog = domain.getErrorLog();
+
+		Assert.assertEquals("Request Status is incorrect", domain.getStatus(),
+				jaxb.getStatus().getCode().value());
+		Assert.assertEquals("Error description is incorrect",
+				"MCOL has found an error in processing the request",
+				errorLog.getErrorText());
 	}
 }
