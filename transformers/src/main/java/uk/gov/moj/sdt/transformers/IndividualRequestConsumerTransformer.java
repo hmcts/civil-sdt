@@ -115,6 +115,9 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
         header.setTargetAppCustomerId (bulkCustomerApplication.getCustomerApplicationId ());
         jaxb.setHeader (header);
 
+        // Set empty target app detail so the tags needed for enrichment are written.
+        jaxb.setTargetAppDetail (new IndividualRequestType.TargetAppDetail ());
+
         return jaxb;
     }
 }

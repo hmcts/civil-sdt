@@ -10,12 +10,26 @@
 	<bean id="jaxWsProxyFactory"  class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
         <property name="serviceClass" value="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"/>
         <property name="address" value="http://localhost:8888/mcol/service/sdtapi"/>
-        <property name="bindingId" value="http://www.w3.org/2003/05/soap/bindings/HTTP/"/>
+        <property name="bindingId" value="http://www.w3.org/2003/05/soap/bindings/HTTP/"/> 
+        <property name="outInterceptors">
+            <list>
+                <ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />
+            </list>
+        </property>
+        <property name="inInterceptors">
+            <list>
+                <ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
+            </list>
+        </property>
+        <property name="features">
+            <bean class="org.apache.cxf.feature.LoggingFeature"/>
+        </property>
     </bean>
         
     <bean id="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType" 
         class="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"  
         factory-bean="jaxWsProxyFactory" factory-method="create" scope="prototype"/>
+
 
 	<bean id="uk.gov.moj.sdt.consumers.Consumer" class="uk.gov.moj.sdt.consumers.Consumer">
 	</bean>

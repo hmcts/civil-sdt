@@ -149,6 +149,7 @@ public abstract class AbstractWsConsumer
             throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error sending [" + errorReferenceContext + "]");
         }
         // Request was badly formatted.
+        // TODO Handle javax.xml.ws.soap.SOAPFaultException
         else if (wsException.getCause () instanceof org.apache.cxf.binding.soap.SoapFault)
         {
             throw new SoapFaultException ("SOAP_FAULT", wsException.getMessage ());

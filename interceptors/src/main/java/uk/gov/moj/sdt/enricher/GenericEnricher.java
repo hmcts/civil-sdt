@@ -69,6 +69,8 @@ public class GenericEnricher extends AbstractSdtEnricher
         // Check to ensure the parent tag can be found in the message.
         if (super.findParentTag (message))
         {
+            LOGGER.debug("Parent tag [" + this.getParentTag () +  "] found...performing enrichment.");
+
             // Get the system specific response from thread local to inject into the outbound message
             String replacementXml = SdtContext.getContext ().getRawOutXml ();
 
