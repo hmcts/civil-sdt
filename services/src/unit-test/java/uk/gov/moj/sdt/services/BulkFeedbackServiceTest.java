@@ -283,6 +283,7 @@ public class BulkFeedbackServiceTest
                             "Duplicate Unique Request Identifier submitted {0}");
             individualRequest.setErrorLog (errorLog);
         }
+        individualRequest.setTargetApplicationResponse ("<response></response>");
 
         bulkSubmission.addIndividualRequest (individualRequest);
     }
