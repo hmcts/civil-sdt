@@ -33,6 +33,8 @@ package uk.gov.moj.sdt.messaging;
 import java.text.SimpleDateFormat;
 
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,10 +56,15 @@ import uk.gov.moj.sdt.messaging.api.ISdtMessage;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
-        "/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml", "/uk/gov/moj/sdt/transformers/spring.context.xml",
-        "classpath*:/**/spring*.xml", "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/utils/spring*.xml",
-        "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml",
+        "/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
+        "/uk/gov/moj/sdt/interceptors/in/spring.context.xml", "/uk/gov/moj/sdt/interceptors/out/spring.context.xml",
+        "/uk/gov/moj/sdt/enricher/spring.context.xml", "/uk/gov/moj/sdt/messaging/spring.hibernate.test.xml",
+        "/uk/gov/moj/sdt/messaging/spring.context.test.xml", "/uk/gov/moj/sdt/cache/spring.context.xml",
+        "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/services/spring.context.xml",
+        "/uk/gov/moj/sdt/utils/spring.context.xml",
+        "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring.context.xml",
+        "/uk/gov/moj/sdt/transformers/spring.context.xml"})
 public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
@@ -83,41 +90,49 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
 
         final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
 
+        // Clear any old messages off the queue.
+        jmsTemplate.setReceiveTimeout (1);
+        while (true)
+        {
+            // Read any old messages.
+            final Message message = jmsTemplate.receive ("Test1Queue");
+            if (message == null)
+            {
+                break;
+            }
+        }
+
         // Send the first message.
         final ISdtMessage message1 = new SdtMessage ();
         final String strMessage1 =
                 "TestMessage1" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
         message1.setSdtRequestReference (strMessage1);
-        messageWriter.queueMessage (message1);
+        messageWriter.queueMessage (message1, "TEST1");
 
         // Send the second message.
         final ISdtMessage message2 = new SdtMessage ();
         final String strMessage2 =
                 "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
         message2.setSdtRequestReference (strMessage2);
-        messageWriter.queueMessage (message2);
+        messageWriter.queueMessage (message2, "TEST1");
 
-        // Wait for 10 seconds before checking the queue.
-        Thread.sleep (10000);
+        // Read the two messages and ensure they are read back in the same order.
+        Message message = jmsTemplate.receive ("Test1Queue");
+        ObjectMessage objmessage = (ObjectMessage) message;
+        if (objmessage == null)
+        {
+            Assert.fail ("Test failed because JMS receive timed out.");
+        }
 
-        /* jmsTemplate.browse ("JMSTestQueue", new BrowserCallback<Object> ()
-         * {
-         * 
-         * @Override
-         * public Object doInJms (final Session session, final QueueBrowser browser) throws JMSException
-         * {
-         * 
-         * @SuppressWarnings ("rawtypes") final Enumeration enumeration = browser.getEnumeration ();
-         * if (enumeration.hasMoreElements ())
-         * {
-         * Assert.fail ("There should be no more messages as all messages are read");
-         * }
-         * Assert.assertTrue (true);
-         * 
-         * return null;
-         * }
-         * 
-         * }); */
+        ISdtMessage sdtMessage = (ISdtMessage) objmessage.getObject ();
+        LOG.debug ("Message Receieved 1 - " + sdtMessage.toString ());
+        Assert.assertTrue (sdtMessage.getSdtRequestReference ().equals (strMessage1));
+
+        message = jmsTemplate.receive ("Test1Queue");
+        objmessage = (ObjectMessage) message;
+        sdtMessage = (ISdtMessage) objmessage.getObject ();
+        LOG.debug ("Message Receieved2 - " + sdtMessage.toString ());
+        Assert.assertTrue (sdtMessage.getSdtRequestReference ().equals (strMessage2));
 
     }
 
@@ -134,15 +149,13 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
         final MessageWriter messageWriter =
                 (MessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriterBad");
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
-
         // Send the message.
         final ISdtMessage message = new SdtMessage ();
         message.setSdtRequestReference ("Test message");
 
         try
         {
-            messageWriter.queueMessage (message);
+            messageWriter.queueMessage (message, "TEST1");
             Assert.fail ("Expected exception not thrown.");
         }
         catch (final UncategorizedJmsException e)

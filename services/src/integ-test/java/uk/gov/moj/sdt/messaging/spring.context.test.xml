@@ -24,14 +24,17 @@
 	
 	<bean id="jmsTemplateBad" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg ref="connectionFactoryBad"/>
-		<property name="defaultDestination" ref="destination"/>
 	</bean>
 	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriterBad" 
 		class="uk.gov.moj.sdt.messaging.MessageWriter">
 		<constructor-arg ref="jmsTemplateBad"/>
-        <constructor-arg value="JMSTestQueue"/>
-	</bean>
+		<property name="queueNameMap">
+			<map>
+				<entry key="TEST1" value="Test1Queue"/>
+			</map>
+		</property>
+ 	</bean>
 	
 		
 	<amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:61616">
@@ -44,19 +47,21 @@
 	
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg ref="connectionFactory"/>
-		<property name="defaultDestination" ref="destination"/>
 	</bean>
 	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriter" 
 		class="uk.gov.moj.sdt.messaging.MessageWriter">
 		<constructor-arg ref="jmsTemplate"/>
-        <constructor-arg value="JMSTestQueue"/>
+        <property name="queueNameMap">
+			<map>
+				<entry key="MCOL" value="McolQueue"/>
+				<entry key="TEST1" value="Test1Queue"/>
+				<entry key="MCOLS" value="McolsQueue"/>
+			</map>
+		</property>
 	</bean>
 				
-	<!--  ActiveMQ Destination  -->
-	<amq:queue id="destination" physicalName="JMSTestQueue" name="JMSTestQueue" />
-
-	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter" lazy-init="true">
+	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter" lazy-init="true" scope="prototype">
 		<constructor-arg>
 			<bean class="uk.gov.moj.sdt.messaging.IndividualRequestMdb">
 				<property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>
@@ -71,7 +76,23 @@
 		depends-on="transactionManager" lazy-init="true">
 		<property name="connectionFactory" ref="connectionFactory" />
 		<property name="cacheLevel" value="3"/>
-		<property name="destination" ref="destination" />
+		<property name="autoStartup" value="true"/>
+		<property name="destinationName" value="McolsQueue"/>
+		<property name="messageListener" ref="messageListener" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="concurrentConsumers" value="1"/>
+		<property name="maxConcurrentConsumers" value="1"/>
+		<property name="receiveTimeout" value="30000"/>
+		<property name="idleTaskExecutionLimit" value="1"/>
+		<property name="idleConsumerLimit" value="1"/>
+	</bean>
+	
+	<bean id="messageListenerContainerMCol"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer"
+		depends-on="transactionManager" lazy-init="true">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="cacheLevel" value="3"/>
+		<property name="destinationName" value="McolQueue"/>
 		<property name="messageListener" ref="messageListener" />
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="concurrentConsumers" value="1"/>

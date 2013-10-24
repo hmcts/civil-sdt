@@ -42,6 +42,7 @@
     	<property name="requestConsumer" ref="uk.gov.moj.sdt.consumers.api.IConsumerGateway"/>
     	<property name="globalParametersCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache"/>
     	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
+    	<property name="errorMessagesCache" ref="uk.gov.moj.sdt.cache.api.IErrorMessagesCache"/>
     </bean>
                           
 </beans>

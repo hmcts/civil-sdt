@@ -21,6 +21,11 @@
  	<bean id="jndiQueueName" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
  		<property name="jndiName" value="java:comp/env/jms/jmsMqQueue"/>
  	</bean>
+ 	
+ 	<!-- A JNDI resolver -->  
+	<bean id="jmsDestResolver" 
+  		class="org.springframework.jms.support.destination.JndiDestinationResolver"/>
+ 	
 	
 	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
 		<constructor-arg ref="amqConnectionFactory"/>
@@ -29,20 +34,23 @@
 	
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg ref="connectionFactory"/>
-		<!-- <property name="defaultDestination" ref="jndiQueueName"/> -->
-		<property name="defaultDestination" ref="destination"/>
+		<!-- <property name="destinationResolver">
+    			<ref bean="jmsDestResolver"/>
+  			</property>
+		-->
 	</bean>
-	
-	 <!--  ActiveMQ Destination  -->
-    <amq:queue id="destination" physicalName="JMSTestQueue" />
 	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriter" 
 		class="uk.gov.moj.sdt.messaging.MessageWriter">
 		<constructor-arg ref="jmsTemplate"/>
-        <constructor-arg value="JMSTestQueue"/>
+		<property name="queueNameMap">
+			<map>
+				<entry key="MCOL" value="McolQueue"/>
+			</map>
+		</property>
 	</bean>
 	
-	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter" scope="prototype">
 		<constructor-arg>
 			<bean class="uk.gov.moj.sdt.messaging.IndividualRequestMdb">
 				<property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>
@@ -56,7 +64,9 @@
 		class="org.springframework.jms.listener.DefaultMessageListenerContainer"
 		depends-on="transactionManager">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="destination" ref="destination" />
+		<property name="destinationName" value="McolQueue"/>
+		<!-- <property name="destinationName" value="jndiqueue name"/>
+		<property name="destinationResolver" ref="jmsDestResolver"/> -->
 		<property name="messageListener" ref="messageListener" />
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="concurrentConsumers" value="1"/>
@@ -65,5 +75,7 @@
 		<property name="idleTaskExecutionLimit" value="10"/>
 		<property name="idleConsumerLimit" value="5"/>
 	</bean>
+	
+	<!-- Define new message listener container for other target application queue -->
 
 </beans>

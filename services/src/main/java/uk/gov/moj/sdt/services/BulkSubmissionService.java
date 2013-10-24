@@ -139,10 +139,12 @@ public class BulkSubmissionService implements IBulkSubmissionService
                     @Override
                     public void run ()
                     {
+                        final String targetAppCode =
+                                iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
                         final ISdtMessage messageObj = new SdtMessage ();
                         messageObj.setSdtRequestReference (iRequest.getSdtRequestReference ());
 
-                        getMessageWriter ().queueMessage (messageObj);
+                        getMessageWriter ().queueMessage (messageObj, targetAppCode);
                     }
 
                 });

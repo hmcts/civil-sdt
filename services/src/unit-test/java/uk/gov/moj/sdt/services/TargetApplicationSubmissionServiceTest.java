@@ -37,7 +37,6 @@ import java.util.Set;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.hibernate.criterion.SimpleExpression;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +58,6 @@ import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
@@ -111,6 +109,11 @@ public class TargetApplicationSubmissionServiceTest
     private IMessageWriter mockMessageWriter;
 
     /**
+     * The mocked ICacheable reference to the error message cache.
+     */
+    private ICacheable mockErrorMsgCacheable;
+
+    /**
      * Method to do any pre-test set-up.
      */
     @Before
@@ -131,6 +134,9 @@ public class TargetApplicationSubmissionServiceTest
 
         mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
         targetAppSubmissionService.setMessageWriter (mockMessageWriter);
+
+        mockErrorMsgCacheable = EasyMock.createMock (ICacheable.class);
+        targetAppSubmissionService.setErrorMessagesCache (mockErrorMsgCacheable);
     }
 
     /**
@@ -254,12 +260,7 @@ public class TargetApplicationSubmissionServiceTest
         errorMsg.setErrorDescription ("Request not acknowledged");
         errorMsg.setErrorText ("Request Not Acknowledged");
 
-        final IErrorMessage[] errorMessages = new IErrorMessage[1];
-        errorMessages[0] = errorMsg;
-
-        EasyMock.expect (
-                this.mockIndividualRequestDao.query ((Class<IDomainObject>) EasyMock.anyObject (),
-                        (SimpleExpression) EasyMock.anyObject ())).andReturn (errorMessages);
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "REQ_NOT_ACK")).andReturn (errorMsg);
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
         final IErrorLog errorLog = new ErrorLog (errorMsg.getErrorCode (), errorMsg.getErrorText ());
@@ -278,13 +279,16 @@ public class TargetApplicationSubmissionServiceTest
         final ISdtMessage sdtMessage = new SdtMessage ();
         sdtMessage.setSdtRequestReference (individualRequest.getSdtRequestReference ());
 
-        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class));
+        final String targetAppCode =
+                individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
+        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class));
         EasyMock.expectLastCall ();
 
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockCacheable);
         EasyMock.replay (mockMessageWriter);
+        EasyMock.replay (mockErrorMsgCacheable);
 
         this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
 
@@ -292,6 +296,7 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockCacheable);
         EasyMock.verify (mockMessageWriter);
+        EasyMock.verify (mockErrorMsgCacheable);
 
         Assert.assertTrue ("Expected to pass", true);
     }
@@ -345,12 +350,7 @@ public class TargetApplicationSubmissionServiceTest
         errorMsg.setErrorDescription ("SDT Internal Error");
         errorMsg.setErrorText ("SDT Internal Error");
 
-        final IErrorMessage[] errorMessages = new IErrorMessage[1];
-        errorMessages[0] = errorMsg;
-
-        EasyMock.expect (
-                this.mockIndividualRequestDao.query ((Class<IDomainObject>) EasyMock.anyObject (),
-                        (SimpleExpression) EasyMock.anyObject ())).andReturn (errorMessages);
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
         final IErrorLog errorLog = new ErrorLog (errorMsg.getErrorCode (), errorMsg.getErrorText ());
@@ -364,12 +364,14 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockCacheable);
+        EasyMock.replay (mockErrorMsgCacheable);
 
         this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
 
         EasyMock.verify (mockIndividualRequestDao);
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockCacheable);
+        EasyMock.verify (mockErrorMsgCacheable);
 
         Assert.assertTrue ("Expected to pass", true);
     }
@@ -433,17 +435,12 @@ public class TargetApplicationSubmissionServiceTest
         errorMsg.setErrorDescription ("SDT Internal Error");
         errorMsg.setErrorText ("SDT Internal Error");
 
-        final IErrorMessage[] errorMessages = new IErrorMessage[1];
-        errorMessages[0] = errorMsg;
-
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
         final IErrorLog errorLog = new ErrorLog (errorMsg.getErrorCode (), errorMsg.getErrorText ());
 
         individualRequest.setErrorLog (errorLog);
 
-        EasyMock.expect (
-                this.mockIndividualRequestDao.query ((Class<IDomainObject>) EasyMock.anyObject (),
-                        (SimpleExpression) EasyMock.anyObject ())).andReturn (errorMessages);
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
 
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
@@ -451,12 +448,14 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockCacheable);
+        EasyMock.replay (mockErrorMsgCacheable);
 
         this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
 
         EasyMock.verify (mockIndividualRequestDao);
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockCacheable);
+        EasyMock.verify (mockErrorMsgCacheable);
 
         Assert.assertTrue ("Expected to pass", true);
     }

@@ -32,6 +32,8 @@
 package uk.gov.moj.sdt.messaging;
 
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,25 +68,30 @@ public class MessageWriter implements IMessageWriter
     private final JmsTemplate jmsTemplate;
 
     /**
-     * The queue name configurable as a bean property.
+     * This variable holds the queue name mapping with the key
+     * as the Target application and the value as the queue name.
      */
-    private final String queueName;
+    private Map<String, String> queueNameMap = new HashMap<String, String> ();
 
     /**
      * Creates a message sender with the JmsTemplate.
      * 
      * @param jmsTemplate The JMS template
-     * @param queueName The JMS queue name
      */
-    public MessageWriter (final JmsTemplate jmsTemplate, final String queueName)
+    public MessageWriter (final JmsTemplate jmsTemplate)
     {
         this.jmsTemplate = jmsTemplate;
-        this.queueName = queueName;
     }
 
     @Override
-    public void queueMessage (final ISdtMessage sdtMessage)
+    public void queueMessage (final ISdtMessage sdtMessage, final String targetAppCode)
     {
+
+        // Check the target application code is valid
+        validateTargetApplication (targetAppCode);
+
+        final String queueName = queueNameMap.get (targetAppCode);
+
         LOGGER.debug ("Sending message [" + sdtMessage.toString () + "] to queue [" + queueName + "]");
 
         // Set meta data in message.
@@ -95,28 +102,19 @@ public class MessageWriter implements IMessageWriter
 
         try
         {
-            this.jmsTemplate.convertAndSend (sdtMessage);
+
+            this.jmsTemplate.convertAndSend (queueName, sdtMessage);
         }
         catch (final UncategorizedJmsException e)
         {
             // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
             // periodically check the database and requeue any messages that are stuck on a state indicating that they
             // have not been sent to the case management system.
-            LOGGER.error ("Failed to connect to the ActivceMQ queue [" + getQueueName () + "]", e);
+            LOGGER.error ("Failed to connect to the ActivceMQ queue [" + queueName + "]", e);
             throw e;
         }
 
         return;
-    }
-
-    /**
-     * The queue name where the messages are sent.
-     * 
-     * @return the name of the queue that the messages are to be sent.
-     */
-    private String getQueueName ()
-    {
-        return this.queueName;
     }
 
     /**
@@ -128,5 +126,53 @@ public class MessageWriter implements IMessageWriter
     {
         MessageWriter.lastQueueId++;
         return MessageWriter.lastQueueId;
+    }
+
+    /**
+     * 
+     * @return map containing the target application to queue name mapping.
+     */
+    public Map<String, String> getQueueNameMap ()
+    {
+        return queueNameMap;
+    }
+
+    /**
+     * 
+     * @param queueNameMap map containing the target application to queue name mapping
+     *            with the key as the the target application code and value as the queue name
+     */
+    public void setQueueNameMap (final Map<String, String> queueNameMap)
+    {
+        this.queueNameMap = queueNameMap;
+    }
+
+    /**
+     * Checks that the target application code is supplied and that it is
+     * mapped to one of the queues in the queue map.
+     * 
+     * @param targetApplicationCode the target application code.
+     */
+    private void validateTargetApplication (final String targetApplicationCode)
+    {
+        // The target application code should be supplied.
+        if (targetApplicationCode == null || targetApplicationCode.trim ().length () == 0)
+        {
+            throw new IllegalArgumentException ("Target application code must be supplied.");
+        }
+        else
+        {
+            // Check that the target application code is mapped to a queue name
+            if ( !this.getQueueNameMap ().containsKey (targetApplicationCode))
+            {
+                throw new IllegalArgumentException ("Target application code [" + targetApplicationCode +
+                        "] does not have a JMS queue mapped.");
+            }
+            else
+            {
+                return;
+            }
+        }
+
     }
 }

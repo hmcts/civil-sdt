@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +86,11 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      * This variable holding the message writer reference.
      */
     private IMessageWriter messageWriter;
+
+    /**
+     * The ICacheable reference to the error messages cache.
+     */
+    private ICacheable errorMessagesCache;
 
     @Override
     public void processRequestToSubmit (final String sdtRequestReference)
@@ -204,18 +208,17 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         individualRequest.markRequestAsRejected (null);
 
         // Check if the Error message is defined as an internal system error
-        // TODO use cached error message
-        final IErrorMessage[] errorMessages =
-                this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", individualRequest.getErrorLog ().getErrorCode ()));
-        if (errorMessages != null)
+        final IErrorMessage errorMessageParam =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        individualRequest.getErrorLog ().getErrorCode ());
+
+        if (errorMessageParam != null)
         {
             // We got an internal system error, so assign it to the error message that
             // should be recorded
-            final IErrorMessage errorMessage = errorMessages[0];
 
             // Now set the error description from the standard error
-            individualRequest.getErrorLog ().setErrorText (errorMessage.getErrorText ());
+            individualRequest.getErrorLog ().setErrorText (errorMessageParam.getErrorText ());
         }
     }
 
@@ -244,54 +247,14 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
                 .setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
         // Get the Error message to indicate that call to target application has timed out
-        // TODO use cached error code
-        final IErrorMessage[] errorMessages =
-                this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK.name ()));
-
-        // Assume that there is only one error message
-        // assert errorMessages.length == 1;
-        final IErrorMessage errorMessage = errorMessages[0];
+        final IErrorMessage errorMessageParam =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        IErrorMessage.ErrorCode.REQ_NOT_ACK.name ());
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog (errorMessage.getErrorCode (), errorMessage.getErrorText ());
+        final IErrorLog errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorText ());
 
         // Set the error log in the individual request
-        individualRequest.setErrorLog (errorLog);
-
-        // now persist the request.
-        this.getIndividualRequestDao ().persist (individualRequest);
-    }
-
-    /**
-     * Updates the request object. This method is called when the send request to target application
-     * returns an server error.
-     * 
-     * @param individualRequest the individual request to be marked with reason as not responding
-     */
-    private void updateTargetAppUnavailable (final IIndividualRequest individualRequest)
-    {
-        // Set the updated date .
-        individualRequest
-                .setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-
-        // Set the status to Received
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ());
-
-        // Forwarding attempts have already been incremented.
-
-        // Get the Error message for the code ERROR_CODE_REQ_NOT_ACK
-        // TODO get error code from cache
-        final IErrorMessage[] errorMessages =
-                this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.REQ_NOT_ACK.name ()));
-
-        final IErrorMessage errorMessage = errorMessages[0];
-
-        // Now create an ErrorLog object with the ErrorMessage object and the
-        // IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog (errorMessage.getErrorCode (), errorMessage.getErrorText ());
-
         individualRequest.setErrorLog (errorLog);
 
         // now persist the request.
@@ -339,11 +302,9 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      */
     private void updateRequestSoapError (final IIndividualRequest individualRequest, final String soapFaultError)
     {
-        final IErrorMessage[] errorMessages =
-                this.getIndividualRequestDao ().query (IErrorMessage.class,
-                        Restrictions.eq ("errorCode", IErrorMessage.ErrorCode.SDT_INT_ERR.name ()));
-
-        final IErrorMessage errorMessage = errorMessages[0];
+        final IErrorMessage errorMessage =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        IErrorMessage.ErrorCode.SDT_INT_ERR.name ());
 
         // Now create an ErrorLog object with the ErrorMessage object and the
         // IndividualRequest object
@@ -502,7 +463,10 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
 
             SdtMetricsMBean.getSdtMetrics ().upRequestRequeues ();
 
-            this.getMessageWriter ().queueMessage (messageObj);
+            final String targetAppCode =
+                    individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
+
+            this.getMessageWriter ().queueMessage (messageObj, targetAppCode);
         }
         else
         {
@@ -546,5 +510,23 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     public void setMessageWriter (final IMessageWriter messageWriter)
     {
         this.messageWriter = messageWriter;
+    }
+
+    /**
+     * 
+     * @return cacheable interface for the error messages cache.
+     */
+    public ICacheable getErrorMessagesCache ()
+    {
+        return errorMessagesCache;
+    }
+
+    /**
+     * 
+     * @param errorMessagesCache the error messages cache.
+     */
+    public void setErrorMessagesCache (final ICacheable errorMessagesCache)
+    {
+        this.errorMessagesCache = errorMessagesCache;
     }
 }

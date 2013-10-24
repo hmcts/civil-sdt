@@ -5,8 +5,8 @@ VALUES ( 1,'DATA_RETENTION_PERIOD',90
 ,'Duration in days, to retain data in the tables subject to a prescribed purge');
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
-VALUES ( 2,'TARGET_APP_TIMEOUT',15
-,'Period in seconds, to wait for response from target application');
+VALUES ( 2,'TARGET_APP_TIMEOUT',15000
+,'Period in milliseconds, to wait for next re-try to reach the target application');
 
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
 VALUES ( 3,'MAX_FORWARDING_ATTEMPTS',3
@@ -27,6 +27,10 @@ VALUES ( 6,'MCOL_MAX_CONCURRENT_QUERY_REQ',5
 INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
 VALUES ( 7,'CONTACT_DETAILS','tbc'
 ,'Current contact details for outgoing SDT application messages to Bulk Customer System');
+
+INSERT INTO global_parameters ( global_parameter_id,parameter_name,parameter_value,parameter_description)
+VALUES ( 8,'TARGET_APP_RESP_TIMEOUT',30000
+,'Period in milliseconds, read timeout to wait for response from target application');
 
 
 INSERT INTO service_types (service_type_id,service_type_name,service_type_status, service_type_description)

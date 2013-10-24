@@ -32,9 +32,14 @@
 package uk.gov.moj.sdt.messaging;
 
 import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
@@ -49,6 +54,11 @@ import uk.gov.moj.sdt.messaging.api.ISdtMessage;
  */
 public class MessageWriterTest
 {
+
+    /**
+     * Logger for this class.
+     */
+    private static final Log LOGGER = LogFactory.getLog (MessageWriterTest.class);
 
     /**
      * JMS Template for mocking.
@@ -68,12 +78,70 @@ public class MessageWriterTest
     {
         // Nicemock returns default values
         jmsTemplate = EasyMock.createMock (JmsTemplate.class);
-        messageWriter = new MessageWriter (jmsTemplate, "JMSUnitTestQ");
+        // messageWriter = new MessageWriter (jmsTemplate, "JMSUnitTestQ");
+        messageWriter = new MessageWriter (jmsTemplate);
     }
 
     /**
      * Test method to test the sending of message.
      * 
+     */
+    @Test
+    public void testQueueMessageWithEmptyTargetApp ()
+    {
+        // Setup finished, now tell the mock what to expect.
+        final ISdtMessage sdtMessage = new SdtMessage ();
+        sdtMessage.setSdtRequestReference ("Test");
+
+        jmsTemplate.convertAndSend ("UnitTestQueue", sdtMessage);
+        EasyMock.expectLastCall ();
+
+        // Get ready to call the mock.
+        replay (jmsTemplate);
+
+        // Send the message.
+        try
+        {
+            messageWriter.queueMessage (sdtMessage, null);
+            Assert.fail ("Should have thrown an exception here");
+        }
+        catch (final IllegalArgumentException e)
+        {
+            Assert.assertTrue ("Expected", true);
+        }
+    }
+
+    /**
+     * Test message with an invalid queue name i.e. where the target application
+     * to queue name map is not valid
+     */
+    @Test
+    public void testQueueMessageWithInvalidTarget ()
+    {
+        // Setup finished, now tell the mock what to expect.
+        final ISdtMessage sdtMessage = new SdtMessage ();
+        sdtMessage.setSdtRequestReference ("Test");
+
+        jmsTemplate.convertAndSend ("UnitTestQueue", sdtMessage);
+        EasyMock.expectLastCall ();
+
+        // Get ready to call the mock.
+        replay (jmsTemplate);
+
+        // Send the message.
+        try
+        {
+            messageWriter.queueMessage (sdtMessage, "UnitTest");
+            Assert.fail ("Should have thrown an exception here");
+        }
+        catch (final IllegalArgumentException e)
+        {
+            Assert.assertTrue ("Expected", true);
+        }
+    }
+
+    /**
+     * Test for a valid queue message on the MessageWriter.
      */
     @Test
     public void testQueueMessage ()
@@ -82,16 +150,29 @@ public class MessageWriterTest
         final ISdtMessage sdtMessage = new SdtMessage ();
         sdtMessage.setSdtRequestReference ("Test");
 
-        jmsTemplate.convertAndSend (sdtMessage);
+        jmsTemplate.convertAndSend ("UnitTestQueue", sdtMessage);
         EasyMock.expectLastCall ();
 
         // Get ready to call the mock.
         replay (jmsTemplate);
 
         // Send the message.
-        messageWriter.queueMessage (sdtMessage);
+        try
+        {
+            final Map<String, String> queueNameMap = new HashMap<String, String> ();
+            queueNameMap.put ("UnitTest", "UnitTestQueue");
 
-        // Make sure the mock was called as expected.
-        verify (jmsTemplate);
+            messageWriter.setQueueNameMap (queueNameMap);
+
+            messageWriter.queueMessage (sdtMessage, "UnitTest");
+            Assert.assertTrue ("Success", true);
+        }
+        catch (final IllegalArgumentException e)
+        {
+            LOGGER.error ("Error", e);
+            Assert.fail ("Not Expected to fail");
+        }
+
+        EasyMock.verify (jmsTemplate);
     }
 }
