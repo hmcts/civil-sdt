@@ -31,7 +31,16 @@
 
 package uk.gov.moj.sdt.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
+import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 
 /**
@@ -40,28 +49,115 @@ import uk.gov.moj.sdt.services.api.ISubmitQueryService;
  * @author d130680
  * 
  */
-public class SubmitQueryService implements ISubmitQueryService
-{
+public class SubmitQueryService implements ISubmitQueryService {
 
-    @Override
-    public void submitQuery (final ISubmitQueryRequest request)
-    {
-        // TODO - Implement this method
+	/**
+	 * Logger object.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(SubmitQueryService.class);
 
-        // Initialise request.getBulkCustomer ();
+	/**
+	 * The consumer gateway that will perform the call to the target application
+	 * web service.
+	 */
+	private IConsumerGateway requestConsumer;
 
-        // Initialise request.getTargetApplication ();
+	/**
+	 * The ICacheable reference to the global parameters cache.
+	 */
+	private ICacheable globalParametersCache;
 
-        // Read raw soap message from threadlocal and extract criteria element. Write to threadlocal for use by outbound
-        // interceptor.
+	@Override
+	public void submitQuery(final ISubmitQueryRequest submitQueryRequest) {
+		// TODO - Implementation is in progress...
+		// Initialise request.getBulkCustomer ();
+		// Initialise request.getTargetApplication ();
+		// Read raw soap message from threadlocal and extract criteria element.
+		// Write to threadlocal for use by outbound
+		// interceptor.
+		// Concurrent and delay processing
+		// Read timeout and connection parameters.
+		// Call consumer gateway
+		// Delegate to Submit Query
 
-        // Concurrent and delay processing
+		// TODO
+		// 1. Data Enrichment. (Need target application read from DB,
+		// bulk customer)
+		enrich(submitQueryRequest);
+		// 2. Parse rawRequest
+		// 3. write to outbound - would be covered inside parser
+		// throttling - need to think
 
-        // Read timeout and connection parameters.
+		// Make call to consumer to submit the request to target
+		// application.
+		try {
+			this.sendRequestToTargetApp(submitQueryRequest);
 
-        // Call consumer gateway
-        // Delegate to Submit Query
+			// this.updateCompletedRequest(submitQueryRequest);
+		} catch (final TimeoutException e) {
+			LOGGER.error("Timeout exception for SDT Bulk Customer reference "
+					+ submitQueryRequest.getBulkCustomer().getSdtCustomerId()
+					+ "]", e);
 
-    }
+			// Create new instance of submitQueryResponse, populate error log
+			// property - error code, description
+			// and return newly created instance
+
+		} catch (final SoapFaultException e) {
+			// Create new instance of submitQueryResponse, populate error log
+			// property with different msg - error code, description
+			// and return newly created instance
+			// Log the exception
+		}
+
+		LOGGER.debug("Submit query request " + submitQueryRequest.getId()
+				+ " processing completed.");
+
+	}
+
+	/**
+	 * Enrich submit query instance to prepare for persistence.
+	 * 
+	 * @param submitQueryRequest
+	 *            submit query request
+	 */
+	private void enrich(final ISubmitQueryRequest submitQueryRequest) {
+		LOGGER.debug("enrich bulk submission instance");
+	}
+
+	/**
+	 * Send the submit query request to target application for submission.
+	 * 
+	 * @param submitQueryRequest
+	 *            the submit query request to be sent to target application.
+	 * @throws OutageException
+	 *             when the target web service is not responding.
+	 * @throws TimeoutException
+	 *             when the target web service does not respond back in time.
+	 */
+	private void sendRequestToTargetApp(
+			final ISubmitQueryRequest submitQueryRequest)
+			throws OutageException, TimeoutException {
+		final IGlobalParameter connectionTimeOutParam = this.globalParametersCache
+				.getValue(IGlobalParameter.class,
+						IGlobalParameter.ParameterKey.TARGET_APP_TIMEOUT.name());
+		final IGlobalParameter requestTimeOutParam = this.globalParametersCache
+				.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
+
+		long requestTimeOut = 0;
+		long connectionTimeOut = 0;
+
+		if (requestTimeOutParam != null) {
+			requestTimeOut = Long.valueOf(requestTimeOutParam.getValue());
+		}
+
+		if (connectionTimeOutParam != null) {
+			connectionTimeOut = Long.valueOf(connectionTimeOutParam.getValue());
+		}
+
+		this.requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut,
+				requestTimeOut);
+	}
 
 }

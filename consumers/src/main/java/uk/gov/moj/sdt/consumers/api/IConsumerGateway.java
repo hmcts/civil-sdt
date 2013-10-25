@@ -41,26 +41,41 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
  * @author Manoj Kulkarni
  * 
  */
-public interface IConsumerGateway
-{
+public interface IConsumerGateway {
 
-    /**
-     * 
-     * @param individualRequest the Individual Request part of the
-     *            submission request.
-     * @param connectionTimeOut the connection timeout parameter value.
-     * @param receiveTimeOut the receive timeout parameter value.
-     * @throws OutageException if the target server is un-reachable.
-     * @throws TimeoutException if the target server response cannot be obtained
-     *             within the timeout period.
-     */
-    void individualRequest (IIndividualRequest individualRequest, final long connectionTimeOut,
-                            final long receiveTimeOut) throws OutageException, TimeoutException;
+	/**
+	 * 
+	 * @param individualRequest
+	 *            the Individual Request part of the submission request.
+	 * @param connectionTimeOut
+	 *            the connection timeout parameter value.
+	 * @param receiveTimeOut
+	 *            the receive timeout parameter value.
+	 * @throws OutageException
+	 *             if the target server is un-reachable.
+	 * @throws TimeoutException
+	 *             if the target server response cannot be obtained within the
+	 *             timeout period.
+	 */
+	void individualRequest(IIndividualRequest individualRequest,
+			final long connectionTimeOut, final long receiveTimeOut)
+			throws OutageException, TimeoutException;
 
-    /**
-     * 
-     * @param submitQueryRequest the submit query request.
-     */
-    void submitQuery (ISubmitQueryRequest submitQueryRequest);
+	/**
+	 * @param submitQueryRequest
+	 *            the submit query request coming from handler.
+	 * @param connectionTimeOut
+	 *            the connection timeout parameter value.
+	 * @param receiveTimeOut
+	 *            the receive timeout parameter value.
+	 * @throws OutageException
+	 *             if the target server is un-reachable.
+	 * @throws TimeoutException
+	 *             if the target server response cannot be obtained within the
+	 *             timeout period.
+	 */
+	void submitQuery(ISubmitQueryRequest submitQueryRequest,
+			final long connectionTimeOut, final long receiveTimeOut)
+			throws OutageException, TimeoutException;
 
 }

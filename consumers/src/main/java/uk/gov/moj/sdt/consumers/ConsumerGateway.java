@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.consumers;
 
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
+import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -43,44 +44,67 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
  * @author Manoj Kulkarni
  * 
  */
-public class ConsumerGateway implements IConsumerGateway
-{
+public class ConsumerGateway implements IConsumerGateway {
 
-    /**
-     * The consumer interface for the IndividualRequest.
-     */
-    private IIndividualRequestConsumer individualRequestConsumer;
+	/**
+	 * The consumer interface for the IndividualRequest.
+	 */
+	private IIndividualRequestConsumer individualRequestConsumer;
 
-    @Override
-    public void individualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
-                                   final long receiveTimeOut) throws OutageException, TimeoutException
-    {
-        this.getIndividualRequestConsumer ().processIndividualRequest (individualRequest, connectionTimeOut,
-                receiveTimeOut);
-    }
+	/**
+	 * The consumer interface for the SubmitQuery.
+	 */
+	private ISubmitQueryConsumer submitQueryConsumer;
 
-    @Override
-    public void submitQuery (final ISubmitQueryRequest submitQueryRequest)
-    {
+	@Override
+	public void individualRequest(final IIndividualRequest individualRequest,
+			final long connectionTimeOut, final long receiveTimeOut)
+			throws OutageException, TimeoutException {
+		this.getIndividualRequestConsumer().processIndividualRequest(
+				individualRequest, connectionTimeOut, receiveTimeOut);
+	}
 
-    }
+	@Override
+	public void submitQuery(final ISubmitQueryRequest submitQueryRequest,
+			final long connectionTimeOut, final long receiveTimeOut)
+			throws OutageException, TimeoutException {
 
-    /**
-     * 
-     * @return individual request consumer.
-     */
-    public IIndividualRequestConsumer getIndividualRequestConsumer ()
-    {
-        return individualRequestConsumer;
-    }
+		this.getSubmitQueryConsumer().processSubmitQuery(submitQueryRequest,
+				connectionTimeOut, receiveTimeOut);
 
-    /**
-     * 
-     * @param individualRequestConsumer the individual request consumer.
-     */
-    public void setIndividualRequestConsumer (final IIndividualRequestConsumer individualRequestConsumer)
-    {
-        this.individualRequestConsumer = individualRequestConsumer;
-    }
+	}
 
+	/**
+	 * 
+	 * @return individual request consumer.
+	 */
+	public IIndividualRequestConsumer getIndividualRequestConsumer() {
+		return individualRequestConsumer;
+	}
+
+	/**
+	 * 
+	 * @param individualRequestConsumer
+	 *            the individual request consumer.
+	 */
+	public void setIndividualRequestConsumer(
+			final IIndividualRequestConsumer individualRequestConsumer) {
+		this.individualRequestConsumer = individualRequestConsumer;
+	}
+
+	/**
+	 * @return submit query consumer instance.
+	 */
+	public ISubmitQueryConsumer getSubmitQueryConsumer() {
+		return submitQueryConsumer;
+	}
+
+	/**
+	 * @param submitQueryConsumer
+	 *            - set submit query consumer instance.
+	 */
+	public void setSubmitQueryConsumer(
+			final ISubmitQueryConsumer submitQueryConsumer) {
+		this.submitQueryConsumer = submitQueryConsumer;
+	}
 }
