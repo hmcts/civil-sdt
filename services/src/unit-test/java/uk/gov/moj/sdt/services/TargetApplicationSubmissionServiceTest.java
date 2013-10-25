@@ -69,6 +69,8 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.utils.GenericXmlParser;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Test class for TargetApplicationSubmissionService.
@@ -137,6 +139,11 @@ public class TargetApplicationSubmissionServiceTest
 
         mockErrorMsgCacheable = EasyMock.createMock (ICacheable.class);
         targetAppSubmissionService.setErrorMessagesCache (mockErrorMsgCacheable);
+
+        final GenericXmlParser genericParser = new GenericXmlParser ();
+        genericParser.setEnclosingTag ("targetAppDetail");
+
+        targetAppSubmissionService.setIndividualResponseXmlParser (genericParser);
     }
 
     /**
@@ -199,6 +206,9 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockCacheable);
+
+        // Setup dummy target response
+        SdtContext.getContext ().setRawInXml ("response");
 
         this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
 
@@ -449,6 +459,9 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockCacheable);
         EasyMock.replay (mockErrorMsgCacheable);
+
+        // Setup dummy response
+        SdtContext.getContext ().setRawInXml ("response");
 
         this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
 

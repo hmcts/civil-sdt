@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,7 @@ import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
@@ -91,6 +93,11 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      * The ICacheable reference to the error messages cache.
      */
     private ICacheable errorMessagesCache;
+
+    /**
+     * Parser for individual response.
+     */
+    private GenericXmlParser individualResponseXmlParser;
 
     @Override
     public void processRequestToSubmit (final String sdtRequestReference)
@@ -169,6 +176,12 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      */
     private void updateCompletedRequest (final IIndividualRequest individualRequest)
     {
+        final String targetAppResponse = individualResponseXmlParser.parse ();
+        if (StringUtils.isNotBlank (targetAppResponse))
+        {
+            individualRequest.setTargetApplicationResponse (targetAppResponse);
+        }
+
         final String requestStatus = individualRequest.getRequestStatus ();
 
         if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ()))
@@ -528,5 +541,25 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
     public void setErrorMessagesCache (final ICacheable errorMessagesCache)
     {
         this.errorMessagesCache = errorMessagesCache;
+    }
+
+    /**
+     * Getter for individualResponseXmlParser.
+     * 
+     * @return the individualResponseXmlParser
+     */
+    public GenericXmlParser getIndividualResponseXmlParser ()
+    {
+        return individualResponseXmlParser;
+    }
+
+    /**
+     * Setter for individualResponseXmlParser.
+     * 
+     * @param individualResponseXmlParser the individualResponseXmlParser to set
+     */
+    public void setIndividualResponseXmlParser (final GenericXmlParser individualResponseXmlParser)
+    {
+        this.individualResponseXmlParser = individualResponseXmlParser;
     }
 }

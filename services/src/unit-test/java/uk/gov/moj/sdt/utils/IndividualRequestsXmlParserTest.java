@@ -33,7 +33,9 @@ package uk.gov.moj.sdt.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -70,6 +72,12 @@ public class IndividualRequestsXmlParserTest
     public void setUp ()
     {
         this.individualRequestsXmlParser = new IndividualRequestsXmlParser ();
+
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
+
+        individualRequestsXmlParser.setReplacementNamespaces (replacementNamespaces);
     }
 
     /**
@@ -111,15 +119,15 @@ public class IndividualRequestsXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find correct payload for request 1",
-                "<bul:mcolClaimStatusUpdate><cla1:claimNumber>claim123</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
+                "<bul:mcolClaimStatusUpdatexmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\"><cla1:claimNumber>claim123</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
                 requests.get (0).getRequestPayload ().replaceAll ("\\s+", ""));
         Assert.assertEquals (
                 "Failed to find correct payload for request 2",
-                "<bul:mcolClaimStatusUpdate><cla1:claimNumber>claim124</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-02-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
+                "<bul:mcolClaimStatusUpdatexmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\"><cla1:claimNumber>claim124</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-02-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
                 requests.get (1).getRequestPayload ().replaceAll ("\\s+", ""));
         Assert.assertEquals (
                 "Failed to find correct payload for request 3",
-                "<bul:mcolClaim><cla1:claimNumber>claim125</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-03-01</cla1:paidInFullDate></bul:mcolClaim>",
+                "<bul:mcolClaimxmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\"><cla1:claimNumber>claim125</cla1:claimNumber><cla1:defendantId>1</cla1:defendantId><cla1:notificationType>MP</cla1:notificationType><cla1:paidInFullDate>2012-03-01</cla1:paidInFullDate></bul:mcolClaim>",
                 requests.get (2).getRequestPayload ().replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }
@@ -148,5 +156,4 @@ public class IndividualRequestsXmlParserTest
         return message;
 
     }
-
 }

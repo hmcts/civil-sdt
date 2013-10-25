@@ -30,8 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 
 /**
  * This class reads a bulk submission xml and parses it into individual raw xml requests.
@@ -54,6 +57,11 @@ public class IndividualRequestsXmlParser
     private static final Log LOGGER = LogFactory.getLog (IndividualRequestsXmlParser.class);
 
     /**
+     * Contains mapping of namespaces to be replaced.
+     */
+    private Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+
+    /**
      * Populate individual requests with the raw xml request.
      * 
      * @param individualRequests the individual requests to be populated with data from the raw XML.
@@ -65,6 +73,10 @@ public class IndividualRequestsXmlParser
 
         // Match it against the result of all previous match replacements.
         final String rawXml = SdtContext.getContext ().getRawInXml ();
+
+        // Retrieve all namespaces
+        final Map<String, String> allNamespaces =
+                XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);
 
         while (iter.hasNext ())
         {
@@ -89,19 +101,38 @@ public class IndividualRequestsXmlParser
 
             final Matcher matcher = pattern.matcher (rawXml);
 
+            String individualRequestRawXml = null;
+
             while (matcher.find ())
             {
                 LOGGER.debug ("Found matching group[" + matcher.group () + "]");
 
                 // Capture the raw XML associated with this request.
-                final String individualRequestRawXml = matcher.group (1);
+                individualRequestRawXml = matcher.group (1).trim ();
 
                 // Form the replacement string from the matched groups and the extra XML.
-                LOGGER.debug ("Individual requewst raw XML[" + individualRequestRawXml + "]");
+                LOGGER.debug ("Individual request raw XML[" + individualRequestRawXml + "]");
+
+                final Map<String, String> matchingNamespaces =
+                        XmlNamespaceUtils.findMatchingNamespaces (individualRequestRawXml, allNamespaces);
+
+                individualRequestRawXml = XmlNamespaceUtils.addNamespaces (individualRequestRawXml, matchingNamespaces);
+
+                LOGGER.debug ("Individual request raw XML[" + individualRequestRawXml + "]");
 
                 individualRequest.setRequestPayload (individualRequestRawXml);
             }
         }
 
+    }
+
+    /**
+     * Setter for replacementNamespaces property.
+     * 
+     * @param replacementNamespaces namespaces to be replaced.
+     */
+    public void setReplacementNamespaces (final Map<String, String> replacementNamespaces)
+    {
+        this.replacementNamespaces = replacementNamespaces;
     }
 }

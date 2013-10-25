@@ -40,15 +40,13 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import uk.gov.moj.sdt.utils.parsing.api.IXmlNamespaceUtils;
-
 /**
- * This class reads a bulk submission xml and parses it into individual raw xml requests.
+ * This is a utility class for dealing with namespaces for xml fragments.
  * 
  * @author D303894
  * 
  */
-public class XmlNamespaceUtils implements IXmlNamespaceUtils
+public final class XmlNamespaceUtils
 {
     /**
      * Logger instance.
@@ -56,22 +54,54 @@ public class XmlNamespaceUtils implements IXmlNamespaceUtils
     private static final Log LOGGER = LogFactory.getLog (XmlNamespaceUtils.class);
 
     /**
-     * Namespaces extracted out of a piece of raw xml.
+     * No-args constructor.
      */
-    private Map<String, String> namespaces;
+    private XmlNamespaceUtils ()
+    {
+
+    }
 
     /**
-     * Combined map of individual namespace maps.
+     * Combine a number of namespace maps into a single namespace map without duplicates.
+     * 
+     * @param namespaceMap an individual namespace map which should be combined with any other individual namespace
+     *            maps.
+     * @param combinedNamespaces combined namespace map
+     * @return map of individual namespace maps combined so far.
      */
-    private Map<String, String> combinedNamespaces = new HashMap<String, String> ();
+    public static Map<String, String> combineNamespaces (final Map<String, String> namespaceMap,
+                                                         final Map<String, String> combinedNamespaces)
+    {
+        final Set<String> keys = namespaceMap.keySet ();
+        final Iterator<String> iter = keys.iterator ();
+        while (iter.hasNext ())
+        {
+            final String key = iter.next ();
 
-    @Override
-    public void extractNamespaces (final String rawXml)
+            // Check if we have already combined this one.
+            if ( !combinedNamespaces.containsKey (key))
+            {
+                // Add to combined set of namespaces.
+                combinedNamespaces.put (key, namespaceMap.get (key));
+            }
+        }
+
+        return combinedNamespaces;
+    }
+
+    /**
+     * Extract namespaces out of a piece of raw XML.
+     * 
+     * @param rawXml raw xml.
+     * @param replacementNamespaces map containing replacement namespaces.
+     * @return map containing extracted namespaces
+     */
+    public static Map<String, String> extractAllNamespaces (final String rawXml,
+                                                            final Map<String, String> replacementNamespaces)
     {
         LOGGER.debug ("Raw xml is " + rawXml);
 
-        // Clear out previous namespaces.
-        namespaces = new HashMap<String, String> ();
+        final Map<String, String> namespaces = new HashMap<String, String> ();
 
         // Build a search pattern to find all namespaces.
         final Pattern pattern = Pattern.compile ("xmlns:(.*?)=\".*?\"");
@@ -82,23 +112,38 @@ public class XmlNamespaceUtils implements IXmlNamespaceUtils
         {
             // Capture the raw XML associated with this request.
             final String namespaceKey = matcher.group (1);
-            final String namespaceValue = matcher.group (0);
+            String namespaceValue = matcher.group (0);
 
-            // Form the replacement string from the matched groups and the extra XML.
+            if (replacementNamespaces != null)
+            {
+                // Replace namespace value if mapping found in replacement namespaces map.
+                final Set<String> keys = replacementNamespaces.keySet ();
+                for (String key : keys)
+                {
+                    if (namespaceValue.contains (key))
+                    {
+                        namespaceValue = "xmlns:" + namespaceKey + "=\"" + replacementNamespaces.get (key) + "\"";
+                    }
+                }
+            }
+
             LOGGER.debug ("Namespace key[" + namespaceKey + "], value[" + namespaceValue + "]");
 
             namespaces.put (namespaceKey, namespaceValue);
         }
-    }
 
-    @Override
-    public Map<String, String> getNamespaces ()
-    {
         return namespaces;
     }
 
-    @Override
-    public Map<String, String> findMatchingNamespaces (final String xmlFragment)
+    /**
+     * Find map of applicable namespaces for given xml fragment based on namespaces for entire xml.
+     * 
+     * @param xmlFragment fragment of xml to which namespaces should apply.
+     * @param allNamespaces namespaces for entire xml
+     * @return map of applicable namespaces.
+     */
+    public static Map<String, String> findMatchingNamespaces (final String xmlFragment,
+                                                              final Map<String, String> allNamespaces)
     {
         LOGGER.debug ("Raw xml fragment is " + xmlFragment);
 
@@ -121,37 +166,46 @@ public class XmlNamespaceUtils implements IXmlNamespaceUtils
             if ( !matchingNamespaces.containsKey (namespaceKey))
             {
                 // Make sure this namespace has been defined.
-                if ( !namespaces.containsKey (namespaceKey))
+                if ( !allNamespaces.containsKey (namespaceKey))
                 {
                     throw new RuntimeException ("Namespace [" + namespaceKey + "] missing from incoming raw xml[" +
                             xmlFragment + "]");
                 }
 
                 // Copy namespace to the set of matching namespaces for this fragment.
-                matchingNamespaces.put (namespaceKey, namespaces.get (namespaceKey));
+                matchingNamespaces.put (namespaceKey, allNamespaces.get (namespaceKey));
             }
         }
 
         return matchingNamespaces;
     }
 
-    @Override
-    public Map<String, String> combineNamespaces (final Map<String, String> namespaceMap)
+    /**
+     * Adds namespaces to xml fragment.
+     * 
+     * @param xmlFragment xml to be decorated.
+     * @param namespaces namespaces to be added.
+     * @return xml with namespace
+     */
+    public static String addNamespaces (final String xmlFragment, final Map<String, String> namespaces)
     {
-        final Set<String> keys = namespaceMap.keySet ();
-        final Iterator<String> iter = keys.iterator ();
-        while (iter.hasNext ())
-        {
-            final String key = iter.next ();
+        final StringBuilder result = new StringBuilder ();
 
-            // Check if we have already combined this one.
-            if ( !combinedNamespaces.containsKey (key))
-            {
-                // Add to combined set of namespaces.
-                combinedNamespaces.put (key, namespaceMap.get (key));
-            }
+        // Locate closing bracket for first element.
+        final int index = xmlFragment.indexOf ('>');
+
+        result.append (xmlFragment.substring (0, index));
+
+        // Add namespace details to first element
+        for (String value : namespaces.values ())
+        {
+            result.append (" ");
+            result.append (value);
         }
 
-        return combinedNamespaces;
+        result.append (xmlFragment.substring (index));
+
+        return result.toString ();
+
     }
 }
