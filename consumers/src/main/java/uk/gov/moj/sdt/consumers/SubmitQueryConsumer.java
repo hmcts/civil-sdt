@@ -27,8 +27,7 @@
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
- * $LastChangedBy$
- */
+ * $LastChangedBy$ */
 
 package uk.gov.moj.sdt.consumers;
 
@@ -55,172 +54,135 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
  * @author D274994
  * 
  */
-public class SubmitQueryConsumer extends AbstractWsConsumer implements
-		ISubmitQueryConsumer {
+public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQueryConsumer
+{
 
-	/**
-	 * Logger instance.
-	 */
-	private static final Log LOGGER = LogFactory
-			.getLog(SubmitQueryConsumer.class);
+    /**
+     * Logger instance.
+     */
+    private static final Log LOGGER = LogFactory.getLog (SubmitQueryConsumer.class);
 
-	/**
-	 * transformer for submit query request.
-	 */
-	// CHECKSTYLE:OFF
-	private IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer;
-	// CHECKSTYLE:ON
-	/**
-	 * A boolean flag to indicate if the WebServiceException is to be thrown
-	 * back to the client when there is a failure to connect to the target
-	 * application.
-	 */
-	private boolean rethrowOnFailureToConnect;
+    /**
+     * transformer for submit query request.
+     */
+    // CHECKSTYLE:OFF
+    private IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
-	 * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest)
-	 */
-	@Override
-	public void processSubmitQuery(
-			final ISubmitQueryRequest submitQueryRequest,
-			final long connectionTimeOut, final long receiveTimeOut)
-			throws OutageException, TimeoutException {
+    // CHECKSTYLE:ON
 
-		LOGGER.info("[processSubmitQuery] started");
-		// Transform domain object to web service object
-		final SubmitQueryRequestType submitQueryRequestType = this.transformer
-				.transformDomainToJaxb(submitQueryRequest);
+    /* (non-Javadoc)
+     * 
+     * @see
+     * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
+     * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest) */
+    @Override
+    public void processSubmitQuery (final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
+                                    final long receiveTimeOut) throws OutageException, TimeoutException
+    {
 
-		// Process and call the end point web service
-		final SubmitQueryResponseType responseType = this
-				.invokeTargetAppService(submitQueryRequestType,
-						submitQueryRequest, connectionTimeOut, receiveTimeOut);
+        LOGGER.info ("[processSubmitQuery] started");
+        // Transform domain object to web service object
+        final SubmitQueryRequestType submitQueryRequestType =
+                this.transformer.transformDomainToJaxb (submitQueryRequest);
 
-		this.transformer
-				.transformJaxbToDomain(responseType, submitQueryRequest);
+        // Process and call the end point web service
+        final SubmitQueryResponseType responseType =
+                this.invokeTargetAppService (submitQueryRequestType, submitQueryRequest, connectionTimeOut,
+                        receiveTimeOut);
 
-		LOGGER.info("[processSubmitQuery] completed");
-	}
+        this.transformer.transformJaxbToDomain (responseType, submitQueryRequest);
 
-	/**
-	 * @param submitQueryRequestType
-	 *            request the individual request JAXB model
-	 * @param submitQueryRequest
-	 *            the individual request domain object
-	 * @param connectionTimeOut
-	 *            the connection time out from the global parameter value
-	 * @param receiveTimeOut
-	 *            the receive time out from the global parameter value.
-	 * @return the SubmitQueryResponseType object after calling the web service
-	 *         of target app.
-	 * @throws OutageException
-	 *             if there is a service outage
-	 * @throws TimeoutException
-	 *             if the read timed out within the time specified
-	 */
-	private SubmitQueryResponseType invokeTargetAppService(
-			final SubmitQueryRequestType submitQueryRequestType,
-			final ISubmitQueryRequest submitQueryRequest,
-			final long connectionTimeOut, final long receiveTimeOut)
-			throws OutageException, TimeoutException {
-		final IServiceRouting serviceRouting = submitQueryRequest
-				.getTargetApplication().getServiceRouting(
-						IServiceType.ServiceTypeName.SUBMIT_QUERY);
+        LOGGER.info ("[processSubmitQuery] completed");
+    }
 
-		final String webServiceEndPoint = serviceRouting
-				.getWebServiceEndpoint();
+    /**
+     * @param submitQueryRequestType
+     *            request the individual request JAXB model
+     * @param submitQueryRequest
+     *            the individual request domain object
+     * @param connectionTimeOut
+     *            the connection time out from the global parameter value
+     * @param receiveTimeOut
+     *            the receive time out from the global parameter value.
+     * @return the SubmitQueryResponseType object after calling the web service
+     *         of target app.
+     * @throws OutageException
+     *             if there is a service outage
+     * @throws TimeoutException
+     *             if the read timed out within the time specified
+     */
+    private SubmitQueryResponseType invokeTargetAppService (final SubmitQueryRequestType submitQueryRequestType,
+                                                            final ISubmitQueryRequest submitQueryRequest,
+                                                            final long connectionTimeOut, final long receiveTimeOut)
+        throws OutageException, TimeoutException
+    {
+        final IServiceRouting serviceRouting =
+                submitQueryRequest.getTargetApplication ()
+                        .getServiceRouting (IServiceType.ServiceTypeName.SUBMIT_QUERY);
 
-		// Get the client interface
-		final ITargetAppInternalEndpointPortType client = super.createClient(
-				webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+        final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint ();
 
-		try {
-			SdtMetricsMBean.getSdtMetrics().upTargetAppCallCount();
+        // Get the client interface
+        final ITargetAppInternalEndpointPortType client =
+                super.createClient (webServiceEndPoint, connectionTimeOut, receiveTimeOut);
 
-			// Measure response time.
-			final long startTime = new GregorianCalendar().getTimeInMillis();
+        try
+        {
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppCallCount ();
 
-			// Call the specific business method for this text - note that a
-			// single test can only use one web
-			// service business method.
-			final SubmitQueryResponseType submitQueryResponseType = client
-					.submitQuery(submitQueryRequestType);
+            // Measure response time.
+            final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-			// Measure total time spent in target application.
-			final long endTime = new GregorianCalendar().getTimeInMillis();
-			SdtMetricsMBean.getSdtMetrics().addBulkSubmitTime(
-					endTime - startTime);
+            // Call the specific business method for this text - note that a
+            // single test can only use one web
+            // service business method.
+            final SubmitQueryResponseType submitQueryResponseType = client.submitQuery (submitQueryRequestType);
 
-			return submitQueryResponseType;
-		} catch (final WebServiceException f) {
-			LOGGER.error("Target application ["
-					+ submitQueryRequest.getTargetApplication()
-							.getTargetApplicationName()
-					+ "] error sending submit query request ["
-					+ submitQueryRequest.getCriteriaType() + "]");
+            // Measure total time spent in target application.
+            final long endTime = new GregorianCalendar ().getTimeInMillis ();
+            SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
 
-			// The following will throw a further exception unless we are here
-			// because the target application is unavailable.
-			// TODO check if we need to reThrowOnFailureToConnect.
-			super.handleClientErrors(getRethrowOnFailureToConnect(), f,
-					submitQueryRequest.getCriteriaType());
+            return submitQueryResponseType;
+        }
+        catch (final WebServiceException f)
+        {
+            LOGGER.error ("Target application [" +
+                    submitQueryRequest.getTargetApplication ().getTargetApplicationName () +
+                    "] error sending submit query request [" + submitQueryRequest.getCriteriaType () + "]");
 
-			try {
-				// Delay before re-attempting to send to target application.
-				Thread.sleep(connectionTimeOut);
-			} catch (final InterruptedException e) {
-				// Ignore.
-			}
-		}
-		return null;
-	}
+            super.handleClientErrors (true, f, submitQueryRequest.getCriteriaType ());
 
-	/**
-	 * 
-	 * @return the transformer for SubmitQueryConsumer
-	 */
-	// CHECKSTYLE:OFF
-	public IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> getTransformer() {
-		return this.transformer;
-	}
+        }
+        return null;
+    }
 
-	// CHECKSTYLE:ON
+    /**
+     * 
+     * @return the transformer for SubmitQueryConsumer
+     */
+    // CHECKSTYLE:OFF
+    public
+            IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
+            getTransformer ()
+    {
+        return this.transformer;
+    }
 
-	/**
-	 * Mutator method for transformer.
-	 * 
-	 * @param transformer
-	 */
-	// CHECKSTYLE:OFF
-	public void setTransformer(
-			IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
-		this.transformer = transformer;
-	}
+    // CHECKSTYLE:ON
 
-	// CHECKSTYLE:ON
+    /**
+     * Mutator method for transformer.
+     * 
+     * @param transformer
+     */
+    // CHECKSTYLE:OFF
+    public
+            void
+            setTransformer (IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer)
+    {
+        this.transformer = transformer;
+    }
 
-	/**
-	 * Get the value for the rethrowOnFailureToConnect flag.
-	 * 
-	 * @return rethrowOnFailureToConnect flag
-	 */
-	public boolean getRethrowOnFailureToConnect() {
-		return rethrowOnFailureToConnect;
-	}
-
-	/**
-	 * Set the value for the rethrowOnFailureToConnect.
-	 * 
-	 * @param rethrowOnFailureToConnect
-	 *            - true will throw the connection fail error.
-	 */
-	public void setRethrowOnFailureToConnect(
-			final boolean rethrowOnFailureToConnect) {
-		this.rethrowOnFailureToConnect = rethrowOnFailureToConnect;
-	}
+    // CHECKSTYLE:ON
 
 }

@@ -33,4 +33,28 @@
         </property>
     </bean>
 
+    <!-- Submit Query Response Xml Parser. -->
+    <bean id="uk.gov.moj.sdt.utils.SubmitQueryResponseXmlParser" class="uk.gov.moj.sdt.utils.GenericXmlParser">
+        <property name="enclosingTag">
+            <value>targetAppDetail</value>
+        </property>
+        <property name="replacementNamespaces">
+            <map>
+                <entry key="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema" value="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Submit Query Request Xml Parser. -->
+    <bean id="uk.gov.moj.sdt.utils.SubmitQueryRequestXmlParser" class="uk.gov.moj.sdt.utils.GenericXmlParser">
+        <property name="enclosingTag">
+            <value>criterion</value>
+        </property>
+        <property name="replacementNamespaces">
+            <map>
+                <entry key="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" value="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema"/>
+            </map>
+        </property>
+    </bean>
+
 </beans>

@@ -40,11 +40,17 @@
 
 	<bean id="uk.gov.moj.sdt.consumers.api.IConsumerGateway" class="uk.gov.moj.sdt.consumers.ConsumerGateway">
 		<property name="individualRequestConsumer" ref="uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer"/>
+        <property name="submitQueryConsumer" ref="uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer"/>
 	</bean>
 	
-	<bean id="uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer" class="uk.gov.moj.sdt.consumers.IndividualRequestConsumer">
-		<property name="transformer" ref="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer"/>
-		<property name="rethrowOnFailureToConnect" value="false"/>
+    <bean id="uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer" class="uk.gov.moj.sdt.consumers.IndividualRequestConsumer">
+        <property name="transformer" ref="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer"/>
+        <property name="rethrowOnFailureToConnect" value="false"/>
+        <lookup-method name="createTargetAppEndPoint" bean="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"/>
+    </bean>
+
+	<bean id="uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer" class="uk.gov.moj.sdt.consumers.SubmitQueryConsumer">
+		<property name="transformer" ref="uk.gov.moj.sdt.transformers.SubmitQueryConsumerTransformer"/>
 		<lookup-method name="createTargetAppEndPoint" bean="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"/>
 	</bean>
 	

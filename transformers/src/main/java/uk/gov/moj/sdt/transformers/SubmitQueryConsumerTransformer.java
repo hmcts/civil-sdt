@@ -27,8 +27,7 @@
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
- * $LastChangedBy$
- */
+ * $LastChangedBy$ */
 
 package uk.gov.moj.sdt.transformers;
 
@@ -56,83 +55,80 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQue
  * 
  */
 // CHECKSTYLE:OFF
-public final class SubmitQueryConsumerTransformer extends AbstractTransformer
-		implements
-		IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> {
-	// CHECKSTYLE:ON
+public final class SubmitQueryConsumerTransformer extends AbstractTransformer implements
+        IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
+{
+    // CHECKSTYLE:ON
 
-	/**
-	 * Logger instance.
-	 */
-	private static final Log LOGGER = LogFactory
-			.getLog(SubmitQueryConsumerTransformer.class);
+    /**
+     * Logger instance.
+     */
+    private static final Log LOGGER = LogFactory.getLog (SubmitQueryConsumerTransformer.class);
 
-	/**
-	 * Private constructor.
-	 */
-	private SubmitQueryConsumerTransformer() {
-	}
+    /**
+     * Private constructor.
+     */
+    private SubmitQueryConsumerTransformer ()
+    {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uk.gov.moj.sdt.transformers.api.IConsumerTransformer#transformJaxbToDomain
-	 * (java.lang.Object, uk.gov.moj.sdt.domain.api.IDomainObject)
-	 */
-	@Override
-	public void transformJaxbToDomain(
-			final SubmitQueryResponseType jaxbInstance,
-			final ISubmitQueryRequest domainObject) {
+    /* (non-Javadoc)
+     * 
+     * @see
+     * uk.gov.moj.sdt.transformers.api.IConsumerTransformer#transformJaxbToDomain
+     * (java.lang.Object, uk.gov.moj.sdt.domain.api.IDomainObject) */
+    @Override
+    public void transformJaxbToDomain (final SubmitQueryResponseType jaxbInstance,
+                                       final ISubmitQueryRequest domainObject)
+    {
 
-		LOGGER.debug("transform SubmitQueryResponseType to ISubmitQueryRequest");
+        LOGGER.debug ("transform SubmitQueryResponseType to ISubmitQueryRequest");
 
-		final StatusType status = jaxbInstance.getStatus();
-		final StatusCodeType statusCode = status.getCode();
+        final StatusType status = jaxbInstance.getStatus ();
+        final StatusCodeType statusCode = status.getCode ();
 
-		if (StatusCodeType.OK.equals(statusCode)) {
-			domainObject.setStatus(StatusCodeType.OK.value());
-			domainObject.setResultCount(jaxbInstance.getResultCount()
-					.intValue());
-		} else if (StatusCodeType.ERROR.equals(statusCode)) {
-			final ErrorType errorType = status.getError();
-			final IErrorLog errorLog = new ErrorLog(errorType.getCode(),
-					errorType.getDescription());
-			domainObject.setStatus(StatusCodeType.ERROR.value());
-			domainObject.reject(errorLog);
-		}
+        if (StatusCodeType.OK.equals (statusCode))
+        {
+            domainObject.setStatus (StatusCodeType.OK.value ());
+            domainObject.setResultCount (jaxbInstance.getResultCount ().intValue ());
+        }
+        else if (StatusCodeType.ERROR.equals (statusCode))
+        {
+            final ErrorType errorType = status.getError ();
+            final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
+            domainObject.setStatus (StatusCodeType.ERROR.value ());
+            domainObject.reject (errorLog);
+        }
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uk.gov.moj.sdt.transformers.api.IConsumerTransformer#transformDomainToJaxb
-	 * (uk.gov.moj.sdt.domain.api.IDomainObject)
-	 */
-	@Override
-	public SubmitQueryRequestType transformDomainToJaxb(
-			final ISubmitQueryRequest domainObject) {
-		LOGGER.debug("transform ISubmitQueryRequest to SubmitQueryRequestType");
+    /* (non-Javadoc)
+     * 
+     * @see
+     * uk.gov.moj.sdt.transformers.api.IConsumerTransformer#transformDomainToJaxb
+     * (uk.gov.moj.sdt.domain.api.IDomainObject) */
+    @Override
+    public SubmitQueryRequestType transformDomainToJaxb (final ISubmitQueryRequest domainObject)
+    {
+        LOGGER.debug ("transform ISubmitQueryRequest to SubmitQueryRequestType");
 
-		final SubmitQueryRequestType jaxb = new SubmitQueryRequestType();
-		final HeaderType header = new HeaderType();
+        final SubmitQueryRequestType jaxb = new SubmitQueryRequestType ();
+        final HeaderType header = new HeaderType ();
 
-		// Populate the header of the SubmitQueryRequestType.
-		header.setCriteriaType(domainObject.getCriteriaType());
+        // Populate the header of the SubmitQueryRequestType.
+        header.setCriteriaType (domainObject.getCriteriaType ());
 
-		final ITargetApplication targetApp = domainObject
-				.getTargetApplication();
-		final IBulkCustomerApplication bulkCustomerApplication = domainObject
-				.getBulkCustomer().getBulkCustomerApplication(
-						targetApp.getTargetApplicationCode());
+        final ITargetApplication targetApp = domainObject.getTargetApplication ();
+        final IBulkCustomerApplication bulkCustomerApplication =
+                domainObject.getBulkCustomer ().getBulkCustomerApplication (targetApp.getTargetApplicationCode ());
 
-		header.setTargetAppCustomerId(bulkCustomerApplication
-				.getCustomerApplicationId());
-		jaxb.setHeader(header);
+        header.setTargetAppCustomerId (bulkCustomerApplication.getCustomerApplicationId ());
+        jaxb.setHeader (header);
 
-		return jaxb;
-	}
+        // Set empty target app detail so the tags needed for enrichment are written.
+        jaxb.setTargetAppDetail (new SubmitQueryRequestType.TargetAppDetail ());
+
+        return jaxb;
+    }
 
 }
