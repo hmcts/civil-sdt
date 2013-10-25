@@ -78,6 +78,11 @@ public class GenericXmlParserTest
     public void getSubmitQueryResponseRawXml () throws Exception
     {
         genericXmlParser.setEnclosingTag ("targetAppDetail");
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+
+        genericXmlParser.setReplacementNamespaces (replacementNamespaces);
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml = this.getRawXml ("testSubmitQueryResponse.xml");
 
@@ -89,7 +94,7 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find expected response",
-                "<sub:mcolDefenceDetail><mquer:claimNumber>13548968</mquer:claimNumber><mquer:defendantdefendantId=\"1\"><mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate><mquer:responseType>DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail>",
+                "<sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"xmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"><mquer:claimNumber>13548968</mquer:claimNumber><mquer:defendantdefendantId=\"1\"><mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate><mquer:responseType>DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail>",
                 result.replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }
