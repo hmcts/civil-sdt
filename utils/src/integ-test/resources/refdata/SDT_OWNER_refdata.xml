@@ -15,7 +15,7 @@
   <GLOBAL_PARAMETERS GLOBAL_PARAMETER_ID="8" PARAMETER_NAME="TARGET_APP_RESP_TIMEOUT" PARAMETER_VALUE="30000" PARAMETER_DESCRIPTION="Period in seconds, to wait for the response from target application" VERSION_NUMBER="0"/>
 
   <SERVICE_ROUTINGS  SERVICE_ROUTINGS_ID="1" SERVICE_TYPE_ID="1" TARGET_APPLICATION_ID="1" WEB_SERVICE_ENDPOINT="http://localhost:8088/mockTargetAppInternalEndpointHttpPortBinding" VERSION_NUMBER="0"/>
-  <SERVICE_ROUTINGS  SERVICE_ROUTINGS_ID="2" SERVICE_TYPE_ID="2" TARGET_APPLICATION_ID="1" WEB_SERVICE_ENDPOINT="http://localhost:8888/mcol-webservices/service" VERSION_NUMBER="0"/>
+  <SERVICE_ROUTINGS  SERVICE_ROUTINGS_ID="2" SERVICE_TYPE_ID="2" TARGET_APPLICATION_ID="1" WEB_SERVICE_ENDPOINT="http://localhost:8088/mockTargetAppInternalEndpointHttpPortBinding" VERSION_NUMBER="0"/>
 
   <ERROR_MESSAGES  ERROR_MESSAGE_ID="1"  ERROR_CODE="SDT_INT_ERR" ERROR_TEXT="A system error has occurred. Please contact {0} for assistance." ERROR_DESCRIPTION="A system error has occured"  VERSION_NUMBER="0"/>
   <ERROR_MESSAGES  ERROR_MESSAGE_ID="2"  ERROR_CODE="CUST_NOT_SETUP" ERROR_TEXT="The Bulk Customer organisation is not setup to send Service Request messages to the {0}. Please contact {1} for assistance." ERROR_DESCRIPTION="The SDT Customer ID for the Bulk Customer organisation is not recognised by SDT."  VERSION_NUMBER="0"/>
