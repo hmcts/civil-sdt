@@ -110,12 +110,13 @@ public class IndividualRequestsXmlParser
                 // Capture the raw XML associated with this request.
                 individualRequestRawXml = matcher.group (1).trim ();
 
-                // Form the replacement string from the matched groups and the extra XML.
                 LOGGER.debug ("Individual request raw XML[" + individualRequestRawXml + "]");
 
+                // Find namespaces applicable for fragment
                 final Map<String, String> matchingNamespaces =
                         XmlNamespaceUtils.findMatchingNamespaces (individualRequestRawXml, allNamespaces);
 
+                // Embed namespaces within fragment
                 individualRequestRawXml = XmlNamespaceUtils.addNamespaces (individualRequestRawXml, matchingNamespaces);
 
                 LOGGER.debug ("Individual request raw XML[" + individualRequestRawXml + "]");

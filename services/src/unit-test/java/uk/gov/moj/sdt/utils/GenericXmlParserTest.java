@@ -32,6 +32,8 @@ package uk.gov.moj.sdt.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -101,6 +103,12 @@ public class GenericXmlParserTest
     public void getIndividualResponseRawXml () throws Exception
     {
         genericXmlParser.setEnclosingTag ("targetAppDetail");
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+
+        genericXmlParser.setReplacementNamespaces (replacementNamespaces);
+
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml = this.getRawXml ("testIndividualResponse.xml");
 
@@ -112,7 +120,7 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find expected response",
-                "<ind:mcolResponseDetail><mresp:claimNumber>21346546</mresp:claimNumber><mresp:issueDate>2001-01-01</mresp:issueDate><mresp:serviceDate>2001-01-01</mresp:serviceDate><mresp:warrantNumber>12345678</mresp:warrantNumber><mresp:enforcingCourtCode>123</mresp:enforcingCourtCode><mresp:enforcingCourtName>CourtCode</mresp:enforcingCourtName><mresp:fee>0</mresp:fee><mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus></ind:mcolResponseDetail>",
+                "<ind:mcolResponseDetailxmlns:ind=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\"xmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\"><mresp:claimNumber>21346546</mresp:claimNumber><mresp:issueDate>2001-01-01</mresp:issueDate><mresp:serviceDate>2001-01-01</mresp:serviceDate><mresp:warrantNumber>12345678</mresp:warrantNumber><mresp:enforcingCourtCode>123</mresp:enforcingCourtCode><mresp:enforcingCourtName>CourtCode</mresp:enforcingCourtName><mresp:fee>0</mresp:fee><mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus></ind:mcolResponseDetail>",
                 result.replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }

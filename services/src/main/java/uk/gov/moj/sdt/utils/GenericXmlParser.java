@@ -30,11 +30,15 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 
 /**
  * This class reads xml and parses it to extract target application specific xml.
@@ -50,25 +54,35 @@ public class GenericXmlParser
     private static final Log LOGGER = LogFactory.getLog (GenericXmlParser.class);
 
     /**
+     * Mapping of namespaces to be replaced.
+     */
+    private Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+
+    /**
      * Name of enclosing element.
      */
     private String enclosingTag;
 
     /**
-     * Parses xml to extract target app specific xml.
+     * Parses raw xml to extract target application specific fragment. The fragment is decorated with applicable
+     * namespace details.
      * 
-     * @return string
+     * @return target app specific fragment
      */
     public String parse ()
     {
 
-        String result = "";
+        String xmlResult = "";
 
         String rawXml = SdtContext.getContext ().getRawInXml ();
 
         // Remove linefeeds as they stop the regular expression working.
         rawXml = rawXml.replace ('\n', ' ');
         rawXml = rawXml.replace ('\r', ' ');
+
+        // Retrieve all namespaces
+        final Map<String, String> allNamespaces =
+                XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);
 
         // Build search pattern for extraction.
         final Pattern pattern =
@@ -79,12 +93,22 @@ public class GenericXmlParser
         {
             LOGGER.debug ("Found matching group[" + matcher.group () + "]");
 
-            // Get the string matching the regular expression.
-            result = matcher.group (2);
+            // Capture raw xml for element
+            xmlResult = matcher.group (2).trim ();
 
+            LOGGER.debug ("result XML[" + xmlResult + "]");
+
+            // Find namespaces applicable for fragment
+            final Map<String, String> matchingNamespaces =
+                    XmlNamespaceUtils.findMatchingNamespaces (xmlResult, allNamespaces);
+
+            // Embed namespaces within fragment
+            xmlResult = XmlNamespaceUtils.addNamespaces (xmlResult, matchingNamespaces);
+
+            LOGGER.debug ("result XML with namespaces[" + xmlResult + "]");
         }
 
-        return result;
+        return xmlResult;
 
     }
 
@@ -108,4 +132,14 @@ public class GenericXmlParser
         return enclosingTag;
     }
 
+    /**
+     * Setter for replacementNamespaces property.<BR>
+     * In the map, key contains source namespace to be replaced and value contains target namespace.
+     * 
+     * @param replacementNamespaces namespaces to be replaced.
+     */
+    public void setReplacementNamespaces (final Map<String, String> replacementNamespaces)
+    {
+        this.replacementNamespaces = replacementNamespaces;
+    }
 }
