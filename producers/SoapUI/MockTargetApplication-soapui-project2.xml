@@ -347,7 +347,7 @@
          </ind:targetAppDetail>
       </ind:individualRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitIndividualRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation></con:interface><con:mockService port="8088" path="/mockTargetAppInternalEndpointHttpPortBinding" host="MCOLDEVWS9" name="TargetAppInternalMockService" dispatchResponseMessages="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-version">false</con:setting></con:settings><con:mockOperation name="submitIndividual" interface="TargetAppInternalEndpointHttpPortBinding" operation="submitIndividual"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8" outgoingWss=""><con:settings><con:setting id="WsdlSettings@enable-mtom">false</con:setting></con:settings><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema">
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitIndividualRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation></con:interface><con:mockService port="8088" path="/mockTargetAppInternalEndpointHttpPortBinding" host="MCOLDEVWS9" name="TargetAppInternalMockService" dispatchResponseMessages="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-version">false</con:setting></con:settings><con:mockOperation name="submitIndividual" interface="TargetAppInternalEndpointHttpPortBinding" operation="submitIndividual"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8" outgoingWss=""><con:settings><con:setting id="WsdlSettings@enable-mtom">false</con:setting></con:settings><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
    <soap:Header/>
    <soap:Body>
       <ind:individualResponse>
@@ -355,28 +355,38 @@
             <ind:sdtRequestId>SDT_REQ_TEST_1</ind:sdtRequestId>
          </ind:header>
          <ind:targetAppDetail>
-            <!--You may enter ANY elements at this point-->
+            <ind:mcolResponseDetail>
+                <mresp:claimNumber>21346546</mresp:claimNumber>
+                <mresp:issueDate>2001-01-01</mresp:issueDate>
+                <mresp:serviceDate>2001-01-01</mresp:serviceDate>
+                <mresp:warrantNumber>12345678</mresp:warrantNumber>
+                <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
+                <mresp:enforcingCourtName>Court Code</mresp:enforcingCourtName>
+                <mresp:fee>0</mresp:fee>
+                <mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus>
+            </ind:mcolResponseDetail>
          </ind:targetAppDetail>
          <ind:status code="Initially Accepted">
          </ind:status>
       </ind:individualResponse>
    </soap:Body>
-</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitIndividualResponse"/></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="submitQuery" interface="TargetAppInternalEndpointHttpPortBinding" operation="submitQuery"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema">
+</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitIndividualResponse"/></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="submitQuery" interface="TargetAppInternalEndpointHttpPortBinding" operation="submitQuery"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
       <sub:submitQueryResponse>
-         <sub:targetAppCustomerId>?</sub:targetAppCustomerId>
-         <sub:resultCount>?</sub:resultCount>
+         <sub:targetAppCustomerId>MCOL12345678</sub:targetAppCustomerId>
+         <sub:resultCount>1</sub:resultCount>
          <sub:targetAppDetail>
-            <!--You may enter ANY elements at this point-->
+            <sub:mcolDefenceDetail>
+                <mquer:claimNumber>13548968</mquer:claimNumber>
+                <mquer:defendant defendantId="1">
+                    <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+                    <mquer:responseType>DE</mquer:responseType>
+                </mquer:defendant>
+             </sub:mcolDefenceDetail>
          </sub:targetAppDetail>
-         <sub:status code="?">
-            <!--Optional:-->
-            <bas:error>
-               <bas:code>?</bas:code>
-               <bas:description>?</bas:description>
-            </bas:error>
+         <sub:status code="Ok">
          </sub:status>
       </sub:submitQueryResponse>
    </soap:Body>
-</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitQueryResponse"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:properties/><con:wssContainer/></con:soapui-project>
+</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitQueryResponse"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:properties/><con:wssContainer/><con:sensitiveInformation/></con:soapui-project>
