@@ -106,21 +106,4 @@ public class GenericEnricherTest
     }
     //CHECKSTYLE:ON
     
-    /**
-     * Test Submit query parsing.
-     */
-    @Test
-    //CHECKSTYLE:OFF
-    public void testSubmitQueryParse(){
-        enricher.setInsertionTag ("criterion");
-        enricher.setParentTag ("individualRequest");
-        
-
-        SdtContext.getContext ().setRawInXml ("<sub:criteria><sub:criterion criteriaType=\"mcolDefenceCriteria\"><sub:mcolDefenceCriteria><quer:fromDate>2013-08-01</quer:fromDate><quer:toDate>2013-08-31</quer:toDate></sub:mcolDefenceCriteria></sub:criterion></sub:criteria>");
-        
-        final String result = enricher.parse ();
-        final String expected = "<sub:mcolDefenceCriteria><quer:fromDate>2013-08-01</quer:fromDate><quer:toDate>2013-08-31</quer:toDate></sub:mcolDefenceCriteria>";
-        Assert.assertEquals(expected, result);
-    }
-    //CHECKSTYLE:ON
 }

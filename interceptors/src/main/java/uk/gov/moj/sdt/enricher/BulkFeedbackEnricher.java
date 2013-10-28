@@ -145,8 +145,6 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                             "] within bulk feedback response XML.");
                 }
             }
-
-            // TODO - need to manipulate the namespace declaration
         }
         else
         {

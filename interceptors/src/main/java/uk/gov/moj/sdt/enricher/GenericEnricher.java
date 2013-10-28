@@ -93,8 +93,6 @@ public class GenericEnricher extends AbstractSdtEnricher
                 // Inject the system specific response into the current envelope.
                 newXml = matcher.replaceFirst (replacementXml);
             }
-
-            // TODO - need to manipulate the namespace declaration
         }
         else
         {
@@ -113,38 +111,4 @@ public class GenericEnricher extends AbstractSdtEnricher
 
     }
     
-    //CHECKSTYLE:OFF
-    /**
-     * Parse. This is test code.
-     * @return string
-     */
-    public String parse () {
-        
-        String result="";
-        
-        // Match it against the result of all previous match replacements.
-        String rawXml = SdtContext.getContext ().getRawInXml ();
-
-        // Remove linefeeds as they stop the regular expression working.
-        rawXml = rawXml.replace ('\n', ' ');
-        rawXml = rawXml.replace ('\r', ' ');
-
-        //Build search pattern for insertion point.
-        final Pattern pattern = Pattern.compile ("<[\\w]+:" + getInsertionTag () + "(.*?)>(.*?)</[\\w]+:" + getInsertionTag () + ">");
-        final Matcher matcher = pattern.matcher (rawXml);
-
-        if (matcher.find ())
-        {
-            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
-
-            // Get the string matching the regular expression...Not sure about group ID value.
-            result=matcher.group (2);
-            
-        }
-        
-        return result;
-
-    }
-    //CHECKSTYLE:ON
-
 }

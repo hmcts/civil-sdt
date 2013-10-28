@@ -53,11 +53,6 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
     private String insertionTag;
 
     /**
-     * The name space to replace.
-     */
-    private String namespace;
-
-    /**
      * Try to find whether the parent tag exists in the message or not.
      * 
      * @param message original xml message
@@ -135,23 +130,4 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
         this.insertionTag = insertionTag;
     }
 
-    /**
-     * Get namespace.
-     * 
-     * @return namespace
-     */
-    public String getNamespace ()
-    {
-        return namespace;
-    }
-
-    /**
-     * Set namespace.
-     * 
-     * @param namespace namespace
-     */
-    public void setNamespace (final String namespace)
-    {
-        this.namespace = namespace;
-    }
 }

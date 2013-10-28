@@ -14,7 +14,6 @@
 		class="uk.gov.moj.sdt.enricher.SubmitQueryEnricher">
 		<property name="parentTag" value="submitQueryResponse"/>
 		<property name="insertionTag" value="results"/>
-		<property name="namespace" value="TODO"/>
 	</bean>
 	
 	<!-- Bulk feedback enricher used to enrich outbound bulk feedback messages -->
@@ -23,7 +22,6 @@
 		class="uk.gov.moj.sdt.enricher.BulkFeedbackEnricher">
 		<property name="parentTag" value="bulkFeedbackResponse"/>
 		<property name="insertionTag" value="responses"/>
-		<property name="namespace" value="TODO"/>
 	</bean>
 
     <!-- Enriches individual requests sent to target applications -->
@@ -32,7 +30,6 @@
         class="uk.gov.moj.sdt.enricher.GenericEnricher">
         <property name="parentTag" value="individualRequest"/>
         <property name="insertionTag" value="targetAppDetail"/>
-        <property name="namespace" value="TODO"/>
     </bean>
 
     <!-- Enriches submit query requests sent to target applications -->
@@ -41,7 +38,6 @@
         class="uk.gov.moj.sdt.enricher.GenericEnricher">
         <property name="parentTag" value="submitQueryRequest"/>
         <property name="insertionTag" value="targetAppDetail"/>
-        <property name="namespace" value="TODO"/>
     </bean>
 
 </beans>

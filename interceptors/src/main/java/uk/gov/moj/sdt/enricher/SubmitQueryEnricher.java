@@ -92,7 +92,6 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
                 newXml = matcher.replaceFirst (replacementXml);
             }
 
-            // TODO - need to manipulate the namespace declaration
         }
         else
         {
