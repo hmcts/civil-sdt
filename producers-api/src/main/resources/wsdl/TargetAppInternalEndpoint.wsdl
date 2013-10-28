@@ -27,10 +27,10 @@
 		<part name="individualResponse" element="resp:individualResponse" />
 	</message>
 	<message name="submitQueryRequest">
-		<part name="parameters" element="qreq:submitQueryRequest" />
+		<part name="submitQueryRequest" element="qreq:submitQueryRequest" />
 	</message>
 	<message name="submitQueryResponse">
-		<part name="parameters" element="qresp:submitQueryResponse" />
+		<part name="submitQueryResponse" element="qresp:submitQueryResponse" />
 	</message>
 
 	<portType name="ITargetAppInternalEndpointPortType">
