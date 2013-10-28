@@ -32,6 +32,7 @@
 package uk.gov.moj.sdt.domain;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -408,4 +409,12 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         SdtMetricsMBean.getSdtMetrics ().setLastBulkRequestRef (sdtRequestReference);
     }
 
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ())
+                .append ("customerRequestReference", customerRequestReference)
+                .append ("sdtRequestReference", sdtRequestReference).append ("requestStatus", requestStatus)
+                .append ("requestType", requestType).toString ();
+    }
 }

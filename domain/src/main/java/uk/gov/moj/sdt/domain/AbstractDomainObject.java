@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -43,60 +45,73 @@ import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
  * @author Robin Compston
  * 
  */
-public abstract class AbstractDomainObject implements IDomainObject, IVisitable {
+public abstract class AbstractDomainObject implements IDomainObject, IVisitable
+{
 
-	/**
-	 * Primary key.
-	 */
-	private long id;
+    /**
+     * Primary key.
+     */
+    private Long id;
 
-	/**
-	 * Hibernate version number.
-	 */
-	private int version;
+    /**
+     * Hibernate version number.
+     */
+    private int version;
 
-	/**
-	 * Constructor for {@link AbstractDomainObject}.
-	 */
-	public AbstractDomainObject() {
-		super();
+    /**
+     * Constructor for {@link AbstractDomainObject}.
+     */
+    public AbstractDomainObject ()
+    {
+        super ();
 
-		// Beware of timing problems when Spring has not finished initialising
-		// and has not created the metics bean.
-		if (SdtMetricsMBean.getSdtMetrics() != null) {
-			SdtMetricsMBean.getSdtMetrics().upDomainObjectsCount();
-		}
-	}
+        // Beware of timing problems when Spring has not finished initialising
+        // and has not created the metics bean.
+        if (SdtMetricsMBean.getSdtMetrics () != null)
+        {
+            SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
+        }
+    }
 
-	/**
-	 * When garbage collected, decrement count of domain objects in statistics.
-	 */
-	// CHECKSTYLE:OFF
-	public void finalize()
-	// CHECKSTYLE:ON
-	{
-		SdtMetricsMBean.getSdtMetrics().downDomainObjectsCount();
-	}
+    /**
+     * When garbage collected, decrement count of domain objects in statistics.
+     */
+    // CHECKSTYLE:OFF
+    public void finalize ()
+    // CHECKSTYLE:ON
+    {
+        SdtMetricsMBean.getSdtMetrics ().downDomainObjectsCount ();
+    }
 
-	@Override
-	public long getId() {
-		return id;
-	}
+    @Override
+    public Long getId ()
+    {
+        return id;
+    }
 
-	@Override
-	public void setId(final long id) {
-		this.id = id;
-	}
+    @Override
+    public void setId (final Long id)
+    {
+        this.id = id;
+    }
 
-	@Override
-	public int getVersion() {
-		return version;
-	}
+    @Override
+    public int getVersion ()
+    {
+        return version;
+    }
 
-	@Override
-	public void accept(final IVisitor visitor, final ITree tree) {
-		// Call any visitor, passing a reference to this class so that it can
-		// act on this class.
-		visitor.visit(this, tree);
-	}
+    @Override
+    public void accept (final IVisitor visitor, final ITree tree)
+    {
+        // Call any visitor, passing a reference to this class so that it can
+        // act on this class.
+        visitor.visit (this, tree);
+    }
+
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).append ("id", id).append ("version", version).toString ();
+    }
 }

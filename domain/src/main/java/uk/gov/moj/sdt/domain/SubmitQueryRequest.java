@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -159,6 +161,13 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     {
         this.errorLog = errorLog;
         this.status = ISubmitQueryRequest.Status.Error.getStatus ();
+    }
+
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("criteriaType", criteriaType)
+                .append ("status", status).toString ();
     }
 
 }

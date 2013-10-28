@@ -261,12 +261,12 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         // create an individual request
         individualRequests = new ArrayList<IIndividualRequest> ();
         IIndividualRequest individualRequest = new IndividualRequest ();
-        individualRequest.setId (1);
+        individualRequest.setId (1L);
         individualRequest.setCustomerRequestReference ("Duplicate");
         individualRequests.add (individualRequest);
         // Set the duplicate request
         individualRequest = new IndividualRequest ();
-        individualRequest.setId (2);
+        individualRequest.setId (2L);
         individualRequest.setCustomerRequestReference ("Duplicate");
         individualRequests.add (individualRequest);
 
@@ -554,19 +554,19 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
 
         // create an individual request 1
         IIndividualRequest individualRequest = new IndividualRequest ();
-        individualRequest.setId (1);
+        individualRequest.setId (1L);
         individualRequest.markRequestAsRejected (errorLog);
         individualRequests.add (individualRequest);
 
         // create an individual request 2
         individualRequest = new IndividualRequest ();
-        individualRequest.setId (2);
+        individualRequest.setId (2L);
         individualRequest.markRequestAsRejected (errorLog);
         individualRequests.add (individualRequest);
 
         // create an individual request 3
         individualRequest = new IndividualRequest ();
-        individualRequest.setId (3);
+        individualRequest.setId (3L);
         individualRequest.markRequestAsRejected (errorLog);
         individualRequests.add (individualRequest);
 

@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
@@ -92,4 +94,10 @@ public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
         this.errorDescription = errorDescription;
     }
 
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("errorCode", errorCode)
+                .append ("errorText", errorText).toString ();
+    }
 }

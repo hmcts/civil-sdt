@@ -78,7 +78,7 @@ public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContex
         final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId (2);
         if (bulkCustomer != null)
         {
-            LOG.debug ("Retrieved bulk customer id [" + Long.toString (bulkCustomer.getId ()) + "]");
+            LOG.debug ("Retrieved bulk customer id [" + bulkCustomer.getId () + "]");
         }
 
         return;

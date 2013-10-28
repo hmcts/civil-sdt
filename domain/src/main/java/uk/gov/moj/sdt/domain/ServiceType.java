@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import uk.gov.moj.sdt.domain.api.IServiceType;
 
 /**
@@ -92,6 +94,12 @@ public class ServiceType extends AbstractDomainObject implements IServiceType
     public void setDescription (final String description)
     {
         this.description = description;
+    }
+
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("name", name).toString ();
     }
 
 }

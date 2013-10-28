@@ -167,7 +167,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
 
         for (IIndividualRequest req : submission.getIndividualRequests ())
         {
-            Assert.assertEquals (5, req.getId ());
+            Assert.assertEquals (5, req.getId ().longValue ());
         }
 
     }

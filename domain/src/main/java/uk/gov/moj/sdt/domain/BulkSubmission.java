@@ -34,6 +34,7 @@ package uk.gov.moj.sdt.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -314,4 +315,11 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
         return errorCode != null;
     }
 
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ())
+                .append ("customerReference", customerReference).append ("sdtBulkReference", sdtBulkReference)
+                .append ("submissionStatus", submissionStatus).toString ();
+    }
 }

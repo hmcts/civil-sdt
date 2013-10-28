@@ -34,6 +34,8 @@ package uk.gov.moj.sdt.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 
@@ -108,6 +110,13 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("sdtCustomerId", sdtCustomerId)
+                .toString ();
     }
 
 }

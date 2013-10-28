@@ -31,9 +31,11 @@
 
 package uk.gov.moj.sdt.domain;
 
-import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType.ServiceTypeName;
@@ -113,6 +115,13 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
         }
 
         return null;
+    }
+
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ())
+                .append ("targetApplicationCode", targetApplicationCode).toString ();
     }
 
 }

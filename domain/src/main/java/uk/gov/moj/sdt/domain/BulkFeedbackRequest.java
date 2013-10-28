@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 
@@ -76,4 +78,12 @@ public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFe
     {
         this.sdtBulkReference = sdtBulkReference;
     }
+
+    @Override
+    public String toString ()
+    {
+        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("sdtBulkReference", sdtBulkReference)
+                .toString ();
+    }
+
 }
