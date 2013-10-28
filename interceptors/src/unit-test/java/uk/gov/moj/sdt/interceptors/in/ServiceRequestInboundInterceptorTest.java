@@ -107,7 +107,7 @@ public class ServiceRequestInboundInterceptorTest extends SdtUnitTestBase
             final IServiceRequest serviceRequest = sRII.getServiceRequest();
             final Long iDField = (Long) getAccesibleField(ServiceRequest.class, "id",
                     Long.class, serviceRequest);
-            assertTrue("id should be 0", 0 == iDField);
+            assertNull ("id should be null",iDField);
             final LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
                     ServiceRequest.class, "requestDateTime", LocalDateTime.class,
                     serviceRequest);
