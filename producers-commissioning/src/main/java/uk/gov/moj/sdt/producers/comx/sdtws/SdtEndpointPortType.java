@@ -167,8 +167,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     private void handleThrowable (final Throwable throwable)
     {
         LOGGER.error ("Unexpected error - ", throwable);
-        // TODO confirm message text.
-        throw new RuntimeException ("A system error has occurred. Please contact technical support for assistance");
+        throw new RuntimeException (
+                "A SDT system component error has occurred. Please contact the SDT support team for assistance");
     }
 
     /**
