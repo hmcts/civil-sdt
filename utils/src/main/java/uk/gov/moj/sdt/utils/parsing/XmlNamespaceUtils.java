@@ -189,23 +189,40 @@ public final class XmlNamespaceUtils
      */
     public static String addNamespaces (final String xmlFragment, final Map<String, String> namespaces)
     {
-        final StringBuilder result = new StringBuilder ();
+        String result = xmlFragment;
 
-        // Locate closing bracket for first element.
-        final int index = xmlFragment.indexOf ('>');
+        // Build pattern to identify first xml element for injection of namespace.
+        final Pattern pattern = Pattern.compile ("(<[a-zA-Z0-9]+?:[\\s\\S]+?)(>)");
 
-        result.append (xmlFragment.substring (0, index));
-
-        // Add namespace details to first element
-        for (String value : namespaces.values ())
+        final Matcher matcher = pattern.matcher (xmlFragment);
+        if (matcher.find ())
         {
-            result.append (" ");
-            result.append (value);
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+            }
+
+            // Build replacement xml concatenating xml for element and namespace(s)
+            final StringBuilder replacementXml = new StringBuilder ();
+            replacementXml.append (matcher.group (1));
+            // Add namespace details to first element
+            for (String value : namespaces.values ())
+            {
+                replacementXml.append (" ");
+                replacementXml.append (value);
+            }
+            replacementXml.append (matcher.group (2));
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Replacement string[" + replacementXml + "]");
+            }
+
+            result = matcher.replaceFirst (replacementXml.toString ());
         }
 
-        result.append (xmlFragment.substring (index));
-
-        return result.toString ();
+        return result;
 
     }
+
 }

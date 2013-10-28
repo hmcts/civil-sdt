@@ -360,7 +360,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
         final String xmlFragment =
-                "   <xsi:some-tag some-attribute=\"some value\">"
+                "   <!--Comment--><xsi:some-tag some-attribute=\"some value\">"
                         + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
                         + "       <aop:some-other-tag some-attribute=\"some value\">" + "       <\\aop:some-other-tag>"
                         + "   <\\xsi:some-tag>";
@@ -371,7 +371,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         // CHECKSTYLE:OFF
         final String expected =
-                "   <xsi:some-tag some-attribute=\"some value\" xmlns:aop=\"http://www.springframework.org/schema/aop\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+                "   <!--Comment--><xsi:some-tag some-attribute=\"some value\" xmlns:aop=\"http://www.springframework.org/schema/aop\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
                         + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
                         + "       <aop:some-other-tag some-attribute=\"some value\">"
                         + "       <\\aop:some-other-tag>"
