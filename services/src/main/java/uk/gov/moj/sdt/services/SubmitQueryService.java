@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.services;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,10 +170,7 @@ public class SubmitQueryService implements ISubmitQueryService
 
         final String targetAppResponse = queryResponseXmlParser.parse ();
 
-        if (StringUtils.isNotBlank (targetAppResponse))
-        {
-            SdtContext.getContext ().setRawOutXml (targetAppResponse);
-        }
+        SdtContext.getContext ().setRawOutXml (targetAppResponse);
     }
 
     /**
