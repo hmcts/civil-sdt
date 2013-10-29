@@ -78,7 +78,6 @@ public class MessageWriterTest
     {
         // Nicemock returns default values
         jmsTemplate = EasyMock.createMock (JmsTemplate.class);
-        // messageWriter = new MessageWriter (jmsTemplate, "JMSUnitTestQ");
         messageWriter = new MessageWriter (jmsTemplate);
     }
 
@@ -103,11 +102,11 @@ public class MessageWriterTest
         try
         {
             messageWriter.queueMessage (sdtMessage, null);
-            Assert.fail ("Should have thrown an exception here");
+            Assert.fail ("Should have thrown an Illegal Argument Exception as the target app code is null.");
         }
         catch (final IllegalArgumentException e)
         {
-            Assert.assertTrue ("Expected", true);
+            Assert.assertTrue ("Illegal Argument specified for the target application", true);
         }
     }
 
@@ -132,11 +131,11 @@ public class MessageWriterTest
         try
         {
             messageWriter.queueMessage (sdtMessage, "UnitTest");
-            Assert.fail ("Should have thrown an exception here");
+            Assert.fail ("Should have thrown an Illegal Argument exception here as the target app code is invalid");
         }
         catch (final IllegalArgumentException e)
         {
-            Assert.assertTrue ("Expected", true);
+            Assert.assertTrue ("Target application code does not have a mapped queue name", true);
         }
     }
 
@@ -160,7 +159,7 @@ public class MessageWriterTest
         try
         {
             final Map<String, String> queueNameMap = new HashMap<String, String> ();
-            queueNameMap.put ("UnitTest", "UnitTestQueue");
+            queueNameMap.put ("UNITTEST", "UnitTestQueue");
 
             messageWriter.setQueueNameMap (queueNameMap);
 

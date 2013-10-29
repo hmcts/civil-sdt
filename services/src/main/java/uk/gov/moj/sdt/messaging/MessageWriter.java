@@ -87,10 +87,8 @@ public class MessageWriter implements IMessageWriter
     public void queueMessage (final ISdtMessage sdtMessage, final String targetAppCode)
     {
 
-        // Check the target application code is valid
-        validateTargetApplication (targetAppCode);
-
-        final String queueName = queueNameMap.get (targetAppCode);
+        // Check the target application code is valid and return queue name.
+        final String queueName = validateTargetApplication (targetAppCode);
 
         LOGGER.debug ("Sending message [" + sdtMessage.toString () + "] to queue [" + queueName + "]");
 
@@ -148,11 +146,13 @@ public class MessageWriter implements IMessageWriter
 
     /**
      * Checks that the target application code is supplied and that it is
-     * mapped to one of the queues in the queue map.
+     * mapped to one of the queues in the queue map. Returns the queue name
+     * that is mapped to the target application code.
      * 
      * @param targetApplicationCode the target application code.
+     * @return the queue name matching to the target application code.
      */
-    private void validateTargetApplication (final String targetApplicationCode)
+    private String validateTargetApplication (final String targetApplicationCode)
     {
         // The target application code should be supplied.
         if (targetApplicationCode == null || targetApplicationCode.trim ().length () == 0)
@@ -162,14 +162,14 @@ public class MessageWriter implements IMessageWriter
         else
         {
             // Check that the target application code is mapped to a queue name
-            if ( !this.getQueueNameMap ().containsKey (targetApplicationCode))
+            if ( !this.getQueueNameMap ().containsKey (targetApplicationCode.toUpperCase ()))
             {
-                throw new IllegalArgumentException ("Target application code [" + targetApplicationCode +
+                throw new IllegalArgumentException ("Target application code [" + targetApplicationCode.toUpperCase () +
                         "] does not have a JMS queue mapped.");
             }
             else
             {
-                return;
+                return this.getQueueNameMap ().get (targetApplicationCode.toUpperCase ());
             }
         }
 
