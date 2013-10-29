@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.api;
 
-
 /**
  * This interface is for target application prior-submission and post-submission operations on
  * the individual request.
@@ -41,7 +40,12 @@ package uk.gov.moj.sdt.services.api;
 public interface ITargetApplicationSubmissionService
 {
     /**
-     * Returns the IndividualRequest for the given SDT Request Reference.
+     * Process the SDT Request reference associated with the Individual Request.
+     * This method will read the individual request associated with the SDT request reference,
+     * mark the request as forwarded, send it to target application for processing,
+     * update the response from the target application and finally mark the request as complete.
+     * Additional check is done to see if all the individual requests associated with
+     * the bulk submission request are processed to their final state i.e. Accepted or Rejected.
      * 
      * @param sdtRequestReference the unique SDT Request Reference associated with individual request
      */

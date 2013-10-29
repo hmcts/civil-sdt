@@ -127,11 +127,14 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 super.createClient (webServiceEndPoint, connectionTimeOut, receiveTimeOut);
 
         // Loop until the target application becomes available.
+        int attemptCount = 0;
         while (true)
         {
             try
             {
                 SdtMetricsMBean.getSdtMetrics ().upTargetAppCallCount ();
+
+                LOGGER.debug ("Submitting individual request to target application, attempt " + (++attemptCount));
 
                 // Measure response time.
                 final long startTime = new GregorianCalendar ().getTimeInMillis ();
@@ -163,7 +166,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 }
                 catch (final InterruptedException e)
                 {
-                    // Ignore.
+                    LOGGER.debug ("Sleep operation interrupted while re-attempting to send to target application", e);
                 }
             }
         }

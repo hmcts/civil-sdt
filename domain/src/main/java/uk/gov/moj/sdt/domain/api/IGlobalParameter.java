@@ -124,6 +124,11 @@ public interface IGlobalParameter extends IDomainObject
         /**
          * Current contact details for outgoing SDT application messages to Bulk Customer System.
          */
-        CONTACT_DETAILS
+        CONTACT_DETAILS,
+
+        /**
+         * Period in milliseconds, read timeout to wait for response from target application.
+         */
+        TARGET_APP_RESP_TIMEOUT
     }
 }

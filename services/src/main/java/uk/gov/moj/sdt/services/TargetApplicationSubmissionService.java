@@ -134,7 +134,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
             catch (final TimeoutException e)
             {
                 LOGGER.error ("Timeout exception for SDT reference " + individualRequest.getSdtRequestReference () +
-                        "]", e);
+                        "]");
 
                 // Update the individual request with the reason code for error REQ_NOT_ACK
                 this.updateRequestTimeOut (individualRequest);
@@ -261,7 +261,8 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
                 this.globalParametersCache.getValue (IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.TARGET_APP_TIMEOUT.name ());
         final IGlobalParameter requestTimeOutParam =
-                this.globalParametersCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
+                this.globalParametersCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.TARGET_APP_RESP_TIMEOUT.name ());
 
         long requestTimeOut = 0;
         long connectionTimeOut = 0;
@@ -294,11 +295,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
 
         // Now create an ErrorLog object with the ErrorMessage object and the
         // IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog ();
-        final java.util.Date currentDate = new java.util.Date (System.currentTimeMillis ());
-        errorLog.setCreatedDate (LocalDateTime.fromDateFields (currentDate));
-        errorLog.setErrorCode (errorMessage.getErrorCode ());
-        errorLog.setErrorText (errorMessage.getErrorText ());
+        final IErrorLog errorLog = new ErrorLog (errorMessage.getErrorCode (), errorMessage.getErrorText ());
 
         // Truncate the soap fault error to 2,000 characters to fit
         // inside the database column of length varchar2(4,000 bytes)

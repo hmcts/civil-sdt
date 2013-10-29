@@ -88,7 +88,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
             }
             catch (final JMSException e)
             {
-                LOGGER.error (e.getMessage (), e);
+                LOGGER.error (e.getMessage ());
                 throw new RuntimeException (e);
             }
 
