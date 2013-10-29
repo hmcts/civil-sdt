@@ -37,6 +37,7 @@ import java.util.Set;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.hibernate.criterion.Criterion;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -202,6 +203,110 @@ public class TargetApplicationSubmissionServiceTest
 
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
+
+        final String[] completeRequestStatus =
+                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
+                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
+
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+
+        EasyMock.expect (
+                this.mockIndividualRequestDao.queryAsList (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (null);
+
+        bulkSubmission.markAsCompleted ();
+
+        mockIndividualRequestDao.persist (bulkSubmission);
+        EasyMock.expectLastCall ();
+
+        EasyMock.replay (mockIndividualRequestDao);
+        EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockCacheable);
+
+        // Setup dummy target response
+        SdtContext.getContext ().setRawInXml ("response");
+
+        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+
+        EasyMock.verify (mockIndividualRequestDao);
+        EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockCacheable);
+
+        Assert.assertTrue ("Expected to pass", true);
+
+    }
+
+    /**
+     * This method checks an all positive scenario for processing request to submit.
+     * In the end there are still individual requests outstanding so the bulk submission
+     * is not marked as completed.
+     * 
+     */
+    @Test
+    public void processRequestToSubmitSuccess ()
+    {
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest ();
+
+        // Set-up the individual request object
+
+        individualRequest.setSdtRequestReference (sdtRequestRef);
+        individualRequest.setRequestStatus ("Received");
+        setUpIndividualRequest (individualRequest);
+
+        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+                individualRequest);
+
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
+        individualReqProcessingDelay.setValue ("10");
+        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+                individualReqProcessingDelay);
+
+        individualRequest.setRequestStatus ("Forwarded");
+        this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ();
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
+        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue ("1000");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+                connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
+        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue ("12000");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+                receiveTimeOutParam);
+
+        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
+        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
+        {
+            @Override
+            public Object answer () throws Throwable
+            {
+                ((IndividualRequest) EasyMock.getCurrentArguments ()[0])
+                        .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
+                // required to be null for a void method
+                return null;
+            }
+        });
+
+        this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ();
+
+        final String[] completeRequestStatus =
+                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
+                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
+
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+
+        final List<IIndividualRequest> indRequests = new ArrayList<IIndividualRequest> ();
+        indRequests.add (individualRequest);
+
+        EasyMock.expect (
+                this.mockIndividualRequestDao.queryAsList (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (indRequests);
 
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockConsumerGateway);
@@ -440,19 +545,22 @@ public class TargetApplicationSubmissionServiceTest
             }
         });
 
-        final IErrorMessage errorMsg = new ErrorMessage ();
-        errorMsg.setErrorCode ("SDT_INT_ERR");
-        errorMsg.setErrorDescription ("SDT Internal Error");
-        errorMsg.setErrorText ("SDT Internal Error");
-
-        // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog (errorMsg.getErrorCode (), errorMsg.getErrorText ());
-
-        individualRequest.setErrorLog (errorLog);
-
-        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
-
         this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ();
+
+        final String[] completeRequestStatus =
+                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
+                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
+
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+
+        EasyMock.expect (
+                this.mockIndividualRequestDao.queryAsList (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (null);
+
+        bulkSubmission.markAsCompleted ();
+
+        mockIndividualRequestDao.persist (bulkSubmission);
         EasyMock.expectLastCall ();
 
         EasyMock.replay (mockIndividualRequestDao);

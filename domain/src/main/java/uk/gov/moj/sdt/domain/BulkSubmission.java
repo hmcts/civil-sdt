@@ -316,6 +316,22 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     }
 
     @Override
+    public void markAsValidated ()
+    {
+        if ( !getSubmissionStatus ().equals (IBulkSubmission.BulkRequestStatus.COMPLETED.name ()))
+        {
+            setSubmissionStatus (IBulkSubmission.BulkRequestStatus.VALIDATED.name ());
+        }
+    }
+
+    @Override
+    public void markAsCompleted ()
+    {
+        setSubmissionStatus (IBulkSubmission.BulkRequestStatus.COMPLETED.name ());
+        setCompletedDate (LocalDateTime.now ());
+    }
+
+    @Override
     public String toString ()
     {
         return new ToStringBuilder (this).appendSuper (super.toString ())

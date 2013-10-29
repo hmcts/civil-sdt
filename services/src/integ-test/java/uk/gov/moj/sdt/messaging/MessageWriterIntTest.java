@@ -41,7 +41,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -153,15 +152,8 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
         final ISdtMessage message = new SdtMessage ();
         message.setSdtRequestReference ("Test message");
 
-        try
-        {
-            messageWriter.queueMessage (message, "TEST1");
-            Assert.fail ("Expected exception not thrown.");
-        }
-        catch (final UncategorizedJmsException e)
-        {
-            // Test has worked - swallow exception.
-            Assert.assertTrue (true);
-        }
+        messageWriter.queueMessage (message, "TEST1");
+        Assert.assertTrue ("Test completed", true);
+
     }
 }

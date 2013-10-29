@@ -209,6 +209,9 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
         bulkSubmission.setTargetApplication (targetApplication);
 
+        // Mark the request as Validated.
+        bulkSubmission.markAsValidated ();
+
         // TODO : Disabled until Service Request Interceptor is fixed.
         // Associate with the service request created by the ServiceRequestInboundInterceptor
         // final IServiceRequest serviceRequest =

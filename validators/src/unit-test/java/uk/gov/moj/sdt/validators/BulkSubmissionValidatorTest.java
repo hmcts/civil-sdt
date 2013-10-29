@@ -587,7 +587,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
         // Test the method
         validator.checkIndividualRequests (bulkSubmission);
 
-        Assert.assertEquals (IBulkSubmission.BulkRequestStatus.FAILED.name (), bulkSubmission.getSubmissionStatus ());
+        Assert.assertEquals (IBulkSubmission.BulkRequestStatus.COMPLETED.name (), bulkSubmission.getSubmissionStatus ());
         Assert.assertEquals (IErrorMessage.ErrorCode.NO_VALID_REQS.name (), bulkSubmission.getErrorCode ());
     }
 

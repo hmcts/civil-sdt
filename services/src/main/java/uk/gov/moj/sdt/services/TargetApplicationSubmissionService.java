@@ -30,7 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +44,7 @@ import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
@@ -67,6 +71,11 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (TargetApplicationSubmissionService.class);
+
+    /**
+     * The maximum allowed characters for the soap fault error description.
+     */
+    private static final int MAX_ALLOWED_CHARS = 2000;
 
     /**
      * Individual Request Dao to perform operations on the individual request object.
@@ -182,67 +191,34 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
             individualRequest.setTargetApplicationResponse (targetAppResponse);
         }
 
-        final String requestStatus = individualRequest.getRequestStatus ();
-
-        if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ()))
-        {
-            this.updateAcceptedRequest (individualRequest);
-        }
-        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus ()))
-        {
-            this.updateInitiallyAcceptedRequest (individualRequest);
-        }
-        else if (requestStatus.equals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()))
-        {
-            this.updateRejectedRequest (individualRequest);
-        }
-
         // now persist the request.
         this.getIndividualRequestDao ().persist (individualRequest);
-    }
 
-    /**
-     * Mark the request with status as "Accepted".
-     * 
-     * @param individualRequest the individual request object.
-     */
-    private void updateAcceptedRequest (final IIndividualRequest individualRequest)
-    {
-        individualRequest.markRequestAsAccepted ();
-    }
+        // Check if all the individual request for the bulk submission are either ACCEPTED or REJECTED
+        // If all the requests are Accepted or Rejected, mark the bulk submission as Complete.
 
-    /**
-     * Mark the request with status as "Rejected".
-     * 
-     * @param individualRequest the individual request object.
-     */
-    private void updateRejectedRequest (final IIndividualRequest individualRequest)
-    {
-        individualRequest.markRequestAsRejected (null);
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
 
-        // Check if the Error message is defined as an internal system error
-        final IErrorMessage errorMessageParam =
-                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
-                        individualRequest.getErrorLog ().getErrorCode ());
+        final String[] completeRequestStatus =
+                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
+                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
 
-        if (errorMessageParam != null)
+        final List<IIndividualRequest> requests =
+                this.getIndividualRequestDao ().queryAsList (IIndividualRequest.class,
+                        Restrictions.eq ("sdtBulkReference", bulkSubmission.getSdtBulkReference ()),
+                        Restrictions.not (Restrictions.in ("requestStatus", completeRequestStatus)));
+
+        if (requests == null || requests.isEmpty ())
         {
-            // We got an internal system error, so assign it to the error message that
-            // should be recorded
 
-            // Now set the error description from the standard error
-            individualRequest.getErrorLog ().setErrorText (errorMessageParam.getErrorText ());
+            LOGGER.debug ("All Individual Requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +
+                    "] have been processed now. Marking the bulk submission as Completed");
+
+            bulkSubmission.markAsCompleted ();
+
+            this.getIndividualRequestDao ().persist (bulkSubmission);
         }
-    }
 
-    /**
-     * Mark the request as initially accepted.
-     * 
-     * @param individualRequest - the individual request object.
-     */
-    private void updateInitiallyAcceptedRequest (final IIndividualRequest individualRequest)
-    {
-        individualRequest.markRequestAsInitiallyAccepted ();
     }
 
     /**
@@ -264,11 +240,8 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
                 this.getErrorMessagesCache ().getValue (IErrorMessage.class,
                         IErrorMessage.ErrorCode.REQ_NOT_ACK.name ());
 
-        // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorText ());
-
-        // Set the error log in the individual request
-        individualRequest.setErrorLog (errorLog);
+        // Set the error message text in the internal error field of the individual request
+        individualRequest.setInternalSystemError (errorMessageParam.getErrorText ());
 
         // now persist the request.
         this.getIndividualRequestDao ().persist (individualRequest);
@@ -327,14 +300,13 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         errorLog.setErrorCode (errorMessage.getErrorCode ());
         errorLog.setErrorText (errorMessage.getErrorText ());
 
-        // Truncate the soap fault error to 1,000 characters to fit
+        // Truncate the soap fault error to 2,000 characters to fit
         // inside the database column of length varchar2(4,000 bytes)
-        // TODO to use global param to get the value below.
-        final int maxAllowedChars = 1000;
+
         String internalError = soapFaultError;
-        if (soapFaultError != null && soapFaultError.length () > maxAllowedChars)
+        if (soapFaultError != null && soapFaultError.length () > MAX_ALLOWED_CHARS)
         {
-            internalError = soapFaultError.substring (0, maxAllowedChars);
+            internalError = soapFaultError.substring (0, MAX_ALLOWED_CHARS);
         }
         individualRequest.setInternalSystemError (internalError);
 

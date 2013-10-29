@@ -254,6 +254,16 @@ public interface IBulkSubmission extends IDomainObject
     boolean hasError ();
 
     /**
+     * Marks the bulk submission as Validated unless the submission is in "Completed" status.
+     */
+    void markAsValidated ();
+
+    /**
+     * Marks the bulk submission as completed.
+     */
+    void markAsCompleted ();
+
+    /**
      * The status of the Bulk Request - one of "Uploaded", "Failed", "
      * Validated", or "Completed" to reflect the current status of SDT processing. Maintained by SDT.
      * 

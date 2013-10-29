@@ -111,7 +111,6 @@ public class MessageWriter implements IMessageWriter
             // periodically check the database and requeue any messages that are stuck on a state indicating that they
             // have not been sent to the case management system.
             LOGGER.error ("Failed to connect to the ActivceMQ queue [" + queueName + "]", e);
-            throw e;
         }
 
         return;
