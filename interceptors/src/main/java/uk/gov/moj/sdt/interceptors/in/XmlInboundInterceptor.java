@@ -38,6 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.logging.LoggingContext;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Interceptor class which handles bulk submission message received by SDT.
@@ -64,7 +67,7 @@ public class XmlInboundInterceptor extends AbstractSdtInterceptor
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional (propagation = Propagation.REQUIRES_NEW)
     public void handleMessage (final SoapMessage message) throws Fault
     {
         // Read contents of message, i.e. XML received from client.
@@ -76,5 +79,19 @@ public class XmlInboundInterceptor extends AbstractSdtInterceptor
 
         // Place entire XML in ThreadLocal from where other processing can extract it.
         SdtContext.getContext ().setRawInXml (rawXml);
+
+        // Setup logging flags from current value in SdtMetric MBean.
+        SdtContext.getContext ().getLoggingContext ().setLoggingFlags (
+                SdtMetricsMBean.getSdtMetrics ().getPerformanceLoggingFlags ());
+
+        // Increment thread local logging id for this invocation.
+        SdtContext.getContext ().getLoggingContext ().setLoggingId (LoggingContext.getNextLoggingId ());
+
+        // Write message to 'performance.log' for this logging point.
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_1))
+        {
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_1,
+                    "XmlInboundInterceptor handling message", "\n\n\t" + rawXml + "\n");
+        }
     }
 }

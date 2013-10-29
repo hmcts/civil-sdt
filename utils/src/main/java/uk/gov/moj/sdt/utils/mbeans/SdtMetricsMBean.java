@@ -112,6 +112,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private int cacheResetControl;
 
     /**
+     * Current active value of performance logging flags which control what performance logging points are active.
+     */
+    private long performanceLoggingFlags;
+
+    /**
      * Count of all bulk submits.
      */
     private long bulkSubmitCounts;
@@ -1486,9 +1491,21 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
+    public long getPerformanceLoggingFlags ()
+    {
+        return this.performanceLoggingFlags;
+    }
+
+    @Override
     public void uncache ()
     {
         this.cacheResetControl++;
+    }
+
+    @Override
+    public void setPerformanceLoggingFlags (final long performanceLoggingFlags)
+    {
+        this.performanceLoggingFlags = performanceLoggingFlags;
     }
 
     // TODO - add function to reload log4j config on demand.

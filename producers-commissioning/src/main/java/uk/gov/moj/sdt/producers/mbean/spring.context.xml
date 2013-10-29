@@ -26,7 +26,7 @@
 						getDatabaseReadsStats, getDatabaseWritesStats,
 						getActiveCustomersStats, getRequestQueueStats, getTargetAppStats,
 						getErrorStats, getLastBulkSubmitRef, getLastBulkRequestRef,
-						uncache, reset
+						uncache, setPerformanceLoggingFlags, reset
 					</value>
 				</property>
 			</bean>

@@ -35,201 +35,250 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.gov.moj.sdt.utils.logging.LoggingContext;
+import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
+
 /**
  * Class holding all thread specific context that needs to be passed around in
  * SDT.
  * 
  * @author Robin Compston.
  */
-public final class SdtContext {
-	/**
-	 * Thread local holder available throughout thread.
-	 */
-	private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext>();
+public final class SdtContext
+{
+    /**
+     * Thread local holder available throughout thread.
+     */
+    private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext> ();
 
-	/**
-	 * The raw inbound XML handled by CXF and stored for application use in
-	 * thread local memory.
-	 */
-	private String rawInXml;
+    /**
+     * The raw inbound XML handled by CXF and stored for application use in
+     * thread local memory.
+     */
+    private String rawInXml;
 
-	/**
-	 * The raw outbound XML handled by CXF and stored for application use in
-	 * thread local memory.
-	 */
-	private String rawOutXml;
+    /**
+     * The raw outbound XML handled by CXF and stored for application use in
+     * thread local memory.
+     */
+    private String rawOutXml;
 
-	/**
-	 * A serviceRequestId.
-	 */
-	private Long serviceRequestId;
+    /**
+     * A serviceRequestId.
+     */
+    private Long serviceRequestId;
 
-	/**
-	 * Map to store the raw XML associated with the status of each individual
-	 * request in a bulk submission. This XML is returned by the case management
-	 * system and is specific to the case management system. SDT is a generic
-	 * systems and must remain agnostic about the contents of this status and
-	 * therefore deliberately treats it as raw XML. As a result, there are no
-	 * JAXB classes corresponding to this status and the status must be received
-	 * from the case management system and passed through the the bulk customer.
-	 * This is done my extracting this XML from the notification received from
-	 * the case management system, and storing it in the database, then on
-	 * receiving a bulk feedback request, reading it out of the database,
-	 * storing it in this map and then inserting it into the outbound XML.
-	 */
-	private Map<String, String> targetApplicationRespMap = new HashMap<String, String>();
+    /**
+     * A serviceRequestId.
+     */
+    private ILoggingContext loggingContext;
 
-	/**
-	 * List to store the synchronisation tasks (commands) that are be executed
-	 * by the message synchroniser when the transaction is committed.
-	 */
-	private List<Runnable> synchronisationTasks;
+    /**
+     * Map to store the raw XML associated with the status of each individual
+     * request in a bulk submission. This XML is returned by the case management
+     * system and is specific to the case management system. SDT is a generic
+     * systems and must remain agnostic about the contents of this status and
+     * therefore deliberately treats it as raw XML. As a result, there are no
+     * JAXB classes corresponding to this status and the status must be received
+     * from the case management system and passed through the the bulk customer.
+     * This is done my extracting this XML from the notification received from
+     * the case management system, and storing it in the database, then on
+     * receiving a bulk feedback request, reading it out of the database,
+     * storing it in this map and then inserting it into the outbound XML.
+     */
+    private Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
 
-	/**
-	 * Constructor for {@link ThreadContext}.
-	 */
-	private SdtContext() {
-	}
+    /**
+     * List to store the synchronisation tasks (commands) that are be executed
+     * by the message synchroniser when the transaction is committed.
+     */
+    private List<Runnable> synchronisationTasks;
 
-	/**
-	 * Getter for rawInXml.
-	 * 
-	 * @return raw inbound XML.
-	 */
-	public String getRawInXml() {
-		return rawInXml;
-	}
+    /**
+     * Constructor for {@link ThreadContext}.
+     */
+    private SdtContext ()
+    {
+    }
 
-	/**
-	 * Getter for rawOutXml.
-	 * 
-	 * @return raw outbound XML.
-	 */
-	public String getRawOutXml() {
-		return rawOutXml;
-	}
+    /**
+     * Get the {@link LoggingContext} object.
+     * 
+     * @return logging context.
+     */
+    public ILoggingContext getLoggingContext ()
+    {
+        return loggingContext;
+    }
 
-	/**
-	 * Setter for rawInXml.
-	 * 
-	 * @param rawInXml
-	 *            return raw inbound XML.
-	 */
-	public void setRawInXml(final String rawInXml) {
-		this.rawInXml = rawInXml;
-	}
+    /**
+     * Getter for rawInXml.
+     * 
+     * @return raw inbound XML.
+     */
+    public String getRawInXml ()
+    {
+        return rawInXml;
+    }
 
-	/**
-	 * Setter for rawOutXml.
-	 * 
-	 * @param rawOutXml
-	 *            return raw outbound XML.
-	 */
-	public void setRawOutXml(final String rawOutXml) {
-		this.rawOutXml = rawOutXml;
-	}
+    /**
+     * Getter for rawOutXml.
+     * 
+     * @return raw outbound XML.
+     */
+    public String getRawOutXml ()
+    {
+        return rawOutXml;
+    }
 
-	/**
-	 * Get the SdtContext for this thread.
-	 * 
-	 * @return the SdtContext for this thread.
-	 */
-	public static SdtContext getContext() {
-		SdtContext sdtContext = THREAD_LOCAL.get();
-		if (sdtContext == null) {
-			sdtContext = new SdtContext();
-			THREAD_LOCAL.set(sdtContext);
-		}
+    /**
+     * Set the {@link ILoggingContext} object.
+     * 
+     * @param loggingContext the logging context.
+     */
+    public void setLoggingContext (final ILoggingContext loggingContext)
+    {
+        this.loggingContext = loggingContext;
+    }
 
-		return sdtContext;
-	}
+    /**
+     * Setter for rawInXml.
+     * 
+     * @param rawInXml
+     *            return raw inbound XML.
+     */
+    public void setRawInXml (final String rawInXml)
+    {
+        this.rawInXml = rawInXml;
+    }
 
-	/**
-	 * Get map containing raw XML returned by the case management system for
-	 * each request.
-	 * 
-	 * @return map containing raw XML returned by the case management system for
-	 *         each request.
-	 */
-	public Map<String, String> getTargetApplicationRespMap() {
-		return targetApplicationRespMap;
-	}
+    /**
+     * Setter for rawOutXml.
+     * 
+     * @param rawOutXml
+     *            return raw outbound XML.
+     */
+    public void setRawOutXml (final String rawOutXml)
+    {
+        this.rawOutXml = rawOutXml;
+    }
 
-	/**
-	 * Set map containing raw XML returned by the case management system for
-	 * each request (taken from the SDT database).
-	 * 
-	 * @param targetApplicationRespMap
-	 *            value of map containing raw XML returned by the case
-	 *            management system for each request
-	 */
-	public void setTargetApplicationRespMap(
-			final Map<String, String> targetApplicationRespMap) {
-		this.targetApplicationRespMap = targetApplicationRespMap;
-	}
+    /**
+     * Get the SdtContext for this thread.
+     * 
+     * @return the SdtContext for this thread.
+     */
+    public static SdtContext getContext ()
+    {
+        SdtContext sdtContext = THREAD_LOCAL.get ();
+        if (sdtContext == null)
+        {
+            sdtContext = new SdtContext ();
 
-	/**
-	 * Adds an task for synchronisation to the synchronisation list.
-	 * 
-	 * @param command
-	 *            the runnable task for synchronisation.
-	 * @return boolean - returns true if the synchronisation list is not already
-	 *         initialized.
-	 */
-	public boolean addSynchronisationTask(final Runnable command) {
-		boolean returnValue = false;
-		if (this.synchronisationTasks == null) {
-			this.synchronisationTasks = new ArrayList<Runnable>();
-			returnValue = true;
-		}
-		this.synchronisationTasks.add(command);
+            final ILoggingContext loggingContext = new LoggingContext ();
+            sdtContext.setLoggingContext (loggingContext);
 
-		return returnValue;
-	}
+            THREAD_LOCAL.set (sdtContext);
+        }
 
-	/**
-	 * Clears the synchronisation task list after the thread no longer needs it.
-	 */
-	public void clearSynchronisationTasks() {
-		if (this.synchronisationTasks != null) {
-			this.synchronisationTasks.clear();
-			this.synchronisationTasks = null;
-		}
+        return sdtContext;
+    }
 
-	}
+    /**
+     * Get map containing raw XML returned by the case management system for
+     * each request.
+     * 
+     * @return map containing raw XML returned by the case management system for
+     *         each request.
+     */
+    public Map<String, String> getTargetApplicationRespMap ()
+    {
+        return targetApplicationRespMap;
+    }
 
-	/**
-	 * get.
-	 * 
-	 * @return the serviceRequestId
-	 */
-	public Long getServiceRequestId() {
-		return serviceRequestId;
-	}
+    /**
+     * Set map containing raw XML returned by the case management system for
+     * each request (taken from the SDT database).
+     * 
+     * @param targetApplicationRespMap
+     *            value of map containing raw XML returned by the case
+     *            management system for each request
+     */
+    public void setTargetApplicationRespMap (final Map<String, String> targetApplicationRespMap)
+    {
+        this.targetApplicationRespMap = targetApplicationRespMap;
+    }
 
-	/**
-	 * Set.
-	 * 
-	 * @param serviceRequestId
-	 *            the serviceRequestId to set
-	 */
-	public void setServiceRequestId(final Long serviceRequestId) {
-		this.serviceRequestId = serviceRequestId;
-	}
+    /**
+     * Adds an task for synchronisation to the synchronisation list.
+     * 
+     * @param command
+     *            the runnable task for synchronisation.
+     * @return boolean - returns true if the synchronisation list is not already
+     *         initialized.
+     */
+    public boolean addSynchronisationTask (final Runnable command)
+    {
+        boolean returnValue = false;
+        if (this.synchronisationTasks == null)
+        {
+            this.synchronisationTasks = new ArrayList<Runnable> ();
+            returnValue = true;
+        }
+        this.synchronisationTasks.add (command);
 
-	/**
-	 * 
-	 * @return the list of the synchronisation tasks.
-	 */
-	public List<Runnable> getSynchronisationTasks() {
-		return this.synchronisationTasks;
-	}
+        return returnValue;
+    }
 
-	/**
-	 * clean up thread local.
-	 */
-	public void remove() {
-		THREAD_LOCAL.remove();
-	}
+    /**
+     * Clears the synchronisation task list after the thread no longer needs it.
+     */
+    public void clearSynchronisationTasks ()
+    {
+        if (this.synchronisationTasks != null)
+        {
+            this.synchronisationTasks.clear ();
+            this.synchronisationTasks = null;
+        }
+
+    }
+
+    /**
+     * get.
+     * 
+     * @return the serviceRequestId
+     */
+    public Long getServiceRequestId ()
+    {
+        return serviceRequestId;
+    }
+
+    /**
+     * Set.
+     * 
+     * @param serviceRequestId
+     *            the serviceRequestId to set
+     */
+    public void setServiceRequestId (final Long serviceRequestId)
+    {
+        this.serviceRequestId = serviceRequestId;
+    }
+
+    /**
+     * 
+     * @return the list of the synchronisation tasks.
+     */
+    public List<Runnable> getSynchronisationTasks ()
+    {
+        return this.synchronisationTasks;
+    }
+
+    /**
+     * clean up thread local.
+     */
+    public void remove ()
+    {
+        THREAD_LOCAL.remove ();
+    }
 
 }

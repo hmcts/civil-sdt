@@ -158,6 +158,13 @@ public interface ISdtMetricsMBean
     int getCacheResetControl ();
 
     /**
+     * Get the current active performance logging flags.
+     * 
+     * @return the current active performance logging flags.
+     */
+    long getPerformanceLoggingFlags ();
+
+    /**
      * Reset all metrics to initial value.
      */
     void reset ();
@@ -168,6 +175,13 @@ public interface ISdtMetricsMBean
      * refresh from source.
      */
     void uncache ();
+
+    /**
+     * Set the value of the performance logging flags.
+     * 
+     * @param performanceLoggingFlags new value of performance logging flags.
+     */
+    void setPerformanceLoggingFlags (long performanceLoggingFlags);
 
     /**
      * Increment count of bulk submits.

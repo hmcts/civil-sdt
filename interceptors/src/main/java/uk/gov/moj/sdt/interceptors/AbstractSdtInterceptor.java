@@ -123,10 +123,11 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     /**
      * Allow inbound or outbound raw XML to be changed in flight.
      * 
-     * @param message the message holding the output stream into which the XML is to be inserted. *
+     * @param message the message holding the output stream into which the XML is to be inserted.
+     * @return modified message.
      * @throws Fault exception encountered while reading content.
      */
-    public void modifyMessage (final SoapMessage message) throws Fault
+    public String modifyMessage (final SoapMessage message) throws Fault
     {
         // Work out if this message is inbound or outbound.
         boolean isOutbound = false;
@@ -134,6 +135,8 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 message == message.getExchange ().getOutMessage () ||
                         message == message.getExchange ().getOutFaultMessage ();
 
+        String modifiedMessage = null;
+        
         if (isOutbound)
         {
             // Outbound message.
@@ -163,7 +166,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 org.apache.commons.io.IOUtils.closeQuietly (csnew);
 
                 // Modify it if desired.
-                String modifiedMessage = changeOutboundMessage (currentEnvelopeMessage);
+                modifiedMessage = changeOutboundMessage (currentEnvelopeMessage);
                 modifiedMessage = modifiedMessage != null ? modifiedMessage : currentEnvelopeMessage;
 
                 // Turn the modified data into a new input stream.
@@ -198,11 +201,11 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 org.apache.commons.io.IOUtils.closeQuietly (is);
 
                 // Modify it if desired.
-                String res = changeInboundMessage (currentEnvelopeMessage);
-                res = res != null ? res : currentEnvelopeMessage;
+                modifiedMessage = changeInboundMessage (currentEnvelopeMessage);
+                modifiedMessage = modifiedMessage != null ? modifiedMessage : currentEnvelopeMessage;
 
                 // Write the modified data back to the input stream.
-                is = org.apache.commons.io.IOUtils.toInputStream (res, "UTF-8");
+                is = org.apache.commons.io.IOUtils.toInputStream (modifiedMessage, "UTF-8");
 
                 // Put input stream in message and close it.
                 message.setContent (InputStream.class, is);
@@ -213,6 +216,8 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 throw new RuntimeException (ioe);
             }
         }
+        
+        return modifiedMessage;
     }
 
     /**

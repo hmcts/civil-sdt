@@ -36,6 +36,7 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.phase.Phase;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 /**
  * Interceptor class which handles bulk submission message sent by SDT.
@@ -67,7 +68,14 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
     public void handleMessage (final SoapMessage message) throws Fault
     {
         // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
-        this.modifyMessage (message);
+        final String modifiedMessage = this.modifyMessage (message);
+
+        // Write message to 'performance.log' for this logging point.
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_10))
+        {
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_10,
+                    "XmlOutboundInterceptor handling message", "\n\n\t" + modifiedMessage + "\n");
+        }
     }
 
 }
