@@ -180,7 +180,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             // Set the error continue rather than throw an exception
             bulkSubmission.setErrorCode (IErrorMessage.ErrorCode.NO_VALID_REQS.name ());
             bulkSubmission.setErrorText (getErrorMessage (replacements, IErrorMessage.ErrorCode.NO_VALID_REQS));
-            bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.COMPLETED.name ());
+            bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus ());
 
         }
 
