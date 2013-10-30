@@ -46,10 +46,20 @@ import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
  */
 public final class SdtContext
 {
+
     /**
      * Thread local holder available throughout thread.
      */
     private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext> ();
+
+    /**
+     * The outbound message.
+     */
+    private String outboundMessage;
+    /**
+     * The outbound message.
+     */
+    private String inboundMessage;
 
     /**
      * The raw inbound XML handled by CXF and stored for application use in
@@ -129,6 +139,46 @@ public final class SdtContext
     public String getRawOutXml ()
     {
         return rawOutXml;
+    }
+
+    /**
+     * Get.
+     * 
+     * @return the outboundMessage
+     */
+    public String getOutboundMessage ()
+    {
+        return outboundMessage;
+    }
+
+    /**
+     * Set.
+     * 
+     * @param outboundMessage the outboundMessage to set
+     */
+    public void setOutboundMessage (final String outboundMessage)
+    {
+        this.outboundMessage = outboundMessage;
+    }
+
+    /**
+     * Get.
+     * 
+     * @return the inboundMessage
+     */
+    public String getInboundMessage ()
+    {
+        return inboundMessage;
+    }
+
+    /**
+     * Set.
+     * 
+     * @param inboundMessage the inboundMessage to set
+     */
+    public void setInboundMessage (final String inboundMessage)
+    {
+        this.inboundMessage = inboundMessage;
     }
 
     /**

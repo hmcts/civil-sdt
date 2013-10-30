@@ -96,13 +96,15 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     {
         serviceRequest = new ServiceRequest ();
         LOG.info("[ServiceRequestInboundInterceptor:handleMessage] incoming message being processed");
-        setMessage(readInputMessage (soapMessage));
+        final String inputMessage = readInputMessage (soapMessage);
+        SdtContext.getContext ().setInboundMessage (inputMessage);
+        //setMessage();
         logMessage ();
     }  
    
 
     /**
-     * log the message to the persistence target.
+     * Log the message to the persistence target.
      * <p>
      * Evaluates whether this is an incoming message (no persistence generated id) or an outgoing message (ThreadLocal
      * stored id exists) and hands on to appropriate processing method.
@@ -117,7 +119,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     {
         final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
         serviceRequest.setBulkCustomerId (extractBulkCustomerId ());
-        serviceRequest.setRequestPayload (this.getMessage ());
+        serviceRequest.setRequestPayload (SdtContext.getContext ().getInboundMessage ());
         serviceRequest.setRequestDateTime (new LocalDateTime ());
         serviceRequest.setRequestType (extractRequestType ());
         serviceRequestDao.persist (serviceRequest);
@@ -130,7 +132,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     }
 
     /**
-     * Retrieve the Request Type from the xmlMessage.
+     * Retrieve the Request Type from the inbound xmlMessage.
      * 
      * @return the request type (for example 'bulkRequest')
      */
@@ -138,20 +140,21 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     {
         String requestType = "";
         final String requestTypePattern = "requestType=\"";
-        final int startPos = this.getMessage ().indexOf (requestTypePattern);
+        final String message = SdtContext.getContext ().getInboundMessage ();
+        final int startPos = message.indexOf (requestTypePattern);
         // the next node contains the request type
-        final String content = this.getMessage ().substring (startPos + requestTypePattern.length ());
+        final String content = message.substring (startPos + requestTypePattern.length ());
         
         if (content.length ()>0)
         {
-            final int endPos = content.indexOf ("\" requestId");
+            final int endPos = content.indexOf ("\"");
             requestType = content.substring (0, endPos);
         }
         return requestType;
     }
 
     /**
-     * Getter.
+     * Getter for the domain object representing the audit record.
      * @return the service request.
      */
     public IServiceRequest getServiceRequest ()
@@ -160,7 +163,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     }
 
     /**
-     * The setter.
+     * The setter for the domain object representing the audit record.
      * @param serviceRequest the IServiceRequest.
      */
     public void setServiceRequest (final IServiceRequest serviceRequest)
@@ -169,7 +172,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     }
 
     /**
-     * Extract the bulk customer id / sdt customer id (synonymous).
+     * Extract the bulk customer id (sdt customer id - synonymous).
      * <p>
      * Always available as part of a submission
      * </p>

@@ -13,6 +13,7 @@
         http://cxf.apache.org/schemas/jaxws.xsd
         http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
+
     <!-- The # prefix, in implementor attribute, indicates bean of type ... The name of the interface which this endpoint must implement -->
     <jaxws:endpoint id="sdtapi" 
                 implementor="#uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType" 
@@ -20,10 +21,14 @@
         <jaxws:inInterceptors>
             <ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
             <ref bean="uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor" />
+            <ref bean="uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor" />
         </jaxws:inInterceptors>
         <jaxws:outInterceptors>
             <ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />               
         </jaxws:outInterceptors>
+        <jaxws:outFaultInterceptors>
+        	<ref bean="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor" />
+        </jaxws:outFaultInterceptors>
         <jaxws:features>
             <bean class="org.apache.cxf.feature.LoggingFeature"/>
         </jaxws:features>

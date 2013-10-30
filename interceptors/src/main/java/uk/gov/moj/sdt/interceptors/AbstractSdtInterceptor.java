@@ -45,9 +45,14 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.io.CachedWriter;
 import org.apache.cxf.io.DelegatingInputStream;
+import org.joda.time.LocalDateTime;
 
+import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.ServiceRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.enricher.AbstractSdtEnricher;
 import uk.gov.moj.sdt.enricher.api.ISdtEnricher;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Abstract class holding common code for all SDT Interceptors.
@@ -71,6 +76,14 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 
     // CHECKSTYLE:ON
 
+    /**
+     * The persistence class for this interceptor.
+     */
+    // CHECKSTYLE:OFF
+   
+    protected IGenericDao serviceRequestDao;
+
+    // CHECKSTYLE:ON
     /**
      * Constructor for {@link AbstractSdtInterceptor}.
      * 
@@ -109,6 +122,23 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     }
 
     /**
+     * Extract the bulk reference.
+     * <p>
+     * Bulk reference is only applicable on certain requests:
+     * <ul>
+     * <li>Bulk submission - not available till response</li>
+     * <li>Submit Query - not applicable</li>
+     * <li>Bulk report - available on both request and response.</li>
+     * </ul>
+     * 
+     * @return the value of the bulk reference
+     */
+    private String extractOutboundBulkReference ()
+    {
+        return extractOutboundValue ("sdtBulkReference");
+    }
+
+    /**
      * Change the raw XML in the inbound message.
      * 
      * @param currentEnvelope the raw inbound SOAP XML to be changed.
@@ -118,6 +148,26 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     {
         final String newCurrentEnvelope = currentEnvelope + "<this_has_been_hacked/>";
         return newCurrentEnvelope;
+    }
+
+    /**
+     * The ServiceRequestDAO.
+     * 
+     * @return a concrete instance of the dao.
+     */
+    public IGenericDao getServiceRequestDao ()
+    {
+        return serviceRequestDao;
+    }
+
+    /**
+     * Set the serviceRequestDAO.
+     * 
+     * @param serviceRequestDao the dao
+     */
+    public void setServiceRequestDao (final IGenericDao serviceRequestDao)
+    {
+        this.serviceRequestDao = serviceRequestDao;
     }
 
     /**
@@ -168,7 +218,12 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
                 // Modify it if desired.
                 modifiedMessage = changeOutboundMessage (currentEnvelopeMessage);
                 modifiedMessage = modifiedMessage != null ? modifiedMessage : currentEnvelopeMessage;
-
+                final SdtContext sdtContext = SdtContext.getContext ();
+                if (null == sdtContext.getOutboundMessage ())
+                {
+                    sdtContext.setOutboundMessage (modifiedMessage);
+                    persistEnvelope (modifiedMessage);
+                }
                 // Turn the modified data into a new input stream.
                 final InputStream replaceInStream =
                         org.apache.commons.io.IOUtils.toInputStream (modifiedMessage, "UTF-8");
@@ -218,6 +273,101 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
         }
         
         return modifiedMessage;
+    }
+
+    /**
+     * When the application closes the message output stream the service request
+     * must also be persisted. Since Hibernate wraps everything up into
+     * transactional units trying to write the output stream value anywhere else
+     * in the stack seems to miss the Hibernate persist ending up with an empty
+     * response payload being persisted.
+     * 
+     * @param envelope the String envelope value of the output soap message.
+     */
+    public void persistEnvelope (final String envelope)
+    {
+        final SdtContext sdtContext = SdtContext.getContext ();
+
+        final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
+
+        if (LOGGER.isInfoEnabled ())
+        {
+            LOGGER.info ("[ServiceRequestOutputboundInterceptor: onClose] - " +
+                    "creating outbound payload database log for ServiceRequest: " + sdtContext.getServiceRequestId ());
+        }
+        final IServiceRequest serviceRequest =
+                serviceRequestDao.fetch (ServiceRequest.class, sdtContext.getServiceRequestId ());
+        if (null != serviceRequest)
+        {
+            serviceRequest.setResponsePayload (envelope);
+            serviceRequest.setResponseDateTime (new LocalDateTime ());
+            final String bulkReference = extractOutboundBulkReference ();
+            if (bulkReference.length () > 0)
+            {
+                serviceRequest.setBulkReference (bulkReference);
+            }
+            serviceRequestDao.persist (serviceRequest);
+        }
+
+    }
+
+    /**
+     * Simple method to extract a text value from this ServiceRequest's outbound xmlMessage String.
+     * <p>
+     * The xml should already have been extracted and persisted on the context object.
+     * </p>
+     * 
+     * @param nodeName The name of an xml node e.g. 'customerId'
+     * @return the content of the node or null
+     */
+    protected String extractOutboundValue (final String nodeName)
+    {
+        final String xmlMessage = SdtContext.getContext ().getOutboundMessage ();
+        return extractValue (nodeName, xmlMessage);
+    }
+
+    /**
+     * Simple method to extract a text value from this ServiceRequest's inbound xmlMessage String.
+     * <p>
+     * The xml should already have been extracted and persisted on the context object
+     * </p>
+     * 
+     * @param nodeName The name of an xml node e.g. 'customerId'
+     * @return the content of the node or null
+     */
+    protected String extractValue (final String nodeName)
+    {
+        final String xmlMessage = SdtContext.getContext ().getInboundMessage ();
+        return extractValue (nodeName, xmlMessage);
+    }
+
+    /**
+     * Simple method to extract a text value from a String of xml.
+     * <p>
+     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses simple String
+     * functionality to locate and extract a String.
+     * </p>
+     * 
+     * @param nodeName The name of an xml node e.g. 'customerId'
+     * @param xmlMessage the message as a String
+     * @return the content of the node or null
+     */
+    protected String extractValue (final String nodeName, final String xmlMessage)
+    {
+        String nodeContent = "";
+        if (nodeName == null || null == xmlMessage || xmlMessage.length () < nodeName.length ())
+        {
+            return "";
+        }
+        int startPos = xmlMessage.indexOf (nodeName);
+        if (startPos != -1)
+        {
+            startPos += nodeName.length ();
+            nodeContent = xmlMessage.substring (startPos);
+            final int endPos = nodeContent.indexOf ("<");
+            nodeContent = nodeContent.substring (1, endPos);
+        }
+        return nodeContent;
     }
 
     /**

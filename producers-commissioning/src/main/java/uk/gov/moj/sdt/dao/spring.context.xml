@@ -19,6 +19,10 @@
             </list>
         </property>
 	</bean>
+	
+	<bean id="uk.gov.moj.sdt.dao.api.IGenericDao"
+	  class="uk.gov.moj.sdt.dao.MockGenericDao">
+    </bean>
 		
 	<bean id="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" 
 		class="uk.gov.moj.sdt.dao.MockBulkSubmissionDao">

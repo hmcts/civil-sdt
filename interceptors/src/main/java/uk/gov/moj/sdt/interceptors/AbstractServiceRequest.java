@@ -71,25 +71,7 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
         super (phase);
     }
 
-    /**
-     * The ServiceRequestDAO.
-     * 
-     * @return a concrete instance of the dao.
-     */
-    public IGenericDao getServiceRequestDao ()
-    {
-        return serviceRequestDao;
-    }
-
-    /**
-     * Set the serviceRequestDAO.
-     * 
-     * @param serviceRequestDao the dao
-     */
-    public void setServiceRequestDao (final IGenericDao serviceRequestDao)
-    {
-        this.serviceRequestDao = serviceRequestDao;
-    }
+   
 
     /**
      * get.
@@ -129,30 +111,5 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
         this.serviceRequestId = serviceRequestId;
     }
 
-    /**
-     * Simple method to extract a text value from this ServiceRequest's xmlMessage String.
-     * <p>
-     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses simple String
-     * functionality to locate and extract a String.
-     * </p>
-     * 
-     * @param nodeName The name of an xml node e.g. 'customerId'
-     * @return the content of the node or null
-     */
-    protected String extractValue (final String nodeName)
-    {
-        String nodeContent = "";
-        if(nodeName == null || null == xmlMessage || xmlMessage.length () < nodeName.length ()) {
-            return "";
-        }
-        int startPos = xmlMessage.indexOf (nodeName);
-        if (startPos != -1)
-        {
-            startPos +=  nodeName.length ();
-            nodeContent = xmlMessage.substring (startPos);
-            final int endPos = nodeContent.indexOf ("<");
-            nodeContent = nodeContent.substring (1, endPos);
-        }
-        return nodeContent;
-    }
+    
 }

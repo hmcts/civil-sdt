@@ -220,7 +220,6 @@ public class GenericDao implements IGenericDao
 
         final Session session = this.getSessionFactory ().getCurrentSession ();
         session.saveOrUpdate (domainObject);
-
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
         SdtMetricsMBean.getSdtMetrics ().addDatabaseWritesTime (endTime - startTime);
