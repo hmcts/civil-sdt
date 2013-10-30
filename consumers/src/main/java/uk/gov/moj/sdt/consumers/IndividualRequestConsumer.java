@@ -44,6 +44,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
@@ -90,10 +91,43 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
         // Transform domain object to web service object
         final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb (individualRequest);
 
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tsdt request reference=" + individualRequest.getSdtRequestReference () +
+                    "\n\tcustomer request reference=" + individualRequest.getCustomerRequestReference () +
+                    "\n\tline number=" + individualRequest.getLineNumber () + "\n\trequest type=" +
+                    individualRequest.getRequestType () + "\n\tforwarding attempts=" +
+                    individualRequest.getForwardingAttempts () + "\n\tpayload=" +
+                    individualRequest.getRequestPayload () + "\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_7, "Send to target application",
+                    detail.toString ());
+        }
+
         // Process and call the end point web service
         final IndividualResponseType responseType =
                 this.invokeTargetAppService (individualRequestType, individualRequest, connectionTimeOut,
                         receiveTimeOut);
+
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_8))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tsdt request reference=" + responseType.getHeader ().getSdtRequestId () +
+                    "\n\tstatus code=" + responseType.getStatus ().getCode ().name () + "\n\ttarget app detail=" +
+                    responseType.getTargetAppDetail ().getAny ());
+            if (responseType.getStatus ().getError () != null)
+            {
+                detail.append ("\n\terror code=" + responseType.getStatus ().getError ().getCode () +
+                        "\n\terror description=" + responseType.getStatus ().getError ().getDescription ());
+            }
+            detail.append ("\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_8,
+                    "receive from target application", detail.toString ());
+        }
 
         this.transformer.transformJaxbToDomain (responseType, individualRequest);
 

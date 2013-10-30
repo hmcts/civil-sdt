@@ -162,7 +162,7 @@ public interface ISdtMetricsMBean
      * 
      * @return the current active performance logging flags.
      */
-    long getPerformanceLoggingFlags ();
+    short getPerformanceLoggingFlags ();
 
     /**
      * Reset all metrics to initial value.
@@ -181,7 +181,7 @@ public interface ISdtMetricsMBean
      * 
      * @param performanceLoggingFlags new value of performance logging flags.
      */
-    void setPerformanceLoggingFlags (long performanceLoggingFlags);
+    void setPerformanceLoggingFlags (short performanceLoggingFlags);
 
     /**
      * Increment count of bulk submits.

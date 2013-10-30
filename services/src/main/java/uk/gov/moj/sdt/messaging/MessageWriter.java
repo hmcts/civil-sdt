@@ -42,6 +42,8 @@ import org.springframework.jms.core.JmsTemplate;
 
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
@@ -94,9 +96,20 @@ public class MessageWriter implements IMessageWriter
 
         // Set meta data in message.
         sdtMessage.setMessageSentTimestamp (new GregorianCalendar ().getTimeInMillis ());
+        sdtMessage.setEnqueueLoggingId (SdtContext.getContext ().getLoggingContext ().getMajorLoggingId ());
 
         SdtMetricsMBean.getSdtMetrics ().upRequestQueueCount ();
         SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
+
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_5))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference () + "\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_5, "Enqueue message",
+                    detail.toString ());
+        }
 
         try
         {

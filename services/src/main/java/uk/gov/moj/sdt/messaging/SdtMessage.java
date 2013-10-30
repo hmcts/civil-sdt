@@ -61,6 +61,11 @@ public class SdtMessage implements Serializable, ISdtMessage
      */
     private long messageSentTimestamp;
 
+    /**
+     * This variable holds performance logging id of the enqueuing thread.
+     */
+    private long enqueueLoggingId;
+
     @Override
     public String getSdtRequestReference ()
     {
@@ -86,9 +91,21 @@ public class SdtMessage implements Serializable, ISdtMessage
     }
 
     @Override
+    public long getEnqueueLoggingId ()
+    {
+        return enqueueLoggingId;
+    }
+
+    @Override
+    public void setEnqueueLoggingId (final long enqueueLoggingId)
+    {
+        this.enqueueLoggingId = enqueueLoggingId;
+    }
+
+    @Override
     public String toString ()
     {
         return "SdtMessage [sdtRequestReference=" + sdtRequestReference + ", messageSentTimestamp=" +
-                messageSentTimestamp + "]";
+                messageSentTimestamp + ", enqueueLoggingId=" + enqueueLoggingId + "]";
     }
 }

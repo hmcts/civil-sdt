@@ -114,7 +114,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Current active value of performance logging flags which control what performance logging points are active.
      */
-    private long performanceLoggingFlags;
+    private short performanceLoggingFlags;
 
     /**
      * Count of all bulk submits.
@@ -1491,7 +1491,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public long getPerformanceLoggingFlags ()
+    public short getPerformanceLoggingFlags ()
     {
         return this.performanceLoggingFlags;
     }
@@ -1503,7 +1503,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public void setPerformanceLoggingFlags (final long performanceLoggingFlags)
+    public void setPerformanceLoggingFlags (final short performanceLoggingFlags)
     {
         this.performanceLoggingFlags = performanceLoggingFlags;
     }

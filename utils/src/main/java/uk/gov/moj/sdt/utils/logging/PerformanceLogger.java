@@ -116,6 +116,36 @@ public final class PerformanceLogger
     private static final int FLAG_BIT_LENGTH = 16;
 
     /**
+     * Start delimiter for formatting.
+     */
+    private static final String START_DELIMITER = "| ";
+
+    /**
+     * End delimiter for formatting.
+     */
+    private static final String END_DELIMITER = " |";
+
+    /**
+     * Length of a formatted line.
+     */
+    private static final int LINE_LENGTH = 16;
+
+    /**
+     * Length of a formatted line.
+     */
+    private static final int LABEL_LENGTH = 6;
+
+    /**
+     * Length of block of ascii.
+     */
+    private static final int ASCII_BLOCK = 4;
+
+    /**
+     * Length of block of ascii.
+     */
+    private static final int ASCII_WIDTH = 56;
+
+    /**
      * Default Constructor.
      */
     private PerformanceLogger ()
@@ -139,11 +169,12 @@ public final class PerformanceLogger
         {
             // Convert loggingPoint to bit String for easy viewing.
             final String binaryLoggingPoint =
-                    PerformanceLogger.leftpad (Long.toBinaryString (loggingPoint), PerformanceLogger.FLAG_BIT_LENGTH);
+                    PerformanceLogger.pad (Long.toBinaryString (loggingPoint), true, "0",
+                            PerformanceLogger.FLAG_BIT_LENGTH);
 
             // Convert loggingFlags to bit String for easy viewing.
             final String binaryLoggingFlags =
-                    PerformanceLogger.leftpad (Long.toBinaryString (loggingContext.getLoggingFlags ()),
+                    PerformanceLogger.pad (Long.toBinaryString (loggingContext.getLoggingFlags ()), true, "0",
                             PerformanceLogger.FLAG_BIT_LENGTH);
 
             final StringBuffer logMessage = new StringBuffer (message);
@@ -181,13 +212,95 @@ public final class PerformanceLogger
     }
 
     /**
+     * Render long string in more readable form.
+     * 
+     * @param input the string to be rendered.
+     * @return the rendered string.
+     */
+    public static String format (final String input)
+    {
+        // Create buffer to work with.
+        final byte[] buffer = input.getBytes ();
+
+        // Line label for current line.
+        int lineNum = 0;
+
+        // To hold formatted output.
+        final StringBuffer output = new StringBuffer ();
+
+        // Keep track of overall position.
+        int position = 0;
+
+        // Where to stop.
+        final int end = buffer.length;
+
+        // To handle a single line - initialise to force a new line.
+        short linePosition = 0;
+
+        // Hold ascii portion of a line.
+        StringBuffer ascii = new StringBuffer ();
+
+        // Hold text portion of a line.
+        StringBuffer text = new StringBuffer ();
+
+        // Continue formatting till none left.
+        while (position < end)
+        {
+            byte current = buffer[position];
+
+            // Insert readability delimiter.
+            if ((linePosition % ASCII_BLOCK) == 0)
+            {
+                ascii.append ("  ");
+            }
+
+            // Store ascii and text separately.
+            ascii.append (pad (Integer.toHexString ((int) current).toUpperCase (), true, "0", 2)).append (" ");
+            if (current == '\n' || current == '\r')
+            {
+                // Convert linefeeds and carriage returns to space to avoid their effect on display.
+                current = ' ';
+            }
+            text.append ((char) current);
+
+            // Update counters.
+            position++;
+            linePosition++;
+
+            // At end of line append the text gathered so far.
+            if ( !(linePosition < LINE_LENGTH) || !(position < end))
+            {
+                if (ascii.length () < ASCII_WIDTH)
+                {
+                    ascii = new StringBuffer (pad (ascii.toString (), false, " ", ASCII_WIDTH));
+                }
+
+                linePosition = 0;
+                output.append ("\n\t");
+                output.append (pad (Integer.toHexString (lineNum * LINE_LENGTH), true, " ", LABEL_LENGTH));
+                output.append (":  ");
+                output.append (ascii);
+                output.append ("    ");
+                output.append (text);
+                lineNum++;
+                ascii = new StringBuffer ();
+                text = new StringBuffer ();
+            }
+        }
+
+        return output.toString ();
+    }
+
+    /**
      * Left pad a String to a fixed length. Reduce length if too long.
      * 
-     * @param in the input String
+     * @param in the input String.
+     * @param left pad left or lad right.
+     * @param padChar the character with which to left pad the String.
      * @param requiredLength the required length of he output String
-     * @return the padded input String
+     * @return the padded input String.
      */
-    private static String leftpad (final String in, final int requiredLength)
+    private static String pad (final String in, final boolean left, final String padChar, final int requiredLength)
     {
         String out = in;
 
@@ -202,7 +315,14 @@ public final class PerformanceLogger
         // Left pad with zeros if too short.
         for (int i = 0; i < (requiredLength - len); i++)
         {
-            out = "0" + out;
+            if (left)
+            {
+                out = padChar + out;
+            }
+            else
+            {
+                out = out + padChar;
+            }
         }
 
         return out;

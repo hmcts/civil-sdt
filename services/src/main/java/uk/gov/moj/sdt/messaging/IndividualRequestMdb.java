@@ -42,6 +42,9 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.messaging.api.IMessageDrivenBean;
 import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.logging.LoggingContext;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
@@ -85,6 +88,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
                 // Update statistics.
                 SdtMetricsMBean.getSdtMetrics ().addRequestQueueTime (sdtMessage.getMessageSentTimestamp ());
                 SdtMetricsMBean.getSdtMetrics ().decrementRequestQueueLength ();
+
             }
             catch (final JMSException e)
             {
@@ -94,6 +98,24 @@ public class IndividualRequestMdb implements IMessageDrivenBean
 
             LOGGER.debug ("Received message, SDT reference [" + sdtReference + "]");
 
+            // Setup logging flags from current value in SdtMetric MBean.
+            SdtContext.getContext ().getLoggingContext ()
+                    .setLoggingFlags (SdtMetricsMBean.getSdtMetrics ().getPerformanceLoggingFlags ());
+
+            // Assemble logging id - for dequeued messages we take the logging id of the original submit bulk thread as
+            // the major portion to tie things together.
+            SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (sdtMessage.getEnqueueLoggingId ());
+            SdtContext.getContext ().getLoggingContext ().setMinorLoggingId (LoggingContext.getNextLoggingId ());
+
+            if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_6))
+            {
+                final StringBuffer detail = new StringBuffer ();
+                detail.append ("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference () + "\n");
+
+                // Write message to 'performance.log' for this logging point.
+                PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_6, "Dequeue message",
+                        detail.toString ());
+            }
             this.getTargetAppSubmissionService ().processRequestToSubmit (sdtReference);
         }
         else

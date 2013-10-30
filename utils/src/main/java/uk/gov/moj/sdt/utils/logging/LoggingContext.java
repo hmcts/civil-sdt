@@ -53,12 +53,17 @@ public class LoggingContext implements ILoggingContext
      * The name of the property <code>loggingFlags</code>.
      */
     // TODO turn off.
-    private long loggingFlags = Long.MAX_VALUE;
+    private int loggingFlags = Integer.MAX_VALUE;
 
     /**
-     * The name of the property <code>loggingId</code>.
+     * The major logging id for this request.
      */
-    private long loggingId;
+    private long majorLoggingId;
+
+    /**
+     * The minor logging id for this request.
+     */
+    private long minorLoggingId;
 
     /**
      * Constructs a new {@link LoggingContext} instance.
@@ -68,27 +73,52 @@ public class LoggingContext implements ILoggingContext
     }
 
     @Override
-    public long getLoggingFlags ()
+    public int getLoggingFlags ()
     {
         return this.loggingFlags;
     }
 
     @Override
-    public void setLoggingFlags (final long loggingFlags)
+    public void setLoggingFlags (final int loggingFlags)
     {
         this.loggingFlags = loggingFlags;
     }
 
     @Override
-    public long getLoggingId ()
+    public long getMajorLoggingId ()
     {
-        return this.loggingId;
+        return this.majorLoggingId;
     }
 
     @Override
-    public void setLoggingId (final long loggingId)
+    public void setMajorLoggingId (final long majorLoggingId)
     {
-        this.loggingId = loggingId;
+        this.majorLoggingId = majorLoggingId;
+    }
+
+    @Override
+    public long getMinorLoggingId ()
+    {
+        return this.minorLoggingId;
+    }
+
+    @Override
+    public void setMinorLoggingId (final long minorLoggingId)
+    {
+        this.minorLoggingId = minorLoggingId;
+    }
+
+    @Override
+    public String getLoggingId ()
+    {
+        if (this.getMinorLoggingId () > 0)
+        {
+            return this.getMajorLoggingId () + "." + this.getMinorLoggingId ();
+        }
+        else
+        {
+            return "" + this.getMajorLoggingId ();
+        }
     }
 
     /**

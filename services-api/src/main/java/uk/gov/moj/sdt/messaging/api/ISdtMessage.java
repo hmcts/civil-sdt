@@ -65,6 +65,20 @@ public interface ISdtMessage
     void setMessageSentTimestamp (final long messageSentTimestamp);
 
     /**
+     * Get the enqueuing performance logging id.
+     * 
+     * @return the enqueuing performance logging id.
+     */
+    long getEnqueueLoggingId ();
+
+    /**
+     * Set new value of enqueue performance logging id.
+     * 
+     * @param enqueueLoggingId new value of enqueuing logging id.
+     */
+    void setEnqueueLoggingId (final long enqueueLoggingId);
+
+    /**
      * Represent class as String.
      * 
      * @return class represented as String.

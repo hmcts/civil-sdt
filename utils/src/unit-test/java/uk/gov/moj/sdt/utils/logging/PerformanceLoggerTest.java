@@ -99,8 +99,8 @@ public class PerformanceLoggerTest extends SdtUnitTestBase
     public void testPerformanceMessage ()
     {
         // Setup SDT context for logging.
-        SdtContext.getContext ().getLoggingContext ().setLoggingFlags (Long.MAX_VALUE);
-        SdtContext.getContext ().getLoggingContext ().setLoggingId (987);
+        SdtContext.getContext ().getLoggingContext ().setLoggingFlags (Integer.MAX_VALUE);
+        SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (987);
 
         // Write message to 'performance.log'.
         PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_1, "Hullo", " - Detail");

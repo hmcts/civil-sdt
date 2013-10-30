@@ -85,6 +85,7 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
         final ISdtMessage sdtMessage = new SdtMessage ();
         sdtMessage.setSdtRequestReference ("SDT_REQ_TEST_1");
         sdtMessage.setMessageSentTimestamp (System.currentTimeMillis ());
+        sdtMessage.setEnqueueLoggingId (1);
         final IMessageWriter messageWriter =
                 (IMessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
         messageWriter.queueMessage (sdtMessage, "MCOLS");

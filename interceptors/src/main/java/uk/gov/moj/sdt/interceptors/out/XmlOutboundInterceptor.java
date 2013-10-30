@@ -66,7 +66,7 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
 
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
-    {        
+    {
         // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
         final String modifiedMessage = this.modifyMessage (message);
 
@@ -74,7 +74,8 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_10))
         {
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_10,
-                    "XmlOutboundInterceptor handling message", "\n\n\t" + modifiedMessage + "\n");
+                    "XmlOutboundInterceptor handling message", "\n\n\t" + PerformanceLogger.format (modifiedMessage) +
+                            "\n");
         }
     }
 

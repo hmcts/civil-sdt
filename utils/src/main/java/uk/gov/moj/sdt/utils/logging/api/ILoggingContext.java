@@ -49,27 +49,47 @@ public interface ILoggingContext extends Serializable
      * 
      * @return <code>loggingFlags</code>.
      */
-    long getLoggingFlags ();
+    int getLoggingFlags ();
 
     /**
      * The setter method of property <code>loggingFlags</code>.
      * 
      * @param loggingFlags property loggingFlags.
      */
-    void setLoggingFlags (long loggingFlags);
+    void setLoggingFlags (int loggingFlags);
 
     /**
-     * The getter method of property <code>loggingId</code>.
+     * The getter method for major logging id.
      * 
-     * @return <code>loggingId</code>.
+     * @return major logging id.
      */
-    long getLoggingId ();
+    long getMajorLoggingId ();
 
     /**
-     * The setter method of property <code>loggingId</code>.
+     * The setter method of property <code>majorLoggingId</code>.
      * 
-     * @param loggingId property loggingId.
+     * @param majorLoggingId property majorLoggingId.
      */
-    void setLoggingId (long loggingId);
+    void setMajorLoggingId (long majorLoggingId);
 
+    /**
+     * The getter method for minor logging id.
+     * 
+     * @return minor logging id.
+     */
+    long getMinorLoggingId ();
+
+    /**
+     * The setter method of property <code>minorLoggingId</code>.
+     * 
+     * @param minorLoggingId property minorLoggingId.
+     */
+    void setMinorLoggingId (long minorLoggingId);
+
+    /**
+     * The getter method for logging id.
+     * 
+     * @return logging id.
+     */
+    String getLoggingId ();
 }
