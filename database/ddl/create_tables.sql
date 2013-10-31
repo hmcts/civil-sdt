@@ -134,6 +134,7 @@ CREATE TABLE service_requests
 ,request_type             VARCHAR2(32)       -- the type of request
 ,sdt_customer_id          VARCHAR2(32)       -- should logically map bulk customers but not guaranteed
 ,sdt_bulk_reference       VARCHAR2(29)       -- should logically map bulk submissions but not guaranteed 
+,server_host_name         VARCHAR2(255)      -- name of the host that processed the service request
 ,version_number           INTEGER DEFAULT 0  -- hiberate versioning column 
 ) &service_requests
 ;
