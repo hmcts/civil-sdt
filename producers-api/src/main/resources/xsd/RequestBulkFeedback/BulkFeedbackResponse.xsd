@@ -33,9 +33,13 @@
     
     <xs:complexType name="responseType">
         <xs:sequence>
-            <xs:choice>
-                <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" minOccurs="0"/>
-            </xs:choice>
+            <xs:element name="responseDetail">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" minOccurs="0"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="status" type="base:individualStatusType"/>
         </xs:sequence>
         <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>

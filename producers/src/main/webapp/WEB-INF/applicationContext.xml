@@ -33,6 +33,18 @@
         </jaxws:features>
         <jaxws:properties>
             <entry key="schema-validation-enabled" value="false"/>
+            <entry key="soap.env.ns.map"> 
+                <map> 
+                    <entry key="base" value="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/> 
+                    <entry key="breq" value="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"/> 
+                    <entry key="bresp" value="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema"/> 
+                    <entry key="bfreq" value="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema"/>
+                    <entry key="bfresp" value="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"/>
+                    <entry key="qreq" value="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema"/>
+                    <entry key="qresp" value="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"/>
+                </map> 
+            </entry> 
+            <entry key="disable.outputstream.optimization" value="true"/> 
         </jaxws:properties>
     </jaxws:endpoint>
     

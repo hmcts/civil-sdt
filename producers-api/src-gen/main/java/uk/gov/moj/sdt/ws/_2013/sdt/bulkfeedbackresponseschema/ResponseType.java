@@ -21,9 +21,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;choice>
- *           &lt;any processContents='lax' minOccurs="0"/>
- *         &lt;/choice>
+ *         &lt;element name="responseDetail">
+ *           &lt;complexType>
+ *             &lt;complexContent>
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 &lt;choice>
+ *                   &lt;any processContents='lax' minOccurs="0"/>
+ *                 &lt;/choice>
+ *               &lt;/restriction>
+ *             &lt;/complexContent>
+ *           &lt;/complexType>
+ *         &lt;/element>
  *         &lt;element name="status" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}individualStatusType"/>
  *       &lt;/sequence>
  *       &lt;attribute name="requestType" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestTypeType" />
@@ -37,13 +45,13 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "responseType", propOrder = {
-    "any",
+    "responseDetail",
     "status"
 })
 public class ResponseType {
 
-    @XmlAnyElement(lax = true)
-    protected Object any;
+    @XmlElement(required = true)
+    protected ResponseType.ResponseDetail responseDetail;
     @XmlElement(required = true)
     protected IndividualStatusType status;
     @XmlAttribute(name = "requestType", required = true)
@@ -52,29 +60,27 @@ public class ResponseType {
     protected String requestId;
 
     /**
-     * Gets the value of the any property.
+     * Gets the value of the responseDetail property.
      * 
      * @return
      *     possible object is
-     *     {@link Element }
-     *     {@link Object }
+     *     {@link ResponseType.ResponseDetail }
      *     
      */
-    public Object getAny() {
-        return any;
+    public ResponseType.ResponseDetail getResponseDetail() {
+        return responseDetail;
     }
 
     /**
-     * Sets the value of the any property.
+     * Sets the value of the responseDetail property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Element }
-     *     {@link Object }
+     *     {@link ResponseType.ResponseDetail }
      *     
      */
-    public void setAny(Object value) {
-        this.any = value;
+    public void setResponseDetail(ResponseType.ResponseDetail value) {
+        this.responseDetail = value;
     }
 
     /**
@@ -147,6 +153,63 @@ public class ResponseType {
      */
     public void setRequestId(String value) {
         this.requestId = value;
+    }
+
+
+    /**
+     * <p>Java class for anonymous complex type.
+     * 
+     * <p>The following schema fragment specifies the expected content contained within this class.
+     * 
+     * <pre>
+     * &lt;complexType>
+     *   &lt;complexContent>
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       &lt;choice>
+     *         &lt;any processContents='lax' minOccurs="0"/>
+     *       &lt;/choice>
+     *     &lt;/restriction>
+     *   &lt;/complexContent>
+     * &lt;/complexType>
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "any"
+    })
+    public static class ResponseDetail {
+
+        @XmlAnyElement(lax = true)
+        protected Object any;
+
+        /**
+         * Gets the value of the any property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Element }
+         *     {@link Object }
+         *     
+         */
+        public Object getAny() {
+            return any;
+        }
+
+        /**
+         * Sets the value of the any property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Element }
+         *     {@link Object }
+         *     
+         */
+        public void setAny(Object value) {
+            this.any = value;
+        }
+
     }
 
 }

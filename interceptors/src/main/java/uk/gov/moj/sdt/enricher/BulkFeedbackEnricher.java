@@ -90,7 +90,7 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                 // attributes.
                 final Pattern pattern =
                         Pattern.compile ("(<[\\w]+:response[ \\w\"=]*requestId=\"" + requestId +
-                                "[ \\w\"=]*>)\\s*(<[\\w]+:status)");
+                                "[ \\w\"=]*>)\\s*<([\\w]+:)(responseDetail)/>\\s*(<[\\w]+:status)");
 
                 // Match it against the result of all previous match replacements.
                 final Matcher matcher = pattern.matcher (newXml);
@@ -101,10 +101,15 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                     {
                         LOGGER.debug ("Found matching group[" + matcher.group () + "]");
                     }
-
+                    
+                    //CHECKSTYLE:OFF
                     // Form the replacement string from the matched groups and the extra XML.
-                    String replacementXml =
-                            matcher.group (1) + targetApplicationRespMap.get (requestId) + matcher.group (2);
+                    String replacementXml = new StringBuilder().append (matcher.group (1))
+                            .append ("<").append (matcher.group(2)).append(matcher.group(3)).append (">")
+                            .append(targetApplicationRespMap.get (requestId))
+                            .append ("</").append (matcher.group(2)).append(matcher.group(3)).append (">")
+                            .append(matcher.group(4)).toString ();
+                    //CHECKSTYLE:ON
 
                     replacementXml = replacementXml.replace ('\n', ' ');
                     replacementXml = replacementXml.replace ('\r', ' ');
@@ -130,7 +135,7 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
 
             // Now check that there are no responses without case management specific content inserted.
             final Pattern pattern =
-                    Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w]*\">\\s*"
+                    Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w]*\">\\s*<[\\w]+:responseDetail/>\\s*"
                             + "<[\\w]+:status code=\"([ \\w]+)\"");
             final Matcher matcher = pattern.matcher (newXml);
             if (matcher.find ())
@@ -145,17 +150,18 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                             "] within bulk feedback response XML.");
                 }
             }
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Message after enrichment [" + newXml + "]");
+            }
+
         }
         else
         {
             // Failure to find matching request in outgoing XML.
             LOGGER.debug("Parent tag [" + this.getParentTag () +
                     "] not found...skipping enrichment.");
-        }
-
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Message after enrichment [" + newXml + "]");
         }
 
         return newXml;

@@ -92,6 +92,11 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
                 newXml = matcher.replaceFirst (replacementXml);
             }
 
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Message after enrichment [" + newXml + "]");
+            }
+
         }
         else
         {
@@ -100,11 +105,6 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
                     "] not found...skipping enrichment.");
         }
 
-
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Message after enrichment [" + newXml + "]");
-        }
 
         return newXml;
 

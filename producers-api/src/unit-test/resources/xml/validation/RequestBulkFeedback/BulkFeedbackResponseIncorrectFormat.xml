@@ -24,15 +24,17 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
   </tns:bulkRequestStatus>
   <tns:responses>
       <tns:response requestId="1234567890123456789012345" requestType="unknown">
-      	<tns:mcolResponseDetail>
-	        <rdns:claimNumber>1234567890</rdns:claimNumber>
-	        <rdns:issueDate>2001-01-010</rdns:issueDate>
-	        <rdns:serviceDate>2001-01-010</rdns:serviceDate>
-	        <rdns:warrantNumber>1234567890</rdns:warrantNumber>
-	        <rdns:enforcingCourtCode>1234</rdns:enforcingCourtCode>
-	        <rdns:enforcingCourtName>12345678901234567890123456789012345678901</rdns:enforcingCourtName>
-	        <rdns:fee>0</rdns:fee>
-	    </tns:mcolResponseDetail>    
+      <tns:responseDetail>
+          	<tns:mcolResponseDetail>
+    	        <rdns:claimNumber>1234567890</rdns:claimNumber>
+    	        <rdns:issueDate>2001-01-010</rdns:issueDate>
+    	        <rdns:serviceDate>2001-01-010</rdns:serviceDate>
+    	        <rdns:warrantNumber>1234567890</rdns:warrantNumber>
+    	        <rdns:enforcingCourtCode>1234</rdns:enforcingCourtCode>
+    	        <rdns:enforcingCourtName>12345678901234567890123456789012345678901</rdns:enforcingCourtName>
+    	        <rdns:fee>0</rdns:fee>
+    	    </tns:mcolResponseDetail>
+        </tns:responseDetail>    
         <tns:status code="UNKNOWN">
           <base:error>
             <base:code>123456789012345678901234567890123</base:code>

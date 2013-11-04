@@ -180,6 +180,7 @@ public class BulkFeedbackTransformerTest extends TestCase
                 responseType.getRequestId ());
         Assert.assertEquals ("Status for individual request 1 does not match",
                 IndividualStatusCodeType.ACCEPTED.value (), responseType.getStatus ().getCode ().value ());
+        Assert.assertNotNull ("ResponseDetail should not be null", responseType.getResponseDetail ());
 
         // Individual request 2
         responseType = responseTypes.get (1);
@@ -187,6 +188,7 @@ public class BulkFeedbackTransformerTest extends TestCase
                 responseType.getRequestId ());
         Assert.assertEquals ("Status for individual request 2 does not match",
                 IndividualStatusCodeType.RECEIVED.value (), responseType.getStatus ().getCode ().value ());
+        Assert.assertNotNull ("ResponseDetail should not be null", responseType.getResponseDetail ());
 
         // Individual request 3
         responseType = responseTypes.get (2);
@@ -194,6 +196,7 @@ public class BulkFeedbackTransformerTest extends TestCase
                 responseType.getRequestId ());
         Assert.assertEquals ("Status for individual request 3 does not match",
                 IndividualStatusCodeType.REJECTED.value (), responseType.getStatus ().getCode ().value ());
+        Assert.assertNotNull ("ResponseDetail should not be null", responseType.getResponseDetail ());
 
         // Check for the errors
         final IndividualStatusType individualStatusType = responseType.getStatus ();
@@ -203,5 +206,6 @@ public class BulkFeedbackTransformerTest extends TestCase
         Assert.assertEquals ("Error code for individual request 3 does not match", errorCode, errorType.getCode ());
         Assert.assertEquals ("Error text for individual request 3 does not match", errorText,
                 errorType.getDescription ());
+        Assert.assertNotNull ("ResponseDetail should not be null", responseType.getResponseDetail ());
     }
 }

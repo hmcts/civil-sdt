@@ -21,15 +21,17 @@
     </bulkRequestStatus>
     <responses> 
         <response requestType="mcolClaim" requestId="request identifier">
-            <mcolResponseDetail>
-                <claimNumber>12345678</claimNumber>
-                <issueDate>2012-11-11</issueDate>
-                <serviceDate>2012-11-11</serviceDate>
-                <warrantNumber>12345678</warrantNumber>
-                <enforcingCourtCode>123</enforcingCourtCode>
-                <enforcingCourtName>enforcing_court_name</enforcingCourtName>
-                <fee>9999</fee>
-            </mcolResponseDetail>
+            <responseDetail>
+                <mcolResponseDetail>
+                    <claimNumber>12345678</claimNumber>
+                    <issueDate>2012-11-11</issueDate>
+                    <serviceDate>2012-11-11</serviceDate>
+                    <warrantNumber>12345678</warrantNumber>
+                    <enforcingCourtCode>123</enforcingCourtCode>
+                    <enforcingCourtName>enforcing_court_name</enforcingCourtName>
+                    <fee>9999</fee>
+                </mcolResponseDetail>
+            </responseDetail>
             <status code="OK|ERROR">
                 <error>
                     <code>1234</code>
@@ -38,8 +40,10 @@
             </status>
         </response>
         <response requestType="abc" requestId="request identifier">
-            <pcolResponseDetail>
-            </pcolResponseDetail>
+            <responseDetail>
+                <pcolResponseDetail>
+                </pcolResponseDetail>
+            </responseDetail>
             <status code="OK|ERROR">
                 <error>
                     <code>1234</code>

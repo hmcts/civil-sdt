@@ -31,15 +31,15 @@
     	<property name="targetResponse">
     		<value>
     			<![CDATA[
-				<mcolResponseDetail>
-                    <claimNumber>12345678</claimNumber>
-                    <issueDate>2012-11-11</issueDate>
-                    <serviceDate>2012-11-11</serviceDate>
-                    <warrantNumber>12345678</warrantNumber>
-                    <enforcingCourtCode>123</enforcingCourtCode>
-                    <enforcingCourtName>enforcing_court_name</enforcingCourtName>
-                    <fee>9999</fee>
-                </mcolResponseDetail>
+                  <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                     <mresp:claimNumber>12345678</mresp:claimNumber>
+                     <mresp:issueDate>2012-11-11</mresp:issueDate>
+                     <mresp:serviceDate>2012-11-11</mresp:serviceDate>
+                     <mresp:warrantNumber>12345678</mresp:warrantNumber>
+                     <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
+                     <mresp:enforcingCourtName>enforcing_court_name</mresp:enforcingCourtName>
+                     <mresp:fee>9999</mresp:fee>
+                  </ind:mcolResponseDetail>
                 ]]>
 			</value>
     	</property>

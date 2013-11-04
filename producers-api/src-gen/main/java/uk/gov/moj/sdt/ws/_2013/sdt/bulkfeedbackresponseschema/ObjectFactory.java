@@ -34,6 +34,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ResponseType }
+     * 
+     */
+    public ResponseType createResponseType() {
+        return new ResponseType();
+    }
+
+    /**
      * Create an instance of {@link BulkFeedbackResponseType }
      * 
      */
@@ -50,19 +58,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ResponseType }
-     * 
-     */
-    public ResponseType createResponseType() {
-        return new ResponseType();
-    }
-
-    /**
      * Create an instance of {@link BulkRequestStatusType }
      * 
      */
     public BulkRequestStatusType createBulkRequestStatusType() {
         return new BulkRequestStatusType();
+    }
+
+    /**
+     * Create an instance of {@link ResponseType.ResponseDetail }
+     * 
+     */
+    public ResponseType.ResponseDetail createResponseTypeResponseDetail() {
+        return new ResponseType.ResponseDetail();
     }
 
     /**

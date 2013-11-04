@@ -25,7 +25,7 @@
     
     <xs:complexType name="resultsType">
         <xs:choice>
-            <xs:any processContents="lax"/>
+            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
     </xs:complexType>
     

@@ -12,41 +12,41 @@
         		<entry key="mcolDefenceCriteria">
         			<value>
         				<![CDATA[
-							<ns3:mcolDefenceDetail>
-								<ns3:claimNumber>12345678</ns3:claimNumber>
-                        		<ns3:defendant defendantId="1">
-	                        		<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
-	                        		<ns3:responseType>PA</ns3:responseType>
-                        		</ns3:defendant>
-                        	</ns3:mcolDefenceDetail>
-                        	<ns3:mcolDefenceDetail>
-                        		<ns3:claimNumber>12345678</ns3:claimNumber>
-                        		<ns3:defendant defendantId="2">
-	                        		<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
-	                        		<ns3:responseType>PA</ns3:responseType>
-                        		</ns3:defendant>
-                        	</ns3:mcolDefenceDetail>
-                        	<ns3:mcolDefenceDetail>
-                        		<ns3:claimNumber>22345678</ns3:claimNumber>
-                        		<ns3:defendant defendantId="3">
-                        			<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
-                        			<ns3:responseType>PA</ns3:responseType>
-                        		</ns3:defendant>
-                        	</ns3:mcolDefenceDetail>
-                        	<ns3:mcolDefenceDetail>
-                        		<ns3:claimNumber>32345678</ns3:claimNumber>
-                        		<ns3:defendant defendantId="4">
-	                        		<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
-	                        		<ns3:responseType>PA</ns3:responseType>
-                        		</ns3:defendant>
-                        	</ns3:mcolDefenceDetail>
-                        	<ns3:mcolDefenceDetail>
-                        		<ns3:claimNumber>42345678</ns3:claimNumber>
-                        		<ns3:defendant defendantId="5">
-                        			<ns3:filedDate>2001-12-31T12:00:00</ns3:filedDate>
-                        			<ns3:responseType>PA</ns3:responseType>
-                        		</ns3:defendant>
-                        	</ns3:mcolDefenceDetail>
+							<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+								<mquer:claimNumber>12345678</mquer:claimNumber>
+                        		<mquer:defendant defendantId="1">
+	                        		<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+	                        		<mquer:responseType>PA</mquer:responseType>
+                        		</mquer:defendant>
+                        	</sub:mcolDefenceDetail>
+                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                        		<mquer:claimNumber>12345678</mquer:claimNumber>
+                        		<mquer:defendant defendantId="2">
+	                        		<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+	                        		<mquer:responseType>PA</mquer:responseType>
+                        		</mquer:defendant>
+                        	</sub:mcolDefenceDetail>
+                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                        		<mquer:claimNumber>22345678</mquer:claimNumber>
+                        		<mquer:defendant defendantId="3">
+                        			<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+                        			<mquer:responseType>PA</mquer:responseType>
+                        		</mquer:defendant>
+                        	</sub:mcolDefenceDetail>
+                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                        		<mquer:claimNumber>32345678</mquer:claimNumber>
+                        		<mquer:defendant defendantId="4">
+	                        		<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+	                        		<mquer:responseType>PA</mquer:responseType>
+                        		</mquer:defendant>
+                        	</sub:mcolDefenceDetail>
+                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                        		<mquer:claimNumber>42345678</mquer:claimNumber>
+                        		<mquer:defendant defendantId="5">
+                        			<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+                        			<mquer:responseType>PA</mquer:responseType>
+                        		</mquer:defendant>
+                        	</sub:mcolDefenceDetail>
                 		]]>
         			</value>
         		</entry>

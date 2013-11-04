@@ -141,6 +141,9 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
             // Set the customer request reference
             responseType.setRequestId (individualRequest.getCustomerRequestReference ());
 
+            // Set dummy response detail so the tags needed for interceptor are written.
+            responseType.setResponseDetail (new ResponseType.ResponseDetail ());
+
             // Set the individual request type
             final IndividualStatusType statusType = new IndividualStatusType ();
             statusType.setCode (IndividualStatusCodeType.fromValue (individualRequest.getRequestStatus ()));

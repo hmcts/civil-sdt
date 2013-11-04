@@ -295,20 +295,23 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
             LOGGER.info ("[ServiceRequestOutputboundInterceptor: onClose] - " +
                     "creating outbound payload database log for ServiceRequest: " + sdtContext.getServiceRequestId ());
         }
-        final IServiceRequest serviceRequest =
-                serviceRequestDao.fetch (ServiceRequest.class, sdtContext.getServiceRequestId ());
-        if (null != serviceRequest)
+        
+        if (null != sdtContext.getServiceRequestId ()) 
         {
-            serviceRequest.setResponsePayload (envelope);
-            serviceRequest.setResponseDateTime (new LocalDateTime ());
-            final String bulkReference = extractOutboundBulkReference ();
-            if (bulkReference.length () > 0)
+            final IServiceRequest serviceRequest =
+                    serviceRequestDao.fetch (ServiceRequest.class, sdtContext.getServiceRequestId ());
+            if (null != serviceRequest)
             {
-                serviceRequest.setBulkReference (bulkReference);
+                serviceRequest.setResponsePayload (envelope);
+                serviceRequest.setResponseDateTime (new LocalDateTime ());
+                final String bulkReference = extractOutboundBulkReference ();
+                if (bulkReference.length () > 0)
+                {
+                    serviceRequest.setBulkReference (bulkReference);
+                }
+                serviceRequestDao.persist (serviceRequest);
             }
-            serviceRequestDao.persist (serviceRequest);
         }
-
     }
 
     /**

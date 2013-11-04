@@ -31,9 +31,13 @@
     
     <xs:complexType name="responseType">
         <xs:sequence>
-            <xs:choice>
-                <xs:any processContents="lax" minOccurs="0"/>
-            </xs:choice>
+            <xs:element name="responseDetail">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:any processContents="lax" minOccurs="0"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="status" type="base:individualStatusType"/>
         </xs:sequence>
         <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>

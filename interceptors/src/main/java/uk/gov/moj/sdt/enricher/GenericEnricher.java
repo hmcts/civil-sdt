@@ -93,18 +93,18 @@ public class GenericEnricher extends AbstractSdtEnricher
                 // Inject the system specific response into the current envelope.
                 newXml = matcher.replaceFirst (replacementXml);
             }
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Message after enrichment [" + newXml + "]");
+            }
+
         }
         else
         {
             // Failure to find matching request in outgoing XML.
             LOGGER.debug("Parent tag [" + this.getParentTag () +
                     "] not found...skipping enrichment.");
-        }
-
-
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Message after enrichment [" + newXml + "]");
         }
 
         return newXml;
