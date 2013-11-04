@@ -13,5 +13,14 @@
     <bean id="uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType" 
         class="uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType"  
         factory-bean="jaxWsProxyFactory" factory-method="create"/>
+        
+    <bean id="jaxWsInternalProxyFactory"  class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+        <property name="serviceClass" value="uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType"/>
+        <property name="address" value="http://localhost:8888/producers/service/sdtinternalapi"/>
+    </bean>
+ 
+    <bean id="uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType" 
+        class="uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType"  
+        factory-bean="jaxWsInternalProxyFactory" factory-method="create"/>    
 
 </beans>

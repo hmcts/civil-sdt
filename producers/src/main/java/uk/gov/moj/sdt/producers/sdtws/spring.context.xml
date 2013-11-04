@@ -13,5 +13,10 @@
         <property name="wsReadBulkRequestHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadBulkRequestHandler"/>
         <property name="wsReadSubmitQueryHandler" ref="uk.gov.moj.sdt.producers.api.IWsReadSubmitQueryHandler"/>
     </bean>
+    
+    <bean id="uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType"
+		class="uk.gov.moj.sdt.producers.sdtws.SdtInternalEndpointPortType">
+        <property name="updateItemHandler" ref="uk.gov.moj.sdt.producers.api.IWsUpdateItemHandler"/>
+    </bean>
 
 </beans>

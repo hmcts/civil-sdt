@@ -36,8 +36,8 @@
 			<entry key="schema-validation-enabled" value="true" />
 		</jaxws:properties>
 	</jaxws:endpoint>
-    
-     <aop:aspectj-autoproxy />
+	
+	<aop:aspectj-autoproxy />
     
     <bean id="performanceMonitor" class="org.springframework.aop.interceptor.PerformanceMonitorInterceptor">
         <property name="useDynamicLogger" value="true"/>

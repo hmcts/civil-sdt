@@ -25,7 +25,13 @@
         class="uk.gov.moj.sdt.handlers.WsReadSubmitQueryHandler">
         <property name="submitQueryService" ref="uk.gov.moj.sdt.services.api.ISubmitQueryService"/>
         <property name="transformer" ref="uk.gov.moj.sdt.transformers.SubmitQueryTransformer"/>
-    </bean>        
+    </bean>      
+    
+    <bean id="uk.gov.moj.sdt.producers.api.IWsUpdateItemHandler"
+    	class="uk.gov.moj.sdt.handlers.WsUpdateItemHandler">
+    	<property name="updateRequestService" ref="uk.gov.moj.sdt.services.api.IUpdateRequestService"/>
+    	<property name="transformer" ref="uk.gov.moj.sdt.transformers.UpdateItemTransformer"/>
+    </bean>
         
 </beans>
     

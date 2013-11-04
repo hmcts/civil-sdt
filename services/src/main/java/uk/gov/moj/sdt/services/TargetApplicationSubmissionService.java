@@ -30,10 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +40,6 @@ import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
@@ -54,7 +49,6 @@ import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
-import uk.gov.moj.sdt.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
@@ -64,7 +58,8 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  * @author Manoj Kulkarni
  * 
  */
-public class TargetApplicationSubmissionService implements ITargetApplicationSubmissionService
+public class TargetApplicationSubmissionService extends AbstractSdtService implements
+        ITargetApplicationSubmissionService
 {
 
     /**
@@ -103,17 +98,11 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      */
     private ICacheable errorMessagesCache;
 
-    /**
-     * Parser for individual response.
-     */
-    private GenericXmlParser individualResponseXmlParser;
-
     @Override
     public void processRequestToSubmit (final String sdtRequestReference)
     {
         // Look for the individual request matching this unique request reference.
-        final IIndividualRequest individualRequest =
-                this.getIndividualRequestDao ().getRequestBySdtReference (sdtRequestReference);
+        final IIndividualRequest individualRequest = this.getIndRequestBySdtReference (sdtRequestReference);
 
         // Proceed ahead if the Individual Request is found.
         if (individualRequest != null)
@@ -175,50 +164,6 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         // Setup raw XML associated with a single request so that it can be picked up by the outbound
         // interceptor and injected into the outbound XML.
         SdtContext.getContext ().setRawOutXml (individualRequest.getRequestPayload ());
-    }
-
-    /**
-     * Update the request object. This method is to be called to update the request object on
-     * completion i.e. successful response is received from the target application.
-     * 
-     * @param individualRequest the individual request to be marked as completed
-     */
-    private void updateCompletedRequest (final IIndividualRequest individualRequest)
-    {
-        final String targetAppResponse = individualResponseXmlParser.parse ();
-        if (StringUtils.isNotBlank (targetAppResponse))
-        {
-            individualRequest.setTargetApplicationResponse (targetAppResponse);
-        }
-
-        // now persist the request.
-        this.getIndividualRequestDao ().persist (individualRequest);
-
-        // Check if all the individual request for the bulk submission are either ACCEPTED or REJECTED
-        // If all the requests are Accepted or Rejected, mark the bulk submission as Complete.
-
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
-
-        final String[] completeRequestStatus =
-                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
-                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
-
-        final List<IIndividualRequest> requests =
-                this.getIndividualRequestDao ().queryAsList (IIndividualRequest.class,
-                        Restrictions.eq ("sdtBulkReference", bulkSubmission.getSdtBulkReference ()),
-                        Restrictions.not (Restrictions.in ("requestStatus", completeRequestStatus)));
-
-        if (requests == null || requests.isEmpty ())
-        {
-
-            LOGGER.debug ("All Individual Requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +
-                    "] have been processed now. Marking the bulk submission as Completed");
-
-            bulkSubmission.markAsCompleted ();
-
-            this.getIndividualRequestDao ().persist (bulkSubmission);
-        }
-
     }
 
     /**
@@ -317,7 +262,7 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
      * 
      * @return individual request dao
      */
-    private IIndividualRequestDao getIndividualRequestDao ()
+    public IIndividualRequestDao getIndividualRequestDao ()
     {
         return individualRequestDao;
     }
@@ -512,23 +457,4 @@ public class TargetApplicationSubmissionService implements ITargetApplicationSub
         this.errorMessagesCache = errorMessagesCache;
     }
 
-    /**
-     * Getter for individualResponseXmlParser.
-     * 
-     * @return the individualResponseXmlParser
-     */
-    public GenericXmlParser getIndividualResponseXmlParser ()
-    {
-        return individualResponseXmlParser;
-    }
-
-    /**
-     * Setter for individualResponseXmlParser.
-     * 
-     * @param individualResponseXmlParser the individualResponseXmlParser to set
-     */
-    public void setIndividualResponseXmlParser (final GenericXmlParser individualResponseXmlParser)
-    {
-        this.individualResponseXmlParser = individualResponseXmlParser;
-    }
 }

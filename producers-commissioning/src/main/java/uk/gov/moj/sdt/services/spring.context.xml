@@ -72,4 +72,10 @@
         	</map>
         </property>                
     </bean>	
+    
+    <!-- Mock implementation for Update Item service, this is not really used but included 
+    	here so that the deployment of the producers commissioning goes smooth -->
+    <bean id="uk.gov.moj.sdt.services.api.IUpdateRequestService" 
+    	class="uk.gov.moj.sdt.services.MockUpdateRequestService">
+    </bean>
 </beans>

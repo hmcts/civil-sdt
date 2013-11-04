@@ -42,13 +42,24 @@
     
     <!-- Implementation for Target Application Submission Service -->
     <bean id="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"
-    	class="uk.gov.moj.sdt.services.TargetApplicationSubmissionService">
+    	class="uk.gov.moj.sdt.services.TargetApplicationSubmissionService" 
+    	parent="uk.gov.moj.sdt.services.AbstractSdtService">
     	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
     	<property name="requestConsumer" ref="uk.gov.moj.sdt.consumers.api.IConsumerGateway"/>
     	<property name="globalParametersCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache"/>
     	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
     	<property name="errorMessagesCache" ref="uk.gov.moj.sdt.cache.api.IErrorMessagesCache"/>
-        <property name="individualResponseXmlParser" ref="uk.gov.moj.sdt.utils.IndividualResponseXmlParser"/>
+    </bean>
+    
+    <!-- Abstract Sdt Service -->
+    <bean id="uk.gov.moj.sdt.services.AbstractSdtService" class="uk.gov.moj.sdt.services.AbstractSdtService" abstract="true">
+    	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+    	<property name="individualResponseXmlParser" ref="uk.gov.moj.sdt.utils.IndividualResponseXmlParser"/>
+    </bean>
+    
+    <!-- Implementation for the Update Request Service -->
+    <bean id="uk.gov.moj.sdt.services.api.IUpdateRequestService" class="uk.gov.moj.sdt.services.UpdateRequestService" 
+    	parent="uk.gov.moj.sdt.services.AbstractSdtService">
     </bean>
                           
 </beans>
