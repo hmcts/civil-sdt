@@ -155,10 +155,12 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                         .getServiceRouting (IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL);
 
         final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint ();
+        final String targetAppCode = iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
 
         // Get the client interface
         final ITargetAppInternalEndpointPortType client =
-                super.createClient (webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+                super.getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name (),
+                        webServiceEndPoint, connectionTimeOut, receiveTimeOut);
 
         // Loop until the target application becomes available.
         int attemptCount = 0;

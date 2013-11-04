@@ -121,10 +121,12 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
                         .getServiceRouting (IServiceType.ServiceTypeName.SUBMIT_QUERY);
 
         final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint ();
+        final String targetAppCode = submitQueryRequest.getTargetApplication ().getTargetApplicationCode ();
 
         // Get the client interface
         final ITargetAppInternalEndpointPortType client =
-                super.createClient (webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+                super.getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_QUERY.name (), webServiceEndPoint,
+                        connectionTimeOut, receiveTimeOut);
 
         try
         {

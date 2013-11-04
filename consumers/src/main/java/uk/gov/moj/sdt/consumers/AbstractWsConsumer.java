@@ -32,6 +32,8 @@ package uk.gov.moj.sdt.consumers;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
@@ -59,17 +61,37 @@ public abstract class AbstractWsConsumer
     protected static final long THIRTY_SECONDS = 30000;
 
     /**
+     * The map to hold the TargetApp Internal End Point with the key
+     * as string concatenation of the target application and service type.
+     */
+    private Map<String, ITargetAppInternalEndpointPortType> clientCache =
+            new ConcurrentHashMap<String, ITargetAppInternalEndpointPortType> ();
+
+    /**
      * 
+     * @param targetApplicationCode the target application code
+     * @param serviceType the service type associated with the target application code
      * @param webServiceEndPoint the Web Service End Point URL
      * @param connectionTimeOut the connection time out value
      * @param receiveTimeOut the acknowledgement time out value
      * @return the target application end point port bean i.e. the client interface.
      */
-    public ITargetAppInternalEndpointPortType createClient (final String webServiceEndPoint,
-                                                            final long connectionTimeOut, final long receiveTimeOut)
+    public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode, final String serviceType,
+                                                         final String webServiceEndPoint, final long connectionTimeOut,
+                                                         final long receiveTimeOut)
     {
-        // Get the SOAP proxy client.
-        final ITargetAppInternalEndpointPortType client = this.createTargetAppEndPoint ();
+        final String clientCacheKey = targetApplicationCode + serviceType;
+        ITargetAppInternalEndpointPortType client = null;
+
+        if (this.clientCache.containsKey (clientCacheKey))
+        {
+            client = this.clientCache.get (clientCacheKey);
+        }
+        else
+        {
+            client = this.createClient ();
+            this.clientCache.put (clientCacheKey, client);
+        }
 
         final Client clientProxy = ClientProxy.getClient (client);
 
@@ -85,6 +107,20 @@ public abstract class AbstractWsConsumer
         // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
         httpClientPolicy.setReceiveTimeout (receiveTimeOut);
         httpConduit.setClient (httpClientPolicy);
+
+        return client;
+    }
+
+    /**
+     * 
+     * Calls the create target app end point to create the client.
+     * 
+     * @return the target application end point port bean i.e. the client interface.
+     */
+    private ITargetAppInternalEndpointPortType createClient ()
+    {
+        // Get the SOAP proxy client.
+        final ITargetAppInternalEndpointPortType client = this.createTargetAppEndPoint ();
 
         return client;
 

@@ -49,9 +49,6 @@
         class="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"  
         factory-bean="jaxWsProxyFactory" factory-method="create" scope="prototype"/>
 
-	<bean id="uk.gov.moj.sdt.consumers.Consumer" class="uk.gov.moj.sdt.consumers.Consumer">
-	</bean>
-	
 	<bean id="uk.gov.moj.sdt.consumers.AbstractWsConsumer" class="uk.gov.moj.sdt.consumers.AbstractWsConsumer" abstract="true">
 		<lookup-method name="createTargetAppEndPoint" bean="uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType"/>
 	</bean>

@@ -18,7 +18,7 @@
     <import file="../build/build-setup-env.xml" />
 
     <!-- Calls extra build distribution targets required by this project. -->
-    <target name="dist-extras" depends="build-war" description="Run extra targets for this project">
+    <target name="dist-extras" depends="" description="Run extra targets for this project">
         <echo level="info" message="Running dist extra targets for project: ${ant.project.name}" />
     </target>
 
