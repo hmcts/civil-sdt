@@ -25,7 +25,7 @@
     </bean>
     
     <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
-    <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
+    <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryB00000002" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
     	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionCompleted"/>
     	<!-- Define the system specific response -->
     	<property name="targetResponse">
@@ -47,7 +47,7 @@
         
     <!-- Create the individual requests via method invocation -->   	
  	<bean id="createIndividualRequestCompleted" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
- 		<property name="targetObject"><ref local="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted"/></property>   		
+ 		<property name="targetObject"><ref local="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryB00000002"/></property>   		
    		<property name="targetMethod" value="createIndividualRequest"/>
    		<property name="arguments">
      		<list>

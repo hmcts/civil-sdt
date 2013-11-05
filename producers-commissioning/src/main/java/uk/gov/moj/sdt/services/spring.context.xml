@@ -66,9 +66,10 @@
         <property name="bulkFeedbackFactoryMap">
         	<map>
         		<!-- These keys also appear in MockBulkSubmissionDao.java for the SDT bulk reference check -->
-        		<entry key="MCOL_20130722000000_B00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryUploaded"/>
-        		<entry key="MCOL_20130722000000_B00000002" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryCompleted"/>        		
-        		<entry key="MCOL_20130722000000_C00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError"/> 
+        		<entry key="MCOL_20130722000000_A00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryA00000001"/>
+        		<entry key="MCOL_20130722000000_B00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryB00000001"/>
+        		<entry key="MCOL_20130722000000_B00000002" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryB00000002"/>        		
+        		<entry key="MCOL_20130722000000_C00000001" value-ref="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryC00000001"/> 
         	</map>
         </property>                
     </bean>	

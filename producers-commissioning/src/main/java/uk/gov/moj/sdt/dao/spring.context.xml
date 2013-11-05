@@ -28,7 +28,8 @@
 		class="uk.gov.moj.sdt.dao.MockBulkSubmissionDao">
 		<!-- Inject list of valid SDT bulk references, these also appear in the services sprint context xml -->
         <property name="bulkReferenceList">
-     		<list>     				     	
+     		<list>
+     			<value>MCOL_20130722000000_A00000001</value>     				     	
 	       		<value>MCOL_20130722000000_B00000001</value>
 	       		<value>MCOL_20130722000000_B00000002</value>
 	       		<value>MCOL_20130722000000_C00000001</value>

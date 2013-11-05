@@ -25,7 +25,7 @@
     </bean>
     
     <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
-    <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
+    <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryC00000001" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
     	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionError"/>
     	<!-- Define the system specific response -->
     	<property name="targetResponse">
@@ -47,7 +47,7 @@
 
     <!-- Create the individual requests via method invocation -->   	
  	<bean id="createIndividualRequestError" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
- 		<property name="targetObject"><ref local="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryError"/></property>   		
+ 		<property name="targetObject"><ref local="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryC00000001"/></property>   		
    		<property name="targetMethod" value="createIndividualRequest"/>
    		<property name="arguments">
      		<list>
@@ -258,7 +258,7 @@
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c26</value>	       			
-	       			<value>mcolJudgment</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>26</value>	       			
 	       			<value>Invalid defendant ID.</value>
@@ -369,75 +369,11 @@
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c40</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>40</value>	       			
-	       			<value>Payment frequency missing.</value>
-	       			<value>true</value>
-	       		</list>
-				<list>	     			
-	       			<value>USER_REQUEST_ID_c41</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>41</value>	       			
-	       			<value>Invalid payment frequency.</value>
-	       			<value>true</value>
-	       		</list>
-	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c42</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>42</value>	       			
-	       			<value>Installment amount specified but payment is not by installments.</value>
-	       			<value>true</value>
-	       		</list>
-				<list>	     			
-	       			<value>USER_REQUEST_ID_c43</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>43</value>	       			
-	       			<value>Installment amount is missing.</value>
-	       			<value>true</value>
-	       		</list>
-	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c44</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>44</value>	       			
 	       			<value>Installment amount must be less than the full claim amount.</value>
-	       			<value>true</value>
-	       		</list>
-				<list>	     			
-	       			<value>USER_REQUEST_ID_c45</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>45</value>	       			
-	       			<value>Installment frequency specified but payment is not by installments.</value>
-	       			<value>true</value>
-	       		</list>
-	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c46</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>46</value>	       			
-	       			<value>Installment frequency is missing.</value>
-	       			<value>true</value>
-	       		</list>
-				<list>	     			
-	       			<value>USER_REQUEST_ID_c47</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>47</value>	       			
-	       			<value>Paid in full by date specified but payment is not on this basis.</value>
-	       			<value>true</value>
-	       		</list>
-				<list>	     			
-	       			<value>USER_REQUEST_ID_c48</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>48</value>	       			
-	       			<value>Paid in full by date is missing.</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -468,19 +404,19 @@
 	       			<value>USER_REQUEST_ID_c52</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
+	       			<value>52</value>	       			
+	       			<value>Interest cannot be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c52b</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
 	       			<value>DUPLD_CUST_REQID</value>	       			
 	       			<value>Unique Request Identifier has been specified more than once within the originating Bulk Request.</value>
 	       			<value>false</value>
 	       		</list>
 	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c53</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>53</value>	       			
-	       			<value>Invalid solicitor's costs on judgment.</value>
-	       			<value>true</value>
-	       		</list>
-				<list>	     			
 	       			<value>USER_REQUEST_ID_c54</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
@@ -518,14 +454,6 @@
 	       			<value>Rejected</value>	       			
 	       			<value>58</value>	       			
 	       			<value>Warrant cannot be requested for this defendant.</value>
-	       			<value>true</value>
-	       		</list>
-	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c59</value>	       			
-	       			<value>mcolWarrant</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>59</value>	       			
-	       			<value>Invalid balance due at date of request amount.</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -605,7 +533,7 @@
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>69</value>	       			
-	       			<value>Defendant cannot be specified for an update type of Withdrawn.</value>
+	       			<value>Defendant cannot be specified for an update type of Settled.</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -645,7 +573,7 @@
 	       			<value>mcolClaim</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Rejected by CCBC - rejection number 12345</value>
+	       			<value>Rejected by CCBC - rejection number 1234500</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -653,7 +581,7 @@
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Judgement rejected by CCBC - rejection number 12345</value>
+	       			<value>Judgement rejected by CCBC - rejection number 1234500</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -661,7 +589,7 @@
 	       			<value>mcolWarrant</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Warrant rejected by CCBC - rejection number 12345</value>
+	       			<value>Warrant rejected by CCBC - rejection number 1234500</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -669,7 +597,7 @@
 	       			<value>mcolJudgmentWarrant</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Warrant rejected by CCBC - rejection number</value>
+	       			<value>Warrant rejected by CCBC - rejection number 1234500</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -677,7 +605,7 @@
 	       			<value>mcolJudgmentWarrant</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Judgment rejected by CCBC - rejection number</value>
+	       			<value>Judgment rejected by CCBC - rejection number 1234500</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -685,7 +613,15 @@
 	       			<value>mcolJudgmentWarrant</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Judgment rejected by CCBC – rejection number 12345</value>
+	       			<value>Judgment rejected by CCBC – rejection number 1234500. Warrant rejected by CCBC - rejection number 1234600.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c75g</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>75</value>	       			
+	       			<value>Rejected by CCBC – rejection number 1234500.</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
@@ -694,6 +630,54 @@
 	       			<value>Rejected</value>	       			
 	       			<value>76</value>	       			
 	       			<value>Incoming message content inconsistent with stated request type.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c79</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>79</value>	       			
+	       			<value>Solicitor's costs on judgment cannot be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c80</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>80</value>	       			
+	       			<value>Deducted amount cannot be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c81</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>81</value>	       			
+	       			<value>Judgment amount can only be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c82</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>82</value>	       			
+	       			<value>Judgment amount must be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c83</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>83</value>	       			
+	       			<value>No updates allowed to claim following application to set judgment aside.</value>
+	       			<value>true</value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c84</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>84</value>	       			
+	       			<value>Update type of Discontinued not allowed once judgment has been issued.</value>
 	       			<value>true</value>
 	       		</list>
 	       	</list>
