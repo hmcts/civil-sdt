@@ -142,6 +142,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
                         final String targetAppCode =
                                 iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
                         final ISdtMessage messageObj = new SdtMessage ();
+
                         messageObj.setSdtRequestReference (iRequest.getSdtRequestReference ());
 
                         getMessageWriter ().queueMessage (messageObj, targetAppCode);
@@ -194,6 +195,9 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // Set the SDT Bulk Reference
         bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
                 .getTargetApplication ().getTargetApplicationCode ()));
+
+        // Store this in the context for the sake of the outbound interceptor.
+        SdtContext.getContext ().setSubmitBulkReference (bulkSubmission.getSdtBulkReference ());
 
         // Update last seen bulk reference.
         SdtMetricsMBean.getSdtMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());

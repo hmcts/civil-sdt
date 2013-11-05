@@ -30,9 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.ServiceRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Shared abstract class for audit logging.
@@ -42,25 +47,16 @@ import uk.gov.moj.sdt.dao.api.IGenericDao;
  */
 public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
 {
+    /**
+     * Logger instance.
+     */
+    private static final Log LOGGER = LogFactory.getLog (AbstractServiceRequest.class);
 
     /**
      * The persistence class for this interceptor.
      */
-    @Autowired
     private IGenericDao serviceRequestDao;
-
    
-    /**
-     * The Service Request Id.
-     */
-    private Long serviceRequestId; 
-   
-
-    /**
-     * The soap message as a String.
-     */
-    private String xmlMessage;
-
     /**
      * Default constructor.
      * 
@@ -71,45 +67,68 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
         super (phase);
     }
 
-   
-
     /**
-     * get.
+     * The ServiceRequestDAO.
      * 
-     * @return the xml message representing the entire Soap message.
+     * @return a concrete instance of the dao.
      */
-    public String getMessage ()
+    public IGenericDao getServiceRequestDao ()
     {
-        return xmlMessage;
+        return serviceRequestDao;
     }
 
     /**
-     * set.
+     * Set the serviceRequestDAO.
      * 
-     * @param xmlMessage the original Soap Message expressed as a String.
+     * @param serviceRequestDao the dao
      */
-    public void setMessage (final String xmlMessage)
+    public void setServiceRequestDao (final IGenericDao serviceRequestDao)
     {
-        this.xmlMessage = xmlMessage;
-    }
-    
-    /**
-     * get.
-     * @return the serviceRequestId
-     */
-    public Long getServiceRequestId ()
-    {
-        return serviceRequestId;
+        this.serviceRequestDao = serviceRequestDao;
     }
 
     /**
-     * set.
-     * @param serviceRequestId the serviceRequestId to set
+     * When the application closes the message output stream the service request
+     * must also be persisted. Since Hibernate wraps everything up into
+     * transactional units trying to write the output stream value anywhere else
+     * in the stack seems to miss the Hibernate persist ending up with an empty
+     * response payload being persisted.
+     * 
+     * @param envelope the String envelope value of the output soap message.
      */
-    public void setServiceRequestId (final Long serviceRequestId)
+    protected void persistEnvelope (final String envelope)
     {
-        this.serviceRequestId = serviceRequestId;
-    }
-
+        final SdtContext sdtContext = SdtContext.getContext ();
+        final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
     
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("ServiceRequestOutputboundInterceptor creating " +
+                    "outbound payload database log for ServiceRequest: " + sdtContext.getServiceRequestId ());
+        }
+    
+        final Long serviceRequestId = sdtContext.getServiceRequestId ();
+    
+        // If there is no service request id then the ServiceRequestInboundInterceptor has not been called and there
+        // will be no service request row in the database.
+        if (serviceRequestId != null)
+        {
+            // Get the log message for the inbound request so we can add the outbound response to it.
+            final IServiceRequest serviceRequest =
+                    serviceRequestDao.fetch (ServiceRequest.class, sdtContext.getServiceRequestId ());
+    
+            // Add the response and timestamp to the service request record.
+            serviceRequest.setResponsePayload (envelope);
+            serviceRequest.setResponseDateTime (new LocalDateTime ());
+    
+            // Note that bulk reference will be null if this is not a bulk submission.
+            final String bulkReference = SdtContext.getContext ().getSubmitBulkReference ();
+            if (bulkReference != null && bulkReference.length () > 0)
+            {
+                serviceRequest.setBulkReference (bulkReference);
+            }
+    
+            serviceRequestDao.persist (serviceRequest);
+        }
+    }
 }

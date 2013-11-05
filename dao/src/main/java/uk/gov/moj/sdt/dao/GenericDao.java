@@ -449,7 +449,10 @@ public class GenericDao implements IGenericDao
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
             final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tdomain object=" + domainObject.toString () + "\n");
+            if (domainObject != null)
+            {
+                detail.append ("\n\n\tdomain object=" + domainObject.toString () + "\n");
+            }
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.uniqueResult end",

@@ -53,15 +53,6 @@ public final class SdtContext
     private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext> ();
 
     /**
-     * The outbound message.
-     */
-    private String outboundMessage;
-    /**
-     * The outbound message.
-     */
-    private String inboundMessage;
-
-    /**
      * The raw inbound XML handled by CXF and stored for application use in
      * thread local memory.
      */
@@ -74,9 +65,16 @@ public final class SdtContext
     private String rawOutXml;
 
     /**
-     * A serviceRequestId.
+     * The id of the service request row used to log the contents of the inbound and outbound XML. The outbound
+     * intercepter has to read the inbound service request in order to add the outbound xml and it uses this property to
+     * locate it.
      */
     private Long serviceRequestId;
+
+    /**
+     * The unique id assigned by SDT to the submit bulk request.
+     */
+    private String submitBulkReference;
 
     /**
      * A serviceRequestId.
@@ -142,43 +140,13 @@ public final class SdtContext
     }
 
     /**
-     * Get.
+     * Get the submitBulkReference.
      * 
-     * @return the outboundMessage
+     * @return the submitBulkReference.
      */
-    public String getOutboundMessage ()
+    public String getSubmitBulkReference ()
     {
-        return outboundMessage;
-    }
-
-    /**
-     * Set.
-     * 
-     * @param outboundMessage the outboundMessage to set
-     */
-    public void setOutboundMessage (final String outboundMessage)
-    {
-        this.outboundMessage = outboundMessage;
-    }
-
-    /**
-     * Get.
-     * 
-     * @return the inboundMessage
-     */
-    public String getInboundMessage ()
-    {
-        return inboundMessage;
-    }
-
-    /**
-     * Set.
-     * 
-     * @param inboundMessage the inboundMessage to set
-     */
-    public void setInboundMessage (final String inboundMessage)
-    {
-        this.inboundMessage = inboundMessage;
+        return submitBulkReference;
     }
 
     /**
@@ -211,6 +179,16 @@ public final class SdtContext
     public void setRawOutXml (final String rawOutXml)
     {
         this.rawOutXml = rawOutXml;
+    }
+
+    /**
+     * Set new value of submitBulkReference.
+     * 
+     * @param submitBulkReference new value of submitBulkReference.
+     */
+    public void setSubmitBulkReference (final String submitBulkReference)
+    {
+        this.submitBulkReference = submitBulkReference;
     }
 
     /**
@@ -324,7 +302,7 @@ public final class SdtContext
     }
 
     /**
-     * clean up thread local.
+     * Clean up thread local.
      */
     public void remove ()
     {

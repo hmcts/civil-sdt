@@ -45,14 +45,9 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.io.CachedWriter;
 import org.apache.cxf.io.DelegatingInputStream;
-import org.joda.time.LocalDateTime;
 
-import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.domain.ServiceRequest;
-import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.enricher.AbstractSdtEnricher;
 import uk.gov.moj.sdt.enricher.api.ISdtEnricher;
-import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Abstract class holding common code for all SDT Interceptors.
@@ -62,7 +57,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
  */
 public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 {
-
     /**
      * Logger instance.
      */
@@ -71,19 +65,8 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     /**
      * List of enrichers to use. An enricher is a class which adds content to the outgoing XML before sending it.
      */
-    // CHECKSTYLE:OFF
-    protected List<AbstractSdtEnricher> enricherList;
+    private List<AbstractSdtEnricher> enricherList;
 
-    // CHECKSTYLE:ON
-
-    /**
-     * The persistence class for this interceptor.
-     */
-    // CHECKSTYLE:OFF
-   
-    protected IGenericDao serviceRequestDao;
-
-    // CHECKSTYLE:ON
     /**
      * Constructor for {@link AbstractSdtInterceptor}.
      * 
@@ -104,13 +87,12 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     {
         LOGGER.debug ("Start - running through list of enrichers");
 
-        // Loop through the list of enrichers and hope one of them produces an enriched message.
-        // Enrichers will enrich messages where a parent tag can be found in the xml message
-        // otherwise the message will not be updated.
+        // Loop through the list of enrichers and hope one of them produces an enriched message. Enrichers will enrich
+        // messages where a parent tag can be found in the xml message otherwise the message will not be updated.
         String enrichedEnvelope = currentEnvelope;
+
         for (ISdtEnricher enricher : enricherList)
         {
-
             // Set the out bound message
             enrichedEnvelope = enricher.enrichXml (enrichedEnvelope);
         }
@@ -122,265 +104,13 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     }
 
     /**
-     * Extract the bulk reference.
-     * <p>
-     * Bulk reference is only applicable on certain requests:
-     * <ul>
-     * <li>Bulk submission - not available till response</li>
-     * <li>Submit Query - not applicable</li>
-     * <li>Bulk report - available on both request and response.</li>
-     * </ul>
-     * 
-     * @return the value of the bulk reference
-     */
-    private String extractOutboundBulkReference ()
-    {
-        return extractOutboundValue ("sdtBulkReference");
-    }
-
-    /**
-     * Change the raw XML in the inbound message.
-     * 
-     * @param currentEnvelope the raw inbound SOAP XML to be changed.
-     * @return the changed raw SOAP XML.
-     */
-    protected String changeInboundMessage (final String currentEnvelope)
-    {
-        final String newCurrentEnvelope = currentEnvelope + "<this_has_been_hacked/>";
-        return newCurrentEnvelope;
-    }
-
-    /**
-     * The ServiceRequestDAO.
-     * 
-     * @return a concrete instance of the dao.
-     */
-    public IGenericDao getServiceRequestDao ()
-    {
-        return serviceRequestDao;
-    }
-
-    /**
-     * Set the serviceRequestDAO.
-     * 
-     * @param serviceRequestDao the dao
-     */
-    public void setServiceRequestDao (final IGenericDao serviceRequestDao)
-    {
-        this.serviceRequestDao = serviceRequestDao;
-    }
-
-    /**
-     * Allow inbound or outbound raw XML to be changed in flight.
-     * 
-     * @param message the message holding the output stream into which the XML is to be inserted.
-     * @return modified message.
-     * @throws Fault exception encountered while reading content.
-     */
-    public String modifyMessage (final SoapMessage message) throws Fault
-    {
-        // Work out if this message is inbound or outbound.
-        boolean isOutbound = false;
-        isOutbound =
-                message == message.getExchange ().getOutMessage () ||
-                        message == message.getExchange ().getOutFaultMessage ();
-
-        String modifiedMessage = null;
-        
-        if (isOutbound)
-        {
-            // Outbound message.
-
-            // Get the original stream which is due to be written from the message.
-            final OutputStream os = message.getContent (OutputStream.class);
-
-            // Create a cached stream which can capture any changes.
-            final CachedStream cs = new CachedStream ();
-            message.setContent (OutputStream.class, cs);
-
-            // Call the interceptors in the chain (at this phase ???)
-            message.getInterceptorChain ().doIntercept (message);
-
-            try
-            {
-                // Flush the cached streqam after whatever the interceptors have done and close it.
-                cs.flush ();
-                org.apache.commons.io.IOUtils.closeQuietly (cs);
-
-                // Get the cached stream put in the message earlier.
-                final CachedOutputStream csnew = (CachedOutputStream) message.getContent (OutputStream.class);
-
-                // Get the data waiting to be written on the stream.
-                final String currentEnvelopeMessage = IOUtils.toString (csnew.getInputStream (), "UTF-8");
-                csnew.flush ();
-                org.apache.commons.io.IOUtils.closeQuietly (csnew);
-
-                // Modify it if desired.
-                modifiedMessage = changeOutboundMessage (currentEnvelopeMessage);
-                modifiedMessage = modifiedMessage != null ? modifiedMessage : currentEnvelopeMessage;
-                final SdtContext sdtContext = SdtContext.getContext ();
-                if (null == sdtContext.getOutboundMessage ())
-                {
-                    sdtContext.setOutboundMessage (modifiedMessage);
-                    persistEnvelope (modifiedMessage);
-                }
-                // Turn the modified data into a new input stream.
-                final InputStream replaceInStream =
-                        org.apache.commons.io.IOUtils.toInputStream (modifiedMessage, "UTF-8");
-
-                // Copy the new input stream to the output stream and close the input stream.
-                org.apache.commons.io.IOUtils.copy (replaceInStream, os);
-                replaceInStream.close ();
-                org.apache.commons.io.IOUtils.closeQuietly (replaceInStream);
-
-                // Flush the output stream, set it in the message and close it.
-                os.flush ();
-                message.setContent (OutputStream.class, os);
-                org.apache.commons.io.IOUtils.closeQuietly (os);
-
-            }
-            catch (final IOException ioe)
-            {
-                throw new RuntimeException (ioe);
-            }
-        }
-        else
-        {
-            try
-            {
-                // Get the input stream.
-                InputStream is = message.getContent (InputStream.class);
-
-                // Read the message out of the stream and close it.
-                final String currentEnvelopeMessage = org.apache.commons.io.IOUtils.toString (is, "UTF-8");
-                org.apache.commons.io.IOUtils.closeQuietly (is);
-
-                // Modify it if desired.
-                modifiedMessage = changeInboundMessage (currentEnvelopeMessage);
-                modifiedMessage = modifiedMessage != null ? modifiedMessage : currentEnvelopeMessage;
-
-                // Write the modified data back to the input stream.
-                is = org.apache.commons.io.IOUtils.toInputStream (modifiedMessage, "UTF-8");
-
-                // Put input stream in message and close it.
-                message.setContent (InputStream.class, is);
-                org.apache.commons.io.IOUtils.closeQuietly (is);
-            }
-            catch (final IOException ioe)
-            {
-                throw new RuntimeException (ioe);
-            }
-        }
-        
-        return modifiedMessage;
-    }
-
-    /**
-     * When the application closes the message output stream the service request
-     * must also be persisted. Since Hibernate wraps everything up into
-     * transactional units trying to write the output stream value anywhere else
-     * in the stack seems to miss the Hibernate persist ending up with an empty
-     * response payload being persisted.
-     * 
-     * @param envelope the String envelope value of the output soap message.
-     */
-    public void persistEnvelope (final String envelope)
-    {
-        final SdtContext sdtContext = SdtContext.getContext ();
-
-        final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
-
-        if (LOGGER.isInfoEnabled ())
-        {
-            LOGGER.info ("[ServiceRequestOutputboundInterceptor: onClose] - " +
-                    "creating outbound payload database log for ServiceRequest: " + sdtContext.getServiceRequestId ());
-        }
-        
-        if (null != sdtContext.getServiceRequestId ()) 
-        {
-            final IServiceRequest serviceRequest =
-                    serviceRequestDao.fetch (ServiceRequest.class, sdtContext.getServiceRequestId ());
-            if (null != serviceRequest)
-            {
-                serviceRequest.setResponsePayload (envelope);
-                serviceRequest.setResponseDateTime (new LocalDateTime ());
-                final String bulkReference = extractOutboundBulkReference ();
-                if (bulkReference.length () > 0)
-                {
-                    serviceRequest.setBulkReference (bulkReference);
-                }
-                serviceRequestDao.persist (serviceRequest);
-            }
-        }
-    }
-
-    /**
-     * Simple method to extract a text value from this ServiceRequest's outbound xmlMessage String.
-     * <p>
-     * The xml should already have been extracted and persisted on the context object.
-     * </p>
-     * 
-     * @param nodeName The name of an xml node e.g. 'customerId'
-     * @return the content of the node or null
-     */
-    protected String extractOutboundValue (final String nodeName)
-    {
-        final String xmlMessage = SdtContext.getContext ().getOutboundMessage ();
-        return extractValue (nodeName, xmlMessage);
-    }
-
-    /**
-     * Simple method to extract a text value from this ServiceRequest's inbound xmlMessage String.
-     * <p>
-     * The xml should already have been extracted and persisted on the context object
-     * </p>
-     * 
-     * @param nodeName The name of an xml node e.g. 'customerId'
-     * @return the content of the node or null
-     */
-    protected String extractValue (final String nodeName)
-    {
-        final String xmlMessage = SdtContext.getContext ().getInboundMessage ();
-        return extractValue (nodeName, xmlMessage);
-    }
-
-    /**
-     * Simple method to extract a text value from a String of xml.
-     * <p>
-     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses simple String
-     * functionality to locate and extract a String.
-     * </p>
-     * 
-     * @param nodeName The name of an xml node e.g. 'customerId'
-     * @param xmlMessage the message as a String
-     * @return the content of the node or null
-     */
-    protected String extractValue (final String nodeName, final String xmlMessage)
-    {
-        String nodeContent = "";
-        if (nodeName == null || null == xmlMessage || xmlMessage.length () < nodeName.length ())
-        {
-            return "";
-        }
-        int startPos = xmlMessage.indexOf (nodeName);
-        if (startPos != -1)
-        {
-            startPos += nodeName.length ();
-            nodeContent = xmlMessage.substring (startPos);
-            final int endPos = nodeContent.indexOf ("<");
-            nodeContent = nodeContent.substring (1, endPos);
-        }
-        return nodeContent;
-    }
-
-    /**
      * Read the contents of the input stream non-destructively so that it is still available for further interceptors.
      * 
      * @param message the SOAP message to be read from.
      * @return contents of payload.
      * @throws Fault exception encountered while reading content.
      */
-    protected String readInputMessage (final SoapMessage message) throws Fault
+    protected String readInputMessage (final SoapMessage message)
     {
         // Contents to return to caller.
         String payload = "";
@@ -455,6 +185,75 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     }
 
     /**
+     * Read the contents of the output stream non-destructively so that it is still available for further interceptors.
+     * 
+     * @param message the SOAP message to be read from.
+     * @param payload the new payload to add to the message.
+     */
+    protected void replaceOutputMessage (final SoapMessage message, final String payload)
+    {
+        try
+        {
+            // Turn the modified data into a new input stream.
+            final InputStream replaceInStream = org.apache.commons.io.IOUtils.toInputStream (payload, "UTF-8");
+
+            // Copy the new input stream to the output stream and close the input stream.
+            final OutputStream os = new CachedOutputStream ();
+            org.apache.commons.io.IOUtils.copy (replaceInStream, os);
+            org.apache.commons.io.IOUtils.closeQuietly (replaceInStream);
+
+            // Flush the output stream, set it in the message.
+            os.flush ();
+            message.setContent (OutputStream.class, os);
+            // org.apache.commons.io.IOUtils.closeQuietly (os);
+        }
+        catch (final IOException e)
+        {
+            throw new RuntimeException (e);
+        }
+    }
+
+    /**
+     * Read the contents of the output stream non-destructively so that it is still available for further interceptors.
+     * 
+     * @param message the SOAP message to be read from.
+     * @return contents of payload.
+     */
+    protected String readOutputMessage (final SoapMessage message)
+    {
+        // Contents to return to caller.
+        String payload = "";
+
+        try
+        {
+            // Get the output stream produced so far by CXF.
+            final OutputStream os = message.getContent (OutputStream.class);
+
+            // Make sure it is a CachedOutputStream otherwise we cannot see the contents.
+            if ( !CachedOutputStream.class.isAssignableFrom (os.getClass ()))
+            {
+                throw new IllegalStateException ("CacheSetupOutboundInterceptor must run prior to this interceptor [" +
+                        this.getClass ().getCanonicalName () + "]");
+            }
+
+            // Get the cached stream put in the message earlier.
+            final CachedOutputStream csnew = CachedOutputStream.class.cast (os);
+            csnew.flush ();
+
+            // Get the data waiting to be written on the stream.
+            payload = IOUtils.toString (csnew.getInputStream (), "UTF-8");
+
+            // org.apache.commons.io.IOUtils.closeQuietly (csnew);
+        }
+        catch (final IOException e)
+        {
+            throw new RuntimeException (e);
+        }
+
+        return payload;
+    }
+
+    /**
      * Set enricher list.
      * 
      * @param enricherList enricher list
@@ -462,50 +261,5 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     public void setEnricherList (final List<AbstractSdtEnricher> enricherList)
     {
         this.enricherList = enricherList;
-    }
-
-    /**
-     * Cached stream implementation to do ....
-     * 
-     * @author Robin Compston
-     * 
-     */
-    private class CachedStream extends CachedOutputStream
-    {
-        /**
-         * Stream.
-         */
-        public CachedStream ()
-        {
-            super ();
-        }
-
-        /**
-         * Do Flush.
-         * 
-         * @throws IOException trouble.
-         */
-        protected void doFlush () throws IOException
-        {
-            currentStream.flush ();
-        }
-
-        /**
-         * Do Flush.
-         * 
-         * @throws IOException trouble.
-         */
-        protected void doClose () throws IOException
-        {
-        }
-
-        /**
-         * Do Flush.
-         * 
-         * @throws IOException trouble.
-         */
-        protected void onWrite () throws IOException
-        {
-        }
     }
 }

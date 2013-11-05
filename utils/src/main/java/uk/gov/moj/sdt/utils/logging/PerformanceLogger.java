@@ -256,9 +256,9 @@ public final class PerformanceLogger
 
             // Store ascii and text separately.
             ascii.append (pad (Integer.toHexString ((int) current).toUpperCase (), true, "0", 2)).append (" ");
-            if (current == '\n' || current == '\r')
+            if (current == '\n' || current == '\r' || current == '\t')
             {
-                // Convert linefeeds and carriage returns to space to avoid their effect on display.
+                // Convert linefeeds, carriage returns and tabs to space to avoid their effect on display.
                 current = ' ';
             }
             text.append ((char) current);

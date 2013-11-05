@@ -73,17 +73,14 @@ public class XmlInboundInterceptor extends AbstractSdtInterceptor
         // Read contents of message, i.e. XML received from client.
         String rawXml = this.readInputMessage (message);
 
-        // Setup logging flags from current value in SdtMetric MBean.
+        // Setup logging flags from current value in SdtMetric MBean for this thread - used by all subsequent processing
+        // of this request.
         SdtContext.getContext ().getLoggingContext ().setLoggingFlags (
                 SdtMetricsMBean.getSdtMetrics ().getPerformanceLoggingFlags ());
 
         // Increment thread local logging id for this invocation, but only if we are at the start of a new thread of
         // work.
-        if (SdtContext.getContext ().getLoggingContext ().getMinorLoggingId () > 0)
-        {
-            SdtContext.getContext ().getLoggingContext ().setMinorLoggingId (LoggingContext.getNextLoggingId ());
-        }
-        else
+        if (SdtContext.getContext ().getLoggingContext ().getMinorLoggingId () == 0)
         {
             SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (LoggingContext.getNextLoggingId ());
         }

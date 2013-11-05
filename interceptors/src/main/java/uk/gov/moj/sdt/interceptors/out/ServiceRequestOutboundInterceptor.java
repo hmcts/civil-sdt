@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -30,76 +30,53 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.out;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.binding.soap.interceptor.Soap11FaultOutInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-import org.springframework.transaction.annotation.Propagation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 
 /**
- * Interceptor class which handles faults.
+ * Class to intercept outgoing messages to audit them.
  * 
- * Stores original error message.
- * 
- * @author Robin Compston
+ * @author d195274
  * 
  */
-public class FaultOutboundInterceptor extends AbstractServiceRequest
+public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
 {
-    /**
-     * Logger instance.
-     */
-    private static final Log LOGGER = LogFactory.getLog (FaultOutboundInterceptor.class);
 
     /**
-     * Test interceptor to prove concept.
+     * Logger for this class.
      */
-    public FaultOutboundInterceptor ()
+    public static final Logger LOG = LoggerFactory.getLogger (ServiceRequestOutboundInterceptor.class);
+
+    /**
+     * Create.
+     */
+    public ServiceRequestOutboundInterceptor ()
     {
-        super (Phase.MARSHAL);
+        super (Phase.PREPARE_SEND_ENDING);
+        addAfter (XmlOutboundInterceptor.class.getName ());
+    }
 
-        // Assume that the interceptor will run after the default SOAP interceptor.
-        getAfter ().add (Soap11FaultOutInterceptor.class.getName ());
+    /**
+     * Create.
+     * 
+     * @param phase
+     *            phase.
+     */
+    public ServiceRequestOutboundInterceptor (final String phase)
+    {
+        super (phase);
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
-    public void handleMessage (final SoapMessage message) throws Fault
+    @Transactional
+    public void handleMessage (final SoapMessage soapMessage) throws Fault
     {
-        // Get the fault detected during SOAP validation.
-        final Fault fault = (Fault) message.getContent (Exception.class);
-
-        // Show the error of the original exception instead of the unhelpful CXF fault message.
-        final Throwable t = getOriginalCause (fault.getCause ());
-        String msg = "Error cause unknown";
-        if (null != t)
-        {
-            msg = t.getMessage ();
-        }
-
-        persistEnvelope ("Error encounted: " + fault.getFaultCode () + ": " + fault.getMessage () +
-                ", sending this message in SOAP fault: " + msg);
-
-        fault.setMessage (msg);
-    }
-
-    /**
-     * Method to retrieve the original error message. This method is recursive.
-     * 
-     * @param t the fault
-     * @return the original wrapped error
-     */
-    private Throwable getOriginalCause (final Throwable t)
-    {
-        if (null == t || null == t.getCause () || t.getCause ().equals (t))
-        {
-            return t;
-        }
-        return getOriginalCause (t.getCause ());
+        this.persistEnvelope (this.readOutputMessage (soapMessage));
     }
 }

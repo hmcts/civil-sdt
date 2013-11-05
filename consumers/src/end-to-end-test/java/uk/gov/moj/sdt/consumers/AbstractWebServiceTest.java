@@ -45,6 +45,11 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
 
 /**
  * Test class for end to end web service tests..
@@ -57,6 +62,20 @@ import org.junit.Assert;
  */
 public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends TestCase
 {
+    /**
+     * Static logging object.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractWebServiceTest.class);
+
+    /**
+     * Setup the test.
+     */
+    @Before
+    public void setUp ()
+    {
+        DBUnitUtility.loadDatabase (this.getClass (), true);
+    }
+
     /**
      * Method to call remote endpoint to be tested.
      */

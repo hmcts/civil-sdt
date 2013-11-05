@@ -5,10 +5,10 @@
 	xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema"
 	xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
 	<bul:header>
-		<bul:sdtCustomerId>123</bul:sdtCustomerId>
+		<bul:sdtCustomerId>12345678</bul:sdtCustomerId>
 		<bul:targetApplicationId>mcol</bul:targetApplicationId>
 		<bul:requestCount>2</bul:requestCount>
-		<bul:customerReference>abc1223456</bul:customerReference>
+		<bul:customerReference>abc1223481</bul:customerReference>
 	</bul:header>
 	<bul:requests>
 		<!--1 or more repetitions: -->

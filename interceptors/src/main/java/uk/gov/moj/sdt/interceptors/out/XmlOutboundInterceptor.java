@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.interceptors.out;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.phase.Phase;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
@@ -60,23 +59,32 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
      */
     public XmlOutboundInterceptor ()
     {
-        super (Phase.PRE_STREAM);
-        addBefore (LoggingOutInterceptor.class.getName ());
+        super (Phase.PREPARE_SEND_ENDING);
+        // addBefore (LoggingOutInterceptor.class.getName ());
     }
 
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
     {
         // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
-        final String modifiedMessage = this.modifyMessage (message);
+        final String payload = this.readOutputMessage (message);
+        
+        // Modify the payload with enrichers.
+        String modifiedPayload = changeOutboundMessage (payload);
+        if (modifiedPayload == null)
+        {
+            // No enrichers matched - restore original payload.
+            modifiedPayload = payload;
+        }
+
+        this.replaceOutputMessage (message, payload);
 
         // Write message to 'performance.log' for this logging point.
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_10))
         {
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_10,
-                    "XmlOutboundInterceptor handling message", "\n\n\t" + PerformanceLogger.format (modifiedMessage) +
+                    "XmlOutboundInterceptor handling message", "\n\n\t" + PerformanceLogger.format (modifiedPayload) +
                             "\n");
         }
     }
-
 }

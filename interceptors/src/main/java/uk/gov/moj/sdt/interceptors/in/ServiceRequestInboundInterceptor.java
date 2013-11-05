@@ -47,8 +47,9 @@ import uk.gov.moj.sdt.utils.SdtContext;
 /**
  * Class to intercept incoming messages and log them to the database.
  * 
- * <p> Generates <code>ServiceDomain</code> domain objects and by means of
- * a Thread Local <SdtContext> instance keeps track of the persisted entity.
+ * <p>
+ * Generates <code>ServiceDomain</code> domain objects and by means of a Thread Local <SdtContext> instance keeps track
+ * of the persisted entity.
  * 
  * Outbound message interceptors in the same thread can then access the persisted entity to update as required.
  * </p>
@@ -65,16 +66,12 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     private static final Logger LOG = LoggerFactory.getLogger (ServiceRequestInboundInterceptor.class);
 
     /**
-     * The service request.
-     */
-    private IServiceRequest serviceRequest;
-    
-    /**
      * Create.
      */
     public ServiceRequestInboundInterceptor ()
     {
         super (Phase.RECEIVE);
+        addAfter (XmlInboundInterceptor.class.getName ());
     }
 
     /**
@@ -88,51 +85,44 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         super (phase);
     }
 
-   
-
     @Override
     @Transactional
     public void handleMessage (final SoapMessage soapMessage) throws Fault
     {
-        serviceRequest = new ServiceRequest ();
-        LOG.info("[ServiceRequestInboundInterceptor:handleMessage] incoming message being processed");
-        final String inputMessage = readInputMessage (soapMessage);
-        SdtContext.getContext ().setInboundMessage (inputMessage);
-        //setMessage();
+        LOG.debug ("ServiceRequestInboundInterceptor handle incoming message being processed");
+
         logMessage ();
-    }  
-   
+    }
 
     /**
      * Log the message to the persistence target.
      * <p>
-     * Evaluates whether this is an incoming message (no persistence generated id) or an outgoing message (ThreadLocal
-     * stored id exists) and hands on to appropriate processing method.
-     * </p>
-     * <p>
      * Incoming messages, once persisted, will generate an id which is stored on a ThreadLocal class to make it
-     * available when the thread returns.
+     * available when the outbound service request interceptor runs.
      * </p>
      * 
      */
     private void logMessage ()
     {
         final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
+
+        // Prepare log message for Hibernate.
+        final IServiceRequest serviceRequest = new ServiceRequest ();
         serviceRequest.setBulkCustomerId (extractBulkCustomerId ());
-        serviceRequest.setRequestPayload (SdtContext.getContext ().getInboundMessage ());
+        serviceRequest.setRequestPayload (SdtContext.getContext ().getRawInXml ());
         serviceRequest.setRequestDateTime (new LocalDateTime ());
         serviceRequest.setRequestType (extractRequestType ());
+
         serviceRequestDao.persist (serviceRequest);
+
+        // Retrieve the id assigned in by Hibernate and store it for the outbound service interceptor to use later.
         final Long serviceRequestID = serviceRequest.getId ();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("[ServiceRequestInboundInterceptor:logMessage] service request :"
-                    + serviceRequestID + " has been persisted");
-        }
         SdtContext.getContext ().setServiceRequestId (serviceRequestID);
     }
 
     /**
-     * Retrieve the Request Type from the inbound xmlMessage.
+     * Retrieve the Request Type from the inbound xmlMessage. Assumes inbound message has already been setup by the
+     * XmlInboundInterceptor.
      * 
      * @return the request type (for example 'bulkRequest')
      */
@@ -140,12 +130,13 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     {
         String requestType = "";
         final String requestTypePattern = "requestType=\"";
-        final String message = SdtContext.getContext ().getInboundMessage ();
+        final String message = SdtContext.getContext ().getRawInXml ();
         final int startPos = message.indexOf (requestTypePattern);
+
         // the next node contains the request type
         final String content = message.substring (startPos + requestTypePattern.length ());
-        
-        if (content.length ()>0)
+
+        if (content.length () > 0)
         {
             final int endPos = content.indexOf ("\"");
             requestType = content.substring (0, endPos);
@@ -154,25 +145,8 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     }
 
     /**
-     * Getter for the domain object representing the audit record.
-     * @return the service request.
-     */
-    public IServiceRequest getServiceRequest ()
-    {
-        return serviceRequest;
-    }
-
-    /**
-     * The setter for the domain object representing the audit record.
-     * @param serviceRequest the IServiceRequest.
-     */
-    public void setServiceRequest (final IServiceRequest serviceRequest)
-    {
-        this.serviceRequest = serviceRequest;
-    }
-
-    /**
-     * Extract the bulk customer id (sdt customer id - synonymous).
+     * Extract the bulk customer id (sdt customer id - synonymous). Assumes inbound message has already been setup by
+     * the XmlInboundInterceptor.
      * <p>
      * Always available as part of a submission
      * </p>
@@ -182,5 +156,37 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     private String extractBulkCustomerId ()
     {
         return extractValue ("sdtCustomerId");
+    }
+
+    /**
+     * Simple method to extract a text value from a String of xml.
+     * <p>
+     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses simple String
+     * functionality to locate and extract a String.
+     * </p>
+     * 
+     * @param nodeName The name of an xml node e.g. 'customerId'
+     * @return the content of the node or null
+     */
+    private String extractValue (final String nodeName)
+    {
+        final String xmlMessage = SdtContext.getContext ().getRawInXml ();
+
+        String nodeContent = "";
+        if (nodeName == null || null == xmlMessage || xmlMessage.length () < nodeName.length ())
+        {
+            return "";
+        }
+        
+        int startPos = xmlMessage.indexOf (nodeName);
+        if (startPos != -1)
+        {
+            startPos += nodeName.length ();
+            nodeContent = xmlMessage.substring (startPos);
+            final int endPos = nodeContent.indexOf ("<");
+            nodeContent = nodeContent.substring (1, endPos);
+        }
+        
+        return nodeContent;
     }
 }
