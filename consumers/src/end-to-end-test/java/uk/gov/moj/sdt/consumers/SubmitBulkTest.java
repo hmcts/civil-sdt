@@ -65,7 +65,16 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
      * Method to call remote submit bulk endpoint to be tested.
      */
     @Test
-    public void testSubmitBulk ()
+    public void testValid ()
+    {
+        this.callWebService (BulkRequestType.class);
+    }
+
+    /**
+     * Method to call remote submit bulk endpoint to be tested.
+     */
+    @Test
+    public void testCountMismatch ()
     {
         this.callWebService (BulkRequestType.class);
     }
