@@ -81,7 +81,7 @@ public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, Up
         // Set endpoint address
         BindingProvider provider = (BindingProvider) client;
         provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://localhost:8888/producers-comx/service/sdtinternalapi");
+                "http://localhost:8888/producers/service/sdtinternalapi");
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
