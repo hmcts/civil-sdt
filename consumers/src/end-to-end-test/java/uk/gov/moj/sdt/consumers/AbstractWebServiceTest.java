@@ -40,6 +40,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
 
@@ -125,8 +126,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             // Create JAXB object of required type from the XML input stream.
             JAXBContext jaxbContext = JAXBContext.newInstance (requestClass);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller ();
-            @SuppressWarnings ({"unchecked", "rawtypes"}) JAXBElement jaxbElement =
-                    (JAXBElement) jaxbUnmarshaller.unmarshal (inputStream);
+            @SuppressWarnings ("rawtypes") JAXBElement jaxbElement =
+                    jaxbUnmarshaller.unmarshal (new StreamSource (inputStream), requestClass);
             request = (JaxbRequestType) jaxbElement.getValue ();
         }
         catch (Exception e)
@@ -223,7 +224,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     }
 
     /**
-     * Utility to remove carriage return (\r) and linefeeds (\n) otherwise the
+     * Utility to remove carriage return (\r), linefeeds (\n) and tabs (\t) otherwise the
      * test for equality does not work.
      * 
      * @param xml
@@ -244,7 +245,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         // Exclude line feeds and carriage returns.
         while (i1 < inChars.length)
         {
-            if (inChars[i1] != '\n' && inChars[i1] != '\r')
+            if (inChars[i1] != '\n' && inChars[i1] != '\r' && inChars[i1] != '\t')
             {
                 outChars[i2++] = inChars[i1];
             }
