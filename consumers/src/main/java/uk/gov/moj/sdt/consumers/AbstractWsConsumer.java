@@ -68,6 +68,8 @@ public abstract class AbstractWsConsumer
             new ConcurrentHashMap<String, ITargetAppInternalEndpointPortType> ();
 
     /**
+     * Get the client for the specified target application. If the client is not cached already, a new client
+     * connection is created otherwise the already cached client is returned.
      * 
      * @param targetApplicationCode the target application code
      * @param serviceType the service type associated with the target application code
