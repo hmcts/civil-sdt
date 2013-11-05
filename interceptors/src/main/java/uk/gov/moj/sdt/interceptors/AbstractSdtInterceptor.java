@@ -232,8 +232,9 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
             // Make sure it is a CachedOutputStream otherwise we cannot see the contents.
             if ( !CachedOutputStream.class.isAssignableFrom (os.getClass ()))
             {
-                throw new IllegalStateException ("CacheSetupOutboundInterceptor must run prior to this interceptor [" +
-                        this.getClass ().getCanonicalName () + "]");
+                throw new IllegalStateException (
+                        "Interceptors require  CXF to setup CachedOutputStream so that contents "
+                                + "can be read non destructively.");
             }
 
             // Get the cached stream put in the message earlier.
