@@ -148,14 +148,14 @@
 	       		<list>	     	       					
 	       			<value>USER_REQUEST_ID_B11</value>	       			
 	       			<value>mcolClaim</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>SYS_ERR_VAL</value>	       			
-	       			<value>A system error has occurred. Please contact TBC for assistance.</value>
-	       			<value>false</value>
+	       			<value>Initially Accepted</value>	       			
+	       			<value></value>	       			
+	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B12</value>	       			
-	       			<value>mcolClaim</value>	       			
+	       			<value>mcolWarrant</value>	       			
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
@@ -172,9 +172,9 @@
 				<list>	     			
 	       			<value>USER_REQUEST_ID_B14</value>	       			
 	       			<value>mcolClaim</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>SYS_ERR_INT</value>	       			
-	       			<value>A system error has occurred. Please contact TBC for assistance.</value>
+	       			<value>Accepted</value>	       			
+	       			<value></value>	       			
+	       			<value></value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			

@@ -20,7 +20,7 @@
 	<bean id="uk.gov.moj.sdt.domain.api.IBulkSumissionError" class="uk.gov.moj.sdt.domain.BulkSubmission">                
         <property name="customerReference" value="USER_FILE_REFERENCE_c1"/>
         <property name="createdDate" ref="org.joda.time.LocalDateTime.submissionDateError" />
-        <property name="numberOfRequest" value="123"/>
+        <property name="numberOfRequest" value="78"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     

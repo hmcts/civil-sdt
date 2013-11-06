@@ -148,18 +148,18 @@
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B11</value>	       			
 	       			<value>mcolClaim</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>SYS_ERR_VAL</value>	       			
-	       			<value>A system error has occurred. Please contact TBC for assistance.</value>
-	       			<value>false</value>
+	       			<value>Initially Accepted</value>	       			
+	       			<value></value>	       			
+	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B12</value>	       			
-	       			<value>mcolClaim</value>	       			
+	       			<value>mcolWarrant</value>	       			
 	       			<value>Forwarded</value>	       			
-	       			<value>REQ_NOT_ACK</value>	       			
-	       			<value>Individual Request not acknowledged by Target Application. Please contact TBC for assistance.</value>
-	       			<value>false</value>
+	       			<value></value>	       			
+	       			<value></value>
+	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B13</value>	       			
