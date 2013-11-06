@@ -32,12 +32,7 @@
 package uk.gov.moj.sdt.consumers;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.ws.BindingProvider;
 
-import org.apache.cxf.endpoint.Client;
-import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.transport.http.HTTPConduit;
-import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +40,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ObjectFactory;
@@ -81,25 +75,7 @@ public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedback
     protected BulkFeedbackResponseType callTestWebService (final BulkFeedbackRequestType request)
     {
         // Get the SOAP proxy client.
-        ISdtEndpointPortType client =
-                (ISdtEndpointPortType) SpringApplicationContext
-                        .getBean ("uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType");
-
-        Client clientProxy = ClientProxy.getClient (client);
-
-        // Set endpoint address
-        BindingProvider provider = (BindingProvider) client;
-        provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://localhost:8888/producers/service/sdtapi");
-
-        HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
-        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
-        // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
-        // it times out
-        httpClientPolicy.setConnectionTimeout (10000);
-        // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
-        httpClientPolicy.setReceiveTimeout (10000);
-        httpConduit.setClient (httpClientPolicy);
+        ISdtEndpointPortType client = getSdtEndpointClient ();
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
