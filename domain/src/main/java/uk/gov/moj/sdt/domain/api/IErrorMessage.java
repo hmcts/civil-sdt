@@ -36,108 +36,118 @@ package uk.gov.moj.sdt.domain.api;
  * 
  * @author Manoj Kulkarni
  */
-public interface IErrorMessage extends IDomainObject
-{
+public interface IErrorMessage extends IDomainObject {
 
-    /**
-     * Get error code.
-     * 
-     * @return error code
-     */
-    String getErrorCode ();
+	/**
+	 * Get error code.
+	 * 
+	 * @return error code
+	 */
+	String getErrorCode();
 
-    /**
-     * Set error code.
-     * 
-     * @param errorCode error code
-     */
-    void setErrorCode (final String errorCode);
+	/**
+	 * Set error code.
+	 * 
+	 * @param errorCode
+	 *            error code
+	 */
+	void setErrorCode(final String errorCode);
 
-    /**
-     * Get error Text.
-     * 
-     * @return error text
-     */
-    String getErrorText ();
+	/**
+	 * Get error Text.
+	 * 
+	 * @return error text
+	 */
+	String getErrorText();
 
-    /**
-     * Set error Text.
-     * 
-     * @param errorText error text
-     */
-    void setErrorText (final String errorText);
+	/**
+	 * Set error Text.
+	 * 
+	 * @param errorText
+	 *            error text
+	 */
+	void setErrorText(final String errorText);
 
-    /**
-     * Get error description.
-     * 
-     * @return error description
-     */
-    String getErrorDescription ();
+	/**
+	 * Get error description.
+	 * 
+	 * @return error description
+	 */
+	String getErrorDescription();
 
-    /**
-     * Set error description.
-     * 
-     * @param errorDescription error description
-     */
-    void setErrorDescription (final String errorDescription);
+	/**
+	 * Set error description.
+	 * 
+	 * @param errorDescription
+	 *            error description
+	 */
+	void setErrorDescription(final String errorDescription);
 
-    /**
-     * Error code enums.
-     * 
-     * @author Son Loi
-     * 
-     */
-    public enum ErrorCode
-    {
-        /**
-         * Internal error.
-         */
-        SDT_INT_ERR,
+	/**
+	 * Error code enums.
+	 * 
+	 * @author Son Loi
+	 * 
+	 */
+	public enum ErrorCode {
+		/**
+		 * Internal error.
+		 */
+		SDT_INT_ERR,
 
-        /**
-         * Request count mismatch.
-         */
-        REQ_COUNT_MISMATCH,
+		/**
+		 * Request count mismatch.
+		 */
+		REQ_COUNT_MISMATCH,
 
-        /**
-         * Customer not setup for target application.
-         */
-        CUST_NOT_SETUP,
+		/**
+		 * Customer not setup for target application.
+		 */
+		CUST_NOT_SETUP,
 
-        /**
-         * Duplicate user file reference.
-         */
-        DUP_CUST_FILEID,
+		/**
+		 * Duplicate user file reference.
+		 */
+		DUP_CUST_FILEID,
 
-        /**
-         * Unique Request Identifier has been specified more than once within the originating Bulk Request.
-         */
-        DUPLD_CUST_REQID,
+		/**
+		 * Unique Request Identifier has been specified more than once within
+		 * the originating Bulk Request.
+		 */
+		DUPLD_CUST_REQID,
 
-        /**
-         * Duplicate unique request identifier.
-         */
-        DUP_CUST_REQID,
+		/**
+		 * Duplicate unique request identifier.
+		 */
+		DUP_CUST_REQID,
 
-        /**
-         * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.
-         */
-        BULK_REF_INVALID,
+		/**
+		 * The supplied SDT Bulk Reference is not listed against the Bulk
+		 * Customer's Bulk Submissions detail.
+		 */
+		BULK_REF_INVALID,
 
-        /**
-         * Target system failed to respond to request and request timed out.
-         */
-        REQ_NOT_ACK,
+		/**
+		 * Target system failed to respond to request and request timed out.
+		 */
+		REQ_NOT_ACK,
 
-        /**
-         * The Bulk Customer organisation is recognised by the SDT Service, but is not set up to send a Service Request
-         * message to the specified Target Application.
-         */
-        CUST_ID_INVALID,
+		/**
+		 * The Bulk Customer organisation is recognised by the SDT Service, but
+		 * is not set up to send a Service Request message to the specified
+		 * Target Application.
+		 */
+		CUST_ID_INVALID,
 
-        /**
-         * The submitted Bulk Request does not contain valid Individual Requests.
-         */
-        NO_VALID_REQS
-    }
+		/**
+		 * The submitted Bulk Request does not contain valid Individual
+		 * Requests.
+		 */
+		NO_VALID_REQS,
+
+		/**
+		 * Target system timed out to respond to submit query request.
+		 */
+		TAR_APP_ERROR
+	}
 }
