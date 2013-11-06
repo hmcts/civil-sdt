@@ -41,16 +41,23 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.ws.BindingProvider;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Assert;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
+import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
  * Test class for end to end web service tests..
@@ -310,4 +317,38 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      * @return a wrapped response JAXB object.
      */
     protected abstract JAXBElement<JaxbResponseType> wrapJaxbObject (final JaxbResponseType response);
+
+    /**
+     * Return a client to call SDT's external endpoint. The client is customised with endpoint url and timeout values.
+     * 
+     * @return client for SDT's external endpoint.
+     */
+    protected ISdtEndpointPortType getSdtEndpointClient ()
+    {
+
+        // Get the SOAP proxy client.
+        ISdtEndpointPortType client =
+                (ISdtEndpointPortType) SpringApplicationContext
+                        .getBean ("uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType");
+
+        Client clientProxy = ClientProxy.getClient (client);
+
+        // Set endpoint address
+        BindingProvider provider = (BindingProvider) client;
+        provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                "http://localhost:8888/producers/service/sdtapi");
+
+        HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
+        // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
+        // it times out
+        httpClientPolicy.setConnectionTimeout (10000);
+        // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
+        httpClientPolicy.setReceiveTimeout (10000);
+        httpConduit.setClient (httpClientPolicy);
+
+        return client;
+
+    }
+
 }

@@ -40,7 +40,6 @@
     <filelist id="deploy-project-list" dir=".">
         <file name="../producers/build.xml" />
         <file name="../producers-commissioning/build.xml" />
-        <!--<file name="../consumers/build.xml" />-->
     </filelist>
 
     <!-- TARGETS -->
