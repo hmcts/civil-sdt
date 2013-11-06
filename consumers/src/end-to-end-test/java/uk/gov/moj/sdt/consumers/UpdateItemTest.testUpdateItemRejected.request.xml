@@ -5,5 +5,10 @@
   <tns:targetAppDetail>
     <ANY-ELEMENT/>
   </tns:targetAppDetail>
-  <tns:status code="Accepted"/>
+  <tns:status code="Rejected">
+  	<tns1:error>
+  		<tns1:code>12</tns1:code>
+  		<tns1:description>Invalid Cost supplied.</tns1:description>
+  	</tns1:error>
+  </tns:status>
 </tns:updateRequest>

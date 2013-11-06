@@ -37,11 +37,13 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.ObjectFactory;
@@ -59,11 +61,35 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
         "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml"})
 public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, UpdateResponseType>
 {
+    @Before
+    public void setUp ()
+    {
+        DBUnitUtility.loadDatabase (this.getClass (), true);
+    }
+
     /**
      * Method to test the update item service.
      */
     @Test
     public void testUpdateItem ()
+    {
+        this.callWebService (UpdateRequestType.class);
+    }
+
+    /**
+     * Method to test the update item service with rejected status.
+     */
+    @Test
+    public void testUpdateItemRejected ()
+    {
+        this.callWebService (UpdateRequestType.class);
+    }
+
+    /**
+     * Method to test the update item service with multiple requests.
+     */
+    @Test
+    public void testUpdateItemMultiple ()
     {
         this.callWebService (UpdateRequestType.class);
     }

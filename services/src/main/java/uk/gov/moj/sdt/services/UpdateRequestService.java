@@ -62,8 +62,16 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
         {
             // Refresh the individual request from the database with the status and the error code
             // from the target application.
-            individualRequest.setRequestStatus (individualRequestParam.getRequestStatus ());
-            individualRequest.setErrorLog (individualRequestParam.getErrorLog ());
+            if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ().equals (
+                    individualRequestParam.getRequestStatus ()))
+            {
+                individualRequest.markRequestAsRejected (individualRequestParam.getErrorLog ());
+            }
+            else if (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ().equals (
+                    individualRequestParam.getRequestStatus ()))
+            {
+                individualRequest.markRequestAsAccepted ();
+            }
 
             // Mark the individual request as completed
             this.updateCompletedRequest (individualRequest);
