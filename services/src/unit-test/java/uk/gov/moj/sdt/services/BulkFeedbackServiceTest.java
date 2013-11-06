@@ -195,6 +195,8 @@ public class BulkFeedbackServiceTest
 
         Assert.assertTrue (targetApplicationRespMap.size () == 3);
 
+        EasyMock.verify (mockBulkSubmissionDao);
+
     }
 
     /**

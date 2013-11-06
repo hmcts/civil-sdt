@@ -9,11 +9,11 @@
  * conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
+ * following acknowledgement: "This product includes Money Claims OnLine."
  * - Products derived from this software may not be called "Money Claims OnLine" nor may
  * "Money Claims OnLine" appear in their names without prior written permission of the
  * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
+ * - Redistributions of any form whatsoever must retain the following acknowledgement: "This
  * product includes Money Claims OnLine."
  * This software is provided "as is" and any expressed or implied warranties, including, but
  * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
@@ -39,7 +39,6 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -59,14 +58,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/consumers/spring*.test.xml",
+@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/consumers/spring*e2e.test.xml",
         "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml"})
-/* @RunWith (SpringJUnit4ClassRunner.class)
- * 
- * @ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/consumers/spring*.xml",
- * "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/interceptors/out/spring*.xml",
- * "classpath*:uk/gov/moj/sdt/interceptors/in/spring*.xml", "classpath*:uk/gov/moj/sdt/enricher/spring*.xml",
- * "classpath*:uk/gov/moj/sdt/transformers/spring*.xml"}) */
 public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType>
 {
     @Before
@@ -79,7 +72,6 @@ public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedback
      * Method to call remote request bulk feedback endpoint to be tested.
      */
     @Test
-    @Ignore
     public void testRequestBulkFeedback ()
     {
         this.callWebService (BulkFeedbackRequestType.class);
@@ -104,22 +96,15 @@ public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedback
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
         // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
         // it times out
-        httpClientPolicy.setConnectionTimeout (300);
+        httpClientPolicy.setConnectionTimeout (10000);
         // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
-        httpClientPolicy.setReceiveTimeout (400);
+        httpClientPolicy.setReceiveTimeout (10000);
         httpConduit.setClient (httpClientPolicy);
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
         return client.getBulkFeedback (request);
     }
-
-    // @Override
-    // protected JAXBElement<BulkFeedbackResponseType> wrapJaxbObject (BulkFeedbackResponseType response)
-    // {
-    // // TODO Auto-generated method stub
-    // return null;
-    // }
 
     @Override
     protected JAXBElement<BulkFeedbackResponseType> wrapJaxbObject (final BulkFeedbackResponseType response)

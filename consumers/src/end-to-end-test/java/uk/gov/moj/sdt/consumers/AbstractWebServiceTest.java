@@ -9,11 +9,11 @@
  * conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
+ * following acknowledgement: "This product includes Money Claims OnLine."
  * - Products derived from this software may not be called "Money Claims OnLine" nor may
  * "Money Claims OnLine" appear in their names without prior written permission of the
  * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
+ * - Redistributions of any form whatsoever must retain the following acknowledgement: "This
  * product includes Money Claims OnLine."
  * This software is provided "as is" and any expressed or implied warranties, including, but
  * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
@@ -241,14 +241,22 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
 
         int i1 = 0;
         int i2 = 0;
+        boolean skipSpace = false;
 
         // Exclude line feeds and carriage returns.
+        // Allow no consecutive spaces (ie only one space).
         while (i1 < inChars.length)
         {
-            if (inChars[i1] != '\n' && inChars[i1] != '\r' && inChars[i1] != '\t')
+            if (i1 != 0 && inChars[i1 - 1] == ' ' && inChars[i1] == ' ')
+            {
+                skipSpace = true;
+            }
+            if (inChars[i1] != '\n' && inChars[i1] != '\r' && inChars[i1] != '\t' && !skipSpace)
             {
                 outChars[i2++] = inChars[i1];
             }
+            if (skipSpace)
+                skipSpace = false;
             i1++;
         }
 

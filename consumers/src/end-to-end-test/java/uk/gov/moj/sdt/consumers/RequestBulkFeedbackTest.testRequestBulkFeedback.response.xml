@@ -1,64 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:bulkFeedbackResponse xmlns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:ns2="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema">
+<ns2:bulkFeedbackResponse xmlns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+ xmlns:ns2="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema">
          <ns2:bulkRequestStatus>
-            <ns2:status code="Ok"/>
-            <ns2:customerReference>2</ns2:customerReference>
-            <ns2:sdtBulkReference>MCOL_20130722000000_B00000002</ns2:sdtBulkReference>
-            <ns2:submittedDate>2013-10-22T13:00:00+01:00</ns2:submittedDate>
-            <ns2:sdtService>SDT Commissioning</ns2:sdtService>
-            <ns2:requestCount>4</ns2:requestCount>
-            <ns2:bulkStatus code="Completed"/>
+            <status code="Ok"/>
+            <ns2:customerReference>REF1</ns2:customerReference>
+            <ns2:sdtBulkReference>MCOL-10012013010101-100099999</ns2:sdtBulkReference>
+            <ns2:submittedDate>2013-10-01 17:26:30.123456789</ns2:submittedDate>
+            <ns2:sdtService>SDT</ns2:sdtService>
+            <ns2:requestCount>1</ns2:requestCount>
+            <ns2:bulkStatus code="Uploaded"/>
          </ns2:bulkRequestStatus>
          <ns2:responses>
-         <!--1 or more repetitions:-->
-            <ns2:response requestId="USER_REQUEST_ID_B1a" requestType="mcolClaim">
-               <ns2:status code="Rejected">
-                  <!--Optional:-->
-                  <ns2:error>
-                     <ns2:code>DUP_CUST_REQID</ns2:code>
-                     <ns2:description>Duplicate User Request Identifier submitted USER_REQUEST_ID_B1a.</ns2:description>
-                  </ns2:error>
-               </ns2:status>
-            </ns2:response>
-            <ns2:response requestId="USER_REQUEST_ID_B1b" requestType="mcolJudgment">
-               <ns2:status code="Rejected">
-                  <!--Optional:-->
-                  <ns2:error>
-                     <ns2:code>DUPLD_CUST_REQID</ns2:code>
-                     <ns2:description>Unique Request Identifier has been specified more than once within the originating Bulk Request.</ns2:description>
-                  </ns2:error>
-               </ns2:status>
-            </ns2:response>
-            <ns2:response requestId="USER_REQUEST_ID_B2" requestType="mcolClaim">
-               <!--Optional:-->
-               <mcolResponseDetail>
-                  <claimNumber>12345678</claimNumber>
-                  <issueDate>2012-11-11</issueDate>
-                  <serviceDate>2012-11-11</serviceDate>
-                  <warrantNumber>12345678</warrantNumber>
-                  <enforcingCourtCode>123</enforcingCourtCode>
-                  <enforcingCourtName>enforcing_court_name</enforcingCourtName>
-                  <fee>9999</fee>
-               </mcolResponseDetail>
-               <ns2:status code="Rejected">
-                  <!--Optional:-->
-                  <ns2:error>
-                     <ns2:code>8</ns2:code>
-                     <ns2:description>First defendant's postcode is not in England or Wales.</ns2:description>
-                  </ns2:error>
-               </ns2:status>
-            </ns2:response>
-            <ns2:response requestId="USER_REQUEST_ID_B4" requestType="mcolClaimStatusUpdate">
-               <!--Optional:-->
-               <mcolResponseDetail>
-                  <claimNumber>12345678</claimNumber>
-                  <issueDate>2012-11-11</issueDate>
-                  <serviceDate>2012-11-11</serviceDate>
-                  <warrantNumber>12345678</warrantNumber>
-                  <enforcingCourtCode>123</enforcingCourtCode>
-                  <enforcingCourtName>enforcing_court_name</enforcingCourtName>
-                  <fee>9999</fee>
-               </mcolResponseDetail>
+            <ns2:response requestId="USER_REQUEST_ID_BF1" requestType="mcolClaim">
+               <ns2:responseDetail/>
                <ns2:status code="Accepted"/>
             </ns2:response>
          </ns2:responses>

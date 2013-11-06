@@ -1,6 +1,6 @@
-      <bul:bulkFeedbackRequestType xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
-         <bul:header>
-            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
-            <bul:sdtBulkReference>MCOL-20131023143256-000000005</bul:sdtBulkReference>
-         </bul:header>
-      </bul:bulkFeedbackRequestType>
+<tns:bulkFeedbackRequestType xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" >
+  <tns:header>
+    <tns:sdtCustomerId>12345678</tns:sdtCustomerId>
+    <tns:sdtBulkReference>MCOL-10012013010101-100099999</tns:sdtBulkReference>
+  </tns:header>
+</tns:bulkFeedbackRequestType>
