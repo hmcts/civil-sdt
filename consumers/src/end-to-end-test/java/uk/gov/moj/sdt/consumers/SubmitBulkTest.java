@@ -91,8 +91,6 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
         // Set endpoint address
         BindingProvider provider = (BindingProvider) client;
-        // provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-        // "http://localhost:8888/producers-comx/service/sdtapi");
         provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
                 "http://localhost:8888/producers/service/sdtapi");
 

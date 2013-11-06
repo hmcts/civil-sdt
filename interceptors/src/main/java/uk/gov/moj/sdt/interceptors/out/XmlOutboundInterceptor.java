@@ -77,7 +77,7 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
             modifiedPayload = payload;
         }
 
-        this.replaceOutputMessage (message, payload);
+        this.replaceOutputMessage (message, modifiedPayload);
 
         // Write message to 'performance.log' for this logging point.
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_10))

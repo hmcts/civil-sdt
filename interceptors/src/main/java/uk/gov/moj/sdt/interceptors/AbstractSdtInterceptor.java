@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,7 +42,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.helpers.IOUtils;
+import org.apache.cxf.helpers.LoadingByteArrayOutputStream;
 import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.io.CacheAndWriteOutputStream;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.io.CachedWriter;
 import org.apache.cxf.io.DelegatingInputStream;
@@ -194,18 +197,28 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
     {
         try
         {
-            // Turn the modified data into a new input stream.
-            final InputStream replaceInStream = org.apache.commons.io.IOUtils.toInputStream (payload, "UTF-8");
+            // Get the existing output stream.
+            final OutputStream os = message.getContent (OutputStream.class);
 
-            // Copy the new input stream to the output stream and close the input stream.
-            final OutputStream os = new CachedOutputStream ();
-            org.apache.commons.io.IOUtils.copy (replaceInStream, os);
-            org.apache.commons.io.IOUtils.closeQuietly (replaceInStream);
+            // Make sure it is a CacheAndWriteOutputStream otherwise we cannot replace the contents.
+            if ( !CacheAndWriteOutputStream.class.isAssignableFrom (os.getClass ()))
+            {
+                throw new IllegalStateException (
+                        "Interceptors require  CXF to setup CacheAndWriteOutputStream so that contents "
+                                + "can be read non destructively.");
+            }
 
-            // Flush the output stream, set it in the message.
-            os.flush ();
-            message.setContent (OutputStream.class, os);
-            // org.apache.commons.io.IOUtils.closeQuietly (os);
+            // Cast to a stream using which we can replace the contents.
+            final CacheAndWriteOutputStream cacheAndWriteOutputStream = CacheAndWriteOutputStream.class.cast (os);
+            cacheAndWriteOutputStream.flush ();
+
+            // Setup inner stream with correct content.
+            final ByteArrayOutputStream replacementStream = new LoadingByteArrayOutputStream();
+            final byte[] byteArray = payload.getBytes();
+            replacementStream.write (byteArray, 0, byteArray.length);
+            
+            // Reset the inner stream which contains the output contents.
+            cacheAndWriteOutputStream.resetOut (replacementStream, false);
         }
         catch (final IOException e)
         {
