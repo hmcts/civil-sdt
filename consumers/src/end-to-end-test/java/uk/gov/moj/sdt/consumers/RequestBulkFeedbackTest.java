@@ -66,7 +66,16 @@ public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedback
      * Method to call remote request bulk feedback endpoint to be tested.
      */
     @Test
-    public void testRequestBulkFeedback ()
+    public void testValidRequestBulkFeedback ()
+    {
+        this.callWebService (BulkFeedbackRequestType.class);
+    }
+
+    /**
+     * Method to call remote request bulk feedback endpoint to be tested.
+     */
+    @Test
+    public void testInvalidRequestBulkFeedback ()
     {
         this.callWebService (BulkFeedbackRequestType.class);
     }
