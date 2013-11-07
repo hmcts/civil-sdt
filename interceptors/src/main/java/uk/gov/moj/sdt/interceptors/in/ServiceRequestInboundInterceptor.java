@@ -36,6 +36,7 @@ import org.apache.cxf.phase.Phase;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -43,6 +44,7 @@ import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.ServerIpAddress;
 
 /**
  * Class to intercept incoming messages and log them to the database.
@@ -86,7 +88,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void handleMessage (final SoapMessage soapMessage) throws Fault
     {
         LOG.debug ("ServiceRequestInboundInterceptor handle incoming message being processed");
@@ -112,6 +114,10 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         serviceRequest.setRequestPayload (SdtContext.getContext ().getRawInXml ());
         serviceRequest.setRequestDateTime (new LocalDateTime ());
         serviceRequest.setRequestType (extractRequestType ());
+        
+        //Get the server Host Name
+        final String hostName = ServerIpAddress.getIPaddress ();
+        serviceRequest.setServerHostName (hostName);
 
         serviceRequestDao.persist (serviceRequest);
 

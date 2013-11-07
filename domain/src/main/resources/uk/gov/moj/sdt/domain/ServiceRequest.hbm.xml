@@ -36,5 +36,9 @@
 			>
 			<column name="SDT_BULK_REFERENCE" />
 		</property>		
+		<property name="serverHostName" type="java.lang.String"
+			>
+			<column name="SERVER_HOST_NAME" />
+		</property>	
 	</class>
 </hibernate-mapping>

@@ -43,6 +43,7 @@ import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
@@ -216,11 +217,10 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // Mark the request as Validated.
         bulkSubmission.markAsValidated ();
 
-        // TODO : Disabled until Service Request Interceptor is fixed.
         // Associate with the service request created by the ServiceRequestInboundInterceptor
-        // final IServiceRequest serviceRequest =
-        // genericDao.fetch (IServiceRequest.class, SdtContext.getContext ().getServiceRequestId ());
-        // bulkSubmission.setServiceRequest (serviceRequest);
+        final IServiceRequest serviceRequest =
+                genericDao.fetch (IServiceRequest.class, SdtContext.getContext ().getServiceRequestId ());
+        bulkSubmission.setServiceRequest (serviceRequest);
     }
 
     /**

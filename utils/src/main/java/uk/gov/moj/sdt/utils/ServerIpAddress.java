@@ -28,56 +28,59 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.interceptors.out;
+package uk.gov.moj.sdt.utils;
 
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.phase.Phase;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 
 /**
- * Class to intercept outgoing messages to audit them.
+ * Utility class to return the server's IP Address.
  * 
- * @author d195274
+ * @author Manoj Kulkarni
  * 
  */
-public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
+// CHECKSTYLE:OFF
+public class ServerIpAddress
+// CHECKSTYLE:ON
 {
+    /**
+     * Constant to indicate that the IP address is not yet known.
+     */
+    private static final String UNKNOWN_ADDRESS = "UNKNOWN";
 
     /**
      * Logger for this class.
      */
-    public static final Logger LOG = LoggerFactory.getLogger (ServiceRequestOutboundInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger (ServerIpAddress.class);
 
     /**
-     * Create.
+     * The IP address of the server machine.
      */
-    public ServiceRequestOutboundInterceptor ()
-    {
-        super (Phase.PREPARE_SEND_ENDING);
-        addAfter (XmlOutboundInterceptor.class.getName ());
-    }
+    private static String ipAddress;
 
     /**
-     * Create.
+     * Gets the IP address of the server machine.
      * 
-     * @param phase
-     *            phase.
+     * @return the IP address of the server machine.
      */
-    public ServiceRequestOutboundInterceptor (final String phase)
+    public static String getIPaddress ()
     {
-        super (phase);
-    }
-
-    @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public void handleMessage (final SoapMessage soapMessage) throws Fault
-    {
-        this.persistEnvelope (this.readOutputMessage (soapMessage));
+        if (StringUtils.isEmpty (ipAddress) || UNKNOWN_ADDRESS.equals (ipAddress))
+        {
+            try
+            {
+                ipAddress = InetAddress.getLocalHost ().getHostAddress ();
+            }
+            catch (final UnknownHostException e)
+            {
+                ipAddress = UNKNOWN_ADDRESS;
+                LOG.warn ("An exception occured while retrieving host address", e);
+            }
+        }
+        return ipAddress;
     }
 }
