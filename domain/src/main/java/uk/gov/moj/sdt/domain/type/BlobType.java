@@ -71,6 +71,11 @@ public class BlobType implements UserType
     @Override
     public boolean equals (final Object x, final Object y) throws HibernateException
     {
+        if (x == null && y == null)
+        {
+            return true;
+        }
+
         if (x == null || y == null)
         {
             return false;

@@ -23,7 +23,7 @@
             <column name="ERROR_TEXT" />
         </property>
 		<!-- This is effectively a one to one mapping -->
-        <many-to-one name="individualRequest" class="uk.gov.moj.sdt.domain.IndividualRequest" not-null="true" cascade="all" unique="true">
+        <many-to-one name="individualRequest" class="uk.gov.moj.sdt.domain.IndividualRequest" not-null="true" unique="true">
         	<column name="INDIVIDUAL_REQUEST_ID" />
     	</many-to-one>
     </class>

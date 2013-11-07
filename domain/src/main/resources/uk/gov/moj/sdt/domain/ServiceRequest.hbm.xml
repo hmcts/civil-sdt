@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 17-Jul-2013 12:18:37 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-	<class name="uk.gov.moj.sdt.domain.ServiceRequest" table="SERVICE_REQUESTS">
+	<class name="uk.gov.moj.sdt.domain.ServiceRequest" table="SERVICE_REQUESTS"  dynamic-update="true">
 		<id name="id" column="SERVICE_REQUEST_ID" >
 			<generator class="sequence">
 				<param name="sequence">srv_req_seq</param>

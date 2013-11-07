@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 03-Jul-2013 15:00:42 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="uk.gov.moj.sdt.domain.BulkSubmission" lazy="false" table="BULK_SUBMISSIONS">
+    <class name="uk.gov.moj.sdt.domain.BulkSubmission" lazy="false" table="BULK_SUBMISSIONS" dynamic-update="true">
         <id name="id" column="BULK_SUBMISSION_ID" >  
                   <generator class="sequence" >
                   	<param name="sequence">bulk_sub_seq</param>
