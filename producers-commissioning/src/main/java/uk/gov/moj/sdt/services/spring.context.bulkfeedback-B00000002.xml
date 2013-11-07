@@ -20,7 +20,7 @@
 	<bean id="uk.gov.moj.sdt.domain.api.IBulkSumissionCompleted" class="uk.gov.moj.sdt.domain.BulkSubmission">     
         <property name="customerReference" value="USER_FILE_REFERENCE_B2"/>
         <property name="createdDate" ref="org.joda.time.LocalDateTime.submissionDateCompleted"/>
-        <property name="numberOfRequest" value="16"/>
+        <property name="numberOfRequest" value="17"/>
         <property name="submissionStatus" value="Completed"/>   
     </bean>
     
@@ -63,6 +63,14 @@
 	       			<!-- Rejection Reason Description -->
 	       			<value>Duplicate User Request Identifier submitted USER_REQUEST_ID_B1a.</value>
 	       			<!-- Target response -->
+	       			<value>false</value>
+	       		</list>
+	       		<list>	     				       		       		
+	       			<value>USER_REQUEST_ID_B1b</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>DUPLD_CUST_REQID</value>	       			
+	       			<value>Unique Request Identifier has been specified more than once within the originating Bulk Request.</value>
 	       			<value>false</value>
 	       		</list>
 	       		<list>	     				       		       		
