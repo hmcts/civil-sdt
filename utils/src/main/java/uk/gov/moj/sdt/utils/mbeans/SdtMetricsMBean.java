@@ -347,6 +347,16 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long targetAppUnavailable;
 
     /**
+     * Number of times the target application returned a miscellaneous error.
+     */
+    private long targetAppMiscErrors;
+
+    /**
+     * Number of times the target application returned a SOAP error.
+     */
+    private long targetAppSoapErrors;
+
+    /**
      * Number of timeouts waiting for target application to respond.
      */
     private long targetAppResponseTimeouts;
@@ -936,7 +946,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private long getTargetAppResponseTimeAvg ()
     {
-        return (this.submitQueryCounts == 0) ? 0 : this.targetAppResponseTime / this.submitQueryCounts;
+        return (this.targetAppCallCount == 0) ? 0 : this.targetAppResponseTime / this.targetAppCallCount;
     }
 
     /**
@@ -967,6 +977,26 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long getTargetAppUnavailable ()
     {
         return this.targetAppUnavailable;
+    }
+
+    /**
+     * Get the number of times the target application errored.
+     * 
+     * @return the number of times the target application errored.
+     */
+    private long getTargetAppMiscErrors ()
+    {
+        return this.targetAppMiscErrors;
+    }
+
+    /**
+     * Get the number of times the target application encountered SOAP error.
+     * 
+     * @return the number of times the target application encountered SOAP error.
+     */
+    private long getTargetAppSoapErrors ()
+    {
+        return this.targetAppSoapErrors;
     }
 
     /**
@@ -1101,18 +1131,18 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
             this.databaseReadsTimeMax = databaseReadsTime;
         }
 
-        this.databaseCallsTime += databaseCallsTime;
+        this.databaseCallsTime += databaseReadsTime;
 
         // Update the minimum if needed.
-        if (databaseCallsTime < this.databaseCallsTimeMin)
+        if (databaseReadsTime < this.databaseCallsTimeMin)
         {
-            this.databaseCallsTimeMin = databaseCallsTime;
+            this.databaseCallsTimeMin = databaseReadsTime;
         }
 
         // Update the maximum if needed.
-        if (databaseCallsTime > this.databaseCallsTimeMax)
+        if (databaseReadsTime > this.databaseCallsTimeMax)
         {
-            this.databaseCallsTimeMax = databaseCallsTime;
+            this.databaseCallsTimeMax = databaseReadsTime;
         }
     }
 
@@ -1140,18 +1170,18 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
             this.databaseWritesTimeMax = databaseWritesTime;
         }
 
-        this.databaseCallsTime += databaseCallsTime;
+        this.databaseCallsTime += databaseWritesTime;
 
         // Update the minimum if needed.
-        if (databaseCallsTime < this.databaseCallsTimeMin)
+        if (databaseWritesTime < this.databaseCallsTimeMin)
         {
-            this.databaseCallsTimeMin = databaseCallsTime;
+            this.databaseCallsTimeMin = databaseWritesTime;
         }
 
         // Update the maximum if needed.
-        if (databaseCallsTime > this.databaseCallsTimeMax)
+        if (databaseWritesTime > this.databaseCallsTimeMax)
         {
-            this.databaseCallsTimeMax = databaseCallsTime;
+            this.databaseCallsTimeMax = databaseWritesTime;
         }
     }
 
@@ -1252,7 +1282,19 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public void upTargetAppUnavailable ()
     {
-        this.targetAppResponseTimeouts += 1;
+        this.targetAppUnavailable += 1;
+    }
+
+    @Override
+    public void upTargetAppMiscErrors ()
+    {
+        this.targetAppMiscErrors += 1;
+    }
+
+    @Override
+    public void upTargetAppSoapErrors ()
+    {
+        this.targetAppSoapErrors += 1;
     }
 
     @Override
@@ -1342,6 +1384,8 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.targetAppResponseTimeMin = Long.MAX_VALUE;
         this.targetAppResponseTimeMax = 0;
         this.targetAppUnavailable = 0;
+        this.targetAppMiscErrors = 0;
+        this.targetAppSoapErrors = 0;
         this.targetAppResponseTimeouts = 0;
         this.xmlValidationFailureCount = 0;
         this.businessExceptionCount = 0;
@@ -1461,7 +1505,8 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
                 this.getTargetAppResponseTime () + "], average[" + this.getTargetAppResponseTimeAvg () + "], minimum[" +
                 this.getTartegAppResponseTimeMin () + "], maximum[" + this.getTargetAppResponseTimeMax () +
                 "], timeouts[" + this.getTargetAppResponseTimeouts () + "], unavailable[" +
-                this.getTargetAppUnavailable () + "]";
+                this.getTargetAppUnavailable () + "], misc errors[" + this.getTargetAppMiscErrors () +
+                "], soap errors[" + this.getTargetAppSoapErrors () + "]";
     }
 
     @Override

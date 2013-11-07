@@ -323,6 +323,16 @@ public interface ISdtMetricsMBean
     void upTargetAppUnavailable ();
 
     /**
+     * Increment the target application miscellaneous errors.
+     */
+    void upTargetAppMiscErrors ();
+
+    /**
+     * Increment the target application SOAP errors.
+     */
+    void upTargetAppSoapErrors ();
+
+    /**
      * Increment the target application response timeout count.
      */
     void upTargetAppResponseTimeouts ();

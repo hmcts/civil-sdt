@@ -91,43 +91,10 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
         // Transform domain object to web service object
         final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb (individualRequest);
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tsdt request reference=" + individualRequest.getSdtRequestReference () +
-                    "\n\tcustomer request reference=" + individualRequest.getCustomerRequestReference () +
-                    "\n\tline number=" + individualRequest.getLineNumber () + "\n\trequest type=" +
-                    individualRequest.getRequestType () + "\n\tforwarding attempts=" +
-                    individualRequest.getForwardingAttempts () + "\n\tpayload=" +
-                    individualRequest.getRequestPayload () + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_7, "Send to target application",
-                    detail.toString ());
-        }
-
         // Process and call the end point web service
         final IndividualResponseType responseType =
                 this.invokeTargetAppService (individualRequestType, individualRequest, connectionTimeOut,
                         receiveTimeOut);
-
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_8))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tsdt request reference=" + responseType.getHeader ().getSdtRequestId () +
-                    "\n\tstatus code=" + responseType.getStatus ().getCode ().name () + "\n\ttarget app detail=" +
-                    responseType.getTargetAppDetail ().getAny ());
-            if (responseType.getStatus ().getError () != null)
-            {
-                detail.append ("\n\terror code=" + responseType.getStatus ().getError ().getCode () +
-                        "\n\terror description=" + responseType.getStatus ().getError ().getDescription ());
-            }
-            detail.append ("\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_8,
-                    "receive from target application", detail.toString ());
-        }
 
         this.transformer.transformJaxbToDomain (responseType, individualRequest);
 
@@ -166,22 +133,56 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
         int attemptCount = 0;
         while (true)
         {
+            long startTime = 0;
+
             try
             {
                 SdtMetricsMBean.getSdtMetrics ().upTargetAppCallCount ();
 
                 LOGGER.debug ("Submitting individual request to target application, attempt " + (++attemptCount));
 
+                if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
+                {
+                    final StringBuffer detail = new StringBuffer ();
+                    detail.append ("\n\n\tsdt request reference=" + iRequest.getSdtRequestReference () +
+                            "\n\tcustomer request reference=" + iRequest.getCustomerRequestReference () +
+                            "\n\tline number=" + iRequest.getLineNumber () + "\n\trequest type=" +
+                            iRequest.getRequestType () + "\n\tforwarding attempts=" +
+                            iRequest.getForwardingAttempts () + "\n\tpayload=" + iRequest.getRequestPayload () +
+                            "\n\n\ttarget application=" +
+                            serviceRouting.getTargetApplication ().getTargetApplicationName () + "\n\tendpoint=" +
+                            serviceRouting.getWebServiceEndpoint () + "\n");
+
+                    // Write message to 'performance.log' for this logging point.
+                    PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_7,
+                            "Send to target application", detail.toString ());
+                }
+
                 // Measure response time.
-                final long startTime = new GregorianCalendar ().getTimeInMillis ();
+                startTime = new GregorianCalendar ().getTimeInMillis ();
 
                 // Call the specific business method for this text - note that a single test can only use one web
                 // service business method.
                 final IndividualResponseType individualResponseType = client.submitIndividual (request);
 
-                // Measure total time spent in target application.
-                final long endTime = new GregorianCalendar ().getTimeInMillis ();
-                SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
+                if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_8))
+                {
+                    final StringBuffer detail = new StringBuffer ();
+                    detail.append ("\n\n\tsdt request reference=" +
+                            individualResponseType.getHeader ().getSdtRequestId () + "\n\tstatus code=" +
+                            individualResponseType.getStatus ().getCode ().name ());
+                    if (individualResponseType.getStatus ().getError () != null)
+                    {
+                        detail.append ("\n\terror code=" + individualResponseType.getStatus ().getError ().getCode () +
+                                "\n\terror description=" +
+                                individualResponseType.getStatus ().getError ().getDescription ());
+                    }
+                    detail.append ("\n");
+
+                    // Write message to 'performance.log' for this logging point.
+                    PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_8,
+                            "receive from target application", detail.toString ());
+                }
 
                 return individualResponseType;
             }
@@ -204,6 +205,13 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 {
                     LOGGER.debug ("Sleep operation interrupted while re-attempting to send to target application", e);
                 }
+            }
+            finally
+            {
+                // Measure total time spent in target application.
+                final long endTime = new GregorianCalendar ().getTimeInMillis ();
+                SdtMetricsMBean.getSdtMetrics ().addTargetAppResponseTime (endTime - startTime);
+
             }
         }
     }

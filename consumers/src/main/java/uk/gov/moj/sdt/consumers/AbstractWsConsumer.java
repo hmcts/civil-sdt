@@ -38,6 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
@@ -59,6 +61,11 @@ public abstract class AbstractWsConsumer
      * Thirty seconds in milliseconds.
      */
     protected static final long THIRTY_SECONDS = 30000;
+
+    /**
+     * Logger instance.
+     */
+    private static final Log LOGGER = LogFactory.getLog (AbstractWsConsumer.class);
 
     /**
      * The map to hold the TargetApp Internal End Point with the key
@@ -164,7 +171,11 @@ public abstract class AbstractWsConsumer
         if ((wsException.getCause () instanceof ConnectException) && rethrowOnFailureToConnect)
         {
             // Target application must be unavailable - update stats.
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppResponseTimeouts ();
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppUnavailable ();
+
+            // We are about to abort the transaction; treat this message as never read and therefore reverse decrement
+            // of queue count done earlier.
+            SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
 
             throw wsException;
         }
@@ -173,9 +184,9 @@ public abstract class AbstractWsConsumer
         // CHECKSTYLE:OFF
         {
             // Target application must be unavailable - update stats.
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppResponseTimeouts ();
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppUnavailable ();
 
-            // Do nothing - we want to carry on trying to connect.
+            // Swallow exception - we want to carry on trying to connect.
         }
         // CHECKSTYLE:ON
         // Timeout waiting for target application to respond.
@@ -190,14 +201,24 @@ public abstract class AbstractWsConsumer
         else if (wsException.getCause () instanceof org.apache.cxf.binding.soap.SoapFault ||
                 wsException.getCause () instanceof javax.xml.ws.soap.SOAPFaultException)
         {
+            // Target application must be unavailable - update stats.
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppSoapErrors ();
+
+            // We are about to abort the transaction; treat this message as never read and therefore reverse decrement
+            // of queue count done earlier.
+            SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
+
             throw new SoapFaultException ("SOAP_FAULT", wsException.getMessage ());
         }
         else
         {
+            // Target application must be unavailable - update stats.
+            SdtMetricsMBean.getSdtMetrics ().upTargetAppMiscErrors ();
+
             // If is is any other exception, we can't handle it cleanly. So throw it back
-            throw wsException;
+            LOGGER.error ("Unexpected exception while sending to target endpoint", wsException);
+
+            // Swallow exception - we want to carry on trying to connect.
         }
-
     }
-
 }
