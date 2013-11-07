@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.services;
 
+import javax.xml.ws.WebServiceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,325 +59,342 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author d130680
  * 
  */
-public class SubmitQueryService implements ISubmitQueryService {
+public class SubmitQueryService implements ISubmitQueryService
+{
 
-	/**
-	 * Logger object.
-	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SubmitQueryService.class);
+    /**
+     * Logger object.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryService.class);
 
-	/**
-	 * The consumer gateway that will perform the call to the target application
-	 * web service.
-	 */
-	private IConsumerGateway requestConsumer;
+    /**
+     * The consumer gateway that will perform the call to the target application
+     * web service.
+     */
+    private IConsumerGateway requestConsumer;
 
-	/**
-	 * The ICacheable reference to the global parameters cache.
-	 */
-	private ICacheable globalParametersCache;
+    /**
+     * The ICacheable reference to the global parameters cache.
+     */
+    private ICacheable globalParametersCache;
 
-	/**
-	 * The ICacheable reference to the error messages cache.
-	 */
-	private ICacheable errorMessagesCache;
+    /**
+     * The ICacheable reference to the error messages cache.
+     */
+    private ICacheable errorMessagesCache;
 
-	/**
-	 * Parser for query response.
-	 */
-	private GenericXmlParser queryResponseXmlParser;
+    /**
+     * Parser for query response.
+     */
+    private GenericXmlParser queryResponseXmlParser;
 
-	/**
-	 * Parser for query request.
-	 */
-	private GenericXmlParser queryRequestXmlParser;
+    /**
+     * Parser for query request.
+     */
+    private GenericXmlParser queryRequestXmlParser;
 
-	/**
-	 * Bulk Customer Dao property.
-	 */
-	private IBulkCustomerDao bulkCustomerDao;
+    /**
+     * Bulk Customer Dao property.
+     */
+    private IBulkCustomerDao bulkCustomerDao;
 
-	@Override
-	public void submitQuery(final ISubmitQueryRequest submitQueryRequest) {
-		LOGGER.info("Processing query request for customer["
-				+ submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "]");
+    @Override
+    public void submitQuery (final ISubmitQueryRequest submitQueryRequest)
+    {
+        LOGGER.info ("Processing submit query request for customer[" +
+                submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]");
 
-		enrich(submitQueryRequest);
+        enrich (submitQueryRequest);
 
-		extractAndWriteCriteria();
+        extractAndWriteCriteria ();
 
-		doThrottling(submitQueryRequest);
+        doThrottling (submitQueryRequest);
 
-		// Call consumer to submit the request to target application.
-		try {
-			this.sendRequestToTargetApp(submitQueryRequest);
+        // Call consumer to submit the request to target application.
+        try
+        {
+            this.sendRequestToTargetApp (submitQueryRequest);
 
-			this.updateCompletedRequest(submitQueryRequest);
-		} catch (final TimeoutException e) {
-			// AF - 1 Section 5.2.6.7 of FS v1.1
-			LOGGER.error("Timeout exception for SDT Bulk Customer ["
-					+ submitQueryRequest.getBulkCustomer().getSdtCustomerId()
-					+ "]", e);
+            this.updateCompletedRequest (submitQueryRequest);
+        }
+        catch (final TimeoutException e)
+        {
+            LOGGER.error ("Timeout exception for SDT Bulk Customer [" +
+                    submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "] ", e.getMessage ());
 
-			// Update the request for timeout error.
-			this.updateRequestTimeOut(submitQueryRequest);
+            // Update the request for timeout error.
+            this.updateRequestTimeOut (submitQueryRequest);
 
-		} catch (final OutageException e) {
-			// AF - 2 Section 5.2.6.8 of FS v1.1
-			LOGGER.error("Outage exception for SDT Bulk Customer ["
-					+ submitQueryRequest.getBulkCustomer().getSdtCustomerId()
-					+ "]", e);
-			// Update the request for outage.
-			this.updateRequestOutage(submitQueryRequest);
-		} catch (final SoapFaultException e) {
-			// Update the individual request with the soap fault reason
-			this.updateRequestSoapError(submitQueryRequest, e.getMessage());
-		}
+        }
+        catch (final OutageException e)
+        {
+            LOGGER.error ("Outage exception for SDT Bulk Customer [" +
+                    submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "] ", e.getMessage ());
+            // Update the request for outage.
+            this.updateRequestOutage (submitQueryRequest);
+        }
+        catch (final SoapFaultException e)
+        {
+            LOGGER.error ("Soap exception for SDT Bulk Customer [" +
+                    submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "] ", e.getMessage ());
+            // Update the request with the soap fault reason
+            this.updateRequestSoapError (submitQueryRequest, e.getMessage ());
+        }
+        catch (final WebServiceException e)
+        {
+            LOGGER.error ("WebService exception for SDT Bulk Customer [" +
+                    submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]", e.getMessage ());
+            // Update the request with reason
+            this.updateRequestSoapError (submitQueryRequest, e.getMessage ());
+        }
 
-		LOGGER.debug("Submit query request " + submitQueryRequest.getId()
-				+ " processing completed.");
+        LOGGER.debug ("Submit query request " + submitQueryRequest.getId () + " processing completed.");
 
-	}
+    }
 
-	/**
-	 * Update request when request times out.
-	 * 
-	 * @param submitQueryRequest
-	 *            submit query request.
-	 */
-	private void updateRequestTimeOut(
-			final ISubmitQueryRequest submitQueryRequest) {
-		// Get the Error message to indicate that call to target application has
-		// timed out
-		final IErrorMessage errorMessageParam = this.getErrorMessagesCache()
-				.getValue(IErrorMessage.class,
-						IErrorMessage.ErrorCode.TAR_APP_ERROR.name());
+    /**
+     * Update request when request times out.
+     * 
+     * @param submitQueryRequest
+     *            submit query request.
+     */
+    private void updateRequestTimeOut (final ISubmitQueryRequest submitQueryRequest)
+    {
+        // Get the Error message to indicate that call to target application has
+        // timed out
+        final IErrorMessage errorMessageParam =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        IErrorMessage.ErrorCode.TAR_APP_ERROR.name ());
 
-		IErrorLog errorLog = null;
-		errorLog = new ErrorLog(errorMessageParam.getErrorCode(),
-				errorMessageParam.getErrorDescription());
-		submitQueryRequest.reject(errorLog);
-	}
+        IErrorLog errorLog = null;
+        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+        submitQueryRequest.reject (errorLog);
+    }
 
-	/**
-	 * Update request when no response from server.
-	 * 
-	 * @param submitQueryRequest
-	 *            submit query request.
-	 */
-	private void updateRequestOutage(
-			final ISubmitQueryRequest submitQueryRequest) {
-		// Get the Error message to indicate that there has been no response
-		// from the server.
-		final IErrorMessage errorMessageParam = this.getErrorMessagesCache()
-				.getValue(IErrorMessage.class,
-						IErrorMessage.ErrorCode.TAR_APP_ERROR.name());
+    /**
+     * Update request when no response from server.
+     * 
+     * @param submitQueryRequest
+     *            submit query request.
+     */
+    private void updateRequestOutage (final ISubmitQueryRequest submitQueryRequest)
+    {
+        // Get the Error message to indicate that there has been no response
+        // from the server.
+        final IErrorMessage errorMessageParam =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        IErrorMessage.ErrorCode.TAR_APP_ERROR.name ());
 
-		IErrorLog errorLog = null;
-		errorLog = new ErrorLog(errorMessageParam.getErrorCode(),
-				errorMessageParam.getErrorDescription());
-		submitQueryRequest.reject(errorLog);
-	}
+        IErrorLog errorLog = null;
+        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+        submitQueryRequest.reject (errorLog);
+    }
 
-	/**
-	 * Update request with SOAP error details.
-	 * 
-	 * @param submitQueryRequest
-	 *            submit query request
-	 * @param message
-	 *            soap error message
-	 */
-	private void updateRequestSoapError(
-			final ISubmitQueryRequest submitQueryRequest, final String message) {
-		final IErrorMessage errorMessageParam = this.getErrorMessagesCache()
-				.getValue(IErrorMessage.class,
-						IErrorMessage.ErrorCode.SDT_INT_ERR.name());
+    /**
+     * Update request with SOAP error details.
+     * 
+     * @param submitQueryRequest
+     *            submit query request
+     * @param message
+     *            soap error message
+     */
+    private void updateRequestSoapError (final ISubmitQueryRequest submitQueryRequest, final String message)
+    {
+        final IErrorMessage errorMessageParam =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        IErrorMessage.ErrorCode.SDT_INT_ERR.name ());
 
-		IErrorLog errorLog = null;
-		errorLog = new ErrorLog(errorMessageParam.getErrorCode(),
-				errorMessageParam.getErrorDescription());
-		submitQueryRequest.reject(errorLog);
+        IErrorLog errorLog = null;
+        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+        submitQueryRequest.reject (errorLog);
 
-	}
+    }
 
-	/**
-	 * Update request when it is processed successfully.
-	 * 
-	 * @param submitQueryRequest
-	 *            submit query request.
-	 */
-	private void updateCompletedRequest(
-			final ISubmitQueryRequest submitQueryRequest) {
-		LOGGER.debug("updateCompletedRequest");
+    /**
+     * Update request when it is processed successfully.
+     * 
+     * @param submitQueryRequest
+     *            submit query request.
+     */
+    private void updateCompletedRequest (final ISubmitQueryRequest submitQueryRequest)
+    {
+        LOGGER.debug ("updateCompletedRequest");
 
-		final String targetAppResponse = queryResponseXmlParser.parse();
+        final String targetAppResponse = queryResponseXmlParser.parse ();
 
-		SdtContext.getContext().setRawOutXml(targetAppResponse);
-	}
+        SdtContext.getContext ().setRawOutXml (targetAppResponse);
+    }
 
-	/**
-	 * Throttle requests.
-	 * 
-	 * @param submitQueryRequest
-	 *            submit query request.
-	 */
-	private void doThrottling(final ISubmitQueryRequest submitQueryRequest) {
-		LOGGER.debug("TODO - throttling");
+    /**
+     * Throttle requests.
+     * 
+     * @param submitQueryRequest
+     *            submit query request.
+     */
+    private void doThrottling (final ISubmitQueryRequest submitQueryRequest)
+    {
+        LOGGER.debug ("TODO - throttling");
 
-	}
+    }
 
-	/**
-	 * Enrich submit query instance to prepare for persistence.
-	 * 
-	 * @param submitQueryRequest
-	 *            submit query request
-	 */
-	private void enrich(final ISubmitQueryRequest submitQueryRequest) {
-		LOGGER.debug("enrich submit query instance");
-		// Get the Bulk Customer from the customer dao for the SDT customer Id
-		final IBulkCustomer bulkCustomer = this
-				.getBulkCustomerDao()
-				.getBulkCustomerBySdtId(
-						submitQueryRequest.getBulkCustomer().getSdtCustomerId());
+    /**
+     * Enrich submit query instance to prepare for persistence.
+     * 
+     * @param submitQueryRequest
+     *            submit query request
+     */
+    private void enrich (final ISubmitQueryRequest submitQueryRequest)
+    {
+        LOGGER.debug ("enrich submit query instance");
+        // Get the Bulk Customer from the customer dao for the SDT customer Id
+        final IBulkCustomer bulkCustomer =
+                this.getBulkCustomerDao ().getBulkCustomerBySdtId (
+                        submitQueryRequest.getBulkCustomer ().getSdtCustomerId ());
 
-		submitQueryRequest.setBulkCustomer(bulkCustomer);
+        submitQueryRequest.setBulkCustomer (bulkCustomer);
 
-		final IBulkCustomerApplication bulkCustomerApplication = bulkCustomer
-				.getBulkCustomerApplication(submitQueryRequest
-						.getTargetApplication().getTargetApplicationCode());
+        final IBulkCustomerApplication bulkCustomerApplication =
+                bulkCustomer.getBulkCustomerApplication (submitQueryRequest.getTargetApplication ()
+                        .getTargetApplicationCode ());
 
-		submitQueryRequest.setTargetApplication(bulkCustomerApplication
-				.getTargetApplication());
-	}
+        submitQueryRequest.setTargetApplication (bulkCustomerApplication.getTargetApplication ());
+    }
 
-	/**
-	 * Extract criteria xml from raw xml that would have been saved by inbound
-	 * interceptor. Write extracted fragment to threadlocal for outbound
-	 * interceptor.
-	 */
-	private void extractAndWriteCriteria() {
+    /**
+     * Extract criteria xml from raw xml that would have been saved by inbound
+     * interceptor. Write extracted fragment to threadlocal for outbound
+     * interceptor.
+     */
+    private void extractAndWriteCriteria ()
+    {
 
-		LOGGER.debug("extract and setup criteria for outbound interceptor");
+        LOGGER.debug ("extract and setup criteria for outbound interceptor");
 
-		final String criteriaXml = queryRequestXmlParser.parse();
+        final String criteriaXml = this.queryRequestXmlParser.parse ();
 
-		// Setup criteria XML so that it can be picked up by the outbound
-		// interceptor and injected into the outbound XML.
-		SdtContext.getContext().setRawOutXml(criteriaXml);
+        // Setup criteria XML so that it can be picked up by the outbound
+        // interceptor and injected into the outbound XML.
+        SdtContext.getContext ().setRawOutXml (criteriaXml);
 
-	}
+    }
 
-	/**
-	 * Send the submit query request to target application for submission.
-	 * 
-	 * @param submitQueryRequest
-	 *            the submit query request to be sent to target application.
-	 * @throws OutageException
-	 *             when the target web service is not responding.
-	 * @throws TimeoutException
-	 *             when the target web service does not respond back in time.
-	 */
-	private void sendRequestToTargetApp(
-			final ISubmitQueryRequest submitQueryRequest)
-			throws OutageException, TimeoutException {
-		final IGlobalParameter connectionTimeOutParam = this.globalParametersCache
-				.getValue(IGlobalParameter.class,
-						IGlobalParameter.ParameterKey.TARGET_APP_TIMEOUT.name());
-		final IGlobalParameter requestTimeOutParam = this.globalParametersCache
-				.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
+    /**
+     * Send the submit query request to target application for submission.
+     * 
+     * @param submitQueryRequest
+     *            the submit query request to be sent to target application.
+     * @throws OutageException
+     *             when the target web service is not responding.
+     * @throws TimeoutException
+     *             when the target web service does not respond back in time.
+     */
+    private void sendRequestToTargetApp (final ISubmitQueryRequest submitQueryRequest)
+        throws OutageException, TimeoutException
+    {
+        final IGlobalParameter connectionTimeOutParam =
+                this.globalParametersCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.TARGET_APP_TIMEOUT.name ());
+        final IGlobalParameter requestTimeOutParam =
+                this.globalParametersCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
 
-		long requestTimeOut = 0;
-		long connectionTimeOut = 0;
+        long requestTimeOut = 0;
+        long connectionTimeOut = 0;
 
-		if (requestTimeOutParam != null) {
-			requestTimeOut = Long.valueOf(requestTimeOutParam.getValue());
-		}
+        if (requestTimeOutParam != null)
+        {
+            requestTimeOut = Long.valueOf (requestTimeOutParam.getValue ());
+        }
 
-		if (connectionTimeOutParam != null) {
-			connectionTimeOut = Long.valueOf(connectionTimeOutParam.getValue());
-		}
+        if (connectionTimeOutParam != null)
+        {
+            connectionTimeOut = Long.valueOf (connectionTimeOutParam.getValue ());
+        }
 
-		this.requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut,
-				requestTimeOut);
-	}
+        this.requestConsumer.submitQuery (submitQueryRequest, connectionTimeOut, requestTimeOut);
+    }
 
-	/**
-	 * 
-	 * @return cacheable interface for the error messages cache.
-	 */
-	public ICacheable getErrorMessagesCache() {
-		return errorMessagesCache;
-	}
+    /**
+     * 
+     * @return cacheable interface for the error messages cache.
+     */
+    public ICacheable getErrorMessagesCache ()
+    {
+        return errorMessagesCache;
+    }
 
-	/**
-	 * 
-	 * @param errorMessagesCache
-	 *            the error messages cache.
-	 */
-	public void setErrorMessagesCache(final ICacheable errorMessagesCache) {
-		this.errorMessagesCache = errorMessagesCache;
-	}
+    /**
+     * 
+     * @param errorMessagesCache
+     *            the error messages cache.
+     */
+    public void setErrorMessagesCache (final ICacheable errorMessagesCache)
+    {
+        this.errorMessagesCache = errorMessagesCache;
+    }
 
-	/**
-	 * Sets the global parameters cache.
-	 * 
-	 * @param globalParametersCache
-	 *            the global parameters cache.
-	 */
-	public void setGlobalParametersCache(final ICacheable globalParametersCache) {
-		this.globalParametersCache = globalParametersCache;
-	}
+    /**
+     * Sets the global parameters cache.
+     * 
+     * @param globalParametersCache
+     *            the global parameters cache.
+     */
+    public void setGlobalParametersCache (final ICacheable globalParametersCache)
+    {
+        this.globalParametersCache = globalParametersCache;
+    }
 
-	/**
-	 * Setter for queryResponseXmlParser.
-	 * 
-	 * @param queryResponseXmlParser
-	 *            the queryResponseXmlParser to set
-	 */
-	public void setQueryResponseXmlParser(
-			final GenericXmlParser queryResponseXmlParser) {
-		this.queryResponseXmlParser = queryResponseXmlParser;
-	}
+    /**
+     * Setter for queryResponseXmlParser.
+     * 
+     * @param queryResponseXmlParser
+     *            the queryResponseXmlParser to set
+     */
+    public void setQueryResponseXmlParser (final GenericXmlParser queryResponseXmlParser)
+    {
+        this.queryResponseXmlParser = queryResponseXmlParser;
+    }
 
-	/**
-	 * Setter for queryRequestXmlParser.
-	 * 
-	 * @param queryRequestXmlParser
-	 *            the queryRequestXmlParser to set
-	 */
-	public void setQueryRequestXmlParser(
-			final GenericXmlParser queryRequestXmlParser) {
-		this.queryRequestXmlParser = queryRequestXmlParser;
-	}
+    /**
+     * Setter for queryRequestXmlParser.
+     * 
+     * @param queryRequestXmlParser
+     *            the queryRequestXmlParser to set
+     */
+    public void setQueryRequestXmlParser (final GenericXmlParser queryRequestXmlParser)
+    {
+        this.queryRequestXmlParser = queryRequestXmlParser;
+    }
 
-	/**
-	 * Get the bulk customer DAO bean.
-	 * 
-	 * @return the Bulk Customer DAO.
-	 */
-	public IBulkCustomerDao getBulkCustomerDao() {
-		return bulkCustomerDao;
-	}
+    /**
+     * Get the bulk customer DAO bean.
+     * 
+     * @return the Bulk Customer DAO.
+     */
+    public IBulkCustomerDao getBulkCustomerDao ()
+    {
+        return bulkCustomerDao;
+    }
 
-	/**
-	 * Sets the Bulk Customer DAO object.
-	 * 
-	 * @param bulkCustomerDao
-	 *            the Bulk Customer Dao.
-	 */
-	public void setBulkCustomerDao(final IBulkCustomerDao bulkCustomerDao) {
-		this.bulkCustomerDao = bulkCustomerDao;
-	}
+    /**
+     * Sets the Bulk Customer DAO object.
+     * 
+     * @param bulkCustomerDao
+     *            the Bulk Customer Dao.
+     */
+    public void setBulkCustomerDao (final IBulkCustomerDao bulkCustomerDao)
+    {
+        this.bulkCustomerDao = bulkCustomerDao;
+    }
 
-	/**
-	 * Sets the consumer gateway.
-	 * 
-	 * @param requestConsumer
-	 *            the request consumer.
-	 */
-	public void setRequestConsumer(final IConsumerGateway requestConsumer) {
-		this.requestConsumer = requestConsumer;
-	}
+    /**
+     * Sets the consumer gateway.
+     * 
+     * @param requestConsumer
+     *            the request consumer.
+     */
+    public void setRequestConsumer (final IConsumerGateway requestConsumer)
+    {
+        this.requestConsumer = requestConsumer;
+    }
 
 }
