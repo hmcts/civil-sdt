@@ -70,12 +70,12 @@ public class GenericXmlParserTest
     }
 
     /**
-     * Test the method to get target app response xml for individual request.
+     * Test the method to get target app response xml for submit query response.
      * 
      * @throws Exception if there is any IO problems
      */
     @Test
-    public void getSubmitQueryResponseRawXml () throws Exception
+    public void testParseSubmitQueryResponseSuccess () throws Exception
     {
         genericXmlParser.setEnclosingTag ("targetAppDetail");
         final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
@@ -123,10 +123,7 @@ public class GenericXmlParserTest
         final String result = this.genericXmlParser.parse ();
 
         // CHECKSTYLE:OFF
-        Assert.assertEquals (
-                "Failed to find expected response",
-                "<ind:mcolResponseDetailxmlns:ind=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\"xmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\"><mresp:claimNumber>21346546</mresp:claimNumber><mresp:issueDate>2001-01-01</mresp:issueDate><mresp:serviceDate>2001-01-01</mresp:serviceDate><mresp:warrantNumber>12345678</mresp:warrantNumber><mresp:enforcingCourtCode>123</mresp:enforcingCourtCode><mresp:enforcingCourtName>CourtCode</mresp:enforcingCourtName><mresp:fee>0</mresp:fee><mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus></ind:mcolResponseDetail>",
-                result.replaceAll ("\\s+", ""));
+        Assert.assertEquals ("Failed to find expected response", "", result);
         // CHECKSTYLE:ON
     }
 
