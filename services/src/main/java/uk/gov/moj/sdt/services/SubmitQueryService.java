@@ -31,6 +31,9 @@
 
 package uk.gov.moj.sdt.services;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.xml.ws.WebServiceException;
 
 import org.slf4j.Logger;
@@ -98,6 +101,11 @@ public class SubmitQueryService implements ISubmitQueryService
      */
     private IBulkCustomerDao bulkCustomerDao;
 
+    /**
+     * threshold for incoming requests for each target application.
+     */
+    private Map<String, Integer> concurrentRequestsInProgress = new ConcurrentHashMap<String, Integer> ();
+
     @Override
     public void submitQuery (final ISubmitQueryRequest submitQueryRequest)
     {
@@ -146,6 +154,13 @@ public class SubmitQueryService implements ISubmitQueryService
                     submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]", e.getMessage ());
             // Update the request with reason
             this.updateRequestSoapError (submitQueryRequest, e.getMessage ());
+        }
+        finally
+        {
+            final String targetApp =
+                    submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
+            // decrease concurrent submit query requests count
+            this.concurrentRequestsInProgress.put (targetApp, this.concurrentRequestsInProgress.get (targetApp) - 1);
         }
 
         LOGGER.debug ("Submit query request " + submitQueryRequest.getId () + " processing completed.");
@@ -233,7 +248,48 @@ public class SubmitQueryService implements ISubmitQueryService
      */
     private void doThrottling (final ISubmitQueryRequest submitQueryRequest)
     {
-        LOGGER.debug ("TODO - throttling");
+        // 1. get target application code e.g. MCOL.
+        final String targetAppName =
+                submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
+        int requestsInProgress;
+
+        // 2. retrieve number of requests in progress from local map.
+        if (this.concurrentRequestsInProgress.containsKey (targetAppName))
+        {
+            requestsInProgress = this.concurrentRequestsInProgress.get (targetAppName);
+        }
+        else
+        {
+            // this is first request for this target app
+            requestsInProgress = 0;
+            this.concurrentRequestsInProgress.put (targetAppName, requestsInProgress);
+        }
+
+        // 3. retrieve max concurrent submit query requests allowed for this target application
+        final String concurrentQueryReqParamName =
+                targetAppName + "_" + IGlobalParameter.ParameterKey.MAX_CONCURRENT_QUERY_REQ.name ();
+        final String maxConcurrentQueryRequests = this.getSystemParameter (concurrentQueryReqParamName);
+
+        // 4. if within - increase value in map and process request
+        if (requestsInProgress < Integer.valueOf (maxConcurrentQueryRequests))
+        {
+            this.concurrentRequestsInProgress.put (targetAppName, requestsInProgress + 1);
+        }
+        else
+        // reject request
+        {
+            LOGGER.warn ("Threshold reached - in progress [" + requestsInProgress + "] max allowed [" +
+                    maxConcurrentQueryRequests + "]");
+            // Get the Error message to indicate that maximum submit query reached.
+            final IErrorMessage errorMessageParam =
+                    this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                            IErrorMessage.ErrorCode.TAR_APP_BUSY.name ());
+
+            IErrorLog errorLog = null;
+            errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+            submitQueryRequest.reject (errorLog);
+
+        }
 
     }
 
@@ -395,6 +451,26 @@ public class SubmitQueryService implements ISubmitQueryService
     public void setRequestConsumer (final IConsumerGateway requestConsumer)
     {
         this.requestConsumer = requestConsumer;
+    }
+
+    /**
+     * Return the named parameter value from global parameters.
+     * 
+     * @param parameterName the name of the parameter.
+     * @return value of the parameter name as stored in the database.
+     */
+    private String getSystemParameter (final String parameterName)
+    {
+        final IGlobalParameter globalParameter =
+                this.globalParametersCache.getValue (IGlobalParameter.class, parameterName);
+
+        if (globalParameter == null)
+        {
+            return null;
+        }
+
+        return globalParameter.getValue ();
+
     }
 
 }

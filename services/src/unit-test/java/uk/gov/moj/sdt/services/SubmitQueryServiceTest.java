@@ -153,6 +153,13 @@ public class SubmitQueryServiceTest
         EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
                 .andReturn (receiveTimeOutParam);
 
+        final IGlobalParameter maxQueryReq = new GlobalParameter ();
+        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setValue ("5");
+        EasyMock.expect (
+                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+                .andReturn (maxQueryReq);
+
         final TimeoutException timeoutEx = new TimeoutException ("TIMEOUT_ERROR", "Timeout occurred");
         this.mockConsumerGateway.submitQuery (submitQueryRequest, 1000, 12000);
         EasyMock.expectLastCall ().andThrow (timeoutEx);
