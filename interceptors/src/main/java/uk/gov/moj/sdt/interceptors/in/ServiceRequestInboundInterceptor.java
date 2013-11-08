@@ -44,7 +44,7 @@ import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.ServerIpAddress;
+import uk.gov.moj.sdt.utils.ServerHostName;
 
 /**
  * Class to intercept incoming messages and log them to the database.
@@ -116,7 +116,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         serviceRequest.setRequestType (extractRequestType ());
         
         //Get the server Host Name
-        final String hostName = ServerIpAddress.getIPaddress ();
+        final String hostName = ServerHostName.getHostName ();
         serviceRequest.setServerHostName (hostName);
 
         serviceRequestDao.persist (serviceRequest);

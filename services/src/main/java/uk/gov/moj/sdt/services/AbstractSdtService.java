@@ -30,11 +30,15 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.GenericXmlParser;
 
@@ -81,27 +85,27 @@ public abstract class AbstractSdtService
         // Check if all the individual request for the bulk submission are either ACCEPTED or REJECTED
         // If all the requests are Accepted or Rejected, mark the bulk submission as Complete.
 
-        // final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
-        //
-        // final String[] completeRequestStatus =
-        // new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
-        // IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
-        //
-        // final List<IIndividualRequest> requests =
-        // this.getIndividualRequestDao ().queryAsList (IIndividualRequest.class,
-        // Restrictions.eq ("sdtBulkReference", bulkSubmission.getSdtBulkReference ()),
-        // Restrictions.not (Restrictions.in ("requestStatus", completeRequestStatus)));
-        //
-        // if (requests == null || requests.isEmpty ())
-        // {
-        //
-        // LOGGER.debug ("All Individual Requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +
-        // "] have been processed now. Marking the bulk submission as Completed");
-        //
-        // bulkSubmission.markAsCompleted ();
-        //
-        // this.getIndividualRequestDao ().persist (bulkSubmission);
-        // }
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+
+        final String[] completeRequestStatus =
+                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
+                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
+
+        final List<IIndividualRequest> requests =
+                this.getIndividualRequestDao ().queryAsList (IIndividualRequest.class,
+                        Restrictions.eq ("sdtBulkReference", bulkSubmission.getSdtBulkReference ()),
+                        Restrictions.not (Restrictions.in ("requestStatus", completeRequestStatus)));
+
+        if (requests == null || requests.isEmpty ())
+        {
+
+            LOGGER.debug ("All Individual Requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +
+                    "] have been processed now. Marking the bulk submission as Completed");
+
+            bulkSubmission.markAsCompleted ();
+
+            this.getIndividualRequestDao ().persist (bulkSubmission);
+        }
 
     }
 

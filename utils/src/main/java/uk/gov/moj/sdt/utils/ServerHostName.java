@@ -44,43 +44,42 @@ import org.slf4j.LoggerFactory;
  * 
  */
 // CHECKSTYLE:OFF
-public class ServerIpAddress
-// CHECKSTYLE:ON
+public class ServerHostName
 {
     /**
-     * Constant to indicate that the IP address is not yet known.
+     * Constant to indicate that the host name is not yet known.
      */
-    private static final String UNKNOWN_ADDRESS = "UNKNOWN";
+    private static final String UNKNOWN_HOST_NAME = "UNKNOWN";
 
     /**
      * Logger for this class.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (ServerIpAddress.class);
+    private static final Logger LOG = LoggerFactory.getLogger (ServerHostName.class);
 
     /**
-     * The IP address of the server machine.
+     * The host name of the server machine.
      */
-    private static String ipAddress;
+    private static String hostName;
 
     /**
-     * Gets the IP address of the server machine.
+     * Gets the host name of the server machine.
      * 
-     * @return the IP address of the server machine.
+     * @return the host name of the server machine.
      */
-    public static String getIPaddress ()
+    public static String getHostName ()
     {
-        if (StringUtils.isEmpty (ipAddress) || UNKNOWN_ADDRESS.equals (ipAddress))
+        if (StringUtils.isEmpty (hostName) || UNKNOWN_HOST_NAME.equals (hostName))
         {
             try
             {
-                ipAddress = InetAddress.getLocalHost ().getHostAddress ();
+                hostName = InetAddress.getLocalHost ().getHostName ();
             }
             catch (final UnknownHostException e)
             {
-                ipAddress = UNKNOWN_ADDRESS;
-                LOG.warn ("An exception occured while retrieving host address", e);
+                hostName = UNKNOWN_HOST_NAME;
+                LOG.warn ("An exception occured while retrieving host name", e);
             }
         }
-        return ipAddress;
+        return hostName;
     }
 }
