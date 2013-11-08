@@ -597,6 +597,7 @@
           <xs:element name="interest" type="xs:unsignedLong" minOccurs="0"/>
           <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0"/>
           <xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0"/>
+          <xs:element name="judgmentAmount" type="xs:unsignedLong" minOccurs="0"/>
           <xs:element name="payee" type="tns:payeeType" minOccurs="0"/>
           <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
@@ -652,12 +653,13 @@
       <xs:complexType name="mcolDefenceDetailType">
         <xs:sequence>
           <xs:element name="claimNumber" type="base:claimNumberType"/>
-          <xs:element name="defendant" type="tns:defendantType"/>
+          <xs:element name="defendantResponse" type="tns:defendantResponseType"/>
         </xs:sequence>
       </xs:complexType>
-      <xs:complexType name="defendantType">
+      <xs:complexType name="defendantResponseType">
         <xs:sequence>
           <xs:element name="filedDate" type="xs:dateTime"/>
+          <xs:element name="raisedOnMcol" type="xs:boolean"/>
           <xs:element name="responseType" type="tns:responseType"/>
         </xs:sequence>
         <xs:attribute name="defendantId" type="base:defendantIdType" use="required"/>
@@ -679,6 +681,7 @@
           <xs:element name="claimNumber" type="base:claimNumberType" minOccurs="0"/>
           <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
           <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
+          <xs:element name="firstPaymentDate" type="xs:date" minOccurs="0"/>
           <xs:element name="warrantNumber" type="base:warrantNumberType" minOccurs="0"/>
           <xs:element name="enforcingCourtCode" type="base:courtCodeType" minOccurs="0"/>
           <xs:element name="enforcingCourtName" type="base:courtNameType" minOccurs="0"/>
@@ -798,9 +801,13 @@
       </xs:complexType>
       <xs:complexType name="responseType">
         <xs:sequence>
-          <xs:choice>
-            <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" minOccurs="0"/>
-          </xs:choice>
+          <xs:element name="responseDetail">
+            <xs:complexType>
+              <xs:choice>
+                <xs:element name="mcolResponseDetail" type="mresp:responseDetailType" minOccurs="0"/>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
           <xs:element name="status" type="base:individualStatusType"/>
         </xs:sequence>
         <xs:attribute name="requestType" type="xs:string" use="required"/>
@@ -809,7 +816,7 @@
       <xs:complexType name="bulkFeedbackResponseType">
         <xs:sequence>
           <xs:element name="bulkRequestStatus" type="tns:bulkRequestStatusType"/>
-          <xs:element name="responses" type="tns:responsesType"/>
+          <xs:element name="responses" type="tns:responsesType" minOccurs="0"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="bulkFeedbackResponse" type="tns:bulkFeedbackResponseType"/>
@@ -934,7 +941,7 @@
       <soap:address location="http://ws.sdt.moj.gov.uk/sdt/service"/>
     </port>
   </service>
-</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="getBulkFeedback" bindingOperationName="getBulkFeedback" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:endpoint>http://ws.sdt.moj.gov.uk/sdt/service</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="getBulkFeedback" bindingOperationName="getBulkFeedback" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
    <soap:Header/>
    <soap:Body>
       <bul:bulkFeedbackRequest>
@@ -954,7 +961,7 @@
          </bul:header>
       </bul:bulkFeedbackRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/getBulkFeedbackRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid (2)"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/getBulkFeedbackRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid (2)"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
    <soap:Header/>
    <soap:Body>
       <bul:bulkFeedbackRequest>
@@ -1068,7 +1075,7 @@
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
       <sub:submitQueryRequest>

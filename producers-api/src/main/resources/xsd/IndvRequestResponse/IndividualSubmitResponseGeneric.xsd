@@ -17,7 +17,7 @@
     <xs:complexType name="individualResponseType">
         <xs:sequence>
             <xs:element name="header" type="tns:headerType"/>
-            <xs:element name="targetAppDetail">
+            <xs:element name="targetAppDetail" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:any processContents="lax"/>

@@ -7,24 +7,27 @@
     <results>
 		<mcolDefenceDetail>
 		  <claimNumber>12345678</claimNumber>
-          <defendant defendantId="1">
+          <defendantResponse defendantId="1">
             <filedDate>2001-12-31T12:00:00</filedDate>
+            <raisedOnMcol>true</raisedOnMcol>
             <responseType>PA</responseType>
-          </defendant>
+          </defendantResponse>
 		</mcolDefenceDetail>
         <mcolDefenceDetail>
           <claimNumber>12345678</claimNumber>
-          <defendant defendantId="1">
+          <defendantResponse defendantId="1">
             <filedDate>2001-12-31T12:00:00</filedDate>
+            <raisedOnMcol>true</raisedOnMcol>
             <responseType>PA</responseType>
-          </defendant>
+          </defendantResponse>
         </mcolDefenceDetail>
         <mcolDefenceDetail>
           <claimNumber>22345678</claimNumber>
-          <defendant defendantId="1">
+          <defendantResponse defendantId="1">
             <filedDate>2001-12-31T12:00:00</filedDate>
+            <raisedOnMcol>true</raisedOnMcol>
             <responseType>PA</responseType>
-          </defendant>
+          </defendantResponse>
         </mcolDefenceDetail>
     </results>
     <status code="OK/Error">

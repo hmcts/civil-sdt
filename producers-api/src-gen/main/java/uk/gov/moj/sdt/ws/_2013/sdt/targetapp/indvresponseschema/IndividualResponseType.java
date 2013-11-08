@@ -21,7 +21,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="header" type="{http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema}headerType"/>
- *         &lt;element name="targetAppDetail">
+ *         &lt;element name="targetAppDetail" minOccurs="0">
  *           &lt;complexType>
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -51,7 +51,6 @@ public class IndividualResponseType {
 
     @XmlElement(required = true)
     protected HeaderType header;
-    @XmlElement(required = true)
     protected IndividualResponseType.TargetAppDetail targetAppDetail;
     @XmlElement(required = true)
     protected CreateStatusType status;

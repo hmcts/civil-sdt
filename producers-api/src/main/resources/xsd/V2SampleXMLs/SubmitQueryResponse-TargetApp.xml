@@ -4,27 +4,29 @@
     <targetAppCustomerId>1234</targetAppCustomerId>
     <resultCount>3</resultCount>
 	<targetAppDetail>
-		<mcolDefenceDetail>
-		  <claimNumber>12345678</claimNumber>
-          <defendants>
-            <defendant defendantId="1">
-              <filedDate>2001-12-31T12:00:00</filedDate>
-              <responseType>PA</responseType>
-            </defendant>
-            <defendant defendantId="2">
-              <filedDate>2001-12-31T12:00:00</filedDate>
-              <responseType>PA</responseType>
-            </defendant>
-          </defendants>
-		</mcolDefenceDetail>
+        <mcolDefenceDetail>
+          <claimNumber>12345678</claimNumber>
+          <defendantResponse defendantId="1">
+            <filedDate>2001-12-31T12:00:00</filedDate>
+            <raisedOnMcol>true</raisedOnMcol>
+            <responseType>PA</responseType>
+          </defendantResponse>
+        </mcolDefenceDetail>
+        <mcolDefenceDetail>
+          <claimNumber>12345678</claimNumber>
+          <defendantResponse defendantId="1">
+            <filedDate>2001-12-31T12:00:00</filedDate>
+            <raisedOnMcol>true</raisedOnMcol>
+            <responseType>PA</responseType>
+          </defendantResponse>
+        </mcolDefenceDetail>
         <mcolDefenceDetail>
           <claimNumber>22345678</claimNumber>
-          <defendants>
-            <defendant defendantId="1">
-              <filedDate>2001-12-31T12:00:00</filedDate>
-              <responseType>PA</responseType>
-            </defendant>
-          </defendants>
+          <defendantResponse defendantId="1">
+            <filedDate>2001-12-31T12:00:00</filedDate>
+            <raisedOnMcol>true</raisedOnMcol>
+            <responseType>PA</responseType>
+          </defendantResponse>
         </mcolDefenceDetail>
 	</targetAppDetail>
     <status code="OK/Error">

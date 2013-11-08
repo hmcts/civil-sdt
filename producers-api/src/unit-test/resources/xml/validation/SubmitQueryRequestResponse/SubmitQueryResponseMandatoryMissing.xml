@@ -10,10 +10,11 @@
   <tns:resultCount>0</tns:resultCount>
   <tns:results>
       <tns:mcolDefenceDetail>
-        <tns2:defendant defendantId="1">
+        <tns2:defendantResponse defendantId="1">
           <tns2:filedDate>2001-12-31T12:00:00</tns2:filedDate>
+          <tns2:raisedOnMcol>true</tns2:raisedOnMcol>
           <tns2:responseType>DE</tns2:responseType>
-        </tns2:defendant>
+        </tns2:defendantResponse>
       </tns:mcolDefenceDetail>
   </tns:results>
 </tns:submitQueryResponse>

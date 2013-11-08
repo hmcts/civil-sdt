@@ -263,6 +263,7 @@
             <xs:element name="interest" type="xs:unsignedLong" minOccurs="0"/>
             <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0"/>
             <xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0"/>
+            <xs:element name="judgmentAmount" type="xs:unsignedLong" minOccurs="0"/>
             <xs:element name="payee" type="tns:payeeType" minOccurs="0"/>
             <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>

@@ -16,10 +16,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
   <tns:results>
     <tns:mcolDefenceDetail>
       <mquer:claimNumber>13548968</mquer:claimNumber>
-      <mquer:defendant defendantId="1">
+      <mquer:defendantResponse defendantId="1">
           <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+          <mquer:raisedOnMcol>true</mquer:raisedOnMcol>
           <mquer:responseType>DE</mquer:responseType>
-      </mquer:defendant>
+      </mquer:defendantResponse>
     </tns:mcolDefenceDetail>
   </tns:results>
 </tns:submitQueryResponse>

@@ -693,6 +693,7 @@
                     <xs:element name="interest" type="xs:unsignedLong" minOccurs="0"/>
                     <xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0"/>
                     <xs:element name="deductedAmount" type="xs:unsignedLong" minOccurs="0"/>
+                    <xs:element name="judgmentAmount" type="xs:unsignedLong" minOccurs="0"/>
                     <xs:element name="payee" type="tns:payeeType" minOccurs="0"/>
                     <xs:element name="sotSignature" type="base:sotSignatureType"/>
                 </xs:sequence>
@@ -766,13 +767,14 @@
             <xs:complexType name="mcolDefenceDetailType">
                 <xs:sequence>
                     <xs:element name="claimNumber" type="base:claimNumberType" />
-                    <xs:element name="defendant" type="tns:defendantType"/>
+                    <xs:element name="defendantResponse" type="tns:defendantResponseType"/>
                 </xs:sequence>
             </xs:complexType>
         
-            <xs:complexType name="defendantType">
+            <xs:complexType name="defendantResponseType">
                 <xs:sequence>
                     <xs:element name="filedDate" type="xs:dateTime" />
+                    <xs:element name="raisedOnMcol" type="xs:boolean" />
                     <xs:element name="responseType" type="tns:responseType" />
                 </xs:sequence>
                 <xs:attribute name="defendantId" type="base:defendantIdType" use="required" />
@@ -805,6 +807,7 @@
 		            <xs:element name="claimNumber" type="base:claimNumberType"  minOccurs="0"/>
 		            <xs:element name="issueDate" type="xs:date" minOccurs="0"/>
 		            <xs:element name="serviceDate" type="xs:date" minOccurs="0"/>
+                    <xs:element name="firstPaymentDate" type="xs:date" minOccurs="0"/>
 		            <xs:element name="warrantNumber" type="base:warrantNumberType"  minOccurs="0"/>
 		            <xs:element name="enforcingCourtCode" type="base:courtCodeType"  minOccurs="0"/>
 		            <xs:element name="enforcingCourtName" type="base:courtNameType"  minOccurs="0"/>
