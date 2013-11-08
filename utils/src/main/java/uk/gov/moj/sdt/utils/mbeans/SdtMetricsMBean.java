@@ -93,7 +93,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Static logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (SdtMetricsMBean.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SdtMetricsMBean.class);
 
     /**
      * The singleton instance of this class created by Spring.
@@ -1236,6 +1236,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void upRequestQueueLength ()
     {
         this.requestQueueLength += 1;
+        LOGGER.debug ("Upping queue length to " + this.requestQueueLength);
 
         if (this.requestQueueLength > this.requestQueueLengthMax)
         {
@@ -1247,6 +1248,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void decrementRequestQueueLength ()
     {
         this.requestQueueLength -= 1;
+        LOGGER.debug ("Decrementing queue length to " + this.requestQueueLength);
     }
 
     @Override
@@ -1336,7 +1338,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public void reset ()
     {
-        LOG.debug ("Resetting SDT metrics");
+        LOGGER.debug ("Resetting SDT metrics");
 
         this.bulkSubmitCounts = 0;
         this.bulkSubmitLastTime = 0;
@@ -1565,7 +1567,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         if (thisBean == null)
         {
             thisBean = new SdtMetricsMBean ();
-            LOG.debug ("Initialised SdtMetricsMBean");
+            LOGGER.debug ("Initialised SdtMetricsMBean");
         }
         return SdtMetricsMBean.thisBean;
     }

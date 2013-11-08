@@ -402,6 +402,9 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         // Left padd the line number with 0 to a maximum of 7 characters
         final String paddedLineNumber = StringUtils.leftPad (String.valueOf (lineNumber), 7, "0");
 
+        // Count requests.
+        SdtMetricsMBean.getSdtMetrics ().upRequestCount ();
+
         // SDT Request Reference consists of <SDT Bulk Reference>-<zero padded line number>
         sdtRequestReference = sdtBulkReference + "-" + paddedLineNumber;
 

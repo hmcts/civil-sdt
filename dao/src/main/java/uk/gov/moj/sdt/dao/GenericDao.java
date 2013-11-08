@@ -138,9 +138,6 @@ public class GenericDao implements IGenericDao
         final Criteria criteria = session.createCriteria (domainType);
         criteria.add (Restrictions.eq ("id", id));
 
-        // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBulkSubmitCounts ();
-
         // Get unique result using criteria and assign to domain object. This will be a tree of objects up to lazy
         // boundaries
         final Object o = criteria.uniqueResult ();

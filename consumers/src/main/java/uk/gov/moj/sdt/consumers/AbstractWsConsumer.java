@@ -174,10 +174,6 @@ public abstract class AbstractWsConsumer
             // Target application must be unavailable - update stats.
             SdtMetricsMBean.getSdtMetrics ().upTargetAppUnavailable ();
 
-            // We are about to abort the transaction; treat this message as never read and therefore reverse decrement
-            // of queue count done earlier.
-            SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
-
             throw new OutageException ("OUTAGE_ERROR", wsException.getMessage ());
         }
         // If the target application is unavailable continue trying to send message indefinitely.
@@ -204,10 +200,6 @@ public abstract class AbstractWsConsumer
         {
             // Target application must be unavailable - update stats.
             SdtMetricsMBean.getSdtMetrics ().upTargetAppSoapErrors ();
-
-            // We are about to abort the transaction; treat this message as never read and therefore reverse decrement
-            // of queue count done earlier.
-            SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
 
             throw new SoapFaultException ("SOAP_FAULT", wsException.getMessage ());
         }

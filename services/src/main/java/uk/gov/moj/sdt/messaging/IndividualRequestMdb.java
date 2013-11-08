@@ -116,7 +116,25 @@ public class IndividualRequestMdb implements IMessageDrivenBean
                 PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_6, "Dequeue message",
                         detail.toString ());
             }
-            this.getTargetAppSubmissionService ().processRequestToSubmit (sdtReference);
+
+            try
+            {
+                this.getTargetAppSubmissionService ().processRequestToSubmit (sdtReference);
+            }
+            // CHECKSTYLE:OFF
+            catch (final RuntimeException e)
+            {
+                LOGGER.error ("Fatal exception encountered in " +
+                        this.getTargetAppSubmissionService ().getClass ().getSimpleName ());
+
+                // We are about to abort the transaction; treat this message as never read and therefore reverse
+                // decrement
+                // of queue count done earlier.
+                SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
+
+                // Rethrow it.
+                throw e;
+            }
         }
         else
         {
