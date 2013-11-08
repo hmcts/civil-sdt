@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -24,79 +24,71 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-package uk.gov.moj.sdt.validators.exception;
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
 
-import java.util.List;
+package uk.gov.moj.sdt.validators;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.gov.moj.sdt.domain.ServiceType;
 
 /**
- * SDT Customer Reference not found.
+ * Tests for {@link ServiceTypeValidatorTest}.
  * 
- * @author d130680
+ * 
+ * 
+ * @author d120520
  * 
  */
-public class CustomerReferenceNotFoundException extends AbstractBusinessException
+
+public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest
 {
-    /**
-     * The Constant serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
 
     /**
-     * SDT Customer Reference not found.
-     * 
-     * @param code error code
-     * @param description error description
+     * Logger.
      */
-    public CustomerReferenceNotFoundException (final String code, final String description)
+    private static final Log LOGGER = LogFactory.getLog (ServiceTypeValidatorTest.class);
+
+    /**
+     * Test subject.
+     */
+    private ServiceTypeValidator validator;
+
+    /**
+     * Constructor for test.
+     * 
+     * @param testName name of this test class.
+     */
+    public ServiceTypeValidatorTest (final String testName)
     {
-        super (code, description);
+        super (testName);
     }
 
     /**
-     * SDT Customer Reference not found.
-     * 
-     * @param code code
-     * @param description description
-     * @param replacements string replacements with tokens
+     * Setup of the Validator and Domain class instance.
      */
-    public CustomerReferenceNotFoundException (final String code, final String description,
-            final List<String> replacements)
+    @Before
+    public void setUp ()
     {
-        super (code, description, replacements);
+        // subject of test
+        validator = new ServiceTypeValidator ();
     }
 
     /**
-     * SDT Customer Reference not found.
-     * 
-     * @param s the s
+     * The purpose of this test is to test successful scenario.
      */
-    public CustomerReferenceNotFoundException (final String s)
+    @Test
+    public void testSuccess ()
     {
-        super (s);
+        validator.visit (new ServiceType (), null);
+
+        // Nothing to verify as validator implementation is empty.
     }
 
-    /**
-     * SDT Customer Reference not found.
-     * 
-     * @param cause the cause
-     */
-    public CustomerReferenceNotFoundException (final Throwable cause)
-    {
-        super (cause);
-    }
-
-    /**
-     * SDT Customer Reference not found.
-     * 
-     * @param s the s
-     * @param cause the cause
-     */
-    public CustomerReferenceNotFoundException (final String s, final Throwable cause)
-    {
-        super (s, cause);
-    }
 }
