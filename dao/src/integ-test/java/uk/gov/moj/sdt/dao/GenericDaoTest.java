@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.dao;
 
 import org.hibernate.criterion.Restrictions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -106,6 +107,23 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
     }
 
     /**
+     * Test method for query as count.
+     */
+    @Test
+    public void testQueryAsCount ()
+    {
+        final IGenericDao genericDao =
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+
+        final long customerCount = genericDao.queryAsCount (BulkCustomer.class, Restrictions.eq ("sdtCustomerId", 2L));
+
+        if (customerCount == 1)
+        {
+            Assert.assertTrue ("Found expected number of rows", true);
+        }
+    }
+
+    /**
      * Tests the global parameter.
      */
     @Test
@@ -141,4 +159,5 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 
         genericDao.persist (bulkCustomer);
     }
+
 }
