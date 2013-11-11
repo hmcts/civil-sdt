@@ -42,6 +42,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
+import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -131,11 +133,10 @@ public class SubmitQueryServiceTest
     }
 
     /**
-     * Test method to test for the time out.
+     * Unit test method to test for request timed out.
      */
-    @SuppressWarnings ("unchecked")
     @Test
-    public void processRequestToSubmitTimeOut ()
+    public void testSubmitQueryRequestTimeout ()
     {
         final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
 
@@ -171,6 +172,119 @@ public class SubmitQueryServiceTest
 
         EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "TAR_APP_ERROR")).andReturn (
                 errorMsg);
+
+        EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockGlobalParamCache);
+        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay (mockBulkCustomerDao);
+
+        SdtContext.getContext ().setRawInXml ("response");
+        this.submitQueryService.submitQuery (submitQueryRequest);
+
+        EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockGlobalParamCache);
+        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertTrue ("Expected to pass", true);
+    }
+
+    /**
+     * Unit test method to test server outage exception.
+     */
+    @Test
+    public void testSubmitQueryRequestOutage ()
+    {
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
+
+        setUpSubmitQueryRequest (submitQueryRequest);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
+        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue ("1000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+                connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
+        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue ("12000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
+                .andReturn (receiveTimeOutParam);
+
+        final IGlobalParameter maxQueryReq = new GlobalParameter ();
+        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setValue ("5");
+        EasyMock.expect (
+                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+                .andReturn (maxQueryReq);
+
+        final OutageException outageEx = new OutageException ("OUTAGE_ERROR", "Server unavailable.");
+        this.mockConsumerGateway.submitQuery (submitQueryRequest, 1000, 12000);
+        EasyMock.expectLastCall ().andThrow (outageEx);
+
+        final IErrorMessage errorMsg = new ErrorMessage ();
+        errorMsg.setErrorCode ("TAR_APP_ERROR");
+        errorMsg.setErrorDescription ("Server unavailable.");
+        errorMsg.setErrorText ("The system encountered a problem.");
+
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "TAR_APP_ERROR")).andReturn (
+                errorMsg);
+
+        EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockGlobalParamCache);
+        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay (mockBulkCustomerDao);
+
+        SdtContext.getContext ().setRawInXml ("response");
+        this.submitQueryService.submitQuery (submitQueryRequest);
+
+        EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockGlobalParamCache);
+        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertTrue ("Expected to pass", true);
+    }
+
+    /**
+     * Unit test method to test server soap fault exception.
+     */
+    @Test
+    public void testSubmitQueryRequestSoapFault ()
+    {
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
+
+        setUpSubmitQueryRequest (submitQueryRequest);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
+        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue ("1000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+                connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
+        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue ("12000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
+                .andReturn (receiveTimeOutParam);
+
+        final IGlobalParameter maxQueryReq = new GlobalParameter ();
+        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setValue ("5");
+        EasyMock.expect (
+                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+                .andReturn (maxQueryReq);
+
+        final SoapFaultException soapFaultEx = new SoapFaultException ("SOAPFAULT_ERROR", "Soap fault occurred");
+        this.mockConsumerGateway.submitQuery (submitQueryRequest, 1000, 12000);
+        EasyMock.expectLastCall ().andThrow (soapFaultEx);
+
+        final IErrorMessage errorMsg = new ErrorMessage ();
+        errorMsg.setErrorCode ("SDT_INT_ERR");
+        errorMsg.setErrorDescription ("SDT Internal Error.");
+        errorMsg.setErrorText ("SDT Internal Error.");
+
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
 
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockGlobalParamCache);

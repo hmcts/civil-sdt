@@ -31,8 +31,8 @@
 
 package uk.gov.moj.sdt.services;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.ws.WebServiceException;
 
@@ -104,7 +104,7 @@ public class SubmitQueryService implements ISubmitQueryService
     /**
      * threshold for incoming requests for each target application.
      */
-    private Map<String, Integer> concurrentRequestsInProgress = new ConcurrentHashMap<String, Integer> ();
+    private Map<String, Integer> concurrentRequestsInProgress = new HashMap<String, Integer> ();
 
     @Override
     public void submitQuery (final ISubmitQueryRequest submitQueryRequest)
@@ -159,8 +159,12 @@ public class SubmitQueryService implements ISubmitQueryService
         {
             final String targetApp =
                     submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
-            // decrease concurrent submit query requests count
-            this.concurrentRequestsInProgress.put (targetApp, this.concurrentRequestsInProgress.get (targetApp) - 1);
+            synchronized (this)
+            {
+                // decrease concurrent submit query requests count
+                this.concurrentRequestsInProgress
+                        .put (targetApp, this.concurrentRequestsInProgress.get (targetApp) - 1);
+            }
         }
 
         LOGGER.debug ("Submit query request " + submitQueryRequest.getId () + " processing completed.");
@@ -246,14 +250,19 @@ public class SubmitQueryService implements ISubmitQueryService
      * @param submitQueryRequest
      *            submit query request.
      */
-    private void doThrottling (final ISubmitQueryRequest submitQueryRequest)
+    private synchronized void doThrottling (final ISubmitQueryRequest submitQueryRequest)
     {
         // 1. get target application code e.g. MCOL.
         final String targetAppName =
                 submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
+        // 2. retrieve max concurrent submit query requests allowed for this target application
+        final String concurrentQueryReqParamName =
+                targetAppName + "_" + IGlobalParameter.ParameterKey.MAX_CONCURRENT_QUERY_REQ.name ();
+        final String maxConcurrentQueryRequests = this.getSystemParameter (concurrentQueryReqParamName);
+
         int requestsInProgress;
 
-        // 2. retrieve number of requests in progress from local map.
+        // 3. retrieve number of requests in progress from local map.
         if (this.concurrentRequestsInProgress.containsKey (targetAppName))
         {
             requestsInProgress = this.concurrentRequestsInProgress.get (targetAppName);
@@ -264,11 +273,6 @@ public class SubmitQueryService implements ISubmitQueryService
             requestsInProgress = 0;
             this.concurrentRequestsInProgress.put (targetAppName, requestsInProgress);
         }
-
-        // 3. retrieve max concurrent submit query requests allowed for this target application
-        final String concurrentQueryReqParamName =
-                targetAppName + "_" + IGlobalParameter.ParameterKey.MAX_CONCURRENT_QUERY_REQ.name ();
-        final String maxConcurrentQueryRequests = this.getSystemParameter (concurrentQueryReqParamName);
 
         // 4. if within - increase value in map and process request
         if (requestsInProgress < Integer.valueOf (maxConcurrentQueryRequests))
