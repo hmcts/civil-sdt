@@ -126,8 +126,8 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
         // Get the client interface
         final ITargetAppInternalEndpointPortType client =
-                super.getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name (),
-                        webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+                getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name (), webServiceEndPoint,
+                        connectionTimeOut, receiveTimeOut);
 
         // Loop until the target application becomes available.
         int attemptCount = 0;

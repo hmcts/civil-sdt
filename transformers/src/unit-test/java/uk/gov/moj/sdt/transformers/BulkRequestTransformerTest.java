@@ -31,19 +31,27 @@
 package uk.gov.moj.sdt.transformers;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestsType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
  * Unit tests for BulkRequestTransformer.
@@ -173,6 +181,61 @@ public class BulkRequestTransformerTest extends TestCase
     @Test
     public void testTransformDomainToJaxb ()
     {
-        // TODO - method hasn't been implemented yet
+        // Set up the domain object to transform
+        final IBulkSubmission domain = new BulkSubmission ();
+        final long numberOfRequest = 8;
+        final String sdtBulkReference = "A123456789";
+        final String customerRef = "C10000123";
+        final LocalDateTime createdDate = new LocalDateTime ();
+        final String submissionStatus = "Uploaded";
+
+        domain.setNumberOfRequest (numberOfRequest);
+        domain.setSdtBulkReference (sdtBulkReference);
+        domain.setCustomerReference (customerRef);
+        domain.setCreatedDate (createdDate);
+        domain.setSubmissionStatus (submissionStatus);
+
+        // Setup some individual requests
+        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
+        final String customerRequestReference1 = "request 1";
+        IndividualRequest ir = new IndividualRequest ();
+        ir.setCustomerRequestReference (customerRequestReference1);
+        ir.setRequestStatus (IndividualStatusCodeType.ACCEPTED.value ());
+        individualRequests.add (ir);
+
+        ir = new IndividualRequest ();
+        final String customerRequestReference2 = "request 2";
+        ir.setCustomerRequestReference (customerRequestReference2);
+        ir.setRequestStatus (IndividualStatusCodeType.RECEIVED.value ());
+        individualRequests.add (ir);
+
+        // Set one up as rejected so an error log can be created
+        ir = new IndividualRequest ();
+        final String customerRequestReference3 = "request 3";
+        ir.setCustomerRequestReference (customerRequestReference3);
+        ir.setRequestStatus (IndividualStatusCodeType.REJECTED.value ());
+
+        // Set the error log and message
+        final String errorCode = "87";
+        final String errorText = "Specified claim does not belong to the requesting customer.";
+        final ErrorLog errorLog = new ErrorLog (errorCode, errorText);
+        ir.setErrorLog (errorLog);
+        individualRequests.add (ir);
+
+        domain.setIndividualRequests (individualRequests);
+
+        final BulkResponseType jaxb = transformer.transformDomainToJaxb (domain);
+
+        Assert.assertEquals ("The Sdt Bulk Reference is as expected", domain.getSdtBulkReference (),
+                jaxb.getSdtBulkReference ());
+        Assert.assertEquals ("The customer reference is as expected", domain.getCustomerReference (),
+                jaxb.getCustomerReference ());
+        Assert.assertEquals ("The Sdt Service is as expected", AbstractTransformer.SDT_SERVICE, jaxb.getSdtService ());
+        Assert.assertEquals ("The number of requests are as expected", jaxb.getRequestCount (),
+                domain.getNumberOfRequest ());
+        Assert.assertNotNull ("The submitted date is found", jaxb.getSubmittedDate ());
+
+        Assert.assertEquals ("The status code is as expected", jaxb.getStatus ().getCode ().value (), "Ok");
+
     }
 }

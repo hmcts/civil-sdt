@@ -43,6 +43,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -458,4 +459,64 @@ public class GenericDao implements IGenericDao
 
         return domainObject;
     }
+
+    @Override
+    public <DomainType extends IDomainObject> long queryAsCount (final Class<DomainType> domainType,
+                                                                 final Criterion... restrictions)
+    {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        GenericDao.LOG.debug ("queryAsCount(): domainType=" + domainType);
+
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_5))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tdomain type=" + domainType.getName ());
+            for (Criterion criterion : restrictions)
+            {
+                detail.append ("\n\trestriction=" + criterion.toString ());
+            }
+            detail.append ("\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_5,
+                    "GenericDao.queryAsCount start", detail.toString ());
+        }
+
+        final Session session = this.getSessionFactory ().getCurrentSession ();
+
+        // Add any restrictions passed by caller.
+        final Criteria criteria = session.createCriteria (domainType);
+        for (final Criterion restriction : restrictions)
+        {
+            // Added condition to check for null, if restriction null then it should not be added to criteria.
+            if (restriction != null)
+            {
+                criteria.add (restriction);
+            }
+        }
+
+        // Get a list of results from Hibernate.
+        final Number countOfObjects = (Number) criteria.setProjection (Projections.rowCount ()).uniqueResult ();
+
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_5))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tdomain object count =" + (countOfObjects != null ? countOfObjects.longValue () : 0));
+            detail.append ("\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_5, "GenericDao.queryAsCount end",
+                    detail.toString ());
+        }
+
+        return countOfObjects != null ? countOfObjects.longValue () : 0;
+    }
+
 }

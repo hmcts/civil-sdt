@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.text.MessageFormat;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -238,9 +240,18 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 this.getErrorMessagesCache ().getValue (IErrorMessage.class,
                         IErrorMessage.ErrorCode.SDT_INT_ERR.name ());
 
+        // Get the global parameter value for the Contact name
+        final IGlobalParameter contactNameParameter =
+                this.getGlobalParametersCache ().getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+
+        final String contactName = contactNameParameter != null ? contactNameParameter.getValue () : "TBC";
+
         // Now create an ErrorLog object with the ErrorMessage object and the
         // IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog (errorMessage.getErrorCode (), errorMessage.getErrorText ());
+        final IErrorLog errorLog =
+                new ErrorLog (errorMessage.getErrorCode (), MessageFormat.format (errorMessage.getErrorText (),
+                        contactName));
 
         // Truncate the soap fault error to 2,000 characters to fit
         // inside the database column of length varchar2(4,000 bytes)
@@ -254,8 +265,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         individualRequest.markRequestAsRejected (errorLog);
 
-        // now persist the request.
-        this.getIndividualRequestDao ().persist (individualRequest);
+        // now complete the request.
+        this.updateCompletedRequest (individualRequest);
     }
 
     /**

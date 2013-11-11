@@ -30,8 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -91,12 +89,12 @@ public abstract class AbstractSdtService
                 new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
                         IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
 
-        final List<IIndividualRequest> requests =
-                this.getIndividualRequestDao ().queryAsList (IIndividualRequest.class,
+        final long requestsCount =
+                this.getIndividualRequestDao ().queryAsCount (IIndividualRequest.class,
                         Restrictions.eq ("sdtBulkReference", bulkSubmission.getSdtBulkReference ()),
                         Restrictions.not (Restrictions.in ("requestStatus", completeRequestStatus)));
 
-        if (requests == null || requests.isEmpty ())
+        if (requestsCount == 0)
         {
 
             LOGGER.debug ("All Individual Requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +

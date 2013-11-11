@@ -132,4 +132,11 @@ public class MockGenericDao implements IGenericDao
         return null;
     }
 
+    @Override
+    public <DomainType extends IDomainObject> long queryAsCount (final Class<DomainType> domainType,
+                                                                 final Criterion... restrictions)
+    {
+        return 0;
+    }
+
 }

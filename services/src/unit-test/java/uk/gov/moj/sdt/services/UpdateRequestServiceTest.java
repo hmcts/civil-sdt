@@ -72,6 +72,7 @@ public class UpdateRequestServiceTest
     /**
      * Logger for debugging.
      */
+    @SuppressWarnings ("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger (UpdateRequestServiceTest.class);
 
     /**
@@ -123,15 +124,11 @@ public class UpdateRequestServiceTest
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
 
-        final String[] completeRequestStatus =
-                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
-                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
-
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
 
         EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsList (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (null);
+                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
 
         bulkSubmission.markAsCompleted ();
 
@@ -170,15 +167,11 @@ public class UpdateRequestServiceTest
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
 
-        final String[] completeRequestStatus =
-                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
-                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
-
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
 
         EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsList (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (null);
+                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
 
         bulkSubmission.markAsCompleted ();
 
@@ -240,18 +233,13 @@ public class UpdateRequestServiceTest
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
 
-        final String[] completeRequestStatus =
-                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
-                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
-
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
-
         final List<IIndividualRequest> indRequests = new ArrayList<IIndividualRequest> ();
         indRequests.add (individualRequest);
 
         EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsList (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (indRequests);
+                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (
+                Long.valueOf (indRequests.size ()));
 
         EasyMock.replay (mockIndividualRequestDao);
 

@@ -31,18 +31,29 @@
 
 package uk.gov.moj.sdt.consumers;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.consumers.exception.OutageException;
+import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -61,6 +72,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 /**
  * Test class for the individual request consumer.
@@ -73,6 +85,7 @@ public class IndividualRequestConsumerTest
     /**
      * Logger for debugging.
      */
+    @SuppressWarnings ("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestConsumerTest.class);
 
     /**
@@ -83,18 +96,27 @@ public class IndividualRequestConsumerTest
     // CHECKSTYLE:ON
 
     /**
-     * Individual Request Consumer instance.
+     * Individual Request Consumer instance of the inner class under test.
      */
-    private IndividualRequestConsumer individualRequestConsumer;
+    private IndRequestConsumer individualRequestConsumer;
+
+    /**
+     * Mock Client instance.
+     */
+    private ITargetAppInternalEndpointPortType mockClient;
 
     /**
      * Method to do any pre-test set-up.
      */
+    @SuppressWarnings ("unchecked")
     @Before
     public void setUp ()
     {
-        this.individualRequestConsumer = EasyMock.createMock (IndividualRequestConsumer.class);
-
+        mockTransformer = EasyMock.createMock (IConsumerTransformer.class);
+        mockClient = EasyMock.createMock (ITargetAppInternalEndpointPortType.class);
+        individualRequestConsumer = new IndRequestConsumer ();
+        individualRequestConsumer.setTransformer (mockTransformer);
+        individualRequestConsumer.setRethrowOnFailureToConnect (true);
     }
 
     /**
@@ -104,20 +126,167 @@ public class IndividualRequestConsumerTest
     public void processIndividualRequestSuccess ()
     {
         final IIndividualRequest individualRequest = this.createIndividualRequest ();
-        final IndividualRequestType individualRequesType = this.createRequestType (individualRequest);
+        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
+
+        final long connectionTimeOut = 30000;
+        final long receiveTimeOut = 60000;
 
         final IndividualResponseType individualResponseType = generateResponse ();
 
-        this.individualRequestConsumer.processIndividualRequest (EasyMock.isA (IIndividualRequest.class),
-                EasyMock.anyLong (), EasyMock.anyLong ());
+        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
 
-        EasyMock.expectLastCall ();
+        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andReturn (individualResponseType);
 
-        EasyMock.replay (individualRequestConsumer);
+        mockTransformer.transformJaxbToDomain (individualResponseType, individualRequest);
 
-        individualRequestConsumer.processIndividualRequest (individualRequest, 10000, 10000);
+        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
+        {
+            @Override
+            public Object answer () throws Throwable
+            {
+                ((IndividualRequest) EasyMock.getCurrentArguments ()[1])
+                        .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
+                // required to be null for a void method
+                return null;
+            }
+        });
 
-        EasyMock.verify (individualRequestConsumer);
+        EasyMock.replay (mockTransformer);
+        EasyMock.replay (mockClient);
+
+        this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut, receiveTimeOut);
+
+        EasyMock.verify (mockTransformer);
+        EasyMock.verify (mockClient);
+
+        Assert.assertTrue ("Test finished successfully", true);
+
+    }
+
+    /**
+     * Test method for processing of individual request outage error.
+     */
+    @Test
+    public void processIndividualRequestOutage ()
+    {
+        final IIndividualRequest individualRequest = this.createIndividualRequest ();
+        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
+
+        final long connectionTimeOut = 30000;
+        final long receiveTimeOut = 60000;
+
+        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
+
+        final WebServiceException wsException = new WebServiceException ();
+        wsException.initCause (new ConnectException ("Server down error"));
+
+        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andThrow (wsException);
+
+        EasyMock.replay (mockTransformer);
+        EasyMock.replay (mockClient);
+
+        try
+        {
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut,
+                    receiveTimeOut);
+
+            Assert.fail ("Expecting an OutageException here.");
+        }
+        catch (final OutageException toe)
+        {
+            Assert.assertTrue ("Got the exception as expected", true);
+        }
+
+        EasyMock.verify (mockTransformer);
+        EasyMock.verify (mockClient);
+
+        Assert.assertTrue ("Test finished successfully", true);
+
+    }
+
+    /**
+     * Test method for processing of individual request timeout error.
+     */
+    @Test
+    public void processIndividualRequestTimeout ()
+    {
+        final IIndividualRequest individualRequest = this.createIndividualRequest ();
+        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
+
+        final long connectionTimeOut = 30000;
+        final long receiveTimeOut = 60000;
+
+        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
+
+        final WebServiceException wsException = new WebServiceException ();
+        wsException.initCause (new SocketTimeoutException ("Timed out waiting for response"));
+
+        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andThrow (wsException);
+
+        EasyMock.replay (mockTransformer);
+        EasyMock.replay (mockClient);
+
+        try
+        {
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut,
+                    receiveTimeOut);
+
+            Assert.fail ("Expecting an Timeout here.");
+        }
+        catch (final TimeoutException toe)
+        {
+            Assert.assertTrue ("Got the exception as expected", true);
+        }
+
+        EasyMock.verify (mockTransformer);
+        EasyMock.verify (mockClient);
+
+        Assert.assertTrue ("Test finished successfully", true);
+
+    }
+
+    /**
+     * Test method for processing of individual request soap fault error.
+     * 
+     * @throws SOAPException exception
+     */
+    @Test
+    public void processIndividualRequestSoapFault () throws SOAPException
+    {
+        final IIndividualRequest individualRequest = this.createIndividualRequest ();
+        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
+
+        final long connectionTimeOut = 30000;
+        final long receiveTimeOut = 60000;
+
+        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
+
+        final WebServiceException wsException = new WebServiceException ();
+        final SOAPFault fault = EasyMock.createMock (SOAPFault.class);
+        fault.setFaultCode ("REQ_FAULT");
+        fault.setFaultString ("Invalid request");
+
+        wsException.initCause (new SOAPFaultException (fault));
+
+        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andThrow (wsException);
+
+        EasyMock.replay (mockTransformer);
+        EasyMock.replay (mockClient);
+
+        try
+        {
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut,
+                    receiveTimeOut);
+
+            Assert.fail ("Expecting an Soap Fault here.");
+        }
+        catch (final SoapFaultException toe)
+        {
+            Assert.assertTrue ("Got the exception as expected", true);
+        }
+
+        EasyMock.verify (mockTransformer);
+        EasyMock.verify (mockClient);
 
         Assert.assertTrue ("Test finished successfully", true);
 
@@ -167,6 +336,7 @@ public class IndividualRequestConsumerTest
         serviceType.setStatus ("RequestTestStatus");
 
         serviceRouting.setServiceType (serviceType);
+        serviceRouting.setTargetApplication (targetApp);
 
         serviceRoutings.add (serviceRouting);
 
@@ -217,6 +387,32 @@ public class IndividualRequestConsumerTest
 
         return responseType;
 
+    }
+
+    /**
+     * Need to extend the consumer class under test for overriding base class methods
+     * of the getClient as it is abstract method.
+     */
+    private class IndRequestConsumer extends IndividualRequestConsumer
+    {
+        /**
+         * Get the client for the specified target application. If the client is not cached already, a new client
+         * connection is created otherwise the already cached client is returned.
+         * 
+         * @param targetApplicationCode the target application code
+         * @param serviceType the service type associated with the target application code
+         * @param webServiceEndPoint the Web Service End Point URL
+         * @param connectionTimeOut the connection time out value
+         * @param receiveTimeOut the acknowledgement time out value
+         * @return the target application end point port bean i.e. the client interface.
+         */
+        @Override
+        public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
+                                                             final String serviceType, final String webServiceEndPoint,
+                                                             final long connectionTimeOut, final long receiveTimeOut)
+        {
+            return mockClient;
+        }
     }
 
 }

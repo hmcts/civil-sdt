@@ -203,4 +203,26 @@ public interface IGenericDao
      */
     long getNextSequenceValue (final String sequenceName) throws DataAccessException;
 
+    /**
+     * Returns a count of domain object model hierarchies with a set of
+     * restrictions. This constructs a Hibernate query from the domainType and
+     * restrictions given and uses Session.createCriteria() to retrieve the
+     * persistent entities. Then the Projection of row count is applied on the criteria
+     * to return an unique count of the domain objects.
+     * 
+     * <p>
+     * This can be used where there is no use for the actual objects, for example.
+     * </p>
+     * 
+     * @param <DomainType> of entity to load.
+     * @param domainType of entity to load.
+     * @param restrictions of the entities to load.
+     * @return the unique count of the domain object heirarchy matching the criteria
+     * 
+     * @throws DataAccessException
+     *             on any I/O related error.
+     */
+    <DomainType extends IDomainObject> long queryAsCount (final Class<DomainType> domainType,
+                                                          final Criterion... restrictions);
+
 }
