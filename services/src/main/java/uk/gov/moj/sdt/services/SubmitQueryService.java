@@ -31,7 +31,10 @@
 
 package uk.gov.moj.sdt.services;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.ws.WebServiceException;
@@ -102,6 +105,11 @@ public class SubmitQueryService implements ISubmitQueryService
     private IBulkCustomerDao bulkCustomerDao;
 
     /**
+     * Place holder object to sync processing.
+     */
+    private Object lock = new Object ();
+
+    /**
      * threshold for incoming requests for each target application.
      */
     private Map<String, Integer> concurrentRequestsInProgress = new HashMap<String, Integer> ();
@@ -163,7 +171,7 @@ public class SubmitQueryService implements ISubmitQueryService
         {
             final String targetApp =
                     submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
-            synchronized (this)
+            synchronized (lock)
             {
                 // decrease concurrent submit query requests count
                 this.concurrentRequestsInProgress
@@ -185,13 +193,7 @@ public class SubmitQueryService implements ISubmitQueryService
     {
         // Get the Error message to indicate that call to target application has
         // timed out
-        final IErrorMessage errorMessageParam =
-                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
-                        IErrorMessage.ErrorCode.TAR_APP_ERROR.name ());
-
-        IErrorLog errorLog = null;
-        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
-        submitQueryRequest.reject (errorLog);
+        buildTargetAppError (submitQueryRequest);
     }
 
     /**
@@ -204,13 +206,42 @@ public class SubmitQueryService implements ISubmitQueryService
     {
         // Get the Error message to indicate that there has been no response
         // from the server.
+        buildTargetAppError (submitQueryRequest);
+    }
+
+    /**
+     * Builds target application response.
+     * 
+     * @param submitQueryRequest submit query request object.
+     */
+    private void buildTargetAppError (final ISubmitQueryRequest submitQueryRequest)
+    {
         final IErrorMessage errorMessageParam =
                 this.getErrorMessagesCache ().getValue (IErrorMessage.class,
                         IErrorMessage.ErrorCode.TAR_APP_ERROR.name ());
 
-        IErrorLog errorLog = null;
-        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+        final List<String> replacements = new ArrayList<String> ();
+        replacements.add (getContactDetails ());
+        final String errorText = MessageFormat.format (errorMessageParam.getErrorText (), replacements.toArray ());
+
+        final IErrorLog errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorText);
         submitQueryRequest.reject (errorLog);
+    }
+
+    /**
+     * Get the contact Details from the global parameters cache.
+     * 
+     * @return contact details
+     */
+    private String getContactDetails ()
+    {
+        final IGlobalParameter globalParameter =
+                globalParametersCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+        final String contactDetails = globalParameter.getValue ();
+
+        return contactDetails;
+
     }
 
     /**
