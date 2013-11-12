@@ -17,7 +17,7 @@
 	</bean>
 	
 	<!-- Bulk Submission definition -->
-	<bean id="uk.gov.moj.sdt.domain.api.IBulkSumissionUploaded" class="uk.gov.moj.sdt.domain.BulkSubmission">        
+	<bean id="uk.gov.moj.sdt.domain.api.IBulkSumissionA00000001" class="uk.gov.moj.sdt.domain.BulkSubmission">        
         <property name="customerReference" value="USER_FILE_REFERENCE_A1"/>
         <property name="createdDate" ref="org.joda.time.LocalDateTime.submissionDateUploaded" />
         <property name="numberOfRequest" value="1"/>
@@ -26,7 +26,7 @@
     
     <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
     <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryA00000001" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
-    	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionUploaded"/>
+    	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionA00000001"/>
     	<!-- Define the system specific response -->
     	<property name="targetResponse">
     		<value>
