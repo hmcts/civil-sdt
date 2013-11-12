@@ -41,6 +41,7 @@ import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
+import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
@@ -132,6 +133,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
     {
         final BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
         final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType ();
+        bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_SERVICE);
+
         final StatusType statusType = new StatusType ();
         bulkRequestStatusType.setStatus (statusType);
         bulkRequestStatusType.setSdtBulkReference (bulkFeedbackRequest.getHeader ().getSdtBulkReference ());

@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
+import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
@@ -92,9 +93,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         this.updateCustomerCount (submitQueryRequestType.getHeader ().getSdtCustomerId ());
 
         // Initialise response.
-        SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
-        submitQueryResponseType.setSdtCustomerId (submitQueryRequestType.getHeader ().getSdtCustomerId ());
-        submitQueryResponseType.setStatus (new StatusType ());
+        SubmitQueryResponseType submitQueryResponseType = createResponse (submitQueryRequestType);
 
         try
         {
@@ -127,6 +126,21 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
 
         return submitQueryResponseType;
 
+    }
+
+    /**
+     * Create and initialise Response.
+     * 
+     * @param submitQueryRequestType request
+     * @return SubmitQueryResponse
+     */
+    private SubmitQueryResponseType createResponse (final SubmitQueryRequestType submitQueryRequestType)
+    {
+        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
+        submitQueryResponseType.setSdtService (AbstractTransformer.SDT_SERVICE);
+        submitQueryResponseType.setSdtCustomerId (submitQueryRequestType.getHeader ().getSdtCustomerId ());
+        submitQueryResponseType.setStatus (new StatusType ());
+        return submitQueryResponseType;
     }
 
     /**
