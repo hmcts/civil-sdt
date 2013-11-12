@@ -24,12 +24,12 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
+ * $Id: SubmitQueryTest.java 17596 2013-11-06 15:26:54Z agarwals $
+ * $LastChangedRevision: 17596 $
+ * $LastChangedDate: 2013-11-06 15:26:54 +0000 (Wed, 06 Nov 2013) $
+ * $LastChangedBy: agarwals $ */
 
-package uk.gov.moj.sdt.consumers;
+package uk.gov.moj.sdt.producers;
 
 import javax.xml.bind.JAXBElement;
 
@@ -38,10 +38,10 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ObjectFactory;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
  * Test class for end to end web service tests..
@@ -50,45 +50,37 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/consumers/spring*e2e.test.xml",
-        "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml"})
-public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType>
+@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+        "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml",
+        "classpath*:uk/gov/moj/sdt/dao/spring*.xml"})
+public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType>
 {
 
     /**
-     * Method to call remote submit bulk endpoint to be tested.
+     * Method to call remote submit query endpoint to be tested.
      */
     @Test
     public void testValid ()
     {
-        this.callWebService (BulkRequestType.class);
-    }
-
-    /**
-     * Method to call remote submit bulk endpoint to be tested.
-     */
-    @Test
-    public void testCountMismatch ()
-    {
-        this.callWebService (BulkRequestType.class);
+        this.callWebService (SubmitQueryRequestType.class);
     }
 
     @Override
-    protected BulkResponseType callTestWebService (final BulkRequestType request)
+    protected SubmitQueryResponseType callTestWebService (final SubmitQueryRequestType request)
     {
         // Get the SOAP proxy client.
         ISdtEndpointPortType client = getSdtEndpointClient ();
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
-        return client.submitBulk (request);
+        return client.submitQuery (request);
     }
 
     @Override
-    protected JAXBElement<BulkResponseType> wrapJaxbObject (final BulkResponseType response)
+    protected JAXBElement<SubmitQueryResponseType> wrapJaxbObject (final SubmitQueryResponseType response)
     {
         // Use the provided factor to create a wrapped instance of the response.
         ObjectFactory objectFactory = new ObjectFactory ();
-        return objectFactory.createBulkResponse (response);
+        return objectFactory.createSubmitQueryResponse (response);
     }
 }

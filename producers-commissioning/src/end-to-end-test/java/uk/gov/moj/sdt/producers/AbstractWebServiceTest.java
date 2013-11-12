@@ -28,7 +28,7 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.consumers;
+package uk.gov.moj.sdt.producers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,11 +51,9 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Assert;
-import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
@@ -74,15 +72,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      * Static logging object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (AbstractWebServiceTest.class);
-
-    /**
-     * Setup the test.
-     */
-    @Before
-    public void setUp ()
-    {
-        DBUnitUtility.loadDatabase (this.getClass (), true);
-    }
 
     /**
      * Method to call remote endpoint to be tested.
@@ -336,7 +325,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         // Set endpoint address
         BindingProvider provider = (BindingProvider) client;
         provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://localhost:8888/producers/service/sdtapi");
+                "http://localhost:8888/producers-comx/service/sdtapi");
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
@@ -344,7 +333,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         // it times out
         httpClientPolicy.setConnectionTimeout (10000);
         // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
-        httpClientPolicy.setReceiveTimeout (10000);
+        httpClientPolicy.setReceiveTimeout (10000000);
         httpConduit.setClient (httpClientPolicy);
 
         return client;

@@ -9,11 +9,11 @@
  * conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgement: "This product includes Money Claims OnLine."
+ * following acknowledgment: "This product includes Money Claims OnLine."
  * - Products derived from this software may not be called "Money Claims OnLine" nor may
  * "Money Claims OnLine" appear in their names without prior written permission of the
  * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgement: "This
+ * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
  * product includes Money Claims OnLine."
  * This software is provided "as is" and any expressed or implied warranties, including, but
  * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
@@ -29,74 +29,67 @@
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
 
-package uk.gov.moj.sdt.consumers;
+package uk.gov.moj.sdt.producers;
 
 import javax.xml.bind.JAXBElement;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
-import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ObjectFactory;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
  * Test class for end to end web service tests..
  * 
- * @author Sally Vonka
+ * @author Robin Compston
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/consumers/spring*e2e.test.xml",
-        "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml"})
-public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType>
+@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+        "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml",
+        "classpath*:uk/gov/moj/sdt/dao/spring*.xml"})
+public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType>
 {
-    @Before
-    public void setUp ()
+
+    /**
+     * Method to call remote submit bulk endpoint to be tested.
+     */
+    @Test
+    public void testValid ()
     {
-        DBUnitUtility.loadDatabase (this.getClass (), true);
+        this.callWebService (BulkRequestType.class);
     }
 
     /**
-     * Method to call remote request bulk feedback endpoint to be tested.
+     * Method to call remote submit bulk endpoint to be tested.
      */
     @Test
-    public void testValidRequestBulkFeedback ()
+    public void testCountMismatch ()
     {
-        this.callWebService (BulkFeedbackRequestType.class);
-    }
-
-    /**
-     * Method to call remote request bulk feedback endpoint to be tested.
-     */
-    @Test
-    public void testInvalidRequestBulkFeedback ()
-    {
-        this.callWebService (BulkFeedbackRequestType.class);
+        this.callWebService (BulkRequestType.class);
     }
 
     @Override
-    protected BulkFeedbackResponseType callTestWebService (final BulkFeedbackRequestType request)
+    protected BulkResponseType callTestWebService (final BulkRequestType request)
     {
         // Get the SOAP proxy client.
         ISdtEndpointPortType client = getSdtEndpointClient ();
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
-        return client.getBulkFeedback (request);
+        return client.submitBulk (request);
     }
 
     @Override
-    protected JAXBElement<BulkFeedbackResponseType> wrapJaxbObject (final BulkFeedbackResponseType response)
+    protected JAXBElement<BulkResponseType> wrapJaxbObject (final BulkResponseType response)
     {
         // Use the provided factor to create a wrapped instance of the response.
         ObjectFactory objectFactory = new ObjectFactory ();
-        return objectFactory.createBulkFeedbackResponse (response);
+        return objectFactory.createBulkResponse (response);
     }
-
 }

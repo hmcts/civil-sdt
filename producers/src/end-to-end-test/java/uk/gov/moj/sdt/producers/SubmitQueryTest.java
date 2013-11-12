@@ -29,7 +29,7 @@
  * $LastChangedDate$
  * $LastChangedBy$ */
 
-package uk.gov.moj.sdt.consumers;
+package uk.gov.moj.sdt.producers;
 
 import javax.xml.bind.JAXBElement;
 
@@ -50,8 +50,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/consumers/spring*e2e.test.xml",
-        "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+        "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml",
+        "classpath*:uk/gov/moj/sdt/dao/spring*.xml"})
 public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType>
 {
 
