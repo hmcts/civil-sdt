@@ -9,5 +9,6 @@
                 </error>
             </status>
             <ns2:sdtBulkReference>MCOL-10012013010101-100099998</ns2:sdtBulkReference>
+            <ns2:sdtService>SDT</ns2:sdtService>
          </ns2:bulkRequestStatus>
 </ns2:bulkFeedbackResponse>
