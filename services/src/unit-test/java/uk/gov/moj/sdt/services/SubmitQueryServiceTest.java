@@ -303,6 +303,46 @@ public class SubmitQueryServiceTest
     }
 
     /**
+     * Unit test method to test server soap fault exception.
+     */
+    @Test
+    public void testSubmitQueryRequestThrottling ()
+    {
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
+
+        setUpSubmitQueryRequest (submitQueryRequest);
+
+        final IGlobalParameter maxQueryReq = new GlobalParameter ();
+        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setValue ("0");
+        EasyMock.expect (
+                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+                .andReturn (maxQueryReq);
+
+        final IErrorMessage errorMsg = new ErrorMessage ();
+        errorMsg.setErrorCode ("TAR_APP_BUSY");
+        errorMsg.setErrorDescription ("Target Application Busy.");
+        errorMsg.setErrorText ("Target Application Busy.");
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "TAR_APP_BUSY"))
+                .andReturn (errorMsg);
+
+        EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockGlobalParamCache);
+        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay (mockBulkCustomerDao);
+
+        SdtContext.getContext ().setRawInXml ("response");
+        this.submitQueryService.submitQuery (submitQueryRequest);
+
+        EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockGlobalParamCache);
+        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertTrue ("Expected to pass", true);
+    }
+
+    /**
      * Set up a valid submit query request object.
      * 
      * @param submitQueryRequest test object for submit query.

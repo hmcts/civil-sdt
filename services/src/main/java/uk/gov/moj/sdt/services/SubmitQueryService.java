@@ -116,7 +116,11 @@ public class SubmitQueryService implements ISubmitQueryService
 
         extractAndWriteCriteria ();
 
-        doThrottling (submitQueryRequest);
+        if (isThresholdReached (submitQueryRequest))
+        {
+            updateRequestServerBusy (submitQueryRequest);
+            return;
+        }
 
         // Call consumer to submit the request to target application.
         try
@@ -249,9 +253,11 @@ public class SubmitQueryService implements ISubmitQueryService
      * 
      * @param submitQueryRequest
      *            submit query request.
+     * @return true if threshold is at surface, false otherwise.
      */
-    private synchronized void doThrottling (final ISubmitQueryRequest submitQueryRequest)
+    private synchronized boolean isThresholdReached (final ISubmitQueryRequest submitQueryRequest)
     {
+        boolean maxReached = false;
         // 1. get target application code e.g. MCOL.
         final String targetAppName =
                 submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
@@ -282,19 +288,30 @@ public class SubmitQueryService implements ISubmitQueryService
         else
         // reject request
         {
+            maxReached = true;
             LOGGER.warn ("Threshold reached - in progress [" + requestsInProgress + "] max allowed [" +
                     maxConcurrentQueryRequests + "]");
-            // Get the Error message to indicate that maximum submit query reached.
-            final IErrorMessage errorMessageParam =
-                    this.getErrorMessagesCache ().getValue (IErrorMessage.class,
-                            IErrorMessage.ErrorCode.TAR_APP_BUSY.name ());
-
-            IErrorLog errorLog = null;
-            errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
-            submitQueryRequest.reject (errorLog);
-
         }
+        return maxReached;
 
+    }
+
+    /**
+     * populate request with server busy message.
+     * 
+     * @param submitQueryRequest request.
+     */
+    private void updateRequestServerBusy (final ISubmitQueryRequest submitQueryRequest)
+    {
+
+        // Get the Error message to indicate that maximum submit query reached.
+        final IErrorMessage errorMessageParam =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        IErrorMessage.ErrorCode.TAR_APP_BUSY.name ());
+
+        IErrorLog errorLog = null;
+        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+        submitQueryRequest.reject (errorLog);
     }
 
     /**
