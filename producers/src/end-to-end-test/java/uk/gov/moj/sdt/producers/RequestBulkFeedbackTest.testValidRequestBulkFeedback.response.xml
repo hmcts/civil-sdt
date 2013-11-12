@@ -7,13 +7,22 @@
             <ns2:sdtBulkReference>MCOL-10012013010101-100099999</ns2:sdtBulkReference>
             <ns2:submittedDate>2013-10-01 17:26:30.123456789</ns2:submittedDate>
             <ns2:sdtService>SDT</ns2:sdtService>
-            <ns2:requestCount>1</ns2:requestCount>
+            <ns2:requestCount>2</ns2:requestCount>
             <ns2:bulkStatus code="Uploaded"/>
          </ns2:bulkRequestStatus>
          <ns2:responses>
             <ns2:response requestId="USER_REQUEST_ID_BF1" requestType="mcolClaim">
                <ns2:responseDetail/>
                <ns2:status code="Accepted"/>
+            </ns2:response>
+               <ns2:response requestId="USER_REQUEST_ID_BF1" requestType="mcolClaim">
+               <ns2:responseDetail/>
+               <ns2:status code="Rejected">
+                <error>
+                    <code>BULK_REF_INVALID</code>
+                    <description>There is no Bulk Request submission associated with your account for the supplied SDT Bulk Reference MCOL-10012013010101-100099998.</description>
+                </error>
+               </ns2:status>
             </ns2:response>
          </ns2:responses>
 </ns2:bulkFeedbackResponse>
