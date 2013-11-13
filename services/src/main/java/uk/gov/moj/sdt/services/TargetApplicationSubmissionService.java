@@ -245,7 +245,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 this.getGlobalParametersCache ().getValue (IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
 
-        final String contactName = contactNameParameter != null ? contactNameParameter.getValue () : "TBC";
+        final String contactName = contactNameParameter != null ? contactNameParameter.getValue () : "";
 
         // Now create an ErrorLog object with the ErrorMessage object and the
         // IndividualRequest object

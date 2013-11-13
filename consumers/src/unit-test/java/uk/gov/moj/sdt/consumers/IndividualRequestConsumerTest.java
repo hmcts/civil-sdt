@@ -89,6 +89,16 @@ public class IndividualRequestConsumerTest
     private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestConsumerTest.class);
 
     /**
+     * Connection time out constant.
+     */
+    private static final long CONNECTION_TIME_OUT = 30000;
+
+    /**
+     * Received time out constant.
+     */
+    private static final long RECEIVE_TIME_OUT = 60000;
+
+    /**
      * Consumer transformer for individual request.
      */
     // CHECKSTYLE:OFF
@@ -106,6 +116,16 @@ public class IndividualRequestConsumerTest
     private ITargetAppInternalEndpointPortType mockClient;
 
     /**
+     * Individual Request instance for testing in the methods.
+     */
+    private IIndividualRequest individualRequest;
+
+    /**
+     * Individual Request type for the individual request.
+     */
+    private IndividualRequestType individualRequestType;
+
+    /**
      * Method to do any pre-test set-up.
      */
     @SuppressWarnings ("unchecked")
@@ -117,6 +137,10 @@ public class IndividualRequestConsumerTest
         individualRequestConsumer = new IndRequestConsumer ();
         individualRequestConsumer.setTransformer (mockTransformer);
         individualRequestConsumer.setRethrowOnFailureToConnect (true);
+
+        individualRequest = this.createIndividualRequest ();
+        individualRequestType = this.createRequestType (individualRequest);
+
     }
 
     /**
@@ -125,12 +149,6 @@ public class IndividualRequestConsumerTest
     @Test
     public void processIndividualRequestSuccess ()
     {
-        final IIndividualRequest individualRequest = this.createIndividualRequest ();
-        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
-
-        final long connectionTimeOut = 30000;
-        final long receiveTimeOut = 60000;
-
         final IndividualResponseType individualResponseType = generateResponse ();
 
         EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
@@ -154,7 +172,8 @@ public class IndividualRequestConsumerTest
         EasyMock.replay (mockTransformer);
         EasyMock.replay (mockClient);
 
-        this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut, receiveTimeOut);
+        this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+                RECEIVE_TIME_OUT);
 
         EasyMock.verify (mockTransformer);
         EasyMock.verify (mockClient);
@@ -169,11 +188,6 @@ public class IndividualRequestConsumerTest
     @Test
     public void processIndividualRequestOutage ()
     {
-        final IIndividualRequest individualRequest = this.createIndividualRequest ();
-        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
-
-        final long connectionTimeOut = 30000;
-        final long receiveTimeOut = 60000;
 
         EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
 
@@ -187,8 +201,8 @@ public class IndividualRequestConsumerTest
 
         try
         {
-            this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut,
-                    receiveTimeOut);
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+                    RECEIVE_TIME_OUT);
 
             Assert.fail ("Expecting an OutageException here.");
         }
@@ -210,12 +224,6 @@ public class IndividualRequestConsumerTest
     @Test
     public void processIndividualRequestTimeout ()
     {
-        final IIndividualRequest individualRequest = this.createIndividualRequest ();
-        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
-
-        final long connectionTimeOut = 30000;
-        final long receiveTimeOut = 60000;
-
         EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
 
         final WebServiceException wsException = new WebServiceException ();
@@ -228,8 +236,8 @@ public class IndividualRequestConsumerTest
 
         try
         {
-            this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut,
-                    receiveTimeOut);
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+                    RECEIVE_TIME_OUT);
 
             Assert.fail ("Expecting an Timeout here.");
         }
@@ -253,12 +261,6 @@ public class IndividualRequestConsumerTest
     @Test
     public void processIndividualRequestSoapFault () throws SOAPException
     {
-        final IIndividualRequest individualRequest = this.createIndividualRequest ();
-        final IndividualRequestType individualRequestType = this.createRequestType (individualRequest);
-
-        final long connectionTimeOut = 30000;
-        final long receiveTimeOut = 60000;
-
         EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
 
         final WebServiceException wsException = new WebServiceException ();
@@ -275,8 +277,8 @@ public class IndividualRequestConsumerTest
 
         try
         {
-            this.individualRequestConsumer.processIndividualRequest (individualRequest, connectionTimeOut,
-                    receiveTimeOut);
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+                    RECEIVE_TIME_OUT);
 
             Assert.fail ("Expecting an Soap Fault here.");
         }
