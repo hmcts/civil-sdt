@@ -60,7 +60,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d276205
  * 
  */
-public class TestSdtEndpointPorTtype
+public class TestSdtEndpointPortType
 {
 
     /**
