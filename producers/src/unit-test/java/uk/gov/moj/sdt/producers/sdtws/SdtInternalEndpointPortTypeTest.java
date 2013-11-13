@@ -51,7 +51,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
  * @author d276205
  * 
  */
-public class TestSdtInternalEndpointPortType
+public class SdtInternalEndpointPortTypeTest
 {
 
     /**

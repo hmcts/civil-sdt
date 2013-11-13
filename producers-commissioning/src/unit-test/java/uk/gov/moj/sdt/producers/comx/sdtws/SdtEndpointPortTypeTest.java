@@ -1,3 +1,5 @@
+package uk.gov.moj.sdt.producers.comx.sdtws;
+
 /* Copyrights and Licenses
  * 
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
@@ -28,7 +30,6 @@
  * $LastChangedRevision$
  * $LastChangedDate$
  * $LastChangedBy$ */
-package uk.gov.moj.sdt.producers.sdtws;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -60,7 +61,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d276205
  * 
  */
-public class TestSdtEndpointPortType
+public class SdtEndpointPortTypeTest
 {
 
     /**
@@ -82,6 +83,11 @@ public class TestSdtEndpointPortType
      * Mocked IWsReadSubmitQueryHandler instance.
      */
     private IWsReadSubmitQueryHandler mockSubmitQueryHandler;
+
+    /**
+     * Constant for commissioning SDT service.
+     */
+    private static final String SDT_COMX_SERVICE = "SDT Commissioning";
 
     /**
      * Set up common for all tests.
@@ -117,6 +123,7 @@ public class TestSdtEndpointPortType
 
         EasyMock.verify (mockCreateBulkRequestHandler);
         assertNotNull ("Response expected", response);
+        assertEquals (SDT_COMX_SERVICE, response.getSdtService ());
     }
 
     /**
@@ -157,6 +164,7 @@ public class TestSdtEndpointPortType
         final BulkFeedbackResponseType response = portType.getBulkFeedback (createBulkFeedbackRequestType ());
 
         assertNotNull ("Response expected", response);
+        assertEquals (SDT_COMX_SERVICE, response.getBulkRequestStatus ().getSdtService ());
         EasyMock.verify (mockBulkRequestHandler);
     }
 
@@ -198,6 +206,7 @@ public class TestSdtEndpointPortType
         final SubmitQueryResponseType response = portType.submitQuery (createsubmitQueryRequestType ());
 
         assertNotNull ("Response expected", response);
+        assertEquals (SDT_COMX_SERVICE, response.getSdtService ());
         EasyMock.verify (mockSubmitQueryHandler);
     }
 
@@ -294,7 +303,6 @@ public class TestSdtEndpointPortType
         bulkRequestStatus.setCustomerReference ("123");
         bulkRequestStatus.setRequestCount (0L);
         bulkRequestStatus.setSdtBulkReference ("123");
-        bulkRequestStatus.setSdtService ("sdt");
         bulkRequestStatus.setStatus (statusType);
 
         final BulkStatusType bulkStatusType = new BulkStatusType ();
@@ -337,7 +345,6 @@ public class TestSdtEndpointPortType
 
         response.setSdtCustomerId (123);
         response.setStatus (statusType);
-        response.setSdtService ("sdt");
         return response;
     }
 
