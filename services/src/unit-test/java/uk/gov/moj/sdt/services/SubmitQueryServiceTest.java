@@ -161,6 +161,12 @@ public class SubmitQueryServiceTest
                 this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
                 .andReturn (maxQueryReq);
 
+        final IGlobalParameter contactDetails = new GlobalParameter ();
+        contactDetails.setName ("CONTACT_DETAILS");
+        contactDetails.setValue ("SDT Team");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "CONTACT_DETAILS")).andReturn (
+                contactDetails);
+
         final TimeoutException timeoutEx = new TimeoutException ("TIMEOUT_ERROR", "Timeout occurred");
         this.mockConsumerGateway.submitQuery (submitQueryRequest, 1000, 12000);
         EasyMock.expectLastCall ().andThrow (timeoutEx);
@@ -217,6 +223,12 @@ public class SubmitQueryServiceTest
         EasyMock.expect (
                 this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
                 .andReturn (maxQueryReq);
+
+        final IGlobalParameter contactDetails = new GlobalParameter ();
+        contactDetails.setName ("CONTACT_DETAILS");
+        contactDetails.setValue ("SDT Team");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "CONTACT_DETAILS")).andReturn (
+                contactDetails);
 
         final OutageException outageEx = new OutageException ("OUTAGE_ERROR", "Server unavailable.");
         this.mockConsumerGateway.submitQuery (submitQueryRequest, 1000, 12000);
