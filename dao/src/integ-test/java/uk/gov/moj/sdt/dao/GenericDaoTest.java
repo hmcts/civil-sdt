@@ -30,6 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.criterion.Restrictions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -158,6 +161,50 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         bulkCustomer.setSdtCustomerId (456);
 
         genericDao.persist (bulkCustomer);
+    }
+
+    /**
+     * Tests the bulk insert.
+     */
+    @Test
+    public void testBulkInsert ()
+    {
+        final IGenericDao genericDao =
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+
+        final List<IBulkCustomer> bulkObjectList = new ArrayList<IBulkCustomer> ();
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        // bulkCustomer.setId (2);
+        bulkCustomer.setSdtCustomerId (456);
+
+        final IBulkCustomer bulkCustomer2 = new BulkCustomer ();
+        bulkCustomer2.setSdtCustomerId (457);
+
+        bulkObjectList.add (bulkCustomer);
+        bulkObjectList.add (bulkCustomer2);
+
+        genericDao.persistBulk (bulkObjectList);
+
+    }
+
+    /**
+     * Tests the bulk update.
+     */
+    @Test
+    public void testBulkUpdate ()
+    {
+        final IGenericDao genericDao =
+                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+
+        final List<IBulkCustomer> bulkObjectList = new ArrayList<IBulkCustomer> ();
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        bulkCustomer.setId (10711L);
+        bulkCustomer.setSdtCustomerId (456);
+
+        bulkObjectList.add (bulkCustomer);
+
+        genericDao.persistBulk (bulkObjectList);
+
     }
 
 }

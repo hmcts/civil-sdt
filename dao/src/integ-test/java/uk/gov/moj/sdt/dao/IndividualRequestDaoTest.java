@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -193,6 +194,30 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
 
         Assert.assertNull (individualRequest);
 
+    }
+
+    /**
+     * Test where pending individual requests are found.
+     */
+    @Test
+    public void getPendingIndividualRequestsFound ()
+    {
+        final List<IIndividualRequest> individualRequests = individualRequestDao.getPendingIndividualRequests (3);
+
+        Assert.assertNotNull (individualRequests);
+        Assert.assertTrue ("Pending individual requests found", individualRequests.size () > 0);
+    }
+
+    /**
+     * Test where pending individual requests are not found.
+     */
+    @Test
+    public void getPendingIndividualRequestsNotFound ()
+    {
+        final List<IIndividualRequest> individualRequests = individualRequestDao.getPendingIndividualRequests (4);
+
+        Assert.assertNotNull (individualRequests);
+        Assert.assertTrue ("Pending individual requests not found", individualRequests.size () == 0);
     }
 
     /**

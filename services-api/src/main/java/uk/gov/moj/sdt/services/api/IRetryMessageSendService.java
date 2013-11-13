@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,69 +28,21 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-
-package uk.gov.moj.sdt.dao;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.dao.DataAccessException;
-
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+package uk.gov.moj.sdt.services.api;
 
 /**
- * Mock Individual Request DAO class used in commissioning project.
+ * Interface for the Message task service.
  * 
- * @author d130680
+ * @author Manoj Kulkarni
  * 
  */
-public class MockIndividualRequestDao extends MockGenericDao implements IIndividualRequestDao
+public interface IRetryMessageSendService
 {
-
     /**
-     * Pre-defined values for valid customer references.
+     * This method looks for any individual requests that have not yet been successfully
+     * sent to the target application and puts them on the target application queue.
+     * 
      */
-    private static final List<String> DUPLICATE_REFERENCE;
+    void queueMessages ();
 
-    static
-    {
-
-        DUPLICATE_REFERENCE = new ArrayList<String> ();
-
-        DUPLICATE_REFERENCE.add ("duplicate");
-
-    }
-
-    @Override
-    public IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
-                                                    final int dataRetention)
-    {
-        if (DUPLICATE_REFERENCE.contains (customerReference.toLowerCase ()))
-        {
-            return new IndividualRequest ();
-        }
-        else
-        {
-            return null;
-        }
-
-    }
-
-    @Override
-    public IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException
-    {
-        // This method is implemented for the producers application only.
-        return null;
-    }
-
-    @Override
-    public List<IIndividualRequest> getPendingIndividualRequests (final int maxAllowedAttempts)
-        throws DataAccessException
-    {
-        // This method is implemented for the producers application only.
-        return null;
-    }
 }

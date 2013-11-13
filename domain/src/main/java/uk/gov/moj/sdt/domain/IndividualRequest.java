@@ -393,6 +393,14 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         populateSdtRequestReference ();
     }
 
+    @Override
+    public void resetForwardingAttempts ()
+    {
+        this.setForwardingAttempts (0);
+        this.setUpdatedDate (LocalDateTime.now ());
+        this.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
+    }
+
     /**
      * Populate SDT Request Reference from the SDT Bulk Reference.
      */
@@ -420,4 +428,5 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
                 .append ("sdtRequestReference", sdtRequestReference).append ("requestStatus", requestStatus)
                 .append ("requestType", requestType).toString ();
     }
+
 }

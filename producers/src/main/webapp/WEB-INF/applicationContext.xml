@@ -2,13 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task" 
     xmlns:jaxws="http://cxf.apache.org/jaxws"  xmlns:cxf="http://cxf.apache.org/core"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
  		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/aop 
 		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
-		http://www.springframework.org/schema/tx 
-		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd 
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
         http://cxf.apache.org/jaxws
         http://cxf.apache.org/schemas/jaxws.xsd
         http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
@@ -72,5 +73,13 @@
             <entry key="schema-validation-enabled" value="false"/>
         </jaxws:properties>
     </jaxws:endpoint>
+    
+    <!-- Daemon threads for the pending message service task. Cron is set to run every 60 seconds-->
+    <task:scheduled-tasks scheduler="sdtScheduler">
+    	<task:scheduled ref="uk.gov.moj.sdt.services.api.IRetryMessageAlreadySentService" method="queueMessages" cron="0/60 * * * * ?"/>
+		<!-- Add similar entry to above to add more tasks -->    	
+	</task:scheduled-tasks>
+
+	<task:scheduler id="sdtScheduler" pool-size="10"/> 
 
 </beans>

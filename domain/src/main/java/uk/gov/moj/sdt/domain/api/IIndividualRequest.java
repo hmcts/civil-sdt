@@ -290,6 +290,12 @@ public interface IIndividualRequest extends IDomainObject
     void populateReferences ();
 
     /**
+     * This method will re-set the forwarding attempts to zero and will
+     * also change the status to the initial value of Received.
+     */
+    void resetForwardingAttempts ();
+
+    /**
      * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
      * "Accepted".
      * 

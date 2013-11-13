@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao.api;
 
+import java.util.List;
+
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -63,4 +65,16 @@ public interface IIndividualRequestDao extends IGenericDao
      * @throws DataAccessException Hibernate exception
      */
     IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException;
+
+    /**
+     * Returns a list of individual requests that are not yet processed by
+     * the target application. The criteria used in this method is based on 2 conditions
+     * a. the forwarding attempts greater than the max allowed (passed as parameter to the method)
+     * b. the status of individual request is Forwarded.
+     * 
+     * @param maxAllowedAttempts - the maximum number of forwarding attempts allowed.
+     * @return list of individual requests
+     * @throws DataAccessException hibernate exception
+     */
+    List<IIndividualRequest> getPendingIndividualRequests (final int maxAllowedAttempts) throws DataAccessException;
 }

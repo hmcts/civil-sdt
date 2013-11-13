@@ -61,5 +61,12 @@
     <bean id="uk.gov.moj.sdt.services.api.IUpdateRequestService" class="uk.gov.moj.sdt.services.UpdateRequestService" 
     	parent="uk.gov.moj.sdt.services.AbstractSdtService">
     </bean>
+    
+    <!-- Implementation of the RetryMessageSend service -->
+    <bean id="uk.gov.moj.sdt.services.api.IRetryMessageAlreadySentService" class="uk.gov.moj.sdt.services.RetryMessageAlreadySentService">
+    	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+    	<property name="messageWriter" ref="uk.gov.moj.sdt.messaging.api.IMessageWriter"/>
+    	<property name="globalParametersCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache"/>
+    </bean>
                           
 </beans>

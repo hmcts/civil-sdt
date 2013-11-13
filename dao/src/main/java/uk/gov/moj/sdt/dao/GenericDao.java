@@ -327,6 +327,37 @@ public class GenericDao implements IGenericDao
     }
 
     @Override
+    public <DomainType extends IDomainObject> void persistBulk (final List<DomainType> domainObjectList)
+        throws DataAccessException
+    {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        LOG.debug ("Persist domain object list " + domainObjectList.toString ());
+
+        final Session session = this.getSessionFactory ().getCurrentSession ();
+        final int maxBatchSize = 20;
+
+        int i = 0;
+        for (Object domainObject : domainObjectList)
+        {
+            session.saveOrUpdate (domainObject);
+            if (i % maxBatchSize == 0)
+            {
+                // Flush a batch of insert/updates and release memory.
+                session.flush ();
+                session.clear ();
+            }
+            i++;
+        }
+
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getSdtMetrics ().addDatabaseWritesTime (endTime - startTime);
+        SdtMetricsMBean.getSdtMetrics ().upDatabaseWritesCount ();
+
+    }
+
+    @Override
     public long getNextSequenceValue (final String sequenceName) throws DataAccessException
     {
         // Record start time.

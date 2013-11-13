@@ -139,4 +139,10 @@ public class MockGenericDao implements IGenericDao
         return 0;
     }
 
+    @Override
+    public void persistBulk (@SuppressWarnings ("rawtypes") final List domainObjectList) throws DataAccessException
+    {
+
+    }
+
 }

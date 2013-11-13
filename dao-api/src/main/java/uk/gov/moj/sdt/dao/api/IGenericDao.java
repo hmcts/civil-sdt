@@ -195,6 +195,27 @@ public interface IGenericDao
     void persist (final Object domainObject) throws DataAccessException;
 
     /**
+     * Stores a list of domainObject in the database, either doing an bulk insert or an
+     * bulk update.
+     * 
+     * <p>
+     * This method persists or updates list of object(s) depending upon the presence of an id (if there is one it is an
+     * update operation).
+     * </p>
+     * 
+     * <p>
+     * Since the passed in object will be persisted its immediate state after this method finishes will be to have an id
+     * either assigned as part of a insert operation or its previous value if this is an update.
+     * </p>
+     * 
+     * @param <DomainType> of entity to persist.
+     * @param domainObjectList the list of instance to insert or update.
+     * @throws DataAccessException on any I/O related error.
+     */
+    <DomainType extends IDomainObject> void persistBulk (final List<DomainType> domainObjectList)
+        throws DataAccessException;
+
+    /**
      * This method returns a sequence number associated with the sequence name.
      * 
      * @param sequenceName The name of the sequence

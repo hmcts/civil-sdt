@@ -120,4 +120,21 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
 
         return individualRequests[0];
     }
+
+    @Override
+    public List<IIndividualRequest> getPendingIndividualRequests (final int maxAllowedAttempts)
+        throws DataAccessException
+    {
+        LOG.debug ("Get a Individual Request pending processing by the target application");
+
+        // Call the generic dao to do this query
+        final List<IIndividualRequest> individualRequests =
+                this.queryAsList (
+                        IIndividualRequest.class,
+                        Restrictions.eq ("requestStatus",
+                                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ()),
+                        Restrictions.ge ("forwardingAttempts", maxAllowedAttempts));
+
+        return individualRequests;
+    }
 }
