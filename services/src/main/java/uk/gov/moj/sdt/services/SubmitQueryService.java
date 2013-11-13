@@ -158,14 +158,14 @@ public class SubmitQueryService implements ISubmitQueryService
             LOGGER.error ("Soap exception for SDT Bulk Customer [" +
                     submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "] ", e.getMessage ());
             // Update the request with the soap fault reason
-            this.updateRequestSoapError (submitQueryRequest, e.getMessage ());
+            this.updateRequestSoapError (submitQueryRequest);
         }
         catch (final WebServiceException e)
         {
             LOGGER.error ("WebService exception for SDT Bulk Customer [" +
                     submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]", e.getMessage ());
             // Update the request with reason
-            this.updateRequestSoapError (submitQueryRequest, e.getMessage ());
+            this.updateRequestSoapError (submitQueryRequest);
         }
         finally
         {
@@ -249,17 +249,15 @@ public class SubmitQueryService implements ISubmitQueryService
      * 
      * @param submitQueryRequest
      *            submit query request
-     * @param message
-     *            soap error message
      */
-    private void updateRequestSoapError (final ISubmitQueryRequest submitQueryRequest, final String message)
+    private void updateRequestSoapError (final ISubmitQueryRequest submitQueryRequest)
     {
         final IErrorMessage errorMessageParam =
                 this.getErrorMessagesCache ().getValue (IErrorMessage.class,
                         IErrorMessage.ErrorCode.SDT_INT_ERR.name ());
 
         IErrorLog errorLog = null;
-        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorText ());
         submitQueryRequest.reject (errorLog);
 
     }
@@ -341,7 +339,7 @@ public class SubmitQueryService implements ISubmitQueryService
                         IErrorMessage.ErrorCode.TAR_APP_BUSY.name ());
 
         IErrorLog errorLog = null;
-        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorDescription ());
+        errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorText ());
         submitQueryRequest.reject (errorLog);
     }
 
