@@ -65,6 +65,15 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
         this.callWebService (SubmitQueryRequestType.class);
     }
 
+    /**
+     * Method to call remote submit query endpoint to be tested.
+     */
+    @Test
+    public void testErrorResult ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
     @Override
     protected SubmitQueryResponseType callTestWebService (final SubmitQueryRequestType request)
     {

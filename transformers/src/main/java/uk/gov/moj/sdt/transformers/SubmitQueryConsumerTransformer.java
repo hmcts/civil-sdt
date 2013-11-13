@@ -95,9 +95,12 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
         else if (StatusCodeType.ERROR.equals (statusCode))
         {
             final ErrorType errorType = status.getError ();
-            final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
-            domainObject.setStatus (StatusCodeType.ERROR.value ());
-            domainObject.reject (errorLog);
+            if (null != errorType)
+            {
+                final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
+                domainObject.setStatus (StatusCodeType.ERROR.value ());
+                domainObject.reject (errorLog);
+            }
         }
 
     }
