@@ -198,6 +198,7 @@
 		<emma>
 			<instr instrpath="${classes.dir}" destdir="${instr.target.dir}" metadatafile="${coverage.dir}/metadata.emma" mode="copy">
 				<filter excludes="*Test*" />
+                <filter excludes="Mock*" />
 			</instr>
 		</emma>
 
@@ -414,6 +415,7 @@
 		<emma>
 			<instr instrpath="${classes.dir}" destdir="${instr.target.dir}" metadatafile="${coverage.dir}/metadata.emma" mode="copy">
 				<filter excludes="*Test*" />
+                <filter excludes="Mock*" />
 			</instr>
 		</emma>
 
