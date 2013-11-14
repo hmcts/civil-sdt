@@ -31,9 +31,6 @@
 		<jaxws:outFaultInterceptors>
 			<ref bean="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor" />
 		</jaxws:outFaultInterceptors>
- 		<jaxws:features>
-			<bean class="org.apache.cxf.feature.LoggingFeature" />
-		</jaxws:features>
 		<jaxws:properties>
 			<entry key="schema-validation-enabled" value="true" />
 			<entry key="soap.env.ns.map">

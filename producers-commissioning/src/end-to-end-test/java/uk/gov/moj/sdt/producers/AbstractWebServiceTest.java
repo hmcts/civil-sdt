@@ -325,7 +325,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         // Set endpoint address
         BindingProvider provider = (BindingProvider) client;
         provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://localhost:8888/producers-comx/service/sdtapi");
+                "http://localhost.:8888/producers-comx/service/sdtapi");
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
