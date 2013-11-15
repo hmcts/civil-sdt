@@ -149,7 +149,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
         catch (final WebServiceException f)
         {
             LOGGER.error ("Target application [" +
-                    submitQueryRequest.getTargetApplication ().getTargetApplicationName () +
+                    submitQueryRequest.getTargetApplication ().getTargetApplicationCode () +
                     "] error sending submit query request [" + submitQueryRequest.getCriteriaType () + "]");
 
             super.handleClientErrors (true, f, submitQueryRequest.getCriteriaType ());

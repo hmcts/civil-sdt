@@ -170,7 +170,7 @@ public class SubmitQueryService implements ISubmitQueryService
         finally
         {
             final String targetApp =
-                    submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
+                    submitQueryRequest.getTargetApplication ().getTargetApplicationCode ().toUpperCase ();
             synchronized (lock)
             {
                 // decrease concurrent submit query requests count
@@ -216,6 +216,8 @@ public class SubmitQueryService implements ISubmitQueryService
      */
     private void buildTargetAppError (final ISubmitQueryRequest submitQueryRequest)
     {
+        // NOTE: At the moment, functionality is common for Timeout and Outage, but two methods to separate
+        // implementation.
         final IErrorMessage errorMessageParam =
                 this.getErrorMessagesCache ().getValue (IErrorMessage.class,
                         IErrorMessage.ErrorCode.TAR_APP_ERROR.name ());
@@ -288,31 +290,31 @@ public class SubmitQueryService implements ISubmitQueryService
     {
         boolean maxReached = false;
         // 1. get target application code e.g. MCOL.
-        final String targetAppName =
-                submitQueryRequest.getTargetApplication ().getTargetApplicationName ().toUpperCase ();
+        final String targetAppCode =
+                submitQueryRequest.getTargetApplication ().getTargetApplicationCode ().toUpperCase ();
         // 2. retrieve max concurrent submit query requests allowed for this target application
         final String concurrentQueryReqParamName =
-                targetAppName + "_" + IGlobalParameter.ParameterKey.MAX_CONCURRENT_QUERY_REQ.name ();
+                targetAppCode + "_" + IGlobalParameter.ParameterKey.MAX_CONCURRENT_QUERY_REQ.name ();
         final String maxConcurrentQueryRequests = this.getSystemParameter (concurrentQueryReqParamName);
 
         int requestsInProgress;
 
         // 3. retrieve number of requests in progress from local map.
-        if (this.concurrentRequestsInProgress.containsKey (targetAppName))
+        if (this.concurrentRequestsInProgress.containsKey (targetAppCode))
         {
-            requestsInProgress = this.concurrentRequestsInProgress.get (targetAppName);
+            requestsInProgress = this.concurrentRequestsInProgress.get (targetAppCode);
         }
         else
         {
             // this is first request for this target app
             requestsInProgress = 0;
-            this.concurrentRequestsInProgress.put (targetAppName, requestsInProgress);
+            this.concurrentRequestsInProgress.put (targetAppCode, requestsInProgress);
         }
 
         // 4. if within - increase value in map and process request
         if (requestsInProgress < Integer.valueOf (maxConcurrentQueryRequests))
         {
-            this.concurrentRequestsInProgress.put (targetAppName, requestsInProgress + 1);
+            this.concurrentRequestsInProgress.put (targetAppCode, requestsInProgress + 1);
         }
         else
         // reject request

@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -130,6 +131,7 @@ public class SubmitQueryServiceTest
         genericParser.setEnclosingTag ("targetAppDetail");
 
         submitQueryService.setQueryRequestXmlParser (genericParser);
+        submitQueryService.setQueryResponseXmlParser (genericParser);
     }
 
     /**
@@ -155,10 +157,9 @@ public class SubmitQueryServiceTest
                 .andReturn (receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter ();
-        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName ("MCOL_MAX_CONCURRENT_QUERY_REQ");
         maxQueryReq.setValue ("5");
-        EasyMock.expect (
-                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
                 .andReturn (maxQueryReq);
 
         final IGlobalParameter contactDetails = new GlobalParameter ();
@@ -218,10 +219,9 @@ public class SubmitQueryServiceTest
                 .andReturn (receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter ();
-        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName ("MCOL_MAX_CONCURRENT_QUERY_REQ");
         maxQueryReq.setValue ("5");
-        EasyMock.expect (
-                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
                 .andReturn (maxQueryReq);
 
         final IGlobalParameter contactDetails = new GlobalParameter ();
@@ -281,10 +281,9 @@ public class SubmitQueryServiceTest
                 .andReturn (receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter ();
-        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName ("MCOL_MAX_CONCURRENT_QUERY_REQ");
         maxQueryReq.setValue ("5");
-        EasyMock.expect (
-                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
                 .andReturn (maxQueryReq);
 
         final SoapFaultException soapFaultEx = new SoapFaultException ("SOAPFAULT_ERROR", "Soap fault occurred");
@@ -325,10 +324,9 @@ public class SubmitQueryServiceTest
         setUpSubmitQueryRequest (submitQueryRequest);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter ();
-        maxQueryReq.setName ("TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName ("MCOL_MAX_CONCURRENT_QUERY_REQ");
         maxQueryReq.setValue ("0");
-        EasyMock.expect (
-                this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TEST_TARGETAPP_MAX_CONCURRENT_QUERY_REQ"))
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
                 .andReturn (maxQueryReq);
 
         final IErrorMessage errorMsg = new ErrorMessage ();
@@ -337,6 +335,63 @@ public class SubmitQueryServiceTest
         errorMsg.setErrorText ("Target Application Busy.");
         EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "TAR_APP_BUSY"))
                 .andReturn (errorMsg);
+
+        EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockGlobalParamCache);
+        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay (mockBulkCustomerDao);
+
+        SdtContext.getContext ().setRawInXml ("response");
+        this.submitQueryService.submitQuery (submitQueryRequest);
+
+        EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockGlobalParamCache);
+        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertTrue ("Expected to pass", true);
+    }
+
+    /**
+     * Unit test method to test submit query request success.
+     */
+    @Test
+    public void testSubmitQueryServiceSuccess ()
+    {
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
+
+        setUpSubmitQueryRequest (submitQueryRequest);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
+        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue ("1000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+                connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
+        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue ("12000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
+                .andReturn (receiveTimeOutParam);
+
+        final IGlobalParameter maxQueryReq = new GlobalParameter ();
+        maxQueryReq.setName ("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setValue ("5");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+                .andReturn (maxQueryReq);
+
+        this.mockConsumerGateway.submitQuery (submitQueryRequest, 1000, 12000);
+        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
+        {
+            @Override
+            public Object answer () throws Throwable
+            {
+                ((SubmitQueryRequest) EasyMock.getCurrentArguments ()[0]).setStatus (ISubmitQueryRequest.Status.OK
+                        .getStatus ());
+                // required to be null for a void method
+                return null;
+            }
+        });
 
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockGlobalParamCache);
