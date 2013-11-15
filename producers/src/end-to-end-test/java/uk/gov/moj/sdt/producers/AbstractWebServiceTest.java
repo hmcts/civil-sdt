@@ -55,6 +55,7 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
@@ -80,7 +81,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     @Before
     public void setUp ()
     {
-        // DBUnitUtility.loadDatabase (this.getClass (), true);
+        DBUnitUtility.loadDatabase (this.getClass (), true);
     }
 
     /**
@@ -341,9 +342,9 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
         // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
         // it times out
-        httpClientPolicy.setConnectionTimeout (10000);
+        httpClientPolicy.setConnectionTimeout (100000);
         // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
-        httpClientPolicy.setReceiveTimeout (10000);
+        httpClientPolicy.setReceiveTimeout (100000);
         httpConduit.setClient (httpClientPolicy);
 
         return client;
