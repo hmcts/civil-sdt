@@ -68,9 +68,9 @@
         </jaxws:properties>
     </jaxws:endpoint>
     
-    <!-- Daemon threads for the pending message service task. Cron is set to run every 60 seconds-->
+    <!-- Daemon threads for the pending message service task. Cron is set to run on top of every hour every day-->
     <task:scheduled-tasks scheduler="sdtScheduler">
-    	<task:scheduled ref="uk.gov.moj.sdt.services.api.IRetryMessageAlreadySentService" method="queueMessages" cron="0/60 * * * * ?"/>
+    	<task:scheduled ref="uk.gov.moj.sdt.services.api.IRetryMessageAlreadySentService" method="queueMessages" cron="0 0 * * * ?"/>
 		<!-- Add similar entry to above to add more tasks -->    	
 	</task:scheduled-tasks>
 
