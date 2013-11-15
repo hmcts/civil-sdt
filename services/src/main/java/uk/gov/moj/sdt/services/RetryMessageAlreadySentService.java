@@ -124,7 +124,7 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
         }
         else
         {
-            LOGGER.info ("No pending individual requests to process");
+            LOGGER.debug ("No pending individual requests to process");
         }
     }
 
