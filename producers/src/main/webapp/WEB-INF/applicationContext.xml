@@ -56,12 +56,7 @@
         <jaxws:inInterceptors>
             <ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
             <ref bean="uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor" />
-            <ref bean="uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor" />
         </jaxws:inInterceptors>
-        <jaxws:outInterceptors>
-            <ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />              
-            <ref bean="uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor" />              
-        </jaxws:outInterceptors>
         <jaxws:outFaultInterceptors>
         	<ref bean="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor" />
         </jaxws:outFaultInterceptors>
