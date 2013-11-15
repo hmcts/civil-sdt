@@ -46,13 +46,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 /**
  * Interceptor class which handles bulk submission message received by SDT.
  * 
- * This interceptor is necessary in order to process the raw XML sent to SDT before CXF has turned it into JAXB objects,
- * after which any non generic portions of the XML (those portions which are case management system specific) will no
- * longer be visible. This is because the XSD defined for SDT treats the case management specific portions of the XML as
- * part of an <any> tag. This non generic XML must be stored in the database as a blob and the details of its content
- * should be hidden from SDT. SDT stores the entire XML in ThreadLocal storage so that it can be retrieved later and
- * various portions of it used to populate the domain objects with the raw XML before storing them in the database via
- * Hibernate.
+ * This interceptor is used to catch any faults detected in CXF and to record the count of these in the metrics.
  * 
  * @author Robin Compston
  * 
@@ -94,7 +88,7 @@ public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor
         // CHECKSTYLE:ON
         {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            e.printStackTrace ();
         }
     }
 }

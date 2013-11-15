@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +104,12 @@ public final class SdtContext
     private List<Runnable> synchronisationTasks;
 
     /**
-     * Constructor for {@link ThreadContext}.
+     * The output stream created by CXF which must be stored until we are ready to write the message.
+     */
+    private OutputStream originalOutputStream;
+
+    /**
+     * Constructor for {@link com.sun.jmx.snmp.ThreadContext}.
      */
     private SdtContext ()
     {
@@ -309,4 +315,23 @@ public final class SdtContext
         THREAD_LOCAL.remove ();
     }
 
+    /**
+     * Get the original output stream.
+     * 
+     * @return the original output stream.
+     */
+    public OutputStream getOriginalOutputStream ()
+    {
+        return originalOutputStream;
+    }
+
+    /**
+     * Save the output stream for later retrieval.
+     * 
+     * @param originalOutputStream the original stream created by CXF.
+     */
+    public void setOriginalOutputStream (final OutputStream originalOutputStream)
+    {
+        this.originalOutputStream = originalOutputStream;
+    }
 }

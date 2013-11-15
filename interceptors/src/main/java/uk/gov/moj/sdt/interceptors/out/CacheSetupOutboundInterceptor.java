@@ -36,21 +36,20 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.AttachmentOutInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.interceptor.StaxOutInterceptor;
-import org.apache.cxf.io.CacheModifyAndWriteOutputStream;
+import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.phase.Phase;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
- * Interceptor class which handles bulk submission message sent by SDT.
- * 
- * This interceptor is necessary in order to process the raw XML sent from SDT after CXF has produced it from JAXB
- * objects. Non generic XML content (which should be hidden from SDT) must NOT be represented by JAXB classes known to
- * SDT. Instead, this non generic XML is inserted as raw XML into the XML already produced by CXF and at the relevant
- * insertion point. This is because the XML sent by SDT should have non generic content (this is true both of the System
- * Gateway and the specific Case Managements Systems). This non generic XML is be stored in the database as a blob and
- * read via Hibernate and loaded into ThreadLocal memory from which this interceptor takes it in order to populate the
- * outgoing XML.
+ * This interceptor stores the original output stream created by CXF (with application server implementation specifics
+ * within it) and replaces it with a caching output stream. This has 2 purposes: it allows data being written to the
+ * stream to be retrieved so that it can be enriched with additional raw XML as required by SDT for its handling of
+ * non-generic content; and it avoids writing any data to the remote endpoint until we are ready to write the enriched
+ * content. This interceptor must be run after the original endpoint has been created and before the first write to the
+ * output stream has been performed by StaxOutInterceptor. The cache output stream is setup in anticipation of the
+ * processing done by XmlOutboudInterceptor and ServiceRequestInterceptor.
  * 
  * @author Robin Compston
  * 
@@ -59,23 +58,26 @@ public class CacheSetupOutboundInterceptor extends AbstractSdtInterceptor
 {
 
     /**
-     * Test interceptor to prove concept.
+     * Constructor to position this interceptor before anything has been written to the output stream.
      */
     public CacheSetupOutboundInterceptor ()
     {
         super (Phase.PRE_STREAM);
-        addAfter(AttachmentOutInterceptor.class.getName()); 
-        addBefore(StaxOutInterceptor.class.getName()); 
+        addAfter (AttachmentOutInterceptor.class.getName ());
+        addBefore (StaxOutInterceptor.class.getName ());
     }
 
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
     {
-        // get the existing output stream
-        final OutputStream os = message.getContent(OutputStream.class);
-        
-        // Stick in a new cache object
-        final CacheModifyAndWriteOutputStream newOut = new CacheModifyAndWriteOutputStream(os);
-        message.setContent(OutputStream.class, newOut);
+        // Save the original output stream for when we want to write down the wire.
+        SdtContext.getContext ().setOriginalOutputStream (message.getContent (OutputStream.class));
+
+        // Create a caching stream to use as the output stream for the message. This will gather up the entire
+        // content as the chain is run. Do not use CacheAndWriteOutputStream (created by LoggingOutInterceptor - this
+        // therefore cannot be turned on) since it caches the message but also writes it down the wire before it has
+        // been enriched.
+        final CachedOutputStream cacheOutputStream = new CachedOutputStream ();
+        message.setContent (OutputStream.class, cacheOutputStream);
     }
 }

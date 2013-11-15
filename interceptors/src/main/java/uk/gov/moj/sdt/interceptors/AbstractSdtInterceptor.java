@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,9 +41,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.helpers.IOUtils;
-import org.apache.cxf.helpers.LoadingByteArrayOutputStream;
 import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.io.CacheModifyAndWriteOutputStream;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.io.CachedWriter;
 import org.apache.cxf.io.DelegatingInputStream;
@@ -99,6 +96,9 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
             // Set the out bound message
             enrichedEnvelope = enricher.enrichXml (enrichedEnvelope);
         }
+
+        // // Replace raw out XML with entire message, ready for outbount service request logging.
+        // SdtContext.getContext ().setRawOutXml (enrichedEnvelope);
 
         LOGGER.debug ("completed - running through list of enrichers");
 
@@ -195,39 +195,21 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
      */
     protected void replaceOutputMessage (final SoapMessage message, final String payload)
     {
-        try
+        // Replacement of output stream is only allowed if the existing output stream is already a cached output
+        // stream.
+        final OutputStream os = message.getContent (OutputStream.class);
+        if ( !CachedOutputStream.class.isAssignableFrom (os.getClass ()))
         {
-            // Get the existing output stream.
-            final OutputStream os = message.getContent (OutputStream.class);
-
-            // Make sure it is a CacheAndWriteOutputStream otherwise we cannot replace the contents.
-            if ( !CacheModifyAndWriteOutputStream.class.isAssignableFrom (os.getClass ()))
-            {
-                throw new IllegalStateException (
-                        "Interceptors require earlier interceptor to setup CacheModifyAndWriteOutputStream "
-                                + "so that contents can be read non destructively and modified.");
-            }
-
-            // Cast to a stream using which we can replace the contents.
-            final CacheModifyAndWriteOutputStream outputStream =
-                    CacheModifyAndWriteOutputStream.class.cast (os);
-            outputStream.flush ();
-
-            // Setup inner stream with correct content.
-            final ByteArrayOutputStream replacementStream = new LoadingByteArrayOutputStream ();
-            final byte[] byteArray = payload.getBytes ();
-            replacementStream.write (byteArray, 0, byteArray.length);
-
-            // Reset the inner stream which contains the output contents.
-            outputStream.resetOut (replacementStream, false);
-            
-            // Replace the underlying stream.
-            outputStream.modifyOutputStream (replacementStream);
+            throw new RuntimeException ("Output stream is of type [" + os.getClass ().getCanonicalName () +
+                    "] but must be of type CachedOutputStream. Make sure " +
+                    "CacheSetupOutboundInterceptor has been configured earlier in the chain.");
         }
-        catch (final IOException e)
-        {
-            throw new RuntimeException (e);
-        }
+
+        // Create new cached output stream to replace existing one.
+        message.setContent (OutputStream.class, new CachedOutputStream ());
+
+        // Now write new contents to it.
+        this.writeOutputMessage (message, payload);
     }
 
     /**
@@ -243,25 +225,19 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 
         try
         {
-            // Get the output stream produced so far by CXF.
             final OutputStream os = message.getContent (OutputStream.class);
-
-            // Make sure it is a CachedOutputStream otherwise we cannot see the contents.
             if ( !CachedOutputStream.class.isAssignableFrom (os.getClass ()))
             {
-                throw new IllegalStateException (
-                        "Interceptors require  CXF to setup CachedOutputStream so that contents "
-                                + "can be read non destructively.");
+                throw new RuntimeException ("Output stream is of type [" + os.getClass ().getCanonicalName () +
+                        "] but must be of type CachedOutputStream. Make sure " +
+                        "CacheSetupOutboundInterceptor has been configured earlier in the chain.");
             }
 
-            // Get the cached stream put in the message earlier.
-            final CachedOutputStream csnew = CachedOutputStream.class.cast (os);
-            csnew.flush ();
+            final CachedOutputStream cs = CachedOutputStream.class.cast (os);
+            cs.flush ();
 
             // Get the data waiting to be written on the stream.
-            payload = IOUtils.toString (csnew.getInputStream (), "UTF-8");
-
-            // org.apache.commons.io.IOUtils.closeQuietly (csnew);
+            payload = IOUtils.toString (cs.getInputStream (), "UTF-8");
         }
         catch (final IOException e)
         {
@@ -269,6 +245,35 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
         }
 
         return payload;
+    }
+
+    /**
+     * Write data to the output stream.
+     * 
+     * @param message the SOAP message to be written to.
+     * @param payload the new payload to add to the message.
+     */
+    protected void writeOutputMessage (final SoapMessage message, final String payload)
+    {
+        try
+        {
+            // Get the original stream which is due to be written from the message.
+            final OutputStream os = message.getContent (OutputStream.class);
+
+            // Turn the modified data into a new input stream.
+            final InputStream replaceInStream = org.apache.commons.io.IOUtils.toInputStream (payload, "UTF-8");
+
+            // Copy the new input stream to the output stream and close the input stream.
+            org.apache.commons.io.IOUtils.copy (replaceInStream, os);
+            org.apache.commons.io.IOUtils.closeQuietly (replaceInStream);
+
+            // Flush the output stream, set it in the message and close it.
+            os.flush ();
+        }
+        catch (final IOException e)
+        {
+            throw new RuntimeException (e);
+        }
     }
 
     /**

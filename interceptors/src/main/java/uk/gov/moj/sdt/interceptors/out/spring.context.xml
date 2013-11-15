@@ -29,4 +29,8 @@
 	<bean id="uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor" 
 		class="uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor">
 	</bean>
+
+	<bean id="uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor" 
+		class="uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor">
+	</bean>
 </beans>

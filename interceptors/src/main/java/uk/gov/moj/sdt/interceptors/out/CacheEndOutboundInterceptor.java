@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -28,10 +28,48 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+package uk.gov.moj.sdt.interceptors.out;
+
+import java.io.OutputStream;
+
+import org.apache.cxf.binding.soap.SoapMessage;
+import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.phase.Phase;
+
+import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
- * This is used to create package declarations, package annotations, package comments and Javadoc tags.
+ * This interceptor restores the original output stream created by CXF. This should be done after the cached output
+ * stream has been finished with. While the original output stream is replaced by the caching output stream nothing will
+ * be written down the wire. When we are ready to send enriched content the original stream is restored and the contents
+ * of the cache output stream written to it.
+ * 
+ * @author Robin Compston
+ * 
  */
-// CHECKSTYLE:OFF
-package org.apache.cxf.io;
-//CHECKSTYLE:OFF
+public class CacheEndOutboundInterceptor extends AbstractSdtInterceptor
+{
+
+    /**
+     * Constructor to position this interceptor before anything has been written to the output stream.
+     */
+    public CacheEndOutboundInterceptor ()
+    {
+        super (Phase.PREPARE_SEND_ENDING);
+        addAfter (ServiceRequestOutboundInterceptor.class.getName ());
+    }
+
+    @Override
+    public void handleMessage (final SoapMessage message) throws Fault
+    {
+        // Get the cached output stream payload. 
+        final String payload = this.readOutputMessage (message);
+        
+        // Restore the original output stream created by CXF.
+        message.setContent (OutputStream.class, SdtContext.getContext ().getOriginalOutputStream ());
+
+        // Write the payload to the original output stream.
+        this.writeOutputMessage (message, payload);
+    }
+}

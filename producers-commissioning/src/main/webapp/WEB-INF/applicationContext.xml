@@ -22,11 +22,15 @@
 		<jaxws:inInterceptors>
 			<ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
 			<ref bean="uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor" />
+			<ref
+				bean="uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor" />
 		</jaxws:inInterceptors>
 		<jaxws:outInterceptors>
- 			<ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />
+			<ref bean="uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor" />
+			<ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />
 			<ref
 				bean="uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor" />
+            <ref bean="uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor" />              
 		</jaxws:outInterceptors>
 		<jaxws:outFaultInterceptors>
 			<ref bean="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor" />

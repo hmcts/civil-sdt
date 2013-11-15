@@ -333,7 +333,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         // it times out
         httpClientPolicy.setConnectionTimeout (10000);
         // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
-        httpClientPolicy.setReceiveTimeout (10000000);
+        httpClientPolicy.setReceiveTimeout (10000);
         httpConduit.setClient (httpClientPolicy);
 
         return client;

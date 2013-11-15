@@ -75,9 +75,9 @@ public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
-    public void handleMessage (final SoapMessage soapMessage) throws Fault
+    @Transactional (propagation = Propagation.REQUIRES_NEW)
+    public void handleMessage (final SoapMessage message) throws Fault
     {
-        this.persistEnvelope (this.readOutputMessage (soapMessage));
+        this.persistEnvelope (this.readOutputMessage (message));
     }
 }

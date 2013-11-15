@@ -60,15 +60,15 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor
     public XmlOutboundInterceptor ()
     {
         super (Phase.PREPARE_SEND_ENDING);
-        // addBefore (LoggingOutInterceptor.class.getName ());
+        addBefore (ServiceRequestOutboundInterceptor.class.getName ());
     }
 
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
     {
-        // Write the given XML into the output stream in order to enrich the generic XML with raw non-generic XML.
+        // Get the cached output stream payload. 
         final String payload = this.readOutputMessage (message);
-        
+
         // Modify the payload with enrichers.
         String modifiedPayload = changeOutboundMessage (payload);
         if (modifiedPayload == null)
