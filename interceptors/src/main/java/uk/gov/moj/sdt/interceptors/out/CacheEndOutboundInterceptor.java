@@ -34,6 +34,7 @@ import java.io.OutputStream;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.phase.Phase;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
@@ -63,9 +64,17 @@ public class CacheEndOutboundInterceptor extends AbstractSdtInterceptor
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
     {
-        // Get the cached output stream payload. 
+        // Do safety check.
+        final OutputStream os = message.getContent (OutputStream.class);
+        if ( !CachedOutputStream.class.isAssignableFrom (os.getClass ()))
+        {
+            throw new RuntimeException (this.getClass ().getCanonicalName () +
+                    " may only be configure if preceded by CacheSetupOutboundInterceptor.");
+        }
+
+        // Get the cached output stream payload.
         final String payload = this.readOutputMessage (message);
-        
+
         // Restore the original output stream created by CXF.
         message.setContent (OutputStream.class, SdtContext.getContext ().getOriginalOutputStream ());
 

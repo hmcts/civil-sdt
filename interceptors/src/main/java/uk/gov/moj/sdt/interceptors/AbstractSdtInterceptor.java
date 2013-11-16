@@ -267,7 +267,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
             org.apache.commons.io.IOUtils.copy (replaceInStream, os);
             org.apache.commons.io.IOUtils.closeQuietly (replaceInStream);
 
-            // Flush the output stream, set it in the message and close it.
+            // Flush the output stream.
             os.flush ();
         }
         catch (final IOException e)
