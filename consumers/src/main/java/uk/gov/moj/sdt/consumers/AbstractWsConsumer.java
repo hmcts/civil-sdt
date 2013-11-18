@@ -108,6 +108,7 @@ public abstract class AbstractWsConsumer
         // Set endpoint address
         final BindingProvider provider = (BindingProvider) client;
         provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY, webServiceEndPoint);
+        provider.getRequestContext ().put (org.apache.cxf.message.Message.ENDPOINT_ADDRESS, webServiceEndPoint);
 
         final HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();

@@ -13,7 +13,9 @@
         <property name="bindingId" value="http://www.w3.org/2003/05/soap/bindings/HTTP/"/> 
         <property name="outInterceptors">
             <list>
+            	<ref bean="uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor" />
                 <ref bean="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" />
+                <ref bean="uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor" />
             </list>
         </property>
         <property name="inInterceptors">
@@ -23,6 +25,20 @@
         </property>
         <property name="features">
             <bean class="org.apache.cxf.feature.LoggingFeature"/>
+        </property>
+        <property name="properties">
+            <map>
+                <entry key="soap.env.ns.map"> 
+                    <map> 
+                        <entry key="tsqreq" value="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema"/> 
+                        <entry key="tsqres" value="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema"/> 
+                        <entry key="base" value="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/> 
+                        <entry key="tireq" value="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema"/> 
+                        <entry key="tires" value="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema"/> 
+                    </map> 
+                </entry> 
+            <entry key="disable.outputstream.optimization" value="true"/> 
+            </map>
         </property>
     </bean>
         
