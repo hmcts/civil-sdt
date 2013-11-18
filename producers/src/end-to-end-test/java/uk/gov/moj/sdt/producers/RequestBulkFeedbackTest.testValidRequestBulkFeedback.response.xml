@@ -12,15 +12,26 @@
          </ns2:bulkRequestStatus>
          <ns2:responses>
             <ns2:response requestId="USER_REQUEST_ID_BF1" requestType="mcolClaim">
-               <ns2:responseDetail/>
+               <ns2:responseDetail>
+                   <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                        <mresp:claimNumber>21346546</mresp:claimNumber>
+                        <mresp:issueDate>2001-01-01</mresp:issueDate>
+                        <mresp:serviceDate>2001-01-01</mresp:serviceDate>
+                        <mresp:warrantNumber>12345678</mresp:warrantNumber>
+                        <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
+                        <mresp:enforcingCourtName>Court Code</mresp:enforcingCourtName>
+                        <mresp:fee>0</mresp:fee>
+                        <mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus>
+                    </ind:mcolResponseDetail>
+               </ns2:responseDetail>
                <ns2:status code="Accepted"/>
             </ns2:response>
-               <ns2:response requestId="USER_REQUEST_ID_BF1" requestType="mcolClaim">
+               <ns2:response requestId="USER_REQUEST_ID_BF2" requestType="mcolClaim">
                <ns2:responseDetail/>
                <ns2:status code="Rejected">
                 <error>
-                    <code>BULK_REF_INVALID</code>
-                    <description>There is no Bulk Request submission associated with your account for the supplied SDT Bulk Reference MCOL-10012013010101-100099998.</description>
+                    <code>1</code>
+                    <description>Error message.</description>
                 </error>
                </ns2:status>
             </ns2:response>
