@@ -56,7 +56,7 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
      * The persistence class for this interceptor.
      */
     private IGenericDao serviceRequestDao;
-   
+
     /**
      * Default constructor.
      * 
@@ -98,37 +98,36 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
      */
     protected void persistEnvelope (final String envelope)
     {
-        final SdtContext sdtContext = SdtContext.getContext ();
-        final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
-    
         if (LOGGER.isDebugEnabled ())
         {
             LOGGER.debug ("ServiceRequestOutputboundInterceptor creating " +
-                    "outbound payload database log for ServiceRequest: " + sdtContext.getServiceRequestId ());
+                    "outbound payload database log for ServiceRequest: " +
+                    SdtContext.getContext ().getServiceRequestId ());
         }
-    
-        final Long serviceRequestId = sdtContext.getServiceRequestId ();
-    
+
+        final Long serviceRequestId = SdtContext.getContext ().getServiceRequestId ();
+
         // If there is no service request id then the ServiceRequestInboundInterceptor has not been called and there
         // will be no service request row in the database.
         if (serviceRequestId != null)
         {
             // Get the log message for the inbound request so we can add the outbound response to it.
             final IServiceRequest serviceRequest =
-                    serviceRequestDao.fetch (ServiceRequest.class, sdtContext.getServiceRequestId ());
-    
+                    this.getServiceRequestDao ().fetch (ServiceRequest.class,
+                            SdtContext.getContext ().getServiceRequestId ());
+
             // Add the response and timestamp to the service request record.
             serviceRequest.setResponsePayload (envelope);
             serviceRequest.setResponseDateTime (new LocalDateTime ());
-    
+
             // Note that bulk reference will be null if this is not a bulk submission.
             final String bulkReference = SdtContext.getContext ().getSubmitBulkReference ();
             if (bulkReference != null && bulkReference.length () > 0)
             {
                 serviceRequest.setBulkReference (bulkReference);
             }
-    
-            serviceRequestDao.persist (serviceRequest);
+
+            this.getServiceRequestDao ().persist (serviceRequest);
         }
     }
 }
