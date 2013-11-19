@@ -9,11 +9,11 @@
  * conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
+ * following acknowledgement: "This product includes Money Claims OnLine."
  * - Products derived from this software may not be called "Money Claims OnLine" nor may
  * "Money Claims OnLine" appear in their names without prior written permission of the
  * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
+ * - Redistributions of any form whatsoever must retain the following acknowledgement: "This
  * product includes Money Claims OnLine."
  * This software is provided "as is" and any expressed or implied warranties, including, but
  * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
@@ -24,12 +24,12 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: SubmitQueryTest.java 17596 2013-11-06 15:26:54Z agarwals $
- * $LastChangedRevision: 17596 $
- * $LastChangedDate: 2013-11-06 15:26:54 +0000 (Wed, 06 Nov 2013) $
- * $LastChangedBy: agarwals $ */
+ * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
+ * $LastChangedRevision: 16414 $
+ * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
+ * $LastChangedBy: holmessm $ */
 
-package uk.gov.moj.sdt.producers;
+package uk.gov.moj.sdt.producers.comx;
 
 import javax.xml.bind.JAXBElement;
 
@@ -38,49 +38,58 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
+import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
-import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ObjectFactory;
-import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
  * Test class for end to end web service tests..
  * 
- * @author Robin Compston
+ * @author Sally Vonka
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/comx/spring*e2e.test.xml",
         "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml",
         "classpath*:uk/gov/moj/sdt/dao/spring*.xml"})
-public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType>
+public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType>
 {
-
     /**
-     * Method to call remote submit query endpoint to be tested.
+     * Method to call remote request bulk feedback endpoint to be tested.
      */
     @Test
-    public void testValid ()
+    public void testValidRequestBulkFeedback ()
     {
-        this.callWebService (SubmitQueryRequestType.class);
+        this.callWebService (BulkFeedbackRequestType.class);
+    }
+
+    /**
+     * Method to call remote request bulk feedback endpoint to be tested.
+     */
+    @Test
+    public void testInvalidRequestBulkFeedback ()
+    {
+        this.callWebService (BulkFeedbackRequestType.class);
     }
 
     @Override
-    protected SubmitQueryResponseType callTestWebService (final SubmitQueryRequestType request)
+    protected BulkFeedbackResponseType callTestWebService (final BulkFeedbackRequestType request)
     {
         // Get the SOAP proxy client.
         ISdtEndpointPortType client = getSdtEndpointClient ();
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
-        return client.submitQuery (request);
+        return client.getBulkFeedback (request);
     }
 
     @Override
-    protected JAXBElement<SubmitQueryResponseType> wrapJaxbObject (final SubmitQueryResponseType response)
+    protected JAXBElement<BulkFeedbackResponseType> wrapJaxbObject (final BulkFeedbackResponseType response)
     {
         // Use the provided factor to create a wrapped instance of the response.
         ObjectFactory objectFactory = new ObjectFactory ();
-        return objectFactory.createSubmitQueryResponse (response);
+        return objectFactory.createBulkFeedbackResponse (response);
     }
+
 }

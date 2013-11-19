@@ -31,6 +31,16 @@
 	<available filepath="." file="${integ.test.filters.dir}" type="dir" property="integ.test.filters.exists" />
 	<!-- Check if integ test webapp directory exists and set indicator property -->
 	<available filepath="." file="${integ.test.webapp.dir}" type="dir" property="integ.test.webapp.exists" />
+	
+	<!-- Check if end-to-end test src directory exists and set indicator property -->
+	<available filepath="." file="${endtoend.test.src.dir}" type="dir" property="endtoend.test.src.exists" />
+	<!-- Check if end-to-end test resources directory exists and set indicator property -->
+	<available filepath="." file="${endtoend.test.resources.dir}" type="dir" property="endtoend.test.resources.exists" />
+	<!-- Check if end-to-end test filters directory exists and set indicator property -->
+	<available filepath="." file="${endtoend.test.filters.dir}" type="dir" property="endtoend.test.filters.exists" />
+	<!-- Check if end-to-end test webapp directory exists and set indicator property -->
+	<available filepath="." file="${endtoend.test.webapp.dir}" type="dir" property="endtoend.test.webapp.exists" />
+	
 	<!-- Check if main resources directory exists and set indicator property -->
 	<available filepath="." file="${resources.dir}" type="dir" property="main.resources.exists" />
 
@@ -56,11 +66,14 @@
 		<mkdir dir="${target.dir}" />
 		<mkdir dir="${unit.test.classes.dir}" />
 		<mkdir dir="${integ.test.classes.dir}" />
+		<mkdir dir="${endtoend.test.classes.dir}"/>
 		<mkdir dir="${lib.test.dir}" />
 		<mkdir dir="${junit.unit.test-reports.dir}" />
 		<mkdir dir="${junit.unit.output.dir}" />
 		<mkdir dir="${junit.integ.test-reports.dir}" />
 		<mkdir dir="${junit.integ.output.dir}" />
+		<mkdir dir="${junit.endtoend.test-reports.dir}"/>
+		<mkdir dir="${junit.endtoend.output.dir}"/>
 		<mkdir dir="${coverage.dir}" />
 		<mkdir dir="${instr.target.dir}" />
 	</target>
@@ -71,10 +84,13 @@
 		<delete dir="${junit.unit.output.dir}" />
 		<delete dir="${junit.integ.test-reports.dir}" />
 		<delete dir="${junit.integ.output.dir}" />
+		<delete dir="${junit.endtoend.test-reports.dir}"/>
+		<delete dir="${junit.endtoend.output.dir}"/>
 		<delete dir="${junit.test-results.dir}" />
 		<delete dir="${test-logs.dir}" />
 		<delete dir="${unit.test.classes.dir}" />
 		<delete dir="${integ.test.classes.dir}" />
+		<delete dir="${endtoend.test.classes.dir}"/>
 		<delete dir="${lib.test.dir}" />
 		<delete dir="${coverage.dir}" />
 		<delete dir="${instr.target.dir}" />
@@ -346,9 +362,33 @@
 				</filterchain>
 				<mapper type="glob" from="*" to="*" />
 			</copy>
+		
+			<copy todir="${endtoend.test.classes.dir}" overwrite="true">
+				<fileset dir="${resources.dir}" casesensitive="false">
+					<include name="**/*.xml" />
+					<include name="**/*.properties" />
+				</fileset>	
+				<filterchain>
+					<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+				</filterchain>
+				<mapper type="glob" from="*" to="*" />
+			</copy>
 
 			<!-- Do not apply filtering to any binary files or else they will be corrupted -->
 			<copy todir="${integ.test.classes.dir}" overwrite="true">
+				<fileset dir="${resources.dir}" casesensitive="false">
+					<include name="**/*" />
+					<exclude name="**/*.xml" />
+					<exclude name="**/*.properties" />
+					<exclude name="**/*.template" />
+					<exclude name="**/*.dtd" />
+					<exclude name="**/*.xsd" />
+					<exclude name="**/.svn/**" />
+				</fileset>
+			</copy>
+		
+			<!-- Do not apply filtering to any binary files or else they will be corrupted -->
+			<copy todir="${endtoend.test.classes.dir}" overwrite="true">
 				<fileset dir="${resources.dir}" casesensitive="false">
 					<include name="**/*" />
 					<exclude name="**/*.xml" />
@@ -493,21 +533,155 @@
 
 	</target>
 
-	<!-- Runs end-to-end tests from the current test bundle. If this is not a qtp test bundle then nothing is executed. -->
-	<target name="run-end-to-end-tests" description="Run qtp tests associated with this module">
+	<!-- Compile all end to end test source -->
+	<target name="compile-endtoend-tests" if="endtoend.test.src.exists" depends="init-tests" description="Compile test src directories">
+		<if>
+			<available file="${unit.test.classes.dir}" type="dir" />
+			<then>
+				<javac debug="${javac.debug}" srcdir="${endtoend.test.src.dir}" destdir="${endtoend.test.classes.dir}" includeAntRuntime="true">
+					<compilerarg line="-encoding ISO-8859-1" />
+					<!-- May be classes in unit test which we need -->
+					<classpath>
+						<path refid="build.endtoend.test.classpath" />
+						<pathelement path="${unit.test.classes.dir}" />
+					</classpath>
+				</javac>
+			</then>
+			<else>
+				<javac debug="${javac.debug}" srcdir="${endtoend.test.src.dir}" destdir="${endtoend.test.classes.dir}" classpathref="build.endtoend.test.classpath" includeAntRuntime="true">
+					<compilerarg line="-encoding ISO-8859-1" />
+				</javac>
+			</else>
+		</if>
+	</target>
+
+	<!-- Copy end to end test src resources -->
+	<target name="-copy-endtoend-test-src-resources" if="endtoend.test.src.exists" depends="init-tests" description="Copy any resources in the src directory">
+		<copy todir="${endtoend.test.classes.dir}" overwrite="true">
+			<fileset dir="${endtoend.test.src.dir}" casesensitive="false">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+				<include name="**/*.template" />
+				<include name="**/*.dtd" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Copy end to end test 'resources' resources -->
+	<target name="-copy-endtoend-test-resources-resources" if="endtoend.test.resources.exists" depends="init-tests" description="Copy any resources in the src directory">
+		<copy todir="${endtoend.test.classes.dir}" overwrite="true">
+			<fileset dir="${endtoend.test.resources.dir}" casesensitive="false">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+				<include name="**/*.template" />
+				<include name="**/*.dtd" />
+				<include name="**/*.xsd" />
+			</fileset>
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+			</filterchain>
+			<mapper type="glob" from="*" to="*" />
+		</copy>
+
+		<!-- Do not apply filtering to any binary files or else they will be corrupted -->
+		<copy todir="${endtoend.test.classes.dir}" overwrite="true">
+			<fileset dir="${endtoend.test.resources.dir}" casesensitive="false">
+				<include name="**/*" />
+				<exclude name="**/*.xml" />
+				<exclude name="**/*.properties" />
+				<exclude name="**/*.template" />
+				<exclude name="**/*.dtd" />
+				<exclude name="**/*.xsd" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</copy>
+	</target>
+		
+	<!-- Copy end to end test filters resources -->
+	<target name="-copy-endtoend-test-filters-resources" if="endtoend.test.filters.exists" depends="init-tests" description="Copy any resources in the filters directory">
+		<copy todir="${endtoend.test.classes.dir}" overwrite="true">
+			<fileset dir="${endtoend.test.filters.dir}" casesensitive="false">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+				<include name="**/*.template" />
+				<include name="**/*.dtd" />
+				<include name="**/*.xsd" />
+			</fileset>
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+			</filterchain>
+			<mapper type="glob" from="*" to="*" />
+		</copy>
+
+		<!-- Do not apply filtering to any binary files or else they will be corrupted -->
+		<copy todir="${endtoend.test.classes.dir}" overwrite="true">
+			<fileset dir="${endtoend.test.filters.dir}" casesensitive="false">
+				<include name="**/*" />
+				<exclude name="**/*.xml" />
+				<exclude name="**/*.properties" />
+				<exclude name="**/*.template" />
+				<exclude name="**/*.dtd" />
+				<exclude name="**/*.xsd" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Copy end to end test webapp resources. This must run after the compile. -->
+	<target name="-copy-endtoend-test-webapp-resources" if="endtoend.test.webapp.exists" depends="init-tests, compile-endtoend-tests" description="Copy any resources in the WEB-INF directory">
+		<copy todir="${endtoend.test.classes.dir}" overwrite="true">
+			<fileset dir=".">
+				<!-- Upper case needed ! -->
+				<include name="${endtoend.test.webapp.dir}/**/*.xml" />
+			</fileset>
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+			</filterchain>
+			<mapper type="glob" from="*" to="*" />
+		</copy>
+	</target>
+
+	<!-- Assemble end to end test artefacts -->
+	<target name="dist-endtoend-tests" if="endtoend.test.src.exists" depends="compile-endtoend-tests, -copy-endtoend-test-src-resources, -copy-endtoend-test-resources-resources, 
+		-copy-main-resources-resources, -copy-endtoend-test-filters-resources, -copy-endtoend-test-webapp-resources" description="Generate the distribution" />
+
+	<!-- Runs end to end tests from the current test bundle. If this is not a end to end test bundle then nothing is executed. -->
+	<target name="run-endtoend-tests" depends="dist-tests" description="Run end to end tests associated with this module">
+
+		<emma>
+			<instr instrpath="${classes.dir}" destdir="${instr.target.dir}" metadatafile="${coverage.dir}/metadata.emma" mode="copy">
+                <filter excludes="*Mock*" />
+                <filter excludes="*Test*" />
+			</instr>
+		</emma>
+
 		<!-- Run the tests -->
-		<junit fork="yes" forkmode="once" errorproperty="tests.error" failureproperty="tests.failed">
+		<junit fork="yes" forkmode="once" errorproperty="tests.error" failureproperty="tests.failed" dir="${basedir}">
 			<jvmarg value="-Xms1024M" />
 			<jvmarg value="-Xmx1024M" />
 			<jvmarg value="-XX:MaxPermSize=256M" />
 
+			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
+			<jvmarg value="-Demma.coverage.out.merge=true" />
+
+			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8008" />
+
 			<syspropertyset refid="all-runtime-properties" />
 
-			<classpath refid="build.qtp.test.classpath" />
+			<classpath>
+				<pathelement location="${instr.target.dir}" />
+				<pathelement location="${endtoend.test.classes.dir}" />
+				<pathelement location="${classes.dir}" />
+				<fileset dir="${lib.test.dir}">
+				     <include name="**/*.jar"/>
+				</fileset>
+				<path refid="build.endtoend.test.classpath" />
+			</classpath>
 
-			<batchtest todir="${junit.end-to-end.output.dir}">
-				<fileset dir="${build.dir}">
-					<include name="end-to-end**/*Test.class" />
+			<batchtest todir="${junit.endtoend.output.dir}">
+				<fileset dir="${endtoend.test.classes.dir}">
+					<include name="**/*Test.class" />
+					<exclude name="**/Abstract*.class" />
 				</fileset>
 			</batchtest>
 
@@ -518,13 +692,48 @@
 			<formatter type="brief" usefile="false" />
 		</junit>
 
-		<antcall target="generate-test-reports" />
+		<antcall target="generate-endtoend-test-reports" />
+		<available file="${coverage.dir}/coverage.emma" property="coverage.report.exists" />
+		<antcall target="generate-emma-coverage-reports" />
+
+	</target>
+
+	<!-- Generate end to end test reports from junit results -->
+	<target name="generate-endtoend-test-reports">
+
+		<!-- Keep a record of the properties -->
+		<echoproperties destfile="${junit.endtoend.test-reports.dir}/ant.properties" prefix="" />
+
+		<!-- Format the reports produced by the junit tests -->
+		<junitreport todir="${junit.endtoend.test-reports.dir}">
+			<fileset dir=".">
+				<include name="**/${junit.endtoend.output.dir}/TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.endtoend.test-reports.dir}" />
+		</junitreport>
+
+		<!-- Also, package up the log files -->
+		<mkdir dir="${test-logs.dir}" />
+		<copy todir="${test-logs.dir}">
+			<fileset dir=".">
+				<include name="*/${junit.endtoend.output.dir}/*.log" />
+			</fileset>
+			<mapper type="regexp" from="^(.+)[\\/]${junit.endtoend.output.dir}[/\\](.+)\.log$$" to="\1-\2.log" />
+		</copy>
+
+		<!-- Finally, why not report on coverage, too? -->
+		<!-- <antcall target="report-coverage" /> -->
+
+		<antcall target="-echo-junit-error" />
+		<antcall target="-echo-junit-failure" />
+
 	</target>
 
 	<!-- Build unit and integ test jar file -->
-	<target name="dist-tests" depends="dist-unit-tests, dist-integ-tests" description="Generate the test distribution">
+	<target name="dist-tests" depends="dist-unit-tests, dist-integ-tests, dist-endtoend-tests" description="Generate the test distribution">
         <jar jarfile="${lib.test.dir}/${dist.test.jar}" basedir="${unit.test.classes.dir}" />
         <jar update="true" jarfile="${lib.test.dir}/${dist.test.jar}" basedir="${integ.test.classes.dir}" />
+		<jar update="true" jarfile="${lib.test.dir}/${dist.test.jar}" basedir="${endtoend.test.classes.dir}" />
 	</target>
 
 	<target name="-echo-junit-error" if="tests.error">

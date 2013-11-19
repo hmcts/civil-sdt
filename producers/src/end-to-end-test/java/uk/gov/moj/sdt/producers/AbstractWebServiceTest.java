@@ -43,8 +43,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.BindingProvider;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -68,7 +66,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  *            the type of the endpoint to be called.
  * @author Robin Compston
  */
-public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends TestCase
+public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 {
     /**
      * Static logging object.

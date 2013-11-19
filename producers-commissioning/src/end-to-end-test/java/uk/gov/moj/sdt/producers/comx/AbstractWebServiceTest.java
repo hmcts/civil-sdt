@@ -28,7 +28,7 @@
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
-package uk.gov.moj.sdt.producers;
+package uk.gov.moj.sdt.producers.comx;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,8 +42,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.BindingProvider;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
@@ -66,7 +64,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  *            the type of the endpoint to be called.
  * @author Robin Compston
  */
-public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends TestCase
+public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 {
     /**
      * Static logging object.

@@ -80,6 +80,15 @@
         <path refid="lib.app.dir" />
         <path refid="lib.test.dir" />
     </path>
+	
+	<!-- Set classpath for end to end tests -->
+	<path id="build.endtoend.test.classpath">
+        <path refid="emma.dir" />
+        <path refid="3rd-party.dir" />
+    	<path refid="3rd-party.spring3.dir" /> 
+        <path refid="lib.app.dir" />
+        <path refid="lib.test.dir" />
+	</path>
 
 	<!-- Apache CXF classpath to generate endpoint from WSDL -->
 	<path id="cxf.classpath">

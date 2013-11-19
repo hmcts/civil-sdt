@@ -29,7 +29,7 @@
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
 
-package uk.gov.moj.sdt.producers;
+package uk.gov.moj.sdt.producers.comx;
 
 import javax.xml.bind.JAXBElement;
 
@@ -50,7 +50,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/comx/spring*e2e.test.xml",
         "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml",
         "classpath*:uk/gov/moj/sdt/dao/spring*.xml"})
 public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType>
