@@ -44,19 +44,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import oracle.jdbc.pool.OracleDataSource;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.CompositeDataSet;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.filter.ExcludeTableFilter;
 import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
@@ -302,7 +306,8 @@ public final class DBUnitUtility
 
             // Insert the test data
             LOG.info ("Inserting data from filePath=" + filePath);
-            final IDataSet targetDataset = builder.build (DBUnitUtility.class.getResourceAsStream (filePath));
+            final IDataSet targetDataset = buildTargetDataset (builder, filePath);
+
             DatabaseOperation.INSERT.execute (dbConnection, targetDataset);
 
             // Enable triggers & constraints
@@ -324,6 +329,26 @@ public final class DBUnitUtility
             LOG.error ("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace ();
         }
+    }
+
+    /**
+     * Build DBUnit dataset. The dataset replaces placeholders with dynamic values. This is especially useful for date
+     * fields when date needs to be relative to current system date.
+     * 
+     * @param builder dbunit builder.
+     * @param filePath file containing test data.
+     * @return DBUnit dataset.
+     * @throws DataSetException in case of any dataset related errors.
+     */
+    private static IDataSet buildTargetDataset (final FlatXmlDataSetBuilder builder, final String filePath)
+        throws DataSetException
+    {
+
+        final IDataSet targetDataset = builder.build (DBUnitUtility.class.getResourceAsStream (filePath));
+        final ReplacementDataSet replacementDataSet = new ReplacementDataSet (targetDataset);
+        replacementDataSet.addReplacementObject ("[yesterday_date]", DateUtils.addDays (new Date (), -1));
+
+        return replacementDataSet;
     }
 
     /**
