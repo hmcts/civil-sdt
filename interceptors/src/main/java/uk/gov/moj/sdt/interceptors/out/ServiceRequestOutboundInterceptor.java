@@ -48,14 +48,13 @@ import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
  */
 public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
 {
-
     /**
      * Logger for this class.
      */
     public static final Logger LOG = LoggerFactory.getLogger (ServiceRequestOutboundInterceptor.class);
 
     /**
-     * Create.
+     * Default constructor.
      */
     public ServiceRequestOutboundInterceptor ()
     {
@@ -64,10 +63,9 @@ public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
     }
 
     /**
-     * Create.
+     * Create instance of {@link ServiceRequestOutboundInterceptor}.
      * 
-     * @param phase
-     *            phase.
+     * @param phase the phase of the CXF interceptor chain.
      */
     public ServiceRequestOutboundInterceptor (final String phase)
     {

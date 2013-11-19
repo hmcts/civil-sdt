@@ -46,6 +46,8 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * be written down the wire. When we are ready to send enriched content the original stream is restored and the contents
  * of the cache output stream written to it.
  * 
+ * This interceptor works as a pair with CacheSetupOutboundInterceptor. Both should be configured as CXF interceptors.
+ * 
  * @author Robin Compston
  * 
  */

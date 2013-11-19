@@ -54,6 +54,16 @@ public final class SdtContext
     private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext> ();
 
     /**
+     * A serviceRequestId.
+     */
+    private ILoggingContext loggingContext;
+
+    /**
+     * The output stream created by CXF which must be stored until we are ready to write the message.
+     */
+    private OutputStream originalOutputStream;
+
+    /**
      * The raw inbound XML handled by CXF and stored for application use in
      * thread local memory.
      */
@@ -78,9 +88,10 @@ public final class SdtContext
     private String submitBulkReference;
 
     /**
-     * A serviceRequestId.
+     * List to store the synchronisation tasks (commands) that are be executed
+     * by the message synchroniser when the transaction is committed.
      */
-    private ILoggingContext loggingContext;
+    private List<Runnable> synchronisationTasks;
 
     /**
      * Map to store the raw XML associated with the status of each individual
@@ -98,21 +109,23 @@ public final class SdtContext
     private Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
 
     /**
-     * List to store the synchronisation tasks (commands) that are be executed
-     * by the message synchroniser when the transaction is committed.
-     */
-    private List<Runnable> synchronisationTasks;
-
-    /**
-     * The output stream created by CXF which must be stored until we are ready to write the message.
-     */
-    private OutputStream originalOutputStream;
-
-    /**
      * Constructor for {@link com.sun.jmx.snmp.ThreadContext}.
      */
     private SdtContext ()
     {
+    }
+
+    /**
+     * Clears the synchronisation task list after the thread no longer needs it.
+     */
+    public void clearSynchronisationTasks ()
+    {
+        if (this.synchronisationTasks != null)
+        {
+            this.synchronisationTasks.clear ();
+            this.synchronisationTasks = null;
+        }
+
     }
 
     /**
@@ -126,9 +139,19 @@ public final class SdtContext
     }
 
     /**
-     * Getter for rawInXml.
+     * Get the original output stream.
      * 
-     * @return raw inbound XML.
+     * @return the original output stream.
+     */
+    public OutputStream getOriginalOutputStream ()
+    {
+        return originalOutputStream;
+    }
+
+    /**
+     * Retrieve the XML that makes up the inbound message.
+     * 
+     * @return xmlMessage the inbound message intercepted by CXF.
      */
     public String getRawInXml ()
     {
@@ -136,13 +159,23 @@ public final class SdtContext
     }
 
     /**
-     * Getter for rawOutXml.
+     * Retrieve the XML that makes up the outbound message.
      * 
-     * @return raw outbound XML.
+     * @return xmlMessage the outbound message intercepted by CXF.
      */
     public String getRawOutXml ()
     {
         return rawOutXml;
+    }
+
+    /**
+     * Get the service request id allocated by hibernate when storing the incoming message.
+     * 
+     * @return the serviceRequestId
+     */
+    public Long getServiceRequestId ()
+    {
+        return serviceRequestId;
     }
 
     /**
@@ -166,10 +199,9 @@ public final class SdtContext
     }
 
     /**
-     * Setter for rawInXml.
+     * Set the XML that makes up the inbound message.
      * 
-     * @param rawInXml
-     *            return raw inbound XML.
+     * @param rawInXml the inbound message intercepted by CXF.
      */
     public void setRawInXml (final String rawInXml)
     {
@@ -177,10 +209,9 @@ public final class SdtContext
     }
 
     /**
-     * Setter for rawOutXml.
+     * Set the XML that makes up the outbound message.
      * 
-     * @param rawOutXml
-     *            return raw outbound XML.
+     * @param rawOutXml the outbound message intercepted by CXF.
      */
     public void setRawOutXml (final String rawOutXml)
     {
@@ -195,27 +226,6 @@ public final class SdtContext
     public void setSubmitBulkReference (final String submitBulkReference)
     {
         this.submitBulkReference = submitBulkReference;
-    }
-
-    /**
-     * Get the SdtContext for this thread.
-     * 
-     * @return the SdtContext for this thread.
-     */
-    public static SdtContext getContext ()
-    {
-        SdtContext sdtContext = THREAD_LOCAL.get ();
-        if (sdtContext == null)
-        {
-            sdtContext = new SdtContext ();
-
-            final ILoggingContext loggingContext = new LoggingContext ();
-            sdtContext.setLoggingContext (loggingContext);
-
-            THREAD_LOCAL.set (sdtContext);
-        }
-
-        return sdtContext;
     }
 
     /**
@@ -265,26 +275,13 @@ public final class SdtContext
     }
 
     /**
-     * Clears the synchronisation task list after the thread no longer needs it.
-     */
-    public void clearSynchronisationTasks ()
-    {
-        if (this.synchronisationTasks != null)
-        {
-            this.synchronisationTasks.clear ();
-            this.synchronisationTasks = null;
-        }
-
-    }
-
-    /**
-     * get.
+     * Save the output stream for later retrieval.
      * 
-     * @return the serviceRequestId
+     * @param originalOutputStream the original stream created by CXF.
      */
-    public Long getServiceRequestId ()
+    public void setOriginalOutputStream (final OutputStream originalOutputStream)
     {
-        return serviceRequestId;
+        this.originalOutputStream = originalOutputStream;
     }
 
     /**
@@ -316,22 +313,23 @@ public final class SdtContext
     }
 
     /**
-     * Get the original output stream.
+     * Get the SdtContext for this thread.
      * 
-     * @return the original output stream.
+     * @return the SdtContext for this thread.
      */
-    public OutputStream getOriginalOutputStream ()
+    public static SdtContext getContext ()
     {
-        return originalOutputStream;
-    }
+        SdtContext sdtContext = THREAD_LOCAL.get ();
+        if (sdtContext == null)
+        {
+            sdtContext = new SdtContext ();
 
-    /**
-     * Save the output stream for later retrieval.
-     * 
-     * @param originalOutputStream the original stream created by CXF.
-     */
-    public void setOriginalOutputStream (final OutputStream originalOutputStream)
-    {
-        this.originalOutputStream = originalOutputStream;
+            final ILoggingContext loggingContext = new LoggingContext ();
+            sdtContext.setLoggingContext (loggingContext);
+
+            THREAD_LOCAL.set (sdtContext);
+        }
+
+        return sdtContext;
     }
 }
