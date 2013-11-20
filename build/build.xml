@@ -74,16 +74,10 @@
     	</tstamp>
     	<echo file="build.log" append="true">${now}: Cleaning tc-server ${line.separator}</echo>
     	
-        <!-- consumers and producers are part of prototype -->
-    	<delete file="${app.server.webapps.dir}/consumers.war" />
         <delete file="${app.server.webapps.dir}/producers.war" />
         <delete file="${app.server.webapps.dir}/producers-comx.war" />
-        <delete dir="${app.server.webapps.dir}/consumers" />
         <delete dir="${app.server.webapps.dir}/producers" />
         <delete dir="${app.server.webapps.dir}/producers-comx" />
-
-        <delete file="${c}/sdt.war" />
-        <delete dir="${app.server.webapps.dir}/sdt" />
 
         <!-- Delete cached servlets generated from jsps, even for insight application -->
         <delete dir="${app.server.webapps.dir}/../work/Catalina/localhost/_" />
