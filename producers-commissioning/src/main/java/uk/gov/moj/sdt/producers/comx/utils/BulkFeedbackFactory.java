@@ -157,7 +157,7 @@ public class BulkFeedbackFactory
      * @param params list of strings containing the information we need
      * 
      */
-    public void createIndividualRequest (final List<List<String>> params)
+    public void createIndividualRequests (final List<List<String>> params)
     {
 
         for (List<String> individualRequestList : params)

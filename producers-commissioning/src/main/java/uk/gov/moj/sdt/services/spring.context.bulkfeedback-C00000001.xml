@@ -4,22 +4,20 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
-	<!-- This is the spring configuration file for initialising error bulk feed back data -->
-
-	<!-- Submission date, this maps to created date in bulk submission -->
-	<bean id="org.joda.time.LocalDateTime.submissionDateError" class="org.joda.time.LocalDateTime">
-		<!-- Use static date of 22 July 2013 -->
-		 <constructor-arg index="0" value="2013"/>
-		 <constructor-arg index="1" value="7"/>
-		 <constructor-arg index="2" value="22"/>
-		 <constructor-arg index="3" value="13"/>
-		 <constructor-arg index="4" value="0"/>		
-	</bean>
-	
 	<!-- Bulk Submission definition -->
 	<bean id="uk.gov.moj.sdt.domain.api.IBulkSumissionC00000001" class="uk.gov.moj.sdt.domain.BulkSubmission">                
-        <property name="customerReference" value="USER_FILE_REFERENCE_c1"/>
-        <property name="createdDate" ref="org.joda.time.LocalDateTime.submissionDateError" />
+        <property name="customerReference" value="USER_FILE_REFERENCE_C1"/>
+        <!-- Submission date, this maps to created date in bulk submission -->
+        <property name="createdDate">
+            <bean class="org.joda.time.LocalDateTime">
+                <!-- Use static date of 22 July 2013 -->
+                 <constructor-arg index="0" value="2013"/>
+                 <constructor-arg index="1" value="7"/>
+                 <constructor-arg index="2" value="22"/>
+                 <constructor-arg index="3" value="13"/>
+                 <constructor-arg index="4" value="0"/> 
+            </bean>
+        </property>
         <property name="numberOfRequest" value="78"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
@@ -46,9 +44,9 @@
     </bean>    
 
     <!-- Create the individual requests via method invocation -->   	
- 	<bean id="createIndividualRequestError" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+ 	<bean id="createIndividualRequestC0000001" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
  		<property name="targetObject"><ref local="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryC00000001"/></property>   		
-   		<property name="targetMethod" value="createIndividualRequest"/>
+   		<property name="targetMethod" value="createIndividualRequests"/>
    		<property name="arguments">
      		<list>
      			<list>
