@@ -115,12 +115,12 @@ public class SubmitQueryConsumerTest
     private ITargetAppInternalEndpointPortType mockClient;
 
     /**
-     * Individual Request instance for testing in the methods.
+     * Submit query request instance for testing in the methods.
      */
     private ISubmitQueryRequest submitQueryRequest;
 
     /**
-     * Individual Request type for the individual request.
+     * Submit query Request type for the query request.
      */
     private SubmitQueryRequestType submitQueryRequestType;
 
@@ -250,7 +250,7 @@ public class SubmitQueryConsumerTest
     /**
      * 
      * @param domainObject the submit query domain object.
-     * @return the Jaxb individual request type.
+     * @return the Jaxb submit query request type.
      */
     private SubmitQueryRequestType createRequestType (final ISubmitQueryRequest domainObject)
     {
@@ -265,7 +265,7 @@ public class SubmitQueryConsumerTest
 
     /**
      * 
-     * @return individual request domain object
+     * @return submit query request domain object
      */
     private ISubmitQueryRequest createSubmitQueryRequest ()
     {
