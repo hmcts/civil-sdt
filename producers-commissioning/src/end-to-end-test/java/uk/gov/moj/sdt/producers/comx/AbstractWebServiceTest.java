@@ -52,7 +52,6 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
@@ -78,7 +77,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
     @Before
     public void setUp ()
     {
-        DBUnitUtility.loadDatabase (this.getClass (), true);
     }
 
     /**

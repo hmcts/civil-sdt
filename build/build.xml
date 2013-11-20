@@ -63,6 +63,7 @@
         <delete dir="${lib.test.dir}" />
         <delete dir="${junit.unit.test-reports.dir}" />
         <delete dir="${junit.integ.test-reports.dir}" />
+        <delete dir="${junit.endtoend.test-reports.dir}" />
         <delete file="../${logs.dir}/sdt*.*" />
     </target>
 
