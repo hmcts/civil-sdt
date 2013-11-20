@@ -125,7 +125,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
 
         // Get the client interface
         final ITargetAppInternalEndpointPortType client =
-                super.getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_QUERY.name (), webServiceEndPoint,
+                getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_QUERY.name (), webServiceEndPoint,
                         connectionTimeOut, receiveTimeOut);
 
         try
