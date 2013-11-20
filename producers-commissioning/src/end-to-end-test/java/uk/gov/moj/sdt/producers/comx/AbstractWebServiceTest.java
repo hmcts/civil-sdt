@@ -41,7 +41,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
@@ -49,9 +48,11 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Assert;
+import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.test.util.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
@@ -70,6 +71,15 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
      * Static logging object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (AbstractWebServiceTest.class);
+
+    /**
+     * Setup the test.
+     */
+    @Before
+    public void setUp ()
+    {
+        DBUnitUtility.loadDatabase (this.getClass (), true);
+    }
 
     /**
      * Method to call remote endpoint to be tested.
@@ -142,7 +152,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
      *            the JAXB object returned by the web service.
      * @return the XML corresponding to the given JAXB object tree.
      */
-    @SuppressWarnings ("unchecked")
     private void checkXmlFromJaxb (JaxbResponseType response)
     {
         try
@@ -321,9 +330,9 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
         Client clientProxy = ClientProxy.getClient (client);
 
         // Set endpoint address
-        BindingProvider provider = (BindingProvider) client;
-        provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://localhost.:8888/producers-comx/service/sdtapi");
+        // BindingProvider provider = (BindingProvider) client;
+        // provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+        // "http://localhost.:8888/producers-comx/service/sdtapi");
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();

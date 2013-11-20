@@ -5,11 +5,22 @@
  		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+           <list>
+               <value>classpath:uk/gov/moj/sdt/producers/client.properties</value>
+           </list>
+         </property>
+    </bean>
+	
 	<bean id="jaxWsProxyFactory" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
 		<property name="serviceClass"
 			value="uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType" />
 		<property name="address"
-			value="http://localhost:8888/producers/service/sdtapi" />
+			value="http://${server.hostname}:${server.portnumber}/producers/service/sdtapi" />
 	</bean>
 
 	<bean id="uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType"
@@ -21,7 +32,7 @@
 		<property name="serviceClass"
 			value="uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType" />
 		<property name="address"
-			value="http://localhost:8888/producers/service/sdtinternalapi" />
+			value="http://${server.hostname}:${server.portnumber}/producers/service/sdtinternalapi" />
 	</bean>
 
 	<bean

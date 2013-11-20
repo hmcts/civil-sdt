@@ -41,7 +41,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
@@ -332,9 +331,9 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
         Client clientProxy = ClientProxy.getClient (client);
 
         // Set endpoint address
-        BindingProvider provider = (BindingProvider) client;
-        provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://localhost:8888/producers/service/sdtapi");
+        // BindingProvider provider = (BindingProvider) client;
+        // provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+        // "http://localhost:8888/producers/service/sdtapi");
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();

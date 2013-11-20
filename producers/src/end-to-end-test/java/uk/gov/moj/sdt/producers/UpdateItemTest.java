@@ -31,7 +31,6 @@
 package uk.gov.moj.sdt.producers;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.ws.BindingProvider;
 
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -106,9 +105,9 @@ public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, Up
         Client clientProxy = ClientProxy.getClient (client);
 
         // Set endpoint address
-        BindingProvider provider = (BindingProvider) client;
-        provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://localhost:8888/producers/service/sdtinternalapi");
+        // BindingProvider provider = (BindingProvider) client;
+        // provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+        // "http://localhost:8888/producers/service/sdtinternalapi");
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
