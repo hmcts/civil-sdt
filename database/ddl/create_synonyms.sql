@@ -13,3 +13,15 @@ CREATE SYNONYM service_routings           FOR sdt_owner.service_routings;
 CREATE SYNONYM service_requests           FOR sdt_owner.service_requests;
 CREATE SYNONYM target_applications        FOR sdt_owner.target_applications;
 
+CREATE SYNONYM BULK_CUST_SEQ              FOR sdt_owner.BULK_CUST_SEQ;
+CREATE SYNONYM BULK_CUST_APP_SEQ          FOR sdt_owner.BULK_CUST_APP_SEQ;
+CREATE SYNONYM BULK_SUB_SEQ               FOR sdt_owner.BULK_SUB_SEQ;
+CREATE SYNONYM ERR_LOG_SEQ                FOR sdt_owner.ERR_LOG_SEQ;
+CREATE SYNONYM ERR_MESG_SEQ               FOR sdt_owner.ERR_MESG_SEQ;
+CREATE SYNONYM GLB_PAR_SEQ                FOR sdt_owner.GLB_PAR_SEQ;
+CREATE SYNONYM IND_REQ_SEQ                FOR sdt_owner.IND_REQ_SEQ;
+CREATE SYNONYM SER_ROU_SEQ                FOR sdt_owner.SER_ROU_SEQ;
+CREATE SYNONYM SER_TYP_SEQ                FOR sdt_owner.SER_TYP_SEQ;
+CREATE SYNONYM TAR_APP_SEQ                FOR sdt_owner.TAR_APP_SEQ;
+CREATE SYNONYM SDT_REF_SEQ                FOR sdt_owner.SDT_REF_SEQ;
+CREATE SYNONYM SRV_REQ_SEQ                FOR sdt_owner.SRV_REQ_SEQ;
