@@ -36,6 +36,20 @@ up as early as possible to ease diagnosis of Spring context initialisation issue
         </listener-class>
     </listener>
     
+    <!-- Filter to perform clean up of the Sdt Context information in the Thread Local -->
+    
+    <filter>
+    	<filter-name>ContextCleanUpFilter</filter-name>
+    	<filter-class>uk.gov.moj.sdt.utils.web.filter.ContextCleanupFilter</filter-class>
+    </filter>
+    
+    <!-- Pattern to indicate which path the filter should be applicable on. -->
+    
+    <filter-mapping>
+    	<filter-name>ContextCleanUpFilter</filter-name>
+    	<url-pattern>/service/*</url-pattern>
+    </filter-mapping>
+    
 	<!-- Servlet to handle Spring Web Services  - necessary in all application exposing web service endpoints -->
 	<servlet>
     	<servlet-name>cxfServlet</servlet-name>
