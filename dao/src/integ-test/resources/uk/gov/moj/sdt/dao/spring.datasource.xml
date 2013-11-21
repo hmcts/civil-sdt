@@ -20,7 +20,6 @@
          </property>
     </bean>
 
-    <!-- Following data source will later need to be changed to JNDI data source with pooling --> 
     <bean id="javax.sql.DataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="${db.driver}" />
         <property name="url" value="${db.url}" />
@@ -28,19 +27,4 @@
         <property name="password" value="${db.pass}" />
     </bean>
 
-    <!-- C3P0 connection pool -->
-	<!-- Disabled for now 
-    <bean id="javax.sql.DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${db.driver}"/>
-        <property name="jdbcUrl" value="${db.url}"/>
-        <property name="user" value="${db.user}"/>
-        <property name="password" value="${db.pass}"/>
-        <property name="initialPoolSize" value="${db.pool.initialSize}"/>
-        <property name="minPoolSize" value="${db.pool.minIdle}"/>
-        <property name="maxPoolSize" value="${db.pool.maxIdle}"/>
-        <property name="acquireIncrement" value="1"/>
-        <property name="acquireRetryAttempts" value="0"/>
-    </bean>
-    -->
-    
 </beans>

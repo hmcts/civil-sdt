@@ -6,9 +6,6 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<!-- Import the Spring datasource configuration -->
-	<import resource="classpath:uk/gov/moj/sdt/dao/spring.datasource.xml" />
-
 	<!-- Factory to make session objects -->
 	<bean id="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

@@ -11,7 +11,8 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
 			/WEB-INF/applicationContext.xml,
-            classpath*:uk/gov/moj/**/spring*.xml,
+            /WEB-INF/spring.datasource.xml,
+            classpath*:uk/gov/moj/**/spring*.xml
         </param-value>
     </context-param>
 
