@@ -54,7 +54,7 @@ public final class SdtContext
     private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext> ();
 
     /**
-     * A serviceRequestId.
+     * The state of current performance logging options.
      */
     private ILoggingContext loggingContext;
 
@@ -113,6 +113,27 @@ public final class SdtContext
      */
     private SdtContext ()
     {
+    }
+
+    /**
+     * Adds an task for synchronisation to the synchronisation list.
+     * 
+     * @param command
+     *            the runnable task for synchronisation.
+     * @return boolean - returns true if the synchronisation list is not already
+     *         initialized.
+     */
+    public boolean addSynchronisationTask (final Runnable command)
+    {
+        boolean returnValue = false;
+        if (this.synchronisationTasks == null)
+        {
+            this.synchronisationTasks = new ArrayList<Runnable> ();
+            returnValue = true;
+        }
+        this.synchronisationTasks.add (command);
+
+        return returnValue;
     }
 
     /**
@@ -189,6 +210,35 @@ public final class SdtContext
     }
 
     /**
+     * 
+     * @return the list of the synchronisation tasks.
+     */
+    public List<Runnable> getSynchronisationTasks ()
+    {
+        return this.synchronisationTasks;
+    }
+
+    /**
+     * Get map containing raw XML returned by the case management system for
+     * each request.
+     * 
+     * @return map containing raw XML returned by the case management system for
+     *         each request.
+     */
+    public Map<String, String> getTargetApplicationRespMap ()
+    {
+        return targetApplicationRespMap;
+    }
+
+    /**
+     * Clean up thread local.
+     */
+    public void remove ()
+    {
+        THREAD_LOCAL.remove ();
+    }
+
+    /**
      * Set the {@link ILoggingContext} object.
      * 
      * @param loggingContext the logging context.
@@ -196,6 +246,16 @@ public final class SdtContext
     public void setLoggingContext (final ILoggingContext loggingContext)
     {
         this.loggingContext = loggingContext;
+    }
+
+    /**
+     * Save the output stream for later retrieval.
+     * 
+     * @param originalOutputStream the original stream created by CXF.
+     */
+    public void setOriginalOutputStream (final OutputStream originalOutputStream)
+    {
+        this.originalOutputStream = originalOutputStream;
     }
 
     /**
@@ -219,6 +279,17 @@ public final class SdtContext
     }
 
     /**
+     * Set.
+     * 
+     * @param serviceRequestId
+     *            the serviceRequestId to set
+     */
+    public void setServiceRequestId (final Long serviceRequestId)
+    {
+        this.serviceRequestId = serviceRequestId;
+    }
+
+    /**
      * Set new value of submitBulkReference.
      * 
      * @param submitBulkReference new value of submitBulkReference.
@@ -226,18 +297,6 @@ public final class SdtContext
     public void setSubmitBulkReference (final String submitBulkReference)
     {
         this.submitBulkReference = submitBulkReference;
-    }
-
-    /**
-     * Get map containing raw XML returned by the case management system for
-     * each request.
-     * 
-     * @return map containing raw XML returned by the case management system for
-     *         each request.
-     */
-    public Map<String, String> getTargetApplicationRespMap ()
-    {
-        return targetApplicationRespMap;
     }
 
     /**
@@ -251,65 +310,6 @@ public final class SdtContext
     public void setTargetApplicationRespMap (final Map<String, String> targetApplicationRespMap)
     {
         this.targetApplicationRespMap = targetApplicationRespMap;
-    }
-
-    /**
-     * Adds an task for synchronisation to the synchronisation list.
-     * 
-     * @param command
-     *            the runnable task for synchronisation.
-     * @return boolean - returns true if the synchronisation list is not already
-     *         initialized.
-     */
-    public boolean addSynchronisationTask (final Runnable command)
-    {
-        boolean returnValue = false;
-        if (this.synchronisationTasks == null)
-        {
-            this.synchronisationTasks = new ArrayList<Runnable> ();
-            returnValue = true;
-        }
-        this.synchronisationTasks.add (command);
-
-        return returnValue;
-    }
-
-    /**
-     * Save the output stream for later retrieval.
-     * 
-     * @param originalOutputStream the original stream created by CXF.
-     */
-    public void setOriginalOutputStream (final OutputStream originalOutputStream)
-    {
-        this.originalOutputStream = originalOutputStream;
-    }
-
-    /**
-     * Set.
-     * 
-     * @param serviceRequestId
-     *            the serviceRequestId to set
-     */
-    public void setServiceRequestId (final Long serviceRequestId)
-    {
-        this.serviceRequestId = serviceRequestId;
-    }
-
-    /**
-     * 
-     * @return the list of the synchronisation tasks.
-     */
-    public List<Runnable> getSynchronisationTasks ()
-    {
-        return this.synchronisationTasks;
-    }
-
-    /**
-     * Clean up thread local.
-     */
-    public void remove ()
-    {
-        THREAD_LOCAL.remove ();
     }
 
     /**

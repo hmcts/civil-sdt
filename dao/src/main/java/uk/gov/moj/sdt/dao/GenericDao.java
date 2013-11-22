@@ -152,7 +152,7 @@ public class GenericDao implements IGenericDao
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
             final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tdomain object=" + domainObject.toString () + "\n");
+            detail.append ("\n\n\tdomain object=" + domainObject == null ? "" : domainObject.toString () + "\n");
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.fetch end",
@@ -334,6 +334,16 @@ public class GenericDao implements IGenericDao
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
         LOG.debug ("Persist domain object list " + domainObjectList.toString ());
 
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tdomain object list=" + domainObjectList.toString () + "\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_3, "GenericDao.persist start",
+                    detail.toString ());
+        }
+
         final Session session = this.getSessionFactory ().getCurrentSession ();
         final int maxBatchSize = 20;
 
@@ -355,6 +365,15 @@ public class GenericDao implements IGenericDao
         SdtMetricsMBean.getSdtMetrics ().addDatabaseWritesTime (endTime - startTime);
         SdtMetricsMBean.getSdtMetrics ().upDatabaseWritesCount ();
 
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tdomain object list=" + domainObjectList.toString () + "\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.persist end",
+                    detail.toString ());
+        }
     }
 
     @Override
@@ -500,7 +519,7 @@ public class GenericDao implements IGenericDao
 
         GenericDao.LOG.debug ("queryAsCount(): domainType=" + domainType);
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_5))
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
             final StringBuffer detail = new StringBuffer ();
             detail.append ("\n\n\tdomain type=" + domainType.getName ());
@@ -511,7 +530,7 @@ public class GenericDao implements IGenericDao
             detail.append ("\n");
 
             // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_5,
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_3,
                     "GenericDao.queryAsCount start", detail.toString ());
         }
 
@@ -536,18 +555,17 @@ public class GenericDao implements IGenericDao
         SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
         SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_5))
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
             final StringBuffer detail = new StringBuffer ();
             detail.append ("\n\n\tdomain object count =" + (countOfObjects != null ? countOfObjects.longValue () : 0));
             detail.append ("\n");
 
             // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_5, "GenericDao.queryAsCount end",
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.queryAsCount end",
                     detail.toString ());
         }
 
         return countOfObjects != null ? countOfObjects.longValue () : 0;
     }
-
 }

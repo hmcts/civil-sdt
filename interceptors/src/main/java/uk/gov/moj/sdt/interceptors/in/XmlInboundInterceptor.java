@@ -36,9 +36,6 @@ import org.apache.cxf.phase.Phase;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.logging.LoggingContext;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Interceptor class which handles bulk submission message received by SDT.
@@ -69,25 +66,6 @@ public class XmlInboundInterceptor extends AbstractSdtInterceptor
     {
         // Read contents of message, i.e. XML received from client.
         String rawXml = this.readInputMessage (message);
-
-        // Setup logging flags from current value in SdtMetric MBean for this thread - used by all subsequent processing
-        // of this request.
-        SdtContext.getContext ().getLoggingContext ().setLoggingFlags (
-                SdtMetricsMBean.getSdtMetrics ().getPerformanceLoggingFlags ());
-
-        // Increment thread local logging id for this invocation, but only if we are at the start of a new thread of
-        // work.
-        if (SdtContext.getContext ().getLoggingContext ().getMinorLoggingId () == 0)
-        {
-            SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (LoggingContext.getNextLoggingId ());
-        }
-
-        // Write message to 'performance.log' for this logging point.
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_1))
-        {
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_1,
-                    "XmlInboundInterceptor handling message", "\n\n\t" + PerformanceLogger.format (rawXml) + "\n");
-        }
 
         // Remove linefeeds as they stop the regular expression working.
         rawXml = rawXml.replace ('\n', ' ');

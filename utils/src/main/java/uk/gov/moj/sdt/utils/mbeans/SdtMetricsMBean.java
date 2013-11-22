@@ -137,7 +137,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long bulkSubmitTimeMin = Long.MAX_VALUE;
 
     /**
-     * Maxiumum processing time of all bulk submits.
+     * Maximum processing time of all bulk submits.
      */
     private long bulkSubmitTimeMax;
 
@@ -162,7 +162,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long bulkFeedbackTimeMin = Long.MAX_VALUE;
 
     /**
-     * Maxiumum processing time of all bulk feedbacks.
+     * Maximum processing time of all bulk feedbacks.
      */
     private long bulkFeedbackTimeMax;
 
@@ -187,7 +187,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long submitQueryTimeMin = Long.MAX_VALUE;
 
     /**
-     * Maxiumum processing time of all submit querys.
+     * Maximum processing time of all submit querys.
      */
     private long submitQueryTimeMax;
 
@@ -202,7 +202,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long requestStatusUpdateCount;
 
     /**
-     * Maxiumum processing time of all submit querys.
+     * Maximum processing time of all submit querys.
      */
     private long completedBulkSubmitCount;
 
@@ -232,12 +232,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long databaseCallsTime;
 
     /**
-     * Maxiumum time calling database.
+     * Maximum time calling database.
      */
     private long databaseCallsTimeMin = Long.MAX_VALUE;
 
     /**
-     * Maxiumum time calling database.
+     * Maximum time calling database.
      */
     private long databaseCallsTimeMax;
 
@@ -252,12 +252,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long databaseReadsTime;
 
     /**
-     * Maxiumum time reading database.
+     * Maximum time reading database.
      */
     private long databaseReadsTimeMin = Long.MAX_VALUE;
 
     /**
-     * Maxiumum time reading database.
+     * Maximum time reading database.
      */
     private long databaseReadsTimeMax;
 
@@ -272,12 +272,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long databaseWritesTime;
 
     /**
-     * Maxiumum writing reading database.
+     * Maximum writing reading database.
      */
     private long databaseWritesTimeMin = Long.MAX_VALUE;
 
     /**
-     * Maxiumum writing reading database.
+     * Maximum writing reading database.
      */
     private long databaseWritesTimeMax;
 
@@ -297,12 +297,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long requestQueueTime;
 
     /**
-     * Maxiumum time on queue waiting for request to be processed.
+     * Maximum time on queue waiting for request to be processed.
      */
     private long requestQueueTimeMin = Long.MAX_VALUE;
 
     /**
-     * Maxiumum time on queue waiting for request to be processed.
+     * Maximum time on queue waiting for request to be processed.
      */
     private long requestQueueTimeMax;
 
@@ -312,7 +312,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long requestQueueLength;
 
     /**
-     * Maxiumum request queue length.
+     * Maximum request queue length.
      */
     private long requestQueueLengthMax;
 

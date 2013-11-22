@@ -28,39 +28,52 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.interceptors.out;
+package uk.gov.moj.sdt.interceptors.in;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
+import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.logging.LoggingContext;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
- * Class to intercept outgoing messages to audit them.
+ * Class to intercept incoming messages and do performance logging. Should run before any changes are made to the
+ * incoming message, i.e. first.
  * 
- * @author d195274
+ * @author Robin Compston
  * 
  */
-public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
+public class PerformanceLoggerInboundInterceptor extends AbstractSdtInterceptor
 {
+
     /**
-     * Default constructor.
+     * Logger for this class.
      */
-    public ServiceRequestOutboundInterceptor ()
+    private static final Logger LOGGER = LoggerFactory.getLogger (PerformanceLoggerInboundInterceptor.class);
+
+    /**
+     * Create instance of {@link PerformanceLoggerInboundInterceptor}.
+     */
+    public PerformanceLoggerInboundInterceptor ()
     {
-        super (Phase.PREPARE_SEND_ENDING);
-        addAfter (XmlOutboundInterceptor.class.getName ());
+        super (Phase.RECEIVE);
+        addBefore (XmlInboundInterceptor.class.getName ());
     }
 
     /**
-     * Create instance of {@link ServiceRequestOutboundInterceptor}.
+     * Create instance of {@link PerformanceLoggerInboundInterceptor}.
      * 
-     * @param phase the phase of the CXF interceptor chain.
+     * @param phase phase of the CXF interceptor chain in which this interceptor should run.
      */
-    public ServiceRequestOutboundInterceptor (final String phase)
+    public PerformanceLoggerInboundInterceptor (final String phase)
     {
         super (phase);
     }
@@ -69,6 +82,24 @@ public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
     @Transactional (propagation = Propagation.REQUIRES_NEW)
     public void handleMessage (final SoapMessage message) throws Fault
     {
-        this.persistEnvelope (this.readOutputMessage (message));
+        // Setup logging flags from current value in SdtMetricsMBean for this thread - used by all subsequent processing
+        // of this request.
+        SdtContext.getContext ().getLoggingContext ()
+                .setLoggingFlags (SdtMetricsMBean.getSdtMetrics ().getPerformanceLoggingFlags ());
+
+        // Increment thread local logging id for this invocation, but only if we are at the start of a new thread of
+        // work.
+        if (SdtContext.getContext ().getLoggingContext ().getMinorLoggingId () == 0)
+        {
+            SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (LoggingContext.getNextLoggingId ());
+        }
+
+        // Write message to 'performance.log' for this logging point.
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_1))
+        {
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_1,
+                    "PerformanceLoggerInboundInterceptor handling message",
+                    "\n\n\t" + PerformanceLogger.format (this.readInputMessage (message)) + "\n");
+        }
     }
 }

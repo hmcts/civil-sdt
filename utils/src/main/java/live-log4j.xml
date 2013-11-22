@@ -24,7 +24,7 @@
 
 	<!-- Define appender (log file) to which all performance messages are written -->
 	<appender name="performance" class="org.apache.log4j.RollingFileAppender">
-		<param name="file" value="../logs/performance.log" />
+		<param name="file" value="../logs/sdt.performance.log" />
 		<param name="MaxFileSize" value="300MB" />
 		<!-- Keep one backup file -->
 		<param name="MaxBackupIndex" value="4" />

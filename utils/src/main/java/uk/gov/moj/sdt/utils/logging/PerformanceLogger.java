@@ -93,6 +93,11 @@ public final class PerformanceLogger
     public static final Long LOGGING_POINT_10 = 1L << 9;
 
     /**
+     * Fault interceptor.
+     */
+    public static final Long LOGGING_POINT_11 = 1L << 10;
+
+    /**
      * Turn on detail for all other logging points.
      */
     public static final Long LOGGING_POINT_16 = 1L << 15;

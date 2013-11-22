@@ -1,6 +1,6 @@
 /* Copyrights and Licenses
  * 
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
+ * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
  * - Redistributions of source code must retain the above copyright notice, this list of conditions
@@ -34,48 +34,45 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 
-import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 /**
- * Interceptor class which handles bulk submission message sent by SDT.
+ * Class to intercept outgoing messages to audit them.
  * 
- * This interceptor is necessary in order to process the raw XML sent from SDT after CXF has produced it from JAXB
- * objects. Non generic XML content (which should be hidden from SDT) must NOT be represented by JAXB classes known to
- * SDT. Instead, this non generic XML is inserted as raw XML into the XML already produced by CXF and at the relevant
- * insertion point. This is because the XML sent by SDT should have non generic content (this is true both of the System
- * Gateway and the specific Case Managements Systems). This non generic XML is be stored in the database as a blob and
- * read via Hibernate and loaded into ThreadLocal memory from which this interceptor takes it in order to populate the
- * outgoing XML.
- * 
- * @author Robin Compston
+ * @author d195274
  * 
  */
-public class XmlOutboundInterceptor extends AbstractSdtInterceptor
+public class PerformanceLoggerOutboundInterceptor extends AbstractServiceRequest
 {
-
     /**
-     * Test interceptor to prove concept.
+     * Default constructor.
      */
-    public XmlOutboundInterceptor ()
+    public PerformanceLoggerOutboundInterceptor ()
     {
         super (Phase.PREPARE_SEND_ENDING);
-        addBefore (ServiceRequestOutboundInterceptor.class.getName ());
+        addAfter (ServiceRequestOutboundInterceptor.class.getName ());
+    }
+
+    /**
+     * Create instance of {@link PerformanceLoggerOutboundInterceptor}.
+     * 
+     * @param phase the phase of the CXF interceptor chain.
+     */
+    public PerformanceLoggerOutboundInterceptor (final String phase)
+    {
+        super (phase);
     }
 
     @Override
     public void handleMessage (final SoapMessage message) throws Fault
     {
-        // Get the cached output stream payload. 
-        final String payload = this.readOutputMessage (message);
-
-        // Modify the payload with enrichers.
-        String modifiedPayload = changeOutboundMessage (payload);
-        if (modifiedPayload == null)
+        // Write message to 'performance.log' for this logging point.
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_10))
         {
-            // No enrichers matched - restore original payload.
-            modifiedPayload = payload;
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_10,
+                    "PerformanceLoggerOutboundInterceptor handling message",
+                    "\n\n\t" + PerformanceLogger.format (this.readOutputMessage (message)) + "\n");
         }
-
-        this.replaceOutputMessage (message, modifiedPayload);
     }
 }

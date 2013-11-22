@@ -65,10 +65,10 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     /**
      * Logger for this class.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (ServiceRequestInboundInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ServiceRequestInboundInterceptor.class);
 
     /**
-     * Create.
+     * Create instance of {@link PerformanceLoggerInboundInterceptor}.
      */
     public ServiceRequestInboundInterceptor ()
     {
@@ -77,10 +77,9 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     }
 
     /**
-     * Create.
+     * Create instance of {@link PerformanceLoggerInboundInterceptor}.
      * 
-     * @param phase
-     *            phase.
+     * @param phase phase of the CXF interceptor chain in which this interceptor should run.
      */
     public ServiceRequestInboundInterceptor (final String phase)
     {
@@ -91,7 +90,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void handleMessage (final SoapMessage soapMessage) throws Fault
     {
-        LOG.debug ("ServiceRequestInboundInterceptor handle incoming message being processed");
+        LOGGER.debug ("ServiceRequestInboundInterceptor handle incoming message being processed");
 
         logMessage ();
     }
