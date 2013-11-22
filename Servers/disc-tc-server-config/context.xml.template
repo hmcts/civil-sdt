@@ -16,5 +16,9 @@
 	<!--
 	maxWait = The maximum number of milliseconds that the pool will wait (when there are no available connections) for a connection to be returned before throwing an exception
 	-->
-    <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxActive="10" initialSize="2" minIdle="2" maxIdle="2" maxWait="2000" name="jdbc/SDTDB" password="${sdt.database.connection.password}" type="javax.sql.DataSource" url="jdbc:oracle:thin:@${db.hostname}:${db.port}/${db.sid}" username="${sdt.database.connection.user}"/> 
+    <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxActive="10" initialSize="2" minIdle="2" maxIdle="2" maxWait="2000" name="jdbc/SDTDB" password="${sdt.database.connection.password}" type="javax.sql.DataSource" url="jdbc:oracle:thin:@${db.hostname}:${db.port}/${db.sid}" username="${sdt.database.connection.user}"/>
+    
+	<!-- JNDI JMS Connection Factory Definition -->
+	
+	<Resource name="jms/mqConnectionFactory" auth="Container" type="org.apache.activemq.ActiveMQConnectionFactory" description="JMS Connection Factory" factory="org.apache.activemq.jndi.JNDIReferenceFactory" brokerURL="${sdt.jms.broker.url}" />    
 </Context>

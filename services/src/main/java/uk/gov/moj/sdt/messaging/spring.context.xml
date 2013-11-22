@@ -11,24 +11,12 @@
 	http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-2.5.xsd
 	">
 	
-	<amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:61616">
- 	</amq:connectionFactory>
- 	
- 	<bean id="jndiAmqConnectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+	<bean id="jndiAmqConnectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean">
  		<property name="jndiName" value="java:comp/env/jms/mqConnectionFactory"/>
  	</bean>
  	
- 	<bean id="jndiQueueName" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
- 		<property name="jndiName" value="java:comp/env/jms/jmsMqQueue"/>
- 	</bean>
- 	
- 	<!-- A JNDI resolver -->  
-	<bean id="jmsDestResolver" 
-  		class="org.springframework.jms.support.destination.JndiDestinationResolver"/>
- 	
-	
-	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
-		<constructor-arg ref="amqConnectionFactory"/>
+ 	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<constructor-arg ref="jndiAmqConnectionFactory"/>
 		<property name="sessionCacheSize" value="100"/>
 	</bean>
 	
@@ -39,6 +27,19 @@
   			</property>
 		-->
 	</bean>
+	
+	<!--  Un-comment the lines below if JNDI queue name is required -->
+ 	
+ 	<!--  
+ 	<bean id="jndiQueueName" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+ 		<property name="jndiName" value="java:comp/env/jms/jmsMqQueue"/>
+ 	</bean>
+ 	
+ 	A JNDI resolver  
+	<bean id="jmsDestResolver" 
+  		class="org.springframework.jms.support.destination.JndiDestinationResolver"/>
+  		
+  	-->	
 	
 	<bean id="uk.gov.moj.sdt.messaging.api.IMessageWriter" 
 		class="uk.gov.moj.sdt.messaging.MessageWriter">
