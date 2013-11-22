@@ -82,7 +82,9 @@ public class MockGenericDao implements IGenericDao
             final IBulkSubmission bulkSubmission = new BulkSubmission ();
             bulkSubmission.setCustomerReference (customerReference.toLowerCase ());
             bulkSubmission.setSdtBulkReference ("MCOL_20130722000000_B00000001");
-            bulkSubmission.setCreatedDate (LocalDateTime.now ());
+            // CHECKSTYLE:OFF
+            bulkSubmission.setCreatedDate (new LocalDateTime (2013, 7, 22, 13, 0));
+            // CHECKSTYLE:ON
             return bulkSubmission;
         }
         else

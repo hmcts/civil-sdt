@@ -74,6 +74,15 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         this.callWebService (BulkRequestType.class);
     }
 
+    /**
+     * Scenario - Request rejected with duplicate customer ref error.
+     */
+    @Test
+    public void testDuplicateCustomerRef ()
+    {
+        this.callWebService (BulkRequestType.class);
+    }
+
     @Override
     protected BulkResponseType callTestWebService (final BulkRequestType request)
     {

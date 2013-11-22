@@ -77,6 +77,24 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
         this.callWebService (SubmitQueryRequestType.class);
     }
 
+    /**
+     * Scenario - Invalid SDT Customer details.
+     */
+    @Test
+    public void testInvalidCustomer ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
+    /**
+     * Scenario - Customer does not have access to target application.
+     */
+    @Test
+    public void testInvalidTargetApp ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
     @Override
     protected SubmitQueryResponseType callTestWebService (final SubmitQueryRequestType request)
     {
