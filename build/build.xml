@@ -42,6 +42,11 @@
         <file name="../producers-commissioning/build.xml" />
     </filelist>
 
+	<!-- List of projects for which deploy is needed in order - note dirset cannot control order of execution -->
+    <filelist id="remote-deploy-project-list" dir=".">
+        <file name="../producers-commissioning/build.xml" />
+    </filelist>
+
     <!-- TARGETS -->
 
     <!-- General initialisation - ensure build directory (for classes) and dist directory (for jar) are present -->
@@ -169,6 +174,41 @@
     	 
     </target>
 	
+    <!-- Compile and create distribution jar for all test source code once to prove all compiles. -->
+    <target name="deploy-remote-all" depends="init, dist-all" description="Deploy all artefacts to application server ">
+        <subant antfile="build.xml" target="deploy" inheritrefs="true" inheritAll="false">
+            <filelist refid="remote-deploy-project-list" />
+        </subant>
+
+    	<property name="sshout" value=""/>
+		<!-- this will be redundunt for other than tc-server -->
+		<sshexec host="${remote.deploy.host}" username="${remote.deploy.user}" password="${remote.deploy.password}" 
+			command="${remote.app-server.dir}/bin/tcruntime-ctl.sh stop" trust="true" failonerror="false" />
+		<sshexec host="${remote.deploy.host}" username="${remote.deploy.user}" password="${remote.deploy.password}"
+    		command="rm -rf ${remote.app-server.dir}/${remote.app-server.hotdeploy.dir}/prod*" trust="true" failonerror="true" />
+		<sshexec host="${remote.deploy.host}" username="${remote.deploy.user}" password="${remote.deploy.password}" 
+    	    command="cp ${remote.deploy.dir}/${application.version}.${buildNumber}/* ${remote.app-server.dir}/${remote.app-server.hotdeploy.dir}/" 
+			trust="true" failonerror="true"/>
+		<!--scp todir="${remote.deploy.user}:${remote.deploy.password}@${remote.deploy.host}:${remote.app-server.dir}/conf" trust="true" failonerror="true" >
+			<fileset dir="${utils.dir}/${src.dir}">
+				<include name="log4j.xml" />
+			</fileset>
+    	</scp-->
+		<sshexec host="${remote.deploy.host}" username="${remote.deploy.user}" password="${remote.deploy.password}" 
+			command="${remote.app-server.dir}/bin/tcruntime-ctl.sh start" trust="true" failonerror="true" />
+		<!-- =============================================== -->
+
+    	
+    	<!-- Log the time the build took -->
+    	<tstamp>
+    		<format property="now" pattern="yyyy-MM-dd HH:mm:ss"/>
+    	</tstamp>
+    	    
+    	<stopwatch name="timer1" action="total"/>    	
+    		
+    	<echo file="build.log" append="true">${now}: Build time ${timer1} ${line.separator}</echo>
+    	 
+    </target>
 	<!-- Run unit tests in all modules -->
     <target name="run-all-unit-tests" depends="dist-all,dist-all-tests" description="Run all unit tests">
 		<subant genericantfile="build.xml" inheritrefs="true" inheritAll="false">

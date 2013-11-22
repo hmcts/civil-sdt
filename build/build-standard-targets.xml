@@ -433,8 +433,18 @@
 		<scp file="${target.dir}/${component.name}" todir="${remote.copy.user}:${remote.copy.password}@${remote.copy.host}:${remote.copy.dir}/${application.version}.${buildNumber}/${component.name}" trust="true" failonerror="false" />
 	</target>
 
+	<target name="-deploy-remote-tc-server" if="remote-tc-server.exists" description="Remote copy to the autodeploy folder of the tc-server(can be reused to for WebLogic">
+		<echo>Copying the war to the remote Application server Hot Deploy directory</echo>
+		<!-- Copy the war file to the remote host directory. -->
+		<ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
+
+		<sshexec host="${remote.deploy.host}" username="${remote.deploy.user}" password="${remote.deploy.password}" command="mkdir -p ${remote.deploy.dir}/${application.version}.${buildNumber}" trust="true" failonerror="true" />
+		<scp file="${target.dir}/${component.name}" todir="${remote.deploy.user}:${remote.deploy.password}@${remote.deploy.host}:${remote.deploy.dir}/${application.version}.${buildNumber}/" trust="true" failonerror="true" />
+
+	</target>
+
 	<!-- Deploy a WAR file to application server -->
-	<target name="deploy" depends="-deploy-to-tc-server, -deploy-to-oas, -deploy-remote-copy" description="Deploy to application server">
+	<target name="deploy" depends="-deploy-to-tc-server, -deploy-to-oas, -deploy-remote-copy, -deploy-remote-tc-server" description="Deploy to application server">
 		<!-- deploy any extra artefacts needed by this project, e.g. zip file -->
 		<ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
 	</target>

@@ -13,6 +13,7 @@
  =========================================================================== -->
 
 <project name="producers-commissioning-extras" basedir=".">
+	<property name="component.name" value="producers-comx.war" />
 
 	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
 	<import file="../build/build-setup-env.xml" />
@@ -272,7 +273,7 @@
         -copy-web-inf-resources,
         -copy-app-lib,-copy-3rd-party-lib,-copy-wsdl-xsd,
         -compress" description="Generate the distribution war file">
-		<jar jarfile="${target.dir}/producers-comx.war" basedir="${producer-commissioning.target.dir}" />
+		<jar jarfile="${target.dir}/${component.name}" basedir="${producer-commissioning.target.dir}" />
 	</target>
 
 </project>

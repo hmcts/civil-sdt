@@ -113,6 +113,10 @@
 		<equals arg1="${application.server}" arg2="remote-copy" />
 	</condition>
 
+	<condition property="remote-tc-server.exists">
+		<equals arg1="${application.server}" arg2="remote-tc-server" />
+	</condition>
+
 	<!-- Set property based on current operating system family -->
 	<condition property="isUnix">
 		<os family="unix" />

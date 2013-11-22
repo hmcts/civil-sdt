@@ -13,6 +13,7 @@
  =========================================================================== -->
 
 <project name="producers-extras" basedir=".">
+	<property name="component.name" value="producers.war" />
 
 	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
 	<import file="../build/build-setup-env.xml" />
@@ -269,7 +270,7 @@
         -copy-web-inf-resources,
         -copy-app-lib,-copy-3rd-party-lib,-copy-wsdl-xsd,
         -compress" description="Generate the distribution war file">
-		<jar jarfile="${target.dir}/producers.war" basedir="${producers.target.dir}" />
+		<jar jarfile="${target.dir}/${component.name}" basedir="${producers.target.dir}" />
 	</target>
 
 </project>
