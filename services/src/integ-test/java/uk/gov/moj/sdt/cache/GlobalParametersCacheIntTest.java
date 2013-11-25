@@ -58,8 +58,9 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
         "/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml", "/uk/gov/moj/sdt/transformers/spring.context.xml",
         "/uk/gov/moj/sdt/interceptors/in/spring.context.xml", "/uk/gov/moj/sdt/interceptors/out/spring.context.xml",
         "/uk/gov/moj/sdt/enricher/spring.context.xml", "/uk/gov/moj/sdt/dao/spring.hibernate.xml",
-        "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/cache/spring.context.xml",
-        "/uk/gov/moj/sdt/utils/spring*.xml", "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring*.xml"})
+        "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/dao/spring.datasource.xml",
+        "/uk/gov/moj/sdt/cache/spring.context.xml", "/uk/gov/moj/sdt/utils/spring*.xml",
+        "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring*.xml"})
 public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**

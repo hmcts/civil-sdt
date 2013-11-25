@@ -52,17 +52,36 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/comx/spring*e2e.test.xml",
         "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml",
-        "classpath*:uk/gov/moj/sdt/dao/spring*.xml"})
+        "/uk/gov/moj/sdt/dao/spring.datasource.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
+        "/uk/gov/moj/sdt/dao/spring.hibernate.xml"})
 public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType>
 {
     /**
      * Method to call remote request bulk feedback endpoint to be tested.
      */
     @Test
-    public void testValidRequestBulkFeedback ()
+    public void testValidRequestBulkFeedbackB00000002 ()
     {
         this.callWebService (BulkFeedbackRequestType.class);
     }
+
+    @Test
+    public void testValidRequestBulkFeedbackA00000001 ()
+    {
+        this.callWebService (BulkFeedbackRequestType.class);
+    }
+
+    @Test
+    public void testValidRequestBulkFeedbackB00000001 ()
+    {
+        this.callWebService (BulkFeedbackRequestType.class);
+    }
+
+    // @Test
+    // public void testValidRequestBulkFeedbackC00000001 ()
+    // {
+    // this.callWebService (BulkFeedbackRequestType.class);
+    // }
 
     /**
      * Method to call remote request bulk feedback endpoint to be tested.

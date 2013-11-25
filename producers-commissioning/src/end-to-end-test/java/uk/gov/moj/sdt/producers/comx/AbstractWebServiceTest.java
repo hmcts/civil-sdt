@@ -212,6 +212,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
             actualXml = removeVariantText (actualXml, "submittedDate");
             actualXml = removeLineFeeds (actualXml);
 
+            LOGGER.debug ("Actual XML is " + actualXml);
+
             // Check xml.
             Assert.assertEquals ("Expected XML [" + resourceName + "] does not match, ", expectedXml, actualXml);
         }
