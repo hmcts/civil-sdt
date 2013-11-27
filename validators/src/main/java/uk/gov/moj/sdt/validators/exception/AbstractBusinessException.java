@@ -76,8 +76,8 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         this.errorDescription = description;
 
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (this.errorDescription);
+        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getMetrics ().setLastBusinessException (this.errorDescription);
     }
 
     /**
@@ -95,8 +95,8 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         this.errorDescription = MessageFormat.format (description, replacements.toArray ());
 
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (this.errorDescription);
+        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getMetrics ().setLastBusinessException (this.errorDescription);
     }
 
     /**
@@ -109,8 +109,8 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         super (s);
 
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (s);
+        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getMetrics ().setLastBusinessException (s);
     }
 
     /**
@@ -123,8 +123,8 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         super (cause);
 
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (cause.getMessage ());
+        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getMetrics ().setLastBusinessException (cause.getMessage ());
     }
 
     /**
@@ -138,8 +138,8 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
         super (s, cause);
 
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getSdtMetrics ().setLastBusinessException (s);
+        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
+        SdtMetricsMBean.getMetrics ().setLastBusinessException (s);
     }
 
     /**

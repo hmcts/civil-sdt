@@ -67,9 +67,9 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
 
         // Beware of timing problems when Spring has not finished initialising
         // and has not created the metics bean.
-        if (SdtMetricsMBean.getSdtMetrics () != null)
+        if (SdtMetricsMBean.getMetrics () != null)
         {
-            SdtMetricsMBean.getSdtMetrics ().upDomainObjectsCount ();
+            SdtMetricsMBean.getMetrics ().upDomainObjectsCount ();
         }
     }
 
@@ -80,7 +80,7 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     public void finalize ()
     // CHECKSTYLE:ON
     {
-        SdtMetricsMBean.getSdtMetrics ().downDomainObjectsCount ();
+        SdtMetricsMBean.getMetrics ().downDomainObjectsCount ();
     }
 
     @Override

@@ -83,21 +83,28 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
 
         // Initialise response.
         UpdateResponseType updateResponseType = new UpdateResponseType ();
-        updateResponseType.setStatus (new StatusType ());
 
-        // Transform to domain object.
-        final IIndividualRequest individualRequest = getTransformer ().transformJaxbToDomain (requestType);
+        try
+        {
+            updateResponseType.setStatus (new StatusType ());
 
-        // No need to validate, call the service layer to process the object
-        this.getUpdateRequestService ().updateIndividualRequest (individualRequest);
+            // Transform to domain object.
+            final IIndividualRequest individualRequest = getTransformer ().transformJaxbToDomain (requestType);
 
-        // Transform domain to Jaxb
-        updateResponseType = getTransformer ().transformDomainToJaxb (individualRequest);
+            // No need to validate, call the service layer to process the object
+            this.getUpdateRequestService ().updateIndividualRequest (individualRequest);
 
-        LOGGER.info ("[updateItem] completed");
+            // Transform domain to Jaxb
+            updateResponseType = getTransformer ().transformDomainToJaxb (individualRequest);
+        }
+        finally
+        {
+            LOGGER.info ("[updateItem] completed");
 
-        // Measure total time spent in use case.
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+            // Measure total time spent in use case.
+            final long endTime = new GregorianCalendar ().getTimeInMillis ();
+            // SdtMetricsMBean.getSdtMetrics ().addUpdateItemTime (endTime - startTime);
+        }
 
         return updateResponseType;
     }

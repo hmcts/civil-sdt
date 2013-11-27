@@ -173,7 +173,7 @@ public abstract class AbstractWsConsumer
         if ((wsException.getCause () instanceof ConnectException) && rethrowOnFailureToConnect)
         {
             // Target application must be unavailable - update stats.
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppUnavailable ();
+            SdtMetricsMBean.getMetrics ().upTargetAppUnavailable ();
 
             throw new OutageException ("OUTAGE_ERROR", wsException.getMessage ());
         }
@@ -182,7 +182,7 @@ public abstract class AbstractWsConsumer
         // CHECKSTYLE:OFF
         {
             // Target application must be unavailable - update stats.
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppUnavailable ();
+            SdtMetricsMBean.getMetrics ().upTargetAppUnavailable ();
 
             // Swallow exception - we want to carry on trying to connect.
         }
@@ -191,7 +191,7 @@ public abstract class AbstractWsConsumer
         else if (wsException.getCause () instanceof SocketTimeoutException)
         {
             // Target application must be unavailable - update stats.
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppResponseTimeouts ();
+            SdtMetricsMBean.getMetrics ().upTargetAppResponseTimeouts ();
 
             throw new TimeoutException ("TIMEOUT_ERROR", "Read time out error sending [" + errorReferenceContext + "]");
         }
@@ -200,14 +200,14 @@ public abstract class AbstractWsConsumer
                 wsException.getCause () instanceof javax.xml.ws.soap.SOAPFaultException)
         {
             // Target application must be unavailable - update stats.
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppSoapErrors ();
+            SdtMetricsMBean.getMetrics ().upTargetAppSoapErrors ();
 
             throw new SoapFaultException ("SOAP_FAULT", wsException.getMessage ());
         }
         else
         {
             // Target application must be unavailable - update stats.
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppMiscErrors ();
+            SdtMetricsMBean.getMetrics ().upTargetAppMiscErrors ();
 
             // If is is any other exception, we can't handle it cleanly. So throw it back
             LOGGER.error ("Unexpected exception while sending to target endpoint", wsException);

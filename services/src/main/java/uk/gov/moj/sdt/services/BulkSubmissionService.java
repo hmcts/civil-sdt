@@ -201,7 +201,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
         SdtContext.getContext ().setSubmitBulkReference (bulkSubmission.getSdtBulkReference ());
 
         // Update last seen bulk reference.
-        SdtMetricsMBean.getSdtMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
+        SdtMetricsMBean.getMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
 
         // Get the Target Application from the target application dao
         final ITargetApplication targetApplication =

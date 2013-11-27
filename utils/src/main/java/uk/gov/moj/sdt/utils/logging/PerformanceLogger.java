@@ -110,15 +110,15 @@ public final class PerformanceLogger
     public static final long ALL_FLAGS_ENABLED = Long.MAX_VALUE;
 
     /**
+     * Number of bit we want to see in log (least significant).
+     */
+    public static final int FLAG_BIT_LENGTH = 16;
+
+    /**
      * Logging object. Note its name must not be in the same hierarchy as other SDT loggers so that it can be turned off
      * and on independently. Note also, this is a log4j logger not an SLF4J logger.
      */
     private static final Logger LOGGER = Logger.getLogger ("sdt.performance");
-
-    /**
-     * Number of bit we want to see in log (least significant).
-     */
-    private static final int FLAG_BIT_LENGTH = 16;
 
     /**
      * Start delimiter for formatting.
@@ -305,7 +305,7 @@ public final class PerformanceLogger
      * @param requiredLength the required length of he output String
      * @return the padded input String.
      */
-    private static String pad (final String in, final boolean left, final String padChar, final int requiredLength)
+    public static String pad (final String in, final boolean left, final String padChar, final int requiredLength)
     {
         String out = in;
 

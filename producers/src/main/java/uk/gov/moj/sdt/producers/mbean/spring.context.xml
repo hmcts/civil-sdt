@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<!-- Note all ids should be based on fully qualified names (interfaces where 
-		this is not ambiguous) and all classes should have an interface. -->
+    <!-- Note all ids should be based on fully qualified names (interfaces 
+        where this is not ambiguous) and all classes should have an interface. -->
 
-	<bean id="producers.exporter" class="org.springframework.jmx.export.MBeanExporter">
-		<property name="beans">
-			<map>
-				<entry key="bean:name=sdtProducersMetrics" value-ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean" />
-			</map>
-		</property>
-		<property name="assembler">
-			<bean
-				class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
-				<property name="managedMethods">
-					<value>getTime, getBulkSubmitStats,
-						getBulkFeedbackStats,getSubmitQueryStats, getStatusUpdateStats,
-						getDomainObjectsStats, getDatabaseCallsStats,
-						getDatabaseReadsStats, getDatabaseWritesStats,
-						getActiveCustomersStats, getRequestQueueStats, getTargetAppStats,
-						getErrorStats, getLastBulkSubmitRef, getLastBulkRequestRef,
-						uncache, setPerformanceLoggingFlags, reset
-					</value>
-				</property>
-			</bean>
-		</property>
-	</bean>
+    <bean id="producers.exporter" class="org.springframework.jmx.export.MBeanExporter">
+        <property name="beans">
+            <map>
+                <entry key="bean:name=sdtProducersMetrics"
+                    value-ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean" />
+            </map>
+        </property>
+        <property name="assembler">
+            <bean
+                class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
+                <property name="managedMethods">
+                    <value>getTime, getBulkSubmitStats,
+                        getBulkFeedbackStats,getSubmitQueryStats,
+                        getStatusUpdateStats,
+                        getDomainObjectsStats,
+                        getDatabaseCallsStats,
+                        getDatabaseReadsStats,
+                        getDatabaseWritesStats,
+                        getActiveCustomersStats,
+                        getRequestQueueStats, getTargetAppStats,
+                        getErrorStats, getLastBulkSubmitRef,
+                        getLastBulkRequestRef,
+                        getPerformanceLoggingString,
+                        uncache,
+                        setPerformanceLoggingFlags, reset
+                    </value>
+                </property>
+            </bean>
+        </property>
+    </bean>
 
 </beans>

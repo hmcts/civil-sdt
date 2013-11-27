@@ -98,8 +98,8 @@ public class MessageWriter implements IMessageWriter
         sdtMessage.setMessageSentTimestamp (new GregorianCalendar ().getTimeInMillis ());
         sdtMessage.setEnqueueLoggingId (SdtContext.getContext ().getLoggingContext ().getMajorLoggingId ());
 
-        SdtMetricsMBean.getSdtMetrics ().upRequestQueueCount ();
-        SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
+        SdtMetricsMBean.getMetrics ().upRequestQueueCount ();
+        SdtMetricsMBean.getMetrics ().upRequestQueueLength ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_5))
         {

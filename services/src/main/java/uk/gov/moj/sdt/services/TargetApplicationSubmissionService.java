@@ -399,7 +399,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             final ISdtMessage messageObj = new SdtMessage ();
             messageObj.setSdtRequestReference (individualRequest.getSdtRequestReference ());
 
-            SdtMetricsMBean.getSdtMetrics ().upRequestRequeues ();
+            SdtMetricsMBean.getMetrics ().upRequestRequeues ();
 
             final String targetAppCode =
                     individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();

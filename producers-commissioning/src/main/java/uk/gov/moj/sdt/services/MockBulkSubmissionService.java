@@ -66,7 +66,7 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
                 .getTargetApplication ().getTargetApplicationCode ()));
 
         // Update last seen bulk reference.
-        SdtMetricsMBean.getSdtMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
+        SdtMetricsMBean.getMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
 
         LOG.debug ("[saveBulkSubmission] completed");
     }

@@ -84,7 +84,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         LOGGER.info ("[getBulkFeedback] started");
         
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBulkFeedbackCounts ();
+        SdtMetricsMBean.getMetrics ().upBulkFeedbackCount ();
 
         // Measure response time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
@@ -114,11 +114,11 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         finally
         {
             LOGGER.info ("[getBulkFeedback] completed");
+            
+            // Measure total time spent in use case.
+            final long endTime = new GregorianCalendar ().getTimeInMillis ();
+            SdtMetricsMBean.getMetrics ().addBulkFeedbackTime (endTime - startTime);
         }
-        
-        // Measure total time spent in use case.
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addBulkFeedbackTime (endTime - startTime);
 
         return response;
     }

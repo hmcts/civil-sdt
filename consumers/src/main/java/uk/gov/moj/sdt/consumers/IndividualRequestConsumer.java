@@ -137,7 +137,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
             try
             {
-                SdtMetricsMBean.getSdtMetrics ().upTargetAppCallCount ();
+                SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
 
                 LOGGER.debug ("Submitting individual request to target application, attempt " + (++attemptCount));
 
@@ -210,7 +210,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
             {
                 // Measure total time spent in target application.
                 final long endTime = new GregorianCalendar ().getTimeInMillis ();
-                SdtMetricsMBean.getSdtMetrics ().addTargetAppResponseTime (endTime - startTime);
+                SdtMetricsMBean.getMetrics ().addTargetAppResponseTime (endTime - startTime);
 
             }
         }

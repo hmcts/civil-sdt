@@ -80,7 +80,7 @@ public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor
             final boolean faultOccurred = (Boolean) privateStringField.get (interceptorChain);
             if (faultOccurred)
             {
-                SdtMetricsMBean.getSdtMetrics ().upXmlValidationFailureCount ();
+                SdtMetricsMBean.getMetrics ().upXmlValidationFailureCount ();
             }
         }
         // CHECKSTYLE:OFF

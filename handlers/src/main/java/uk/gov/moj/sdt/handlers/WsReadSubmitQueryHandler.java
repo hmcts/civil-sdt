@@ -84,7 +84,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         LOGGER.info ("[submitQuery] started");
 
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upSubmitQueryCounts ();
+        SdtMetricsMBean.getMetrics ().upSubmitQueryCount ();
 
         // Measure response time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
@@ -118,11 +118,11 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         finally
         {
             LOGGER.info ("[submitQuery] completed");
-        }
 
-        // Measure total time spent in use case.
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addSubmitQueryTime (endTime - startTime);
+            // Measure total time spent in use case.
+            final long endTime = new GregorianCalendar ().getTimeInMillis ();
+            SdtMetricsMBean.getMetrics ().addSubmitQueryTime (endTime - startTime);
+        }
 
         return submitQueryResponseType;
 

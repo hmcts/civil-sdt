@@ -39,6 +39,7 @@ import java.util.GregorianCalendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
 
 /**
@@ -60,9 +61,9 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
  * - avg,
  * - min,
  * - max,
- * customer counts,
- * bulk counts,
- * request counts,
+ * customer count,
+ * bulk count,
+ * request count,
  * numbers of complete bulks (all requests) sent,
  * request queue lengths,
  * requests on queue,
@@ -76,7 +77,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
  * status updates
  * on bulk
  * on requests,
- * XML validation failure counts,
+ * XML validation failure count,
  * validation errors,
  * business exceptions,
  * last business exception,
@@ -119,7 +120,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Count of all bulk submits.
      */
-    private long bulkSubmitCounts;
+    private long bulkSubmitCount;
 
     /**
      * Time of last bulk submits web service call.
@@ -144,7 +145,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Count of all bulk feedback.
      */
-    private long bulkFeedbackCounts;
+    private long bulkFeedbackCount;
 
     /**
      * Time of last bulk Feedback web service call.
@@ -169,7 +170,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     /**
      * Count of all submit query.
      */
-    private long submitQueryCounts;
+    private long submitQueryCount;
 
     /**
      * Time of last submit query web service call.
@@ -409,15 +410,15 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      * 
      * @return count of bulk submits.
      */
-    private long getBulkSubmitCounts ()
+    private long getBulkSubmitCount ()
     {
-        return this.bulkSubmitCounts;
+        return this.bulkSubmitCount;
     }
 
     @Override
-    public void upBulkSubmitCounts ()
+    public void upBulkSubmitCount ()
     {
-        this.bulkSubmitCounts += 1;
+        this.bulkSubmitCount += 1;
 
         this.bulkSubmitLastTime = new GregorianCalendar ().getTimeInMillis ();
     }
@@ -470,7 +471,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private long getBulkSubmitTimeAvg ()
     {
-        return (this.bulkSubmitCounts == 0) ? 0 : this.bulkSubmitTime / this.bulkSubmitCounts;
+        return (this.bulkSubmitCount == 0) ? 0 : this.bulkSubmitTime / this.bulkSubmitCount;
     }
 
     /**
@@ -500,15 +501,15 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      * 
      * @return count of bulk Feedbacks.
      */
-    private long getBulkFeedbackCounts ()
+    private long getBulkFeedbackCount ()
     {
-        return this.bulkFeedbackCounts;
+        return this.bulkFeedbackCount;
     }
 
     @Override
-    public void upBulkFeedbackCounts ()
+    public void upBulkFeedbackCount ()
     {
-        this.bulkFeedbackCounts += 1;
+        this.bulkFeedbackCount += 1;
 
         this.bulkFeedbackLastTime = new GregorianCalendar ().getTimeInMillis ();
     }
@@ -548,7 +549,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private long getBulkFeedbackTimeAvg ()
     {
-        return (this.bulkFeedbackCounts == 0) ? 0 : this.bulkFeedbackTime / this.bulkFeedbackCounts;
+        return (this.bulkFeedbackCount == 0) ? 0 : this.bulkFeedbackTime / this.bulkFeedbackCount;
     }
 
     /**
@@ -578,15 +579,15 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      * 
      * @return count of submit querys.
      */
-    private long getSubmitQueryCounts ()
+    private long getSubmitQueryCount ()
     {
-        return this.submitQueryCounts;
+        return this.submitQueryCount;
     }
 
     @Override
-    public void upSubmitQueryCounts ()
+    public void upSubmitQueryCount ()
     {
-        this.submitQueryCounts += 1;
+        this.submitQueryCount += 1;
 
         this.submitQueryLastTime = new GregorianCalendar ().getTimeInMillis ();
     }
@@ -626,7 +627,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      */
     private long getSubmitQueryTimeAvg ()
     {
-        return (this.submitQueryCounts == 0) ? 0 : this.submitQueryTime / this.submitQueryCounts;
+        return (this.submitQueryCount == 0) ? 0 : this.submitQueryTime / this.submitQueryCount;
     }
 
     /**
@@ -1340,17 +1341,17 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     {
         LOGGER.debug ("Resetting SDT metrics");
 
-        this.bulkSubmitCounts = 0;
+        this.bulkSubmitCount = 0;
         this.bulkSubmitLastTime = 0;
         this.bulkSubmitTime = 0;
         this.bulkSubmitTimeMin = Long.MAX_VALUE;
         this.bulkSubmitTimeMax = 0;
-        this.bulkFeedbackCounts = 0;
+        this.bulkFeedbackCount = 0;
         this.bulkFeedbackLastTime = 0;
         this.bulkFeedbackTime = 0;
         this.bulkFeedbackTimeMin = Long.MAX_VALUE;
         this.bulkFeedbackTimeMax = 0;
-        this.submitQueryCounts = 0;
+        this.submitQueryCount = 0;
         this.submitQueryLastTime = 0;
         this.submitQueryTime = 0;
         this.submitQueryTimeMin = Long.MAX_VALUE;
@@ -1407,9 +1408,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public String getBulkSubmitStats ()
     {
 
-        return "Bulk submits: count[" + this.getBulkSubmitCounts () + "], last[" +
+        return "Bulk submits: count[" + this.getBulkSubmitCount () + "], last[" +
                 this.formatter.format (bulkSubmitLastTime) + "], rate[" +
-                this.getRate (this.getBulkSubmitCounts (), this.getElapsedTime ()) + "], requests[" +
+                this.getRate (this.getBulkSubmitCount (), this.getElapsedTime ()) + "], requests[" +
                 this.getRequestCount () + "], time[" + this.getBulkSubmitTime () + "], average[" +
                 this.getBulkSubmitTimeAvg () + "], minimum[" + this.getBulkSubmitTimeMin () + "], maximum[" +
                 this.getBulkSubmitTimeMax () + "]";
@@ -1427,9 +1428,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getBulkFeedbackStats ()
     {
-        return "Bulk feedbacks: count[" + this.getBulkFeedbackCounts () + "], last[" +
+        return "Bulk feedbacks: count[" + this.getBulkFeedbackCount () + "], last[" +
                 this.formatter.format (bulkFeedbackLastTime) + "], rate[" +
-                this.getRate (this.getBulkFeedbackCounts (), this.getElapsedTime ()) + "], time[" +
+                this.getRate (this.getBulkFeedbackCount (), this.getElapsedTime ()) + "], time[" +
                 this.getBulkFeedbackTime () + "], average[" + this.getBulkFeedbackTimeAvg () + "], minimum[" +
                 this.getBulkFeedbackTimeMin () + "], maximum[" + this.getBulkFeedbackTimeMax () + "]";
     }
@@ -1437,9 +1438,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getSubmitQueryStats ()
     {
-        return "Submit queries: count[" + this.getSubmitQueryCounts () + "], last[" +
+        return "Submit queries: count[" + this.getSubmitQueryCount () + "], last[" +
                 this.formatter.format (submitQueryLastTime) + "], rate[" +
-                this.getRate (this.getSubmitQueryCounts (), this.getElapsedTime ()) + "], time[" +
+                this.getRate (this.getSubmitQueryCount (), this.getElapsedTime ()) + "], time[" +
                 this.getSubmitQueryTime () + "], average[" + this.getSubmitQueryTimeAvg () + "], minimum[" +
                 this.getSubmitQueryTimeMin () + "], maximum[" + this.getSubmitQueryTimeMax () + "]";
     }
@@ -1447,7 +1448,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getStatusUpdateStats ()
     {
-        return "Status update: bulk count[" + this.getBulkStatusUpdateCount () + "], request count[" +
+        return "Status updates: bulk count[" + this.getBulkStatusUpdateCount () + "], request count[" +
                 this.getRequestStatusUpdateCount () + "], completed bulk count[" + this.getCompletedBulkSubmitCount () +
                 "]";
     }
@@ -1515,7 +1516,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public String getErrorStats ()
     {
         return "Errors and exceptions: xml validation errors[" + this.getXmlValidationFailureCount () +
-                "], business exceptions[" + this.getBusinessExceptionCount () + "], last business exceptions[" +
+                "], business exceptions[" + this.getBusinessExceptionCount () + "], last business exception[" +
                 this.getLastBusinessException () + "]";
     }
 
@@ -1538,6 +1539,14 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
+    public String getPerformanceLoggingString ()
+    {
+        return "Performance logging flags: " +
+                PerformanceLogger.pad (Integer.toBinaryString (this.getPerformanceLoggingFlags ()), true, "0",
+                        PerformanceLogger.FLAG_BIT_LENGTH);
+    }
+
+    @Override
     public short getPerformanceLoggingFlags ()
     {
         return this.performanceLoggingFlags;
@@ -1555,14 +1564,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.performanceLoggingFlags = performanceLoggingFlags;
     }
 
-    // TODO - add function to reload log4j config on demand.
-
     /**
      * Get singleton instance of this bean - used by callers to update statistics.
      * 
      * @return singleton instance of this bean.
      */
-    public static SdtMetricsMBean getSdtMetrics ()
+    public static SdtMetricsMBean getMetrics ()
     {
         if (thisBean == null)
         {

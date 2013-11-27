@@ -146,13 +146,13 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
             final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tdomain object=" + domainObject == null ? "" : domainObject.toString () + "\n");
+            detail.append ("\n\n\tdomain object=" + (domainObject == null ? "\n" : domainObject.toString () + "\n"));
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.fetch end",
@@ -206,8 +206,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
@@ -269,8 +269,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
@@ -312,8 +312,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseWritesTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseWritesCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseWritesTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseWritesCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
@@ -332,6 +332,7 @@ public class GenericDao implements IGenericDao
     {
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
         LOG.debug ("Persist domain object list " + domainObjectList.toString ());
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
@@ -362,8 +363,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseWritesTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseWritesCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseWritesTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseWritesCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
@@ -405,8 +406,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
@@ -447,7 +448,6 @@ public class GenericDao implements IGenericDao
 
         return Restrictions.between ("createdDate", LocalDateTime.fromDateFields (start),
                 LocalDateTime.fromDateFields (end));
-
     }
 
     @Override
@@ -491,8 +491,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
@@ -552,8 +552,8 @@ public class GenericDao implements IGenericDao
 
         // Calculate time in hibernate/database.
         final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addDatabaseReadsTime (endTime - startTime);
-        SdtMetricsMBean.getSdtMetrics ().upDatabaseReadsCount ();
+        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {

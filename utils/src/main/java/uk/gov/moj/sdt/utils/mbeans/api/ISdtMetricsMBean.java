@@ -151,6 +151,13 @@ public interface ISdtMetricsMBean
     String getLastBulkRequestRef ();
 
     /**
+     * Get the current active performance logging string.
+     * 
+     * @return the current active performance logging string.
+     */
+    String getPerformanceLoggingString ();
+
+    /**
      * Get the current cache reset control.
      * 
      * @return the last bulk request reference.
@@ -186,7 +193,7 @@ public interface ISdtMetricsMBean
     /**
      * Increment count of bulk submits.
      */
-    void upBulkSubmitCounts ();
+    void upBulkSubmitCount ();
 
     /**
      * Add latest bulk submit time to total.
@@ -198,7 +205,7 @@ public interface ISdtMetricsMBean
     /**
      * Increment count of bulk Feedbacks.
      */
-    void upBulkFeedbackCounts ();
+    void upBulkFeedbackCount ();
 
     /**
      * Add latest bulk Feedback time to total.
@@ -210,7 +217,7 @@ public interface ISdtMetricsMBean
     /**
      * Increment count of submit querys.
      */
-    void upSubmitQueryCounts ();
+    void upSubmitQueryCount ();
 
     /**
      * Add latest submit query time to total.

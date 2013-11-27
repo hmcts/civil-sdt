@@ -411,13 +411,13 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         final String paddedLineNumber = StringUtils.leftPad (String.valueOf (lineNumber), 7, "0");
 
         // Count requests.
-        SdtMetricsMBean.getSdtMetrics ().upRequestCount ();
+        SdtMetricsMBean.getMetrics ().upRequestCount ();
 
         // SDT Request Reference consists of <SDT Bulk Reference>-<zero padded line number>
         sdtRequestReference = sdtBulkReference + "-" + paddedLineNumber;
 
         // Update last seen bulk reference.
-        SdtMetricsMBean.getSdtMetrics ().setLastBulkRequestRef (sdtRequestReference);
+        SdtMetricsMBean.getMetrics ().setLastBulkRequestRef (sdtRequestReference);
     }
 
     @Override

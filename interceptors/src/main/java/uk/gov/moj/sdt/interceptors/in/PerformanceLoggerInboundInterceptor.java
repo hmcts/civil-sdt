@@ -85,7 +85,7 @@ public class PerformanceLoggerInboundInterceptor extends AbstractSdtInterceptor
         // Setup logging flags from current value in SdtMetricsMBean for this thread - used by all subsequent processing
         // of this request.
         SdtContext.getContext ().getLoggingContext ()
-                .setLoggingFlags (SdtMetricsMBean.getSdtMetrics ().getPerformanceLoggingFlags ());
+                .setLoggingFlags (SdtMetricsMBean.getMetrics ().getPerformanceLoggingFlags ());
 
         // Increment thread local logging id for this invocation, but only if we are at the start of a new thread of
         // work.

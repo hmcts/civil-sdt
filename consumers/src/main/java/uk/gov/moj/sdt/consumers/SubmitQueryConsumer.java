@@ -130,7 +130,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
 
         try
         {
-            SdtMetricsMBean.getSdtMetrics ().upTargetAppCallCount ();
+            SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
 
             // Measure response time.
             final long startTime = new GregorianCalendar ().getTimeInMillis ();
@@ -142,7 +142,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
 
             // Measure total time spent in target application.
             final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
+            SdtMetricsMBean.getMetrics ().addBulkSubmitTime (endTime - startTime);
 
             return submitQueryResponseType;
         }

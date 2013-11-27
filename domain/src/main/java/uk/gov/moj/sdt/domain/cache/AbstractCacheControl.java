@@ -110,12 +110,12 @@ public abstract class AbstractCacheControl implements ICacheable
      */
     protected final boolean uncacheRequired ()
     {
-        if (this.localCacheResetControl < SdtMetricsMBean.getSdtMetrics ().getCacheResetControl ())
+        if (this.localCacheResetControl < SdtMetricsMBean.getMetrics ().getCacheResetControl ())
         {
             LOG.debug ("Uncache required for " + this.getClass ().getCanonicalName ());
 
             // Bring current value up to date and retport uncache required.
-            this.localCacheResetControl = SdtMetricsMBean.getSdtMetrics ().getCacheResetControl ();
+            this.localCacheResetControl = SdtMetricsMBean.getMetrics ().getCacheResetControl ();
 
             return true;
         }

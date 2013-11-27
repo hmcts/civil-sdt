@@ -105,7 +105,7 @@ public abstract class AbstractWsHandler
     protected synchronized void updateCustomerCount (final long customer)
     {
         // Have the SdtMetrics been reset?
-        if (SdtMetricsMBean.getSdtMetrics ().getActiveCustomers () < uniqueCustomerCount)
+        if (SdtMetricsMBean.getMetrics ().getActiveCustomers () < uniqueCustomerCount)
         {
             // Clear map.
             uniqueCustomers = new HashMap <Long, Long>();
@@ -117,9 +117,9 @@ public abstract class AbstractWsHandler
             uniqueCustomers.put (customer, customer);
             
             // Update metrics.
-            SdtMetricsMBean.getSdtMetrics ().upActiveCustomers ();
+            SdtMetricsMBean.getMetrics ().upActiveCustomers ();
         }
 
-        uniqueCustomerCount = SdtMetricsMBean.getSdtMetrics ().getActiveCustomers ();
+        uniqueCustomerCount = SdtMetricsMBean.getMetrics ().getActiveCustomers ();
     }
 }

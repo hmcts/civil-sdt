@@ -86,8 +86,8 @@ public class IndividualRequestMdb implements IMessageDrivenBean
                 sdtReference = sdtMessage.getSdtRequestReference ();
 
                 // Update statistics.
-                SdtMetricsMBean.getSdtMetrics ().addRequestQueueTime (sdtMessage.getMessageSentTimestamp ());
-                SdtMetricsMBean.getSdtMetrics ().decrementRequestQueueLength ();
+                SdtMetricsMBean.getMetrics ().addRequestQueueTime (sdtMessage.getMessageSentTimestamp ());
+                SdtMetricsMBean.getMetrics ().decrementRequestQueueLength ();
 
             }
             catch (final JMSException e)
@@ -100,7 +100,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
 
             // Setup logging flags from current value in SdtMetric MBean.
             SdtContext.getContext ().getLoggingContext ()
-                    .setLoggingFlags (SdtMetricsMBean.getSdtMetrics ().getPerformanceLoggingFlags ());
+                    .setLoggingFlags (SdtMetricsMBean.getMetrics ().getPerformanceLoggingFlags ());
 
             // Assemble logging id - for dequeued messages we take the logging id of the original submit bulk thread as
             // the major portion to tie things together.
@@ -130,7 +130,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean
                 // We are about to abort the transaction; treat this message as never read and therefore reverse
                 // decrement
                 // of queue count done earlier.
-                SdtMetricsMBean.getSdtMetrics ().upRequestQueueLength ();
+                SdtMetricsMBean.getMetrics ().upRequestQueueLength ();
 
                 // Rethrow it.
                 throw e;

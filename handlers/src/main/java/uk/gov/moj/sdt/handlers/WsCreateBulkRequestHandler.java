@@ -87,7 +87,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         LOGGER.info ("[submitBulk] started");
         
         // Update mbean stats.
-        SdtMetricsMBean.getSdtMetrics ().upBulkSubmitCounts ();
+        SdtMetricsMBean.getMetrics ().upBulkSubmitCount ();
 
         // Measure response time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
@@ -120,11 +120,11 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         finally
         {
             LOGGER.info ("[submitBulk] completed");
-        }
 
-        // Measure total time spent in use case.
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getSdtMetrics ().addBulkSubmitTime (endTime - startTime);
+            // Measure total time spent in use case.
+            final long endTime = new GregorianCalendar ().getTimeInMillis ();
+            SdtMetricsMBean.getMetrics ().addBulkSubmitTime (endTime - startTime);
+        }
 
         return bulkResponseType;
     }
