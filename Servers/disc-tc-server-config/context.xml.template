@@ -11,8 +11,8 @@
     <!--
             <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
             -->
-    <Loader loaderClass="com.springsource.insight.collection.tcserver.ltw.TomcatWeavingInsightClassLoader"/>
-    <Listener className="com.springsource.insight.collection.tcserver.lifecycle.ApplicationLifecycleCollectionListener"/>
+    <!-- <Loader loaderClass="com.springsource.insight.collection.tcserver.ltw.TomcatWeavingInsightClassLoader"/>
+    <Listener className="com.springsource.insight.collection.tcserver.lifecycle.ApplicationLifecycleCollectionListener"/> -->
 	<!--
 	maxWait = The maximum number of milliseconds that the pool will wait (when there are no available connections) for a connection to be returned before throwing an exception
 	-->

@@ -32,8 +32,8 @@
           directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log."
           suffix=".txt" />
       </Host>
-      <Valve
-        className="com.springsource.insight.collection.tcserver.request.HttpRequestOperationCollectionValve" />
+<!--       <Valve
+        className="com.springsource.insight.collection.tcserver.request.HttpRequestOperationCollectionValve" />  -->
     </Engine>
     <Connector acceptCount="100" connectionTimeout="20000" executor="tomcatThreadPool"
       maxKeepAliveRequests="15" port="${bio.http.port}" protocol="org.apache.coyote.http11.Http11Protocol"
