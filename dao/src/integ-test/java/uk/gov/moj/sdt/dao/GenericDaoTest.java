@@ -185,6 +185,17 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
 
         genericDao.persistBulk (bulkObjectList);
 
+        final List<IBulkCustomer> savedBulkObjectList =
+                genericDao
+                        .queryAsList (IBulkCustomer.class, Restrictions.in ("sdtCustomerId", new Long[] {456L, 457L}));
+
+        Assert.assertNotNull (savedBulkObjectList);
+        Assert.assertEquals (2, savedBulkObjectList.size ());
+        for (IBulkCustomer savedBulkCustomer : savedBulkObjectList)
+        {
+            Assert.assertNotNull (savedBulkCustomer);
+        }
+
     }
 
     /**
@@ -204,6 +215,17 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         bulkObjectList.add (bulkCustomer);
 
         genericDao.persistBulk (bulkObjectList);
+
+        final List<IBulkCustomer> savedBulkObjectList =
+                genericDao.queryAsList (IBulkCustomer.class, Restrictions.in ("sdtCustomerId", new Long[] {456L}));
+
+        Assert.assertNotNull (savedBulkObjectList);
+        Assert.assertEquals (1, savedBulkObjectList.size ());
+        for (IBulkCustomer savedBulkCustomer : savedBulkObjectList)
+        {
+            Assert.assertNotNull (savedBulkCustomer);
+            Assert.assertEquals (456, savedBulkCustomer.getSdtCustomerId ());
+        }
 
     }
 
