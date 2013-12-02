@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,7 +34,7 @@ import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
 
 /**
  * Object stored in thread local holding performance logging information.
- * 
+ *
  * @author Robin Compston
  */
 public class LoggingContext implements ILoggingContext
@@ -52,8 +52,7 @@ public class LoggingContext implements ILoggingContext
     /**
      * The name of the property <code>loggingFlags</code>.
      */
-    // TODO turn off.
-    private int loggingFlags = Integer.MAX_VALUE;
+    private int loggingFlags;
 
     /**
      * The major logging id for this request.
@@ -123,7 +122,7 @@ public class LoggingContext implements ILoggingContext
 
     /**
      * Get the next logging id to be assigned to some new thread.
-     * 
+     *
      * @return the next logging id.
      */
     public static synchronized long getNextLoggingId ()
