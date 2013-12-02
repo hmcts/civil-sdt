@@ -34,6 +34,7 @@
 			<fileset dir="${webapp.dir}" casesensitive="false">
 				<include name="**/*.*" />
 				<exclude name="images/*.*" />
+                <exclude name="**/*.template" /> 
 			</fileset>
 			<filterchain>
 				<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
@@ -45,6 +46,17 @@
 				<include name="images/*.*" />
 			</fileset>
 		</copy>
+        <!-- Copy .template files and drop the .template suffix. These contain unresolved property names which
+                are essential in the deployed environment. Note that the non .template equivalent files have already 
+                been templatized by now by the configure-property-files target so that they are available in the 
+                Eclipse bin directory. These must be overwritten by the .template version in the target directory 
+                from which deployment is done. -->
+        <copy todir="${producer-commissioning.target.dir}" overwrite="true">
+            <fileset dir="${webapp.dir}" casesensitive="false">
+                <include name="**/*.template" />
+            </fileset>
+            <mapper type="glob" from="*.template" to="*" />
+        </copy>
 	</target>
 
 	<!-- Copy classes (assumed to be built already) -->

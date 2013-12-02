@@ -56,3 +56,8 @@ sdt.database.connection.user=${sdt.database.connection.user}
 # SDT Oracle connection password
 sdt.database.connection.password=${sdt.database.connection.password}
 
+#Log4j configuration file for Commissioning app
+sdt.producers-comx.log4j.configlocation=${sdt.producers-comx.log4j.configlocation}
+
+#Log4j configuration file for Productiong app
+sdt.producers.log4j.configlocation=${sdt.producers.log4j.configlocation}

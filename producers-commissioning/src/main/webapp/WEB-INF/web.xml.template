@@ -24,7 +24,7 @@
     <!-- Defines the location of the Log4J configuration file. -->
     <context-param>
         <param-name>log4jConfigLocation</param-name>
-        <param-value>file:C:/disc/runtime/springsource/vfabric-tc-server-developer-2.6.3.RELEASE/disc-tc-server/conf/log4j.xml</param-value>
+        <param-value>file:${sdt.producers-comx.log4j.configlocation}</param-value>
     </context-param>
 
     <!-- Refresh log4j configuration every 60 seconds. -->
