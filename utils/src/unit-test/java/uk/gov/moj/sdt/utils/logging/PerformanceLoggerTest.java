@@ -53,7 +53,7 @@ public class PerformanceLoggerTest extends SdtUnitTestBase
     /**
      * Pathname of performance log file.
      */
-    private static final String PERFORMANCE_LOG_PATH = "../logs/performance.log";
+    private static final String PERFORMANCE_LOG_PATH = "../logs/sdt.performance.log";
 
     /**
      * File for performance log.
