@@ -110,7 +110,7 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
 
                 // Now queue the message
                 this.messageWriter.queueMessage (sdtMessage, individualRequest.getBulkSubmission ()
-                        .getTargetApplication ().getTargetApplicationCode ());
+                        .getTargetApplication ().getTargetApplicationCode (), false);
 
                 // Re-set the forwarding attempts on the individual request.
                 individualRequest.resetForwardingAttempts ();

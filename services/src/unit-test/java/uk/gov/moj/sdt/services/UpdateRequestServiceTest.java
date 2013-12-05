@@ -293,7 +293,7 @@ public class UpdateRequestServiceTest
         final ITargetApplication targetApp = new TargetApplication ();
 
         targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("mcol");
+        targetApp.setTargetApplicationCode ("MCOL");
         targetApp.setTargetApplicationName ("TEST_TargetApp");
         final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
 

@@ -60,6 +60,11 @@ public class MessageWriter implements IMessageWriter
     private static final Log LOGGER = LogFactory.getLog (MessageWriter.class);
 
     /**
+     * Default suffix for DLQ name.
+     */
+    private static final String DLQ_SUFFIX = ".DLQ";
+
+    /**
      * The last id used for a queued message.
      */
     private static long lastQueueId;
@@ -86,11 +91,11 @@ public class MessageWriter implements IMessageWriter
     }
 
     @Override
-    public void queueMessage (final ISdtMessage sdtMessage, final String targetAppCode)
+    public void queueMessage (final ISdtMessage sdtMessage, final String targetAppCode, final boolean deadLetter)
     {
 
         // Check the target application code is valid and return queue name.
-        final String queueName = validateTargetApplication (targetAppCode);
+        final String queueName = getQueueName (targetAppCode, deadLetter);
 
         LOGGER.debug ("Sending message [" + sdtMessage.toString () + "] to queue [" + queueName + "]");
 
@@ -165,10 +170,13 @@ public class MessageWriter implements IMessageWriter
      * that is mapped to the target application code.
      * 
      * @param targetApplicationCode the target application code.
+     * @param deadLetter flags whether dead letter queue name should be returned.
      * @return the queue name matching to the target application code.
      */
-    private String validateTargetApplication (final String targetApplicationCode)
+    private String getQueueName (final String targetApplicationCode, final boolean deadLetter)
     {
+        String queueName;
+
         // The target application code should be supplied.
         if (targetApplicationCode == null || targetApplicationCode.trim ().length () == 0)
         {
@@ -177,14 +185,21 @@ public class MessageWriter implements IMessageWriter
         else
         {
             // Check that the target application code is mapped to a queue name
-            if ( !this.getQueueNameMap ().containsKey (targetApplicationCode.toUpperCase ()))
+            if ( !this.getQueueNameMap ().containsKey (targetApplicationCode))
             {
-                throw new IllegalArgumentException ("Target application code [" + targetApplicationCode.toUpperCase () +
+                throw new IllegalArgumentException ("Target application code [" + targetApplicationCode +
                         "] does not have a JMS queue mapped.");
             }
             else
             {
-                return this.getQueueNameMap ().get (targetApplicationCode.toUpperCase ());
+                queueName = this.getQueueNameMap ().get (targetApplicationCode);
+                if (deadLetter)
+                {
+                    // Append DLQ suffix for dead letter.
+                    queueName += DLQ_SUFFIX;
+
+                }
+                return queueName;
             }
         }
 

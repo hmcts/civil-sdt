@@ -101,7 +101,7 @@ public class MessageWriterTest
         // Send the message.
         try
         {
-            messageWriter.queueMessage (sdtMessage, null);
+            messageWriter.queueMessage (sdtMessage, null, false);
             Assert.fail ("Should have thrown an Illegal Argument Exception as the target app code is null.");
         }
         catch (final IllegalArgumentException e)
@@ -130,7 +130,7 @@ public class MessageWriterTest
         // Send the message.
         try
         {
-            messageWriter.queueMessage (sdtMessage, "UnitTest");
+            messageWriter.queueMessage (sdtMessage, "UnitTest", false);
             Assert.fail ("Should have thrown an Illegal Argument exception here as the target app code is invalid");
         }
         catch (final IllegalArgumentException e)
@@ -163,7 +163,43 @@ public class MessageWriterTest
 
             messageWriter.setQueueNameMap (queueNameMap);
 
-            messageWriter.queueMessage (sdtMessage, "UnitTest");
+            messageWriter.queueMessage (sdtMessage, "UNITTEST", false);
+            Assert.assertTrue ("Success", true);
+        }
+        catch (final IllegalArgumentException e)
+        {
+            LOGGER.error ("Error", e);
+            Assert.fail ("Not Expected to fail");
+        }
+
+        EasyMock.verify (jmsTemplate);
+    }
+
+    /**
+     * Test for a valid queue message on the MessageWriter for dead letter.
+     */
+    @Test
+    public void testQueueMessageForDeadLetter ()
+    {
+        // Setup finished, now tell the mock what to expect.
+        final ISdtMessage sdtMessage = new SdtMessage ();
+        sdtMessage.setSdtRequestReference ("Test");
+
+        jmsTemplate.convertAndSend ("UnitTestQueue.DLQ", sdtMessage);
+        EasyMock.expectLastCall ();
+
+        // Get ready to call the mock.
+        replay (jmsTemplate);
+
+        // Send the message.
+        try
+        {
+            final Map<String, String> queueNameMap = new HashMap<String, String> ();
+            queueNameMap.put ("UNITTEST", "UnitTestQueue");
+
+            messageWriter.setQueueNameMap (queueNameMap);
+
+            messageWriter.queueMessage (sdtMessage, "UNITTEST", true);
             Assert.assertTrue ("Success", true);
         }
         catch (final IllegalArgumentException e)

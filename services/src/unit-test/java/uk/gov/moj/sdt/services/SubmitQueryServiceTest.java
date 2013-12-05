@@ -34,13 +34,13 @@ package uk.gov.moj.sdt.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.ws.WebServiceException;
+
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -75,11 +75,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
  */
 public class SubmitQueryServiceTest
 {
-    /**
-     * Logger for debugging.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryServiceTest.class);
-
     /**
      * Submit Query Service object.
      */
@@ -314,6 +309,61 @@ public class SubmitQueryServiceTest
     }
 
     /**
+     * Unit test method to test web service exception.
+     */
+    @Test
+    public void testSubmitQueryRequestForWebServiceException ()
+    {
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
+
+        setUpSubmitQueryRequest (submitQueryRequest);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
+        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue ("1000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+                connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
+        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue ("12000");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
+                .andReturn (receiveTimeOutParam);
+
+        final IGlobalParameter maxQueryReq = new GlobalParameter ();
+        maxQueryReq.setName ("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setValue ("5");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+                .andReturn (maxQueryReq);
+
+        final WebServiceException wsException = new WebServiceException ("WS_ERROR");
+        this.mockConsumerGateway.submitQuery (submitQueryRequest, 1000, 12000);
+        EasyMock.expectLastCall ().andThrow (wsException);
+
+        final IErrorMessage errorMsg = new ErrorMessage ();
+        errorMsg.setErrorCode ("SDT_INT_ERR");
+        errorMsg.setErrorDescription ("SDT Internal Error.");
+        errorMsg.setErrorText ("SDT Internal Error.");
+
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
+
+        EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockGlobalParamCache);
+        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay (mockBulkCustomerDao);
+
+        SdtContext.getContext ().setRawInXml ("response");
+        this.submitQueryService.submitQuery (submitQueryRequest);
+
+        EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockGlobalParamCache);
+        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertTrue ("Expected to pass", true);
+    }
+
+    /**
      * Unit test method to test server soap fault exception.
      */
     @Test
@@ -424,7 +474,7 @@ public class SubmitQueryServiceTest
         final ITargetApplication targetApp = new TargetApplication ();
 
         targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("mcol");
+        targetApp.setTargetApplicationCode ("MCOL");
         targetApp.setTargetApplicationName ("TEST_TargetApp");
         final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
 

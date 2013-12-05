@@ -146,7 +146,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
                         messageObj.setSdtRequestReference (iRequest.getSdtRequestReference ());
 
-                        getMessageWriter ().queueMessage (messageObj, targetAppCode);
+                        getMessageWriter ().queueMessage (messageObj, targetAppCode, false);
                     }
 
                 });

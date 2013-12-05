@@ -150,7 +150,8 @@ public class RetryMessageAlreadySentServiceTest
         {
             // Create the SdtMessage required for sending message on the queue.
             final ISdtMessage sdtMessage = this.createSdtMessage (individualRequestObj.getSdtRequestReference ());
-            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class));
+            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
+                    EasyMock.anyBoolean ());
             EasyMock.expectLastCall ();
 
             // Re-set the forwarding attempts on the individual request.
@@ -214,7 +215,8 @@ public class RetryMessageAlreadySentServiceTest
         {
             // Create the SdtMessage required for sending message on the queue.
             final ISdtMessage sdtMessage = this.createSdtMessage (individualRequestObj.getSdtRequestReference ());
-            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class));
+            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
+                    EasyMock.anyBoolean ());
             EasyMock.expectLastCall ();
 
             // Re-set the forwarding attempts on the individual request.
@@ -305,7 +307,8 @@ public class RetryMessageAlreadySentServiceTest
         {
             // Create the SdtMessage required for sending message on the queue.
             final ISdtMessage sdtMessage = this.createSdtMessage (individualRequestObj.getSdtRequestReference ());
-            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class));
+            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
+                    EasyMock.anyBoolean ());
             EasyMock.expectLastCall ();
 
             // Re-set the forwarding attempts on the individual request.
@@ -346,7 +349,7 @@ public class RetryMessageAlreadySentServiceTest
         final ITargetApplication targetApp = new TargetApplication ();
 
         targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("mcol");
+        targetApp.setTargetApplicationCode ("MCOL");
         targetApp.setTargetApplicationName ("TEST_TargetApp");
         final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
 

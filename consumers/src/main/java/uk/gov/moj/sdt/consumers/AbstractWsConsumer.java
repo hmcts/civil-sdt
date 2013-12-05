@@ -90,6 +90,13 @@ public abstract class AbstractWsConsumer
                                                          final String webServiceEndPoint, final long connectionTimeOut,
                                                          final long receiveTimeOut)
     {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Create client for target [" + targetApplicationCode + "] service [" + serviceType +
+                    "] endpoint [" + webServiceEndPoint + "] conn timeout [" + connectionTimeOut + "] recv timeout [" +
+                    receiveTimeOut + "]");
+        }
+
         final String clientCacheKey = targetApplicationCode + serviceType;
         ITargetAppInternalEndpointPortType client = null;
 
@@ -161,14 +168,21 @@ public abstract class AbstractWsConsumer
      *            when the server is down.
      * @param wsException - the WebServiceException caught by the client submit call.
      * @param errorReferenceContext - optional parameter indicating the unique reference to identify the request.
+     * @throws WebServiceException - if passed in exception cannot be handled.
      * @throws OutageException - if there is a connection failure, the web service exception may be re-thrown.
      * @throws TimeoutException - if there is a read timeout issue, throw the time out exception.
      * @throws SoapFaultException - if the soap request resulted in an soap fault.
      */
     protected void handleClientErrors (final boolean rethrowOnFailureToConnect, final WebServiceException wsException,
                                        final String errorReferenceContext)
-        throws OutageException, TimeoutException, SoapFaultException
+        throws WebServiceException, OutageException, TimeoutException, SoapFaultException
     {
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("handle exception -> " + wsException);
+        }
+
         // If the target application is unavailable continue trying to send message indefinitely.
         if ((wsException.getCause () instanceof ConnectException) && rethrowOnFailureToConnect)
         {
@@ -210,9 +224,8 @@ public abstract class AbstractWsConsumer
             SdtMetricsMBean.getMetrics ().upTargetAppMiscErrors ();
 
             // If is is any other exception, we can't handle it cleanly. So throw it back
-            LOGGER.error ("Unexpected exception while sending to target endpoint", wsException);
+            throw wsException;
 
-            // Swallow exception - we want to carry on trying to connect.
         }
     }
 }

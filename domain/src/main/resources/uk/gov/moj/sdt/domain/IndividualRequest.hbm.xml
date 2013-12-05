@@ -52,6 +52,9 @@
         <property name="requestType" type="java.lang.String">
             <column name="REQUEST_TYPE" />
         </property>                
+        <property name="deadLetter" type="yes_no">
+            <column name="DEAD_LETTER" />
+        </property>                
         <one-to-one name="errorLog" class="uk.gov.moj.sdt.domain.ErrorLog" cascade="all" property-ref="individualRequest">
         </one-to-one>
         

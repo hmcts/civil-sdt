@@ -43,8 +43,10 @@ public interface IMessageWriter
      * Writes a message to the message queue. The target application code
      * is required so the message writer can resolve reference to the message queue.
      * 
-     * @param sdtMessage the message object to be written to the message queue
+     * @param sdtMessage the message object to be written to the message queue.
      * @param targetAppCode the code of the target application.
+     * @param deadLetter is the message to be written to dead letter queue.
      */
-    void queueMessage (ISdtMessage sdtMessage, String targetAppCode);
+    void queueMessage (ISdtMessage sdtMessage, String targetAppCode, boolean deadLetter);
+
 }

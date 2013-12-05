@@ -32,6 +32,8 @@ package uk.gov.moj.sdt.services;
 
 import java.text.MessageFormat;
 
+import javax.xml.ws.WebServiceException;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +126,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             }
             catch (final TimeoutException e)
             {
-                LOGGER.error ("Timeout exception for SDT reference " + individualRequest.getSdtRequestReference () +
+                LOGGER.error ("Timeout exception for SDT reference [" + individualRequest.getSdtRequestReference () +
                         "]");
 
                 // Update the individual request with the reason code for error REQ_NOT_ACK
@@ -137,6 +139,15 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             {
                 // Update the individual request with the soap fault reason
                 this.updateRequestSoapError (individualRequest, e.getMessage ());
+            }
+            catch (final WebServiceException e)
+            {
+
+                LOGGER.error ("Exception calling target application for SDT reference [" +
+                        individualRequest.getSdtRequestReference () + "] - " + e.getMessage ());
+
+                this.handleWebServiceException (individualRequest, e.getMessage ());
+
             }
 
             LOGGER.debug ("Individual request " + sdtRequestReference + " processing completed.");
@@ -267,6 +278,38 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         // now complete the request.
         this.updateCompletedRequest (individualRequest);
+    }
+
+    /**
+     * Store exception message as internal error. Mark the request as dead message and write to corresponding target
+     * application's dead letter queue (DLQ).
+     * 
+     * @param individualRequest the individual request to be marked.
+     * @param errorMessage the exception message when the request has failed.
+     */
+    private void handleWebServiceException (final IIndividualRequest individualRequest, final String errorMessage)
+    {
+        // Truncate the error message to fit database column length
+        String internalError = errorMessage;
+        if (errorMessage != null && errorMessage.length () > MAX_ALLOWED_CHARS)
+        {
+            internalError = errorMessage.substring (0, MAX_ALLOWED_CHARS);
+        }
+        individualRequest.setInternalSystemError (internalError);
+        individualRequest.setDeadLetter (true);
+
+        // now persist the request.
+        this.getIndividualRequestDao ().persist (individualRequest);
+
+        // Create a new message for DLQ.
+        final ISdtMessage messageObj = new SdtMessage ();
+        messageObj.setSdtRequestReference (individualRequest.getSdtRequestReference ());
+
+        final String targetAppCode =
+                individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
+
+        this.getMessageWriter ().queueMessage (messageObj, targetAppCode, true);
+
     }
 
     /**
@@ -404,7 +447,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             final String targetAppCode =
                     individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
 
-            this.getMessageWriter ().queueMessage (messageObj, targetAppCode);
+            this.getMessageWriter ().queueMessage (messageObj, targetAppCode, false);
         }
         else
         {

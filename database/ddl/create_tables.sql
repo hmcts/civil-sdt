@@ -101,6 +101,7 @@ CREATE TABLE individual_requests
 ,request_type                 VARCHAR2(50)
 ,version_number               INTEGER DEFAULT 0  -- hiberate versioning column
 ,individual_payload           BLOB
+,dead_letter                  CHAR(1)
 ) &individual_requests_lob 
 &individual_requests 
 ;

@@ -36,6 +36,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.ws.WebServiceException;
+
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.hibernate.criterion.Criterion;
@@ -68,7 +70,6 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.messaging.SdtMessage;
 import uk.gov.moj.sdt.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.GenericXmlParser;
@@ -323,6 +324,8 @@ public class TargetApplicationSubmissionServiceTest
     @Test
     public void processRequestToSubmitTimeOut ()
     {
+        LOGGER.debug ("Timeout scenario");
+
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest ();
 
@@ -382,10 +385,78 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn (
                 maxForwardingAttemptsParam);
 
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference (individualRequest.getSdtRequestReference ());
+        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
+                EasyMock.anyBoolean ());
+        EasyMock.expectLastCall ();
 
-        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class));
+        EasyMock.replay (mockIndividualRequestDao);
+        EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockCacheable);
+        EasyMock.replay (mockMessageWriter);
+        EasyMock.replay (mockErrorMsgCacheable);
+
+        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+
+        EasyMock.verify (mockIndividualRequestDao);
+        EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockCacheable);
+        EasyMock.verify (mockMessageWriter);
+        EasyMock.verify (mockErrorMsgCacheable);
+
+        Assert.assertTrue ("Expected to pass", true);
+    }
+
+    /**
+     * Test method to test for web service exception.
+     */
+    @Test
+    public void processRequestToSubmitForWebServiceException ()
+    {
+        LOGGER.debug ("Web service exception scenario");
+
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest ();
+
+        // Set-up the individual request object
+
+        individualRequest.setSdtRequestReference (sdtRequestRef);
+        individualRequest.setRequestStatus ("Received");
+        setUpIndividualRequest (individualRequest);
+
+        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+                individualRequest);
+
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
+        individualReqProcessingDelay.setValue ("10");
+        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+                individualReqProcessingDelay);
+
+        individualRequest.setRequestStatus ("Forwarded");
+        this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ().times (1);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
+        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue ("1000");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+                connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
+        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue ("12000");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+                receiveTimeOutParam);
+
+        final WebServiceException wsException = new WebServiceException ("WS Error");
+        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
+        EasyMock.expectLastCall ().andThrow (wsException);
+
+        this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ();
+
+        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
+                EasyMock.eq (true));
         EasyMock.expectLastCall ();
 
         EasyMock.replay (mockIndividualRequestDao);
@@ -598,7 +669,7 @@ public class TargetApplicationSubmissionServiceTest
         final ITargetApplication targetApp = new TargetApplication ();
 
         targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("mcol");
+        targetApp.setTargetApplicationCode ("MCOL");
         targetApp.setTargetApplicationName ("TEST_TargetApp");
         final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
 

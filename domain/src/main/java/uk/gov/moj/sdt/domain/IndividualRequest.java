@@ -61,12 +61,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     private String customerRequestReference;
 
     /**
-     * Case Number associated to Request where available. Case Numbers for new claim requests
-     * will be allocated by the online Case Management application (MCOL) and passed back to SDT.
-     */
-    // private String caseNumber;
-
-    /**
      * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
      * "Accepted".
      */
@@ -142,6 +136,12 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * Request type like mcolClaim, mcolJudgment etc.
      */
     private String requestType;
+
+    /**
+     * Flags whether message is dead letter i.e. cannot be processed due to unknown problem and requires further
+     * investigation.
+     */
+    private boolean deadLetter;
 
     @Override
     public IBulkSubmission getBulkSubmission ()
@@ -427,6 +427,19 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
                 .append ("customerRequestReference", customerRequestReference)
                 .append ("sdtRequestReference", sdtRequestReference).append ("requestStatus", requestStatus)
                 .append ("requestType", requestType).toString ();
+    }
+
+    @Override
+    public boolean isDeadLetter ()
+    {
+        return deadLetter;
+    }
+
+    @Override
+    public void setDeadLetter (final boolean deadLetter)
+    {
+        this.deadLetter = deadLetter;
+
     }
 
 }

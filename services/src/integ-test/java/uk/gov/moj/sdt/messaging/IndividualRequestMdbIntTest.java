@@ -88,7 +88,7 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
         sdtMessage.setEnqueueLoggingId (1);
         final IMessageWriter messageWriter =
                 (IMessageWriter) this.applicationContext.getBean ("uk.gov.moj.sdt.messaging.api.IMessageWriter");
-        messageWriter.queueMessage (sdtMessage, "MCOLS");
+        messageWriter.queueMessage (sdtMessage, "MCOLS", false);
 
         LOG.debug ("After SetUp");
     }

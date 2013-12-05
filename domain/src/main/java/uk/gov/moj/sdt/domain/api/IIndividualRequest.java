@@ -296,6 +296,19 @@ public interface IIndividualRequest extends IDomainObject
     void resetForwardingAttempts ();
 
     /**
+     * @return true if this request is a dead letter i.e. cannot be processed due to unknown problem and requires
+     *         further investigation.
+     */
+    boolean isDeadLetter ();
+
+    /**
+     * Sets deadLetter property.
+     * 
+     * @param deadLetter indicates if request is dead letter.
+     */
+    void setDeadLetter (final boolean deadLetter);
+
+    /**
      * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
      * "Accepted".
      * 
