@@ -145,72 +145,49 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
             Assert.assertNotNull (request.getSdtBulkReference ());
             Assert.assertNotNull (request.getSdtRequestReference ());
             Assert.assertNotNull (request.getRequestPayload ());
-            LOG.debug ("Payload for request " + request.getId () + "is " + request.getRequestPayload ());
         }
-
     }
-
-    /**
-     * This method tests the bulk submission with the intention of checking that
-     * the rollback of the database transaction does not send the message to the queue.
-     * 
-     * @throws IOException if there is any IO errors.
-     */
-    // @Test
-    // @Rollback (true)
-    // public void testSubmissionforRollback () throws IOException
-    // {
-    // final String rawXml = this.getRawXml ("testXMLValid2.xml");
-    // SdtContext.getContext ().setRawInXml (rawXml);
-    //
-    // final IBulkSubmissionService bulkSubmissionService =
-    // (IBulkSubmissionService) this.applicationContext
-    // .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
-    //
-    // final IBulkSubmission bulkSubmission = this.createInvalidBulkSubmission ();
-    //
-    // Call the bulk submission service
-    // try
-    // {
-    // bulkSubmissionService.saveBulkSubmission (bulkSubmission);
-    // Assert.fail ("The test is not expected to be successfull commit in database.");
-    // }
-    // catch (final Exception e)
-    // {
-    // Assert.assertTrue ("The submission has rolled back", true);
-    // }
-    //
-    // }
 
     /**
      * This method tests for persistence of a submission containing multiple individual requests.
      * 
      * @throws IOException if there is any error reading from the test file.
      */
-    // @Test
-    // @Rollback (false)
-    // public void saveMultipleSubmissions () throws IOException
-    // {
-    // final String rawXml = this.getRawXml ("testXMLValid3.xml");
-    // SdtContext.getContext ().setRawInXml (rawXml);
-    //
-    // final IBulkSubmission bulkSubmission = this.createBulkSubmission (62);
-    //
-    // bulkSubmission.setNumberOfRequest (62L);
-    // Call the bulk submission service
-    // bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+    @Test
+    @Rollback (false)
+    public void saveMultipleSubmissions () throws IOException
+    {
+        final String rawXml = this.getRawXml ("testXMLValid3.xml");
+        SdtContext.getContext ().setRawInXml (rawXml);
 
-    // Assert.assertNotNull (bulkSubmission.getPayload ());
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission (62);
 
-    // Assert.assertEquals (62L, bulkSubmission.getNumberOfRequest ());
+        bulkSubmission.setNumberOfRequest (62L);
 
-    // Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+        // Set the service request id so it can be retrieved in the saveBulkSubmission code
+        SdtContext.getContext ().setServiceRequestId (new Long (10800));
 
-    // final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-    // Assert.assertNotNull (individualRequests);
-    // Assert.assertEquals (62, individualRequests.size ());
+        // Call the bulk submission service
+        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
 
-    // }
+        Assert.assertNotNull (bulkSubmission.getPayload ());
+
+        Assert.assertEquals (62L, bulkSubmission.getNumberOfRequest ());
+
+        Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        Assert.assertNotNull (individualRequests);
+        Assert.assertEquals (62, individualRequests.size ());
+
+        for (IIndividualRequest request : individualRequests)
+        {
+
+            Assert.assertNotNull (request.getSdtBulkReference ());
+            Assert.assertNotNull (request.getSdtRequestReference ());
+            Assert.assertNotNull (request.getRequestPayload ());
+        }
+    }
 
     /**
      * 
@@ -251,8 +228,6 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
 
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
-        bulkSubmission
-                .setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         bulkSubmission.setCustomerReference ("10711");
         bulkSubmission.setNumberOfRequest (1);
@@ -279,67 +254,6 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
 
     /**
      * 
-     * @return an invalid Bulk Submission object for the testing.
-     */
-    private IBulkSubmission createInvalidBulkSubmission ()
-    {
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        final ITargetApplication targetApp = new TargetApplication ();
-
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("MCOL");
-        targetApp.setTargetApplicationName ("MCOL");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
-
-        final IServiceRouting serviceRouting = new ServiceRouting ();
-        serviceRouting.setId (1L);
-        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
-
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setId (1L);
-        serviceType.setName ("RequestTest1");
-        serviceType.setDescription ("RequestTestDesc1");
-        serviceType.setStatus ("RequestTestStatus");
-
-        serviceRouting.setServiceType (serviceType);
-
-        serviceRoutings.add (serviceRouting);
-
-        targetApp.setServiceRoutings (serviceRoutings);
-
-        bulkSubmission.setTargetApplication (targetApp);
-
-        bulkCustomer.setSdtCustomerId (2L);
-
-        bulkSubmission.setBulkCustomer (bulkCustomer);
-
-        bulkSubmission
-                .setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        bulkSubmission.setCustomerReference ("10711");
-        bulkSubmission.setNumberOfRequest (1);
-
-        bulkSubmission.setSubmissionStatus ("SUBMITTEDSUBMITTEDSUBMITTEDSUBMITTED");
-        bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-
-        final IndividualRequest individualRequest = new IndividualRequest ();
-        individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
-                .currentTimeMillis ())));
-        individualRequest
-                .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        individualRequest.setCustomerRequestReference ("ICustReq123");
-        individualRequest.setRequestStatus ("Received");
-        individualRequest.setBulkSubmission (bulkSubmission);
-        individualRequest.setLineNumber (1);
-
-        bulkSubmission.addIndividualRequest (individualRequest);
-
-        return bulkSubmission;
-    }
-
-    /**
-     * 
      * @param bulkSubmission bulk submission record.
      * @param customerReference customer reference.
      * @param status status.
@@ -351,8 +265,6 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
                                                        final int lineNumber)
     {
         final IndividualRequest individualRequest = new IndividualRequest ();
-        individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
-                .currentTimeMillis ())));
         individualRequest
                 .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         individualRequest.setCustomerRequestReference (customerReference);
