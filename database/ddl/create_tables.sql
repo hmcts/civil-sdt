@@ -96,12 +96,12 @@ CREATE TABLE individual_requests
 ,updated_date                 TIMESTAMP         -- date/time of last change to record
 ,completed_date               TIMESTAMP
 ,forwarding_attempts          INTEGER
-,target_application_response  BLOB 
+,dead_letter                  CHAR(1)
 ,internal_system_error        VARCHAR2(4000)
 ,request_type                 VARCHAR2(50)
 ,version_number               INTEGER DEFAULT 0  -- hiberate versioning column
 ,individual_payload           BLOB
-,dead_letter                  CHAR(1)
+,target_application_response  BLOB 
 ) &individual_requests_lob 
 &individual_requests 
 ;
