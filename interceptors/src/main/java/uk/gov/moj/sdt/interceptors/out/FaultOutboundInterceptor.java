@@ -34,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.Soap11FaultOutInterceptor;
+import org.apache.cxf.binding.soap.interceptor.Soap12FaultOutInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.springframework.transaction.annotation.Propagation;
@@ -66,6 +67,7 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest
 
         // Assume that the interceptor will run after the default SOAP interceptor.
         getAfter ().add (Soap11FaultOutInterceptor.class.getName ());
+        getAfter ().add (Soap12FaultOutInterceptor.class.getName ());
     }
 
     @Override
@@ -83,8 +85,10 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest
             msg = t.getMessage ();
         }
 
-        persistEnvelope ("Error encounted: " + fault.getFaultCode () + ": " + fault.getMessage () +
-                ", sending this message in SOAP fault: " + msg);
+        final String errorMsg = "Error encounted: " + fault.getFaultCode () + ": " + fault.getMessage () +
+                ", sending this message in SOAP fault: " + msg;
+        LOGGER.info (errorMsg);
+        persistEnvelope (errorMsg);
 
         // Write message to 'performance.log' for this logging point.
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_11))
