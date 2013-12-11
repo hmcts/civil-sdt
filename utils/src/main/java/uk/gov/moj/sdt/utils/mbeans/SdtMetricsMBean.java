@@ -1601,6 +1601,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.performanceLoggingFlags = performanceLoggingFlags;
     }
 
+    @Override
+    public void updateBulkCustomerCount (final String customer)
+    {
+        getCustomerCounter ().updateBulkCustomerCount (customer);
+    }
+
     /**
      * Get singleton instance of this bean - used by callers to update statistics. Note that if Spring initialisation is
      * not complete the version of the constructor that sets up McolMetricsMBean.thisBean will not have been called and
@@ -1616,15 +1622,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
             LOGGER.debug ("Spring has not yet initialised SdtMetricsMBean");
 
             // Keep caller happy with throw away metrics - these stats will be lost - Spring not yet inititalised.
-            return new SdtMetricsMBean (true);
+            final SdtMetricsMBean sdtMetricsMBean = new SdtMetricsMBean (true);
+            sdtMetricsMBean.setCustomerCounter (new CustomerCounter ());
+            return sdtMetricsMBean;
         }
 
         return SdtMetricsMBean.thisBean;
-    }
-
-    @Override
-    public void updateBulkCustomerCount (final String customer)
-    {
-        getCustomerCounter ().updateBulkCustomerCount (customer);
     }
 }
