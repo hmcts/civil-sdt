@@ -31,8 +31,6 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,11 +47,6 @@ import uk.gov.moj.sdt.domain.TargetApplication;
 
 public class TargetApplicationValidatorTest extends AbstractValidatorUnitTest
 {
-
-    /**
-     * Logger.
-     */
-    private static final Log LOGGER = LogFactory.getLog (TargetApplicationValidatorTest.class);
 
     /**
      * Test subject.
