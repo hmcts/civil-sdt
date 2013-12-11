@@ -87,7 +87,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional (propagation = Propagation.REQUIRES_NEW)
     public void handleMessage (final SoapMessage soapMessage) throws Fault
     {
         LOGGER.debug ("ServiceRequestInboundInterceptor handle incoming message being processed");
@@ -113,8 +113,8 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         serviceRequest.setRequestPayload (SdtContext.getContext ().getRawInXml ());
         serviceRequest.setRequestDateTime (new LocalDateTime ());
         serviceRequest.setRequestType (extractRequestType ());
-        
-        //Get the server Host Name
+
+        // Get the server Host Name
         final String hostName = ServerHostName.getHostName ();
         serviceRequest.setServerHostName (hostName);
 
@@ -138,13 +138,17 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         final String message = SdtContext.getContext ().getRawInXml ();
         final int startPos = message.indexOf (requestTypePattern);
 
-        // the next node contains the request type
-        final String content = message.substring (startPos + requestTypePattern.length ());
-
-        if (content.length () > 0)
+        //Ensure that search pattern is found
+        if (startPos > -1)
         {
-            final int endPos = content.indexOf ("\"");
-            requestType = content.substring (0, endPos);
+            // the next node contains the request type
+            final String content = message.substring (startPos + requestTypePattern.length ());
+
+            if (content.length () > 0)
+            {
+                final int endPos = content.indexOf ("\"");
+                requestType = content.substring (0, endPos);
+            }
         }
         return requestType;
     }
@@ -182,7 +186,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         {
             return "";
         }
-        
+
         int startPos = xmlMessage.indexOf (nodeName);
         if (startPos != -1)
         {
@@ -191,7 +195,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
             final int endPos = nodeContent.indexOf ("<");
             nodeContent = nodeContent.substring (1, endPos);
         }
-        
+
         return nodeContent;
     }
 }

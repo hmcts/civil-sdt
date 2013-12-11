@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
@@ -55,6 +57,11 @@ import uk.gov.moj.sdt.utils.SdtUnitTestBase;
  */
 public class ServiceRequestInboundInterceptorTest extends SdtUnitTestBase
 {
+
+    /**
+     * Logger.
+     */
+    private static final Log LOGGER = LogFactory.getLog (ServiceRequestInboundInterceptorTest.class);
 
     /**
      * Constructor.
@@ -165,8 +172,7 @@ public class ServiceRequestInboundInterceptorTest extends SdtUnitTestBase
         }
         catch (final SecurityException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace ();
+            LOGGER.error(e);
         }
     }
 
