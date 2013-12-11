@@ -947,7 +947,7 @@
       <bul:bulkFeedbackRequest>
          <bul:header>
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
-            <bul:sdtBulkReference>MCOL-20131114113202-000000006</bul:sdtBulkReference>
+            <bul:sdtBulkReference>MCOL-20131210172854-000000005</bul:sdtBulkReference>
          </bul:header>
       </bul:bulkFeedbackRequest>
    </soap:Body>
@@ -1083,11 +1083,11 @@
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
             <bul:targetApplicationId>mcol</bul:targetApplicationId>
             <bul:requestCount>1</bul:requestCount>
-            <bul:customerReference>3</bul:customerReference>
+            <bul:customerReference>6</bul:customerReference>
          </bul:header>
          <bul:requests>
             <!--1 to 2000 repetitions:-->
-            <bul:request requestType="mcolClaim" requestId="3">
+            <bul:request requestType="mcolClaim" requestId="6">
                <!--You have a CHOICE of the next 5 items at this level-->
                <bul:mcolClaim>
                   <!--Optional:-->
@@ -1101,13 +1101,6 @@
                      </cla:address>
                   </cla:claimant>
                   <!--Optional:-->
-                  <cla:claimantCorrespondence>
-                     <cla:name>correspondenceForename correspondenceSurname</cla:name>
-                     <cla:address>
-                        <cla:line1>correspondenceAddress line 1</cla:line1>
-                        <cla:line2>correspondenceAddress line 2</cla:line2>
-                     </cla:address>
-                  </cla:claimantCorrespondence>
                   <cla:defendant1>
                      <cla:name>defendant1Forename defendant1Surname</cla:name>
                      <cla:address>
@@ -1135,6 +1128,111 @@
                      <bas:name>John</bas:name>
                   </cla:sotSignature>
                </bul:mcolClaim>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid Judgment"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>7</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 to 2000 repetitions:-->
+            <bul:request requestType="mcolJudgment" requestId="7">
+               <!--You have a CHOICE of the next 5 items at this level-->
+            <bul:mcolJudgment>
+               <jud:claimNumber>9QZ00002</jud:claimNumber>
+               <jud:jointJudgment>false</jud:jointJudgment>
+               <jud:judgmentType>A</jud:judgmentType>
+               <!--Optional:-->
+               <jud:sentParticularsSeparately>true</jud:sentParticularsSeparately>
+               <!--Optional:-->
+               <jud:defendantId>1</jud:defendantId>
+               <!--Optional:-->
+               <jud:defendant1Address>
+                  <bas:line1>defendant1Address line1</bas:line1>
+                  <bas:line2>defendant1Address line2</bas:line2>
+                  <!--Optional:-->
+                  <bas:line3>defendant1Address line3</bas:line3>
+                  <!--Optional:-->
+                  <bas:line4>defendant1Address line4</bas:line4>
+                  <bas:postcode>RG42 2DL</bas:postcode>
+               </jud:defendant1Address>
+               <!--Optional:-->
+               <jud:defendant1DateOfBirth>1960-10-10</jud:defendant1DateOfBirth>
+               <jud:paymentSchedule>
+                  <!--You have a CHOICE of the next 3 items at this level-->
+                  <jud:immediatePayment/>
+               </jud:paymentSchedule>
+               <!--Optional:-->
+               <jud:interest>99999</jud:interest>
+               <!--Optional:-->
+               <jud:solicitorCost>5000</jud:solicitorCost>
+               <!--Optional:-->
+               <jud:deductedAmount>10000000</jud:deductedAmount>
+               <!--Optional:-->
+               <jud:payee>
+                  <jud:name>payee name</jud:name>
+                  <jud:address>
+                     <jud:line1>payee line1</jud:line1>
+                     <jud:line2>payee line2</jud:line2>
+                     <!--Optional:-->
+                     <jud:line3>payee line3</jud:line3>
+                     <!--Optional:-->
+                     <jud:line4>payee line4</jud:line4>
+                     <!--Optional:-->
+                     <jud:line5>payee line5</jud:line5>
+                     <!--Optional:-->
+                     <jud:postcode>RG42 2DL</jud:postcode>
+                  </jud:address>
+                  <!--Optional:-->
+                  <jud:telephoneNumber>12345678901234</jud:telephoneNumber>
+                  <!--Optional:-->
+                  <jud:dxNumber>payee dx number</jud:dxNumber>
+                  <!--Optional:-->
+                  <jud:faxNumber>payee fx number</jud:faxNumber>
+                  <!--Optional:-->
+                  <jud:email>payee email</jud:email>
+                  <!--Optional:-->
+                  <jud:pcm>12</jud:pcm>
+                  <!--Optional:-->
+                  <jud:reference>payee reference</jud:reference>
+                  <!--Optional:-->
+                  <jud:bankAccountNumber>123456789012345678</jud:bankAccountNumber>
+                  <!--Optional:-->
+                  <jud:bankAccountHolder>payee bank account holder</jud:bankAccountHolder>
+                  <!--Optional:-->
+                  <jud:bankSortCode>12345678</jud:bankSortCode>
+                  <!--Optional:-->
+                  <jud:bankName>payee bank name</jud:bankName>
+                  <!--Optional:-->
+                  <jud:bankInfo1>payee bank info1</jud:bankInfo1>
+                  <!--Optional:-->
+                  <jud:bankInfo2>payee bank info2</jud:bankInfo2>
+                  <!--Optional:-->
+                  <jud:slipCodeline1>payee slip code line1</jud:slipCodeline1>
+                  <!--Optional:-->
+                  <jud:slipCodeline2>payee slip code line2</jud:slipCodeline2>
+                  <!--Optional:-->
+                  <jud:giroAccountNumber>12345678</jud:giroAccountNumber>
+                  <!--Optional:-->
+                  <jud:giroTransCode1>123456789</jud:giroTransCode1>
+                  <!--Optional:-->
+                  <jud:giroTransCode2>12</jud:giroTransCode2>
+                  <!--Optional:-->
+                  <jud:apacsTransCode>12</jud:apacsTransCode>
+               </jud:payee>
+               <jud:sotSignature>
+                  <bas:flag>true</bas:flag>
+                  <bas:name>sotSignature</bas:name>
+               </jud:sotSignature>
+            </bul:mcolJudgment>
             </bul:request>
          </bul:requests>
       </bul:bulkRequest>
