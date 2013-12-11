@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
+import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
 
 /**
@@ -283,9 +284,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long databaseWritesTimeMax;
 
     /**
-     * Number of active customers.
+     * Number of active bulk customers.
      */
-    private long activeCustomers;
+    private long activeBulkCustomers;
 
     /**
      * Number of requests queue count to target application.
@@ -393,14 +394,30 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private DateFormat formatter = new SimpleDateFormat ("yyyy.MM.dd_HH:mm:ss.SSS");
 
     /**
-     * Constructor for {@link SdtMetricsMBean}.
+     * Utility class for counting unique customers.
      */
-    private SdtMetricsMBean ()
+    private ICustomerCounter customerCounter;
+
+    /**
+     * Constructor for {@link SdtMetricsMBean}. This called by Spring and should become the bean that all subsequent
+     * calls to metrics use, hence is stores in thisBean, which is obtained by getMetrics ().
+     */
+    public SdtMetricsMBean ()
     {
         SdtMetricsMBean.thisBean = this;
 
         // Set start time.
         this.resetTime = new GregorianCalendar ().getTimeInMillis ();
+    }
+
+    /**
+     * Constructor for {@link SdtMetricsMBean} with discriminator parameter.
+     * 
+     * @param doNotRegister discriminator parameter to identify construct which does not register bean in static. Only
+     *            Spring must do this so that mbean uses same bean that we use. Parameter is a marker and is not used.
+     */
+    public SdtMetricsMBean (final boolean doNotRegister)
+    {
     }
 
     // BULK SUBMISSION
@@ -1077,6 +1094,26 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         return this.lastBusinessException;
     }
 
+    /**
+     * Get the unique customer counter.
+     * 
+     * @return customer counter reference.
+     */
+    private ICustomerCounter getCustomerCounter ()
+    {
+        return customerCounter;
+    }
+
+    /**
+     * Set the unique customer counter.
+     * 
+     * @param customerCounter new value of customer counter.
+     */
+    public void setCustomerCounter (final ICustomerCounter customerCounter)
+    {
+        this.customerCounter = customerCounter;
+    }
+
     @Override
     public void upBulkStatusUpdateCount ()
     {
@@ -1187,9 +1224,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public void upActiveCustomers ()
+    public void upActiveBulkCustomers ()
     {
-        this.activeCustomers += 1;
+        this.activeBulkCustomers += 1;
     }
 
     @Override
@@ -1374,7 +1411,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.databaseWritesTime = 0;
         this.databaseWritesTimeMin = Long.MAX_VALUE;
         this.databaseWritesTimeMax = 0;
-        this.activeCustomers = 0;
+        this.activeBulkCustomers = 0;
         this.requestQueueCount = 0;
         this.requestQueueTime = 0;
         this.requestQueueTimeMin = Long.MAX_VALUE;
@@ -1399,9 +1436,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public long getActiveCustomers ()
+    public long getActiveBulkCustomers ()
     {
-        return this.activeCustomers;
+        return this.activeBulkCustomers;
     }
 
     @Override
@@ -1486,7 +1523,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getActiveCustomersStats ()
     {
-        return "Active customers: count[" + this.getActiveCustomers () + "]";
+        return "Active bulk customers: count[" + this.getActiveBulkCustomers () + "]";
     }
 
     @Override
@@ -1565,17 +1602,29 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     /**
-     * Get singleton instance of this bean - used by callers to update statistics.
+     * Get singleton instance of this bean - used by callers to update statistics. Note that if Spring initialisation is
+     * not complete the version of the constructor that sets up McolMetricsMBean.thisBean will not have been called and
+     * this method will return a temporary mbean which will satisfy caller but will result in lost early statistics -
+     * this is acceptable.
      * 
      * @return singleton instance of this bean.
      */
     public static SdtMetricsMBean getMetrics ()
     {
-        if (thisBean == null)
+        if (SdtMetricsMBean.thisBean == null)
         {
-            thisBean = new SdtMetricsMBean ();
-            LOGGER.debug ("Initialised SdtMetricsMBean");
+            LOGGER.debug ("Spring has not yet initialised SdtMetricsMBean");
+
+            // Keep caller happy with throw away metrics - these stats will be lost - Spring not yet inititalised.
+            return new SdtMetricsMBean (true);
         }
+
         return SdtMetricsMBean.thisBean;
+    }
+
+    @Override
+    public void updateBulkCustomerCount (final String customer)
+    {
+        getCustomerCounter ().updateBulkCustomerCount (customer);
     }
 }

@@ -50,7 +50,7 @@ public interface ISdtMetricsMBean
      * 
      * @return the number of active customers using the system.
      */
-    long getActiveCustomers ();
+    long getActiveBulkCustomers ();
 
     /**
      * Get summary of bulk submit statistics.
@@ -271,9 +271,9 @@ public interface ISdtMetricsMBean
     void addDatabaseWritesTime (final long databaseWritesTime);
 
     /**
-     * Increment the active customers count.
+     * Increment the active bulk customers count.
      */
-    void upActiveCustomers ();
+    void upActiveBulkCustomers ();
 
     /**
      * Increment the completed bulk submit count.
@@ -375,4 +375,10 @@ public interface ISdtMetricsMBean
      */
     void setLastBulkRequestRef (final String lastBulkRequestRef);
 
+    /**
+     * Count the number of distinct web customers using the system since last reset.
+     * 
+     * @param customer the unique identifier of the customer who called the web service.
+     */
+    void updateBulkCustomerCount (final String customer);
 }

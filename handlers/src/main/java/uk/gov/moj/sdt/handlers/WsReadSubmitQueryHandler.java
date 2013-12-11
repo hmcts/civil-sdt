@@ -90,7 +90,8 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
         // Update number of customers using the system.
-        this.updateCustomerCount (submitQueryRequestType.getHeader ().getSdtCustomerId ());
+        SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
+                Long.toString (submitQueryRequestType.getHeader ().getSdtCustomerId ()));
 
         // Initialise response.
         SubmitQueryResponseType submitQueryResponseType = createResponse (submitQueryRequestType);

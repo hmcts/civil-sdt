@@ -85,7 +85,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
     {
         LOGGER.info ("[submitBulk] started");
-        
+
         // Update mbean stats.
         SdtMetricsMBean.getMetrics ().upBulkSubmitCount ();
 
@@ -93,8 +93,9 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
         // Update number of customers using the system.
-        this.updateCustomerCount (bulkRequestType.getHeader ().getSdtCustomerId ());
-        
+        SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
+                Long.toString (bulkRequestType.getHeader ().getSdtCustomerId ()));
+
         // Initialise response;
         BulkResponseType bulkResponseType = intialiseResponse (bulkRequestType);
 

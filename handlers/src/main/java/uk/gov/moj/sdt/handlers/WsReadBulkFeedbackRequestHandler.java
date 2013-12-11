@@ -90,7 +90,8 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
         // Update number of customers using the system.
-        this.updateCustomerCount (bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+        SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
+                Long.toString (bulkFeedbackRequest.getHeader ().getSdtCustomerId ()));
 
         BulkFeedbackResponseType response = createResponse (bulkFeedbackRequest);
         try

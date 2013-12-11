@@ -10,6 +10,11 @@
 	<!-- Note all ids should be based on fully qualified names (interfaces where 
 		this is not ambiguous) and all classes should have an interface. -->
 
-	<bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean" />
+    <bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean" >
+        <property name="customerCounter" ref="uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter"/>
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter" class="uk.gov.moj.sdt.utils.mbeans.CustomerCounter" >
+    </bean>
 
 </beans>
