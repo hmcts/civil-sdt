@@ -165,7 +165,6 @@
 				<include name="${jboss-logging.jar}" />
 				<include name="${jboss-transaction-api.jar}" />
 				<include name="${joda-time.jar}" />
-				<include name="${junit.jar}" />
 				<include name="${org.springframework.aop.jar}" />
 				<include name="${org.springframework.asm.jar}" />
 				<include name="${org.springframework.beans.jar}" />
@@ -176,15 +175,10 @@
 				<include name="${org.springframework.expression.jar}" />
 				<include name="${org.springframework.jdbc.jar}" />
 				<include name="${org.springframework.jms.jar}" />
-				<include name="${org.springframework.js.jar}" />
-				<include name="${org.springframework.js.resources.jar}" />
 				<include name="${org.springframework.orm.jar}" />
 				<include name="${org.springframework.oxm.jar}" />
-				<include name="${org.springframework.test.jar}" />
 				<include name="${org.springframework.transaction.jar}" />
 				<include name="${org.springframework.web.jar}" />
-				<include name="${org.springframework.web.servlet.jar}" />
-				<include name="${org.springframework.webflow.jar}" />
 				<include name="${slf4j-api.jar}" />
 				<include name="${slf4j-log4j12.jar}" />
 				<include name="${usertype-spi.jar}" />
@@ -199,7 +193,6 @@
 				<include name="${aopalliance.jar}" />
 				<include name="${aspectjrt.jar}" />
 				<include name="${aspectjweaver.jar}" />
-				<include name="${c3p0.jar}" />
 				<include name="${cglib.jar}" />
 				<include name="${commons-beanutils-core.jar}" />
 				<include name="${commons-beanutils.jar}" />
@@ -224,8 +217,6 @@
 				<include name="${itext.jar}" />
 				<include name="${jaxb-impl.jar}" />
 				<include name="${jaxen.jar}" />
-				<include name="${jaxws-rt.jar}" />
-				<include name="${jaxws-spring.jar}" />
 				<include name="${jboss-el.jar}" />
 				<include name="${jcip-annotations.jar}" />
 				<include name="${jcl-over-slf4j.jar}" />
@@ -242,14 +233,10 @@
 				<include name="${mail.jar}" />
 				<include name="${neethi.jar}" />
 				<include name="${ojdbc.jar}" />
-				<include name="${openws.jar}" />
 				<include name="${org.apache.xalan-xalan}" />
 				<include name="${org.apache.xerces-xercesImpl}" />
-				<include name="${persistence-api.jar}" />
-				<include name="${qas-proweb.jar}" />
 				<include name="${resolver.jar}" />
 				<include name="${serializer.jar}" />
-				<include name="${springmodules-validation.jar}" />
 				<include name="${standard.jar}" />
 				<include name="${stax-api.jar}" />
 				<include name="${stax-ex.jar}" />
