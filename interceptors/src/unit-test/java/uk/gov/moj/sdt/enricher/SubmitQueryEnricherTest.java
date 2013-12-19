@@ -83,4 +83,31 @@ public class SubmitQueryEnricherTest
 
     }
     
+    /**
+     * Test for null value.
+     */
+    @Test
+    public void testForNullValue ()
+    {
+        SdtContext.getContext ().setRawOutXml (null);
+        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
+        final String expected = "<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>";
+        Assert.assertEquals(expected, result);
+
+    }
+
+    /**
+     * Test for empty string value.
+     */
+    @Test
+    public void testForEmptyValue ()
+    {
+        SdtContext.getContext ().setRawOutXml ("");
+        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
+        final String expected = "<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>";
+        Assert.assertEquals(expected, result);
+
+    }
+
+
 }

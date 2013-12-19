@@ -180,13 +180,15 @@ public class SubmitQueryServiceTest
         EasyMock.replay (mockErrorMsgCacheable);
         EasyMock.replay (mockBulkCustomerDao);
 
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext ().setRawInXml ("criteria");
         this.submitQueryService.submitQuery (submitQueryRequest);
 
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockGlobalParamCache);
         EasyMock.verify (mockErrorMsgCacheable);
         EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertEquals ("Raw output xml should be null", null, SdtContext.getContext ().getRawOutXml ());
 
         Assert.assertTrue ("Expected to pass", true);
     }
@@ -242,13 +244,15 @@ public class SubmitQueryServiceTest
         EasyMock.replay (mockErrorMsgCacheable);
         EasyMock.replay (mockBulkCustomerDao);
 
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext ().setRawInXml ("criteria");
         this.submitQueryService.submitQuery (submitQueryRequest);
 
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockGlobalParamCache);
         EasyMock.verify (mockErrorMsgCacheable);
         EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertEquals ("Raw output xml should be null", null, SdtContext.getContext ().getRawOutXml ());
 
         Assert.assertTrue ("Expected to pass", true);
     }
@@ -297,13 +301,15 @@ public class SubmitQueryServiceTest
         EasyMock.replay (mockErrorMsgCacheable);
         EasyMock.replay (mockBulkCustomerDao);
 
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext ().setRawInXml ("criteria");
         this.submitQueryService.submitQuery (submitQueryRequest);
 
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockGlobalParamCache);
         EasyMock.verify (mockErrorMsgCacheable);
         EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertEquals ("Raw output xml should be null", null, SdtContext.getContext ().getRawOutXml ());
 
         Assert.assertTrue ("Expected to pass", true);
     }
@@ -352,13 +358,15 @@ public class SubmitQueryServiceTest
         EasyMock.replay (mockErrorMsgCacheable);
         EasyMock.replay (mockBulkCustomerDao);
 
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext ().setRawInXml ("criteria");
         this.submitQueryService.submitQuery (submitQueryRequest);
 
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockGlobalParamCache);
         EasyMock.verify (mockErrorMsgCacheable);
         EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertEquals ("Raw output xml should be null", null, SdtContext.getContext ().getRawOutXml ());
 
         Assert.assertTrue ("Expected to pass", true);
     }
@@ -391,13 +399,15 @@ public class SubmitQueryServiceTest
         EasyMock.replay (mockErrorMsgCacheable);
         EasyMock.replay (mockBulkCustomerDao);
 
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext ().setRawInXml ("criteria");
         this.submitQueryService.submitQuery (submitQueryRequest);
 
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockGlobalParamCache);
         EasyMock.verify (mockErrorMsgCacheable);
         EasyMock.verify (mockBulkCustomerDao);
+
+        Assert.assertEquals ("Raw output xml should be null", null, SdtContext.getContext ().getRawOutXml ());
 
         Assert.assertTrue ("Expected to pass", true);
     }
@@ -448,7 +458,7 @@ public class SubmitQueryServiceTest
         EasyMock.replay (mockErrorMsgCacheable);
         EasyMock.replay (mockBulkCustomerDao);
 
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext ().setRawInXml ("criteria");
         this.submitQueryService.submitQuery (submitQueryRequest);
 
         EasyMock.verify (mockConsumerGateway);

@@ -194,6 +194,10 @@ public class SubmitQueryService implements ISubmitQueryService
         // Get the Error message to indicate that call to target application has
         // timed out
         buildTargetAppError (submitQueryRequest);
+
+        // Clear out xml to prevent enrichment
+        SdtContext.getContext ().setRawOutXml (null);
+
     }
 
     /**
@@ -207,6 +211,9 @@ public class SubmitQueryService implements ISubmitQueryService
         // Get the Error message to indicate that there has been no response
         // from the server.
         buildTargetAppError (submitQueryRequest);
+
+        // Clear out xml to prevent enrichment
+        SdtContext.getContext ().setRawOutXml (null);
     }
 
     /**
@@ -262,6 +269,8 @@ public class SubmitQueryService implements ISubmitQueryService
         errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorText ());
         submitQueryRequest.reject (errorLog);
 
+        // Clear out xml to prevent enrichment
+        SdtContext.getContext ().setRawOutXml (null);
     }
 
     /**
@@ -343,6 +352,10 @@ public class SubmitQueryService implements ISubmitQueryService
         IErrorLog errorLog = null;
         errorLog = new ErrorLog (errorMessageParam.getErrorCode (), errorMessageParam.getErrorText ());
         submitQueryRequest.reject (errorLog);
+
+        // Clear out xml to prevent enrichment
+        SdtContext.getContext ().setRawOutXml (null);
+
     }
 
     /**

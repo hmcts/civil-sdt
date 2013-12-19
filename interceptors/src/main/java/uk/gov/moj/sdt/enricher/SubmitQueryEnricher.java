@@ -34,6 +34,7 @@ package uk.gov.moj.sdt.enricher;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -71,12 +72,12 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
         {
             // Get the system specific response from thread local to inject into the outbound message
             String replacementXml = SdtContext.getContext ().getRawOutXml ();
-
+            
             //Build search pattern for insertion point.
             final Pattern pattern = Pattern.compile ("<[\\w]+:" + getInsertionTag () + "/>");
             final Matcher matcher = pattern.matcher (newXml);
 
-            if (matcher.find ())
+            if (StringUtils.isNotBlank(replacementXml) && matcher.find ())
             {
                 LOGGER.debug ("Found matching group[" + matcher.group () + "]");
 
