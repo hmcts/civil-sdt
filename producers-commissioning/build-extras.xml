@@ -172,12 +172,13 @@
 				<include name="${org.springframework.context.support.jar}" />
 				<include name="${org.springframework.core.jar}" />
 				<include name="${org.springframework.expression.jar}" />
-				<include name="${org.springframework.transaction.jar}" />
+                <include name="${org.springframework.jms.jar}" />
 				<include name="${org.springframework.web.jar}" />
 				<include name="${slf4j-api.jar}" />
 				<include name="${slf4j-log4j12.jar}" />
 				<include name="${usertype-spi.jar}" />
 				<include name="${usertype.core.jar}" />
+                <include name="${org.springframework.transaction.jar}" />
 				<include name="${usertype.jodatime.jar}" />
 			</fileset>
 			<fileset dir="${3rd-party.dir}" casesensitive="false">
