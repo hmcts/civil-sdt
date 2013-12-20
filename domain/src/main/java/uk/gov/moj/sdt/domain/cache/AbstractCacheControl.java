@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * An abstract class to provide a cache/uncache facility to classes that cache data from the database.
@@ -52,6 +52,11 @@ public abstract class AbstractCacheControl implements ICacheable
      * Static logging object.
      */
     private static final Logger LOG = LoggerFactory.getLogger (AbstractCacheControl.class);
+
+    /**
+     * MBean which holds value controlling uncache operation.
+     */
+    private ISdtManagementMBean managementMBean;
 
     /**
      * Value of the cache count for this {@link AbstractCacheControl} instance need to be uncached.
@@ -110,16 +115,26 @@ public abstract class AbstractCacheControl implements ICacheable
      */
     protected final boolean uncacheRequired ()
     {
-        if (this.localCacheResetControl < SdtMetricsMBean.getMetrics ().getCacheResetControl ())
+        if (this.localCacheResetControl < managementMBean.getCacheResetControl ())
         {
             LOG.debug ("Uncache required for " + this.getClass ().getCanonicalName ());
 
-            // Bring current value up to date and retport uncache required.
-            this.localCacheResetControl = SdtMetricsMBean.getMetrics ().getCacheResetControl ();
+            // Bring current value up to date and report uncache required.
+            this.localCacheResetControl = managementMBean.getCacheResetControl ();
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Allow Spring to wire up the bean.
+     * 
+     * @param managementMBean new value of the management bean.
+     */
+    public void setManagementMBean (final ISdtManagementMBean managementMBean)
+    {
+        this.managementMBean = managementMBean;
     }
 }

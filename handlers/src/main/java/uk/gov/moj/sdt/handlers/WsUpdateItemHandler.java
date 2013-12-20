@@ -41,6 +41,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.services.api.IUpdateRequestService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
@@ -78,6 +79,9 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
     {
         LOGGER.info ("[updateItem] started");
 
+        // Update mbean stats.
+        SdtMetricsMBean.getMetrics ().upStatusUpdateCount ();
+
         // Measure response time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
@@ -103,7 +107,7 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
 
             // Measure total time spent in use case.
             final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            // SdtMetricsMBean.getSdtMetrics ().addUpdateItemTime (endTime - startTime);
+            SdtMetricsMBean.getMetrics ().addStatusUpdateTime (endTime - startTime);
         }
 
         return updateResponseType;

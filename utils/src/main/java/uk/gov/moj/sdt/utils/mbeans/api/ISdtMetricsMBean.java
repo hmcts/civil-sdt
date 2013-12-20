@@ -45,6 +45,13 @@ public interface ISdtMetricsMBean
     String getTime ();
 
     /**
+     * Get the current OS stats for CPU and memory.
+     * 
+     * @return String containing OS stats.
+     */
+    String getOsStats ();
+
+    /**
      * Get the number of active customers using the system. Public because needed by handlers to reset unique customer
      * map.
      * 
@@ -76,7 +83,7 @@ public interface ISdtMetricsMBean
     /**
      * Get summary of status statistics.
      * 
-     * @return summary of status statistics.
+     * @return summary of status update statistics.
      */
     String getStatusUpdateStats ();
 
@@ -158,13 +165,6 @@ public interface ISdtMetricsMBean
     String getPerformanceLoggingString ();
 
     /**
-     * Get the current cache reset control.
-     * 
-     * @return the last bulk request reference.
-     */
-    int getCacheResetControl ();
-
-    /**
      * Get the current active performance logging flags.
      * 
      * @return the current active performance logging flags.
@@ -175,13 +175,6 @@ public interface ISdtMetricsMBean
      * Reset all metrics to initial value.
      */
     void reset ();
-
-    /**
-     * Mark all cache classes extending {@link AbstractCacheControl} as needing to uncache any cached content. It is the
-     * responsibility of the implementation to notice this has been called and discard any cached items, forcing a
-     * refresh from source.
-     */
-    void uncache ();
 
     /**
      * Set the value of the performance logging flags.
@@ -227,14 +220,16 @@ public interface ISdtMetricsMBean
     void addSubmitQueryTime (final long submitQueryTime);
 
     /**
-     * Increment the bulk status update count.
+     * Increment count of status updates.
      */
-    void upBulkStatusUpdateCount ();
+    void upStatusUpdateCount ();
 
     /**
-     * Increment the request status update count.
+     * Add latest status update time to total.
+     * 
+     * @param statusUpdateTime time to add to total status update time.
      */
-    void upRequestStatusUpdateCount ();
+    void addStatusUpdateTime (final long statusUpdateTime);
 
     /**
      * Increment the domain objects count.
@@ -274,11 +269,6 @@ public interface ISdtMetricsMBean
      * Increment the active bulk customers count.
      */
     void upActiveBulkCustomers ();
-
-    /**
-     * Increment the completed bulk submit count.
-     */
-    void upCompletedBulkSubmitCount ();
 
     /**
      * Increment the request count.
@@ -381,4 +371,9 @@ public interface ISdtMetricsMBean
      * @param customer the unique identifier of the customer who called the web service.
      */
     void updateBulkCustomerCount (final String customer);
+
+    /**
+     * Write current value of metrics to a time-stamped file.
+     */
+    void dumpMetrics ();
 }

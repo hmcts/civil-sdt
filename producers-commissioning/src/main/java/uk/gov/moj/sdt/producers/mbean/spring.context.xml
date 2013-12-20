@@ -21,20 +21,27 @@
             <bean
                 class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
                 <property name="managedMethods">
-                    <value>getTime, getBulkSubmitStats,
-                        getBulkFeedbackStats,getSubmitQueryStats,
+                    <value>getTime, 
+                        getOsStats,
+                        getBulkSubmitStats,
+                        getBulkFeedbackStats,
+                        getSubmitQueryStats,
                         getStatusUpdateStats,
                         getDomainObjectsStats,
                         getDatabaseCallsStats,
                         getDatabaseReadsStats,
                         getDatabaseWritesStats,
                         getActiveCustomersStats,
-                        getRequestQueueStats, getTargetAppStats,
-                        getErrorStats, getLastBulkSubmitRef,
+                        getRequestQueueStats, 
+                        getTargetAppStats,
+                        getErrorStats, 
+                        getLastBulkSubmitRef,
                         getLastBulkRequestRef,
                         getPerformanceLoggingString,
                         uncache,
-                        setPerformanceLoggingFlags, reset
+                        setPerformanceLoggingFlags, 
+                        reset, 
+                        dumpMetrics
                     </value>
                 </property>
             </bean>

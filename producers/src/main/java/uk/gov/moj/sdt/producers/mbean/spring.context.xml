@@ -10,7 +10,7 @@
     <!-- Note all ids should be based on fully qualified names (interfaces 
         where this is not ambiguous) and all classes should have an interface. -->
 
-    <bean id="producers.exporter" class="org.springframework.jmx.export.MBeanExporter">
+    <bean class="org.springframework.jmx.export.MBeanExporter">
         <property name="beans">
             <map>
                 <entry key="bean:name=sdtProducersMetrics"
@@ -21,24 +21,50 @@
             <bean
                 class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
                 <property name="managedMethods">
-                    <value>getTime, getBulkSubmitStats,
-                        getBulkFeedbackStats,getSubmitQueryStats,
+                    <value>getTime, 
+                        getOsStats,
+                        getBulkSubmitStats,
+                        getBulkFeedbackStats,
+                        getSubmitQueryStats,
                         getStatusUpdateStats,
                         getDomainObjectsStats,
                         getDatabaseCallsStats,
                         getDatabaseReadsStats,
                         getDatabaseWritesStats,
                         getActiveCustomersStats,
-                        getRequestQueueStats, getTargetAppStats,
-                        getErrorStats, getLastBulkSubmitRef,
+                        getRequestQueueStats, 
+                        getTargetAppStats,
+                        getErrorStats, 
+                        getLastBulkSubmitRef,
                         getLastBulkRequestRef,
                         getPerformanceLoggingString,
                         uncache,
-                        setPerformanceLoggingFlags, reset
+                        setPerformanceLoggingFlags, 
+                        reset, 
+                        dumpMetrics
                     </value>
                 </property>
             </bean>
         </property>
     </bean>
 
+    <bean class="org.springframework.jmx.export.MBeanExporter">
+        <property name="beans">
+            <map>
+                <entry key="bean:name=sdtProducersManagement"
+                    value-ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" />
+            </map>
+        </property>
+        <property name="assembler">
+            <bean
+                class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
+                <property name="managedMethods">
+                    <value>uncache, 
+                        setMdbPoolSize,
+                        requeueOldIndividualRequests
+                    </value>
+                </property>
+            </bean>
+        </property>
+    </bean>
 </beans>

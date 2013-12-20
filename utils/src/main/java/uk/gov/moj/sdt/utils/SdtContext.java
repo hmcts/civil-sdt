@@ -319,7 +319,10 @@ public final class SdtContext
      */
     public static SdtContext getContext ()
     {
+        // Look to see if context already setup for this thread.
         SdtContext sdtContext = THREAD_LOCAL.get ();
+
+        // If not create it and store it in thread local storage.
         if (sdtContext == null)
         {
             sdtContext = new SdtContext ();

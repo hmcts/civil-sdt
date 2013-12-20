@@ -43,9 +43,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * Integration test for the Global Parameters Cache.
@@ -54,13 +57,11 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
-        "/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml", "/uk/gov/moj/sdt/transformers/spring.context.xml",
-        "/uk/gov/moj/sdt/interceptors/in/spring.context.xml", "/uk/gov/moj/sdt/interceptors/out/spring.context.xml",
-        "/uk/gov/moj/sdt/enricher/spring.context.xml", "/uk/gov/moj/sdt/dao/spring.hibernate.xml",
-        "/uk/gov/moj/sdt/dao/spring*.xml", "/uk/gov/moj/sdt/dao/spring.datasource.xml",
-        "/uk/gov/moj/sdt/cache/spring.context.xml", "/uk/gov/moj/sdt/utils/spring*.xml",
-        "/uk/gov/moj/sdt/utils/transaction/synchronizer/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
+        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
+        "classpath:/uk/gov/moj/sdt/transformers/spring*.xml", "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
+        "classpath:/uk/gov/moj/sdt/enricher/spring*.xml", "classpath:/uk/gov/moj/sdt/cache/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
@@ -96,10 +97,8 @@ public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4Spr
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
 
         assertNotNull (globalParameter);
-
         assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
-
-        LOG.debug ("Global Parameter value is " + globalParameter.getValue ());
+        assertTrue (globalParameter.getValue ().equals ("90"));
     }
 
     /**
@@ -114,4 +113,41 @@ public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4Spr
         assertNull (globalParameter);
     }
 
+    /**
+     * Test getValue method where parameter is found after uncache.
+     */
+    @Test
+    public void testUncache ()
+    {
+        // Try to retrieve the bean
+        IGlobalParameter globalParameter =
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+
+        assertNotNull (globalParameter);
+        assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
+        assertTrue (globalParameter.getValue ().equals ("90"));
+
+        // Do uncache operation.
+        final ISdtManagementMBean sdtManagementMBean =
+                (ISdtManagementMBean) SpringApplicationContext
+                        .getBean ("uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean");
+        sdtManagementMBean.uncache ();
+
+        // Change the value in the database.
+        final IGenericDao genericDao =
+                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+        globalParameter.setValue ("91");
+        genericDao.persist (globalParameter);
+
+        // Try to retrieve the bean again with new value.
+        globalParameter = null;
+        globalParameter =
+                globalParameterCache.getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+
+        assertNotNull (globalParameter);
+        assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
+        assertTrue (globalParameter.getValue ().equals ("91"));
+    }
 }

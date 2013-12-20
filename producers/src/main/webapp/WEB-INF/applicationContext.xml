@@ -56,9 +56,13 @@
                 implementor="#uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType" 
                 address="/sdtinternalapi">
         <jaxws:inInterceptors>
+            <ref bean="uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor" />
             <ref bean="uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor" />
             <ref bean="uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor" />
         </jaxws:inInterceptors>
+        <jaxws:outInterceptors>
+            <ref bean="uk.gov.moj.sdt.interceptors.out.PerformanceLoggerOutboundInterceptor" />
+        </jaxws:outInterceptors>
         <jaxws:outFaultInterceptors>
         	<ref bean="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor" />
         </jaxws:outFaultInterceptors>

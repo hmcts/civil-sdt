@@ -16,7 +16,8 @@
 
 	<!-- Global store of all global parameters. -->
 	<bean id="uk.gov.moj.sdt.cache.api.IGlobalParametersCache" class="uk.gov.moj.sdt.cache.GlobalParametersCache" lazy-init="true">
-		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
+        <property name="managementMBean" ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" />
+        <property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
 	</bean>
 
 </beans>

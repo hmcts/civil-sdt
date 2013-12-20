@@ -17,4 +17,8 @@
     <bean id="uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter" class="uk.gov.moj.sdt.utils.mbeans.CustomerCounter" >
     </bean>
 
+    <bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtManagementMBean" >
+        <!-- <property name="messageListenerContainer" ref="messageListenerContainer"/>  -->
+    </bean>
+
 </beans>

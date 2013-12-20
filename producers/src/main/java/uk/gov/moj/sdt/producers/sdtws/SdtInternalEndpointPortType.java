@@ -36,6 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType;
@@ -71,6 +72,23 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
                     updateRequest.getHeader ().getSdtRequestId ());
         }
 
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tsdt sdt request id=" + updateRequest.getHeader ().getSdtRequestId () +
+                    "\n\tstatus code=" + updateRequest.getStatus ().getCode () + "\n");
+
+            if (updateRequest.getStatus ().getError () != null)
+            {
+                detail.append ("\n\terror code=" + updateRequest.getStatus ().getError ().getCode () +
+                        "\n\terror description=" + updateRequest.getStatus ().getError ().getDescription () + "\n");
+            }
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2, "Status update received",
+                    detail.toString ());
+        }
+
         UpdateResponseType response = null;
 
         try
@@ -82,6 +100,22 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
         // CHECKSTYLE:ON
         {
             handleThrowable (throwable);
+        }
+
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_9))
+        {
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tstatus code=" + response.getStatus ().getCode () + "\n");
+
+            if (response.getStatus ().getError () != null)
+            {
+                detail.append ("\n\terror code=" + response.getStatus ().getError ().getCode () +
+                        "\n\terror description=" + response.getStatus ().getError ().getDescription () + "\n");
+            }
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_9,
+                    "Status update response returned", detail.toString ());
         }
 
         return response;

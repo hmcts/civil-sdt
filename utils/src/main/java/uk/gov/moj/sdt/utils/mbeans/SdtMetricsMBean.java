@@ -30,6 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.mbeans;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -106,12 +112,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
      * The singleton instance of this class created by Spring.
      */
     private static final double MILLISECONDS = 1000;
-
-    /**
-     * Value which determines the current value of a flag which controls whether individual {@link AbstractCacheControl}
-     * instances need to be uncached.
-     */
-    private int cacheResetControl;
 
     /**
      * Current active value of performance logging flags which control what performance logging points are active.
@@ -194,19 +194,29 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private long submitQueryTimeMax;
 
     /**
-     * Bulk status update count (as a result of all requests on a bulk being updated).
+     * Count of all status updates.
      */
-    private long bulkStatusUpdateCount;
+    private long statusUpdateCount;
 
     /**
-     * Request status update count (from target application).
+     * Time of last status update web service call.
      */
-    private long requestStatusUpdateCount;
+    private long statusUpdateLastTime;
 
     /**
-     * Maximum processing time of all submit querys.
+     * Total processing time of all status updates.
      */
-    private long completedBulkSubmitCount;
+    private long statusUpdateTime;
+
+    /**
+     * Minimum processing time of all status updates.
+     */
+    private long statusUpdateTimeMin = Long.MAX_VALUE;
+
+    /**
+     * Maximum processing time of all status updates.
+     */
+    private long statusUpdateTimeMax;
 
     /**
      * Number of requests in bulk submits.
@@ -667,34 +677,82 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         return this.submitQueryTimeMax;
     }
 
+    // UPDATE REQUEST
+
     /**
-     * Number of bulk status updates from target application.
+     * Get current count of status updates since last reset.
      * 
-     * @return number of bulk status updates.
+     * @return count of status updates.
      */
-    private long getBulkStatusUpdateCount ()
+    private long getStatusUpdateCount ()
     {
-        return this.bulkStatusUpdateCount;
+        return this.statusUpdateCount;
+    }
+
+    @Override
+    public void upStatusUpdateCount ()
+    {
+        this.statusUpdateCount += 1;
+
+        this.statusUpdateLastTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
     /**
-     * Get the number of requests status updates (from target application).
+     * Get total time for status updates since last reset.
      * 
-     * @return the number of requests status updates.
+     * @return total time (milliseconds) for status updates.
      */
-    private long getRequestStatusUpdateCount ()
+    private long getStatusUpdateTime ()
     {
-        return this.requestStatusUpdateCount;
+        return this.statusUpdateTime;
+    }
+
+    @Override
+    public void addStatusUpdateTime (final long statusUpdateTime)
+    {
+        this.statusUpdateTime += statusUpdateTime;
+
+        // Update the minimum if needed.
+        if (statusUpdateTime < this.statusUpdateTimeMin)
+        {
+            this.statusUpdateTimeMin = statusUpdateTime;
+        }
+
+        // Update the maximum if needed.
+        if (statusUpdateTime > this.statusUpdateTimeMax)
+        {
+            this.statusUpdateTimeMax = statusUpdateTime;
+        }
     }
 
     /**
-     * Get the number of completed bulk submits (all requests sent to target application).
+     * Get average time for status updates since last reset.
      * 
-     * @return the number of completed bulk submits.
+     * @return average time (milliseconds) for status updates.
      */
-    private long getCompletedBulkSubmitCount ()
+    private long getStatusUpdateTimeAvg ()
     {
-        return this.completedBulkSubmitCount;
+        return (this.statusUpdateCount == 0) ? 0 : this.statusUpdateTime / this.statusUpdateCount;
+    }
+
+    /**
+     * Get minimum time for status updates since last reset.
+     * 
+     * @return minimum time (milliseconds) for status updates.
+     */
+    private long getStatusUpdateTimeMin ()
+    {
+        return this.statusUpdateTimeMin;
+    }
+
+    /**
+     * Get maximum time for status updates since last reset.
+     * 
+     * @return maximum time (milliseconds) for status updates.
+     */
+    private long getStatusUpdateTimeMax ()
+    {
+        return this.statusUpdateTimeMax;
     }
 
     /**
@@ -1115,18 +1173,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public void upBulkStatusUpdateCount ()
-    {
-        this.bulkStatusUpdateCount += 1;
-    }
-
-    @Override
-    public void upRequestStatusUpdateCount ()
-    {
-        this.requestStatusUpdateCount += 1;
-    }
-
-    @Override
     public void upDomainObjectsCount ()
     {
         this.domainObjectsCount += 1;
@@ -1227,12 +1273,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public void upActiveBulkCustomers ()
     {
         this.activeBulkCustomers += 1;
-    }
-
-    @Override
-    public void upCompletedBulkSubmitCount ()
-    {
-        this.completedBulkSubmitCount += 1;
     }
 
     @Override
@@ -1393,9 +1433,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.submitQueryTime = 0;
         this.submitQueryTimeMin = Long.MAX_VALUE;
         this.submitQueryTimeMax = 0;
-        this.bulkStatusUpdateCount = 0;
-        this.requestStatusUpdateCount = 0;
-        this.completedBulkSubmitCount = 0;
+        this.statusUpdateCount = 0;
+        this.statusUpdateLastTime = 0;
+        this.statusUpdateTime = 0;
+        this.statusUpdateTimeMin = Long.MAX_VALUE;
+        this.statusUpdateTimeMax = 0;
         this.requestCount = 0;
         this.resetTime = 0;
         this.domainObjectsCount = 0;
@@ -1463,6 +1505,24 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
+    public String getOsStats ()
+    {
+        final java.lang.management.OperatingSystemMXBean o = ManagementFactory.getOperatingSystemMXBean ();
+        if ( !(o instanceof com.sun.management.OperatingSystemMXBean))
+        {
+            return "";
+        }
+
+        final com.sun.management.OperatingSystemMXBean osMxBean = (com.sun.management.OperatingSystemMXBean) o;
+        final RuntimeMXBean rtMxBean = ManagementFactory.getRuntimeMXBean ();
+
+        return "Number of processors[" + osMxBean.getAvailableProcessors () + "], process cpu time[" +
+                osMxBean.getProcessCpuTime () + "], uptime[" + (rtMxBean == null ? 1 : rtMxBean.getUptime ()) +
+                "], total physical memory[" + osMxBean.getTotalPhysicalMemorySize () + "], free physical memory[" +
+                osMxBean.getFreePhysicalMemorySize () + "]";
+    }
+
+    @Override
     public String getBulkFeedbackStats ()
     {
         return "Bulk feedbacks: count[" + this.getBulkFeedbackCount () + "], last[" +
@@ -1485,9 +1545,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getStatusUpdateStats ()
     {
-        return "Status updates: bulk count[" + this.getBulkStatusUpdateCount () + "], request count[" +
-                this.getRequestStatusUpdateCount () + "], completed bulk count[" + this.getCompletedBulkSubmitCount () +
-                "]";
+        return "Status updates: count[" + this.getStatusUpdateCount () + "], last[" +
+                this.formatter.format (statusUpdateLastTime) + "], rate[" +
+                this.getRate (this.getStatusUpdateCount (), this.getElapsedTime ()) + "], time[" +
+                this.getStatusUpdateTime () + "], average[" + this.getStatusUpdateTimeAvg () + "], minimum[" +
+                this.getStatusUpdateTimeMin () + "], maximum[" + this.getStatusUpdateTimeMax () + "]";
     }
 
     @Override
@@ -1570,12 +1632,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     }
 
     @Override
-    public int getCacheResetControl ()
-    {
-        return this.cacheResetControl;
-    }
-
-    @Override
     public String getPerformanceLoggingString ()
     {
         return "Performance logging flags: " +
@@ -1587,12 +1643,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     public short getPerformanceLoggingFlags ()
     {
         return this.performanceLoggingFlags;
-    }
-
-    @Override
-    public void uncache ()
-    {
-        this.cacheResetControl++;
     }
 
     @Override
@@ -1619,8 +1669,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     {
         if (SdtMetricsMBean.thisBean == null)
         {
-            LOGGER.debug ("Spring has not yet initialised SdtMetricsMBean");
-
             // Keep caller happy with throw away metrics - these stats will be lost - Spring not yet inititalised.
             final SdtMetricsMBean sdtMetricsMBean = new SdtMetricsMBean (true);
             sdtMetricsMBean.setCustomerCounter (new CustomerCounter ());
@@ -1628,5 +1676,44 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         }
 
         return SdtMetricsMBean.thisBean;
+    }
+
+    @Override
+    public void dumpMetrics ()
+    {
+        final Date date = new Date ();
+
+        try
+        {
+            String filename = "metrics." + this.formatter.format (date) + ".txt";
+            filename = filename.replace (':', '.');
+            final File file = new File (filename);
+            final BufferedWriter output = new BufferedWriter (new FileWriter (file));
+
+            // Dump the various metrics to the file.
+            output.write (getTime () + "\n");
+            output.write (getOsStats () + "\n");
+            output.write (getActiveCustomersStats () + "\n");
+            output.write (getBulkSubmitStats () + "\n");
+            output.write (getRequestQueueStats () + "\n");
+            output.write (getLastBulkSubmitRef () + "\n");
+            output.write (getLastBulkRequestRef () + "\n");
+            output.write (getTargetAppStats () + "\n");
+            output.write (getBulkFeedbackStats () + "\n");
+            output.write (getSubmitQueryStats () + "\n");
+            output.write (getStatusUpdateStats () + "\n");
+            output.write (getDomainObjectsStats () + "\n");
+            output.write (getDatabaseCallsStats () + "\n");
+            output.write (getDatabaseReadsStats () + "\n");
+            output.write (getDatabaseWritesStats () + "\n");
+            output.write (getErrorStats () + "\n");
+            output.write (getPerformanceLoggingString () + "\n");
+
+            output.close ();
+        }
+        catch (final IOException e)
+        {
+            e.printStackTrace ();
+        }
     }
 }

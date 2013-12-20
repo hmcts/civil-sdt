@@ -90,15 +90,15 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
         {
-            final String detail =
-                    "\n\n\tsdt customer id=" + bulkRequest.getHeader ().getSdtCustomerId () +
-                            "\n\ttarget application=" + bulkRequest.getHeader ().getTargetApplicationId () +
-                            "\n\tcustomer reference=" + bulkRequest.getHeader ().getCustomerReference () +
-                            "\n\trequest count=" + bulkRequest.getHeader ().getRequestCount () + "\n";
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tsdt customer id=" + bulkRequest.getHeader ().getSdtCustomerId () +
+                    "\n\ttarget application=" + bulkRequest.getHeader ().getTargetApplicationId () +
+                    "\n\tcustomer reference=" + bulkRequest.getHeader ().getCustomerReference () +
+                    "\n\trequest count=" + bulkRequest.getHeader ().getRequestCount () + "\n");
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2, "Submit bulk request received",
-                    detail);
+                    detail.toString ());
         }
 
         BulkResponseType response = null;
@@ -145,13 +145,13 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
         {
-            final String detail =
-                    "\n\n\tsdt customer id=" + bulkFeedbackRequest.getHeader ().getSdtCustomerId () +
-                            "\n\tsdt bulk reference=" + bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "\n";
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tsdt customer id=" + bulkFeedbackRequest.getHeader ().getSdtCustomerId () +
+                    "\n\tsdt bulk reference=" + bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "\n");
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2,
-                    "Bulk feedback request received", detail);
+                    "Bulk feedback request received", detail.toString ());
         }
 
         BulkFeedbackResponseType response = null;
@@ -201,14 +201,13 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
         {
-            final String detail =
-                    "\n\n\tcustomer=" + submitQueryRequest.getHeader ().getSdtCustomerId () +
-                            "\n\ttarget application=" + submitQueryRequest.getHeader ().getTargetApplicationId () +
-                            "\n";
+            final StringBuffer detail = new StringBuffer ();
+            detail.append ("\n\n\tcustomer=" + submitQueryRequest.getHeader ().getSdtCustomerId () +
+                    "\n\ttarget application=" + submitQueryRequest.getHeader ().getTargetApplicationId () + "\n");
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2,
-                    "Submit query request received", detail);
+                    "Submit query request received", detail.toString ());
         }
 
         SubmitQueryResponseType response = null;
