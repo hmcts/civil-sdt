@@ -40,6 +40,8 @@ import org.junit.Test;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.utils.mbeans.SdtManagementMBean;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * Test class for error messages cache.
@@ -54,6 +56,11 @@ public class ErrorMessagesCacheTest
      * Error messages cache.
      */
     private ErrorMessagesCache cache;
+
+    /**
+     * Management bean holding cache information.
+     */
+    private ISdtManagementMBean managementMBean;
 
     /**
      * Generic dao.
@@ -75,6 +82,8 @@ public class ErrorMessagesCacheTest
         cache = new ErrorMessagesCache ();
         mockGenericDao = EasyMock.createMock (IGenericDao.class);
         cache.setGenericDao (mockGenericDao);
+        managementMBean = new SdtManagementMBean ();
+        cache.setManagementMBean (managementMBean);
 
         // Setup some results
         result = new ErrorMessage[3];

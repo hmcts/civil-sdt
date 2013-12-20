@@ -39,6 +39,8 @@ import org.junit.Test;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.utils.mbeans.SdtManagementMBean;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * Test class for global parameters cache.
@@ -53,6 +55,11 @@ public class GlobalParametersCacheTest
      * Global parameters cache.
      */
     private GlobalParametersCache cache;
+
+    /**
+     * Management bean holding cache information.
+     */
+    private ISdtManagementMBean managementMBean;
 
     /**
      * Generic dao.
@@ -74,6 +81,8 @@ public class GlobalParametersCacheTest
         cache = new GlobalParametersCache ();
         mockGenericDao = EasyMock.createMock (IGenericDao.class);
         cache.setGenericDao (mockGenericDao);
+        managementMBean = new SdtManagementMBean ();
+        cache.setManagementMBean (managementMBean);
 
         // Setup some results
         result = new GlobalParameter[3];
