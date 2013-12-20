@@ -50,10 +50,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/producers/comx/spring*e2e.test.xml",
-        "classpath*:uk/gov/moj/sdt/utils/spring*.xml", "classpath*:uk/gov/moj/sdt/transformers/spring*.xml",
-        "/uk/gov/moj/sdt/dao/spring.datasource.xml", "/uk/gov/moj/sdt/dao/spring.context.xml",
-        "/uk/gov/moj/sdt/dao/spring.hibernate.xml"})
+@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/producers/comx/spring*e2e.test.xml",
+        "classpath:/uk/gov/moj/sdt/utils/spring*.xml", "classpath:/uk/gov/moj/sdt/transformers/spring*.xml",
+        "classpath:/uk/gov/moj/sdt/dao/spring*.xml"})
 public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType>
 {
     /**
