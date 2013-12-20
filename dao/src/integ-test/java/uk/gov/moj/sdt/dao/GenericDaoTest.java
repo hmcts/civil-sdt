@@ -57,7 +57,7 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:**/applicationContext.xml", "classpath*:**/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/**/spring*.xml"})
 public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**

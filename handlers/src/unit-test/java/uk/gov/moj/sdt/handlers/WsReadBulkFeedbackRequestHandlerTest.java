@@ -69,9 +69,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackRespon
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:uk/gov/moj/sdt/validators/spring*.xml",
-        "classpath*:uk/gov/moj/sdt/dao/spring*.xml", "classpath*:uk/gov/moj/sdt/services/spring*.xml",
-        "classpath*:uk/gov/moj/sdt/services-api/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/**/spring*.xml"})
 public class WsReadBulkFeedbackRequestHandlerTest
 {
     /**
