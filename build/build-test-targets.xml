@@ -477,7 +477,8 @@
 				<pathelement location="${integ.test.classes.dir}" />
 				<pathelement location="${classes.dir}" />
 				<fileset dir="${lib.test.dir}">
-				     <include name="**/*.jar"/>
+                    <include name="**/*.jar"/>
+                    <include name="**/producers-commissioning-test.jar"/>
 				</fileset>
 				<path refid="build.integ.test.classpath" />
 			</classpath>
