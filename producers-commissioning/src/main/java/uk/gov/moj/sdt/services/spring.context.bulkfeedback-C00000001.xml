@@ -18,7 +18,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="78"/>
+        <property name="numberOfRequest" value="80"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -255,14 +255,6 @@
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c26</value>	       			
-	       			<value>mcolClaimStatusUpdate</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>26</value>	       			
-	       			<value>Invalid defendant ID.</value>
-	       			<value>true</value>
-	       		</list>
-	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c27</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
@@ -366,6 +358,22 @@
 	       			<value>Second defendant's date of birth must be in the past.</value>
 	       			<value>true</value>
 	       		</list>
+                <list>                  
+                    <value>USER_REQUEST_ID_c42</value>                  
+                    <value>mcolClaimStatusUpdate</value>                 
+                    <value>Rejected</value>                 
+                    <value>42</value>                   
+                    <value>Claim status update already submitted for this claim.</value>
+                    <value>true</value>
+                </list>
+                <list>                  
+                    <value>USER_REQUEST_ID_c43</value>                  
+                    <value>mcolClaimStatusUpdate</value>                 
+                    <value>Rejected</value>                 
+                    <value>43</value>                   
+                    <value>Defendant cannot be specified as there is a joint judgment.</value>
+                    <value>true</value>
+                </list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c44</value>	       			
 	       			<value>mcolJudgment</value>	       			
@@ -374,6 +382,14 @@
 	       			<value>Installment amount must be less than the full claim amount.</value>
 	       			<value>true</value>
 	       		</list>
+                <list>                  
+                    <value>USER_REQUEST_ID_c45</value>                  
+                    <value>mcolClaimStatusUpdate</value>                 
+                    <value>Rejected</value>                 
+                    <value>45</value>                   
+                    <value>Defendant cannot be specified on a paid update pre-judgment.</value>
+                    <value>true</value>
+                </list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c49</value>	       			
 	       			<value>mcolJudgment</value>	       			
@@ -531,7 +547,7 @@
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>69</value>	       			
-	       			<value>Defendant cannot be specified for an update type of Settled.</value>
+	       			<value>Defendant cannot be specified for an update type of Settled or Discontinued.</value>
 	       			<value>true</value>
 	       		</list>
 	       		<list>	     			
