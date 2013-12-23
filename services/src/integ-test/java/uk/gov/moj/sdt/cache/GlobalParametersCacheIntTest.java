@@ -58,10 +58,10 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-        "classpath:/uk/gov/moj/sdt/transformers/spring*.xml", "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/enricher/spring*.xml", "classpath:/uk/gov/moj/sdt/cache/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+        "classpath*:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
+        "classpath*:/uk/gov/moj/sdt/transformers/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/enricher/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/cache/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
