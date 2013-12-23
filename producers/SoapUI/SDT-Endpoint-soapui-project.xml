@@ -836,6 +836,13 @@
         <xs:sequence>
           <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
           <xs:element name="targetApplicationId" type="base:targetApplicationIdType"/>
+          <xs:element name="queryReference" minOccurs="0">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:length value="20"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
         </xs:sequence>
       </xs:complexType>
       <xs:complexType name="criteriaType">
@@ -941,13 +948,13 @@
       <soap:address location="http://ws.sdt.moj.gov.uk/sdt/service"/>
     </port>
   </service>
-</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="getBulkFeedback" bindingOperationName="getBulkFeedback" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:endpoint>http://ws.sdt.moj.gov.uk/sdt/service</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="getBulkFeedback" bindingOperationName="getBulkFeedback" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
    <soap:Header/>
    <soap:Body>
       <bul:bulkFeedbackRequest>
          <bul:header>
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
-            <bul:sdtBulkReference>MCOL-20131211155245-000000010</bul:sdtBulkReference>
+            <bul:sdtBulkReference>MCOL-20131223144458-000000030</bul:sdtBulkReference>
          </bul:header>
       </bul:bulkFeedbackRequest>
    </soap:Body>
@@ -1047,11 +1054,11 @@
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
             <bul:targetApplicationId>mcol</bul:targetApplicationId>
             <bul:requestCount>1</bul:requestCount>
-            <bul:customerReference>21</bul:customerReference>
+            <bul:customerReference>71</bul:customerReference>
          </bul:header>
          <bul:requests>
             <!--1 to 2000 repetitions:-->
-            <bul:request requestType="mcolClaim" requestId="21">
+            <bul:request requestType="mcolClaim" requestId="71">
                <!--You have a CHOICE of the next 5 items at this level-->
                <bul:mcolClaim>
                   <!--Optional:-->
@@ -1104,14 +1111,14 @@
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
             <bul:targetApplicationId>mcol</bul:targetApplicationId>
             <bul:requestCount>1</bul:requestCount>
-            <bul:customerReference>22</bul:customerReference>
+            <bul:customerReference>62</bul:customerReference>
          </bul:header>
          <bul:requests>
             <!--1 to 2000 repetitions:-->
-            <bul:request requestType="mcolJudgment" requestId="22">
+            <bul:request requestType="mcolJudgment" requestId="62">
                <!--You have a CHOICE of the next 5 items at this level-->
             <bul:mcolJudgment>
-               <jud:claimNumber>9QZ00006</jud:claimNumber>
+               <jud:claimNumber>9QZ00005</jud:claimNumber>
                <jud:jointJudgment>false</jud:jointJudgment>
                <jud:judgmentType>A</jud:judgmentType>
                <!--Optional:-->
@@ -1209,14 +1216,14 @@
             <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
             <bul:targetApplicationId>mcol</bul:targetApplicationId>
             <bul:requestCount>1</bul:requestCount>
-            <bul:customerReference>25</bul:customerReference>
+            <bul:customerReference>45</bul:customerReference>
          </bul:header>
          <bul:requests>
             <!--1 to 2000 repetitions:-->
-            <bul:request requestType="mcolWarrant" requestId="25">
+            <bul:request requestType="mcolWarrant" requestId="45">
                <!--You have a CHOICE of the next 5 items at this level-->
             <bul:mcolWarrant>
-               <war:claimNumber>9QZ00006</war:claimNumber>
+               <war:claimNumber>9QZ00003</war:claimNumber>
                <war:defendantId>1</war:defendantId>
                <war:defendantAddress>
                   <bas:line1>defendant1Address line1</bas:line1>
@@ -1242,6 +1249,158 @@
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid - Combined Judgment and Warrant"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>53</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 to 2000 repetitions:-->
+            <bul:request requestType="mcolJudgmentWarrant" requestId="53">
+               <!--You have a CHOICE of the next 5 items at this level-->
+            <bul:mcolJudgmentWarrant>
+			<jud:mcolJudgment>
+			   <jud:claimNumber>9QZ00005</jud:claimNumber>
+			   <jud:jointJudgment>false</jud:jointJudgment>
+			   <jud:judgmentType>A</jud:judgmentType>
+			   <!--Optional:-->
+			   <jud:sentParticularsSeparately>true</jud:sentParticularsSeparately>
+			   <!--Optional:-->
+			   <jud:defendantId>1</jud:defendantId>
+			   <!--Optional:-->
+			   <jud:defendant1Address>
+				  <bas:line1>defendant1Address line1</bas:line1>
+				  <bas:line2>defendant1Address line2</bas:line2>
+				  <!--Optional:-->
+				  <bas:line3>defendant1Address line3</bas:line3>
+				  <!--Optional:-->
+				  <bas:line4>defendant1Address line4</bas:line4>
+				  <bas:postcode>RG42 2DL</bas:postcode>
+			   </jud:defendant1Address>
+			   <!--Optional:-->
+			   <jud:defendant1DateOfBirth>1960-10-10</jud:defendant1DateOfBirth>
+			   <jud:paymentSchedule>
+				  <!--You have a CHOICE of the next 3 items at this level-->
+				  <jud:immediatePayment/>
+			   </jud:paymentSchedule>
+			   <!--Optional:-->
+			   <jud:interest>99999</jud:interest>
+			   <!--Optional:-->
+			   <jud:solicitorCost>5000</jud:solicitorCost>
+			   <!--Optional:-->
+			   <jud:deductedAmount>10000000</jud:deductedAmount>
+			   <!--Optional:-->
+			   <jud:payee>
+				  <jud:name>payee name</jud:name>
+				  <jud:address>
+					 <jud:line1>payee line1</jud:line1>
+					 <jud:line2>payee line2</jud:line2>
+					 <!--Optional:-->
+					 <jud:line3>payee line3</jud:line3>
+					 <!--Optional:-->
+					 <jud:line4>payee line4</jud:line4>
+					 <!--Optional:-->
+					 <jud:line5>payee line5</jud:line5>
+					 <!--Optional:-->
+					 <jud:postcode>RG42 2DL</jud:postcode>
+				  </jud:address>
+				  <!--Optional:-->
+				  <jud:telephoneNumber>12345678901234</jud:telephoneNumber>
+				  <!--Optional:-->
+				  <jud:dxNumber>payee dx number</jud:dxNumber>
+				  <!--Optional:-->
+				  <jud:faxNumber>payee fx number</jud:faxNumber>
+				  <!--Optional:-->
+				  <jud:email>payee email</jud:email>
+				  <!--Optional:-->
+				  <jud:pcm>12</jud:pcm>
+				  <!--Optional:-->
+				  <jud:reference>payee reference</jud:reference>
+				  <!--Optional:-->
+				  <jud:bankAccountNumber>123456789012345678</jud:bankAccountNumber>
+				  <!--Optional:-->
+				  <jud:bankAccountHolder>payee bank account holder</jud:bankAccountHolder>
+				  <!--Optional:-->
+				  <jud:bankSortCode>12345678</jud:bankSortCode>
+				  <!--Optional:-->
+				  <jud:bankName>payee bank name</jud:bankName>
+				  <!--Optional:-->
+				  <jud:bankInfo1>payee bank info1</jud:bankInfo1>
+				  <!--Optional:-->
+				  <jud:bankInfo2>payee bank info2</jud:bankInfo2>
+				  <!--Optional:-->
+				  <jud:slipCodeline1>payee slip code line1</jud:slipCodeline1>
+				  <!--Optional:-->
+				  <jud:slipCodeline2>payee slip code line2</jud:slipCodeline2>
+				  <!--Optional:-->
+				  <jud:giroAccountNumber>12345678</jud:giroAccountNumber>
+				  <!--Optional:-->
+				  <jud:giroTransCode1>123456789</jud:giroTransCode1>
+				  <!--Optional:-->
+				  <jud:giroTransCode2>12</jud:giroTransCode2>
+				  <!--Optional:-->
+				  <jud:apacsTransCode>12</jud:apacsTransCode>
+			   </jud:payee>
+			   <jud:sotSignature>
+				  <bas:flag>true</bas:flag>
+				  <bas:name>sotSignature</bas:name>
+			   </jud:sotSignature>
+			</jud:mcolJudgment>
+			<jud:mcolWarrant>
+				<war:claimNumber>9QZ00001</war:claimNumber>
+				<war:defendantId>1</war:defendantId>
+				<war:defendantAddress>
+				   <bas:line1>defendant1Address line1</bas:line1>
+				   <bas:line2>defendant1Address line1</bas:line2>
+				   <!--Optional:-->
+				   <bas:line3>defendant1Address line1</bas:line3>
+				   <!--Optional:-->
+				   <bas:line4>defendant1Address line1</bas:line4>
+				   <bas:postcode>RG42 2DL</bas:postcode>
+				</war:defendantAddress>
+				<war:balanceOfDebt>50000</war:balanceOfDebt>
+				<war:warrantAmount>10000</war:warrantAmount>
+				<!--Optional:-->
+				<war:solicitorCost>5000</war:solicitorCost>
+				<!--Optional:-->
+				<war:additionalNotes>additional notes</war:additionalNotes>
+				<war:sotSignature>
+				   <bas:flag>true</bas:flag>
+				   <bas:name>sotSignature</bas:name>
+				</war:sotSignature>
+			</jud:mcolWarrant>
+            </bul:mcolJudgmentWarrant>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid - Claim Status Update"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>76</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+               <!--1 or more repetitions:-->
+               <bul:request requestType="mcolClaimStatusUpdate" requestId="76">
+                  <!--You have a CHOICE of the next 5 items at this level-->
+                  <bul:mcolClaimStatusUpdate>
+                     <cla1:claimNumber>9QZ00007</cla1:claimNumber>
+                     <cla1:notificationType>WD</cla1:notificationType>
+                  </bul:mcolClaimStatusUpdate>
+               </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
 </soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
@@ -1249,12 +1408,13 @@
          <sub:header>
             <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
             <sub:targetApplicationId>mcol</sub:targetApplicationId>
+		  <sub:queryReference>optional</sub:queryReference>
          </sub:header>
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01</quer:fromDate>
-                  <quer:toDate>2013-08-31</quer:toDate>
+                  <quer:fromDate>2009-12-01</quer:fromDate>
+                  <quer:toDate>2009-12-02</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>

@@ -21,6 +21,14 @@
 		<xs:sequence>
 			<xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
 			<xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
+            <xs:element name="queryReference" minOccurs="0"> 
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="1"/>
+                        <xs:maxLength value="20"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 		</xs:sequence>
 	</xs:complexType>
     
