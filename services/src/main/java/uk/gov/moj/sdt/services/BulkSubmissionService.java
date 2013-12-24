@@ -45,13 +45,13 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.messaging.SdtMessage;
-import uk.gov.moj.sdt.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
-import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
+import uk.gov.moj.sdt.services.messaging.SdtMessage;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
+import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 

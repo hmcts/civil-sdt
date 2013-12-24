@@ -48,7 +48,7 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 
 /**
  * Test {@link GenericDao} CRUD methods.
@@ -57,7 +57,8 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/**/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**

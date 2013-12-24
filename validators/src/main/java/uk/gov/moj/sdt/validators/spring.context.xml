@@ -14,8 +14,8 @@
     <bean id="uk.gov.moj.sdt.validators.AbstractSdtValidator" abstract="true"
         class="uk.gov.moj.sdt.validators.AbstractSdtValidator">        
         <property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" />                               
-        <property name="globalParameterCache" ref="uk.gov.moj.sdt.cache.api.IGlobalParametersCache" />
-        <property name="errorMessagesCache" ref="uk.gov.moj.sdt.cache.api.IErrorMessagesCache" />
+        <property name="globalParameterCache" ref="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache" />
+        <property name="errorMessagesCache" ref="uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache" />
     </bean>
 
 	<bean id="uk.gov.moj.sdt.validators.api.IBulkCustomerValidator" 

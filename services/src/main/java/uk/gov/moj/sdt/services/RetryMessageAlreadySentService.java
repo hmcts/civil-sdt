@@ -41,10 +41,10 @@ import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.messaging.SdtMessage;
-import uk.gov.moj.sdt.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.IRetryMessageSendService;
+import uk.gov.moj.sdt.services.messaging.SdtMessage;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 
 /**
  * Class implementing the interface IRetryMessageSendService.

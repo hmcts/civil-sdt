@@ -46,8 +46,8 @@ import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.io.CachedWriter;
 import org.apache.cxf.io.DelegatingInputStream;
 
-import uk.gov.moj.sdt.enricher.AbstractSdtEnricher;
-import uk.gov.moj.sdt.enricher.api.ISdtEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.api.ISdtEnricher;
 
 /**
  * Abstract class holding common code for all SDT Interceptors.

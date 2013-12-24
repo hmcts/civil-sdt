@@ -12,10 +12,10 @@
 		class="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor">
 		<property name="enricherList">
 			<list>
-				<ref bean="uk.gov.moj.sdt.enricher.SubmitQueryEnricher" />				
-				<ref bean="uk.gov.moj.sdt.enricher.BulkFeedbackEnricher" />
-                <ref bean="uk.gov.moj.sdt.enricher.IndividualRequestEnricher" />
-                <ref bean="uk.gov.moj.sdt.enricher.SubmitQueryRequestEnricher"/>
+				<ref bean="uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher" />				
+				<ref bean="uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher" />
+                <ref bean="uk.gov.moj.sdt.interceptors.enricher.IndividualRequestEnricher" />
+                <ref bean="uk.gov.moj.sdt.interceptors.enricher.SubmitQueryRequestEnricher"/>
 			</list>
 		</property>
 	</bean>

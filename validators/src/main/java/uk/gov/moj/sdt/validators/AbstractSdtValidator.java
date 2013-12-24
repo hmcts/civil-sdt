@@ -43,6 +43,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.domain.visitor.AbstractDomainObjectVisitor;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
@@ -50,7 +51,6 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.DuplicateUserRequestIdentifierException;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
-import uk.gov.moj.sdt.visitor.AbstractDomainObjectVisitor;
 
 /**
  * Base class for validators providing common methods.

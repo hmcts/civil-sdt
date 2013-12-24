@@ -61,10 +61,10 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.utils.IndividualRequestsXmlParser;
+import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
+import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
-import uk.gov.moj.sdt.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 /**

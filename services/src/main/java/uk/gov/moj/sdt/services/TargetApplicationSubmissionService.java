@@ -49,10 +49,10 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.messaging.SdtMessage;
-import uk.gov.moj.sdt.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.services.messaging.SdtMessage;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 

@@ -42,7 +42,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.ObjectFactory;
@@ -56,9 +56,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath:/uk/gov/moj/sdt/utils/spring*.xml", "classpath:/uk/gov/moj/sdt/transformers/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/dao/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
 public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, UpdateResponseType>
 {
     @Before

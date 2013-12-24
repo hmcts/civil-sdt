@@ -51,7 +51,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 
 /**
  * Test class for the Bulk Submissions Dao.
@@ -60,7 +60,8 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/**/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**

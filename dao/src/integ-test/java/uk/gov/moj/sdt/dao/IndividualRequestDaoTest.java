@@ -52,7 +52,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.test.util.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 
 /**
  * Test class for the Individual Request Dao.
@@ -61,7 +61,8 @@ import uk.gov.moj.sdt.test.util.DBUnitUtility;
  * 
  */
 @RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/**/spring*.xml"})
+@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**

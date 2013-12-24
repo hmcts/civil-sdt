@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.utils.GenericXmlParser;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 
 /**
  * Abstract Sdt Service class for any common functionality between the various services.

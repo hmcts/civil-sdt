@@ -70,9 +70,9 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.messaging.api.ISdtMessage;
-import uk.gov.moj.sdt.utils.GenericXmlParser;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
