@@ -663,6 +663,7 @@
 			<jvmarg value="-Xms1024M" />
 			<jvmarg value="-Xmx1024M" />
 			<jvmarg value="-XX:MaxPermSize=256M" />
+            <jvmarg value="-XX:-UseSplitVerifier" />
 
 			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
 			<jvmarg value="-Demma.coverage.out.merge=true" />
