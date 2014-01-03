@@ -77,6 +77,16 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     private IErrorLog errorLog;
 
     /**
+     * Response from the target application, used in commissioning app.
+     */
+    private String targetApplicationResponse;
+
+    /**
+     * Used in commissioning application to send various response.
+     */
+    private String queryReference;
+
+    /**
      * Constructs an instance of {@link SubmitQueryRequest}.
      */
     public SubmitQueryRequest ()
@@ -161,6 +171,37 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     {
         this.errorLog = errorLog;
         this.status = ISubmitQueryRequest.Status.Error.getStatus ();
+    }
+
+    @Override
+    public void setErrorLog (final IErrorLog errorLog)
+    {
+        this.errorLog = errorLog;
+        this.status = ISubmitQueryRequest.Status.Error.getStatus ();
+    }
+
+    @Override
+    public String getTargetApplicationResponse ()
+    {
+        return targetApplicationResponse;
+    }
+
+    @Override
+    public void setTargetApplicationResponse (final String targetApplicationResponse)
+    {
+        this.targetApplicationResponse = targetApplicationResponse;
+    }
+
+    @Override
+    public String getQueryReference ()
+    {
+        return this.queryReference;
+    }
+
+    @Override
+    public void setQueryReference (final String queryReference)
+    {
+        this.queryReference = queryReference;
     }
 
     @Override

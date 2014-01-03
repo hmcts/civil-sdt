@@ -6,6 +6,7 @@ xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"
   <tns:header>
     <tns:sdtCustomerId>12345678</tns:sdtCustomerId>
     <tns:targetApplicationId>mcol</tns:targetApplicationId>
+    <tns:queryReference>MCOLDefence3</tns:queryReference>
   </tns:header>
   <tns:criteria>
     <tns:criterion criteriaType="mcolDefenceCriteria">

@@ -1102,20 +1102,115 @@
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="ValidMCOLDefence1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
       <sub:submitQueryRequest>
          <sub:header>
             <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
             <sub:targetApplicationId>mcol</sub:targetApplicationId>
-		  <sub:queryReference>optional</sub:queryReference>
+		  <sub:queryReference>MCOLDefence1</sub:queryReference>
          </sub:header>
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
                   <quer:fromDate>2013-08-01</quer:fromDate>
                   <quer:toDate>2013-08-31</quer:toDate>
+               </sub:mcolDefenceCriteria>
+            </sub:criterion>
+         </sub:criteria>
+      </sub:submitQueryRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitQueryRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="ValidMCOLDefence2"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+   <soap:Header/>
+   <soap:Body>
+      <sub:submitQueryRequest>
+         <sub:header>
+            <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
+            <sub:targetApplicationId>mcol</sub:targetApplicationId>
+		  <sub:queryReference>MCOLDefence2</sub:queryReference>
+         </sub:header>
+         <sub:criteria>
+            <sub:criterion criteriaType="mcolDefenceCriteria">
+               <sub:mcolDefenceCriteria>
+                  <quer:fromDate>2013-08-01</quer:fromDate>
+                  <quer:toDate>2013-08-31</quer:toDate>
+               </sub:mcolDefenceCriteria>
+            </sub:criterion>
+         </sub:criteria>
+      </sub:submitQueryRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitQueryRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="ValidMCOLDefence3"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+   <soap:Header/>
+   <soap:Body>
+      <sub:submitQueryRequest>
+         <sub:header>
+            <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
+            <sub:targetApplicationId>mcol</sub:targetApplicationId>
+		  <sub:queryReference>MCOLDefence3</sub:queryReference>
+         </sub:header>
+         <sub:criteria>
+            <sub:criterion criteriaType="mcolDefenceCriteria">
+               <sub:mcolDefenceCriteria>
+                  <quer:fromDate>2013-08-01</quer:fromDate>
+                  <quer:toDate>2013-08-31</quer:toDate>
+               </sub:mcolDefenceCriteria>
+            </sub:criterion>
+         </sub:criteria>
+      </sub:submitQueryRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitQueryRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="ValidMCOLDefence4"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+   <soap:Header/>
+   <soap:Body>
+      <sub:submitQueryRequest>
+         <sub:header>
+            <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
+            <sub:targetApplicationId>mcol</sub:targetApplicationId>
+		  <sub:queryReference>MCOLDefence4</sub:queryReference>
+         </sub:header>
+         <sub:criteria>
+            <sub:criterion criteriaType="mcolDefenceCriteria">
+               <sub:mcolDefenceCriteria>
+                  <quer:fromDate>2013-08-01</quer:fromDate>
+                  <quer:toDate>2013-08-31</quer:toDate>
+               </sub:mcolDefenceCriteria>
+            </sub:criterion>
+         </sub:criteria>
+      </sub:submitQueryRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitQueryRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="ValidMCOLDefence5"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+   <soap:Header/>
+   <soap:Body>
+      <sub:submitQueryRequest>
+         <sub:header>
+            <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
+            <sub:targetApplicationId>mcol</sub:targetApplicationId>
+		  <sub:queryReference>MCOLDefence5</sub:queryReference>
+         </sub:header>
+         <sub:criteria>
+            <sub:criterion criteriaType="mcolDefenceCriteria">
+               <sub:mcolDefenceCriteria>
+                  <quer:fromDate>2013-08-01</quer:fromDate>
+                  <quer:toDate>2013-08-31</quer:toDate>
+               </sub:mcolDefenceCriteria>
+            </sub:criterion>
+         </sub:criteria>
+      </sub:submitQueryRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitQueryRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="ValidMCOLDefence6"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8888/producers-comx/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+   <soap:Header/>
+   <soap:Body>
+      <sub:submitQueryRequest>
+         <sub:header>
+            <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
+            <sub:targetApplicationId>mcol</sub:targetApplicationId>
+		  <sub:queryReference>MCOLDefence6</sub:queryReference>
+         </sub:header>
+         <sub:criteria>
+            <sub:criterion criteriaType="mcolDefenceCriteria">
+               <sub:mcolDefenceCriteria>
+                  <quer:fromDate>2013-08-01</quer:fromDate>
+                  <quer:toDate>2013-07-31</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>

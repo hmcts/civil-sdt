@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	
+	<!-- Submit Query Request definition -->
+	<bean id="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence1" class="uk.gov.moj.sdt.domain.SubmitQueryRequest">                
+        <property name="resultCount" value="5"/>
+        <property name="status" value="Ok"/>
+        <property name="targetApplicationResponse">
+        	<value>
+        		<![CDATA[
+                  <sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+						<mquer:claimNumber>3XC12345</mquer:claimNumber>
+                 		<mquer:defendantResponse defendantId="1">
+                  		<mquer:filedDate>2013-12-19T10:04:21</mquer:filedDate>
+                  		<mquer:responseType>DE</mquer:responseType>
+                 		</mquer:defendantResponse>
+                 	</sub:mcolDefenceDetail>
+                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                 		<mquer:claimNumber>3XC12345</mquer:claimNumber>
+                 		<mquer:defendantResponse defendantId="2">
+                  		<mquer:filedDate>2013-12-19T10:45:58</mquer:filedDate>
+                  		<mquer:responseType>DE</mquer:responseType>
+                 		</mquer:defendantResponse>
+                 	</sub:mcolDefenceDetail>
+                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                 		<mquer:claimNumber>3XC12346</mquer:claimNumber>
+                 		<mquer:defendantResponse defendantId="1">
+                 			<mquer:filedDate>2013-12-19T12:04:21</mquer:filedDate>
+                 			<mquer:responseType>PA</mquer:responseType>
+                 		</mquer:defendantResponse>
+                 	</sub:mcolDefenceDetail>
+                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                 		<mquer:claimNumber>3XC12347</mquer:claimNumber>
+                 		<mquer:defendantResponse defendantId="1">
+                  		<mquer:filedDate>2013-12-19T13:32:09</mquer:filedDate>
+                  		<mquer:responseType>DC</mquer:responseType>
+                 		</mquer:defendantResponse>
+                 	</sub:mcolDefenceDetail>
+                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+                 		<mquer:claimNumber>3XC12348</mquer:claimNumber>
+                 		<mquer:defendantResponse defendantId="1">
+                 			<mquer:filedDate>2013-12-19T13:56:47</mquer:filedDate>
+                 			<mquer:responseType>DC</mquer:responseType>
+                 		</mquer:defendantResponse>
+                	</sub:mcolDefenceDetail>
+                ]]>
+        	</value>
+        </property>
+    </bean>
+    
+</beans>

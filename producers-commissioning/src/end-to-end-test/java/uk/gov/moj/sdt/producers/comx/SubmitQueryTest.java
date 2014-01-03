@@ -51,8 +51,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/producers/comx/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", 
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
 public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType>
 {
 
@@ -60,7 +59,52 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
      * Method to call remote submit query endpoint to be tested.
      */
     @Test
-    public void testValid ()
+    public void testValidRequestForMCOLDefence1 ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
+    /**
+     * Method to call remote submit query endpoint to be tested.
+     */
+    @Test
+    public void testValidRequestForMCOLDefence2 ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
+    /**
+     * Method to call remote submit query endpoint to be tested.
+     */
+    @Test
+    public void testValidRequestForMCOLDefence3 ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
+    /**
+     * Method to call remote submit query endpoint to be tested.
+     */
+    @Test
+    public void testValidRequestForMCOLDefence4 ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
+    /**
+     * Method to call remote submit query endpoint to be tested.
+     */
+    @Test
+    public void testValidRequestForMCOLDefence5 ()
+    {
+        this.callWebService (SubmitQueryRequestType.class);
+    }
+
+    /**
+     * Method to call remote submit query endpoint to be tested.
+     */
+    @Test
+    public void testValidRequestForMCOLDefence6 ()
     {
         this.callWebService (SubmitQueryRequestType.class);
     }

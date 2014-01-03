@@ -9,47 +9,12 @@
         class="uk.gov.moj.sdt.producers.comx.services.MockSubmitQueryService"> 
         <property name="responseContentMap">
         	<map>
-        		<entry key="mcolDefenceCriteria">
-        			<value>
-        				<![CDATA[
-							<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-								<mquer:claimNumber>12345678</mquer:claimNumber>
-                        		<mquer:defendantResponse defendantId="1">
-	                        		<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-	                        		<mquer:responseType>PA</mquer:responseType>
-                        		</mquer:defendantResponse>
-                        	</sub:mcolDefenceDetail>
-                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-                        		<mquer:claimNumber>12345678</mquer:claimNumber>
-                        		<mquer:defendantResponse defendantId="2">
-	                        		<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-	                        		<mquer:responseType>PA</mquer:responseType>
-                        		</mquer:defendantResponse>
-                        	</sub:mcolDefenceDetail>
-                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-                        		<mquer:claimNumber>22345678</mquer:claimNumber>
-                        		<mquer:defendantResponse defendantId="3">
-                        			<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-                        			<mquer:responseType>PA</mquer:responseType>
-                        		</mquer:defendantResponse>
-                        	</sub:mcolDefenceDetail>
-                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-                        		<mquer:claimNumber>32345678</mquer:claimNumber>
-                        		<mquer:defendantResponse defendantId="4">
-	                        		<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-	                        		<mquer:responseType>PA</mquer:responseType>
-                        		</mquer:defendantResponse>
-                        	</sub:mcolDefenceDetail>
-                        	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-                        		<mquer:claimNumber>42345678</mquer:claimNumber>
-                        		<mquer:defendantResponse defendantId="5">
-                        			<mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-                        			<mquer:responseType>PA</mquer:responseType>
-                        		</mquer:defendantResponse>
-                        	</sub:mcolDefenceDetail>
-                		]]>
-        			</value>
-        		</entry>
+        		<entry key="MCOLDefence1" value-ref="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence1"/>
+        		<entry key="MCOLDefence2" value-ref="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence2"/>
+        		<entry key="MCOLDefence3" value-ref="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence3"/>        		
+        		<entry key="MCOLDefence4" value-ref="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence4"/>
+        		<entry key="MCOLDefence5" value-ref="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence5"/>
+        		<entry key="MCOLDefence6" value-ref="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence6"/>
         	</map>
         </property>       
     </bean> 

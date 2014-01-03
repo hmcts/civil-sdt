@@ -82,6 +82,9 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
         // Get the criteria type
         submitQueryRequest.setCriteriaType (this.getCriterion (submitQueryRequestType.getCriteria ()));
 
+        // Get the query reference type
+        submitQueryRequest.setQueryReference (headerType.getQueryReference ());
+
         return submitQueryRequest;
     }
 

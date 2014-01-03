@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.producers.comx.services;
 
 import java.util.Map;
 
+import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -49,20 +50,30 @@ public class MockSubmitQueryService implements ISubmitQueryService
     /**
      * Map of the response content by the criteria type as key.
      */
-    private Map<String, String> responseContentMap;
+    private Map<String, SubmitQueryRequest> responseContentMap;
 
     @Override
     public void submitQuery (final ISubmitQueryRequest request)
     {
 
-        final String criteriaType = request.getCriteriaType ();
+        final String queryReference = request.getQueryReference ();
 
-        // CHECKSTYLE:OFF
-        request.setResultCount (5);
-        // CHECKSTYLE:ON
+        SubmitQueryRequest submitQueryRequest = this.getResponseContentMap ().get (queryReference);
+
+        if (submitQueryRequest == null)
+        {
+            // If the query reference is not one of the recognised type, then
+            // get the response for the default query reference.
+            submitQueryRequest = this.getResponseContentMap ().get ("MCOLDefence1");
+        }
+
+        request.setResultCount (submitQueryRequest.getResultCount ());
+        request.setStatus (submitQueryRequest.getStatus ());
+        request.reject (submitQueryRequest.getErrorLog ());
+        request.setTargetApplicationResponse (submitQueryRequest.getTargetApplicationResponse ());
 
         // Write the result xml to threadlocal so the outbound interceptor can pick it up
-        writeToThreadLocal (criteriaType);
+        writeToThreadLocal (request.getTargetApplicationResponse ());
 
     }
 
@@ -70,29 +81,25 @@ public class MockSubmitQueryService implements ISubmitQueryService
      * Write the result to thread local - the result is obtained from the
      * responseContentMap.
      * 
-     * @param criteriaType the criteria of the submit request
+     * @param targetAppResponse the target application response
      */
-    private void writeToThreadLocal (final String criteriaType)
+    private void writeToThreadLocal (final String targetAppResponse)
     {
-        String response = this.getResponseContentMap ().get (criteriaType);
 
-        if (response == null)
+        if (targetAppResponse != null)
         {
-            // If the criteria type is not one of the recognised type, then
-            // get the response for the default criteria.
-            response = this.getResponseContentMap ().get ("mcolDefenceCriteria");
-        }
 
-        SdtContext.getContext ().setRawOutXml (response);
+            SdtContext.getContext ().setRawOutXml (targetAppResponse);
+        }
     }
 
     /**
-     * This method will return the map of the response content with the key as
-     * the criteria type.
+     * This method will return the map of the SubmitQuery with the key as
+     * the Query Reference.
      * 
      * @return the response content map with the key as the criteria type
      */
-    public Map<String, String> getResponseContentMap ()
+    public Map<String, SubmitQueryRequest> getResponseContentMap ()
     {
         return responseContentMap;
     }
@@ -102,7 +109,7 @@ public class MockSubmitQueryService implements ISubmitQueryService
      * 
      * @param responseContentMap the response content map.
      */
-    public void setResponseContentMap (final Map<String, String> responseContentMap)
+    public void setResponseContentMap (final Map<String, SubmitQueryRequest> responseContentMap)
     {
         this.responseContentMap = responseContentMap;
     }

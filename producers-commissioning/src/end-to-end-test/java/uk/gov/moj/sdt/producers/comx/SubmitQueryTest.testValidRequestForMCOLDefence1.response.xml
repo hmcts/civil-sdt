@@ -9,56 +9,56 @@
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>12345678</mquer:claimNumber>
+            <mquer:claimNumber>3XC12345</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
-                <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-                <mquer:responseType>PA</mquer:responseType>
+                <mquer:filedDate>2013-12-19T10:04:21</mquer:filedDate>
+                <mquer:responseType>DE</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>12345678</mquer:claimNumber>
+            <mquer:claimNumber>3XC12345</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="2">
-                <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+                <mquer:filedDate>2013-12-19T10:45:58</mquer:filedDate>
+                <mquer:responseType>DE</mquer:responseType>
+            </mquer:defendantResponse>
+        </sub:mcolDefenceDetail>
+        <sub:mcolDefenceDetail
+            xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
+            xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+            <mquer:claimNumber>3XC12346</mquer:claimNumber>
+            <mquer:defendantResponse
+                xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+                xmlns="" defendantId="1">
+                <mquer:filedDate>2013-12-19T12:04:21</mquer:filedDate>
                 <mquer:responseType>PA</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>22345678</mquer:claimNumber>
+            <mquer:claimNumber>3XC12347</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-                xmlns="" defendantId="3">
-                <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-                <mquer:responseType>PA</mquer:responseType>
+                xmlns="" defendantId="1">
+                <mquer:filedDate>2013-12-19T13:32:09</mquer:filedDate>
+                <mquer:responseType>DC</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>32345678</mquer:claimNumber>
+            <mquer:claimNumber>3XC12348</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-                xmlns="" defendantId="4">
-                <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-                <mquer:responseType>PA</mquer:responseType>
-            </mquer:defendantResponse>
-        </sub:mcolDefenceDetail>
-        <sub:mcolDefenceDetail
-            xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
-            xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>42345678</mquer:claimNumber>
-            <mquer:defendantResponse
-                xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
-                xmlns="" defendantId="5">
-                <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
-                <mquer:responseType>PA</mquer:responseType>
+                xmlns="" defendantId="1">
+                <mquer:filedDate>2013-12-19T13:56:47</mquer:filedDate>
+                <mquer:responseType>DC</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
     </ns2:results>

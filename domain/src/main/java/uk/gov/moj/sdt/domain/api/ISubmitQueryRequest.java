@@ -108,11 +108,43 @@ public interface ISubmitQueryRequest extends IDomainObject
     void setStatus (final String status);
 
     /**
+     * Get the target application response.
+     * 
+     * @return the target application response
+     */
+    String getTargetApplicationResponse ();
+
+    /**
+     * 
+     * @param targetAppResponse the target application response.
+     */
+    void setTargetApplicationResponse (final String targetAppResponse);
+
+    /**
+     * 
+     * @return the query reference.
+     */
+    String getQueryReference ();
+
+    /**
+     * 
+     * @param queryReference the query reference.
+     */
+    void setQueryReference (final String queryReference);
+
+    /**
      * Get error log.
      * 
      * @return error message
      */
     IErrorLog getErrorLog ();
+
+    /**
+     * Sets the error log.
+     * 
+     * @param errorLog the error log
+     */
+    void setErrorLog (final IErrorLog errorLog);
 
     /**
      * Does request have error?
