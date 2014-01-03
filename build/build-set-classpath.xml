@@ -50,6 +50,13 @@
         </fileset>
     </path>
 
+    <!-- Add Jacoco jars which are needed by junit when executing tests -->
+    <path id="jacoco.dir">
+        <fileset dir="${ant.runtime.dir}/lib">
+            <include name="jacoco*.jar" />
+        </fileset>
+    </path>
+
 	<!-- Set 3rd party and sdt application jars to classpath for building 'src' code in all projects -->
 	<path id="build.src.classpath">
 		<path refid="3rd-party.dir" />

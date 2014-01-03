@@ -102,6 +102,13 @@
 		</classpath>
 	</taskdef>
 
+    <!-- Add JaCoCo target -->
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath>
+            <fileset dir="${ant.runtime.dir}/lib" includes="jacoco*.jar" />
+        </classpath>
+    </taskdef>
+
 	<!-- Set properties based on other property values -->
 	<condition property="tc-server.exists">
 		<equals arg1="${application.server}" arg2="tc-server" />

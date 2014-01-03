@@ -12,7 +12,7 @@
  = Copyright Logica UK Ltd. 2012
  =========================================================================== -->
 
-<project name="test-targets" basedir=".">
+<project name="test-targets" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<!-- Check if unit test src directory exists and set indicator property -->
 	<available filepath="." file="${unit.test.src.dir}" type="dir" property="unit.test.src.exists" />
@@ -211,49 +211,39 @@
 	<!-- Runs unit tests from the current test bundle. If this is not a unit test bundle then nothing is executed. -->
 	<target name="run-unit-tests" depends="dist-tests" description="Run unit tests associated with this module">
 
-		<emma>
-			<instr instrpath="${classes.dir}" destdir="${instr.target.dir}" metadatafile="${coverage.dir}/metadata.emma" mode="copy">
-                <filter excludes="*Mock*" />
-				<filter excludes="*Test*" />
-			</instr>
-		</emma>
-
-		<!-- Run the tests -->
-		<junit fork="yes" forkmode="once" errorproperty="tests.error" failureproperty="tests.failed" dir="${basedir}">
-			<jvmarg value="-Xms1024M" />
-			<jvmarg value="-Xmx1024M" />
-			<jvmarg value="-XX:MaxPermSize=256M" />
-			<jvmarg value="-XX:-UseSplitVerifier" />
-
-			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
-			<jvmarg value="-Demma.coverage.out.merge=true" />
-
-			<syspropertyset refid="all-runtime-properties" />
-
-			<classpath>
-				<pathelement location="${instr.target.dir}" />
-				<pathelement location="${unit.test.classes.dir}" />
-				<pathelement location="${classes.dir}" />
-				<path refid="build.unit.test.classpath" />
-			</classpath>
-
-			<batchtest todir="${junit.unit.output.dir}">
-				<fileset dir="${unit.test.classes.dir}">
-					<include name="**/*Test.class" />
-					<exclude name="**/Abstract*.class" />
-				</fileset>
-			</batchtest>
-
-			<!-- write to output files -->
-			<formatter type="xml" />
-
-			<!-- write to console also -->
-			<formatter type="brief" usefile="false" />
-		</junit>
+		<!-- Run the tests with JaCoCo for code coverage -->
+        <jacoco:coverage destfile="${coverage.dir}/jacoco.exec" excludes="*Mock*:*Test*">
+    		<junit fork="yes" forkmode="once" errorproperty="tests.error" failureproperty="tests.failed" dir="${basedir}">
+    			<jvmarg value="-Xms1024M" />
+    			<jvmarg value="-Xmx1024M" />
+    			<jvmarg value="-XX:MaxPermSize=256M" />
+    
+    			<syspropertyset refid="all-runtime-properties" />
+    
+    			<classpath>
+    				<pathelement location="${unit.test.classes.dir}" />
+    				<pathelement location="${classes.dir}" />
+    				<path refid="build.unit.test.classpath" />
+    			</classpath>
+    
+    			<batchtest todir="${junit.unit.output.dir}">
+    				<fileset dir="${unit.test.classes.dir}">
+    					<include name="**/*Test.class" />
+    					<exclude name="**/Abstract*.class" />
+    				</fileset>
+    			</batchtest>
+    
+    			<!-- write to output files -->
+    			<formatter type="xml" />
+    
+    			<!-- write to console also -->
+    			<formatter type="brief" usefile="false" />
+    		</junit>
+		</jacoco:coverage>
 
 		<antcall target="generate-unit-test-reports" />
-		<available file="${coverage.dir}/coverage.emma" property="coverage.report.exists" />
-		<antcall target="generate-emma-coverage-reports" />
+        <available file="${coverage.dir}/jacoco.exec" property="coverage.report.exists" />
+		<antcall target="generate-jacoco-coverage-reports" />
 	</target>
 
 	<!-- Generate unit test reports from junit results -->
@@ -748,18 +738,40 @@
 		<!-- <fail message="The JUnit tests failed - see test results for more details." /> -->
 	</target>
 
-	<!-- Generate Emma reports-->
-	<target name="generate-emma-coverage-reports" if="coverage.report.exists">
-		<emma>
-			<report sourcepath="${src.dir}" depth="method">
-				<fileset dir="${coverage.dir}">
-					<include name="*.emma" />
-				</fileset>
-				<xml outfile="${basedir}/${coverage.dir}/coverage.xml" />
-				<html outfile="${basedir}/${coverage.dir}/coverage.html" />
-			</report>
-		</emma>
-	</target>
+    <!-- Generate Emma reports-->
+    <target name="generate-emma-coverage-reports" if="coverage.report.exists">
+        <emma>
+            <report sourcepath="${src.dir}" depth="method">
+                <fileset dir="${coverage.dir}">
+                    <include name="*.emma" />
+                </fileset>
+                <xml outfile="${basedir}/${coverage.dir}/coverage.xml" />
+                <html outfile="${basedir}/${coverage.dir}/coverage.html" />
+            </report>
+        </emma>
+    </target>
+
+	<!-- Generate JaCoCo reports-->
+    <target name="generate-jacoco-coverage-reports" if="coverage.report.exists">
+        <jacoco:report>
+        	<executiondata>
+                <fileset dir="${coverage.dir}">
+                    <include name="*.exec" />
+                </fileset>
+        	</executiondata>
+        	<structure name="${ant.project.name}">
+    	        <classfiles>
+    	            <fileset dir="${classes.dir}"/>
+    	        </classfiles>
+    	        <sourcefiles encoding="UTF-8">
+    	            <fileset dir="${src.dir}"/>
+    	        </sourcefiles>
+        	</structure>
+        	
+        	<html destdir="${basedir}/${coverage.dir}"/>
+        	<xml destfile="${basedir}/${coverage.dir}/coverage.xml"/>
+        </jacoco:report>
+    </target>
 
 </project>
 
