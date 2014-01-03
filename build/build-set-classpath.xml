@@ -16,10 +16,13 @@
 
 	<!-- Add directory containing all 3rd party jars to classpath -->
 	<!-- Exclude the XmlSchema-1.4.7.jar file as the consumer picks up the wrong class -->
+	<!-- Exclude the aspectj*1.6.12.jar file as they are incompatible with JDK 7. -->
 	<path id="3rd-party.dir">
 		<fileset dir="${3rd-party.dir}">
 			<include name="*.jar" />
 			<exclude name="XmlSchema-1.4.7.jar"/>
+			<exclude name="aspectjrt-1.6.12.jar"/>
+            <exclude name="aspectjweaver-1.6.12.jar"/>
 		</fileset>
 	</path>
 	<path id="3rd-party.spring3.dir">
