@@ -30,9 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -102,8 +102,11 @@ public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4Spr
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
 
         assertNotNull (globalParameter);
-        assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
-        assertTrue (globalParameter.getValue ().equals ("90"));
+        assertEquals ("Wrong global parameter name retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (),
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), globalParameter.getName ());
+        assertEquals ("Wrong global parameter value retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), "90", globalParameter.getValue ());
     }
 
     /**
@@ -130,8 +133,11 @@ public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4Spr
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
 
         assertNotNull (globalParameter);
-        assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
-        assertTrue (globalParameter.getValue ().equals ("90"));
+        assertEquals ("Wrong global parameter name retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (),
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), globalParameter.getName ());
+        assertEquals ("Wrong global parameter value retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), "90", globalParameter.getValue ());
 
         // Do uncache operation.
         final ISdtManagementMBean sdtManagementMBean =
@@ -152,7 +158,10 @@ public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4Spr
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
 
         assertNotNull (globalParameter);
-        assertTrue (globalParameter.getName ().equals (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ()));
-        assertTrue (globalParameter.getValue ().equals ("91"));
+        assertEquals ("Wrong global parameter name retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (),
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), globalParameter.getName ());
+        assertEquals ("Wrong global parameter value retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), "91", globalParameter.getValue ());
     }
 }
