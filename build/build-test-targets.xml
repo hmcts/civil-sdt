@@ -443,55 +443,46 @@
 	<!-- Runs integ tests from the current test bundle. If this is not a integ test bundle then nothing is executed. -->
 	<target name="run-integration-tests" depends="dist-tests" description="Run integ tests associated with this module">
 
-		<emma>
-			<instr instrpath="${classes.dir}" destdir="${instr.target.dir}" metadatafile="${coverage.dir}/metadata.emma" mode="copy">
-                <filter excludes="*Mock*" />
-                <filter excludes="*Test*" />
-			</instr>
-		</emma>
-
-		<!-- Run the tests -->
-		<junit fork="yes" forkmode="once" errorproperty="tests.error" failureproperty="tests.failed" dir="${basedir}">
-			<jvmarg value="-Xms1024M" />
-			<jvmarg value="-Xmx1024M" />
-			<jvmarg value="-XX:MaxPermSize=256M" />
-            <jvmarg value="-XX:-UseSplitVerifier" />
-
-			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
-			<jvmarg value="-Demma.coverage.out.merge=true" />
-
-			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8008" />
-
-			<syspropertyset refid="all-runtime-properties" />
-
-			<classpath>
-				<pathelement location="${instr.target.dir}" />
-				<pathelement location="${integ.test.classes.dir}" />
-				<pathelement location="${classes.dir}" />
-				<fileset dir="${lib.test.dir}">
-                    <include name="**/*.jar"/>
-                    <include name="**/producers-commissioning-test.jar"/>
-				</fileset>
-				<path refid="build.integ.test.classpath" />
-			</classpath>
-
-			<batchtest todir="${junit.integ.output.dir}">
-				<fileset dir="${integ.test.classes.dir}">
-					<include name="**/*Test.class" />
-					<exclude name="**/Abstract*.class" />
-				</fileset>
-			</batchtest>
-
-			<!-- write to output files -->
-			<formatter type="xml" />
-
-			<!-- write to console also -->
-			<formatter type="brief" usefile="false" />
-		</junit>
+        <!-- Run the tests with JaCoCo for code coverage -->
+        <jacoco:coverage destfile="${coverage.dir}/jacoco.exec" excludes="*Mock*:*Test*">
+    		<junit fork="yes" forkmode="once" errorproperty="tests.error" failureproperty="tests.failed" dir="${basedir}">
+    			<jvmarg value="-Xms1024M" />
+    			<jvmarg value="-Xmx1024M" />
+    			<jvmarg value="-XX:MaxPermSize=256M" />
+    
+    			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8008" />
+    
+    			<syspropertyset refid="all-runtime-properties" />
+    
+    			<classpath>
+    				<pathelement location="${instr.target.dir}" />
+    				<pathelement location="${integ.test.classes.dir}" />
+    				<pathelement location="${classes.dir}" />
+    				<fileset dir="${lib.test.dir}">
+                        <include name="**/*.jar"/>
+                        <include name="**/producers-commissioning-test.jar"/>
+    				</fileset>
+    				<path refid="build.integ.test.classpath" />
+    			</classpath>
+    
+    			<batchtest todir="${junit.integ.output.dir}">
+    				<fileset dir="${integ.test.classes.dir}">
+    					<include name="**/*Test.class" />
+    					<exclude name="**/Abstract*.class" />
+    				</fileset>
+    			</batchtest>
+    
+    			<!-- write to output files -->
+    			<formatter type="xml" />
+    
+    			<!-- write to console also -->
+    			<formatter type="brief" usefile="false" />
+    		</junit>
+        </jacoco:coverage>
 
 		<antcall target="generate-integ-test-reports" />
-		<available file="${coverage.dir}/coverage.emma" property="coverage.report.exists" />
-		<antcall target="generate-emma-coverage-reports" />
+		<available file="${coverage.dir}/jacoco.exec" property="coverage.report.exists" />
+		<antcall target="generate-jacoco-coverage-reports" />
 
 	</target>
 
@@ -641,22 +632,12 @@
 	<!-- Runs end to end tests from the current test bundle. If this is not a end to end test bundle then nothing is executed. -->
 	<target name="run-endtoend-tests" depends="dist-tests" description="Run end to end tests associated with this module">
 
-		<emma>
-			<instr instrpath="${classes.dir}" destdir="${instr.target.dir}" metadatafile="${coverage.dir}/metadata.emma" mode="copy">
-                <filter excludes="*Mock*" />
-                <filter excludes="*Test*" />
-			</instr>
-		</emma>
-
 		<!-- Run the tests -->
+		<!-- NOTE: Tests are run without JaCoCo because actual code to be tested is being executed on the server. -->
 		<junit fork="yes" forkmode="once" errorproperty="tests.error" failureproperty="tests.failed" dir="${basedir}">
 			<jvmarg value="-Xms1024M" />
 			<jvmarg value="-Xmx1024M" />
 			<jvmarg value="-XX:MaxPermSize=256M" />
-            <jvmarg value="-XX:-UseSplitVerifier" />
-
-			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
-			<jvmarg value="-Demma.coverage.out.merge=true" />
 
 			<jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8008" />
 
@@ -687,8 +668,8 @@
 		</junit>
 
 		<antcall target="generate-endtoend-test-reports" />
-		<available file="${coverage.dir}/coverage.emma" property="coverage.report.exists" />
-		<antcall target="generate-emma-coverage-reports" />
+		<available file="${coverage.dir}/jacoco.exec" property="coverage.report.exists" />
+		<antcall target="generate-jacoco-coverage-reports" />
 
 	</target>
 
@@ -737,19 +718,6 @@
 	<target name="-echo-junit-failure" if="tests.failed">
 		<!-- <fail message="The JUnit tests failed - see test results for more details." /> -->
 	</target>
-
-    <!-- Generate Emma reports-->
-    <target name="generate-emma-coverage-reports" if="coverage.report.exists">
-        <emma>
-            <report sourcepath="${src.dir}" depth="method">
-                <fileset dir="${coverage.dir}">
-                    <include name="*.emma" />
-                </fileset>
-                <xml outfile="${basedir}/${coverage.dir}/coverage.xml" />
-                <html outfile="${basedir}/${coverage.dir}/coverage.html" />
-            </report>
-        </emma>
-    </target>
 
 	<!-- Generate JaCoCo reports-->
     <target name="generate-jacoco-coverage-reports" if="coverage.report.exists">
