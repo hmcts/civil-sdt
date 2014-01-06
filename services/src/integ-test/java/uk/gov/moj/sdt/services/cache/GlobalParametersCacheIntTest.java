@@ -99,14 +99,14 @@ public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4Spr
     {
         final IGlobalParameter globalParameter =
                 globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+                        IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name ());
 
         assertNotNull (globalParameter);
         assertEquals ("Wrong global parameter name retrieved for " +
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (),
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), globalParameter.getName ());
+                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name (),
+                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name (), globalParameter.getName ());
         assertEquals ("Wrong global parameter value retrieved for " +
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), "90", globalParameter.getValue ());
+                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name (), "3", globalParameter.getValue ());
     }
 
     /**
