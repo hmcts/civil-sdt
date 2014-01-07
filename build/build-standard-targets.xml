@@ -453,10 +453,6 @@
 	<target name="checkstyle" depends="" description="Generate checkstyle report">
 	</target>
 
-	<!-- Run Emma coverage report -->
-	<target name="coverage" depends="" description="Run Emma coverage report">
-	</target>
-
 	<!-- Run diagnostics report -->
 	<target name="diagnostics" depends="init" description="Output diagnostics of ANT">
 		<diagnostics />

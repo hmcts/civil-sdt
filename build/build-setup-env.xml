@@ -95,13 +95,6 @@
 		</classpath>
 	</taskdef>
 
-	<!-- Add EMMA target -->
-	<taskdef resource="emma_ant.properties">
-		<classpath>
-			<fileset dir="${ant.runtime.dir}/lib" includes="emma*.jar" />
-		</classpath>
-	</taskdef>
-
     <!-- Add JaCoCo target -->
     <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
         <classpath>

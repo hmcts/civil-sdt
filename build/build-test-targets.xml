@@ -75,7 +75,6 @@
 		<mkdir dir="${junit.endtoend.test-reports.dir}"/>
 		<mkdir dir="${junit.endtoend.output.dir}"/>
 		<mkdir dir="${coverage.dir}" />
-		<mkdir dir="${instr.target.dir}" />
 	</target>
 
 	<!-- Delete all test artefacts -->
@@ -93,7 +92,6 @@
 		<delete dir="${endtoend.test.classes.dir}"/>
 		<delete dir="${lib.test.dir}" />
 		<delete dir="${coverage.dir}" />
-		<delete dir="${instr.target.dir}" />
 	</target>
 
 	<!-- Compile all unit test source -->
@@ -455,7 +453,6 @@
     			<syspropertyset refid="all-runtime-properties" />
     
     			<classpath>
-    				<pathelement location="${instr.target.dir}" />
     				<pathelement location="${integ.test.classes.dir}" />
     				<pathelement location="${classes.dir}" />
     				<fileset dir="${lib.test.dir}">
@@ -644,7 +641,6 @@
 			<syspropertyset refid="all-runtime-properties" />
 
 			<classpath>
-				<pathelement location="${instr.target.dir}" />
 				<pathelement location="${endtoend.test.classes.dir}" />
 				<pathelement location="${classes.dir}" />
 				<fileset dir="${lib.test.dir}">
@@ -737,7 +733,7 @@
         	</structure>
         	
         	<html destdir="${basedir}/${coverage.dir}"/>
-        	<xml destfile="${basedir}/${coverage.dir}/coverage.xml"/>
+        	<csv destfile="${basedir}/${coverage.dir}/coverage.csv"/>
         </jacoco:report>
     </target>
 

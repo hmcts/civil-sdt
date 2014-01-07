@@ -43,20 +43,6 @@
         </fileset>
     </path>
 
-    <!-- Add emma jars which are needed by junit when executing tests -->
-    <path id="emma.dir">
-        <fileset dir="${ant.runtime.dir}/lib">
-            <include name="emma*.jar" />
-        </fileset>
-    </path>
-
-    <!-- Add Jacoco jars which are needed by junit when executing tests -->
-    <path id="jacoco.dir">
-        <fileset dir="${ant.runtime.dir}/lib">
-            <include name="jacoco*.jar" />
-        </fileset>
-    </path>
-
 	<!-- Set 3rd party and sdt application jars to classpath for building 'src' code in all projects -->
 	<path id="build.src.classpath">
 		<path refid="3rd-party.dir" />
@@ -73,7 +59,6 @@
 
     <!-- Set classpath for unit tests -->
     <path id="build.unit.test.classpath">
-        <path refid="emma.dir" />
         <path refid="3rd-party.dir" />
     	<path refid="3rd-party.spring3.dir" />    	
         <path refid="lib.app.dir" />
@@ -82,7 +67,6 @@
 
     <!-- Set classpath for integration tests -->
     <path id="build.integ.test.classpath">
-        <path refid="emma.dir" />
         <path refid="3rd-party.dir" />
     	<path refid="3rd-party.spring3.dir" /> 
         <path refid="lib.app.dir" />
@@ -91,7 +75,6 @@
 	
 	<!-- Set classpath for end to end tests -->
 	<path id="build.endtoend.test.classpath">
-        <path refid="emma.dir" />
         <path refid="3rd-party.dir" />
     	<path refid="3rd-party.spring3.dir" /> 
         <path refid="lib.app.dir" />
