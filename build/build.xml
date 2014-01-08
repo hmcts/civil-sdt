@@ -70,7 +70,7 @@
         <delete dir="${junit.integ.test-reports.dir}" />
         <delete dir="${junit.endtoend.test-reports.dir}" /> 
     	<delete verbose="true">
-    		 <fileset dir="../${logs.dir}" includes="sdt*.log"/>
+    		 <fileset dir="../${logs.dir}" includes="sdt*.*"/>
     	</delete>
     </target>
 
