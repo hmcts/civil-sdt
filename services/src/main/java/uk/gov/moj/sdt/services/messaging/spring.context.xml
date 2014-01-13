@@ -17,7 +17,7 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
            <list>
-               <value>classpath:uk/gov/moj/sdt/messaging/jms.properties</value>
+               <value>classpath:uk/gov/moj/sdt/services/messaging/jms.properties</value>
            </list>
          </property>
     </bean>
