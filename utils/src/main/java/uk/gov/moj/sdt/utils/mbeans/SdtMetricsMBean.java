@@ -114,6 +114,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     private static final double MILLISECONDS = 1000;
 
     /**
+     * Constant to convert nanoseconds to milliseconds.
+     */
+    private static final long NANO_TO_MILLI = 1000000;
+
+    /**
      * Current active value of performance logging flags which control what performance logging points are active.
      */
     private short performanceLoggingFlags;
@@ -1516,9 +1521,23 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         final com.sun.management.OperatingSystemMXBean osMxBean = (com.sun.management.OperatingSystemMXBean) o;
         final RuntimeMXBean rtMxBean = ManagementFactory.getRuntimeMXBean ();
 
-        return "Number of processors[" + osMxBean.getAvailableProcessors () + "], process cpu time[" +
-                osMxBean.getProcessCpuTime () + "], uptime[" + (rtMxBean == null ? 1 : rtMxBean.getUptime ()) +
-                "], total physical memory[" + osMxBean.getTotalPhysicalMemorySize () + "], free physical memory[" +
+        // Format CPU time.
+        String cpuTime = "";
+        if (osMxBean != null)
+        {
+            cpuTime = formatTime (osMxBean.getProcessCpuTime () / NANO_TO_MILLI);
+        }
+
+        // Format up time.
+        String upTime = "";
+        if (rtMxBean != null)
+        {
+            upTime = formatTime (rtMxBean.getUptime ());
+        }
+
+        return "Operating system: number of processors[" + osMxBean.getAvailableProcessors () + "], process cpu time[" +
+                cpuTime + "], up time[" + upTime + "], total physical memory[" +
+                osMxBean.getTotalPhysicalMemorySize () + "], free physical memory[" +
                 osMxBean.getFreePhysicalMemorySize () + "]";
     }
 
@@ -1619,16 +1638,31 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
                 this.getLastBusinessException () + "]";
     }
 
-    @Override
-    public String getLastBulkSubmitRef ()
+    /**
+     * Get the last bulk submission reference assigned.
+     * 
+     * @return the last bulk submission reference.
+     */
+    private String getLastBulkSubmitRef ()
     {
         return this.lastBulkSubmitRef;
     }
 
-    @Override
-    public String getLastBulkRequestRef ()
+    /**
+     * Get the last bulk request reference assigned.
+     * 
+     * @return the last bulk request reference.
+     */
+    private String getLastBulkRequestRef ()
     {
         return this.lastBulkRequestRef;
+    }
+
+    @Override
+    public String getLastRefStats ()
+    {
+        return "References: last bulk submit reference[" + this.getLastBulkSubmitRef () +
+                "], last bulk request reference[" + this.getLastBulkRequestRef () + "]";
     }
 
     @Override
@@ -1685,7 +1719,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
 
         try
         {
-            String filename = "metrics." + this.formatter.format (date) + ".txt";
+            String filename = "sdt.metrics." + this.formatter.format (date) + ".txt";
             filename = filename.replace (':', '.');
             final File file = new File (filename);
             final BufferedWriter output = new BufferedWriter (new FileWriter (file));
@@ -1696,8 +1730,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
             output.write (getActiveCustomersStats () + "\n");
             output.write (getBulkSubmitStats () + "\n");
             output.write (getRequestQueueStats () + "\n");
-            output.write (getLastBulkSubmitRef () + "\n");
-            output.write (getLastBulkRequestRef () + "\n");
+            output.write (getLastRefStats () + "\n");
             output.write (getTargetAppStats () + "\n");
             output.write (getBulkFeedbackStats () + "\n");
             output.write (getSubmitQueryStats () + "\n");
@@ -1715,5 +1748,42 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         {
             e.printStackTrace ();
         }
+    }
+
+    /**
+     * Format milliseconds into hours, minutes, seconds and milliseconds.
+     * 
+     * @param timeInMilliseconds time in milliseconds to be formatted.
+     * @return formatted time.
+     */
+    private String formatTime (final long timeInMilliseconds)
+    {
+        // CHECKSTYLE:OFF
+        long hours = timeInMilliseconds / 3600000;
+        long minutes = timeInMilliseconds / 60000 % 60;
+        long seconds = timeInMilliseconds / 1000 % 60;
+        long milliseconds = timeInMilliseconds % 1000;
+
+        return pad (hours, 2) + ":" + pad (minutes, 2) + ":" + pad (seconds, 2) + "." + pad (milliseconds, 3);
+        // CHECKSTYLE:ON
+    }
+
+    /**
+     * Pad a number to a given number of characters with leading zeros.
+     * 
+     * @param number number of be padded.
+     * @param size resulting size of padded number.
+     * @return padded number.
+     */
+    private String pad (final long number, final int size)
+    {
+        String result = new String ("" + number);
+
+        for (int i = result.length (); i < size; i++)
+        {
+            result = "0" + result;
+        }
+
+        return result.toString ();
     }
 }

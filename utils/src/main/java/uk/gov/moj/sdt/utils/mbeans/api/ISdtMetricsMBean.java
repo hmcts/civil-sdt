@@ -144,18 +144,11 @@ public interface ISdtMetricsMBean
     String getErrorStats ();
 
     /**
-     * Get the last bulk submit reference assiged.
+     * Get the last references assigned.
      * 
-     * @return the last bulk submit reference.
+     * @return the last references assigned.
      */
-    String getLastBulkSubmitRef ();
-
-    /**
-     * Get the last bulk request reference assiged.
-     * 
-     * @return the last bulk request reference.
-     */
-    String getLastBulkRequestRef ();
+    String getLastRefStats ();
 
     /**
      * Get the current active performance logging string.
