@@ -66,15 +66,16 @@ public interface ISdtManagementMBean
      * 
      * @param queueName the queue name for which the MDB pool size is to be set.
      * @param poolSize new size of message driven bean pool
+     * @return message indicating outcome.
      */
-    void setMdbPoolSize (String queueName, int poolSize);
+    String setMdbPoolSize (String queueName, int poolSize);
 
     /**
      * Requeue all individual requests that have not yet been sent to the target application and that were created
      * before a given time. These will have a status of RECEIVED (never sent to target application) or FORWARDED (sent
      * to target application but no response received).
      * 
-     * @param minimumAgeInMinutes TODO
+     * @param minimumAgeInMinutes minimum age in minutes of unforwarded messages to be requeued.
      */
     void requeueOldIndividualRequests (int minimumAgeInMinutes);
 }

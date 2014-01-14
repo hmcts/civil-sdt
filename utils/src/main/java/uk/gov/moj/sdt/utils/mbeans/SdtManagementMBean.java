@@ -58,6 +58,10 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     private static final Logger LOGGER = LoggerFactory.getLogger (SdtManagementMBean.class);
 
     /**
+     * Maximum value to which MDB pool size can be set.
+     */
+    private static final int MAX_POOL_SIZE = 50;
+    /**
      * The current value of a flag which controls whether individual {@link AbstractCacheControl} instances need to be
      * uncached. This number is incremented on each uncache, telling caching objects that their cache is stale and needs
      * to be discarded and reloaded. They look at this value and compare it with their own copy of it each time the
@@ -98,9 +102,30 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     }
 
     @Override
-    public void setMdbPoolSize (final String queueName, final int poolSize)
+    public String setMdbPoolSize (final String queueName, final int poolSize)
     {
+        if ( !containerMap.containsKey (queueName))
+        {
+            LOGGER.error ("mdb pool [" + queueName + "] not found.");
+            return "mdb pool [" + queueName + "] not found";
+        }
 
+        // Validate new pool size.
+        if (poolSize < 1 || poolSize > MAX_POOL_SIZE)
+        {
+            LOGGER.error ("mdb pool size can only be set between 1 and 50.");
+            return "mdb pool size can only be set between 1 and 50.";
+        }
+
+        // Get the message listener container registered earlier.
+        final DefaultMessageListenerContainer messageListenerContainer = containerMap.get (queueName);
+
+        // Set new maximum pool size for named queue.
+        final int oldPoolSize = messageListenerContainer.getMaxConcurrentConsumers ();
+        messageListenerContainer.setMaxConcurrentConsumers (poolSize);
+
+        LOGGER.info ("mdb pool [" + queueName + "] size changed from " + oldPoolSize + " to " + poolSize);
+        return "mdb pool [" + queueName + "] size changed from " + oldPoolSize + " to " + poolSize;
     }
 
     @Override

@@ -18,7 +18,7 @@
     </bean>
 
     <bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtManagementMBean" >
-        <!-- <property name="messageListenerContainer" ref="messageListenerContainer"/>  -->
+        <property name="messageListenerContainer" ref="messageListenerContainer"/>
     </bean>
 
 </beans>
