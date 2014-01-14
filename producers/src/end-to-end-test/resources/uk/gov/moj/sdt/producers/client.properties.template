@@ -32,7 +32,7 @@
 ########################################################################################################################
 
 # port number of the tc server
-server.portnumber=${my.application.server.portnumber}
+server.portnumber=${application.server.portnumber}
 
 # host name of the server
-server.hostname=${my.application.server.hostname}
+server.hostname=${application.server.hostname}

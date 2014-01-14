@@ -46,18 +46,20 @@
 #
 # sdt.<package>.<group>.<property>=${sdt.<package>.<group>.<property>}
 #
-# ${sdt.<package>.<group>.<property>} will be set in environment.properties.template either to a constant, or to a value in local.properties, i.e.
-# ${sdt.<package>.<group>.<property>}=${my.sdt.<package>.<group>.<property>}
+# [ ${sdt.<package>.<group>.<property>} will be set in environment.properties.template either to a constant, or to a value in local.properties, i.e.
+#   ${sdt.<package>.<group>.<property>}=${my.sdt.<package>.<group>.<property>} ]
 
 # SDT Oracle connection URL
 sdt.database.connection.url=${sdt.database.connection.url}
+
 # SDT Oracle connection username
 sdt.database.connection.user=${sdt.database.connection.user}
+
 # SDT Oracle connection password
 sdt.database.connection.password=${sdt.database.connection.password}
 
 #Log4j configuration file for Commissioning app
 sdt.producers-comx.log4j.configlocation=${sdt.producers-comx.log4j.configlocation}
 
-#Log4j configuration file for Productiong app
+#Log4j configuration file for Production app
 sdt.producers.log4j.configlocation=${sdt.producers.log4j.configlocation}

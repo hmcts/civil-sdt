@@ -36,4 +36,4 @@
 # This causes the property values to remain un-resolved. 
 ################################################################################
 #Queue name mapping to the the actual queue name
-MCOL.Queue=${my.broker.mcol.queuename}
+MCOL.Queue=${broker.mcol.queuename}
