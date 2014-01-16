@@ -212,8 +212,6 @@ public class TargetApplicationSubmissionServiceTest
                 this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
                         EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
 
-        bulkSubmission.markAsCompleted ();
-
         mockIndividualRequestDao.persist (bulkSubmission);
         EasyMock.expectLastCall ();
 
@@ -230,7 +228,12 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.verify (mockConsumerGateway);
         EasyMock.verify (mockCacheable);
 
-        Assert.assertTrue ("Expected to pass", true);
+        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
+        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission ().getUpdatedDate ());
 
     }
 
@@ -551,8 +554,6 @@ public class TargetApplicationSubmissionServiceTest
                 this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
                         EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
 
-        bulkSubmission.markAsCompleted ();
-
         mockIndividualRequestDao.persist (bulkSubmission);
         EasyMock.expectLastCall ();
 
@@ -568,7 +569,12 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.verify (mockCacheable);
         EasyMock.verify (mockErrorMsgCacheable);
 
-        Assert.assertTrue ("Expected to pass", true);
+        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
+        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission ().getUpdatedDate ());
     }
 
     /**
@@ -634,8 +640,6 @@ public class TargetApplicationSubmissionServiceTest
                 this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
                         EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
 
-        bulkSubmission.markAsCompleted ();
-
         mockIndividualRequestDao.persist (bulkSubmission);
         EasyMock.expectLastCall ();
 
@@ -654,7 +658,12 @@ public class TargetApplicationSubmissionServiceTest
         EasyMock.verify (mockCacheable);
         EasyMock.verify (mockErrorMsgCacheable);
 
-        Assert.assertTrue ("Expected to pass", true);
+        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
+        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission ().getUpdatedDate ());
     }
 
     /**

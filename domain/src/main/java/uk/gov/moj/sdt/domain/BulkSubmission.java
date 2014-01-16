@@ -328,6 +328,7 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     public void markAsCompleted ()
     {
         setSubmissionStatus (IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus ());
+        setUpdatedDate (LocalDateTime.now ());
         setCompletedDate (LocalDateTime.now ());
     }
 

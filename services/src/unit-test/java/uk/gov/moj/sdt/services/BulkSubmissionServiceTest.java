@@ -268,15 +268,12 @@ public class BulkSubmissionServiceTest
 
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
-        bulkSubmission
-                .setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
         bulkSubmission.setCustomerReference ("TEST_CUST_REF");
         bulkSubmission.setId (1L);
         bulkSubmission.setNumberOfRequest (2);
         bulkSubmission.setPayload ("TEST_XML");
         bulkSubmission.setSubmissionStatus ("SUBMITTED");
-        bulkSubmission.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System

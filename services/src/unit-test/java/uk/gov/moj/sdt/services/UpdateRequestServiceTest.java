@@ -118,9 +118,6 @@ public class UpdateRequestServiceTest
                 this.mockIndividualRequestDao.getRequestBySdtReference (individualRequestParam
                         .getSdtRequestReference ())).andReturn (individualRequest);
 
-        individualRequest.setRequestStatus (individualRequestParam.getRequestStatus ());
-        individualRequest.setErrorLog (individualRequestParam.getErrorLog ());
-
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
 
@@ -129,8 +126,6 @@ public class UpdateRequestServiceTest
         EasyMock.expect (
                 this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
                         EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
-
-        bulkSubmission.markAsCompleted ();
 
         mockIndividualRequestDao.persist (bulkSubmission);
         EasyMock.expectLastCall ();
@@ -142,7 +137,18 @@ public class UpdateRequestServiceTest
 
         this.updateRequestService.updateIndividualRequest (individualRequestParam);
         EasyMock.verify (mockIndividualRequestDao);
-        Assert.assertTrue ("Expected to pass", true);
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals ("Individual request status is incorrect",
+                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus (), individualRequest.getRequestStatus ());
+        Assert.assertNotNull ("Individual request should have error", individualRequest.getErrorLog ());
+        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
+        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission ().getUpdatedDate ());
+        // CHECKSTYLE:ON
 
     }
 
@@ -162,19 +168,14 @@ public class UpdateRequestServiceTest
                 this.mockIndividualRequestDao.getRequestBySdtReference (individualRequestParam
                         .getSdtRequestReference ())).andReturn (individualRequest);
 
-        individualRequest.setRequestStatus (individualRequestParam.getRequestStatus ());
-
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
-
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
 
         EasyMock.expect (
                 this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
                         EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
 
-        bulkSubmission.markAsCompleted ();
-
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
         mockIndividualRequestDao.persist (bulkSubmission);
         EasyMock.expectLastCall ();
 
@@ -185,7 +186,18 @@ public class UpdateRequestServiceTest
 
         this.updateRequestService.updateIndividualRequest (individualRequestParam);
         EasyMock.verify (mockIndividualRequestDao);
-        Assert.assertTrue ("Expected to pass", true);
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals ("Individual request status is incorrect",
+                IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (), individualRequest.getRequestStatus ());
+        Assert.assertNull ("Individual request should not have error", individualRequest.getErrorLog ());
+        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
+        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission ().getUpdatedDate ());
+        // CHECKSTYLE:ON
 
     }
 
