@@ -58,9 +58,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.services.messaging.SdtMessage;
-import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 
 /**
  * Test class for the RetryMessageAlreadySentService.
@@ -86,9 +84,9 @@ public class RetryMessageAlreadySentServiceTest
     private ICacheable mockCacheable;
 
     /**
-     * Mocked message writer reference.
+     * Mocked messaging utility reference.
      */
-    private IMessageWriter mockMessageWriter;
+    private IMessagingUtility mockMessagingUtility;
 
     /**
      * RetryMessageAlreadySentService instance to be tested.
@@ -110,8 +108,8 @@ public class RetryMessageAlreadySentServiceTest
         mockCacheable = EasyMock.createMock (ICacheable.class);
         messageTaskService.setGlobalParametersCache (mockCacheable);
 
-        mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
-        messageTaskService.setMessageWriter (mockMessageWriter);
+        mockMessagingUtility = EasyMock.createMock (IMessagingUtility.class);
+        messageTaskService.setMessagingUtility (mockMessagingUtility);
 
     }
 
@@ -148,10 +146,7 @@ public class RetryMessageAlreadySentServiceTest
 
         for (IIndividualRequest individualRequestObj : individualRequests)
         {
-            // Create the SdtMessage required for sending message on the queue.
-            final ISdtMessage sdtMessage = this.createSdtMessage (individualRequestObj.getSdtRequestReference ());
-            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
-                    EasyMock.anyBoolean ());
+            mockMessagingUtility.enqueueRequest (individualRequestObj);
             EasyMock.expectLastCall ();
 
             // Re-set the forwarding attempts on the individual request.
@@ -163,13 +158,13 @@ public class RetryMessageAlreadySentServiceTest
 
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockMessageWriter);
+        EasyMock.replay (mockMessagingUtility);
 
         this.messageTaskService.queueMessages ();
 
         EasyMock.verify (mockIndividualRequestDao);
         EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockMessageWriter);
+        EasyMock.verify (mockMessagingUtility);
 
         Assert.assertEquals ("Forwarding attempts on individual request", 0, individualRequests.get (0)
                 .getForwardingAttempts ());
@@ -213,10 +208,8 @@ public class RetryMessageAlreadySentServiceTest
 
         for (IIndividualRequest individualRequestObj : individualRequests)
         {
-            // Create the SdtMessage required for sending message on the queue.
-            final ISdtMessage sdtMessage = this.createSdtMessage (individualRequestObj.getSdtRequestReference ());
-            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
-                    EasyMock.anyBoolean ());
+
+            mockMessagingUtility.enqueueRequest (individualRequestObj);
             EasyMock.expectLastCall ();
 
             // Re-set the forwarding attempts on the individual request.
@@ -228,13 +221,13 @@ public class RetryMessageAlreadySentServiceTest
 
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockMessageWriter);
+        EasyMock.replay (mockMessagingUtility);
 
         this.messageTaskService.queueMessages ();
 
         EasyMock.verify (mockIndividualRequestDao);
         EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockMessageWriter);
+        EasyMock.verify (mockMessagingUtility);
 
         Assert.assertEquals ("Forwarding attempts on individual request", 0, individualRequests.get (0)
                 .getForwardingAttempts ());
@@ -305,10 +298,7 @@ public class RetryMessageAlreadySentServiceTest
 
         for (IIndividualRequest individualRequestObj : individualRequests)
         {
-            // Create the SdtMessage required for sending message on the queue.
-            final ISdtMessage sdtMessage = this.createSdtMessage (individualRequestObj.getSdtRequestReference ());
-            mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
-                    EasyMock.anyBoolean ());
+            mockMessagingUtility.enqueueRequest (individualRequestObj);
             EasyMock.expectLastCall ();
 
             // Re-set the forwarding attempts on the individual request.
@@ -320,13 +310,13 @@ public class RetryMessageAlreadySentServiceTest
 
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockMessageWriter);
+        EasyMock.replay (mockMessagingUtility);
 
         this.messageTaskService.queueMessages ();
 
         EasyMock.verify (mockIndividualRequestDao);
         EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockMessageWriter);
+        EasyMock.verify (mockMessagingUtility);
 
         Assert.assertEquals ("Forwarding attempts on individual request", 0, individualRequests.get (0)
                 .getForwardingAttempts ());
@@ -384,20 +374,6 @@ public class RetryMessageAlreadySentServiceTest
         bulkSubmission.setIndividualRequests (requests);
 
         request.setBulkSubmission (bulkSubmission);
-    }
-
-    /**
-     * 
-     * @param sdtRequestReference the SDT request reference of the individual request.
-     * @return an SdtMessage instance containing the supplied SDT request reference
-     */
-    private ISdtMessage createSdtMessage (final String sdtRequestReference)
-    {
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference (sdtRequestReference);
-
-        return sdtMessage;
-
     }
 
 }

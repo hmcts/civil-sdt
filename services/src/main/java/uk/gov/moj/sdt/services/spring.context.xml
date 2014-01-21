@@ -36,8 +36,7 @@
     	<property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao"/>
     	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
     	<property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator"/>
-    	<property name="messageSynchronizer" ref="uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer"/>
-    	<property name="messageWriter" ref="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"/>
+    	<property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
     </bean>   
     
     <!-- Implementation for Target Application Submission Service -->
@@ -65,7 +64,7 @@
     <!-- Implementation of the RetryMessageSend service -->
     <bean id="uk.gov.moj.sdt.services.api.IRetryMessageAlreadySentService" class="uk.gov.moj.sdt.services.RetryMessageAlreadySentService">
     	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
-    	<property name="messageWriter" ref="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"/>
+    	<property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
     	<property name="globalParametersCache" ref="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache"/>
     </bean>
                           

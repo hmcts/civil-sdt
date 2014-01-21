@@ -11,6 +11,11 @@
 	<bean id="uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator" class="uk.gov.moj.sdt.services.utils.SdtBulkReferenceGenerator">
 		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
 	</bean>
+	
+	<bean id="uk.gov.moj.sdt.services.utils.api.IMessagingUtility" class="uk.gov.moj.sdt.services.utils.MessagingUtility">
+		<property name="messageSynchronizer" ref="uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer"/>
+    	<property name="messageWriter" ref="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"/>
+	</bean>
     
 	<!-- Individual Requests Xml Parser. -->
 	<bean id="uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser" class="uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser">

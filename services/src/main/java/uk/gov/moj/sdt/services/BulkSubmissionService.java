@@ -46,14 +46,11 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
-import uk.gov.moj.sdt.services.messaging.SdtMessage;
-import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -91,15 +88,9 @@ public class BulkSubmissionService implements IBulkSubmissionService
     private IndividualRequestsXmlParser individualRequestsXmlParser;
 
     /**
-     * Message writer for queueing messages to the messaging server.
+     * Messaging utility for queueing messages in the messaging server.
      */
-    private IMessageWriter messageWriter;
-
-    /**
-     * Message synchroniser for synchronising the messages in the JMS with
-     * the hibernate transactions.
-     */
-    private IMessageSynchronizer messageSynchronizer;
+    private IMessagingUtility messagingUtility;
 
     /**
      * SDT Bulk reference generator.
@@ -118,15 +109,14 @@ public class BulkSubmissionService implements IBulkSubmissionService
         // Now persist the bulk submissions.
         this.getGenericDao ().persist (bulkSubmission);
 
-        enqueueValidRequests (bulkSubmission.getIndividualRequests ());
+        this.enqueueValidRequests (bulkSubmission.getIndividualRequests ());
 
     }
 
     /**
-     * Enqueue the SDT request id of each valid individual request to the message
-     * server.
+     * Queues the valid individual requests on the messaging server.
      * 
-     * @param individualRequests collection of individual requests.
+     * @param individualRequests the individual requests for a bulk submission.
      */
     private void enqueueValidRequests (final List<IIndividualRequest> individualRequests)
     {
@@ -134,23 +124,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
         {
             if (iRequest.isEnqueueable ())
             {
-                this.getMessageSynchronizer ().execute (new Runnable ()
-                {
-
-                    @Override
-                    public void run ()
-                    {
-                        final String targetAppCode =
-                                iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
-                        final ISdtMessage messageObj = new SdtMessage ();
-
-                        messageObj.setSdtRequestReference (iRequest.getSdtRequestReference ());
-
-                        getMessageWriter ().queueMessage (messageObj, targetAppCode, false);
-                    }
-
-                });
-
+                this.getMessagingUtility ().enqueueRequest (iRequest);
             }
         }
     }
@@ -282,24 +256,6 @@ public class BulkSubmissionService implements IBulkSubmissionService
     }
 
     /**
-     * 
-     * @return the Message Writer
-     */
-    public IMessageWriter getMessageWriter ()
-    {
-        return messageWriter;
-    }
-
-    /**
-     * 
-     * @param messageWriter the Message writer implementation.
-     */
-    public void setMessageWriter (final IMessageWriter messageWriter)
-    {
-        this.messageWriter = messageWriter;
-    }
-
-    /**
      * Get the individualRequestsXmlParser.
      * 
      * @return the individualRequestsXmlParser.
@@ -330,20 +286,22 @@ public class BulkSubmissionService implements IBulkSubmissionService
     }
 
     /**
+     * Get the messaging utility class reference.
      * 
-     * @return the message synchronizer
+     * @return the messaging utility
      */
-    public IMessageSynchronizer getMessageSynchronizer ()
+    public IMessagingUtility getMessagingUtility ()
     {
-        return messageSynchronizer;
+        return messagingUtility;
     }
 
     /**
      * 
-     * @param messageSynchronizer the message synchronizer for synchronising the JMS message queue.
+     * @param messagingUtility the messaging utility class.
      */
-    public void setMessageSynchronizer (final IMessageSynchronizer messageSynchronizer)
+    public void setMessagingUtility (final IMessagingUtility messagingUtility)
     {
-        this.messageSynchronizer = messageSynchronizer;
+        this.messagingUtility = messagingUtility;
     }
+
 }

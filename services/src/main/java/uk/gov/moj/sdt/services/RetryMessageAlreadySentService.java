@@ -42,9 +42,7 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.IRetryMessageSendService;
-import uk.gov.moj.sdt.services.messaging.SdtMessage;
-import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 
 /**
  * Class implementing the interface IRetryMessageSendService.
@@ -73,9 +71,9 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
     private IIndividualRequestDao individualRequestDao;
 
     /**
-     * This variable holding the message writer reference.
+     * This variable holding the messaging utility reference.
      */
-    private IMessageWriter messageWriter;
+    private IMessagingUtility messagingUtility;
 
     /**
      * The ICacheable reference to the global parameters cache.
@@ -105,12 +103,7 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
         {
             for (IIndividualRequest individualRequest : individualRequests)
             {
-                // Create the SdtMessage required for sending message on the queue.
-                final ISdtMessage sdtMessage = this.createSdtMessage (individualRequest.getSdtRequestReference ());
-
-                // Now queue the message
-                this.messageWriter.queueMessage (sdtMessage, individualRequest.getBulkSubmission ()
-                        .getTargetApplication ().getTargetApplicationCode (), false);
+                this.messagingUtility.enqueueRequest (individualRequest);
 
                 // Re-set the forwarding attempts on the individual request.
                 individualRequest.resetForwardingAttempts ();
@@ -139,11 +132,11 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
 
     /**
      * 
-     * @param messageWriter the message writer instance.
+     * @param messagingUtility the messagingUtility instance.
      */
-    public void setMessageWriter (final IMessageWriter messageWriter)
+    public void setMessagingUtility (final IMessagingUtility messagingUtility)
     {
-        this.messageWriter = messageWriter;
+        this.messagingUtility = messagingUtility;
     }
 
     /**
@@ -172,20 +165,6 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
         }
 
         return globalParameter.getValue ();
-
-    }
-
-    /**
-     * 
-     * @param sdtRequestReference the SDT request reference of the individual request.
-     * @return an SdtMessage instance containing the supplied SDT request reference
-     */
-    private ISdtMessage createSdtMessage (final String sdtRequestReference)
-    {
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference (sdtRequestReference);
-
-        return sdtMessage;
 
     }
 

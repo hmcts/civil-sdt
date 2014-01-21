@@ -62,10 +62,10 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
-import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 /**
  * Test class for BulkSubmissionService.
@@ -116,9 +116,9 @@ public class BulkSubmissionServiceTest
     private ISdtBulkReferenceGenerator mockSdtBulkReferenceGenerator;
 
     /**
-     * Message Synchroniser reference.
+     * Messaging Utility reference.
      */
-    private IMessageSynchronizer mockMessageSynchronizer;
+    private IMessagingUtility mockMessagingUtility;
 
     /**
      * Setup of the mock dao and injection of other objects.
@@ -147,8 +147,8 @@ public class BulkSubmissionServiceTest
         mockSdtBulkReferenceGenerator = EasyMock.createMock (ISdtBulkReferenceGenerator.class);
         bulkSubmissionService.setSdtBulkReferenceGenerator (mockSdtBulkReferenceGenerator);
 
-        mockMessageSynchronizer = EasyMock.createMock (IMessageSynchronizer.class);
-        bulkSubmissionService.setMessageSynchronizer (mockMessageSynchronizer);
+        mockMessagingUtility = EasyMock.createMock (IMessagingUtility.class);
+        bulkSubmissionService.setMessagingUtility (mockMessagingUtility);
     }
 
     /**
