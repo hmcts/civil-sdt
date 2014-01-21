@@ -35,6 +35,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -134,6 +135,28 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                         Restrictions.eq ("requestStatus",
                                 IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ()),
                         Restrictions.ge ("forwardingAttempts", maxAllowedAttempts));
+
+        return individualRequests;
+    }
+
+    @Override
+    public List<IIndividualRequest> getRejectedIndividualRequests (final int minimumAgeInMinutes)
+        throws DataAccessException
+    {
+        LOG.debug ("Get an individual request pending processing by the target application");
+
+        // Calculate time of latest individual request (based on last updated time) that can be requeued, given the
+        // minimum age of requests to be requeued.
+        final LocalDateTime now = new LocalDateTime ();
+        final LocalDateTime latestTime = now.minusMinutes (minimumAgeInMinutes);
+
+        // Call the generic dao to do this query
+        final List<IIndividualRequest> individualRequests =
+                this.queryAsList (
+                        IIndividualRequest.class,
+                        Restrictions.eq ("requestStatus",
+                                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()),
+                        Restrictions.lt ("updatedDate", latestTime));
 
         return individualRequests;
     }

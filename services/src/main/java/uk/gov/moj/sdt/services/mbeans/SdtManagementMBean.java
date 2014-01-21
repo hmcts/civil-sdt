@@ -28,15 +28,23 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-package uk.gov.moj.sdt.utils.mbeans;
+package uk.gov.moj.sdt.services.mbeans;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.services.messaging.SdtMessage;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
@@ -62,7 +70,8 @@ public final class SdtManagementMBean implements ISdtManagementMBean
      */
     private static final int MAX_POOL_SIZE = 50;
     /**
-     * The current value of a flag which controls whether individual {@link AbstractCacheControl} instances need to be
+     * The current value of a flag which controls whether individual
+     * {@link uk.gov.moj.sdt.domain.cache.AbstractCacheControl} instances need to be
      * uncached. This number is incremented on each uncache, telling caching objects that their cache is stale and needs
      * to be discarded and reloaded. They look at this value and compare it with their own copy of it each time the
      * cache is accessed.
@@ -74,6 +83,16 @@ public final class SdtManagementMBean implements ISdtManagementMBean
      */
     private Map<String, DefaultMessageListenerContainer> containerMap =
             new HashMap<String, DefaultMessageListenerContainer> ();
+
+    /**
+     * Individual Request Dao to perform operations on the individual request object.
+     */
+    private IIndividualRequestDao individualRequestDao;
+
+    /**
+     * This variable holding the message writer reference.
+     */
+    private IMessageWriter messageWriter;
 
     /**
      * Constructor for {@link SdtManagementMBean}. This is called by Spring and should become the bean that all
@@ -129,8 +148,53 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     }
 
     @Override
+    @Transactional (propagation = Propagation.REQUIRED)
     public void requeueOldIndividualRequests (final int minimumAgeInMinutes)
     {
+        // Get list of pending individual requests.
+        final List<IIndividualRequest> individualRequests =
+                this.individualRequestDao.getRejectedIndividualRequests (minimumAgeInMinutes);
 
+        LOGGER.debug ("Requeue " + individualRequests.size () + " rejected messages older than " + minimumAgeInMinutes +
+                " minutes");
+
+        // Loop through the list of the individual requests found.
+        if ( !individualRequests.isEmpty ())
+        {
+            for (IIndividualRequest individualRequest : individualRequests)
+            {
+                // Create the SdtMessage required for sending message on the queue.
+                final ISdtMessage sdtMessage = new SdtMessage ();
+                sdtMessage.setSdtRequestReference (individualRequest.getSdtRequestReference ());
+
+                // Now queue the message
+                this.messageWriter.queueMessage (sdtMessage, individualRequest.getBulkSubmission ()
+                        .getTargetApplication ().getTargetApplicationCode (), false);
+
+                // Re-set the forwarding attempts on the individual request.
+                individualRequest.resetForwardingAttempts ();
+            }
+
+            // Persist the list of individual requests.
+            this.individualRequestDao.persistBulk (individualRequests);
+        }
+    }
+
+    /**
+     * 
+     * @param individualRequestDao the individual request dao object.
+     */
+    public void setIndividualRequestDao (final IIndividualRequestDao individualRequestDao)
+    {
+        this.individualRequestDao = individualRequestDao;
+    }
+
+    /**
+     * 
+     * @param messageWriter the message writer instance.
+     */
+    public void setMessageWriter (final IMessageWriter messageWriter)
+    {
+        this.messageWriter = messageWriter;
     }
 }

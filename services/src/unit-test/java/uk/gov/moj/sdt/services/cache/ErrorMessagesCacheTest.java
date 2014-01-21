@@ -40,7 +40,7 @@ import org.junit.Test;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.utils.mbeans.SdtManagementMBean;
+import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**

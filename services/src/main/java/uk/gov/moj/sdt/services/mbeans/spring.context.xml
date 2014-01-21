@@ -10,11 +10,10 @@
 	<!-- Note all ids should be based on fully qualified names (interfaces where 
 		this is not ambiguous) and all classes should have an interface. -->
 
-    <bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean" class="uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean" >
-        <property name="customerCounter" ref="uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter"/>
-    </bean>
-
-    <bean id="uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter" class="uk.gov.moj.sdt.utils.mbeans.CustomerCounter" >
+    <bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" class="uk.gov.moj.sdt.services.mbeans.SdtManagementMBean" >
+        <property name="messageListenerContainer" ref="messageListenerContainer"/>
+        <property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+        <property name="messageWriter" ref="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"/>
     </bean>
 
 </beans>

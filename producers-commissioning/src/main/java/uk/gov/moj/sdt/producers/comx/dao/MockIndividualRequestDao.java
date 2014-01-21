@@ -93,4 +93,12 @@ public class MockIndividualRequestDao extends MockGenericDao implements IIndivid
         // This method is implemented for the producers application only.
         return null;
     }
+
+    @Override
+    public List<IIndividualRequest> getRejectedIndividualRequests (final int maxAllowedAttempts)
+        throws DataAccessException
+    {
+        // This method is implemented for the producers application only.
+        return null;
+    }
 }
