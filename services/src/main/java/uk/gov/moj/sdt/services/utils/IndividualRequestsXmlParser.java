@@ -69,6 +69,9 @@ public class IndividualRequestsXmlParser
      */
     public void populateRawRequest (final List<IIndividualRequest> individualRequests)
     {
+
+        LOGGER.info ("Started parsing raw xml to extract payload for " + individualRequests.size () + " requests");
+
         // Get iterator so we can traverse the list of requests and the payload (raw XML) to each one.
         final Iterator<IIndividualRequest> iter = individualRequests.iterator ();
 
@@ -125,6 +128,7 @@ public class IndividualRequestsXmlParser
                 individualRequest.setRequestPayload (individualRequestRawXml);
             }
         }
+        LOGGER.info ("Finised parsing raw xml");
 
     }
 

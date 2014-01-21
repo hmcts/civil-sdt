@@ -42,6 +42,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -91,7 +92,7 @@ public class IndividualRequestsXmlParserTest
     public void getIndividualRequestsRawXmlMap () throws Exception
     {
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = this.getRawXml ();
+        final String rawXml = this.getRawXml ("testXMLValid.xml");
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
@@ -135,19 +136,53 @@ public class IndividualRequestsXmlParserTest
     }
 
     /**
+     * Tests performance of parsing large xml request.
      * 
+     * @throws IOException if unable to read file.
+     */
+    @Test
+    @Ignore ("Disabled as execution time around 3 minutes and needs to be improved.")
+    public void testParserPerformance () throws IOException
+    {
+        // Load xml into SdtContext as if the inbound interceptor had run.
+        final String rawXml = this.getRawXml ("testLargeBulkRequest.xml");
+
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest> ();
+
+        // Create array list of individual requests as if these had been created by CXF in parsing the inbound SOAP
+        // message and then transformed into domain objects.
+        for (int i = 1; i <= 1; i++)
+        {
+
+            final IIndividualRequest individualRequest = new IndividualRequest ();
+            individualRequest.setCustomerRequestReference ("Req0-" + i);
+            individualRequest.setRequestStatus ("Forwarded");
+            requests.add (individualRequest);
+
+        }
+
+        // Now call the parser to add the xml fragments into the payload of the individual requests.
+        this.individualRequestsXmlParser.populateRawRequest (requests);
+
+        // CHECKSTYLE:OFF
+        // TODO Add assertions.
+        // CHECKSTYLE:ON
+    }
+
+    /**
+     * Return contents from given file.
+     * 
+     * @param filename file to read.
      * @return rax xml from a test file
      * @throws IOException during the read operations
      */
-    private String getRawXml () throws IOException
+    private String getRawXml (final String filename) throws IOException
     {
-        // Read the test xml file.
-        File myFile;
         String message = "";
 
-        // XPathHandler xmlHandler = new XPathHandler ();
-
-        myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", "testXMLValid.xml", false));
+        final File myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", filename, false));
 
         message = FileUtils.readFileToString (myFile);
 

@@ -77,6 +77,8 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             final Map<String, String> targetApplicationRespMap =
                     SdtContext.getContext ().getTargetApplicationRespMap ();
 
+            LOGGER.info ("Started enriching feedback response for " + targetApplicationRespMap.size () + " request(s)");
+
             // Get iterator so we can look for all keys. Since order is undetermined we can assume nothing about finding
             // the requests in the same order and so must search the entire string each time.
             final Iterator<String> iter = targetApplicationRespMap.keySet ().iterator ();
@@ -151,11 +153,13 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                 }
             }
 
+            LOGGER.info ("Finised enriching feedback response");
+
             if (LOGGER.isDebugEnabled ())
             {
                 LOGGER.debug ("Message after enrichment [" + newXml + "]");
             }
-
+            
         }
         else
         {

@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/integ-test/java"/>
+	<classpathentry kind="src" path="src/unit-test/resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/domain"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/utils"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/3rd-party"/>
