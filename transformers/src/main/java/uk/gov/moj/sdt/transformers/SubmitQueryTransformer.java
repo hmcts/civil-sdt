@@ -32,6 +32,9 @@ package uk.gov.moj.sdt.transformers;
 
 import java.math.BigInteger;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
@@ -56,6 +59,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 public final class SubmitQueryTransformer extends AbstractTransformer implements
         ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest>
 {
+    /**
+     * Logger for this class.
+     */
+    private static final Log LOGGER = LogFactory.getLog (SubmitQueryTransformer.class);
 
     /**
      * Private constructor.
@@ -68,6 +75,8 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
     @Override
     public ISubmitQueryRequest transformJaxbToDomain (final SubmitQueryRequestType submitQueryRequestType)
     {
+        LOGGER.debug ("transform SubmitQueryRequestType to ISubmitQueryRequest");
+
         final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
         final HeaderType headerType = submitQueryRequestType.getHeader ();
 
@@ -91,6 +100,8 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
     @Override
     public SubmitQueryResponseType transformDomainToJaxb (final ISubmitQueryRequest submitQueryRequest)
     {
+        LOGGER.debug ("transform ISubmitQueryRequest to SubmitQueryRequestType");
+
         final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
 
         // Maps some values.

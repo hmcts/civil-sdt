@@ -63,34 +63,36 @@ public class UpdateItemTransformer extends AbstractTransformer implements
     private static final Log LOGGER = LogFactory.getLog (UpdateItemTransformer.class);
 
     @Override
-    public IIndividualRequest transformJaxbToDomain (final UpdateRequestType jaxbInstance)
+    public IIndividualRequest transformJaxbToDomain (final UpdateRequestType updateRequest)
     {
         LOGGER.debug ("transform UpdateRequestType to IIndividualRequest");
 
-        final IIndividualRequest domainObject = new IndividualRequest ();
-        final UpdateStatusType status = jaxbInstance.getStatus ();
+        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final UpdateStatusType status = updateRequest.getStatus ();
         final UpdateStatusCodeType statusCode = status.getCode ();
 
-        final HeaderType headerType = jaxbInstance.getHeader ();
-        domainObject.setSdtRequestReference (headerType.getSdtRequestId ());
+        final HeaderType headerType = updateRequest.getHeader ();
+        individualRequest.setSdtRequestReference (headerType.getSdtRequestId ());
 
         if (UpdateStatusCodeType.REJECTED.equals (statusCode))
         {
             final ErrorType errorType = status.getError ();
             final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
-            domainObject.markRequestAsRejected (errorLog);
+            individualRequest.markRequestAsRejected (errorLog);
         }
         else if (UpdateStatusCodeType.ACCEPTED.equals (statusCode))
         {
-            domainObject.markRequestAsAccepted ();
+            individualRequest.markRequestAsAccepted ();
         }
 
-        return domainObject;
+        return individualRequest;
     }
 
     @Override
-    public UpdateResponseType transformDomainToJaxb (final IIndividualRequest domainObject)
+    public UpdateResponseType transformDomainToJaxb (final IIndividualRequest individualRequest)
     {
+        LOGGER.debug ("transform IIndividualRequest to UpdateRequestType");
+
         final UpdateResponseType updateResponseType = new UpdateResponseType ();
         final StatusType status = new StatusType ();
         status.setCode (StatusCodeType.OK);

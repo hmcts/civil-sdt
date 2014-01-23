@@ -178,50 +178,13 @@ public class GenericDao implements IGenericDao
                                                                         final Criterion... restrictions)
         throws DataAccessException
     {
-        // Record start time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
-
         GenericDao.LOG.debug ("query(): domainType=" + domainType);
-
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tdomain type=" + domainType.getName ());
-            for (Criterion criterion : restrictions)
-            {
-                detail.append ("\n\trestriction=" + criterion.toString ());
-            }
-            detail.append ("\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_3, "GenericDao.query start",
-                    detail.toString ());
-        }
 
         // Get a list of results from Hibernate.
         final List<?> domainObjects = queryAsList (domainType, restrictions);
 
         @SuppressWarnings ("unchecked") final DomainType[] results =
                 (DomainType[]) Array.newInstance (domainType, domainObjects.size ());
-
-        // Calculate time in hibernate/database.
-        final long endTime = new GregorianCalendar ().getTimeInMillis ();
-        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
-        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
-
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            for (Object domainObject : domainObjects)
-            {
-                detail.append ("\n\n\tdomain object=" + domainObject.toString ());
-            }
-            detail.append ("\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.query end",
-                    detail.toString ());
-        }
 
         return domainObjects.toArray (results);
     }
@@ -275,11 +238,18 @@ public class GenericDao implements IGenericDao
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
             final StringBuffer detail = new StringBuffer ();
-            for (Object domainObject : domainObjects)
+            if (domainObjects == null || domainObjects.size () == 0)
             {
-                detail.append ("\n\n\tdomain object=" + domainObject.toString ());
+                detail.append ("\n\n\tdomain object=\n");
             }
-            detail.append ("\n");
+            else
+            {
+                for (Object domainObject : domainObjects)
+                {
+                    detail.append ("\n\n\tdomain object=" + domainObject.toString ());
+                }
+                detail.append ("\n");
+            }
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.queryAsList end",
@@ -496,15 +466,52 @@ public class GenericDao implements IGenericDao
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
-            final StringBuffer detail = new StringBuffer ();
-            if (domainObject != null)
-            {
-                detail.append ("\n\n\tdomain object=" + domainObject.toString () + "\n");
-            }
+            final String detail =
+                    "\n\n\tdomain object=" + (domainObject == null ? "\n" : domainObject.toString () + "\n");
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.uniqueResult end",
-                    detail.toString ());
+                    detail);
+        }
+
+        return domainObject;
+    }
+
+    @Override
+    public final <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
+                                                                             final Criteria criteria)
+        throws DataAccessException
+    {
+        // Record start time.
+        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+
+        GenericDao.LOG.debug ("queryAsList(): domainType=" + domainType);
+
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
+        {
+            final String detail = "\n\n\tdomain type=" + domainType.getName () + "\n\tcriteria=" + criteria + "\n";
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_3, "GenericDao.queryAsList start",
+                    detail);
+        }
+
+        // Get a list of results from Hibernate.
+        @SuppressWarnings ("unchecked") final DomainType domainObject = (DomainType) criteria.uniqueResult ();
+
+        // Calculate time in hibernate/database.
+        final long endTime = new GregorianCalendar ().getTimeInMillis ();
+        SdtMetricsMBean.getMetrics ().addDatabaseReadsTime (endTime - startTime);
+        SdtMetricsMBean.getMetrics ().upDatabaseReadsCount ();
+
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
+        {
+            final String detail =
+                    "\n\n\tdomain object=" + (domainObject == null ? "\n" : domainObject.toString () + "\n");
+
+            // Write message to 'performance.log' for this logging point.
+            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.queryAsList end",
+                    detail);
         }
 
         return domainObject;
@@ -557,13 +564,12 @@ public class GenericDao implements IGenericDao
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_4))
         {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tdomain object count =" + (countOfObjects != null ? countOfObjects.longValue () : 0));
-            detail.append ("\n");
+            final String detail =
+                    "\n\n\tdomain object count =" + (countOfObjects != null ? countOfObjects.longValue () : 0) + "\n";
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_4, "GenericDao.queryAsCount end",
-                    detail.toString ());
+                    detail);
         }
 
         return countOfObjects != null ? countOfObjects.longValue () : 0;

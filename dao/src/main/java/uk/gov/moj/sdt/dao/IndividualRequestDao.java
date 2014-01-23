@@ -75,7 +75,8 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         LOG.debug ("Get a Individual Request matching the Bulk Customer, "
                 + "Customer Request Reference and the Data Retention Period");
 
-        // Create the criteria
+        // Create the criteria - this is necessary because Hibernate does not allow dot notation in restrictions and
+        // using an alias is the only way to avoid this.
         final Session session = getSessionFactory ().getCurrentSession ();
         final Criteria criteria =
                 session.createCriteria (IIndividualRequest.class).createAlias ("bulkSubmission", "bs")
@@ -84,18 +85,11 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
         criteria.add (Restrictions.eq ("customerRequestReference", customerReference).ignoreCase ());
 
-        // Only bring back individual request within the data retention period
+        // Only bring back individual request within the data retention period - we do not trust the housekeeping to
+        // have cleared up the old records.
         criteria.add (createDateRestriction ("createdDate", dataRetention));
 
-        final List<IIndividualRequest> individualRequests = (List<IIndividualRequest>) criteria.list ();
-
-        // Return null or the first individual request
-        if (individualRequests == null || individualRequests.size () == 0)
-        {
-            return null;
-        }
-
-        return individualRequests.get (0);
+        return (IIndividualRequest) this.uniqueResult (IIndividualRequest.class, criteria);
     }
 
     @Override
@@ -155,7 +149,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                 this.queryAsList (
                         IIndividualRequest.class,
                         Restrictions.eq ("requestStatus",
-                                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()),
+                                IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()),
                         Restrictions.lt ("updatedDate", latestTime));
 
         return individualRequests;

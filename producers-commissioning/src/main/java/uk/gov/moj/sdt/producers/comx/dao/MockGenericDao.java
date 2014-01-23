@@ -34,6 +34,7 @@ package uk.gov.moj.sdt.producers.comx.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.joda.time.LocalDateTime;
 import org.springframework.dao.DataAccessException;
@@ -130,6 +131,13 @@ public class MockGenericDao implements IGenericDao
     @Override
     public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
                                                                        final Criterion... restrictions)
+    {
+        return null;
+    }
+
+    @Override
+    public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
+                                                                       final Criteria criteria)
     {
         return null;
     }

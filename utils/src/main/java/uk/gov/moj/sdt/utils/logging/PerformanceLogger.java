@@ -98,6 +98,16 @@ public final class PerformanceLogger
     public static final Long LOGGING_POINT_11 = 1L << 10;
 
     /**
+     * Start tree walker.
+     */
+    public static final Long LOGGING_POINT_12 = 1L << 11;
+
+    /**
+     * End tree walker.
+     */
+    public static final Long LOGGING_POINT_13 = 1L << 12;
+
+    /**
      * Turn on detail for all other logging points.
      */
     public static final Long LOGGING_POINT_16 = 1L << 15;

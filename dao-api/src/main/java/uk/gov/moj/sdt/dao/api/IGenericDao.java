@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.dao.api;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.springframework.dao.DataAccessException;
 
@@ -148,6 +149,21 @@ public interface IGenericDao
      */
     <DomainType extends IDomainObject> List<DomainType> queryAsList (final Class<DomainType> domainType,
                                                                      final Criterion... restrictions);
+
+    /**
+     * Returns a list of domain object model hierarchies with criteria prepared by the specific DAO. Then the query is
+     * executed.
+     * 
+     * @param <DomainType> of entity to load.
+     * @param domainType of entity to load.
+     * @param criteria the criteria to use in the query.
+     * @return business domain entity model hierarchy root object.
+     * 
+     * @throws DataAccessException
+     *             on any I/O related error.
+     */
+    <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
+                                                                final Criteria criteria);
 
     /**
      * Returns unique domain object model hierarchy with a set of

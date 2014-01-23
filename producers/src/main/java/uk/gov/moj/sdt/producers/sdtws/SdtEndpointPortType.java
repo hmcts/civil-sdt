@@ -184,7 +184,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_9,
-                    "Bulk feedback response received returned", detail.toString ());
+                    "Bulk feedback response returned", detail.toString ());
         }
 
         return response;
@@ -236,7 +236,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
 
             // Write message to 'performance.log' for this logging point.
             PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_9,
-                    "Submit query response received returned", detail.toString ());
+                    "Submit query response returned", detail.toString ());
         }
 
         return response;
