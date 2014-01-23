@@ -757,8 +757,8 @@
             
             <xs:complexType name="mcolDefenceCriteriaType">
                 <xs:sequence>
-                    <xs:element name="fromDate" type="xs:date" />
-                    <xs:element name="toDate" type="xs:date" />
+                    <xs:element name="fromDate" type="xs:dateTime" />
+                    <xs:element name="toDate" type="xs:dateTime" />
                 </xs:sequence>
             </xs:complexType>
         
@@ -782,6 +782,7 @@
         
             <xs:simpleType name="responseType">
                 <xs:restriction base="xs:string">
+                    <xs:enumeration value="AS"/>
                     <xs:enumeration value="DE"/>
                     <xs:enumeration value="DC"/>
                     <xs:enumeration value="PA"/>
