@@ -39,6 +39,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
     /**
      * Constant to define number of individual requests per bulk.
      */
-    private static final int IND_REQ_PER_BULK = 2000;
+    private static final int IND_REQ_PER_BULK = 1000;
 
     /**
      * Maximum number of requests to execute on the threads.
@@ -102,6 +103,7 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
      * Tests performance for concurrent requests.
      */
     @Test
+    @Ignore
     public void testConcurrentRequests ()
     {
         LOGGER.info ("Test performance for maximum " + MAX_WORKER_THREADS +
