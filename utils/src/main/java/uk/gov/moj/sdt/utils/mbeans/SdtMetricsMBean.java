@@ -1463,7 +1463,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.requestQueueTime = 0;
         this.requestQueueTimeMin = Long.MAX_VALUE;
         this.requestQueueTimeMax = 0;
-        this.requestQueueLength = 0;
+        // Do not reset this - this.requestQueueLength = 0;
         this.requestQueueLengthMax = 0;
         this.requestRequeues = 0;
         this.targetAppCallCount = 0;
@@ -1477,8 +1477,8 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         this.xmlValidationFailureCount = 0;
         this.businessExceptionCount = 0;
         this.lastBusinessException = "";
-        this.lastBulkSubmitRef = "";
-        this.lastBulkRequestRef = "";
+        // Do not reset this - this.lastBulkSubmitRef = "";
+        // Do not reset this - this.lastBulkRequestRef = "";
         this.resetTime = new GregorianCalendar ().getTimeInMillis ();
     }
 
@@ -1495,9 +1495,9 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
         return "Bulk submits: count[" + this.getBulkSubmitCount () + "], last[" +
                 this.formatter.format (bulkSubmitLastTime) + "], rate[" +
                 this.getRate (this.getBulkSubmitCount (), this.getElapsedTime ()) + "], requests[" +
-                this.getRequestCount () + "], time[" + this.getBulkSubmitTime () + "], average[" +
-                this.getBulkSubmitTimeAvg () + "], minimum[" + this.getBulkSubmitTimeMin () + "], maximum[" +
-                this.getBulkSubmitTimeMax () + "]";
+                this.getRequestCount () + "], rate[" + this.getRate (this.getRequestCount (), this.getElapsedTime ()) +
+                "], time[" + this.getBulkSubmitTime () + "], average[" + this.getBulkSubmitTimeAvg () + "], minimum[" +
+                this.getBulkSubmitTimeMin () + "], maximum[" + this.getBulkSubmitTimeMax () + "]";
     }
 
     @Override
@@ -1580,25 +1580,28 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getDatabaseCallsStats ()
     {
-        return "Database calls: count[" + this.getDatabaseCallsCount () + "], time[" + this.getDatabaseCallsTime () +
-                "], average[" + this.getDatabaseCallsTimeAvg () + "], minimum[" + this.getDatabaseCallsTimeMin () +
-                "], maximum[" + this.getDatabaseCallsTimeMax () + "]";
+        return "Database calls: count[" + this.getDatabaseCallsCount () + "], rate[" +
+                this.getRate (this.getDatabaseCallsCount (), this.getElapsedTime ()) + "], time[" +
+                this.getDatabaseCallsTime () + "], average[" + this.getDatabaseCallsTimeAvg () + "], minimum[" +
+                this.getDatabaseCallsTimeMin () + "], maximum[" + this.getDatabaseCallsTimeMax () + "]";
     }
 
     @Override
     public String getDatabaseReadsStats ()
     {
-        return "Database reads: count[" + this.getDatabaseReadsCount () + "], time[" + this.getDatabaseReadsTime () +
-                "], average[" + this.getDatabaseReadsTimeAvg () + "], minimum[" + this.getDatabaseReadsTimeMin () +
-                "], maximum[" + this.getDatabaseReadsTimeMax () + "]";
+        return "Database reads: count[" + this.getDatabaseReadsCount () + "], rate[" +
+                this.getRate (this.getDatabaseReadsCount (), this.getElapsedTime ()) + "], time[" +
+                this.getDatabaseReadsTime () + "], average[" + this.getDatabaseReadsTimeAvg () + "], minimum[" +
+                this.getDatabaseReadsTimeMin () + "], maximum[" + this.getDatabaseReadsTimeMax () + "]";
     }
 
     @Override
     public String getDatabaseWritesStats ()
     {
-        return "Database writes: count[" + this.getDatabaseWritesCount () + "], time[" + this.getDatabaseWritesTime () +
-                "], average[" + this.getDatabaseWritesTimeAvg () + "], minimum[" + this.getDatabaseWritesTimeMin () +
-                "], maximum[" + this.getDatabaseWritesTimeMax () + "]";
+        return "Database writes: count[" + this.getDatabaseWritesCount () + "], rate[" +
+                this.getRate (this.getDatabaseWritesCount (), this.getElapsedTime ()) + "], time[" +
+                this.getDatabaseWritesTime () + "], average[" + this.getDatabaseWritesTimeAvg () + "], minimum[" +
+                this.getDatabaseWritesTimeMin () + "], maximum[" + this.getDatabaseWritesTimeMax () + "]";
     }
 
     @Override
@@ -1610,11 +1613,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean
     @Override
     public String getRequestQueueStats ()
     {
-        return "Request queue: count[" + this.getRequestQueueCount () + "], time[" + this.getRequestQueueTime () +
-                "], average[" + this.getRequestQueueTimeAvg () + "], minimum[" + this.getRequestQueueTimeMin () +
-                "], maximum[" + this.getRequestQueueTimeMax () + "], current queue length[" +
-                this.getRequestQueueLength () + "], max queue length[" + this.getRequestQueueLengthMax () +
-                "], requeues[" + this.getRequestRequeues () + "]";
+        return "Request queue: count[" + this.getRequestQueueCount () + "], rate[" +
+                this.getRate (this.getRequestQueueCount (), this.getElapsedTime ()) + "], time[" +
+                this.getRequestQueueTime () + "], average[" + this.getRequestQueueTimeAvg () + "], minimum[" +
+                this.getRequestQueueTimeMin () + "], maximum[" + this.getRequestQueueTimeMax () +
+                "], current queue length[" + this.getRequestQueueLength () + "], max queue length[" +
+                this.getRequestQueueLengthMax () + "], requeues[" + this.getRequestRequeues () + "]";
 
     }
 
