@@ -15,10 +15,12 @@
         </param-value>
     </context-param>
 
-    <!-- This defines webapp.root for log4j -->
+    <!-- Supresses expose of the web app root system property that would enable log file paths
+         relative to application root directory.
+         Disabled here to avoid conflict with the application's web app root system property -->
     <context-param>
-        <param-name>webAppRootKey</param-name>
-        <param-value>producer-comx.root</param-value>
+        <param-name>log4jExposeWebAppRoot</param-name>
+        <param-value>false</param-value>
     </context-param>
 
     <!-- Defines the location of the Log4J configuration file. -->
