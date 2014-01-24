@@ -93,6 +93,7 @@ public class IndividualRequestsXmlParser
 
         final Matcher matcher = pattern.matcher (rawXml);
 
+        // Find and store all the matches.
         while (matcher.find ())
         {
             // Capture the request id associated with this request.
@@ -122,6 +123,7 @@ public class IndividualRequestsXmlParser
             allRawIndividualRequests.put (requestId, individualRequestRawXml);
         }
 
+        // Apply the stored matches to the associated individual requests.
         while (iter.hasNext ())
         {
             // Get the next request.
@@ -142,96 +144,6 @@ public class IndividualRequestsXmlParser
         LOGGER.debug ("Finished parsing raw xml");
     }
 
-    // /**
-    // * Parse the given raw XML and extract the matching fragments returning them in a map.
-    // *
-    // * @param pattern the pattern used to extract fragments.
-    // * @param rawXml the raw XML to extract fragments from.
-    // * @return a map of the extracted fragments.
-    // */
-    // private Map<String, String> parseRawXml (final String pattern, final String rawXml)
-    // {
-    // final Map<String, String> fragmentMap = new HashMap<String, String> ();
-    //
-    // // Convert to char array for efficient manipulation.
-    // final char[] patternArray = pattern.toCharArray ();
-    // final char[] rawXmlArray = rawXml.toCharArray ();
-    //
-    // // Position indexes.
-    // int patternPos = 0;
-    // int rawXmlPos = 0;
-    // final int patternEnd = patternArray.length - 1;
-    // final int rawXmlEnd = rawXmlArray.length - 1;
-    //
-    // // Parse entire raw XML.
-    // while ( !(rawXmlPos > rawXmlEnd))
-    // {
-    // // Get the next pattern character.
-    // final boolean match = matchPattern (rawXmlArray[rawXmlPos], patternArray, patternPos);
-    //
-    // // Continue to increment pattern position while pattern matches, else reset to zero.
-    // patternPos = match ? patternPos++ : 0;
-    //
-    // // Have we reached the end of the pattern?
-    // if (patternPos == patternEnd)
-    // {
-    // fragmentMap.put (key, fragment);
-    // }
-    //
-    // // Deal with next character.
-    // rawXmlPos++;
-    // }
-    //
-    // return fragmentMap;
-    // }
-    //
-    // /**
-    // * Deal with regular expression characters.
-    // *
-    // * @param targetChar the actual character to match against the pattern.
-    // * @param pattern the whole pattern to be matched.
-    // * @param patternPosition the current position in the pattern.
-    // * @return true - matches pattern at this character, false - doe not match pattern at this character.
-    // */
-    // private boolean matchPattern (final char targetChar, final char[] pattern, final int patternPosition)
-    // {
-    // int pos = patternPosition;
-    //
-    // // Get the next pattern character.
-    // char patternChar = pattern[patternPosition];
-    //
-    // // Handle special characters.
-    // switch (patternChar)
-    // {
-    // case '\\':
-    // // Escape character implies need to read the next character.
-    // pos++;
-    // if ( !(pos < pattern.length))
-    // {
-    // // Now gone too far to match.
-    // return false;
-    // }
-    //
-    // // Get escaped character.
-    // patternChar = pattern[pos];
-    //
-    // // Process the escaped character.
-    // switch (patternChar)
-    // {
-    // case 'w':
-    // break;
-    // default:
-    // break;
-    // }
-    //
-    // break;
-    // default:
-    // break;
-    // }
-    //
-    // return targetChar == patternChar;
-    // }
-    //
     /**
      * Setter for replacementNamespaces property.
      * 
