@@ -99,8 +99,6 @@ public final class XmlNamespaceUtils
     public static Map<String, String> extractAllNamespaces (final String rawXml,
                                                             final Map<String, String> replacementNamespaces)
     {
-        LOGGER.debug ("Raw xml is " + rawXml);
-
         final Map<String, String> namespaces = new HashMap<String, String> ();
 
         // Build a search pattern to find all namespaces.
@@ -127,7 +125,10 @@ public final class XmlNamespaceUtils
                 }
             }
 
-            LOGGER.debug ("Namespace key[" + namespaceKey + "], value[" + namespaceValue + "]");
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Namespace key [" + namespaceKey + "], value [" + namespaceValue + "]");
+            }
 
             namespaces.put (namespaceKey, namespaceValue);
         }
@@ -145,7 +146,10 @@ public final class XmlNamespaceUtils
     public static Map<String, String> findMatchingNamespaces (final String xmlFragment,
                                                               final Map<String, String> allNamespaces)
     {
-        LOGGER.debug ("Raw xml fragment is " + xmlFragment);
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Finding matching namespaces for fragment [" + xmlFragment + "]");
+        }
 
         // Clear out previous namespaces.
         final Map<String, String> matchingNamespaces = new HashMap<String, String> ();
@@ -161,7 +165,10 @@ public final class XmlNamespaceUtils
             final String namespaceKey = matcher.group (1);
 
             // Form the replacement string from the matched groups and the extra XML.
-            LOGGER.debug ("Matching namespace[" + namespaceKey + "]");
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Matching namespace for fragment [" + namespaceKey + "]");
+            }
 
             if ( !matchingNamespaces.containsKey (namespaceKey))
             {

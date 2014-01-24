@@ -69,8 +69,10 @@ public class IndividualRequestsXmlParser
      */
     public void populateRawRequest (final List<IIndividualRequest> individualRequests)
     {
-
-        LOGGER.info ("Started parsing raw xml to extract payload for " + individualRequests.size () + " requests");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Started parsing raw xml to extract payload for " + individualRequests.size () + " requests");
+        }
 
         // Get iterator so we can traverse the list of requests and the payload (raw XML) to each one.
         final Iterator<IIndividualRequest> iter = individualRequests.iterator ();
@@ -81,6 +83,44 @@ public class IndividualRequestsXmlParser
         // Retrieve all namespaces
         final Map<String, String> allNamespaces =
                 XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);
+
+        final Map<String, String> allRawIndividualRequests = new HashMap<String, String> ();
+
+        // Build a search pattern with this request id. Allow for any order of requestId
+        // attributes.
+        final Pattern pattern =
+                Pattern.compile ("<[\\w]+:request[ \\w\"=]*requestId=\"([\\w]+)\"[ \\w\"=]*>(.*?)</[\\w]+:request>");
+
+        final Matcher matcher = pattern.matcher (rawXml);
+
+        while (matcher.find ())
+        {
+            // Capture the request id associated with this request.
+            final String requestId = matcher.group (1).trim ();
+
+            // Capture the raw XML associated with this request.
+            String individualRequestRawXml = matcher.group (2).trim ();
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found match: requestId [" + requestId + "], individualRequestRawXml [" +
+                        individualRequestRawXml + "]");
+            }
+
+            // Find namespaces applicable for fragment
+            final Map<String, String> matchingNamespaces =
+                    XmlNamespaceUtils.findMatchingNamespaces (individualRequestRawXml, allNamespaces);
+
+            // Embed namespaces within fragment
+            individualRequestRawXml = XmlNamespaceUtils.addNamespaces (individualRequestRawXml, matchingNamespaces);
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Raw XML enhanced with namespaces [" + individualRequestRawXml + "]");
+            }
+
+            allRawIndividualRequests.put (requestId, individualRequestRawXml);
+        }
 
         while (iter.hasNext ())
         {
@@ -95,43 +135,103 @@ public class IndividualRequestsXmlParser
                 continue;
             }
 
-            // Build a search pattern with this request id. Allow for any order of requestId
-            // attributes.
-            final Pattern pattern =
-                    Pattern.compile ("<[\\w]+:request [\\w]+=\"[\\w]+\" requestId=\"" +
-                            individualRequest.getCustomerRequestReference () + "\">(.*?)</[\\w]+:request>");
-
-            LOGGER.debug ("Raw Xml after linefeed stripping is " + rawXml);
-
-            final Matcher matcher = pattern.matcher (rawXml);
-
-            String individualRequestRawXml = null;
-
-            while (matcher.find ())
-            {
-                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
-
-                // Capture the raw XML associated with this request.
-                individualRequestRawXml = matcher.group (1).trim ();
-
-                LOGGER.debug ("Individual request raw XML[" + individualRequestRawXml + "]");
-
-                // Find namespaces applicable for fragment
-                final Map<String, String> matchingNamespaces =
-                        XmlNamespaceUtils.findMatchingNamespaces (individualRequestRawXml, allNamespaces);
-
-                // Embed namespaces within fragment
-                individualRequestRawXml = XmlNamespaceUtils.addNamespaces (individualRequestRawXml, matchingNamespaces);
-
-                LOGGER.debug ("Individual request raw XML[" + individualRequestRawXml + "]");
-
-                individualRequest.setRequestPayload (individualRequestRawXml);
-            }
+            individualRequest.setRequestPayload (allRawIndividualRequests.get (individualRequest
+                    .getCustomerRequestReference ()));
         }
-        LOGGER.info ("Finised parsing raw xml");
 
+        LOGGER.debug ("Finished parsing raw xml");
     }
 
+    // /**
+    // * Parse the given raw XML and extract the matching fragments returning them in a map.
+    // *
+    // * @param pattern the pattern used to extract fragments.
+    // * @param rawXml the raw XML to extract fragments from.
+    // * @return a map of the extracted fragments.
+    // */
+    // private Map<String, String> parseRawXml (final String pattern, final String rawXml)
+    // {
+    // final Map<String, String> fragmentMap = new HashMap<String, String> ();
+    //
+    // // Convert to char array for efficient manipulation.
+    // final char[] patternArray = pattern.toCharArray ();
+    // final char[] rawXmlArray = rawXml.toCharArray ();
+    //
+    // // Position indexes.
+    // int patternPos = 0;
+    // int rawXmlPos = 0;
+    // final int patternEnd = patternArray.length - 1;
+    // final int rawXmlEnd = rawXmlArray.length - 1;
+    //
+    // // Parse entire raw XML.
+    // while ( !(rawXmlPos > rawXmlEnd))
+    // {
+    // // Get the next pattern character.
+    // final boolean match = matchPattern (rawXmlArray[rawXmlPos], patternArray, patternPos);
+    //
+    // // Continue to increment pattern position while pattern matches, else reset to zero.
+    // patternPos = match ? patternPos++ : 0;
+    //
+    // // Have we reached the end of the pattern?
+    // if (patternPos == patternEnd)
+    // {
+    // fragmentMap.put (key, fragment);
+    // }
+    //
+    // // Deal with next character.
+    // rawXmlPos++;
+    // }
+    //
+    // return fragmentMap;
+    // }
+    //
+    // /**
+    // * Deal with regular expression characters.
+    // *
+    // * @param targetChar the actual character to match against the pattern.
+    // * @param pattern the whole pattern to be matched.
+    // * @param patternPosition the current position in the pattern.
+    // * @return true - matches pattern at this character, false - doe not match pattern at this character.
+    // */
+    // private boolean matchPattern (final char targetChar, final char[] pattern, final int patternPosition)
+    // {
+    // int pos = patternPosition;
+    //
+    // // Get the next pattern character.
+    // char patternChar = pattern[patternPosition];
+    //
+    // // Handle special characters.
+    // switch (patternChar)
+    // {
+    // case '\\':
+    // // Escape character implies need to read the next character.
+    // pos++;
+    // if ( !(pos < pattern.length))
+    // {
+    // // Now gone too far to match.
+    // return false;
+    // }
+    //
+    // // Get escaped character.
+    // patternChar = pattern[pos];
+    //
+    // // Process the escaped character.
+    // switch (patternChar)
+    // {
+    // case 'w':
+    // break;
+    // default:
+    // break;
+    // }
+    //
+    // break;
+    // default:
+    // break;
+    // }
+    //
+    // return targetChar == patternChar;
+    // }
+    //
     /**
      * Setter for replacementNamespaces property.
      * 
