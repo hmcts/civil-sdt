@@ -182,7 +182,6 @@
 				<include name="${usertype-spi.jar}" />
 				<include name="${usertype.core.jar}" />
                 <include name="${org.springframework.transaction.jar}" />
-				<include name="${usertype.jodatime.jar}" />
 			</fileset>
 			<fileset dir="${3rd-party.dir}" casesensitive="false">
 				<include name="${activation.jar}" />
