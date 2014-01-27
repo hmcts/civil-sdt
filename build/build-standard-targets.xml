@@ -443,8 +443,48 @@
 
 	</target>
 
+    <!-- Deploy an EAR file to weblogic application server -->
+    <target name="-deploy-to-weblogic" if="weblogic.exists" description="Deploy to weblogic application server">
+        <if>
+            <available file="${weblogic.deploy.dir}/${app.meta-inf}" type="dir" />
+            <then>
+                <!-- Delete the ear to be sure we create new one -->
+                <delete file="${deployable.component}" />
+                <delete dir="${weblogic.deploy.dir}/META-INF" quiet="true" />
+
+                <mkdir dir="${weblogic.deploy.dir}/META-INF" />
+                <copy todir="${weblogic.deploy.dir}/META-INF">
+                    <fileset dir="${weblogic.deploy.dir}/${app.meta-inf}" />
+                </copy>
+
+                <echo level="info" message="zip: ${deployable.component} from ./target/${component.name}" />
+                <zip destfile="${deployable.component}">
+                    <fileset dir="./target" includes="${component.name}" />
+                    <fileset dir="${weblogic.deploy.dir}">
+                        <include name="**/META-INF/*.*" />
+                    </fileset>
+                </zip>
+
+                <antcall target="-deploy-weblogic" />
+            </then>
+        </if>
+    </target>
+
+    <!-- several of these values are set in the individual build-extras files allowing the deployment of multiple apps-->
+    <target name="-deploy-weblogic">
+        <wldeploy action="deploy" verbose="true" debug="true" remote="true"
+            upload="true"
+        	name="${deployed.appname}" 
+            source="${deployable.component}"
+            user="${weblogic.user}" 
+        	password="${weblogic.password}"
+            adminurl="${weblogic.adminurl}"
+        	targets="${weblogic.targets}"
+        />
+    </target>
+
 	<!-- Deploy a WAR file to application server -->
-	<target name="deploy" depends="-deploy-to-tc-server, -deploy-to-oas, -deploy-remote-copy, -deploy-remote-tc-server" description="Deploy to application server">
+	<target name="deploy" depends="-deploy-to-tc-server, -deploy-to-oas, -deploy-remote-copy, -deploy-remote-tc-server, -deploy-to-weblogic" description="Deploy to application server">
 		<!-- deploy any extra artefacts needed by this project, e.g. zip file -->
 		<ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
 	</target>

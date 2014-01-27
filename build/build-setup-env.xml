@@ -102,13 +102,19 @@
         </classpath>
     </taskdef>
 
-	<!-- Set properties based on other property values -->
+    <!-- Add WebLogic task definition -->
+    <taskdef name="wldeploy" classname="weblogic.ant.taskdefs.management.WLDeploy"/>
+
+    <!-- Set properties based on other property values -->
 	<condition property="tc-server.exists">
 		<equals arg1="${application.server}" arg2="tc-server" />
 	</condition>
 	<condition property="oas.exists">
 		<equals arg1="${application.server}" arg2="oas" />
 	</condition>
+    <condition property="weblogic.exists">
+        <equals arg1="${application.server}" arg2="weblogic" />
+    </condition>
 	<condition property="remote-copy.exists">
 		<equals arg1="${application.server}" arg2="remote-copy" />
 	</condition>
