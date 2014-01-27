@@ -60,6 +60,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 @ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
+        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
         "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
         "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",

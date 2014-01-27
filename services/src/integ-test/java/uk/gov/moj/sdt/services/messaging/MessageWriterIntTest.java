@@ -56,15 +56,15 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml", 
-        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml", 
+        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
+        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
+        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml", 
+        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
         "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
         "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml", 
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
 {
     /**
