@@ -244,12 +244,12 @@ public final class VisitableTreeWalker extends AbstractTreeWalker
      */
     public static void walk (final IVisitable target, final String visitorSuffix)
     {
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_11))
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_12))
         {
             final String detail = "\n\n\ttarget=" + target.toString () + "\n";
 
             // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (VisitableTreeWalker.class, PerformanceLogger.LOGGING_POINT_11,
+            PerformanceLogger.log (VisitableTreeWalker.class, PerformanceLogger.LOGGING_POINT_12,
                     "Start tree walker for " + visitorSuffix, detail);
         }
 
@@ -257,12 +257,12 @@ public final class VisitableTreeWalker extends AbstractTreeWalker
         final VisitableTreeWalker visitableTreeWalker = new VisitableTreeWalker ();
         visitableTreeWalker.walkTree (target, visitorSuffix);
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_12))
+        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_13))
         {
             final String detail = "\n\n\ttarget=" + target.toString () + "\n";
 
             // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (VisitableTreeWalker.class, PerformanceLogger.LOGGING_POINT_12,
+            PerformanceLogger.log (VisitableTreeWalker.class, PerformanceLogger.LOGGING_POINT_13,
                     "End tree walker for " + visitorSuffix, detail);
         }
     }
