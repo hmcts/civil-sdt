@@ -11,6 +11,9 @@
         where this is not ambiguous) and all classes should have an interface. -->
 
     <bean class="org.springframework.jmx.export.MBeanExporter">
+        <property name="registrationBehaviorName">
+            <value>REGISTRATION_REPLACE_EXISTING</value>
+        </property>
         <property name="beans">
             <map>
                 <entry key="bean:name=sdtProducersMetrics"
@@ -48,6 +51,9 @@
     </bean>
 
     <bean class="org.springframework.jmx.export.MBeanExporter">
+        <property name="registrationBehaviorName">
+            <value>REGISTRATION_REPLACE_EXISTING</value>
+        </property>
         <property name="beans">
             <map>
                 <entry key="bean:name=sdtProducersManagement"
