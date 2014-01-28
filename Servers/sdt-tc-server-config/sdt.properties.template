@@ -46,8 +46,8 @@
 #
 # sdt.<package>.<group>.<property>=${sdt.<package>.<group>.<property>}
 #
-# [ ${sdt.<package>.<group>.<property>} will be set in environment.properties.template either to a constant, or to a value in local.properties, i.e.
-#   ${sdt.<package>.<group>.<property>}=${my.sdt.<package>.<group>.<property>} ]
+# ${sdt.<package>.<group>.<property>} will be set in environment.properties.template either to a constant, or to a value in local.properties, i.e.
+# ${sdt.<package>.<group>.<property>}=${my.sdt.<package>.<group>.<property>}
 
 # SDT Oracle connection URL
 sdt.database.connection.url=${sdt.database.connection.url}
