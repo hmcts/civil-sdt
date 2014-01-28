@@ -38,12 +38,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -61,7 +60,7 @@ public class IndividualRequestsXmlParserTest
     /**
      * Logger instance.
      */
-    private static final Log LOGGER = LogFactory.getLog (IndividualRequestsXmlParserTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestsXmlParserTest.class);
 
     /**
      * The individual request xml parser instance for testing.
@@ -140,8 +139,7 @@ public class IndividualRequestsXmlParserTest
      * 
      * @throws IOException if unable to read file.
      */
-    @Test
-    @Ignore ("Disabled as execution time around 3 minutes and needs to be improved.")
+    @Test (timeout = 2000)
     public void testParserPerformance () throws IOException
     {
         // Load xml into SdtContext as if the inbound interceptor had run.
@@ -153,7 +151,7 @@ public class IndividualRequestsXmlParserTest
 
         // Create array list of individual requests as if these had been created by CXF in parsing the inbound SOAP
         // message and then transformed into domain objects.
-        for (int i = 1; i <= 1; i++)
+        for (int i = 1; i <= 2000; i++)
         {
 
             final IIndividualRequest individualRequest = new IndividualRequest ();
@@ -163,12 +161,19 @@ public class IndividualRequestsXmlParserTest
 
         }
 
+        LOGGER.info ("Start parsing for " + requests.size () + " requests");
         // Now call the parser to add the xml fragments into the payload of the individual requests.
         this.individualRequestsXmlParser.populateRawRequest (requests);
 
-        // CHECKSTYLE:OFF
-        // TODO Add assertions.
-        // CHECKSTYLE:ON
+        LOGGER.info ("Completed parsing for " + requests.size () + " requests");
+
+        int requestIndex = 0;
+        for (IIndividualRequest request : requests)
+        {
+            requestIndex++;
+            Assert.assertNotNull ("Payload should have been populated in request#" + requestIndex,
+                    request.getRequestPayload ());
+        }
     }
 
     /**
