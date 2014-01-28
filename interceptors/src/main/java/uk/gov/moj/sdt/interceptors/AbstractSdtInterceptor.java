@@ -88,7 +88,8 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
         LOGGER.debug ("Start - running through list of enrichers");
 
         // Loop through the list of enrichers and hope one of them produces an enriched message. Enrichers will enrich
-        // messages where a parent tag can be found in the xml message otherwise the message will not be updated.
+        // messages where a discriminating parent tag can be found in the xml message otherwise the message will not be
+        // updated.
         String enrichedEnvelope = currentEnvelope;
 
         for (ISdtEnricher enricher : enricherList)
@@ -97,7 +98,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
             enrichedEnvelope = enricher.enrichXml (enrichedEnvelope);
         }
 
-        // // Replace raw out XML with entire message, ready for outbount service request logging.
+        // // Replace raw out XML with entire message, ready for outbound service request logging.
         // SdtContext.getContext ().setRawOutXml (enrichedEnvelope);
 
         LOGGER.debug ("completed - running through list of enrichers");

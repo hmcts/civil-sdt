@@ -32,6 +32,7 @@
 package uk.gov.moj.sdt.producers;
 
 import java.io.InputStream;
+import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -39,7 +40,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -76,7 +76,7 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
     /**
      * Constant to define number of worker threads to process concurrent requests.
      */
-    private static final int MAX_WORKER_THREADS = 5;
+    private static final int MAX_WORKER_THREADS = 1;
 
     /**
      * Constant to define number of individual requests per bulk.
@@ -103,7 +103,6 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
      * Tests performance for concurrent requests.
      */
     @Test
-    @Ignore
     public void testConcurrentRequests ()
     {
         LOGGER.info ("Test performance for maximum " + MAX_WORKER_THREADS +
@@ -325,8 +324,11 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
 
             try
             {
+                LOGGER.info ("Start test for thread " + Thread.currentThread ().getName () + " at " +
+                        new Date ().toString ());
                 BulkResponseType responseType = callTestWebService (requestType);
-                LOGGER.info ("Completed request: " + requestType.getHeader ().getCustomerReference ());
+                LOGGER.info ("End test for thread " + Thread.currentThread ().getName () + " at " +
+                        new Date ().toString ());
             }
             catch (Exception e)
             {

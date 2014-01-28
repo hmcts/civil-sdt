@@ -61,34 +61,45 @@ public class GenericEnricher extends AbstractSdtEnricher
             LOGGER.debug ("Message before enrichment [" + message + "]");
         }
 
+        // Assume no change to input.
         String newXml = message;
-        // Remove linefeeds as they stop the regular expression working.
-        newXml = newXml.replace ('\n', ' ');
-        newXml = newXml.replace ('\r', ' ');
-        
+
         // Check to ensure the parent tag can be found in the message.
         if (super.findParentTag (message))
         {
-            LOGGER.debug("Parent tag [" + this.getParentTag () +  "] found...performing enrichment.");
+            // Remove linefeeds as they stop the regular expression working.
+            newXml = newXml.replace ('\n', ' ');
+            newXml = newXml.replace ('\r', ' ');
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Parent tag [" + this.getParentTag () + "] found...performing enrichment.");
+            }
 
             // Get the system specific response from thread local to inject into the outbound message
             String replacementXml = SdtContext.getContext ().getRawOutXml ();
 
-            //Build search pattern for insertion point.
+            // Build search pattern for insertion point.
             final Pattern pattern = Pattern.compile ("<[\\w]+:" + getInsertionTag () + "/>");
             final Matcher matcher = pattern.matcher (newXml);
 
             if (matcher.find ())
             {
-                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+                if (LOGGER.isDebugEnabled ())
+                {
+                    LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+                }
 
                 // Get the string matching the regular expression.
                 final String singleLineTag = matcher.group ();
-                
+
                 // Add the start and end tag to the replacement xml.
                 replacementXml = changeToStartTag (singleLineTag) + replacementXml + changeToEndTag (singleLineTag);
 
-                LOGGER.debug ("Replacement string[" + replacementXml + "]");
+                if (LOGGER.isDebugEnabled ())
+                {
+                    LOGGER.debug ("Replacement string[" + replacementXml + "]");
+                }
 
                 // Inject the system specific response into the current envelope.
                 newXml = matcher.replaceFirst (replacementXml);
@@ -102,13 +113,13 @@ public class GenericEnricher extends AbstractSdtEnricher
         }
         else
         {
-            // Failure to find matching request in outgoing XML.
-            LOGGER.debug("Parent tag [" + this.getParentTag () +
-                    "] not found...skipping enrichment.");
+            if (LOGGER.isDebugEnabled ())
+            {
+                // Failure to find matching request in outgoing XML.
+                LOGGER.debug ("Parent tag [" + this.getParentTag () + "] not found...skipping enrichment.");
+            }
         }
 
         return newXml;
-
     }
-    
 }

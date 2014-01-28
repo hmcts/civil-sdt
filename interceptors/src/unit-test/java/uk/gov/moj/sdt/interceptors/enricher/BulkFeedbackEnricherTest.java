@@ -41,7 +41,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -299,14 +298,13 @@ public class BulkFeedbackEnricherTest
      * @throws IOException if test data file not found.
      */
     @Test
-    @Ignore ("Ignored because execution time > 5 minutes")
     public void testLargeFeedbackResponse () throws IOException
     {
 
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
         
-        for (int i = 1; i < 2 ; i++) {
+        for (int i = 1; i <= 2000 ; i++) {
             
             // CHECKSTYLE:OFF Line length is acceptable
             targetApplicationRespMap
@@ -320,16 +318,12 @@ public class BulkFeedbackEnricherTest
         // Setup the XML to be enriched.
         final String inXml = this.getRawXml ("testLargeFeedbackResponse.xml");
 
-        // Call the enricher.
-        final String result = enricher.enrichXml (inXml);
+        LOGGER.info ("Start enrichment of " + targetApplicationRespMap.size () + " responses.");
 
-        //TODO Assert result.
-//        // Check the enriched XML.
-//        final String expected =
-//                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>987654321</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Rejected\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
-        // CHECKSTYLE:ON
-//
-//        Assert.assertEquals (expected, result);
+        // Call the enricher.
+        enricher.enrichXml (inXml);
+        
+        LOGGER.info ("End enrichment of " + targetApplicationRespMap.size () + " responses.");
     }
 
     /**

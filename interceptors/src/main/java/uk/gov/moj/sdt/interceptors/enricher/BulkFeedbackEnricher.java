@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.enricher;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -49,7 +50,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
  */
 public class BulkFeedbackEnricher extends AbstractSdtEnricher
 {
-
     /**
      * Logger instance.
      */
@@ -63,68 +63,105 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             LOGGER.debug ("Message before enrichment [" + message + "]");
         }
 
-        // Buffer to hold the developing result.
+        // Assume no change to input.
         String newXml = message;
-
-        newXml = newXml.replace ('\n', ' ');
-        newXml = newXml.replace ('\r', ' ');
 
         // Check to ensure the parent tag can be found in the message.
         if (super.findParentTag (message))
         {
+            // Buffer to hold the developing result.
+            newXml = message.replace ('\n', ' ');
+            newXml = newXml.replace ('\r', ' ');
+
             // Get the map created by the service which contains the fragments of response to be inserted into the
             // outgoing XML.
             final Map<String, String> targetApplicationRespMap =
                     SdtContext.getContext ().getTargetApplicationRespMap ();
 
-            LOGGER.info ("Started enriching feedback response for " + targetApplicationRespMap.size () + " request(s)");
+            // Get the map created by the service which contains the fragments of response to be inserted into the
+            // outgoing XML.
+            final Map<String, String> matchedRequestIdMap = new HashMap<String, String> ();
+            SdtContext.getContext ().getTargetApplicationRespMap ();
 
-            // Get iterator so we can look for all keys. Since order is undetermined we can assume nothing about finding
-            // the requests in the same order and so must search the entire string each time.
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Started enriching feedback response for " + targetApplicationRespMap.size () +
+                        " request(s)");
+            }
+
+            // The XML to be assembled with replacement groups.
+            final StringBuffer replacementXml = new StringBuffer ();
+
+            // Current position in rawXml to copy from.
+            int rawXmlPos = 0;
+
+            // Build a search pattern with this request id. Allow for any order of requestId and requestType
+            // attributes.
+            Pattern pattern =
+                    Pattern.compile ("(<[\\w]+:response[ \\w\"=]*requestId=\"([\\w-]+)\"[ \\w\"=]*>)\\s*<([\\w]+:)"
+                            + "(responseDetail)/>\\s*(<[\\w]+:status)");
+
+            // Match it against the result of all previous match replacements.
+            Matcher matcher = pattern.matcher (newXml);
+
+            while (matcher.find ())
+            {
+                if (LOGGER.isDebugEnabled ())
+                {
+                    LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+                }
+
+                // Extract the request ID in the matching group.
+                final String requestId = matcher.group (2);
+
+                // CHECKSTYLE:OFF
+                // Form the replacement string from the matched groups and the extra XML - populate with target
+                // application specific content.
+                String replacementGroup =
+                        new StringBuilder ().append (matcher.group (1)).append ("<").append (matcher.group (3))
+                                .append (matcher.group (4)).append (">")
+                                .append (targetApplicationRespMap.get (requestId)).append ("</")
+                                .append (matcher.group (3)).append (matcher.group (4)).append (">")
+                                .append (matcher.group (5)).toString ();
+
+                if ( !(targetApplicationRespMap.containsKey (requestId)))
+                {
+                    // Target application key does not exist - restore original content.
+                    replacementGroup = matcher.group ();
+                }
+                // CHECKSTYLE:ON
+
+                replacementGroup = replacementGroup.replace ('\n', ' ');
+                replacementGroup = replacementGroup.replace ('\r', ' ');
+
+                if (LOGGER.isDebugEnabled ())
+                {
+                    LOGGER.debug ("Replacement string[" + replacementGroup + "]");
+                }
+
+                // Inject the system specific response into the current envelope.
+                replacementXml.append (newXml.substring (rawXmlPos, matcher.start ()));
+                replacementXml.append (replacementGroup);
+                rawXmlPos = matcher.end ();
+
+                matchedRequestIdMap.put (requestId, requestId);
+            }
+
+            if ( !(rawXmlPos > newXml.length ()))
+            {
+                // Copy any remainder of the uncopied rawXml.
+                replacementXml.append (newXml.substring (rawXmlPos));
+            }
+
+            newXml = replacementXml.toString ();
+
             final Iterator<String> iter = targetApplicationRespMap.keySet ().iterator ();
-
             while (iter.hasNext ())
             {
-                // Get the next request id.
                 final String requestId = iter.next ();
 
-                // Build a search pattern with this request id. Allow for any order of requestId and requestType
-                // attributes.
-                final Pattern pattern =
-                        Pattern.compile ("(<[\\w]+:response[ \\w\"=]*requestId=\"" + requestId +
-                                "[ \\w\"=]*>)\\s*<([\\w]+:)(responseDetail)/>\\s*(<[\\w]+:status)");
-
-                // Match it against the result of all previous match replacements.
-                final Matcher matcher = pattern.matcher (newXml);
-
-                if (matcher.find ())
-                {
-                    if (LOGGER.isDebugEnabled ())
-                    {
-                        LOGGER.debug ("Found matching group[" + matcher.group () + "]");
-                    }
-                    
-                    //CHECKSTYLE:OFF
-                    // Form the replacement string from the matched groups and the extra XML.
-                    String replacementXml = new StringBuilder().append (matcher.group (1))
-                            .append ("<").append (matcher.group(2)).append(matcher.group(3)).append (">")
-                            .append(targetApplicationRespMap.get (requestId))
-                            .append ("</").append (matcher.group(2)).append(matcher.group(3)).append (">")
-                            .append(matcher.group(4)).toString ();
-                    //CHECKSTYLE:ON
-
-                    replacementXml = replacementXml.replace ('\n', ' ');
-                    replacementXml = replacementXml.replace ('\r', ' ');
-
-                    if (LOGGER.isDebugEnabled ())
-                    {
-                        LOGGER.debug ("Replacement string[" + replacementXml + "]");
-                    }
-
-                    // Inject the system specific response into the current envelope
-                    newXml = matcher.replaceFirst (replacementXml);
-                }
-                else
+                // Get next target application entry.
+                if ( !(matchedRequestIdMap.containsKey (requestId)))
                 {
                     // Failure to find matching request in outgoing XML.
                     LOGGER.error ("Failure to find matching request in outgoing bulk feedback XML for request id[" +
@@ -136,10 +173,10 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             }
 
             // Now check that there are no responses without case management specific content inserted.
-            final Pattern pattern =
+            pattern =
                     Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w]*\">\\s*<[\\w]+:responseDetail/>\\s*"
                             + "<[\\w]+:status code=\"([ \\w]+)\"");
-            final Matcher matcher = pattern.matcher (newXml);
+            matcher = pattern.matcher (newXml);
             if (matcher.find ())
             {
                 // Ignore rejected responses which do not need to be enhanced.
@@ -153,19 +190,18 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                 }
             }
 
-            LOGGER.info ("Finised enriching feedback response");
-
             if (LOGGER.isDebugEnabled ())
             {
                 LOGGER.debug ("Message after enrichment [" + newXml + "]");
             }
-            
         }
         else
         {
-            // Failure to find matching request in outgoing XML.
-            LOGGER.debug("Parent tag [" + this.getParentTag () +
-                    "] not found...skipping enrichment.");
+            if (LOGGER.isDebugEnabled ())
+            {
+                // Failure to find matching request in outgoing XML.
+                LOGGER.debug ("Parent tag [" + this.getParentTag () + "] not found...skipping enrichment.");
+            }
         }
 
         return newXml;
