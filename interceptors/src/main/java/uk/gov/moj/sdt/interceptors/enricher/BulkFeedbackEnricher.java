@@ -90,7 +90,7 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             }
 
             // The XML to be assembled with replacement groups.
-            final StringBuffer replacementXml = new StringBuffer ();
+            final StringBuilder replacementXml = new StringBuilder ();
 
             // Current position in rawXml to copy from.
             int rawXmlPos = 0;
