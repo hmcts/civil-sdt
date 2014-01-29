@@ -198,8 +198,12 @@ public final class XmlNamespaceUtils
     {
         String result = xmlFragment;
 
-        // Build pattern to identify first xml element for injection of namespace.
-        final Pattern pattern = Pattern.compile ("(<[a-zA-Z0-9]+?:[\\s\\S]+?)(>)");
+        // Build pattern to identify first xml element for injection of namespace. In the pattern below, any namespaces
+        // already present need to be discarded and, although they are not wanted, they must be grouped in round
+        // brackets since this is the only way to put a repeater against them. What ends up in the group 2 is the
+        // last such namespace matched which is then discarded.
+        final Pattern pattern =
+                Pattern.compile ("(<[\\S&&[^:]]+?:[\\w-]+)[\\s]*(xmlns:[\\S&&[^>]]+[\\s]*)*([\\s\\S]*?)[\\s]*>");
 
         final Matcher matcher = pattern.matcher (xmlFragment);
         if (matcher.find ())
@@ -212,13 +216,25 @@ public final class XmlNamespaceUtils
             // Build replacement xml concatenating xml for element and namespace(s)
             final StringBuilder replacementXml = new StringBuilder ();
             replacementXml.append (matcher.group (1));
+
             // Add namespace details to first element
             for (String value : namespaces.values ())
             {
                 replacementXml.append (" ");
                 replacementXml.append (value);
             }
-            replacementXml.append (matcher.group (2));
+
+            // CHECKSTYLE:OFF
+            if ( !(matcher.group (3).equals ("")))
+            {
+                // Add any attributes found.
+                replacementXml.append (" ");
+                replacementXml.append (matcher.group (3));
+            }
+            // CHECKSTYLE:ON
+
+            // Add final backet.
+            replacementXml.append (">");
 
             if (LOGGER.isDebugEnabled ())
             {
@@ -231,5 +247,4 @@ public final class XmlNamespaceUtils
         return result;
 
     }
-
 }

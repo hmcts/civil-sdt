@@ -86,9 +86,12 @@
 		<property name="messageListener" ref="messageListener" />
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="concurrentConsumers" value="1"/>
+        <!-- we have implemented an mbean to change maxConcurrentConsumers at runtime. -->
 		<property name="maxConcurrentConsumers" value="5"/>
 		<property name="receiveTimeout" value="30000"/>
+        <!-- idleTaskExecutionLimit controls how many seconds a thread hangs around without doing work. -->
 		<property name="idleTaskExecutionLimit" value="10"/>
+        <!-- idleConsumerLimit controls the maximum number of idle threads that hang around without doing work. -->
 		<property name="idleConsumerLimit" value="5"/>
 	</bean>
 	

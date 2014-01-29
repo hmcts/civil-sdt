@@ -371,7 +371,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         // CHECKSTYLE:OFF
         final String expected =
-                "   <!--Comment--><xsi:some-tag some-attribute=\"some value\" xmlns:aop=\"http://www.springframework.org/schema/aop\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+                "   <!--Comment--><xsi:some-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" some-attribute=\"some value\">"
                         + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
                         + "       <aop:some-other-tag some-attribute=\"some value\">"
                         + "       <\\aop:some-other-tag>"
@@ -381,5 +381,166 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         // CHECKSTYLE:ON
 
+    }
+
+    /**
+     * Test addition of namespace to xml where namespaces already present on request (which CLX puts there) and with no
+     * attributes on request.
+     */
+    @Test
+    public void testAddNamespacesAlreadyPresentNoAttributes ()
+    {
+        // Define text raw xml.
+        final String xml =
+                "<bul:bulkRequest xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\""
+                        + "    xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\" "
+                        + "    xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\""
+                        + "    xmlns:jud=\"http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema\""
+                        + "    xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\""
+                        + "    xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\">" + "    <bul:header>"
+                        + "        <bul:sdtCustomerId>12345678</bul:sdtCustomerId>"
+                        + "        <bul:targetApplicationId>mcol</bul:targetApplicationId>"
+                        + "        <bul:requestCount>1</bul:requestCount>"
+                        + "        <bul:customerReference>1</bul:customerReference>" + "    </bul:header>"
+                        + "    <bul:requests>" + "        <bul:request requestType=\"mcolClaimStatusUpdate\""
+                        + "            requestId=\"1-1\">" + "            <bul:mcolClaimStatusUpdate>"
+                        + "                <cla1:claimNumber>claim123</cla1:claimNumber>"
+                        + "                <cla1:defendantId>1</cla1:defendantId>"
+                        + "                <cla1:notificationType>MP</cla1:notificationType>"
+                        + "                <cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>"
+                        + "            </bul:mcolClaimStatusUpdate>" + "        </bul:request>" + "    </bul:requests>"
+                        + "</bul:bulkRequest>";
+
+        final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
+
+        final String xmlFragment =
+                "       <bul:mcolClaimStatusUpdate "
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"  "
+                        + "xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\">"
+                        + "  <cla1:claimNumber>claim123</cla1:claimNumber>" + "<cla1:defendantId>1</cla1:defendantId>"
+                        + "<cla1:notificationType>MP</cla1:notificationType>"
+                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+
+        final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
+
+        final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
+
+        final String expected =
+                "       <bul:mcolClaimStatusUpdate "
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" "
+                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">"
+                        + "  <cla1:claimNumber>claim123</cla1:claimNumber>" + "<cla1:defendantId>1</cla1:defendantId>"
+                        + "<cla1:notificationType>MP</cla1:notificationType>"
+                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+
+        Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
+    }
+
+    /**
+     * Test addition of namespace to xml where namespaces already present on request (which CLX puts there) and with
+     * attributes on request.
+     */
+    @Test
+    public void testAddNamespacesAlreadyPresentAndAttributes ()
+    {
+        // Define text raw xml.
+        final String xml =
+                "<bul:bulkRequest xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\""
+                        + "    xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\" "
+                        + "    xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\""
+                        + "    xmlns:jud=\"http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema\""
+                        + "    xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\""
+                        + "    xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\">" + "    <bul:header>"
+                        + "        <bul:sdtCustomerId>12345678</bul:sdtCustomerId>"
+                        + "        <bul:targetApplicationId>mcol</bul:targetApplicationId>"
+                        + "        <bul:requestCount>1</bul:requestCount>"
+                        + "        <bul:customerReference>1</bul:customerReference>" + "    </bul:header>"
+                        + "    <bul:requests>" + "        <bul:request requestType=\"mcolClaimStatusUpdate\""
+                        + "            requestId=\"1-1\">" + "            <bul:mcolClaimStatusUpdate>"
+                        + "                <cla1:claimNumber>claim123</cla1:claimNumber>"
+                        + "                <cla1:defendantId>1</cla1:defendantId>"
+                        + "                <cla1:notificationType>MP</cla1:notificationType>"
+                        + "                <cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>"
+                        + "            </bul:mcolClaimStatusUpdate>" + "        </bul:request>" + "    </bul:requests>"
+                        + "</bul:bulkRequest>";
+
+        final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
+
+        final String xmlFragment =
+                "       <bul:mcolClaimStatusUpdate "
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"  "
+                        + "xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\" somAttribute=\"abcd\">"
+                        + "  <cla1:claimNumber>claim123</cla1:claimNumber>" + "<cla1:defendantId>1</cla1:defendantId>"
+                        + "<cla1:notificationType>MP</cla1:notificationType>"
+                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+
+        final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
+
+        final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
+
+        final String expected =
+                "       <bul:mcolClaimStatusUpdate "
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" "
+                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\" "
+                        + "somAttribute=\"abcd\">" + "  <cla1:claimNumber>claim123</cla1:claimNumber>"
+                        + "<cla1:defendantId>1</cla1:defendantId>"
+                        + "<cla1:notificationType>MP</cla1:notificationType>"
+                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+
+        Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
+    }
+
+    /**
+     * Test addition of namespace to xml where namespaces already present on request (which CLX puts there) and with
+     * attributes on request and an awkward space.
+     */
+    @Test
+    public void testAddNamespacesAlreadyPresentAndAttributesWithSpace ()
+    {
+        // Define text raw xml.
+        final String xml =
+                "<bul:bulkRequest xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\""
+                        + "    xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\" "
+                        + "    xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\""
+                        + "    xmlns:jud=\"http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema\""
+                        + "    xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\""
+                        + "    xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\">" + "    <bul:header>"
+                        + "        <bul:sdtCustomerId>12345678</bul:sdtCustomerId>"
+                        + "        <bul:targetApplicationId>mcol</bul:targetApplicationId>"
+                        + "        <bul:requestCount>1</bul:requestCount>"
+                        + "        <bul:customerReference>1</bul:customerReference>" + "    </bul:header>"
+                        + "    <bul:requests>" + "        <bul:request requestType=\"mcolClaimStatusUpdate\""
+                        + "            requestId=\"1-1\">" + "            <bul:mcolClaimStatusUpdate>"
+                        + "                <cla1:claimNumber>claim123</cla1:claimNumber>"
+                        + "                <cla1:defendantId>1</cla1:defendantId>"
+                        + "                <cla1:notificationType>MP</cla1:notificationType>"
+                        + "                <cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>"
+                        + "            </bul:mcolClaimStatusUpdate>" + "        </bul:request>" + "    </bul:requests>"
+                        + "</bul:bulkRequest>";
+
+        final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
+
+        final String xmlFragment =
+                "       <bul:mcolClaimStatusUpdate "
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"  "
+                        + "xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\" somAttribute=\"abcd\" >"
+                        + "  <cla1:claimNumber>claim123</cla1:claimNumber>" + "<cla1:defendantId>1</cla1:defendantId>"
+                        + "<cla1:notificationType>MP</cla1:notificationType>"
+                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+
+        final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
+
+        final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
+
+        final String expected =
+                "       <bul:mcolClaimStatusUpdate "
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" "
+                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\" "
+                        + "somAttribute=\"abcd\">" + "  <cla1:claimNumber>claim123</cla1:claimNumber>"
+                        + "<cla1:defendantId>1</cla1:defendantId>"
+                        + "<cla1:notificationType>MP</cla1:notificationType>"
+                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+
+        Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
     }
 }
