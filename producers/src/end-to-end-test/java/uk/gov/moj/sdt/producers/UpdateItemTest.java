@@ -57,8 +57,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
 public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, UpdateResponseType>
 {
     @Before
@@ -103,11 +102,6 @@ public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, Up
                         .getBean ("uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType");
 
         Client clientProxy = ClientProxy.getClient (client);
-
-        // Set endpoint address
-        // BindingProvider provider = (BindingProvider) client;
-        // provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-        // "http://localhost:8888/producers/service/sdtinternalapi");
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();

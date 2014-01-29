@@ -329,11 +329,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 
         Client clientProxy = ClientProxy.getClient (client);
 
-        // Set endpoint address
-        // BindingProvider provider = (BindingProvider) client;
-        // provider.getRequestContext ().put (BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-        // "http://localhost.:8888/producers-comx/service/sdtapi");
-
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
         // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
