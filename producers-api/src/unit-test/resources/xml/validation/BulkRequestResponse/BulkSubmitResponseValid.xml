@@ -6,7 +6,7 @@
       <tns1:description>tns1:description</tns1:description>
     </tns1:error>
   </tns1:status>
-  <tns:customerReference>tns:customerReference</tns:customerReference>
+  <tns:customerReference>customerReference</tns:customerReference>
   <tns:sdtBulkReference>12345678901234567890123456789</tns:sdtBulkReference>
   <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
   <tns:sdtService>mcol</tns:sdtService>

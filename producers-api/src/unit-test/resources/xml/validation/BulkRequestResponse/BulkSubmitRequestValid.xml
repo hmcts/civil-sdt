@@ -4,10 +4,10 @@
     <tns:sdtCustomerId>12345678</tns:sdtCustomerId>
     <tns:targetApplicationId>mcol</tns:targetApplicationId>
     <tns:requestCount>0</tns:requestCount>
-    <tns:customerReference>tns:customerReference</tns:customerReference>
+    <tns:customerReference>-customerReference-1_</tns:customerReference>
   </tns:header>
   <tns:requests>
-      <tns:request requestId="1" requestType="mcolClaim">
+      <tns:request requestId="1_a-" requestType="mcolClaim">
         <tns:mcolClaim>
           <tns2:defendant1>
             <tns2:name>tns2:name</tns2:name>

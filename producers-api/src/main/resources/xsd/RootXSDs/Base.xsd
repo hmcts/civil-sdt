@@ -38,6 +38,7 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1" />
 			<xs:maxLength value="32" />
+            <xs:pattern value="[0-9a-zA-Z_-]+"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -114,6 +115,7 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1" />
 			<xs:maxLength value="24" />
+            <xs:pattern value="[0-9a-zA-Z_-]+"/>
 		</xs:restriction>
 	</xs:simpleType>
 
