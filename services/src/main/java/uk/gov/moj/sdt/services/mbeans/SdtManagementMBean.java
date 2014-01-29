@@ -42,9 +42,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
@@ -95,6 +94,11 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     private IMessageWriter messageWriter;
 
     /**
+     * This variable holding the messaging utility reference.
+     */
+    private IMessagingUtility messagingUtility;
+
+    /**
      * Constructor for {@link SdtManagementMBean}. This is called by Spring and should become the bean that all
      * subsequent executes management commands.
      */
@@ -132,8 +136,8 @@ public final class SdtManagementMBean implements ISdtManagementMBean
         // Validate new pool size.
         if (poolSize < 1 || poolSize > MAX_POOL_SIZE)
         {
-            LOGGER.error ("mdb pool size can only be set between 1 and 50.");
-            return "mdb pool size can only be set between 1 and 50.";
+            LOGGER.error ("MDB pool size can only be set between 1 and " + MAX_POOL_SIZE + ".");
+            return "MDB pool size can only be set between 1 and " + MAX_POOL_SIZE + ".";
         }
 
         // Get the message listener container registered earlier.
@@ -163,16 +167,13 @@ public final class SdtManagementMBean implements ISdtManagementMBean
         {
             for (IIndividualRequest individualRequest : individualRequests)
             {
-                // Create the SdtMessage required for sending message on the queue.
-                final ISdtMessage sdtMessage = new SdtMessage ();
-                sdtMessage.setSdtRequestReference (individualRequest.getSdtRequestReference ());
-
-                // Now queue the message
-                this.messageWriter.queueMessage (sdtMessage, individualRequest.getBulkSubmission ()
-                        .getTargetApplication ().getTargetApplicationCode (), false);
+                this.messagingUtility.enqueueRequest (individualRequest);
 
                 // Re-set the forwarding attempts on the individual request.
                 individualRequest.resetForwardingAttempts ();
+
+                LOGGER.debug ("Now re-queued pending individual request [" +
+                        individualRequest.getSdtRequestReference () + "]");
             }
 
             // Persist the list of individual requests.
@@ -196,5 +197,14 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     public void setMessageWriter (final IMessageWriter messageWriter)
     {
         this.messageWriter = messageWriter;
+    }
+
+    /**
+     * 
+     * @param messagingUtility the messagingUtility instance.
+     */
+    public void setMessagingUtility (final IMessagingUtility messagingUtility)
+    {
+        this.messagingUtility = messagingUtility;
     }
 }
