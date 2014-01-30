@@ -234,7 +234,6 @@
 				<include name="${logkit.jar}" />
 				<include name="${mail.jar}" />
 				<include name="${neethi.jar}" />
-				<include name="${ojdbc.jar}" />
 				<include name="${org.apache.xalan-xalan}" />
 				<include name="${org.apache.xerces-xercesImpl}" />
 				<include name="${resolver.jar}" />
@@ -251,7 +250,6 @@
 				<include name="${woodstox-core-asl.jar}" />
 				<include name="${wsdl4j.jar}" />
 				<include name="${wss4j.jar}" />
-				<include name="${wstx-asl.jar}" />
 				<include name="${xalan.jar}" />
 				<include name="${xbean-spring.jar}" />
 				<include name="${xercesImpl.jar}" />

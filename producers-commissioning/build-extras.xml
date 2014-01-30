@@ -239,7 +239,6 @@
 				<include name="${woodstox-core-asl.jar}" />
 				<include name="${wsdl4j.jar}" />
 				<include name="${wss4j.jar}" />
-				<include name="${wstx-asl.jar}" />
 				<include name="${xalan.jar}" />
 				<include name="${xbean-spring.jar}" />
 				<include name="${xercesImpl.jar}" />
