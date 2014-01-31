@@ -138,7 +138,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      */
     private void processBulkSubmission (final IBulkSubmission bulkSubmission)
     {
-        LOGGER.info ("Service called to persist bulk request details");
+        LOGGER.debug ("Service called to persist bulk request details");
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
     }
 

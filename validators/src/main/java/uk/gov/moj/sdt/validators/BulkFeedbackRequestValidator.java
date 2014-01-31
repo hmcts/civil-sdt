@@ -73,7 +73,7 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
     public void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree)
     {
 
-        LOGGER.info ("started visit(BulkFeedbackRequest)");
+        LOGGER.debug ("started visit(BulkFeedbackRequest)");
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
 
         // Validate the bulk reference, throw an exception if it doesn't exist

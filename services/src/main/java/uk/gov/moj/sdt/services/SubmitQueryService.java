@@ -179,7 +179,8 @@ public class SubmitQueryService implements ISubmitQueryService
             }
         }
 
-        LOGGER.debug ("Submit query request " + submitQueryRequest.getId () + " processing completed.");
+        LOGGER.debug ("Completed submit query request for customer[" +
+                submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]");
 
     }
 
@@ -297,6 +298,12 @@ public class SubmitQueryService implements ISubmitQueryService
      */
     private synchronized boolean isThresholdReached (final ISubmitQueryRequest submitQueryRequest)
     {
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Check for throttling. Current requests in progress: " + concurrentRequestsInProgress);
+        }
+
         boolean maxReached = false;
         // 1. get target application code e.g. MCOL.
         final String targetAppCode =
@@ -329,8 +336,8 @@ public class SubmitQueryService implements ISubmitQueryService
         // reject request
         {
             maxReached = true;
-            LOGGER.warn ("Threshold reached - in progress [" + requestsInProgress + "] max allowed [" +
-                    maxConcurrentQueryRequests + "]");
+            LOGGER.warn ("Threshold reached for target app [" + targetAppCode + "] - in progress [" +
+                    requestsInProgress + "] max allowed [" + maxConcurrentQueryRequests + "]");
         }
         return maxReached;
 
@@ -355,6 +362,9 @@ public class SubmitQueryService implements ISubmitQueryService
 
         // Clear out xml to prevent enrichment
         SdtContext.getContext ().setRawOutXml (null);
+
+        LOGGER.info ("Request rejected for customer[" + submitQueryRequest.getBulkCustomer ().getSdtCustomerId () +
+                "] with error [" + errorLog + "]");
 
     }
 

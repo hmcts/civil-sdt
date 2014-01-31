@@ -62,7 +62,7 @@ public abstract class AbstractWsHandler
                                             final AbstractResponseType responseType)
     // CHECKSTYLE:ON
     {
-        LOGGER.info ("Business error during request processing - " + businessException);
+        LOGGER.info ("Business error - " + businessException);
 
         final ErrorType errorType = new ErrorType ();
         errorType.setCode (businessException.getErrorCode ());

@@ -97,7 +97,6 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         try
         {
             // Transform Web service object to Domain object.
-            LOGGER.info ("transform to domain type");
             final IBulkFeedbackRequest bulkFeedbackRequestDomain =
                     getTransformer ().transformJaxbToDomain (bulkFeedbackRequest);
 

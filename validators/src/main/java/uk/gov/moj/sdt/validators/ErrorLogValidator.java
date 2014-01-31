@@ -30,9 +30,6 @@
  * $LastChangedBy: kulkarnim $ */
 package uk.gov.moj.sdt.validators;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IErrorLogValidator;
@@ -45,11 +42,6 @@ import uk.gov.moj.sdt.validators.api.IErrorLogValidator;
  */
 public class ErrorLogValidator extends AbstractSdtValidator implements IErrorLogValidator
 {
-
-    /**
-     * Logger instance.
-     */
-    private static final Log LOGGER = LogFactory.getLog (ErrorLogValidator.class);
 
     /**
      * No-argument Constructor.

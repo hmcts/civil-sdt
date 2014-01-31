@@ -57,7 +57,7 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
     @Override
     public void execute (final Runnable command)
     {
-        LOGGER.info ("Submitting new command {} to run after commit [" + command + " ]");
+        LOGGER.debug ("Submitting new command");
         if ( !TransactionSynchronizationManager.isSynchronizationActive ())
         {
             LOGGER.info ("Transaction synchronization is NOT ACTIVE. Executing command [" + command + "] right now");
@@ -76,10 +76,14 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
     public void afterCommit ()
     {
         final List<Runnable> synchronisationTasks = SdtContext.getContext ().getSynchronisationTasks ();
-        LOGGER.info ("Transaction successfully committed, so executing the tasks in the list");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Transaction successfully committed, so executing " + synchronisationTasks.size () +
+                    " tasks in the list");
+        }
         for (Runnable runnableTask : synchronisationTasks)
         {
-            LOGGER.info ("Executing task " + runnableTask);
+            LOGGER.debug ("Executing task " + runnableTask);
             runnableTask.run ();
         }
     }
@@ -87,7 +91,7 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
     @Override
     public void afterCompletion (final int status)
     {
-        LOGGER.info ("Transaction completed with status " + (status == STATUS_COMMITTED ? "Committed" : "Rollback"));
+        LOGGER.debug ("Transaction completed with status " + (status == STATUS_COMMITTED ? "Committed" : "Rollback"));
         SdtContext.getContext ().clearSynchronisationTasks ();
     }
 

@@ -88,7 +88,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
      */
     public void checkCustomerHasAccess (final long sdtCustomerId, final String targetApplicationCode)
     {
-        LOGGER.info ("Validating SDT Customer ID [" + sdtCustomerId + "] and target application [" +
+        LOGGER.debug ("Validating SDT Customer ID [" + sdtCustomerId + "] and target application [" +
                 targetApplicationCode + "]");
         final IBulkCustomer bulkCustomer = bulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId);
 

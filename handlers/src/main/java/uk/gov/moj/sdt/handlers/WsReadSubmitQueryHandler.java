@@ -164,7 +164,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
      */
     private void processSubmitQuery (final ISubmitQueryRequest request)
     {
-        LOGGER.info ("Service call to submit query");
+        LOGGER.debug ("Service call to submit query");
 
         submitQueryService.submitQuery (request);
 

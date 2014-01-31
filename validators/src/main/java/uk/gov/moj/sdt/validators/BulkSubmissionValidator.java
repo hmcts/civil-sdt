@@ -80,7 +80,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
     {
 
         // Do validation of bulk submission.
-        LOGGER.info ("started visit(BulkSubmission)");
+        LOGGER.debug ("started visit(BulkSubmission)");
 
         // Validate SDT Customer ID and target application
         final IBulkCustomer bulkCustomer = bulkSubmission.getBulkCustomer ();
