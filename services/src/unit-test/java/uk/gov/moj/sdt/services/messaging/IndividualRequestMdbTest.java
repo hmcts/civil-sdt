@@ -36,12 +36,12 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.services.TargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
@@ -55,9 +55,9 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 public class IndividualRequestMdbTest
 {
     /**
-     * Logger for this class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (IndividualRequestMdbTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestMdbTest.class);
 
     /**
      * Mock service for the message processing.

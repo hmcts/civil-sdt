@@ -59,7 +59,7 @@ public final class Utilities
     /**
      * Static logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (Utilities.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (Utilities.class);
 
     /**
      * No-args constructor.
@@ -90,18 +90,18 @@ public final class Utilities
                 final boolean success = targetDirectory.mkdir ();
                 if (success)
                 {
-                    Utilities.LOG.debug ("Directory: " + dirName + " created.");
+                    Utilities.LOGGER.debug ("Directory: " + dirName + " created.");
                 }
                 else
                 {
-                    Utilities.LOG.error ("** ERROR - Unable to create the directory [" + dirName + "]");
+                    Utilities.LOGGER.error ("** ERROR - Unable to create the directory [" + dirName + "]");
                     throw new IOException ("** ERROR - Unable to create the directory [" +
                             targetDirectory.getAbsolutePath () + "]");
                 }
             }
             else
             {
-                Utilities.LOG.error ("** ERROR - directory [" + dirName + "] not found");
+                Utilities.LOGGER.error ("** ERROR - directory [" + dirName + "] not found");
                 throw new IOException ("** ERROR - directory [" + targetDirectory.getAbsolutePath () + "] not found");
             }
         }
@@ -116,18 +116,18 @@ public final class Utilities
                 final boolean success = targetFile.createNewFile ();
                 if (success)
                 {
-                    Utilities.LOG.debug ("File: " + pathname + " created.");
+                    Utilities.LOGGER.debug ("File: " + pathname + " created.");
                 }
                 else
                 {
-                    Utilities.LOG.error ("** ERROR - Unable to create the file [" + pathname + "]");
+                    Utilities.LOGGER.error ("** ERROR - Unable to create the file [" + pathname + "]");
                     throw new IOException ("** ERROR - Unable to create the file [" + targetFile.getAbsolutePath () +
                             "]");
                 }
             }
             else
             {
-                Utilities.LOG.error ("** ERROR - Unable to find the file [" + pathname + "]");
+                Utilities.LOGGER.error ("** ERROR - Unable to find the file [" + pathname + "]");
                 throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getAbsolutePath () + "]");
             }
         }
@@ -149,7 +149,7 @@ public final class Utilities
         // If the file exists.
         if ( !targetFile.exists ())
         {
-            Utilities.LOG.error ("** ERROR - Unable to find the file [" + targetFile.getName () + "]");
+            Utilities.LOGGER.error ("** ERROR - Unable to find the file [" + targetFile.getName () + "]");
             throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getName () + "]");
         }
         return targetFile;

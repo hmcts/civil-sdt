@@ -70,7 +70,7 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (MessageWriterIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (MessageWriterIntTest.class);
 
     /**
      * Test method to test the sending of message.
@@ -126,13 +126,13 @@ public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
         }
 
         ISdtMessage sdtMessage = (ISdtMessage) objmessage.getObject ();
-        LOG.debug ("Message Receieved 1 - " + sdtMessage.toString ());
+        LOGGER.debug ("Message Receieved 1 - " + sdtMessage.toString ());
         Assert.assertTrue (sdtMessage.getSdtRequestReference ().equals (strMessage1));
 
         message = jmsTemplate.receive ("Test1Queue");
         objmessage = (ObjectMessage) message;
         sdtMessage = (ISdtMessage) objmessage.getObject ();
-        LOG.debug ("Message Receieved2 - " + sdtMessage.toString ());
+        LOGGER.debug ("Message Receieved2 - " + sdtMessage.toString ());
         Assert.assertTrue (sdtMessage.getSdtRequestReference ().equals (strMessage2));
 
     }

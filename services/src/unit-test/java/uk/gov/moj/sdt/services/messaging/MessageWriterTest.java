@@ -36,12 +36,12 @@ import static org.easymock.EasyMock.replay;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
@@ -54,11 +54,10 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
  */
 public class MessageWriterTest
 {
-
     /**
-     * Logger for this class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (MessageWriterTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (MessageWriterTest.class);
 
     /**
      * JMS Template for mocking.

@@ -35,14 +35,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
@@ -57,11 +57,10 @@ import uk.gov.moj.sdt.utils.SdtUnitTestBase;
  */
 public class ServiceRequestInboundInterceptorTest extends SdtUnitTestBase
 {
-
     /**
-     * Logger.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (ServiceRequestInboundInterceptorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ServiceRequestInboundInterceptorTest.class);
 
     /**
      * Constructor.
@@ -172,7 +171,7 @@ public class ServiceRequestInboundInterceptorTest extends SdtUnitTestBase
         }
         catch (final SecurityException e)
         {
-            LOGGER.error(e);
+            LOGGER.error("testHandleMessage()", e);
         }
     }
 

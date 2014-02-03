@@ -36,8 +36,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -51,9 +51,9 @@ import uk.gov.moj.sdt.utils.SdtContext;
 public class BulkFeedbackEnricher extends AbstractSdtEnricher
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkFeedbackEnricher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackEnricher.class);
 
     @Override
     public String enrichXml (final String message)

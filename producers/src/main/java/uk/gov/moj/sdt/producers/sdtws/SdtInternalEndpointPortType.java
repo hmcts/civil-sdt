@@ -32,8 +32,8 @@ package uk.gov.moj.sdt.producers.sdtws;
 
 import javax.jws.WebService;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
@@ -52,11 +52,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
 // CHECKSTYLE:ON
 public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
 {
-
     /**
-     * Logger for this class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (SdtInternalEndpointPortType.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SdtInternalEndpointPortType.class);
 
     /**
      * Update item handler for handling individual request update.

@@ -58,7 +58,7 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
     /**
      * Static logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (AbstractSdtGoodFileTestBase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtGoodFileTestBase.class);
 
     /**
      * Flag to say whether comparison with good file is required.
@@ -117,8 +117,9 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
                 // Check we have an output file.
                 if ( !outFile.exists ())
                 {
-                    AbstractSdtGoodFileTestBase.LOG.error ("** ERROR - Unable to find the output file for this test (" +
-                            outFile.getAbsolutePath () + ")");
+                    AbstractSdtGoodFileTestBase.LOGGER
+                            .error ("** ERROR - Unable to find the output file for this test (" +
+                                    outFile.getAbsolutePath () + ")");
                     throw new IOException ("** ERROR - Unable to find the output file from the script (" +
                             outFile.getAbsolutePath () + ")");
                 }
@@ -126,8 +127,9 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
                 // Check we have a good file.
                 if ( !goodFile.exists ())
                 {
-                    AbstractSdtGoodFileTestBase.LOG.error ("** ERROR - Unable to find the good file for this test (" +
-                            goodFile.getAbsolutePath () + ")");
+                    AbstractSdtGoodFileTestBase.LOGGER
+                            .error ("** ERROR - Unable to find the good file for this test (" +
+                                    goodFile.getAbsolutePath () + ")");
                     throw new IOException ("** ERROR - Unable to find the good file for the script (" +
                             goodFile.getAbsolutePath () + ")");
                 }
@@ -266,7 +268,8 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
                     if (outStr.compareTo (goodStr) != 0)
                     {
                         foundDifference = true;
-                        AbstractSdtGoodFileTestBase.LOG.info ("Differences detected between OUT and OUT.GOOD files");
+                        AbstractSdtGoodFileTestBase.LOGGER
+                                .error ("Differences detected between latest out file and 'good' file");
 
                         // Output the line with the difference and the expected line to the console for review
                         this.badLine =
@@ -289,7 +292,7 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
             }
             catch (final IOException e)
             {
-                AbstractSdtGoodFileTestBase.LOG.error ("Exception thrown : ", e);
+                AbstractSdtGoodFileTestBase.LOGGER.error ("Exception thrown : ", e);
                 filesMatch = false;
             }
         }
@@ -298,9 +301,9 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
         {
             if (useDelimiters)
             {
-                AbstractSdtGoodFileTestBase.LOG.info ("** Check the block of text between the (" +
+                AbstractSdtGoodFileTestBase.LOGGER.info ("** Check the block of text between the (" +
                         this.getTestStartString () + ") and (" + this.getTestCompletedString () + ") messages.");
-                AbstractSdtGoodFileTestBase.LOG.info ("** All other text before and after this block is "
+                AbstractSdtGoodFileTestBase.LOGGER.info ("** All other text before and after this block is "
                         + "ignored for comparison purposes.");
             }
 
@@ -309,8 +312,8 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
         }
         else
         {
-            AbstractSdtGoodFileTestBase.LOG
-                    .info ("Output file matches the reference comparison file - " + goodFilePath);
+            AbstractSdtGoodFileTestBase.LOGGER.info ("Output file matches the reference comparison file - " +
+                    goodFilePath);
         }
 
         return filesMatch;

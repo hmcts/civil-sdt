@@ -38,12 +38,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -64,9 +64,9 @@ public abstract class AbstractWsConsumer
     protected static final long THIRTY_SECONDS = 30000;
 
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (AbstractWsConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractWsConsumer.class);
 
     /**
      * The map to hold the TargetApp Internal End Point with the key

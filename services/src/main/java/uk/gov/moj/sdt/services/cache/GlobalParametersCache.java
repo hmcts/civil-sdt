@@ -57,7 +57,7 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (GlobalParametersCache.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (GlobalParametersCache.class);
 
     /**
      * DAO to retrieve error messages.
@@ -90,7 +90,7 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
             loadCache ();
         }
 
-        LOG.debug ("Retrieving global parameter with key [" + paramName + "]");
+        LOGGER.debug ("Retrieving global parameter with key [" + paramName + "]");
 
         // Get the value of the named parameter.
         final Object someObject = this.getGlobalParameters ().get (paramName);
@@ -99,7 +99,7 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
 
         if (someObject == null)
         {
-            LOG.warn ("Parameter with name [" + paramName + "] not found.");
+            LOGGER.warn ("Parameter with name [" + paramName + "] not found.");
             return null;
         }
 
@@ -129,7 +129,7 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
             // Assume map is uninitialised if empty.
             if (this.getGlobalParameters ().isEmpty ())
             {
-                LOG.debug ("Loading global parameters into cache.");
+                LOGGER.debug ("Loading global parameters into cache.");
 
                 // Retrieve all rows from global parameters table.
                 final IGlobalParameter[] result = genericDao.query (IGlobalParameter.class);

@@ -35,8 +35,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -48,11 +48,10 @@ import uk.gov.moj.sdt.utils.SdtContext;
  */
 public class SubmitQueryEnricher extends AbstractSdtEnricher
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (SubmitQueryEnricher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryEnricher.class);
 
     @Override
     public String enrichXml (final String message)

@@ -33,8 +33,8 @@ package uk.gov.moj.sdt.producers.sdtws;
 
 import javax.jws.WebService;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
@@ -60,9 +60,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 public class SdtEndpointPortType implements ISdtEndpointPortType
 {
     /**
-     * Logger for this class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (SdtEndpointPortType.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SdtEndpointPortType.class);
 
     /**
      * Handles bulk submission request.

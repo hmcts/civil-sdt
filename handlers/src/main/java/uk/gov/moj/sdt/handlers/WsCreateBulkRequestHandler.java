@@ -33,8 +33,8 @@ package uk.gov.moj.sdt.handlers;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,9 +62,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWsCreateBulkRequestHandler
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (WsCreateBulkRequestHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (WsCreateBulkRequestHandler.class);
 
     /**
      * Bulk Submission service.
@@ -84,7 +84,11 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
     {
-        LOGGER.info ("[submitBulk] started");
+        if (LOGGER.isInfoEnabled ())
+        {
+            LOGGER.info ("Submit bulk started for customer[" + bulkRequestType.getHeader ().getSdtCustomerId () +
+                    "], customer reference[" + bulkRequestType.getHeader ().getCustomerReference () + "]");
+        }
 
         // Update mbean stats.
         SdtMetricsMBean.getMetrics ().upBulkSubmitCount ();
@@ -120,7 +124,11 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         }
         finally
         {
-            LOGGER.info ("[submitBulk] completed");
+            if (LOGGER.isInfoEnabled ())
+            {
+                LOGGER.info ("Submit bulk started for customer[" + bulkRequestType.getHeader ().getSdtCustomerId () +
+                        "], customer reference[" + bulkRequestType.getHeader ().getCustomerReference () + "]");
+            }
 
             // Measure total time spent in use case.
             final long endTime = new GregorianCalendar ().getTimeInMillis ();

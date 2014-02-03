@@ -34,8 +34,8 @@ import java.util.GregorianCalendar;
 
 import javax.xml.ws.WebServiceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -62,9 +62,9 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     // CHECKSTYLE:ON
 
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (IndividualRequestConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestConsumer.class);
 
     /**
      * Consumer transformer for individual request.
@@ -86,7 +86,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     public void processIndividualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
                                           final long receiveTimeOut) throws OutageException, TimeoutException
     {
-        LOGGER.info ("[processIndividualRequest] started");
+        LOGGER.debug ("[processIndividualRequest] started");
 
         // Transform domain object to web service object
         final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb (individualRequest);
@@ -98,7 +98,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
         this.transformer.transformJaxbToDomain (responseType, individualRequest);
 
-        LOGGER.info ("[processIndividualRequest] completed");
+        LOGGER.debug ("[processIndividualRequest] completed");
 
     }
 

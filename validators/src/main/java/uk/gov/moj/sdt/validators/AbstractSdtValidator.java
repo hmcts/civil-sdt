@@ -28,15 +28,14 @@
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
-
 package uk.gov.moj.sdt.validators;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -61,9 +60,9 @@ import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (AbstractSdtValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtValidator.class);
 
     /**
      * Bulk customer dao.

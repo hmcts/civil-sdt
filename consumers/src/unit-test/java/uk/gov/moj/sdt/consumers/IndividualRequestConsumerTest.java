@@ -48,8 +48,6 @@ import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -82,12 +80,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
  */
 public class IndividualRequestConsumerTest
 {
-    /**
-     * Logger for debugging.
-     */
-    @SuppressWarnings ("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestConsumerTest.class);
-
     /**
      * Connection time out constant.
      */

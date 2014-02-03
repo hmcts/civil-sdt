@@ -34,11 +34,11 @@ import java.lang.reflect.Constructor;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -60,9 +60,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 public class UpdateItemTransformerTest extends TestCase
 {
     /**
-     * Logger to be used in the class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (UpdateItemTransformerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (UpdateItemTransformerTest.class);
 
     /**
      * Update Item Transformer for the unit testing.

@@ -56,7 +56,7 @@ public final class NonVisitableTreeWalker extends AbstractTreeWalker
     /**
      * Static logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (NonVisitableTreeWalker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (NonVisitableTreeWalker.class);
 
     /**
      * Default private constructor for utility class.
@@ -159,19 +159,19 @@ public final class NonVisitableTreeWalker extends AbstractTreeWalker
         }
         catch (final IntrospectionException e)
         {
-            LOG.error ("Failure to get bean info from " + target.getClass ().getName (), e);
+            LOGGER.error ("Failure to get bean info from " + target.getClass ().getName (), e);
             throw new UnsupportedOperationException ("Failure to get bean info from " + target.getClass ().getName (),
                     e);
         }
         catch (final InvocationTargetException e)
         {
-            LOG.error ("Failure to INvoke method " + method.getName (), e);
+            LOGGER.error ("Failure to INvoke method " + method.getName (), e);
             throw new UnsupportedOperationException ("Failure to get bean info from " + target.getClass ().getName (),
                     e);
         }
         catch (final IllegalAccessException e)
         {
-            LOG.error ("Failure to get bean info from " + target.getClass ().getName (), e);
+            LOGGER.error ("Failure to get bean info from " + target.getClass ().getName (), e);
             throw new UnsupportedOperationException ("Failure to get bean info from " + target.getClass ().getName (),
                     e);
         }

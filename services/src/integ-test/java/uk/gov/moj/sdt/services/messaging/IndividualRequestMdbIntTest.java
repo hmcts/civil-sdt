@@ -69,7 +69,7 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (IndividualRequestMdbIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestMdbIntTest.class);
 
     /**
      * Setup the test.
@@ -78,7 +78,7 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
     public void setUp ()
     {
 
-        LOG.debug ("Before SetUp");
+        LOGGER.debug ("Before SetUp");
 
         DBUnitUtility.loadDatabase (this.getClass (), true);
 
@@ -92,7 +92,7 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
                         .getBean ("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
         messageWriter.queueMessage (sdtMessage, "MCOLS", false);
 
-        LOG.debug ("After SetUp");
+        LOGGER.debug ("After SetUp");
     }
 
     /**

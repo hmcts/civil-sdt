@@ -68,7 +68,7 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (IndividualRequestDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestDaoTest.class);
 
     /**
      * *Individual Request DAO.
@@ -96,7 +96,7 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
     @Before
     public void setUp ()
     {
-        LOG.debug ("Before SetUp");
+        LOGGER.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
 
         individualRequestDao =
@@ -106,7 +106,7 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
         bulkCustomer = individualRequestDao.fetch (BulkCustomer.class, 10711);
         dataRetentionPeriod = 90;
 
-        LOG.debug ("After SetUp");
+        LOGGER.debug ("After SetUp");
     }
 
     /**
@@ -244,7 +244,7 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
 
         individualRequestDao.persist (individualRequest);
 
-        LOG.debug ("Individual Request persisted successfully");
+        LOGGER.debug ("Individual Request persisted successfully");
 
     }
 

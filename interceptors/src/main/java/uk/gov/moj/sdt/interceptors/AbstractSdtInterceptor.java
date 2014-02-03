@@ -36,8 +36,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.helpers.IOUtils;
@@ -45,6 +43,8 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.io.CachedWriter;
 import org.apache.cxf.io.DelegatingInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
 import uk.gov.moj.sdt.interceptors.enricher.api.ISdtEnricher;
@@ -58,9 +58,9 @@ import uk.gov.moj.sdt.interceptors.enricher.api.ISdtEnricher;
 public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (AbstractSdtInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtInterceptor.class);
 
     /**
      * List of enrichers to use. An enricher is a class which adds content to the outgoing XML before sending it.

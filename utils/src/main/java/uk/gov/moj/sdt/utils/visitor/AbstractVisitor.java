@@ -52,7 +52,7 @@ public abstract class AbstractVisitor implements IVisitor
     /**
      * Static logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (AbstractVisitor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractVisitor.class);
 
     /**
      * Map containing all registers {@link IVisitor}s which can be retrieved as needed by the
@@ -73,7 +73,7 @@ public abstract class AbstractVisitor implements IVisitor
             // Store an instance of this class in a static map so it can be used to retrieve this Visitor when walking a
             // tree of IVisitable objects and applied as appropriate.
             AbstractVisitor.allVisitors.put (key, this);
-            LOG.debug ("Visitor [" + key + "] registered in allVisitors map.");
+            LOGGER.debug ("Visitor [" + key + "] registered in allVisitors map.");
         }
     }
 
@@ -157,18 +157,18 @@ public abstract class AbstractVisitor implements IVisitor
                     throw RuntimeException.class.cast (throwable);
                 }
 
-                LOG.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
+                LOGGER.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
                 throw new UnsupportedOperationException (e);
             }
             catch (final IllegalAccessException e)
             {
-                LOG.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
+                LOGGER.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
                 throw new UnsupportedOperationException (e);
             }
         }
         catch (final NoSuchMethodException e)
         {
-            LOG.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
+            LOGGER.error ("Cannot find visit method for target bean [" + interfaceClass.getName () + "].", e);
             throw new UnsupportedOperationException (e);
         }
     }

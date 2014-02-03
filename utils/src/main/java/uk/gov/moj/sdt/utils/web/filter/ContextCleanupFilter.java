@@ -56,7 +56,7 @@ public class ContextCleanupFilter implements Filter
     /**
      * Logger for this class.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (ContextCleanupFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ContextCleanupFilter.class);
 
     @Override
     public void init (final FilterConfig filterConfig) throws ServletException
@@ -75,7 +75,7 @@ public class ContextCleanupFilter implements Filter
         // ThreadLocal
         SdtContext.getContext ().remove ();
 
-        LOG.debug ("Performed remove operation on the SdtContext");
+        LOGGER.debug ("Performed remove operation on the SdtContext");
     }
 
     @Override

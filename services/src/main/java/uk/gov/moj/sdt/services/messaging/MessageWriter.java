@@ -35,8 +35,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.core.JmsTemplate;
 
@@ -55,9 +55,9 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 public class MessageWriter implements IMessageWriter
 {
     /**
-     * Logger for this class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (MessageWriter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (MessageWriter.class);
 
     /**
      * Default suffix for DLQ name.

@@ -32,8 +32,8 @@ package uk.gov.moj.sdt.utils.transaction.synchronizer;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -48,39 +48,44 @@ import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
  */
 public class MessageSynchronizer extends TransactionSynchronizationAdapter implements IMessageSynchronizer
 {
-
     /**
-     * Logger for this class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (MessageSynchronizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (MessageSynchronizer.class);
 
     @Override
     public void execute (final Runnable command)
     {
-        LOGGER.debug ("Submitting new command");
+        LOGGER.debug ("Submitting new command {} to run after commit [" + command + " ]");
+
+        // Is this thread in the context of a transaction? If not then run immediately.
         if ( !TransactionSynchronizationManager.isSynchronizationActive ())
         {
-            LOGGER.info ("Transaction synchronization is NOT ACTIVE. Executing command [" + command + "] right now");
+            LOGGER.debug ("Transaction synchronization is NOT ACTIVE. Executing command [" + command + "] right now");
+
+            // Run one new command (usually each command is responsible for a single message).
             command.run ();
-            return;
         }
-
-        if (SdtContext.getContext ().addSynchronisationTask (command))
+        // else queue up the command to run once the transaction has completed.
+        else
         {
-            TransactionSynchronizationManager.registerSynchronization (this);
+            // Add new command to thread local list.
+            if (SdtContext.getContext ().addSynchronisationTask (command))
+            {
+                TransactionSynchronizationManager.registerSynchronization (this);
+            }
         }
 
+        return;
     }
 
     @Override
     public void afterCommit ()
     {
         final List<Runnable> synchronisationTasks = SdtContext.getContext ().getSynchronisationTasks ();
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Transaction successfully committed, so executing " + synchronisationTasks.size () +
-                    " tasks in the list");
-        }
+
+        LOGGER.debug ("Transaction successfully committed, so executing the tasks in the list");
+
         for (Runnable runnableTask : synchronisationTasks)
         {
             LOGGER.debug ("Executing task " + runnableTask);
@@ -100,7 +105,5 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
     {
         // Delegate processing to the execute method.
         this.execute (task);
-
     }
-
 }

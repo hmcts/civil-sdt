@@ -52,7 +52,7 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (BulkCustomerDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkCustomerDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
@@ -65,7 +65,7 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
     @Override
     public IBulkCustomer getBulkCustomerBySdtId (final long sdtCustomerId) throws DataAccessException
     {
-        LOG.debug ("Get a bulk customer matching sdtId [" + sdtCustomerId + "]");
+        LOGGER.debug ("Get a bulk customer matching sdtId [" + sdtCustomerId + "]");
 
         // Call the generic dao to perform this query.
         final IBulkCustomer bulkCustomer =

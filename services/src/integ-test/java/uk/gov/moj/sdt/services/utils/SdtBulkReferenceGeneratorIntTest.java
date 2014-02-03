@@ -69,7 +69,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractTransactionalJUnit
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (SdtBulkReferenceGeneratorIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SdtBulkReferenceGeneratorIntTest.class);
 
     /**
      * Test method for the SDT bulk reference generation.
@@ -89,7 +89,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractTransactionalJUnit
         }
         catch (final IllegalArgumentException e)
         {
-            LOG.debug (e.getMessage ());
+            LOGGER.debug (e.getMessage ());
             assertTrue (true);
         }
 
@@ -100,7 +100,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractTransactionalJUnit
         }
         catch (final IllegalArgumentException e)
         {
-            LOG.debug (e.getMessage ());
+            LOGGER.debug (e.getMessage ());
             assertTrue (true);
         }
 
@@ -111,12 +111,12 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractTransactionalJUnit
         }
         catch (final IllegalArgumentException e)
         {
-            LOG.debug (e.getMessage ());
+            LOGGER.debug (e.getMessage ());
             assertTrue (true);
         }
 
         final String bulkReferenceNumber = referenceGenerator.getSdtBulkReference ("MCOL");
-        LOG.debug ("Generated reference number is " + bulkReferenceNumber);
+        LOGGER.debug ("Generated reference number is " + bulkReferenceNumber);
         assertNotNull (bulkReferenceNumber);
         assertEquals (29, bulkReferenceNumber.length ());
     }

@@ -75,7 +75,7 @@ public class GenericDao implements IGenericDao
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (GenericDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (GenericDao.class);
 
     /**
      * The Hibernate session factory needed to acquire the session.
@@ -117,7 +117,7 @@ public class GenericDao implements IGenericDao
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        GenericDao.LOG.debug ("fetch(): domainType=" + domainType + ", id=" + id);
+        GenericDao.LOGGER.debug ("fetch(): domainType=" + domainType + ", id=" + id);
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
@@ -178,7 +178,7 @@ public class GenericDao implements IGenericDao
                                                                         final Criterion... restrictions)
         throws DataAccessException
     {
-        GenericDao.LOG.debug ("query(): domainType=" + domainType);
+        GenericDao.LOGGER.debug ("query(): domainType=" + domainType);
 
         // Get a list of results from Hibernate.
         final List<?> domainObjects = queryAsList (domainType, restrictions);
@@ -197,7 +197,7 @@ public class GenericDao implements IGenericDao
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        GenericDao.LOG.debug ("queryAsList(): domainType=" + domainType);
+        GenericDao.LOGGER.debug ("queryAsList(): domainType=" + domainType);
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
@@ -265,7 +265,7 @@ public class GenericDao implements IGenericDao
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        LOG.debug ("Persist domain object " + domainObject.toString ());
+        LOGGER.debug ("Persist domain object " + domainObject.toString ());
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
@@ -303,7 +303,7 @@ public class GenericDao implements IGenericDao
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        LOG.debug ("Persist domain object list " + domainObjectList.toString ());
+        LOGGER.debug ("Persist domain object list " + domainObjectList.toString ());
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
@@ -353,7 +353,7 @@ public class GenericDao implements IGenericDao
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        LOG.debug ("Sequence generation for " + sequenceName);
+        LOGGER.debug ("Sequence generation for " + sequenceName);
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
@@ -426,7 +426,7 @@ public class GenericDao implements IGenericDao
     {
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        GenericDao.LOG.debug ("uniqueResult(): domainType=" + domainType);
+        GenericDao.LOGGER.debug ("uniqueResult(): domainType=" + domainType);
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
@@ -485,7 +485,7 @@ public class GenericDao implements IGenericDao
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        GenericDao.LOG.debug ("queryAsList(): domainType=" + domainType);
+        GenericDao.LOGGER.debug ("queryAsList(): domainType=" + domainType);
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {
@@ -524,7 +524,7 @@ public class GenericDao implements IGenericDao
         // Record start time.
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
-        GenericDao.LOG.debug ("queryAsCount(): domainType=" + domainType);
+        GenericDao.LOGGER.debug ("queryAsCount(): domainType=" + domainType);
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_3))
         {

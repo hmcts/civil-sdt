@@ -97,7 +97,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
     /**
      * Logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (SdtXmlTestBase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SdtXmlTestBase.class);
 
     /**
      * Flag to detect whether parsing error was encountered.
@@ -171,7 +171,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                     Utilities.checkFileExists (SdtXmlTestBase.XML_OUTPUT_DIR, xmlFileName + ".out", true);
 
             // Create Writer for the formatter to use.
-            SdtXmlTestBase.LOG.debug ("File to write is: " + xmlOutPath);
+            SdtXmlTestBase.LOGGER.debug ("File to write is: " + xmlOutPath);
             final BufferedWriter bw = new BufferedWriter (new FileWriter (xmlOutPath));
 
             // Format XML output as pretty.
@@ -180,17 +180,17 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
             bw.close ();
 
             // Check good file also exists.
-            SdtXmlTestBase.LOG.debug ("Written file: " + xmlOutPath);
+            SdtXmlTestBase.LOGGER.debug ("Written file: " + xmlOutPath);
             final String xmlGoodPath =
                     Utilities.checkFileExists (SdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
 
             // compare the output and the good file.
-            SdtXmlTestBase.LOG.info ("Comparing XML file " + xmlOutPath + " against good file " + xmlGoodPath);
+            SdtXmlTestBase.LOGGER.info ("Comparing XML file " + xmlOutPath + " against good file " + xmlGoodPath);
             return this.compareTestOutputFiles (xmlOutPath, xmlGoodPath, useDelimiters);
         }
         catch (final IOException e)
         {
-            SdtXmlTestBase.LOG.error ("Exception: ", e);
+            SdtXmlTestBase.LOGGER.error ("Exception: ", e);
             return false;
         }
     }
@@ -261,17 +261,17 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 // Record that we hit an error during parsing.
                 SdtXmlTestBase.this.errorEncountered = true;
 
-                LOG.debug (e.getMessage ());
+                LOGGER.debug (e.getMessage ());
 
                 // Was it the wrong error?
                 if (expectedMessages != null && expectedMessages.contains (e.getMessage ()))
                 {
-                    LOG.debug ("Found expected error and removing it from list - " + e.getMessage ());
+                    LOGGER.debug ("Found expected error and removing it from list - " + e.getMessage ());
                     expectedMessages.remove (e.getMessage ());
                 }
                 else
                 {
-                    LOG.error ("Parser encountered unexpected error - expected message: [" + e.getMessage () +
+                    LOGGER.error ("Parser encountered unexpected error - expected message: [" + e.getMessage () +
                             "], actual message: [" + e.getMessage () + "]");
                     SdtXmlTestBase.fail ("Parser encountered unexpected error: expected [" + e.getMessage () +
                             "], actual [" + e.getMessage () + "]");
@@ -301,7 +301,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         if (errorFilePathname != null)
         {
             errorFilePath = Utilities.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
-            LOG.debug ("Error message file - " + errorFilePath);
+            LOGGER.debug ("Error message file - " + errorFilePath);
         }
         else
         {
@@ -340,25 +340,25 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         }
         catch (final IOException e)
         {
-            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
+            LOGGER.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
             SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
         catch (final SAXException e)
         {
-            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "] on line " +
-                    ((SAXParseException) e).getLineNumber (), e);
+            LOGGER.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname +
+                    "] on line " + ((SAXParseException) e).getLineNumber (), e);
             SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
         catch (final ParserConfigurationException e)
         {
-            LOG.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
+            LOGGER.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
             SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
 
         // Has no error been reported and yet we expected one?
         if ( !this.errorEncountered && errorFilePathname != null)
         {
-            LOG.error ("Parser failed to encounter all expected error(s).  The following errors were not found:");
+            LOGGER.error ("Parser failed to encounter all expected error(s).  The following errors were not found:");
             SdtXmlTestBase.fail ("Parser failed to encounter all expected error(s)");
         }
 
@@ -366,11 +366,11 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         // the list of expected error messages.
         if (remainingExpectedErrors != null && !remainingExpectedErrors.isEmpty ())
         {
-            LOG.error ("The parser failed to encounter all expected error messages that are in the error messages file."
-                    + "  The following errors were not found:");
+            LOGGER.error ("The parser failed to encounter all expected error messages that "
+                    + "are in the error messages file. The following errors were not found:");
             for (String remainingError : remainingExpectedErrors)
             {
-                LOG.error (remainingError);
+                LOGGER.error (remainingError);
             }
             SdtXmlTestBase.fail ("Parser failed to encounter all expected error(s)");
         }

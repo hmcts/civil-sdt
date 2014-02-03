@@ -30,13 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.out;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.Soap11FaultOutInterceptor;
 import org.apache.cxf.binding.soap.interceptor.Soap12FaultOutInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,9 +54,9 @@ import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 public class FaultOutboundInterceptor extends AbstractServiceRequest
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (FaultOutboundInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (FaultOutboundInterceptor.class);
 
     /**
      * Test interceptor to prove concept.
@@ -87,7 +87,7 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest
 
         final String errorMsg = "Error encounted: " + fault.getFaultCode () + ": " + fault.getMessage () +
                 ", sending this message in SOAP fault: " + msg;
-        LOGGER.info (errorMsg);
+        LOGGER.error (errorMsg);
         persistEnvelope (errorMsg);
 
         // Write message to 'performance.log' for this logging point.

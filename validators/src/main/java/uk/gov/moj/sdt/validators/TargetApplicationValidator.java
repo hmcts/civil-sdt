@@ -30,8 +30,8 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -45,11 +45,10 @@ import uk.gov.moj.sdt.validators.api.ITargetApplicationValidator;
  */
 public class TargetApplicationValidator extends AbstractSdtValidator implements ITargetApplicationValidator
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (TargetApplicationValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (TargetApplicationValidator.class);
 
     /**
      * No-argument Constructor.

@@ -32,8 +32,8 @@ package uk.gov.moj.sdt.transformers;
 
 import java.math.BigInteger;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
@@ -60,9 +60,9 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
         ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest>
 {
     /**
-     * Logger for this class.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (SubmitQueryTransformer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryTransformer.class);
 
     /**
      * Private constructor.

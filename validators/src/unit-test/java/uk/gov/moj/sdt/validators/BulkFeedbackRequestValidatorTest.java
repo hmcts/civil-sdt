@@ -34,12 +34,12 @@ package uk.gov.moj.sdt.validators;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -65,9 +65,9 @@ import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
 {
     /**
-     * Logger.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkFeedbackRequestValidatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackRequestValidatorTest.class);
 
     /**
      * Subject for test.

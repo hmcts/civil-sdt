@@ -33,8 +33,8 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -49,11 +49,10 @@ import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
  */
 public class BulkCustomerValidator extends AbstractSdtValidator implements IBulkCustomerValidator
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkCustomerValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkCustomerValidator.class);
 
     /**
      * No-argument Constructor.

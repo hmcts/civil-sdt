@@ -30,8 +30,8 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -45,11 +45,10 @@ import uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator;
  */
 public class SubmitQueryRequestValidator extends AbstractSdtValidator implements ISubmitQueryRequestValidator
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (SubmitQueryRequestValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryRequestValidator.class);
 
     /**
      * No-argument Constructor.

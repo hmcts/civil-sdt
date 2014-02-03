@@ -88,7 +88,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionServiceIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionServiceIntTest.class);
 
     /**
      * Test subject.
@@ -101,9 +101,9 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     @Before
     public void setUp ()
     {
-        LOG.debug ("Before SetUp");
+        LOGGER.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
-        LOG.debug ("After SetUp");
+        LOGGER.debug ("After SetUp");
         bulkSubmissionService =
                 (IBulkSubmissionService) this.applicationContext
                         .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");

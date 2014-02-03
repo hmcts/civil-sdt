@@ -33,8 +33,8 @@ package uk.gov.moj.sdt.producers.comx.services;
 
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -52,9 +52,9 @@ import uk.gov.moj.sdt.utils.SdtContext;
 public class MockBulkFeedbackService implements IBulkFeedbackService
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (MockBulkFeedbackService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (MockBulkFeedbackService.class);
 
     /**
      * Map of bulk feedback factories.
@@ -64,7 +64,7 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
     @Override
     public IBulkSubmission getBulkFeedback (final IBulkFeedbackRequest bulkFeedbackRequest)
     {
-        LOGGER.info ("getBulkFeedback started");
+        LOGGER.debug ("getBulkFeedback started");
 
         // Determine which feedback sample to return based on the SDT bulk reference
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();

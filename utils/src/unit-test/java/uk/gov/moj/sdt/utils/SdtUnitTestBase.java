@@ -50,7 +50,7 @@ public class SdtUnitTestBase extends TestCase {
 	/**
 	 * Static logging object.
 	 */
-	private static final Logger LOG = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SdtUnitTestBase.class);
 
 	/**
@@ -91,7 +91,7 @@ public class SdtUnitTestBase extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		SdtUnitTestBase.LOG.debug("Start Test: "
+		SdtUnitTestBase.LOGGER.debug("Start Test: "
 				+ this.getClass().getCanonicalName() + "." + this.getName());
 
 		// Local set up if we are running outside of the appserver.

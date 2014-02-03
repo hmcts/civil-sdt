@@ -55,7 +55,7 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
@@ -69,7 +69,7 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     public IBulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
                                               final int dataRetention) throws DataAccessException
     {
-        LOG.debug ("Get a Bulk Submission matching the Bulk Customer, "
+        LOGGER.debug ("Get a Bulk Submission matching the Bulk Customer, "
                 + "Customer Reference and the Data Retention Period");
 
         // Create the criteria
@@ -91,7 +91,7 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     public IBulkSubmission getBulkSubmissionBySdtRef (final IBulkCustomer bulkCustomer, final String sdtBulkReference,
                                                       final int dataRetention) throws DataAccessException
     {
-        LOG.debug ("Get a bulk submission matching the Bulk Customer, "
+        LOGGER.debug ("Get a bulk submission matching the Bulk Customer, "
                 + "SDT bulk reference and the Data Retention Period ");
 
         // Create the criteria

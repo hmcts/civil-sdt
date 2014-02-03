@@ -32,8 +32,8 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,11 +55,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 @Transactional (propagation = Propagation.REQUIRED)
 public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateItemHandler
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (WsUpdateItemHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (WsUpdateItemHandler.class);
 
     /**
      * Service class to process the update item.
@@ -75,9 +74,13 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
     // CHECKSTYLE:ON
 
     @Override
-    public UpdateResponseType updateItem (final UpdateRequestType requestType)
+    public UpdateResponseType updateItem (final UpdateRequestType updateRequestType)
     {
-        LOGGER.info ("[updateItem] started");
+        if (LOGGER.isInfoEnabled ())
+        {
+            LOGGER.info ("Update item started for sdt request id[" + updateRequestType.getHeader ().getSdtRequestId () +
+                    "]");
+        }
 
         // Update mbean stats.
         SdtMetricsMBean.getMetrics ().upStatusUpdateCount ();
@@ -93,7 +96,7 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
             updateResponseType.setStatus (new StatusType ());
 
             // Transform to domain object.
-            final IIndividualRequest individualRequest = getTransformer ().transformJaxbToDomain (requestType);
+            final IIndividualRequest individualRequest = getTransformer ().transformJaxbToDomain (updateRequestType);
 
             // No need to validate, call the service layer to process the object
             this.getUpdateRequestService ().updateIndividualRequest (individualRequest);
@@ -103,7 +106,11 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
         }
         finally
         {
-            LOGGER.info ("[updateItem] completed");
+            if (LOGGER.isInfoEnabled ())
+            {
+                LOGGER.info ("Update item started for sdt request id[" +
+                        updateRequestType.getHeader ().getSdtRequestId () + "]");
+            }
 
             // Measure total time spent in use case.
             final long endTime = new GregorianCalendar ().getTimeInMillis ();

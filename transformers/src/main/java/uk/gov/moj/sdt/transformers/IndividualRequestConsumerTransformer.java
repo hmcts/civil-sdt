@@ -31,8 +31,8 @@
 
 package uk.gov.moj.sdt.transformers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
@@ -57,9 +57,9 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
         IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest>
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (IndividualRequestConsumerTransformer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestConsumerTransformer.class);
 
     /**
      * Private constructor.

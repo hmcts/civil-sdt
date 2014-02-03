@@ -67,7 +67,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (BulkSubmissionDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionDaoTest.class);
 
     /**
      * Bulk Submission DAO.
@@ -100,7 +100,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     @Before
     public void setUp ()
     {
-        LOG.debug ("Before SetUp");
+        LOGGER.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
 
         bulkSubmissionDao =
@@ -110,7 +110,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         dataRetentionPeriod = 90;
         sdtBulkReference = "MCOL-10012013010101-100000009";
 
-        LOG.debug ("After SetUp");
+        LOGGER.debug ("After SetUp");
     }
 
     /**
@@ -122,7 +122,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
 
         final IBulkSubmission bulkSubmission = new BulkSubmission ();
 
-        LOG.debug ("Bulk Customer is " + bulkCustomer);
+        LOGGER.debug ("Bulk Customer is " + bulkCustomer);
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
         bulkSubmission.setTargetApplication (targetApplication);
@@ -137,14 +137,14 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
 
         bulkSubmissionDao.persist (bulkSubmission);
 
-        LOG.debug ("Persisted successfully");
+        LOGGER.debug ("Persisted successfully");
 
         final IBulkSubmission submission =
                 bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sdtBulkReference, dataRetentionPeriod);
 
         Assert.assertNotNull (submission);
 
-        LOG.debug ("payload for bulk submission is " + new String (submission.getPayload ()));
+        LOGGER.debug ("payload for bulk submission is " + new String (submission.getPayload ()));
 
         Assert.assertEquals (new String (submission.getPayload ()), xmlToLoad);
         Assert.assertEquals (submission.getCustomerReference (), "REF1");
@@ -263,7 +263,7 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
 
         bulkSubmissionDao.persist (bulkSubmission);
 
-        LOG.debug ("Bulk Submission persisted successfully");
+        LOGGER.debug ("Bulk Submission persisted successfully");
 
     }
 

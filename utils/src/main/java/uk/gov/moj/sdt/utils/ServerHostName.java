@@ -54,7 +54,7 @@ public class ServerHostName
     /**
      * Logger for this class.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (ServerHostName.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ServerHostName.class);
 
     /**
      * The host name of the server machine.
@@ -77,7 +77,7 @@ public class ServerHostName
             catch (final UnknownHostException e)
             {
                 hostName = UNKNOWN_HOST_NAME;
-                LOG.warn ("An exception occured while retrieving host name", e);
+                LOGGER.warn ("An exception occured while retrieving host name", e);
             }
         }
         return hostName;

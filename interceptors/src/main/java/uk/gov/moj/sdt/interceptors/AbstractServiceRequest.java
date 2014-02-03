@@ -30,9 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
@@ -48,9 +48,9 @@ import uk.gov.moj.sdt.utils.SdtContext;
 public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (AbstractServiceRequest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractServiceRequest.class);
 
     /**
      * The persistence class for this interceptor.

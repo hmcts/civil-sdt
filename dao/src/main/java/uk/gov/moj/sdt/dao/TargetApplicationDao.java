@@ -52,7 +52,7 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (TargetApplicationDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (TargetApplicationDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
@@ -65,7 +65,7 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
     @Override
     public ITargetApplication getTargetApplicationByCode (final String targetAppCode) throws DataAccessException
     {
-        LOG.debug ("Get a target application matching the code " + targetAppCode);
+        LOGGER.debug ("Get a target application matching the code " + targetAppCode);
         final ITargetApplication[] targetApplication =
                 this.query (ITargetApplication.class, Restrictions.eq ("targetApplicationCode", targetAppCode));
 

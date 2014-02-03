@@ -162,6 +162,7 @@ public class IndividualRequestsXmlParserTest
         }
 
         LOGGER.info ("Start parsing for " + requests.size () + " requests");
+
         // Now call the parser to add the xml fragments into the payload of the individual requests.
         this.individualRequestsXmlParser.populateRawRequest (requests);
 

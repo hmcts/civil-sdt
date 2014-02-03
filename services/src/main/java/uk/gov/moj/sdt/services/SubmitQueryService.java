@@ -117,7 +117,7 @@ public class SubmitQueryService implements ISubmitQueryService
     @Override
     public void submitQuery (final ISubmitQueryRequest submitQueryRequest)
     {
-        LOGGER.info ("Processing submit query request for customer[" +
+        LOGGER.debug ("Processing submit query request for customer[" +
                 submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]");
 
         enrich (submitQueryRequest);
@@ -344,7 +344,7 @@ public class SubmitQueryService implements ISubmitQueryService
     }
 
     /**
-     * populate request with server busy message.
+     * Populate request with server busy message.
      * 
      * @param submitQueryRequest request.
      */
@@ -363,9 +363,8 @@ public class SubmitQueryService implements ISubmitQueryService
         // Clear out xml to prevent enrichment
         SdtContext.getContext ().setRawOutXml (null);
 
-        LOGGER.info ("Request rejected for customer[" + submitQueryRequest.getBulkCustomer ().getSdtCustomerId () +
+        LOGGER.error ("Request rejected for customer[" + submitQueryRequest.getBulkCustomer ().getSdtCustomerId () +
                 "] with error [" + errorLog + "]");
-
     }
 
     /**
@@ -377,6 +376,7 @@ public class SubmitQueryService implements ISubmitQueryService
     private void enrich (final ISubmitQueryRequest submitQueryRequest)
     {
         LOGGER.debug ("enrich submit query instance");
+
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =
                 this.getBulkCustomerDao ().getBulkCustomerBySdtId (
@@ -545,7 +545,5 @@ public class SubmitQueryService implements ISubmitQueryService
         }
 
         return globalParameter.getValue ();
-
     }
-
 }

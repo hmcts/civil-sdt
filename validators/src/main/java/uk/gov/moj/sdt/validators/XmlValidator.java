@@ -66,7 +66,7 @@ public class XmlValidator implements IXmlValidator
     /**
      * Logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (XmlValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (XmlValidator.class);
 
     /**
      * The xml that requires validation.
@@ -111,17 +111,17 @@ public class XmlValidator implements IXmlValidator
         }
         catch (final SAXException e)
         {
-            LOG.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
+            LOGGER.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
             exceptionMessage = e.getMessage ();
         }
         catch (final ParserConfigurationException e)
         {
-            LOG.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
+            LOGGER.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
             exceptionMessage = e.getMessage ();
         }
         catch (final IOException e)
         {
-            LOG.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
+            LOGGER.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
             exceptionMessage = e.getMessage ();
         }
 

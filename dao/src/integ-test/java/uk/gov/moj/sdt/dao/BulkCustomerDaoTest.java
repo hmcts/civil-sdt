@@ -56,7 +56,7 @@ public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContex
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (BulkCustomerDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkCustomerDaoTest.class);
 
     /**
      * Default constructor for {@link BulkCustomerDaoTest}.
@@ -79,7 +79,7 @@ public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContex
         final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId (2);
         if (bulkCustomer != null)
         {
-            LOG.debug ("Retrieved bulk customer id [" + bulkCustomer.getId () + "]");
+            LOGGER.debug ("Retrieved bulk customer id [" + bulkCustomer.getId () + "]");
         }
 
         return;

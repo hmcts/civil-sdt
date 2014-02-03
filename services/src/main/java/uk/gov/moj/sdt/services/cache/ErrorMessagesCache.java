@@ -53,7 +53,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (ErrorMessagesCache.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ErrorMessagesCache.class);
 
     /**
      * The map of error messages.
@@ -85,7 +85,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
             loadCache ();
         }
 
-        LOG.debug ("Retrieving error message with key [" + errorMessageCode + "]");
+        LOGGER.debug ("Retrieving error message with key [" + errorMessageCode + "]");
 
         // Get the value of the named parameter.
         final Object someObject = this.getErrorMessages ().get (errorMessageCode);
@@ -122,7 +122,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
             // Assume map is uninitialised if empty.
             if (this.getErrorMessages ().isEmpty ())
             {
-                LOG.debug ("Loading error messages into cache.");
+                LOGGER.debug ("Loading error messages into cache.");
 
                 // Retrieve all rows from error messages table.
                 final IErrorMessage[] result = genericDao.query (IErrorMessage.class);

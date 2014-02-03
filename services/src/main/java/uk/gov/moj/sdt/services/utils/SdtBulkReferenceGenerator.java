@@ -56,7 +56,7 @@ public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (SdtBulkReferenceGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SdtBulkReferenceGenerator.class);
 
     /**
      * DAO to retrieve error messages.

@@ -35,8 +35,8 @@ import java.util.GregorianCalendar;
 
 import javax.xml.ws.WebServiceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -56,11 +56,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
  */
 public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQueryConsumer
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (SubmitQueryConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryConsumer.class);
 
     /**
      * transformer for submit query request.
@@ -80,7 +79,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
                                     final long receiveTimeOut) throws OutageException, TimeoutException
     {
 
-        LOGGER.info ("[processSubmitQuery] started");
+        LOGGER.debug ("[processSubmitQuery] started");
         // Transform domain object to web service object
         final SubmitQueryRequestType submitQueryRequestType =
                 this.transformer.transformDomainToJaxb (submitQueryRequest);
@@ -92,7 +91,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
 
         this.transformer.transformJaxbToDomain (responseType, submitQueryRequest);
 
-        LOGGER.info ("[processSubmitQuery] completed");
+        LOGGER.debug ("[processSubmitQuery] completed");
     }
 
     /**

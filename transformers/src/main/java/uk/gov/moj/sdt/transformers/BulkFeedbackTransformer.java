@@ -32,8 +32,8 @@ package uk.gov.moj.sdt.transformers;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -68,9 +68,9 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
         ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission>
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkFeedbackTransformer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackTransformer.class);
 
     /**
      * Private constructor.

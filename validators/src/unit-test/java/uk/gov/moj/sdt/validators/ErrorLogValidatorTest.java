@@ -31,10 +31,10 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.ErrorLog;
 
@@ -49,11 +49,10 @@ import uk.gov.moj.sdt.domain.ErrorLog;
 
 public class ErrorLogValidatorTest extends AbstractValidatorUnitTest
 {
-
     /**
-     * Logger.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (ErrorLogValidatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ErrorLogValidatorTest.class);
 
     /**
      * Test subject.

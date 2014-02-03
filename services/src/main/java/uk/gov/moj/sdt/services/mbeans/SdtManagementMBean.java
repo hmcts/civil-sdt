@@ -122,6 +122,8 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     public void uncache ()
     {
         this.cacheResetControl++;
+
+        LOGGER.info ("Uncaching all cacheable items, cacheResetControl=" + cacheResetControl);
     }
 
     @Override
@@ -159,7 +161,7 @@ public final class SdtManagementMBean implements ISdtManagementMBean
         final List<IIndividualRequest> individualRequests =
                 this.individualRequestDao.getRejectedIndividualRequests (minimumAgeInMinutes);
 
-        LOGGER.debug ("Requeue " + individualRequests.size () + " rejected messages older than " + minimumAgeInMinutes +
+        LOGGER.info ("Requeue " + individualRequests.size () + " rejected messages older than " + minimumAgeInMinutes +
                 " minutes");
 
         // Loop through the list of the individual requests found.

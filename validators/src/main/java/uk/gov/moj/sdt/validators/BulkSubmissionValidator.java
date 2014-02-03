@@ -24,10 +24,10 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id$
- * $LastChangedRevision$
- * $LastChangedDate$
- * $LastChangedBy$ */
+ * $Id: $
+ * $LastChangedRevision: $
+ * $LastChangedDate: $
+ * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
@@ -59,9 +59,9 @@ import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 public class BulkSubmissionValidator extends AbstractSdtValidator implements IBulkSubmissionValidator
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (BulkSubmissionValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionValidator.class);
 
     /**
      * Bulk submission dao.

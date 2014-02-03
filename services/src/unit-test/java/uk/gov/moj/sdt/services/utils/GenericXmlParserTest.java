@@ -36,11 +36,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -54,9 +54,9 @@ import uk.gov.moj.sdt.utils.Utilities;
 public class GenericXmlParserTest
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (GenericXmlParserTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (GenericXmlParserTest.class);
 
     /**
      * The xml parser instance for testing.

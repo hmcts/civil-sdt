@@ -32,8 +32,8 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,11 +60,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusT
 @Transactional (propagation = Propagation.REQUIRED)
 public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implements IWsReadBulkRequestHandler
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (WsReadBulkFeedbackRequestHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (WsReadBulkFeedbackRequestHandler.class);
 
     /**
      * Injected Get Bulk Feedback service.
@@ -75,14 +74,17 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
      * The transformer associated with this handler.
      */
     private ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, 
-                IBulkFeedbackRequest, IBulkSubmission> transformer;
+        IBulkFeedbackRequest, IBulkSubmission> transformer;
 
     @Override
     public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
     {
+        if (LOGGER.isInfoEnabled ())
+        {
+            LOGGER.info ("Bulk feedback started for customer[" + bulkFeedbackRequest.getHeader ().getSdtCustomerId () +
+                    "], customer reference[" + bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "]");
+        }
 
-        LOGGER.info ("[getBulkFeedback] started");
-        
         // Update mbean stats.
         SdtMetricsMBean.getMetrics ().upBulkFeedbackCount ();
 
@@ -113,8 +115,13 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         }
         finally
         {
-            LOGGER.info ("[getBulkFeedback] completed");
-            
+            if (LOGGER.isInfoEnabled ())
+            {
+                LOGGER.info ("Bulk feedback started for customer[" +
+                        bulkFeedbackRequest.getHeader ().getSdtCustomerId () + "], customer reference[" +
+                        bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "]");
+            }
+
             // Measure total time spent in use case.
             final long endTime = new GregorianCalendar ().getTimeInMillis ();
             SdtMetricsMBean.getMetrics ().addBulkFeedbackTime (endTime - startTime);

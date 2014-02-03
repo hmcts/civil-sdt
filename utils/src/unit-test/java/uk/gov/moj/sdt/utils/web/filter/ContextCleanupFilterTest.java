@@ -57,7 +57,7 @@ public class ContextCleanupFilterTest
     /**
      * Logger for this class.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (ContextCleanupFilterTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ContextCleanupFilterTest.class);
 
     /**
      * ContextCleanupFilter instance for testing.

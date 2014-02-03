@@ -72,7 +72,7 @@ public class GlobalParametersCacheIntTest extends AbstractTransactionalJUnit4Spr
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (GlobalParametersCacheIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (GlobalParametersCacheIntTest.class);
 
     /**
      * Test subject.

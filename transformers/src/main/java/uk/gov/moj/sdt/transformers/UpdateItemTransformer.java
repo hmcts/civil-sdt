@@ -30,8 +30,8 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.transformers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -56,11 +56,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 public class UpdateItemTransformer extends AbstractTransformer implements
         ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest>
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (UpdateItemTransformer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (UpdateItemTransformer.class);
 
     @Override
     public IIndividualRequest transformJaxbToDomain (final UpdateRequestType updateRequest)

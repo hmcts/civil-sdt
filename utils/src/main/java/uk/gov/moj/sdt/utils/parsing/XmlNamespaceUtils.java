@@ -37,8 +37,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a utility class for dealing with namespaces for xml fragments.
@@ -49,9 +49,9 @@ import org.apache.commons.logging.LogFactory;
 public final class XmlNamespaceUtils
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (XmlNamespaceUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (XmlNamespaceUtils.class);
 
     /**
      * No-args constructor.

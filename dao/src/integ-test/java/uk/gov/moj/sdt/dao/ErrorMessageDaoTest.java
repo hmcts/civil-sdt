@@ -59,7 +59,7 @@ public class ErrorMessageDaoTest extends AbstractTransactionalJUnit4SpringContex
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (ErrorMessageDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (ErrorMessageDaoTest.class);
 
     /**
      * Default constructor for {@link BulkCustomerDaoTest}.
@@ -81,7 +81,7 @@ public class ErrorMessageDaoTest extends AbstractTransactionalJUnit4SpringContex
 
         final IErrorMessage[] errorMessages = genericDao.query (IErrorMessage.class);
 
-        LOG.debug ("Retrieved " + errorMessages.length + " error message(s).");
+        LOGGER.debug ("Retrieved " + errorMessages.length + " error message(s).");
 
         Assert.assertEquals (2, errorMessages.length);
 

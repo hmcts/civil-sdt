@@ -64,7 +64,7 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
     /**
      * Logger object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (GenericDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (GenericDaoTest.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
@@ -106,7 +106,7 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
         {
             // User found
             final IBulkCustomer bulkCustomer = bulkCustomers[0];
-            LOG.debug ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
+            LOGGER.debug ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
         }
     }
 
@@ -143,7 +143,7 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
             // Found the global parameters
             for (IGlobalParameter globalParam : globalParameters)
             {
-                LOG.debug ("GlobalParam =" + globalParam.getName () + ":" + globalParam.getValue ());
+                LOGGER.debug ("GlobalParam =" + globalParam.getName () + ":" + globalParam.getValue ());
             }
         }
     }

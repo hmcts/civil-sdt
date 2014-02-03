@@ -30,8 +30,8 @@
  * $LastChangedBy: agarwals $ */
 package uk.gov.moj.sdt.handlers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
@@ -47,9 +47,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 public abstract class AbstractWsHandler
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (AbstractWsHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractWsHandler.class);
 
     /**
      * Handle given business exception by transforming into error type and setting on given response type.
@@ -62,7 +62,7 @@ public abstract class AbstractWsHandler
                                             final AbstractResponseType responseType)
     // CHECKSTYLE:ON
     {
-        LOGGER.info ("Business error - " + businessException);
+        LOGGER.error ("Business error - " + businessException);
 
         final ErrorType errorType = new ErrorType ();
         errorType.setCode (businessException.getErrorCode ());

@@ -32,8 +32,8 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,11 +58,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 @Transactional (propagation = Propagation.REQUIRED)
 public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsReadSubmitQueryHandler
 {
-
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (WsReadSubmitQueryHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (WsReadSubmitQueryHandler.class);
 
     /**
      * Submit Query service to return response.
@@ -81,7 +80,12 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
     @Override
     public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequestType)
     {
-        LOGGER.info ("[submitQuery] started");
+        if (LOGGER.isInfoEnabled ())
+        {
+            LOGGER.info ("Submit query started for customer[" +
+                    submitQueryRequestType.getHeader ().getSdtCustomerId () + "], query reference[" +
+                    submitQueryRequestType.getHeader ().getQueryReference () + "]");
+        }
 
         // Update mbean stats.
         SdtMetricsMBean.getMetrics ().upSubmitQueryCount ();
@@ -118,7 +122,12 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         }
         finally
         {
-            LOGGER.info ("[submitQuery] completed");
+            if (LOGGER.isInfoEnabled ())
+            {
+                LOGGER.info ("Submit query started for customer[" +
+                        submitQueryRequestType.getHeader ().getSdtCustomerId () + "], query reference[" +
+                        submitQueryRequestType.getHeader ().getQueryReference () + "]");
+            }
 
             // Measure total time spent in use case.
             final long endTime = new GregorianCalendar ().getTimeInMillis ();

@@ -35,8 +35,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
@@ -50,9 +50,9 @@ import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 public class GenericXmlParser
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOGGER = LogFactory.getLog (GenericXmlParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (GenericXmlParser.class);
 
     /**
      * Mapping of namespaces to be replaced.

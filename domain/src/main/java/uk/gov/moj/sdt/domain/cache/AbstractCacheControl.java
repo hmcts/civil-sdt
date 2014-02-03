@@ -51,7 +51,7 @@ public abstract class AbstractCacheControl implements ICacheable
     /**
      * Static logging object.
      */
-    private static final Logger LOG = LoggerFactory.getLogger (AbstractCacheControl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractCacheControl.class);
 
     /**
      * MBean which holds value controlling uncache operation.
@@ -71,7 +71,7 @@ public abstract class AbstractCacheControl implements ICacheable
         // Should cache be discarded?
         if (this.uncacheRequired ())
         {
-            LOG.debug ("Uncaching " + this.getClass ().getCanonicalName ());
+            LOGGER.debug ("Uncaching " + this.getClass ().getCanonicalName ());
 
             this.uncache ();
         }
@@ -117,7 +117,7 @@ public abstract class AbstractCacheControl implements ICacheable
     {
         if (this.localCacheResetControl < managementMBean.getCacheResetControl ())
         {
-            LOG.debug ("Uncache required for " + this.getClass ().getCanonicalName ());
+            LOGGER.debug ("Uncache required for " + this.getClass ().getCanonicalName ());
 
             // Bring current value up to date and report uncache required.
             this.localCacheResetControl = managementMBean.getCacheResetControl ();

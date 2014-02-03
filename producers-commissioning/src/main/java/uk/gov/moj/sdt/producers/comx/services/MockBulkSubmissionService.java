@@ -30,8 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.producers.comx.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
@@ -49,9 +49,9 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 public class MockBulkSubmissionService implements IBulkSubmissionService
 {
     /**
-     * Logger instance.
+     * Logger object.
      */
-    private static final Log LOG = LogFactory.getLog (MockBulkSubmissionService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (MockBulkSubmissionService.class);
 
     /**
      * SDT Bulk reference generator.
@@ -61,7 +61,7 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
     @Override
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
     {
-        LOG.debug ("[saveBulkSubmission] started");
+        LOGGER.debug ("[saveBulkSubmission] started");
 
         // Set the SDT Bulk Reference for the handler's transformer to use
         bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
@@ -70,7 +70,7 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
         // Update last seen bulk reference.
         SdtMetricsMBean.getMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
 
-        LOG.debug ("[saveBulkSubmission] completed");
+        LOGGER.debug ("[saveBulkSubmission] completed");
     }
 
     /**
