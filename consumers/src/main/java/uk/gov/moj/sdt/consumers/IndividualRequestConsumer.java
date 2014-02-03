@@ -86,8 +86,6 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     public void processIndividualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
                                           final long receiveTimeOut) throws OutageException, TimeoutException
     {
-        LOGGER.debug ("[processIndividualRequest] started");
-
         // Transform domain object to web service object
         final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb (individualRequest);
 
@@ -97,9 +95,6 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                         receiveTimeOut);
 
         this.transformer.transformJaxbToDomain (responseType, individualRequest);
-
-        LOGGER.debug ("[processIndividualRequest] completed");
-
     }
 
     /**
@@ -139,7 +134,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
             {
                 SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
 
-                LOGGER.debug ("Submitting individual request to target application, attempt " + (++attemptCount));
+                LOGGER.debug ("Submitting individual request to target application, attempt[" + (++attemptCount) + "]");
 
                 if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
                 {
@@ -155,7 +150,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
                     // Write message to 'performance.log' for this logging point.
                     PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_7,
-                            "Send to target application", detail.toString ());
+                            "Send individual request to target application", detail.toString ());
                 }
 
                 // Measure response time.
@@ -181,7 +176,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
                     // Write message to 'performance.log' for this logging point.
                     PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_8,
-                            "receive from target application", detail.toString ());
+                            "receive individual request response from target application", detail.toString ());
                 }
 
                 return individualResponseType;
@@ -190,7 +185,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
             {
                 LOGGER.error ("Target application [" +
                         iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () +
-                        "] error sending individual request [" + iRequest.getSdtRequestReference () + "]");
+                        "] error sending individual request [" + iRequest.getSdtRequestReference () + "]", f);
 
                 // The following will throw a further exception unless we are here because the target application is
                 // unavailable.
@@ -203,7 +198,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 }
                 catch (final InterruptedException e)
                 {
-                    LOGGER.debug ("Sleep operation interrupted while re-attempting to send to target application", e);
+                    LOGGER.error ("Sleep operation interrupted while re-attempting to send to target application", e);
                 }
             }
             finally
@@ -211,7 +206,6 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 // Measure total time spent in target application.
                 final long endTime = new GregorianCalendar ().getTimeInMillis ();
                 SdtMetricsMBean.getMetrics ().addTargetAppResponseTime (endTime - startTime);
-
             }
         }
     }
