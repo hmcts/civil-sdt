@@ -45,6 +45,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
@@ -78,8 +79,6 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
     public void processSubmitQuery (final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
                                     final long receiveTimeOut) throws OutageException, TimeoutException
     {
-
-        LOGGER.debug ("[processSubmitQuery] started");
         // Transform domain object to web service object
         final SubmitQueryRequestType submitQueryRequestType =
                 this.transformer.transformDomainToJaxb (submitQueryRequest);
@@ -90,8 +89,6 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
                         receiveTimeOut);
 
         this.transformer.transformJaxbToDomain (responseType, submitQueryRequest);
-
-        LOGGER.debug ("[processSubmitQuery] completed");
     }
 
     /**
@@ -127,21 +124,53 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
                 getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_QUERY.name (), webServiceEndPoint,
                         connectionTimeOut, receiveTimeOut);
 
+        long startTime = 0;
+
         try
         {
             SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
 
-            // Measure response time.
-            final long startTime = new GregorianCalendar ().getTimeInMillis ();
+            LOGGER.debug ("Submitting query to target application");
 
-            // Call the specific business method for this text - note that a
-            // single test can only use one web
-            // service business method.
+            if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
+            {
+                final StringBuffer detail = new StringBuffer ();
+                detail.append ("\n\n\ttarget application customer id=" +
+                        submitQueryRequestType.getHeader ().getTargetAppCustomerId () + "\n\n\ttarget application=" +
+                        serviceRouting.getTargetApplication ().getTargetApplicationName () + "\n\tendpoint=" +
+                        serviceRouting.getWebServiceEndpoint () + "\n");
+
+                // Write message to 'performance.log' for this logging point.
+                PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_7,
+                        "Send query to target application", detail.toString ());
+            }
+
+            // Measure response time.
+            startTime = new GregorianCalendar ().getTimeInMillis ();
+
+            // Call the specific business method for this text - note that a single test can only use one web service
+            // business method.
             final SubmitQueryResponseType submitQueryResponseType = client.submitQuery (submitQueryRequestType);
 
-            // Measure total time spent in target application.
-            final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            SdtMetricsMBean.getMetrics ().addBulkSubmitTime (endTime - startTime);
+            if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_8))
+            {
+                final StringBuffer detail = new StringBuffer ();
+                detail.append ("\n\n\ttarget application customer id=" +
+                        submitQueryResponseType.getTargetAppCustomerId () + "\n\n\tresult count=" +
+                        submitQueryResponseType.getResultCount () + "\n\tstatus code=" +
+                        submitQueryResponseType.getStatus ().getCode ().name ());
+                if (submitQueryResponseType.getStatus ().getError () != null)
+                {
+                    detail.append ("\n\terror code=" + submitQueryResponseType.getStatus ().getError ().getCode () +
+                            "\n\terror description=" +
+                            submitQueryResponseType.getStatus ().getError ().getDescription ());
+                }
+                detail.append ("\n");
+
+                // Write message to 'performance.log' for this logging point.
+                PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_8,
+                        "receive query results from target application", detail.toString ());
+            }
 
             return submitQueryResponseType;
         }
@@ -152,8 +181,14 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
                     "] error sending submit query request [" + submitQueryRequest.getCriteriaType () + "]");
 
             super.handleClientErrors (true, f, submitQueryRequest.getCriteriaType ());
-
         }
+        finally
+        {
+            // Measure total time spent in target application.
+            final long endTime = new GregorianCalendar ().getTimeInMillis ();
+            SdtMetricsMBean.getMetrics ().addTargetAppResponseTime (endTime - startTime);
+        }
+
         return null;
     }
 
