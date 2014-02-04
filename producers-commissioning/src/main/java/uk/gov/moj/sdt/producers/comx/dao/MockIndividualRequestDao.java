@@ -95,7 +95,7 @@ public class MockIndividualRequestDao extends MockGenericDao implements IIndivid
     }
 
     @Override
-    public List<IIndividualRequest> getRejectedIndividualRequests (final int maxAllowedAttempts)
+    public List<IIndividualRequest> getStaleIndividualRequests (final int maxAllowedAttempts)
         throws DataAccessException
     {
         // This method is implemented for the producers application only.

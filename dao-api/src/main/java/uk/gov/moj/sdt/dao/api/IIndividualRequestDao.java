@@ -79,15 +79,16 @@ public interface IIndividualRequestDao extends IGenericDao
     List<IIndividualRequest> getPendingIndividualRequests (final int maxAllowedAttempts) throws DataAccessException;
 
     /**
-     * Returns a list of individual requests that have been forwarded more times than the allowed number of forwarding
-     * attempts. As a result they are in the REJECTED state in which they will be ignored without manual intervention.
-     * This method reads REJECTED individual requests that are older than a given number of minutes, allowing them to be
-     * requeued. Currently this method is called only by the mbean responsible for manually requesting the forwarding of
-     * rejected messages.
+     * Returns a list of individual requests that have been received and never forwarded with zero or more attempts to
+     * forward them. This can happen if JMS goes down, in which case they may not have been successfully placed on the
+     * queue. Since in normal processing only the MDB reattempts to forward requests, these are in effect lost to the
+     * system. Manual intervention is needed to requeue them. Currently this method is called only by the mbean
+     * responsible for manually requesting the forwarding of rejected messages.
      * 
-     * @param minimumAgeInMinutes - the minimum number of minutes since a message was updated.
+     * @param minimumAgeInMinutes - the minimum number of minutes since a message was updated before it will be
+     *            requeued.
      * @return list of individual requests
      * @throws DataAccessException hibernate exception
      */
-    List<IIndividualRequest> getRejectedIndividualRequests (final int minimumAgeInMinutes) throws DataAccessException;
+    List<IIndividualRequest> getStaleIndividualRequests (final int minimumAgeInMinutes) throws DataAccessException;
 }

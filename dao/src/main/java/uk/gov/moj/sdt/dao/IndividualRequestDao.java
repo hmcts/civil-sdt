@@ -72,8 +72,12 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     public IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
                                                     final int dataRetention) throws DataAccessException
     {
-        LOGGER.debug ("Get a Individual Request matching the Bulk Customer, "
-                + "Customer Request Reference and the Data Retention Period");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Get individual request matching the bulk customer[" + bulkCustomer + "], " +
+                    "customer reference[" + customerReference + "] and the data retention period[" + dataRetention +
+                    "]");
+        }
 
         // Create the criteria - this is necessary because Hibernate does not allow dot notation in restrictions and
         // using an alias is the only way to avoid this.
@@ -95,7 +99,10 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     @Override
     public IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException
     {
-        LOGGER.debug ("Get a Individual Request matching the Sdt Request Reference");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Get individual request matching the SDT reference id[" + sdtReferenceId + "]");
+        }
 
         // Call the generic dao to do this query.
         final IIndividualRequest[] individualRequests =
@@ -120,7 +127,11 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     public List<IIndividualRequest> getPendingIndividualRequests (final int maxAllowedAttempts)
         throws DataAccessException
     {
-        LOGGER.debug ("Get a Individual Request pending processing by the target application");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Get pending individual requests in status FORWARDED that have not yet "
+                    + "reached their maximum forwarding attempts.");
+        }
 
         // Call the generic dao to do this query
         final List<IIndividualRequest> individualRequests =
@@ -134,10 +145,14 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     }
 
     @Override
-    public List<IIndividualRequest> getRejectedIndividualRequests (final int minimumAgeInMinutes)
+    public List<IIndividualRequest> getStaleIndividualRequests (final int minimumAgeInMinutes)
         throws DataAccessException
     {
-        LOGGER.debug ("Get an individual request pending processing by the target application");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Get unforwarded individual requests created more than " + minimumAgeInMinutes +
+                    " minutes ago");
+        }
 
         // Calculate time of latest individual request (based on last updated time) that can be requeued, given the
         // minimum age of requests to be requeued.
@@ -148,8 +163,11 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         final List<IIndividualRequest> individualRequests =
                 this.queryAsList (
                         IIndividualRequest.class,
-                        Restrictions.eq ("requestStatus",
-                                IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()),
+                        Restrictions.or (
+                                Restrictions.eq ("requestStatus",
+                                        IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()),
+                                Restrictions.eq ("requestStatus",
+                                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ())),
                         Restrictions.lt ("updatedDate", latestTime));
 
         return individualRequests;

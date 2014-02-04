@@ -159,7 +159,7 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     {
         // Get list of pending individual requests.
         final List<IIndividualRequest> individualRequests =
-                this.individualRequestDao.getRejectedIndividualRequests (minimumAgeInMinutes);
+                this.individualRequestDao.getStaleIndividualRequests (minimumAgeInMinutes);
 
         LOGGER.info ("Requeue " + individualRequests.size () + " rejected messages older than " + minimumAgeInMinutes +
                 " minutes");
