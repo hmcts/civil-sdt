@@ -95,18 +95,27 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
                 Long.toString (bulkFeedbackRequest.getHeader ().getSdtCustomerId ()));
 
+        // Initialise response;
+        LOGGER.debug ("Setup initial bulk feedback response");
         BulkFeedbackResponseType response = createResponse (bulkFeedbackRequest);
+
         try
         {
             // Transform Web service object to Domain object.
+            LOGGER.debug ("Transform from BulkFeedbackRequestType to IBulkFeedbackRequest");
             final IBulkFeedbackRequest bulkFeedbackRequestDomain =
                     getTransformer ().transformJaxbToDomain (bulkFeedbackRequest);
 
             // Validate the domain object
+            LOGGER.debug ("Validate bulk feedback");
             validateDomain (bulkFeedbackRequestDomain);
 
+            // Process validated request
+            LOGGER.debug ("Process bulk feedback");
             final IBulkSubmission bulkSubmission = bulkFeedbackService.getBulkFeedback (bulkFeedbackRequestDomain);
 
+            // Get the jaxb response object from the bulk submission domain object
+            LOGGER.debug ("Transform from IBulkFeedbackRequest to BulkFeedbackResponseType");
             response = getTransformer ().transformDomainToJaxb (bulkSubmission);
         }
         catch (final AbstractBusinessException be)
@@ -117,7 +126,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
         {
             if (LOGGER.isInfoEnabled ())
             {
-                LOGGER.info ("Bulk feedback started for customer[" +
+                LOGGER.info ("Bulk feedback completed for customer[" +
                         bulkFeedbackRequest.getHeader ().getSdtCustomerId () + "], customer reference[" +
                         bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "]");
             }
@@ -158,9 +167,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
      */
     private void validateDomain (final IBulkFeedbackRequest bulkFeedbackRequest) throws AbstractBusinessException
     {
-        LOGGER.debug ("[validateDomain] started");
         VisitableTreeWalker.walk (bulkFeedbackRequest, "Validator");
-        LOGGER.debug ("[validateDomain] finished");
     }
 
     /**

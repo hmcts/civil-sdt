@@ -32,7 +32,8 @@ package uk.gov.moj.sdt.consumers.exception;
 
 /**
  * 
- * Outage exception can be thrown by the consumer if the target application does not respond at all.
+ * Outage exception is thrown by the consumer if the target application cannot be reached (and we do not want to keep on
+ * trying to connect).
  * 
  * @author Manoj Kulkarni
  * 

@@ -129,7 +129,7 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
             // Assume map is uninitialised if empty.
             if (this.getGlobalParameters ().isEmpty ())
             {
-                LOGGER.debug ("Loading global parameters into cache.");
+                LOGGER.info ("Loading global parameters into cache.");
 
                 // Retrieve all rows from global parameters table.
                 final IGlobalParameter[] result = genericDao.query (IGlobalParameter.class);
@@ -151,6 +151,8 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
         {
             // Clear map but do not destroy it.
             this.getGlobalParameters ().clear ();
+
+            LOGGER.info ("Uncaching global parammeters.");
         }
     }
 

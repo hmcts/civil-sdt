@@ -140,8 +140,6 @@ public class IndividualRequestsXmlParser
             individualRequest.setRequestPayload (allRawIndividualRequests.get (individualRequest
                     .getCustomerRequestReference ()));
         }
-
-        LOGGER.debug ("Finished parsing raw xml");
     }
 
     /**

@@ -117,9 +117,6 @@ public class SubmitQueryService implements ISubmitQueryService
     @Override
     public void submitQuery (final ISubmitQueryRequest submitQueryRequest)
     {
-        LOGGER.debug ("Processing submit query request for customer[" +
-                submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]");
-
         enrich (submitQueryRequest);
 
         extractAndWriteCriteria ();
@@ -178,10 +175,6 @@ public class SubmitQueryService implements ISubmitQueryService
                         .put (targetApp, this.concurrentRequestsInProgress.get (targetApp) - 1);
             }
         }
-
-        LOGGER.debug ("Completed submit query request for customer[" +
-                submitQueryRequest.getBulkCustomer ().getSdtCustomerId () + "]");
-
     }
 
     /**
@@ -282,32 +275,26 @@ public class SubmitQueryService implements ISubmitQueryService
      */
     private void updateCompletedRequest (final ISubmitQueryRequest submitQueryRequest)
     {
-        LOGGER.debug ("updateCompletedRequest");
-
         final String targetAppResponse = queryResponseXmlParser.parse ();
 
+        // Setup raw XML from target application for addition to raw out stream in interceptor.
         SdtContext.getContext ().setRawOutXml (targetAppResponse);
     }
 
     /**
-     * Throttle requests.
+     * Check if the number maximum number of concurrent threads has been reached?
      * 
-     * @param submitQueryRequest
-     *            submit query request.
+     * @param submitQueryRequest submit query request.
      * @return true if threshold is at surface, false otherwise.
      */
     private synchronized boolean isThresholdReached (final ISubmitQueryRequest submitQueryRequest)
     {
-
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Check for throttling. Current requests in progress: " + concurrentRequestsInProgress);
-        }
-
         boolean maxReached = false;
+
         // 1. get target application code e.g. MCOL.
         final String targetAppCode =
                 submitQueryRequest.getTargetApplication ().getTargetApplicationCode ().toUpperCase ();
+
         // 2. retrieve max concurrent submit query requests allowed for this target application
         final String concurrentQueryReqParamName =
                 targetAppCode + "_" + IGlobalParameter.ParameterKey.MAX_CONCURRENT_QUERY_REQ.name ();
@@ -331,6 +318,12 @@ public class SubmitQueryService implements ISubmitQueryService
         if (requestsInProgress < Integer.valueOf (maxConcurrentQueryRequests))
         {
             this.concurrentRequestsInProgress.put (targetAppCode, requestsInProgress + 1);
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Increment concurrent requests. Current requests in progress [" +
+                        concurrentRequestsInProgress.size () + "]");
+            }
         }
         else
         // reject request
@@ -339,8 +332,8 @@ public class SubmitQueryService implements ISubmitQueryService
             LOGGER.warn ("Threshold reached for target app [" + targetAppCode + "] - in progress [" +
                     requestsInProgress + "] max allowed [" + maxConcurrentQueryRequests + "]");
         }
-        return maxReached;
 
+        return maxReached;
     }
 
     /**
@@ -375,7 +368,7 @@ public class SubmitQueryService implements ISubmitQueryService
      */
     private void enrich (final ISubmitQueryRequest submitQueryRequest)
     {
-        LOGGER.debug ("enrich submit query instance");
+        LOGGER.debug ("Enrich submit query instance to prepare for persistence");
 
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =
@@ -399,7 +392,7 @@ public class SubmitQueryService implements ISubmitQueryService
     private void extractAndWriteCriteria ()
     {
 
-        LOGGER.debug ("extract and setup criteria for outbound interceptor");
+        LOGGER.debug ("Extract and setup criteria for outbound interceptor");
 
         final String criteriaXml = this.queryRequestXmlParser.parse ();
 
@@ -440,6 +433,8 @@ public class SubmitQueryService implements ISubmitQueryService
         {
             connectionTimeOut = Long.valueOf (connectionTimeOutParam.getValue ());
         }
+
+        LOGGER.debug ("Send submit query request to target application");
 
         this.requestConsumer.submitQuery (submitQueryRequest, connectionTimeOut, requestTimeOut);
     }

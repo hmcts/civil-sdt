@@ -72,8 +72,6 @@ public class GenericEnricherTest
     @Test
     public void testSubmitQueryEnrichmentSuccess ()
     {
-        LOGGER.debug ("test for subimt query response enrichment");
-
         enricher.setInsertionTag ("results");
         enricher.setParentTag ("submitQueryResponse");
         
@@ -93,7 +91,6 @@ public class GenericEnricherTest
     public void testIndRequestEnrichment(){
         enricher.setInsertionTag ("targetAppDetail");
         enricher.setParentTag ("individualRequest");
-        
 
         SdtContext.getContext ().setRawOutXml ("<claim></claim>");
         

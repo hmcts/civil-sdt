@@ -108,6 +108,10 @@ public class GenericDaoTest extends AbstractTransactionalJUnit4SpringContextTest
             final IBulkCustomer bulkCustomer = bulkCustomers[0];
             LOGGER.debug ("sdtCustomerId = " + bulkCustomer.getSdtCustomerId ());
         }
+        else
+        {
+            Assert.fail ("Cannot find customer with customer id[2]");
+        }
     }
 
     /**

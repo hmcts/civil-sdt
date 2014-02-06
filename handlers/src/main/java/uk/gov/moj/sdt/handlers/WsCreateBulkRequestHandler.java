@@ -101,20 +101,25 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
                 Long.toString (bulkRequestType.getHeader ().getSdtCustomerId ()));
 
         // Initialise response;
+        LOGGER.debug ("Setup initial bulk submission response");
         BulkResponseType bulkResponseType = intialiseResponse (bulkRequestType);
 
         try
         {
             // Transform web service object to domain object(s)
+            LOGGER.debug ("Transform from BulkRequestType to IBulkSubmission");
             final IBulkSubmission bulkSubmission = getTransformer ().transformJaxbToDomain (bulkRequestType);
 
             // Validate domain
+            LOGGER.debug ("Validate bulk submission");
             validateDomain (bulkSubmission);
 
             // Process validated request
+            LOGGER.debug ("Process bulk submission");
             processBulkSubmission (bulkSubmission);
 
             // Get the jaxb response object from the bulk submission domain object
+            LOGGER.debug ("Transform from IBulkSubmission to BulkResponseType");
             bulkResponseType = getTransformer ().transformDomainToJaxb (bulkSubmission);
         }
         catch (final AbstractBusinessException be)
@@ -126,7 +131,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         {
             if (LOGGER.isInfoEnabled ())
             {
-                LOGGER.info ("Submit bulk started for customer[" + bulkRequestType.getHeader ().getSdtCustomerId () +
+                LOGGER.info ("Submit bulk completed for customer[" + bulkRequestType.getHeader ().getSdtCustomerId () +
                         "], customer reference[" + bulkRequestType.getHeader ().getCustomerReference () + "]");
             }
 
@@ -146,7 +151,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      */
     private void processBulkSubmission (final IBulkSubmission bulkSubmission)
     {
-        LOGGER.debug ("Service called to persist bulk request details");
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
     }
 
@@ -159,8 +163,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      */
     private BulkResponseType intialiseResponse (final BulkRequestType bulkRequest)
     {
-
-        LOGGER.debug ("setup initial response");
         final BulkResponseType response = new BulkResponseType ();
         response.setSdtService (AbstractTransformer.SDT_SERVICE);
         response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
@@ -184,8 +186,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      */
     private void validateDomain (final IBulkSubmission bulkSubmission) throws AbstractBusinessException
     {
-        LOGGER.debug ("[validateDomain] started");
-
         VisitableTreeWalker.walk (bulkSubmission, "Validator");
 
         // This validation needs to be done after the first lot of validation

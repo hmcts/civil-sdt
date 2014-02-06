@@ -101,9 +101,8 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     @Before
     public void setUp ()
     {
-        LOGGER.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
-        LOGGER.debug ("After SetUp");
+
         bulkSubmissionService =
                 (IBulkSubmissionService) this.applicationContext
                         .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");

@@ -92,6 +92,8 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
 
         if (someObject == null)
         {
+            LOGGER.warn ("Error message with error message code [" + errorMessageCode + "] not found.");
+
             throw new IllegalStateException ("Error message with key [" + errorMessageCode + "] not found.");
         }
 
@@ -122,7 +124,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
             // Assume map is uninitialised if empty.
             if (this.getErrorMessages ().isEmpty ())
             {
-                LOGGER.debug ("Loading error messages into cache.");
+                LOGGER.info ("Loading error messages into cache.");
 
                 // Retrieve all rows from error messages table.
                 final IErrorMessage[] result = genericDao.query (IErrorMessage.class);
@@ -144,6 +146,8 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
         {
             // Clear map but do not destroy it.
             this.getErrorMessages ().clear ();
+
+            LOGGER.info ("Uncaching error messages.");
         }
     }
 

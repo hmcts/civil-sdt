@@ -83,15 +83,13 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
     @Override
     public void queueMessages ()
     {
-        LOGGER.debug ("Queue Pending Message, getting the maximum forwarding attempts system parameter");
-
         final String maxForwardingAttemptsStr =
                 this.getSystemParameter (IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name ());
         final int maxForwardingAttempts =
                 maxForwardingAttemptsStr != null ? Integer.valueOf (maxForwardingAttemptsStr)
                         : DEFAULT_MAX_FORWARDING_ATTEMPTS;
 
-        LOGGER.debug ("Now looking for pending individual request having reached [" + maxForwardingAttemptsStr +
+        LOGGER.debug ("Looking for pending individual request which have reached [" + maxForwardingAttemptsStr +
                 "] forwarding attempts");
 
         // Get list of pending individual requests.
@@ -108,8 +106,8 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
                 // Re-set the forwarding attempts on the individual request.
                 individualRequest.resetForwardingAttempts ();
 
-                LOGGER.debug ("Now re-queued pending individual request [" +
-                        individualRequest.getSdtRequestReference () + "]");
+                LOGGER.debug ("Re-queue pending individual request [" + individualRequest.getSdtRequestReference () +
+                        "]");
             }
 
             // Persist the list of individual requests.

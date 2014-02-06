@@ -130,7 +130,8 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
         {
             SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
 
-            LOGGER.debug ("Submitting query to target application");
+            LOGGER.debug ("Submitting query to target application[" + targetAppCode + "], for customer[" +
+                    submitQueryRequestType.getHeader ().getTargetAppCustomerId () + "]");
 
             if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
             {

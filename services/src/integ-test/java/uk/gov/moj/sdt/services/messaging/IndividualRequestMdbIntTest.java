@@ -77,9 +77,6 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
     @Before
     public void setUp ()
     {
-
-        LOGGER.debug ("Before SetUp");
-
         DBUnitUtility.loadDatabase (this.getClass (), true);
 
         // Write a Message to the MDB
@@ -91,8 +88,6 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
                 (IMessageWriter) this.applicationContext
                         .getBean ("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
         messageWriter.queueMessage (sdtMessage, "MCOLS", false);
-
-        LOGGER.debug ("After SetUp");
     }
 
     /**
@@ -129,7 +124,5 @@ public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4Spri
         {
             Assert.assertTrue (true);
         }
-
     }
-
 }

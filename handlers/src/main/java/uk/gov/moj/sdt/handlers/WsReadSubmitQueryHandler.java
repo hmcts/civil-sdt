@@ -97,24 +97,27 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
                 Long.toString (submitQueryRequestType.getHeader ().getSdtCustomerId ()));
 
-        // Initialise response.
+        // Initialise response;
+        LOGGER.debug ("Setup initial submit query response");
         SubmitQueryResponseType submitQueryResponseType = createResponse (submitQueryRequestType);
 
         try
         {
-
-            // Transform to domain object.
+            // Transform web service object to domain object(s)
+            LOGGER.debug ("Transform from SubmitQueryRequestType to ISubmitQueryRequest");
             final ISubmitQueryRequest submitQueryRequest =
                     getTransformer ().transformJaxbToDomain (submitQueryRequestType);
 
             // Validate domain.
+            LOGGER.debug ("Validate submit query");
             validateDomain (submitQueryRequest);
 
             // Process validated request.
+            LOGGER.debug ("Process submit query");
             processSubmitQuery (submitQueryRequest);
 
+            LOGGER.debug ("Transform from ISubmitQueryRequest to SubmitQueryResponseType");
             submitQueryResponseType = getTransformer ().transformDomainToJaxb (submitQueryRequest);
-
         }
         catch (final AbstractBusinessException be)
         {
@@ -124,7 +127,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         {
             if (LOGGER.isInfoEnabled ())
             {
-                LOGGER.info ("Submit query started for customer[" +
+                LOGGER.info ("Submit query completed for customer[" +
                         submitQueryRequestType.getHeader ().getSdtCustomerId () + "], query reference[" +
                         submitQueryRequestType.getHeader ().getQueryReference () + "]");
             }
@@ -161,9 +164,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
      */
     private void validateDomain (final ISubmitQueryRequest submitQueryRequest) throws AbstractBusinessException
     {
-        LOGGER.debug ("[validateDomain] started");
         VisitableTreeWalker.walk (submitQueryRequest, "Validator");
-        LOGGER.debug ("[validateDomain] finished");
     }
 
     /**
@@ -173,10 +174,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
      */
     private void processSubmitQuery (final ISubmitQueryRequest request)
     {
-        LOGGER.debug ("Service call to submit query");
-
         submitQueryService.submitQuery (request);
-
     }
 
     /**

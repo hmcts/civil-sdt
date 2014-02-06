@@ -31,9 +31,6 @@
 
 package uk.gov.moj.sdt.transformers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -61,11 +58,6 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
     // CHECKSTYLE:ON
 
     /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryConsumerTransformer.class);
-
-    /**
      * Private constructor.
      */
     private SubmitQueryConsumerTransformer ()
@@ -81,9 +73,6 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
     public void transformJaxbToDomain (final SubmitQueryResponseType jaxbInstance,
                                        final ISubmitQueryRequest domainObject)
     {
-
-        LOGGER.debug ("transform SubmitQueryResponseType to ISubmitQueryRequest");
-
         final StatusType status = jaxbInstance.getStatus ();
         final StatusCodeType statusCode = status.getCode ();
 
@@ -102,7 +91,6 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
                 domainObject.reject (errorLog);
             }
         }
-
     }
 
     /* (non-Javadoc)
@@ -113,8 +101,6 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
     @Override
     public SubmitQueryRequestType transformDomainToJaxb (final ISubmitQueryRequest domainObject)
     {
-        LOGGER.debug ("transform ISubmitQueryRequest to SubmitQueryRequestType");
-
         final SubmitQueryRequestType jaxb = new SubmitQueryRequestType ();
         final HeaderType header = new HeaderType ();
 
@@ -133,5 +119,4 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
 
         return jaxb;
     }
-
 }

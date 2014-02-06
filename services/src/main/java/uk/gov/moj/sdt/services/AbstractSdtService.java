@@ -97,14 +97,13 @@ public abstract class AbstractSdtService
         if (requestsCount == 0)
         {
 
-            LOGGER.debug ("All Individual Requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +
+            LOGGER.debug ("All individual requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +
                     "] have been processed now. Marking the bulk submission as Completed");
 
             bulkSubmission.markAsCompleted ();
 
             this.getIndividualRequestDao ().persist (bulkSubmission);
         }
-
     }
 
     /**

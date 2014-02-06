@@ -31,9 +31,6 @@
 
 package uk.gov.moj.sdt.transformers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -57,24 +54,16 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
         IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest>
 {
     /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestConsumerTransformer.class);
-
-    /**
      * Private constructor.
      */
     private IndividualRequestConsumerTransformer ()
     {
-
     }
 
     @Override
     public void
             transformJaxbToDomain (final IndividualResponseType jaxbInstance, final IIndividualRequest domainObject)
     {
-        LOGGER.debug ("transform IndividualResponseType to IIndividualRequest");
-
         final CreateStatusType status = jaxbInstance.getStatus ();
         final CreateStatusCodeType statusCode = status.getCode ();
 
@@ -98,8 +87,6 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
     @Override
     public IndividualRequestType transformDomainToJaxb (final IIndividualRequest domainObject)
     {
-        LOGGER.debug ("transform IIndividualRequest to IndividualRequestType");
-
         final IndividualRequestType jaxb = new IndividualRequestType ();
         final HeaderType header = new HeaderType ();
 

@@ -56,8 +56,6 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
     @Override
     public void execute (final Runnable command)
     {
-        LOGGER.debug ("Submitting new command {} to run after commit [" + command + " ]");
-
         // Is this thread in the context of a transaction? If not then run immediately.
         if ( !TransactionSynchronizationManager.isSynchronizationActive ())
         {
@@ -69,6 +67,8 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
         // else queue up the command to run once the transaction has completed.
         else
         {
+            LOGGER.debug ("Submitting new command {} to run after commit [" + command + " ]");
+
             // Add new command to thread local list.
             if (SdtContext.getContext ().addSynchronisationTask (command))
             {

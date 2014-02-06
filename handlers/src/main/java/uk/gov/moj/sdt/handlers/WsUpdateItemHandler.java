@@ -89,6 +89,7 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
         final long startTime = new GregorianCalendar ().getTimeInMillis ();
 
         // Initialise response.
+        LOGGER.debug ("Setup initial update request response");
         UpdateResponseType updateResponseType = new UpdateResponseType ();
 
         try
@@ -96,19 +97,22 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
             updateResponseType.setStatus (new StatusType ());
 
             // Transform to domain object.
+            LOGGER.debug ("Transform from UpdateRequestType to IIndividualRequest");
             final IIndividualRequest individualRequest = getTransformer ().transformJaxbToDomain (updateRequestType);
 
             // No need to validate, call the service layer to process the object
+            LOGGER.debug ("Process individual request");
             this.getUpdateRequestService ().updateIndividualRequest (individualRequest);
 
             // Transform domain to Jaxb
+            LOGGER.debug ("Transform from IIndividualRequest to UpdateResponseType");
             updateResponseType = getTransformer ().transformDomainToJaxb (individualRequest);
         }
         finally
         {
             if (LOGGER.isInfoEnabled ())
             {
-                LOGGER.info ("Update item started for sdt request id[" +
+                LOGGER.info ("Update item completed for sdt request id[" +
                         updateRequestType.getHeader ().getSdtRequestId () + "]");
             }
 
@@ -160,5 +164,4 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
     {
         this.updateRequestService = updateRequestService;
     }
-
 }

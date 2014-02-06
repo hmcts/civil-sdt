@@ -52,21 +52,6 @@
         <appender-ref ref="rolling" />
     </logger>
     
-    <logger name="uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher" additivity="true">
-        <level value="info" />
-        <appender-ref ref="rolling" />
-    </logger>
-    
-    <logger name="uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser" additivity="true">
-        <level value="info" />
-        <appender-ref ref="rolling" />
-    </logger>
-    
-    <logger name="uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils" additivity="true">
-        <level value="info" />
-        <appender-ref ref="rolling" />
-    </logger>
-
     <!-- Logger for apache 3rd-party code -->
     <logger name="org.apache" additivity="true">
         <level value="info" />

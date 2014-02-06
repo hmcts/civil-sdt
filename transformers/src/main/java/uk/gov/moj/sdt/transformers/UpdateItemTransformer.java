@@ -30,9 +30,6 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.transformers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -56,16 +53,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 public class UpdateItemTransformer extends AbstractTransformer implements
         ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest>
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (UpdateItemTransformer.class);
-
     @Override
     public IIndividualRequest transformJaxbToDomain (final UpdateRequestType updateRequest)
     {
-        LOGGER.debug ("transform UpdateRequestType to IIndividualRequest");
-
         final IIndividualRequest individualRequest = new IndividualRequest ();
         final UpdateStatusType status = updateRequest.getStatus ();
         final UpdateStatusCodeType statusCode = status.getCode ();
@@ -90,8 +80,6 @@ public class UpdateItemTransformer extends AbstractTransformer implements
     @Override
     public UpdateResponseType transformDomainToJaxb (final IIndividualRequest individualRequest)
     {
-        LOGGER.debug ("transform IIndividualRequest to UpdateRequestType");
-
         final UpdateResponseType updateResponseType = new UpdateResponseType ();
         final StatusType status = new StatusType ();
         status.setCode (StatusCodeType.OK);

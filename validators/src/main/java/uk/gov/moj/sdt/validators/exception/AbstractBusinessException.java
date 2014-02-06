@@ -102,7 +102,7 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     /**
      * Base class for business exceptions.
      * 
-     * @param s the s
+     * @param s the description of the exception.
      */
     public AbstractBusinessException (final String s)
     {
@@ -116,7 +116,7 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     /**
      * Base class for business exceptions.
      * 
-     * @param cause the cause
+     * @param cause the cause of the exception.
      */
     public AbstractBusinessException (final Throwable cause)
     {
@@ -130,8 +130,8 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     /**
      * Base class for business exceptions.
      * 
-     * @param s the s
-     * @param cause the cause
+     * @param s the message of the exception.
+     * @param cause the cause of the exception.
      */
     public AbstractBusinessException (final String s, final Throwable cause)
     {
@@ -160,5 +160,21 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     public String getErrorDescription ()
     {
         return errorDescription;
+    }
+
+    /**
+     * Render exception as a string.
+     * 
+     * @return error description
+     */
+    public String toString ()
+    {
+        // Get class name of exception.
+        final String clazz = getClass ().getName ();
+
+        // Get the error code and description (which may have substituted place holders).
+        final String message = "code [" + this.getErrorCode () + "], description [" + this.getErrorDescription () + "]";
+
+        return clazz + ": " + message;
     }
 }

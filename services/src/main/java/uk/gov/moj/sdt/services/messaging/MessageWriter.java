@@ -97,7 +97,8 @@ public class MessageWriter implements IMessageWriter
         // Check the target application code is valid and return queue name.
         final String queueName = getQueueName (targetAppCode, deadLetter);
 
-        LOGGER.debug ("Sending message [" + sdtMessage.toString () + "] to queue [" + queueName + "]");
+        LOGGER.debug ("Sending message with SDT request reference [" + sdtMessage.getSdtRequestReference () +
+                "] to queue [" + queueName + "]");
 
         // Set meta data in message.
         sdtMessage.setMessageSentTimestamp (new GregorianCalendar ().getTimeInMillis ());
@@ -187,6 +188,8 @@ public class MessageWriter implements IMessageWriter
             // Check that the target application code is mapped to a queue name
             if ( !this.getQueueNameMap ().containsKey (targetApplicationCode))
             {
+                LOGGER.error ("Attempting to write to unknown queue for target application [" + targetApplicationCode +
+                        "]");
                 throw new IllegalArgumentException ("Target application code [" + targetApplicationCode +
                         "] does not have a JMS queue mapped.");
             }
@@ -202,6 +205,5 @@ public class MessageWriter implements IMessageWriter
                 return queueName;
             }
         }
-
     }
 }

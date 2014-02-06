@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -80,6 +81,10 @@ public class BulkCustomerDaoTest extends AbstractTransactionalJUnit4SpringContex
         if (bulkCustomer != null)
         {
             LOGGER.debug ("Retrieved bulk customer id [" + bulkCustomer.getId () + "]");
+        }
+        else
+        {
+            Assert.fail ("Could not find bulk customer [" + 2 + "]");
         }
 
         return;

@@ -96,7 +96,6 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
     @Before
     public void setUp ()
     {
-        LOGGER.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
 
         individualRequestDao =
@@ -105,8 +104,6 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
         bulkSubmission = individualRequestDao.fetch (IBulkSubmission.class, 10710);
         bulkCustomer = individualRequestDao.fetch (BulkCustomer.class, 10711);
         dataRetentionPeriod = 90;
-
-        LOGGER.debug ("After SetUp");
     }
 
     /**
@@ -245,7 +242,6 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
         individualRequestDao.persist (individualRequest);
 
         LOGGER.debug ("Individual Request persisted successfully");
-
     }
 
 }

@@ -73,7 +73,6 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
     @Override
     public void visit (final IIndividualRequest individualRequest, final ITree tree)
     {
-        LOGGER.debug ("started visit(individualRequest)");
         final IBulkCustomer bulkCustomer = individualRequest.getBulkSubmission ().getBulkCustomer ();
 
         // Validate user file reference is unique across data retention period for individual request
@@ -97,7 +96,6 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
             individualRequest.markRequestAsRejected (errorLog);
 
         }
-        LOGGER.debug ("completed visit(individualRequest)");
     }
 
     /**
@@ -109,5 +107,4 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
     {
         this.individualRequestDao = individualRequestDao;
     }
-
 }

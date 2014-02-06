@@ -71,8 +71,7 @@ public class ContextCleanupFilter implements Filter
     {
         filterChain.doFilter (servletRequest, servletResponse);
 
-        // After the request has been processed, now we do the clean up from the
-        // ThreadLocal
+        // After the request has been processed, clean up from the ThreadLocal.
         SdtContext.getContext ().remove ();
 
         LOGGER.debug ("Performed remove operation on the SdtContext");
@@ -83,5 +82,4 @@ public class ContextCleanupFilter implements Filter
     {
         // code to be called when the filter is destroyed.
     }
-
 }

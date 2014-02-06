@@ -33,9 +33,6 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -50,11 +47,6 @@ import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
 public class BulkCustomerValidator extends AbstractSdtValidator implements IBulkCustomerValidator
 {
     /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkCustomerValidator.class);
-
-    /**
      * No-argument Constructor.
      */
     public BulkCustomerValidator ()
@@ -64,8 +56,6 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
     @Override
     public void visit (final IBulkCustomer bulkCustomer, final ITree tree)
     {
-        LOGGER.debug ("Bulk customer is " + bulkCustomer.getSdtCustomerId ());
-
         final IBulkCustomer bulkCustomerFound =
                 getBulkCustomerDao ().getBulkCustomerBySdtId (bulkCustomer.getSdtCustomerId ());
 
@@ -77,7 +67,6 @@ public class BulkCustomerValidator extends AbstractSdtValidator implements IBulk
             parameters.add (getContactDetails ());
 
             createValidationException (parameters, IErrorMessage.ErrorCode.CUST_ID_INVALID);
-
         }
     }
 }

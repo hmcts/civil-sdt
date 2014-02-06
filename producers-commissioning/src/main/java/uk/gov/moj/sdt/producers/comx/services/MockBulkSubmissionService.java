@@ -61,16 +61,12 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
     @Override
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
     {
-        LOGGER.debug ("[saveBulkSubmission] started");
-
         // Set the SDT Bulk Reference for the handler's transformer to use
         bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
                 .getTargetApplication ().getTargetApplicationCode ()));
 
         // Update last seen bulk reference.
         SdtMetricsMBean.getMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
-
-        LOGGER.debug ("[saveBulkSubmission] completed");
     }
 
     /**
@@ -82,5 +78,4 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
     {
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
     }
-
 }

@@ -69,8 +69,12 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     public IBulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
                                               final int dataRetention) throws DataAccessException
     {
-        LOGGER.debug ("Get a Bulk Submission matching the Bulk Customer, "
-                + "Customer Reference and the Data Retention Period");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
+                    "customer reference[" + customerReference + "] and the data retention period[" + dataRetention +
+                    "]");
+        }
 
         // Create the criteria
         final Session session = getSessionFactory ().getCurrentSession ();
@@ -91,8 +95,12 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
     public IBulkSubmission getBulkSubmissionBySdtRef (final IBulkCustomer bulkCustomer, final String sdtBulkReference,
                                                       final int dataRetention) throws DataAccessException
     {
-        LOGGER.debug ("Get a bulk submission matching the Bulk Customer, "
-                + "SDT bulk reference and the Data Retention Period ");
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
+                    "SDT bulk reference[" + sdtBulkReference + "] and the data retention period [" + dataRetention +
+                    "]");
+        }
 
         // Create the criteria
         final Session session = getSessionFactory ().getCurrentSession ();

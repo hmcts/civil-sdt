@@ -71,8 +71,6 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
     @Override
     public void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree)
     {
-
-        LOGGER.debug ("started visit(BulkFeedbackRequest)");
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
 
         // Validate the bulk reference, throw an exception if it doesn't exist
@@ -85,9 +83,6 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
             replacements.add (String.valueOf (sdtBulkReference));
             createValidationException (replacements, IErrorMessage.ErrorCode.BULK_REF_INVALID);
         }
-
-        LOGGER.debug ("completed visit(BulkFeedbackRequest)");
-
     }
 
     /**

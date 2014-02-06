@@ -32,9 +32,6 @@ package uk.gov.moj.sdt.transformers;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -68,11 +65,6 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
         ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission>
 {
     /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackTransformer.class);
-
-    /**
      * Private constructor.
      */
     private BulkFeedbackTransformer ()
@@ -82,8 +74,6 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
     @Override
     public IBulkFeedbackRequest transformJaxbToDomain (final BulkFeedbackRequestType bulkFeedbackRequest)
     {
-        LOGGER.debug ("transform BulkFeedbackRequestType to IBulkFeebackRequest");
-
         // Grab the request details from the header
         final HeaderType header = bulkFeedbackRequest.getHeader ();
         final IBulkFeedbackRequest bulkFeedback = new BulkFeedbackRequest ();
@@ -100,8 +90,6 @@ public final class BulkFeedbackTransformer extends AbstractTransformer implement
     @Override
     public BulkFeedbackResponseType transformDomainToJaxb (final IBulkSubmission bulkSubmission)
     {
-        LOGGER.debug ("transform IBulkSubmission to BulkFeedbackResponseType");
-
         // Create target JAXB response object.
         final BulkFeedbackResponseType bulkFeedbackResponseType = new BulkFeedbackResponseType ();
 

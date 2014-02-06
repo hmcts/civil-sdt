@@ -100,7 +100,7 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
     {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("ServiceRequestOutputboundInterceptor creating " +
+            LOGGER.debug ("AbstractServiceRequest creating " +
                     "outbound payload database log for ServiceRequest: " +
                     SdtContext.getContext ().getServiceRequestId ());
         }

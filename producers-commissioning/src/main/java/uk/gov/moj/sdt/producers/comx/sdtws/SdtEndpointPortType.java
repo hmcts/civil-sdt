@@ -88,7 +88,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("endpoint called for method [submitBulk] by customer [" +
+            LOGGER.debug ("Endpoint called for submit bulk by customer [" +
                     bulkRequest.getHeader ().getSdtCustomerId () + "]");
         }
 
@@ -144,8 +144,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("endpoint called for method [getBulkFeedback] by customer [" +
-                    bulkFeedbackRequest.getHeader ().getSdtCustomerId ());
+            LOGGER.debug ("Endpoint called for bulk feedback by customer [" +
+                    bulkFeedbackRequest.getHeader ().getSdtCustomerId () + "]");
         }
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
@@ -201,8 +201,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
     {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("endpoint called for method [submitQuery] by customer [" +
-                    submitQueryRequest.getHeader ().getSdtCustomerId ());
+            LOGGER.debug ("Endpoint called for submit query by customer [" +
+                    submitQueryRequest.getHeader ().getSdtCustomerId () + "]");
         }
 
         if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))

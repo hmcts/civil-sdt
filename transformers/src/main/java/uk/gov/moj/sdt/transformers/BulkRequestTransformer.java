@@ -34,8 +34,6 @@ package uk.gov.moj.sdt.transformers;
 import java.util.List;
 
 import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -64,16 +62,10 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
         ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission>
 {
     /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkRequestTransformer.class);
-
-    /**
      * Private constructor.
      */
     private BulkRequestTransformer ()
     {
-
     }
 
     /**
@@ -125,8 +117,6 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
     @Override
     public IBulkSubmission transformJaxbToDomain (final BulkRequestType bulkRequest)
     {
-        LOGGER.debug ("transform BulkRequestType to IBulkSubmission");
-
         final HeaderType headerType = bulkRequest.getHeader ();
 
         // Create target domain object.
@@ -156,8 +146,6 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
     @Override
     public BulkResponseType transformDomainToJaxb (final IBulkSubmission bulkSubmission)
     {
-        LOGGER.debug ("transform IBulkSubmission to BulkResponseType");
-
         final BulkResponseType jaxb = new BulkResponseType ();
         // Populate the generated SDT Bulk Reference in response
         jaxb.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());

@@ -92,7 +92,7 @@ public abstract class AbstractWsConsumer
     {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("Create client for target [" + targetApplicationCode + "] service [" + serviceType +
+            LOGGER.debug ("Get client for target [" + targetApplicationCode + "] service [" + serviceType +
                     "] endpoint [" + webServiceEndPoint + "] conn timeout [" + connectionTimeOut + "] recv timeout [" +
                     receiveTimeOut + "]");
         }
@@ -177,12 +177,6 @@ public abstract class AbstractWsConsumer
                                        final String errorReferenceContext)
         throws WebServiceException, OutageException, TimeoutException, SoapFaultException
     {
-
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("handle exception -> " + wsException);
-        }
-
         // If the target application is unavailable continue trying to send message indefinitely.
         if ((wsException.getCause () instanceof ConnectException) && rethrowOnFailureToConnect)
         {

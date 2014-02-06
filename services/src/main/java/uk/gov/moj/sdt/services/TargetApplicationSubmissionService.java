@@ -108,6 +108,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         // Look for the individual request matching this unique request reference.
         final IIndividualRequest individualRequest = this.getIndRequestBySdtReference (sdtRequestReference);
 
+        LOGGER.debug ("Process individual request [" + individualRequest.getSdtBulkReference () + "].");
+
         // Proceed ahead if the Individual Request is found.
         if (individualRequest != null)
         {
@@ -149,9 +151,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 this.handleWebServiceException (individualRequest, e.getMessage ());
 
             }
-
-            LOGGER.debug ("Individual request " + sdtRequestReference + " processing completed.");
-
         }
         else
         {
@@ -171,6 +170,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void updateForwardingRequest (final IIndividualRequest individualRequest)
     {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Update individual request [" + individualRequest.getSdtBulkReference () +
+                    "] with status FORWARDED.");
+        }
+
         individualRequest.incrementForwardingAttempts ();
         this.getIndividualRequestDao ().persist (individualRequest);
 
@@ -187,7 +192,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void updateRequestTimeOut (final IIndividualRequest individualRequest)
     {
-        // Set the updated date .
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Update individual request [" + individualRequest.getSdtBulkReference () + "] as timed out.");
+        }
+
+        // Set the updated date.
         // We've already incremented the forwarding attempts and set the status to forwarded so
         // no need to do that here again.
         individualRequest
@@ -215,6 +225,9 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     private void sendRequestToTargetApp (final IIndividualRequest individualRequest)
         throws OutageException, TimeoutException
     {
+        LOGGER.debug ("Send individual request [" + individualRequest.getSdtBulkReference () +
+                "] to target application.");
+
         final IGlobalParameter connectionTimeOutParam =
                 this.globalParametersCache.getValue (IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.TARGET_APP_TIMEOUT.name ());
@@ -247,6 +260,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void updateRequestSoapError (final IIndividualRequest individualRequest, final String soapFaultError)
     {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Update individual request [" + individualRequest.getSdtBulkReference () +
+                    "] as status REJECTED following soap error.");
+        }
+
         final IErrorMessage errorMessage =
                 this.getErrorMessagesCache ().getValue (IErrorMessage.class,
                         IErrorMessage.ErrorCode.SDT_INT_ERR.name ());
@@ -289,6 +308,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void handleWebServiceException (final IIndividualRequest individualRequest, final String errorMessage)
     {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Update individual request [" + individualRequest.getSdtBulkReference () +
+                    "] with internal error and send to dead letter queue.");
+        }
+
         // Truncate the error message to fit database column length
         String internalError = errorMessage;
         if (errorMessage != null && errorMessage.length () > MAX_ALLOWED_CHARS)
@@ -308,8 +333,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         final String targetAppCode =
                 individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
 
+        // Write to dead letter queue.
         this.getMessageWriter ().queueMessage (messageObj, targetAppCode, true);
-
     }
 
     /**
@@ -510,5 +535,4 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     {
         this.errorMessagesCache = errorMessagesCache;
     }
-
 }

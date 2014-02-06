@@ -74,7 +74,6 @@ public class SubmitQueryEnricherTest
     @Test
     public void testSuccess ()
     {
-        LOGGER.debug ("test for successful scenario");
         SdtContext.getContext ().setRawOutXml ("<record></record>");
         final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results>" +

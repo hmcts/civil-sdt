@@ -87,13 +87,16 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                                           final long receiveTimeOut) throws OutageException, TimeoutException
     {
         // Transform domain object to web service object
+        LOGGER.debug ("Transform from IIndividualRequest to IndividualRequestType");
         final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb (individualRequest);
 
         // Process and call the end point web service
+        LOGGER.debug ("Invoke target application service for individual request");
         final IndividualResponseType responseType =
                 this.invokeTargetAppService (individualRequestType, individualRequest, connectionTimeOut,
                         receiveTimeOut);
 
+        LOGGER.debug ("Transform from IndividualResponseType to IIndividualRequest");
         this.transformer.transformJaxbToDomain (responseType, individualRequest);
     }
 
@@ -124,8 +127,9 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name (), webServiceEndPoint,
                         connectionTimeOut, receiveTimeOut);
 
-        // Loop until the target application becomes available.
         int attemptCount = 0;
+
+        // Loop until the target application becomes available.
         while (true)
         {
             long startTime = 0;
@@ -134,7 +138,10 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
             {
                 SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
 
-                LOGGER.debug ("Submitting individual request to target application, attempt[" + (++attemptCount) + "]");
+                attemptCount++;
+
+                LOGGER.debug ("Submitting individual request[" + iRequest.getSdtRequestReference () +
+                        "] to target application[" + targetAppCode + "], attempt[" + attemptCount + "]");
 
                 if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
                 {
@@ -253,5 +260,4 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     {
         this.rethrowOnFailureToConnect = rethrowOnFailureToConnect;
     }
-
 }

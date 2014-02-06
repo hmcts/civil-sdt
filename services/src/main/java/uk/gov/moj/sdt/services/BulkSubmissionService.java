@@ -101,15 +101,14 @@ public class BulkSubmissionService implements IBulkSubmissionService
     @Transactional (propagation = Propagation.REQUIRED)
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
     {
-
         enrich (bulkSubmission);
 
         enrich (bulkSubmission.getIndividualRequests ());
 
         // Now persist the bulk submissions.
-        this.getGenericDao ().persist (bulkSubmission);
+        getGenericDao ().persist (bulkSubmission);
 
-        this.enqueueValidRequests (bulkSubmission.getIndividualRequests ());
+        enqueueValidRequests (bulkSubmission.getIndividualRequests ());
 
     }
 
@@ -120,6 +119,8 @@ public class BulkSubmissionService implements IBulkSubmissionService
      */
     private void enqueueValidRequests (final List<IIndividualRequest> individualRequests)
     {
+        LOGGER.debug ("Enqueue " + individualRequests.size () + " requests");
+
         for (final IIndividualRequest iRequest : individualRequests)
         {
             if (iRequest.isEnqueueable ())
@@ -136,8 +137,6 @@ public class BulkSubmissionService implements IBulkSubmissionService
      */
     private void enrich (final List<IIndividualRequest> individualRequests)
     {
-        LOGGER.debug ("enrich individual requests");
-
         for (IIndividualRequest iRequest : individualRequests)
         {
             iRequest.populateReferences ();
@@ -145,7 +144,6 @@ public class BulkSubmissionService implements IBulkSubmissionService
 
         // Populate the individual requests with the raw xml specific for that request.
         individualRequestsXmlParser.populateRawRequest (individualRequests);
-
     }
 
     /**
@@ -155,7 +153,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
      */
     private void enrich (final IBulkSubmission bulkSubmission)
     {
-        LOGGER.debug ("enrich bulk submission instance");
+        LOGGER.debug ("Enrich bulk submission instance to prepare for persistence");
 
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
         bulkSubmission.setPayload (SdtContext.getContext ().getRawInXml ());
@@ -303,5 +301,4 @@ public class BulkSubmissionService implements IBulkSubmissionService
     {
         this.messagingUtility = messagingUtility;
     }
-
 }

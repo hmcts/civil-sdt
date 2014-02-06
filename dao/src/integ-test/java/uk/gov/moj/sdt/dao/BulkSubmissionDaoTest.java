@@ -100,7 +100,6 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
     @Before
     public void setUp ()
     {
-        LOGGER.debug ("Before SetUp");
         DBUnitUtility.loadDatabase (this.getClass (), true);
 
         bulkSubmissionDao =
@@ -109,8 +108,6 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         targetApplication = bulkSubmissionDao.fetch (ITargetApplication.class, 10713L);
         dataRetentionPeriod = 90;
         sdtBulkReference = "MCOL-10012013010101-100000009";
-
-        LOGGER.debug ("After SetUp");
     }
 
     /**
@@ -122,7 +119,6 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
 
         final IBulkSubmission bulkSubmission = new BulkSubmission ();
 
-        LOGGER.debug ("Bulk Customer is " + bulkCustomer);
         bulkSubmission.setBulkCustomer (bulkCustomer);
 
         bulkSubmission.setTargetApplication (targetApplication);
@@ -136,8 +132,6 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
 
         bulkSubmissionDao.persist (bulkSubmission);
-
-        LOGGER.debug ("Persisted successfully");
 
         final IBulkSubmission submission =
                 bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sdtBulkReference, dataRetentionPeriod);
@@ -262,9 +256,5 @@ public class BulkSubmissionDaoTest extends AbstractTransactionalJUnit4SpringCont
         bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
 
         bulkSubmissionDao.persist (bulkSubmission);
-
-        LOGGER.debug ("Bulk Submission persisted successfully");
-
     }
-
 }

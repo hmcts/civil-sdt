@@ -127,7 +127,7 @@ public final class XmlNamespaceUtils
 
             if (LOGGER.isDebugEnabled ())
             {
-                LOGGER.debug ("Namespace key [" + namespaceKey + "], value [" + namespaceValue + "]");
+                LOGGER.debug ("Extracting namespace with key [" + namespaceKey + "], value [" + namespaceValue + "]");
             }
 
             namespaces.put (namespaceKey, namespaceValue);
@@ -146,11 +146,6 @@ public final class XmlNamespaceUtils
     public static Map<String, String> findMatchingNamespaces (final String xmlFragment,
                                                               final Map<String, String> allNamespaces)
     {
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Finding matching namespaces for fragment [" + xmlFragment + "]");
-        }
-
         // Clear out previous namespaces.
         final Map<String, String> matchingNamespaces = new HashMap<String, String> ();
 
@@ -175,6 +170,8 @@ public final class XmlNamespaceUtils
                 // Make sure this namespace has been defined.
                 if ( !allNamespaces.containsKey (namespaceKey))
                 {
+                    LOGGER.error ("Namespace[" + namespaceKey + "] missing from incoming raw xml[" + xmlFragment + "]");
+
                     throw new RuntimeException ("Namespace [" + namespaceKey + "] missing from incoming raw xml[" +
                             xmlFragment + "]");
                 }
@@ -182,6 +179,11 @@ public final class XmlNamespaceUtils
                 // Copy namespace to the set of matching namespaces for this fragment.
                 matchingNamespaces.put (namespaceKey, allNamespaces.get (namespaceKey));
             }
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Found matching namespaces for fragment [" + xmlFragment + "]:" + matchingNamespaces);
         }
 
         return matchingNamespaces;
@@ -196,12 +198,21 @@ public final class XmlNamespaceUtils
      */
     public static String addNamespaces (final String xmlFragment, final Map<String, String> namespaces)
     {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Adding namespaces to fragment [" + xmlFragment + "]");
+        }
+
         String result = xmlFragment;
 
         // Build pattern to identify first xml element for injection of namespace. In the pattern below, any namespaces
         // already present need to be discarded and, although they are not wanted, they must be grouped in round
         // brackets since this is the only way to put a repeater against them. What ends up in the group 2 is the
         // last such namespace matched which is then discarded.
+        //
+        // group1 - qualified tag name of first tag
+        // group2 - namespaces added by CXL which are to be discarded
+        // group3 - rest of the tag contents
         final Pattern pattern =
                 Pattern.compile ("(<[\\S&&[^:]]+?:[\\w-]+)[\\s]*(xmlns:[\\S&&[^>]]+[\\s]*)*([\\s\\S]*?)[\\s]*>");
 
@@ -242,6 +253,11 @@ public final class XmlNamespaceUtils
             }
 
             result = matcher.replaceFirst (replacementXml.toString ());
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Enhanced fragment [" + result + "]");
         }
 
         return result;

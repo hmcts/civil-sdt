@@ -64,8 +64,6 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
     @Override
     public IBulkSubmission getBulkFeedback (final IBulkFeedbackRequest bulkFeedbackRequest)
     {
-        LOGGER.debug ("getBulkFeedback started");
-
         // Determine which feedback sample to return based on the SDT bulk reference
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
         final BulkFeedbackFactory bulkFeedbackFactory = bulkFeedbackFactoryMap.get (sdtBulkReference);
@@ -74,7 +72,6 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
         SdtContext.getContext ().setTargetApplicationRespMap (bulkFeedbackFactory.getTargetResponseMap ());
 
         return populateBulkSubmission (bulkFeedbackFactory, sdtBulkReference);
-
     }
 
     /**
@@ -91,7 +88,6 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
         bulkSubmission.setSdtBulkReference (sdtBulkReference);
 
         return bulkSubmission;
-
     }
 
     /**
@@ -103,5 +99,4 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
     {
         this.bulkFeedbackFactoryMap = bulkFeedbackFactoryMap;
     }
-
 }

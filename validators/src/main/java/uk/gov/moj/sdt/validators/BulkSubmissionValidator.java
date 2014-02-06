@@ -78,10 +78,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
     @Override
     public void visit (final IBulkSubmission bulkSubmission, final ITree tree)
     {
-
-        // Do validation of bulk submission.
-        LOGGER.debug ("started visit(BulkSubmission)");
-
         // Validate SDT Customer ID and target application
         final IBulkCustomer bulkCustomer = bulkSubmission.getBulkCustomer ();
         final long sdtCustomerId = bulkCustomer.getSdtCustomerId ();
@@ -139,9 +135,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
                 individualRequest.markRequestAsRejected (errorLog);
             }
         }
-
-        LOGGER.debug ("finished visit(BulkSubmission)");
-
     }
 
     /**
@@ -183,6 +176,5 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus ());
 
         }
-
     }
 }

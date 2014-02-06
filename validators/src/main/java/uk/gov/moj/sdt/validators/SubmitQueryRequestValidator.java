@@ -60,13 +60,8 @@ public class SubmitQueryRequestValidator extends AbstractSdtValidator implements
     @Override
     public void visit (final ISubmitQueryRequest submitQueryRequest, final ITree tree)
     {
-        LOGGER.debug ("started visit(ISubmitQueryRequest)");
-
         // Validate customer exists and can access target application
         checkCustomerHasAccess (submitQueryRequest.getBulkCustomer ().getSdtCustomerId (), submitQueryRequest
                 .getTargetApplication ().getTargetApplicationCode ());
-
-        LOGGER.debug ("completed visit(ISubmitQueryRequest)");
-
     }
 }
