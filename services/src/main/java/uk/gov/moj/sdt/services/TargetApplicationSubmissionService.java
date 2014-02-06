@@ -108,11 +108,11 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         // Look for the individual request matching this unique request reference.
         final IIndividualRequest individualRequest = this.getIndRequestBySdtReference (sdtRequestReference);
 
-        LOGGER.debug ("Process individual request [" + individualRequest.getSdtBulkReference () + "].");
-
         // Proceed ahead if the Individual Request is found.
         if (individualRequest != null)
         {
+            LOGGER.debug ("Process individual request [" + individualRequest.getSdtBulkReference () + "].");
+
             // Check the configurable delay from system parameter and delay the consumer call for that time.
             this.delayRequestProcessing (individualRequest);
 
