@@ -81,7 +81,7 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
     /**
      * Constant to define number of individual requests per bulk.
      */
-    private static final int IND_REQ_PER_BULK = 1000;
+    private static final int IND_REQ_PER_BULK = 2000;
 
     /**
      * Maximum number of requests to execute on the threads.
@@ -319,16 +319,13 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
         @Override
         public void run ()
         {
-            LOGGER.info ("Calling bulk submission web service for request : " +
-                    requestType.getHeader ().getCustomerReference ());
-
             try
             {
-                LOGGER.info ("Start test for thread " + Thread.currentThread ().getName () + " at " +
-                        new Date ().toString ());
+                LOGGER.info ("Start test for thread [" + Thread.currentThread ().getName () + "] for request [" +
+                        requestType.getHeader ().getCustomerReference () + "]at [" + new Date ().toString () + "]");
                 BulkResponseType responseType = callTestWebService (requestType);
-                LOGGER.info ("End test for thread " + Thread.currentThread ().getName () + " at " +
-                        new Date ().toString ());
+                LOGGER.info ("End test for thread [" + Thread.currentThread ().getName () + "] for request [" +
+                        requestType.getHeader ().getCustomerReference () + "]at [" + new Date ().toString () + "]");
             }
             catch (Exception e)
             {
