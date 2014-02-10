@@ -100,8 +100,7 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
     {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("AbstractServiceRequest creating " +
-                    "outbound payload database log for ServiceRequest: " +
+            LOGGER.debug ("AbstractServiceRequest creating " + "outbound payload database log for ServiceRequest: " +
                     SdtContext.getContext ().getServiceRequestId ());
         }
 
@@ -113,8 +112,7 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor
         {
             // Get the log message for the inbound request so we can add the outbound response to it.
             final IServiceRequest serviceRequest =
-                    this.getServiceRequestDao ().fetch (ServiceRequest.class,
-                            SdtContext.getContext ().getServiceRequestId ());
+                    this.getServiceRequestDao ().fetch (ServiceRequest.class, serviceRequestId);
 
             // Add the response and timestamp to the service request record.
             serviceRequest.setResponsePayload (envelope);
