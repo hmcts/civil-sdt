@@ -81,6 +81,7 @@
         <archive path="C:/disc/3rd-party/jars/servlet-api-2.5-20081211.jar"/>
         <archive path="C:/disc/3rd-party/jars/dbunit-2.4.8.jar"/>
         <archive path="C:/disc/3rd-party/jars/easymock-3.1.jar"/>
+		<archive path="C:/disc/3rd-party/jars/objenesis-1.2.jar"/>
         <archive path="C:/disc/3rd-party/jars/spring3/org.springframework.test-3.1.2.RELEASE.jar" source="C:/disc/3rd-party/sources/org.springframework.test-sources-3.1.2.RELEASE.jar"/>
         <archive path="C:/disc/3rd-party/jars/spring3/junit-4.10.jar"/>
     </library>

@@ -109,6 +109,7 @@
         <filelist dir="${3rd-party.dir}">
             <file name="${dbunit.jar}" />
             <file name="${easymock.jar}" />
+        	<file name="${objenesis.jar}" />
         </filelist>
         <filelist dir="${3rd-party.spring3.dir}">
             <file name="${junit.jar}" />
