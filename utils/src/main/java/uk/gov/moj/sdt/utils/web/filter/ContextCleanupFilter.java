@@ -69,12 +69,17 @@ public class ContextCleanupFilter implements Filter
     public void doFilter (final ServletRequest servletRequest, final ServletResponse servletResponse,
                           final FilterChain filterChain) throws IOException, ServletException
     {
-        filterChain.doFilter (servletRequest, servletResponse);
+        try
+        {
+            filterChain.doFilter (servletRequest, servletResponse);
+        }
+        finally
+        {
+            // After the request has been processed, clean up from the ThreadLocal.
+            SdtContext.getContext ().remove ();
 
-        // After the request has been processed, clean up from the ThreadLocal.
-        SdtContext.getContext ().remove ();
-
-        LOGGER.debug ("Performed remove operation on the SdtContext");
+            LOGGER.debug ("Performed remove operation on the SdtContext");
+        }
     }
 
     @Override
