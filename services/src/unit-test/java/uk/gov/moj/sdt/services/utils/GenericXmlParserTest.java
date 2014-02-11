@@ -30,12 +30,9 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.services.utils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,7 +86,7 @@ public class GenericXmlParserTest
 
         genericXmlParser.setReplacementNamespaces (replacementNamespaces);
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = this.getRawXml ("testSubmitQueryResponse.xml");
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testSubmitQueryResponse.xml");
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
@@ -120,7 +117,7 @@ public class GenericXmlParserTest
         genericXmlParser.setReplacementNamespaces (replacementNamespaces);
 
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = this.getRawXml ("testIndividualResponseRejected.xml");
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testIndividualResponseRejected.xml");
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
@@ -148,7 +145,7 @@ public class GenericXmlParserTest
         genericXmlParser.setReplacementNamespaces (replacementNamespaces);
 
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = this.getRawXml ("testIndividualResponse.xml");
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testIndividualResponse.xml");
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
@@ -179,7 +176,7 @@ public class GenericXmlParserTest
         genericXmlParser.setReplacementNamespaces (replacementNamespaces);
 
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = this.getRawXml ("testIndividualResponseEmptyDetail.xml");
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testIndividualResponseEmptyDetail.xml");
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
@@ -189,30 +186,6 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals ("Failed to find expected response", "", result);
         // CHECKSTYLE:ON
-    }
-
-    /**
-     * 
-     * @param filename name of file containing source xml
-     * @return rax xml from a test file
-     * @throws IOException during the read operations
-     */
-    private String getRawXml (final String filename) throws IOException
-    {
-        // Read the test xml file.
-        File myFile;
-        String message = "";
-
-        myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", filename, false));
-
-        message = FileUtils.readFileToString (myFile);
-
-        // Remove linefeeds as they stop the regular expression working.
-        message = message.replace ('\n', ' ');
-        message = message.replace ('\r', ' ');
-
-        return message;
-
     }
 
 }

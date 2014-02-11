@@ -37,8 +37,6 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
@@ -50,11 +48,6 @@ import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
  */
 public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 {
-    /**
-     * Logging object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (XmlNamespaceUtilsTest.class);
-
     /**
      * Constructs a new {@link XmlNamespaceUtilsTest}.
      * 
@@ -283,6 +276,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
         try
         {
+            @SuppressWarnings ("unused")
             final Map<String, String> map =
                     XmlNamespaceUtils.findMatchingNamespaces ("   <xsi:some-tag some-attribute=\"some value\">"
                             + "       <aop:some-other-tag some-attribute=\"some value\"\\>"

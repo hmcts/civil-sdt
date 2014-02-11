@@ -34,9 +34,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -59,11 +56,6 @@ import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
  */
 public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtValidator.class);
-
     /**
      * Bulk customer dao.
      */

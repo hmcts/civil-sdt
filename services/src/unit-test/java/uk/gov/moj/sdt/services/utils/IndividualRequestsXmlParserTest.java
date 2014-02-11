@@ -30,14 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +89,7 @@ public class IndividualRequestsXmlParserTest
     public void getIndividualRequestsRawXmlMap () throws Exception
     {
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = this.getRawXml ("testXMLValid.xml");
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testXMLValid.xml");
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
@@ -143,7 +141,7 @@ public class IndividualRequestsXmlParserTest
     public void testParserPerformance () throws IOException
     {
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = this.getRawXml ("testLargeBulkRequest.xml");
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testLargeBulkRequest.xml");
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
@@ -177,26 +175,4 @@ public class IndividualRequestsXmlParserTest
         }
     }
 
-    /**
-     * Return contents from given file.
-     * 
-     * @param filename file to read.
-     * @return rax xml from a test file
-     * @throws IOException during the read operations
-     */
-    private String getRawXml (final String filename) throws IOException
-    {
-        String message = "";
-
-        final File myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", filename, false));
-
-        message = FileUtils.readFileToString (myFile);
-
-        // Remove linefeeds as they stop the regular expression working.
-        message = message.replace ('\n', ' ');
-        message = message.replace ('\r', ' ');
-
-        return message;
-
-    }
 }

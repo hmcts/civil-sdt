@@ -131,16 +131,6 @@ public final class PerformanceLogger
     private static final Logger LOGGER = Logger.getLogger ("sdt.performance");
 
     /**
-     * Start delimiter for formatting.
-     */
-    private static final String START_DELIMITER = "| ";
-
-    /**
-     * End delimiter for formatting.
-     */
-    private static final String END_DELIMITER = " |";
-
-    /**
      * Length of a formatted line.
      */
     private static final int LINE_LENGTH = 16;

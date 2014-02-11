@@ -104,13 +104,6 @@ public class BulkFeedbackServiceTest
     private IBulkFeedbackRequest bulkFeedbackRequest;
 
     /**
-     * The Dao.
-     * 
-     */
-
-    private IBulkSubmission bulkSubmission;
-
-    /**
      * Bulk Customer to use for the test.
      */
     private IBulkCustomer bulkCustomer;
@@ -186,8 +179,7 @@ public class BulkFeedbackServiceTest
         expect (mockBulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, reference, dataRetentionPeriod))
                 .andReturn (bulkSubmission);
         replay (mockBulkSubmissionDao);
-        final IBulkSubmission bulkSubmissionAfterFeedback;
-        bulkSubmissionAfterFeedback = bulkFeedbackService.getBulkFeedback (bulkFeedbackRequest);
+        bulkFeedbackService.getBulkFeedback (bulkFeedbackRequest);
 
         final Map<String, String> targetApplicationRespMap = SdtContext.getContext ().getTargetApplicationRespMap ();
 

@@ -30,20 +30,16 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -86,11 +82,6 @@ import uk.gov.moj.sdt.utils.Utilities;
 public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4SpringContextTests
 {
     /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionServiceIntTest.class);
-
-    /**
      * Test subject.
      */
     private IBulkSubmissionService bulkSubmissionService;
@@ -118,7 +109,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     @Rollback (false)
     public void saveSingleSubmission () throws IOException
     {
-        final String rawXml = this.getRawXml ("testXMLValid2.xml");
+        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testSampleRequest.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
 
         final IBulkSubmission bulkSubmission = this.createBulkSubmission (1);
@@ -158,7 +149,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     @Rollback (false)
     public void saveMultipleSubmissions () throws IOException
     {
-        final String rawXml = this.getRawXml ("testXMLValid3.xml");
+        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testLargeSampleRequest.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
 
         final IBulkSubmission bulkSubmission = this.createBulkSubmission (62);
@@ -273,31 +264,6 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         bulkSubmission.addIndividualRequest (individualRequest);
 
         return individualRequest;
-    }
-
-    /**
-     * 
-     * @return rax xml from a test file
-     * @param fileName the name of the file to load
-     * @throws IOException during the read operations
-     */
-    private String getRawXml (final String fileName) throws IOException
-    {
-        // Read the test xml file.
-        File myFile;
-        String message = "";
-
-        // XPathHandler xmlHandler = new XPathHandler ();
-
-        myFile = new File (Utilities.checkFileExists ("src/integ-test/resources/", fileName, false));
-
-        message = FileUtils.readFileToString (myFile);
-
-        // Remove linefeeds as they stop the regular expression working.
-        message = message.replace ('\n', ' ');
-        message = message.replace ('\r', ' ');
-        return message;
-
     }
 
 }

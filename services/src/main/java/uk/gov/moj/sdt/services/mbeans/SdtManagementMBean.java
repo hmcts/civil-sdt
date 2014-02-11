@@ -89,11 +89,6 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     private IIndividualRequestDao individualRequestDao;
 
     /**
-     * This variable holding the message writer reference.
-     */
-    private IMessageWriter messageWriter;
-
-    /**
      * This variable holding the messaging utility reference.
      */
     private IMessagingUtility messagingUtility;
@@ -198,7 +193,6 @@ public final class SdtManagementMBean implements ISdtManagementMBean
      */
     public void setMessageWriter (final IMessageWriter messageWriter)
     {
-        this.messageWriter = messageWriter;
     }
 
     /**

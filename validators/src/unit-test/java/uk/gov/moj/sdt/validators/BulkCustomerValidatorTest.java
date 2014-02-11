@@ -37,8 +37,6 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -58,11 +56,6 @@ import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
  */
 public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkCustomerValidatorTest.class);
-
     /**
      * Subject for test.
      */

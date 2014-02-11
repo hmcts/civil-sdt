@@ -30,9 +30,6 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IServiceTypeValidator;
@@ -45,11 +42,6 @@ import uk.gov.moj.sdt.validators.api.IServiceTypeValidator;
  */
 public class ServiceTypeValidator extends AbstractSdtValidator implements IServiceTypeValidator
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (ServiceTypeValidator.class);
-
     /**
      * No-argument Constructor.
      */

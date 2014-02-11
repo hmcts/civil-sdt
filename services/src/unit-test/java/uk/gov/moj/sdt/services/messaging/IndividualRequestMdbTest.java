@@ -40,8 +40,6 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.services.TargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
@@ -54,11 +52,6 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
  */
 public class IndividualRequestMdbTest
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestMdbTest.class);
-
     /**
      * Mock service for the message processing.
      */

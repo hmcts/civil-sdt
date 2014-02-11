@@ -49,8 +49,6 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Assert;
 import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
@@ -67,11 +65,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  */
 public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 {
-    /**
-     * Static logging object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractWebServiceTest.class);
-
     /**
      * Setup the test.
      */
@@ -152,7 +145,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
      *            the JAXB object returned by the web service.
      * @return the XML corresponding to the given JAXB object tree.
      */
-    @SuppressWarnings ("unchecked")
     private void checkXmlFromJaxb (JaxbResponseType response)
     {
         try

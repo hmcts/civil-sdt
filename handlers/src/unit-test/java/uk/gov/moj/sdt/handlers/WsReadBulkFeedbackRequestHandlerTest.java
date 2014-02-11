@@ -41,8 +41,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -75,11 +73,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackRespon
 public class WsReadBulkFeedbackRequestHandlerTest
 {
     /**
-     * Logger for debugging.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (WsReadBulkFeedbackRequestHandlerTest.class);
-
-    /**
      * Bulk Feedback Service for testing.
      */
     private WsReadBulkFeedbackRequestHandler wsReadBulkFeedbackReqHandler;
@@ -108,7 +101,6 @@ public class WsReadBulkFeedbackRequestHandlerTest
      * /**
      * Setup of the mock dao and injection of other objects.
      */
-    @SuppressWarnings ("unchecked")
     @Before
     public void setUp ()
     {
@@ -172,13 +164,12 @@ public class WsReadBulkFeedbackRequestHandlerTest
         headerType.setSdtCustomerId ((long) customerId);
 
         bulkFeedbackRequestType.setHeader (headerType);
-        final BulkFeedbackResponseType bulkFeedbackResponseType;
 
         EasyMock.expect (mockBulkFeedbackService.getBulkFeedback (bulkFeedbackRequestDomain))
                 .andReturn (bulkSubmission);
         EasyMock.replay (mockBulkFeedbackService);
 
-        bulkFeedbackResponseType = wsReadBulkFeedbackReqHandler.getBulkFeedback (bulkFeedbackRequestType);
+        wsReadBulkFeedbackReqHandler.getBulkFeedback (bulkFeedbackRequestType);
 
         EasyMock.verify (mockBulkFeedbackService);
 

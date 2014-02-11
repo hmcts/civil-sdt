@@ -30,14 +30,12 @@
  * $LastChangedBy: agarwals $ */
 package uk.gov.moj.sdt.interceptors.enricher;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -316,7 +314,7 @@ public class BulkFeedbackEnricherTest
         SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
 
         // Setup the XML to be enriched.
-        final String inXml = this.getRawXml ("testLargeFeedbackResponse.xml");
+        final String inXml = Utilities.getRawXml ("src/unit-test/resources/", "testLargeFeedbackResponse.xml");
 
         LOGGER.info ("Start enrichment of " + targetApplicationRespMap.size () + " responses.");
 
@@ -326,27 +324,4 @@ public class BulkFeedbackEnricherTest
         LOGGER.info ("End enrichment of " + targetApplicationRespMap.size () + " responses.");
     }
 
-    /**
-     * 
-     * @param filename name of file containing source xml
-     * @return rax xml from a test file
-     * @throws IOException during the read operations
-     */
-    private String getRawXml (final String filename) throws IOException
-    {
-        // Read the test xml file.
-        File myFile;
-        String message = "";
-
-        myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", filename, false));
-
-        message = FileUtils.readFileToString (myFile);
-
-        // Remove linefeeds as they stop the regular expression working.
-        message = message.replace ('\n', ' ');
-        message = message.replace ('\r', ' ');
-
-        return message;
-
-    }
 }

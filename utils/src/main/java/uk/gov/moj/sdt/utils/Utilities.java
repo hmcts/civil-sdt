@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -214,6 +215,30 @@ public final class Utilities
         final SimpleDateFormat formatter = new SimpleDateFormat ("dd-MMM-yyyy HH:mm");
         final String formattedDate = formatter.format (d);
         return formattedDate;
+    }
+
+    /**
+     * Obtain xml contents from given file. Removes line feeds from content so that regular expressions work as
+     * expected.
+     * 
+     * @param dirName directory for the file.
+     * @param fileName name of the file.
+     * @return raw xml read from the file.
+     * @throws IOException in case of errors during read operation
+     */
+    public static String getRawXml (final String dirName, final String fileName) throws IOException
+    {
+        String message = "";
+
+        final File myFile = new File (Utilities.checkFileExists (dirName, fileName, false));
+
+        message = FileUtils.readFileToString (myFile);
+
+        // Remove linefeeds as they stop the regular expression working.
+        message = message.replace ('\n', ' ');
+        message = message.replace ('\r', ' ');
+        return message;
+
     }
 
 }

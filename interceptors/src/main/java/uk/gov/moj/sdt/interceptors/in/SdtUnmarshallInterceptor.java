@@ -37,8 +37,8 @@ import org.apache.cxf.interceptor.DocLiteralInInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.phase.PhaseInterceptorChain;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
@@ -54,6 +54,11 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor
 {
     /**
+     * Logger object.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (SdtUnmarshallInterceptor.class);
+    
+    /**
      * Test interceptor to prove concept.
      */
     public SdtUnmarshallInterceptor ()
@@ -63,7 +68,6 @@ public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
     public void handleMessage (final SoapMessage message) throws Fault
     {
         // Call the following interceptors in the chain.
@@ -87,8 +91,7 @@ public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor
         catch (final Exception e)
         // CHECKSTYLE:ON
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace ();
+            LOGGER.error("Error in unmarshalling interceptor" , e);
         }
     }
 }

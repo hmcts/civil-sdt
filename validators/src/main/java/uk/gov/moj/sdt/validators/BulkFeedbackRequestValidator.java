@@ -33,9 +33,6 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -51,11 +48,6 @@ import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
  */
 public class BulkFeedbackRequestValidator extends AbstractSdtValidator implements IBulkFeedbackRequestValidator
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackRequestValidator.class);
-
     /**
      * Bulk submission dao.
      */

@@ -33,9 +33,6 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -53,11 +50,6 @@ import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
  */
 public class IndividualRequestValidator extends AbstractSdtValidator implements IIndividualRequestValidator
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestValidator.class);
-
     /**
      * Individual request dao.
      */

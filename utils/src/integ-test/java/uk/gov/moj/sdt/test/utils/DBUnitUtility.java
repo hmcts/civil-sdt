@@ -357,6 +357,7 @@ public final class DBUnitUtility
      * @param schema
      *            the schema for which the connection is to be closed.
      */
+    @SuppressWarnings ("unused")
     private static synchronized void closeConnection (final String schema)
     {
         synchronized (allConnections)

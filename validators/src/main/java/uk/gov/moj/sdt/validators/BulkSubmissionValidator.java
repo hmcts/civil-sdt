@@ -35,9 +35,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -58,11 +55,6 @@ import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
  */
 public class BulkSubmissionValidator extends AbstractSdtValidator implements IBulkSubmissionValidator
 {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionValidator.class);
-
     /**
      * Bulk submission dao.
      */

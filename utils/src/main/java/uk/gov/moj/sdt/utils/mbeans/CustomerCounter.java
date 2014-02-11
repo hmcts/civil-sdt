@@ -33,9 +33,6 @@ package uk.gov.moj.sdt.utils.mbeans;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 
 /**
@@ -46,11 +43,6 @@ import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
  */
 public final class CustomerCounter implements ICustomerCounter
 {
-    /**
-     * Static logging object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (CustomerCounter.class);
-
     /**
      * Map of unique bulk customers seen by system.
      */

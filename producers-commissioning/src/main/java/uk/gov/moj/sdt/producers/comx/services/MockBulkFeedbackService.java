@@ -64,6 +64,9 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
     @Override
     public IBulkSubmission getBulkFeedback (final IBulkFeedbackRequest bulkFeedbackRequest)
     {
+        LOGGER.debug ("getBulkFeedback for customer [" + bulkFeedbackRequest.getBulkCustomer ().getSdtCustomerId () +
+                "]");
+
         // Determine which feedback sample to return based on the SDT bulk reference
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
         final BulkFeedbackFactory bulkFeedbackFactory = bulkFeedbackFactoryMap.get (sdtBulkReference);

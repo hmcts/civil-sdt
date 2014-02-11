@@ -30,12 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
 import org.easymock.EasyMock;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
@@ -159,7 +157,7 @@ public class BulkSubmissionServiceTest
     @Test
     public void saveBulkSubmission () throws IOException
     {
-        SdtContext.getContext ().setRawInXml (this.getRawXml ("testXMLValid2.xml"));
+        SdtContext.getContext ().setRawInXml (Utilities.getRawXml ("src/unit-test/resources/", "testXMLValid2.xml"));
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
@@ -197,7 +195,7 @@ public class BulkSubmissionServiceTest
     @Test
     public void testSubmissionWithMultipleRequests () throws IOException
     {
-        final String rawXml = this.getRawXml ("testXMLValid3.xml");
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testXMLValid3.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
 
         // Activate Mock Generic Dao
@@ -306,28 +304,6 @@ public class BulkSubmissionServiceTest
         individualRequest.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
 
         bulkSubmission.addIndividualRequest (individualRequest);
-    }
-
-    /**
-     * 
-     * @return rax xml from a test file
-     * @param fileName the name of the file to load
-     * @throws IOException during the read operations
-     */
-    private String getRawXml (final String fileName) throws IOException
-    {
-        // Read the test xml file.
-        File myFile;
-        String message = "";
-
-        // XPathHandler xmlHandler = new XPathHandler ();
-
-        myFile = new File (Utilities.checkFileExists ("src/unit-test/resources/", fileName, false));
-
-        message = FileUtils.readFileToString (myFile);
-
-        return message;
-
     }
 
 }

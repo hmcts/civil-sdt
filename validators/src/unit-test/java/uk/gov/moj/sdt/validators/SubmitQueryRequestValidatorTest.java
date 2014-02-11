@@ -48,7 +48,6 @@ import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 
@@ -82,11 +81,6 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest
      * IBulkCustomer.
      */
     private IBulkCustomer bulkCustomer;
-
-    /**
-     * ITargetApplication.
-     */
-    private ITargetApplication targetApplication;
 
     /**
      * IBulkCustomerDao.

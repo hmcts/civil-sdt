@@ -39,8 +39,6 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -68,11 +66,6 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
  */
 public class RetryMessageAlreadySentServiceTest
 {
-    /**
-     * Logger for debugging.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (RetryMessageAlreadySentServiceTest.class);
-
     /**
      * Mocked Individual Request Dao object.
      */

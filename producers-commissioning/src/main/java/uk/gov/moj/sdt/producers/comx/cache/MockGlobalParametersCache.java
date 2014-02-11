@@ -45,6 +45,7 @@ import uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache;
 public class MockGlobalParametersCache implements ICacheable, IGlobalParametersCache
 {
 
+    @SuppressWarnings ("unchecked")
     @Override
     public <DomainType extends IDomainObject> DomainType
             getValue (final Class<DomainType> domainType, final String key)

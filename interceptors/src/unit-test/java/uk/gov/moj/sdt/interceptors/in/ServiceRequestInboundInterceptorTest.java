@@ -36,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -86,23 +85,6 @@ public class ServiceRequestInboundInterceptorTest extends SdtUnitTestBase
         EasyMock.expectLastCall ();
         EasyMock.replay (mockServiceRequestDao);
         return mockServiceRequestDao;
-    }
-
-    /**
-     * Builds a dummy soap message.
-     * 
-     * @param resourcePath
-     *            the path to the xml file containing the soap message.
-     * @return a soap message
-     */
-    private SoapMessage getDummySoapMessage (final String resourcePath)
-    {
-        //
-        final SoapMessage soapMessage = new SoapMessage (new MessageImpl ());
-        soapMessage.setExchange (new ExchangeImpl ());
-        soapMessage.setContent (InputStream.class, ServiceRequestInboundInterceptorTest.class
-                .getResourceAsStream (resourcePath));
-        return soapMessage;
     }
 
     /**
