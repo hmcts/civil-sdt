@@ -122,7 +122,7 @@ public class ContextCleanupFilterTest
 
     /**
      * Test method for the doFilter method of the filter when the doFilter throws
-     * an exception.
+     * an exception but still clears sdt context.
      * 
      * @throws ServletException the exception thrown by the doFilter
      * @throws IOException the exception thrown on IO problems
@@ -158,10 +158,8 @@ public class ContextCleanupFilterTest
         EasyMock.verify (mockServletResponse);
         EasyMock.verify (mockFilterChain);
 
-        // Add code to verify that the entities in SdtContext are not removed.
-        Assert.assertNotNull ("Sdt Context not expected to be cleaned up", SdtContext.getContext ().getRawInXml ());
-
-        Assert.assertTrue ("Test completed successfully", true);
+        // Add code to verify that the entities in SdtContext are removed.
+        Assert.assertNull ("Sdt Context expected to be cleaned up", SdtContext.getContext ().getRawInXml ());
 
     }
 
