@@ -137,7 +137,7 @@ public class IndividualRequestsXmlParserTest
      * 
      * @throws IOException if unable to read file.
      */
-    @Test (timeout = 2000)
+    @Test (timeout = 30000)
     public void testParserPerformance () throws IOException
     {
         // Load xml into SdtContext as if the inbound interceptor had run.
