@@ -31,8 +31,6 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 
 /**
@@ -97,8 +95,12 @@ public class GlobalParameter extends AbstractDomainObject implements IGlobalPara
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("name", name).append ("value", value)
-                .toString ();
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", name=").append (this.getName ());
+        sb.append (", value=").append (this.getValue ());
+        sb.append (", description=").append (this.getDescription ());
+        sb.append ("]");
+        return sb.toString ();
     }
-
 }

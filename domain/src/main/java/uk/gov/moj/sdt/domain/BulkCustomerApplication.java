@@ -31,8 +31,6 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -99,7 +97,12 @@ public class BulkCustomerApplication extends AbstractDomainObject implements IBu
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).appendSuper (super.toString ()).append (targetApplication)
-                .append (bulkCustomer).append ("customerApplicationId", customerApplicationId).toString ();
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", bulkCustomer=").append (this.getBulkCustomer ());
+        sb.append (", targetApplication=").append (this.getTargetApplication ());
+        sb.append (", customerApplicationId=").append (this.getCustomerApplicationId ());
+        sb.append ("]");
+        return sb.toString ();
     }
 }

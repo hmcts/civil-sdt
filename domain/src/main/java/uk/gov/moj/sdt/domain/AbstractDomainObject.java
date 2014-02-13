@@ -31,8 +31,6 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -109,9 +107,27 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
         visitor.visit (this, tree);
     }
 
+    /**
+     * Get the Object class name and hash id. This is used to wrap domain objects in order to prevent recursive toString
+     * () calls and should be applied in the toString () method of all domain objects which are associated with other
+     * domain objects.
+     * 
+     * @param object whose details are to be returned.
+     * @return details of object concerned.
+     */
+    protected String getHashId (final Object object)
+    {
+        return object == null ? null : object.getClass ().getSimpleName () + "@" +
+                Integer.toHexString (object.getClass ().hashCode ());
+    }
+
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).append ("id", id).append ("version", version).toString ();
+        final StringBuffer sb = new StringBuffer ("AbstractEntity[");
+        sb.append ("id=" + this.getId ());
+        sb.append (", version=").append (this.getVersion ());
+        sb.append ("]");
+        return sb.toString ();
     }
 }

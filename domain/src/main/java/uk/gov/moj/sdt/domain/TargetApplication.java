@@ -35,8 +35,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType.ServiceTypeName;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -120,8 +118,12 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).appendSuper (super.toString ())
-                .append ("targetApplicationCode", targetApplicationCode).toString ();
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", serviceRoutings=").append (getHashId (this.getServiceRoutings ()));
+        sb.append (", targetApplicationCode=").append (this.getTargetApplicationCode ());
+        sb.append (", targetApplicationName=").append (this.getTargetApplicationName ());
+        sb.append ("]");
+        return sb.toString ();
     }
-
 }

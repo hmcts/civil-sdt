@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -153,8 +152,14 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("errorCode", errorCode)
-                .append ("errorText", errorText).toString ();
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", individualRequest=").append (getHashId (this.getIndividualRequest ()));
+        sb.append (", createdDate=").append (this.getCreatedDate ());
+        sb.append (", updatedDate=").append (this.getUpdatedDate ());
+        sb.append (", errorCode=").append (this.getErrorCode ());
+        sb.append (", errorText=").append (this.getErrorText ());
+        sb.append ("]");
+        return sb.toString ();
     }
-
 }

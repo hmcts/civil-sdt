@@ -31,8 +31,6 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -100,8 +98,12 @@ public class ServiceRouting extends AbstractDomainObject implements IServiceRout
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).appendSuper (super.toString ()).append (serviceType)
-                .append ("webServiceEndpoint", webServiceEndpoint).toString ();
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", targetApplication=").append (this.getTargetApplication ());
+        sb.append (", serviceType=").append (this.getServiceType ());
+        sb.append (", webServiceEndpoint=").append (this.getWebServiceEndpoint ());
+        sb.append ("]");
+        return sb.toString ();
     }
-
 }

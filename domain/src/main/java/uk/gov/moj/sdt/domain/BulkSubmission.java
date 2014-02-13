@@ -34,7 +34,6 @@ package uk.gov.moj.sdt.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -335,8 +334,21 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).appendSuper (super.toString ())
-                .append ("customerReference", customerReference).append ("sdtBulkReference", sdtBulkReference)
-                .append ("submissionStatus", submissionStatus).toString ();
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", bulkCustomer=").append (this.getBulkCustomer ());
+        sb.append (", targetApplication=").append (this.getTargetApplication ());
+        sb.append (", sdtBulkReference=").append (this.getSdtBulkReference ());
+        sb.append (", customerReference=").append (this.getCustomerReference ());
+        sb.append (", createdDate=").append (this.getCreatedDate ());
+        sb.append (", numberOfRequest=").append (this.getNumberOfRequest ());
+        sb.append (", submissionStatus=").append (this.getSubmissionStatus ());
+        sb.append (", completedDate=").append (this.getCompletedDate ());
+        sb.append (", updatedDate=").append (this.getUpdatedDate ());
+        sb.append (", errorCode=").append (this.getErrorCode ());
+        sb.append (", errorText=").append (this.getErrorText ());
+        sb.append (", payload=").append (getHashId (this.getPayload ()));
+        sb.append ("]");
+        return sb.toString ();
     }
 }

@@ -30,8 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -207,8 +205,18 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     @Override
     public String toString ()
     {
-        return new ToStringBuilder (this).appendSuper (super.toString ()).append ("criteriaType", criteriaType)
-                .append ("status", status).toString ();
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", bulkCustomer=").append (this.getBulkCustomer ());
+        sb.append (", targetApplication=").append (this.getTargetApplication ());
+        sb.append (", criteriaType=").append (this.getCriteriaType ());
+        sb.append (", resultCount=").append (this.getResultCount ());
+        sb.append (", status=").append (this.getStatus ());
+        sb.append (", errorLog=").append (this.getErrorLog ());
+        sb.append (", criteriaType=").append (this.getCriteriaType ());
+        sb.append (", targetApplicationResponse=").append (this.getTargetApplicationResponse ());
+        sb.append (", queryReference=").append (this.getQueryReference ());
+        sb.append ("]");
+        return sb.toString ();
     }
-
 }

@@ -32,7 +32,6 @@
 package uk.gov.moj.sdt.domain;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -421,15 +420,6 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
-    public String toString ()
-    {
-        return new ToStringBuilder (this).appendSuper (super.toString ())
-                .append ("customerRequestReference", customerRequestReference)
-                .append ("sdtRequestReference", sdtRequestReference).append ("requestStatus", requestStatus)
-                .append ("requestType", requestType).toString ();
-    }
-
-    @Override
     public boolean isDeadLetter ()
     {
         return deadLetter;
@@ -442,4 +432,28 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     }
 
+    @Override
+    public String toString ()
+    {
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", bulkSubmission=").append (getHashId (this.getBulkSubmission ()));
+        sb.append (", customerRequestReference=").append (this.getCustomerRequestReference ());
+        sb.append (", requestStatus=").append (this.getRequestStatus ());
+        sb.append (", sdtBulkReference=").append (this.getSdtBulkReference ());
+        sb.append (", lineNumber=").append (this.getLineNumber ());
+        sb.append (", sdtRequestReference=").append (this.getSdtRequestReference ());
+        sb.append (", createdDate=").append (this.getCreatedDate ());
+        sb.append (", updatedDate=").append (this.getUpdatedDate ());
+        sb.append (", completedDate=").append (this.getCompletedDate ());
+        sb.append (", forwardingAttempts=").append (this.getForwardingAttempts ());
+        sb.append (", targetApplicationResponse=").append (this.getTargetApplicationResponse ());
+        sb.append (", errorLog=").append (this.getErrorLog ());
+        sb.append (", requestPayload=").append (this.getRequestPayload ());
+        sb.append (", internalSystemError=").append (this.getInternalSystemError ());
+        sb.append (", requestType=").append (this.getRequestType ());
+        sb.append (", deadLetter=").append (this.isDeadLetter ());
+        sb.append ("]");
+        return sb.toString ();
+    }
 }

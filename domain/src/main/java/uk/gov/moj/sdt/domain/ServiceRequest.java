@@ -220,4 +220,21 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     {
         return this.serverHostName;
     }
+
+    @Override
+    public String toString ()
+    {
+        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        sb.append (super.toString ());
+        sb.append (", requestDateTime=").append (this.getRequestDateTime ());
+        sb.append (", responseDateTime=").append (this.getResponseDateTime ());
+        sb.append (", bulkCustomerId=").append (this.getBulkCustomerId ());
+        sb.append (", requestType=").append (this.getRequestType ());
+        sb.append (", requestPayload=").append (getHashId (this.getRequestPayload ()));
+        sb.append (", responsePayload=").append (getHashId (this.getResponsePayload ()));
+        sb.append (", bulkReference=").append (this.getBulkReference ());
+        sb.append (", serverHostName=").append (this.getServerHostName ());
+        sb.append ("]");
+        return sb.toString ();
+    }
 }
