@@ -295,7 +295,7 @@ public class BulkFeedbackEnricherTest
      * Test performance of enrichment step for very large response.
      * @throws IOException if test data file not found.
      */
-    @Test (timeout = 500)
+    @Test (timeout = 5000)
     public void testLargeFeedbackResponse () throws IOException
     {
 
