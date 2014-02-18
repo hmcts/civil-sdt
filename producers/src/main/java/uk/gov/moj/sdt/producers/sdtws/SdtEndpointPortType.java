@@ -172,14 +172,18 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
             detail.append ("\n\n\tsdt service=" + response.getBulkRequestStatus ().getSdtService () +
                     "\n\tsdt bulk reference=" + response.getBulkRequestStatus ().getSdtBulkReference () +
                     "\n\tcustomer reference=" + response.getBulkRequestStatus ().getCustomerReference () +
-                    "\n\trequest count=" + response.getBulkRequestStatus ().getRequestCount () + "\n\tbulk status=" +
-                    response.getBulkRequestStatus ().getBulkStatus ().getCode ().name () + "\n");
-            if (response.getBulkRequestStatus ().getBulkStatus ().getError () != null)
+                    "\n\trequest count=" + response.getBulkRequestStatus ().getRequestCount () + "\n");
+            if (response.getBulkRequestStatus ().getBulkStatus () != null)
             {
-                detail.append ("\n\terror code=" +
-                        response.getBulkRequestStatus ().getBulkStatus ().getError ().getCode () +
-                        "\n\terror description=" +
-                        response.getBulkRequestStatus ().getBulkStatus ().getError ().getDescription () + "\n");
+                detail.append ("\n\tbulk status=" +
+                        response.getBulkRequestStatus ().getBulkStatus ().getCode ().name ());
+                if (response.getBulkRequestStatus ().getBulkStatus ().getError () != null)
+                {
+                    detail.append ("\n\terror code=" +
+                            response.getBulkRequestStatus ().getBulkStatus ().getError ().getCode () +
+                            "\n\terror description=" +
+                            response.getBulkRequestStatus ().getBulkStatus ().getError ().getDescription () + "\n");
+                }
             }
 
             // Write message to 'performance.log' for this logging point.
