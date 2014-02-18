@@ -93,7 +93,15 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         // have cleared up the old records.
         criteria.add (createDateRestriction ("createdDate", dataRetention));
 
-        return (IIndividualRequest) this.uniqueResult (IIndividualRequest.class, criteria);
+        final List<IIndividualRequest> individualRequests = (List<IIndividualRequest>) criteria.list ();
+
+        // Return null or the first individual request
+        if (individualRequests == null || individualRequests.size () == 0)
+        {
+            return null;
+        }
+
+        return individualRequests.get (0);
     }
 
     @Override
