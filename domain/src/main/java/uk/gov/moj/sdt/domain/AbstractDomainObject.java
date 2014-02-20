@@ -118,7 +118,7 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     protected String getHashId (final Object object)
     {
         return object == null ? null : object.getClass ().getSimpleName () + "@" +
-                Integer.toHexString (object.getClass ().hashCode ());
+                Integer.toHexString (object.hashCode ());
     }
 
     @Override
