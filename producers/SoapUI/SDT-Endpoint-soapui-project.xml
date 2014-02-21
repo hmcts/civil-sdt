@@ -32,6 +32,7 @@
         <xs:restriction base="xs:string">
           <xs:minLength value="1"/>
           <xs:maxLength value="32"/>
+          <xs:pattern value="[0-9a-zA-Z_-]+"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="claimNumberType">
@@ -98,6 +99,7 @@
         <xs:restriction base="xs:string">
           <xs:minLength value="1"/>
           <xs:maxLength value="24"/>
+          <xs:pattern value="[0-9a-zA-Z_-]+"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="sdtRequestIdType">
@@ -645,8 +647,8 @@
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
       <xs:complexType name="mcolDefenceCriteriaType">
         <xs:sequence>
-          <xs:element name="fromDate" type="xs:date"/>
-          <xs:element name="toDate" type="xs:date"/>
+          <xs:element name="fromDate" type="xs:dateTime"/>
+          <xs:element name="toDate" type="xs:dateTime"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="mcolDefenceCriteria" type="tns:mcolDefenceCriteriaType"/>
@@ -666,6 +668,7 @@
       </xs:complexType>
       <xs:simpleType name="responseType">
         <xs:restriction base="xs:string">
+          <xs:enumeration value="AS"/>
           <xs:enumeration value="DE"/>
           <xs:enumeration value="DC"/>
           <xs:enumeration value="PA"/>
@@ -839,7 +842,8 @@
           <xs:element name="queryReference" minOccurs="0">
             <xs:simpleType>
               <xs:restriction base="xs:string">
-                <xs:length value="20"/>
+                <xs:minLength value="1"/>
+                <xs:maxLength value="20"/>
               </xs:restriction>
             </xs:simpleType>
           </xs:element>
