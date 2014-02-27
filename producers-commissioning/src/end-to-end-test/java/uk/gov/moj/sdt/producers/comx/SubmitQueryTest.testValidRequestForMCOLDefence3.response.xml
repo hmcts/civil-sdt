@@ -2,9 +2,10 @@
 <ns2:submitQueryResponse xmlns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
     xmlns:ns2="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema">
     <status code="Error">
-    	<error>
-        	<code>78</code>
-            <description>Results truncated - maximum number allowed reached.</description>
+        <error>
+            <code>78</code>
+            <description>Results truncated - maximum number allowed
+                reached.</description>
         </error>
     </status>
     <ns2:sdtCustomerId>12345678</ns2:sdtCustomerId>
@@ -19,6 +20,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-02T10:04:21</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DE</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -30,6 +32,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-02T11:45:01</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>PA</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -41,6 +44,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-03T14:21:17</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DC</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -52,6 +56,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-03T18:03:32</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DE</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -63,6 +68,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="2">
                 <mquer:filedDate>2014-01-03T09:55:19</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>PA</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -74,6 +80,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-03T14:31:42</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DE</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -85,6 +92,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-03T14:31:42</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DE</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -96,6 +104,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-03T15:12:54</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>PA</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -107,6 +116,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-03T16:02:46</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DC</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -118,6 +128,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2014-01-03T17:16:15</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DC</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>

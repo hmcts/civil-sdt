@@ -4,7 +4,7 @@
     <status code="Ok"/>
     <ns2:sdtCustomerId>12345678</ns2:sdtCustomerId>
     <ns2:sdtService>SDT Commissioning</ns2:sdtService>
-    <ns2:resultCount>5</ns2:resultCount>
+    <ns2:resultCount>6</ns2:resultCount>
     <ns2:results>
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
@@ -14,6 +14,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2013-12-19T10:04:21</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DE</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -25,6 +26,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="2">
                 <mquer:filedDate>2013-12-19T10:45:58</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DE</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -36,6 +38,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2013-12-19T12:04:21</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>PA</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -47,6 +50,7 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2013-12-19T13:32:09</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DC</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
@@ -58,7 +62,20 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2013-12-19T13:56:47</mquer:filedDate>
+                <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                 <mquer:responseType>DC</mquer:responseType>
+            </mquer:defendantResponse>
+        </sub:mcolDefenceDetail>
+        <sub:mcolDefenceDetail
+            xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
+            xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+            <mquer:claimNumber>3XC12350</mquer:claimNumber>
+            <mquer:defendantResponse
+                xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+                xmlns="" defendantId="1">
+                <mquer:filedDate>2013-12-19T14:04:23</mquer:filedDate>
+                <mquer:raisedOnMcol>true</mquer:raisedOnMcol>
+                <mquer:responseType>AS</mquer:responseType>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
     </ns2:results>

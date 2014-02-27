@@ -1118,8 +1118,8 @@
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01</quer:fromDate>
-                  <quer:toDate>2013-08-31</quer:toDate>
+                  <quer:fromDate>2013-08-01T00:00:00</quer:fromDate>
+                  <quer:toDate>2013-08-31T00:00:00</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>
@@ -1137,8 +1137,8 @@
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01</quer:fromDate>
-                  <quer:toDate>2013-08-31</quer:toDate>
+                  <quer:fromDate>2013-08-01T00:00:00</quer:fromDate>
+                  <quer:toDate>2013-08-31T00:00:00</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>
@@ -1156,8 +1156,8 @@
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01</quer:fromDate>
-                  <quer:toDate>2013-08-31</quer:toDate>
+                  <quer:fromDate>2013-08-01T00:00:00</quer:fromDate>
+                  <quer:toDate>2013-08-31T00:00:00</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>
@@ -1175,8 +1175,8 @@
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01</quer:fromDate>
-                  <quer:toDate>2013-08-31</quer:toDate>
+                  <quer:fromDate>2013-08-01T00:00:00</quer:fromDate>
+                  <quer:toDate>2013-08-31T00:00:00</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>
@@ -1194,8 +1194,8 @@
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01</quer:fromDate>
-                  <quer:toDate>2013-08-31</quer:toDate>
+                  <quer:fromDate>2013-08-01T00:00:00</quer:fromDate>
+                  <quer:toDate>2013-08-31T00:00:00</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>
@@ -1213,8 +1213,8 @@
          <sub:criteria>
             <sub:criterion criteriaType="mcolDefenceCriteria">
                <sub:mcolDefenceCriteria>
-                  <quer:fromDate>2013-08-01</quer:fromDate>
-                  <quer:toDate>2013-07-31</quer:toDate>
+                  <quer:fromDate>2013-08-01T00:00:00</quer:fromDate>
+                  <quer:toDate>2013-08-31T00:00:00</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>

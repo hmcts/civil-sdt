@@ -15,35 +15,40 @@
                   <sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
 						<mquer:claimNumber>A0A100DE</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
-                  		<mquer:filedDate>2014-01-02T10:04:21</mquer:filedDate>
-                  		<mquer:responseType>DE</mquer:responseType>
+                      		<mquer:filedDate>2014-01-02T10:04:21</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
+                      		<mquer:responseType>DE</mquer:responseType>
                  		</mquer:defendantResponse>
                  	</sub:mcolDefenceDetail>
                  	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
                  		<mquer:claimNumber>A0A100C5</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
-                  		<mquer:filedDate>2014-01-02T11:45:01</mquer:filedDate>
-                  		<mquer:responseType>PA</mquer:responseType>
+                      		<mquer:filedDate>2014-01-02T11:45:01</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
+                      		<mquer:responseType>PA</mquer:responseType>
                  		</mquer:defendantResponse>
                  	</sub:mcolDefenceDetail>
                  	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
                  		<mquer:claimNumber>A0A100FB</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
                  			<mquer:filedDate>2014-01-03T14:21:17</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DC</mquer:responseType>
                  		</mquer:defendantResponse>
                  	</sub:mcolDefenceDetail>
                  	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
                  		<mquer:claimNumber>A0A100HH</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
-                  		<mquer:filedDate>2014-01-03T18:03:32</mquer:filedDate>
-                  		<mquer:responseType>DE</mquer:responseType>
+                      		<mquer:filedDate>2014-01-03T18:03:32</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
+                      		<mquer:responseType>DE</mquer:responseType>
                  		</mquer:defendantResponse>
                  	</sub:mcolDefenceDetail>
                  	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
                  		<mquer:claimNumber>A0A100HH</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="2">
                  			<mquer:filedDate>2014-01-03T09:55:19</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>PA</mquer:responseType>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
@@ -51,6 +56,7 @@
                  		<mquer:claimNumber>A0A100HI</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
                  			<mquer:filedDate>2014-01-03T14:31:42</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DE</mquer:responseType>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
@@ -58,6 +64,7 @@
                  		<mquer:claimNumber>A0A100H8</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
                  			<mquer:filedDate>2014-01-03T14:31:42</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DE</mquer:responseType>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
@@ -65,6 +72,7 @@
                  		<mquer:claimNumber>A0A100HK</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
                  			<mquer:filedDate>2014-01-03T15:12:54</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>PA</mquer:responseType>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
@@ -72,6 +80,7 @@
                  		<mquer:claimNumber>A0A10018</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
                  			<mquer:filedDate>2014-01-03T16:02:46</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DC</mquer:responseType>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
@@ -79,6 +88,7 @@
                  		<mquer:claimNumber>3XC12349</mquer:claimNumber>
                  		<mquer:defendantResponse defendantId="1">
                  			<mquer:filedDate>2014-01-03T17:16:15</mquer:filedDate>
+                            <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DC</mquer:responseType>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
