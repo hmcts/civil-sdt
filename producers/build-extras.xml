@@ -57,6 +57,7 @@
         <copy todir="${producers.target.dir}" overwrite="true">
             <fileset dir="${webapp.dir}" casesensitive="false">
                 <include name="**/*.template" />
+                <exclude name="**/index.html.template" />
             </fileset>
             <mapper type="glob" from="*.template" to="*" />
         </copy>

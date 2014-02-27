@@ -318,39 +318,58 @@
         <echoproperties />
     </target>
 
-	<!-- Generate distribution for SDT Wsdl/Xsd -->
-    <target name="generate-sdt-wsdl-dist" description="Zip SDT Wsdl and Xsd for distribution">
+	<!-- Generate SDT Wsdl/Xsd distribution for bulk clients -->
+    <target name="generate-sdt-wsdl-dist-client" description="Zip SDT Wsdl and Xsd for distribution to bulk clients">
         <delete dir="${sdt-wsdl-dist.dir}"/>
         <copy todir="${sdt-wsdl-dist.dir}/wsdl" overwrite="true">
-            <fileset dir="${producers-api.dir}/${resources.dir}/wsdl" casesensitive="false">
-                <include name="SdtEndpointDist.wsdl"/>
-            </fileset>
+            <filelist dir="${producers-api.dir}/${resources.dir}/wsdl">
+                <file name="SdtEndpointDist.wsdl"/>
+            </filelist>
         </copy>
         <copy todir="${sdt-wsdl-dist.dir}/xsd/BulkRequestResponse" overwrite="true">
-            <fileset dir="${producers-api.dir}/${resources.dir}/xsd/BulkRequestResponse" casesensitive="false">
-                <include name="BulkSubmitRequest.xsd" />
-                <include name="BulkSubmitResponse.xsd" />
-            </fileset>
+            <filelist dir="${producers-api.dir}/${resources.dir}/xsd/BulkRequestResponse">
+                <file name="BulkSubmitRequest.xsd" />
+                <file name="BulkSubmitResponse.xsd" />
+            </filelist>
         </copy>
         <copy todir="${sdt-wsdl-dist.dir}/xsd/RequestBulkFeedback" overwrite="true">
-            <fileset dir="${producers-api.dir}/${resources.dir}/xsd/RequestBulkFeedback" casesensitive="false">
-                <include name="BulkFeedbackRequest.xsd" />
-                <include name="BulkFeedbackResponse.xsd" />
-            </fileset>
+            <filelist dir="${producers-api.dir}/${resources.dir}/xsd/RequestBulkFeedback">
+                <file name="BulkFeedbackRequest.xsd" />
+                <file name="BulkFeedbackResponse.xsd" />
+            </filelist>
         </copy>
         <copy todir="${sdt-wsdl-dist.dir}/xsd/SubmitQueryRequestResponse" overwrite="true">
-            <fileset dir="${producers-api.dir}/${resources.dir}/xsd/SubmitQueryRequestResponse" casesensitive="false">
-                <include name="SubmitQueryRequest.xsd" />
-                <include name="SubmitQueryResponse.xsd" />
-            </fileset>
+            <filelist dir="${producers-api.dir}/${resources.dir}/xsd/SubmitQueryRequestResponse">
+                <file name="SubmitQueryRequest.xsd" />
+                <file name="SubmitQueryResponse.xsd" />
+            </filelist>
         </copy>
         <copy todir="${sdt-wsdl-dist.dir}/xsd/RootXSDs" overwrite="true">
-            <fileset dir="${producers-api.dir}/${resources.dir}/xsd/RootXSDs" casesensitive="false">
-                <include name="*.xsd" />
-            </fileset>
+            <filelist dir="${producers-api.dir}/${resources.dir}/xsd/RootXSDs">
+                <file name="Base.xsd" />
+                <file name="Claim.xsd" />
+                <file name="ClaimStatusUpdate.xsd" />
+                <file name="Judgment.xsd" />
+                <file name="McolQuery.xsd" />
+                <file name="McolResponseDetail.xsd" />
+                <file name="Warrant.xsd" />
+            </filelist>
         </copy>
-    	<delete file="${sdt-wsdl-dist.dir}.zip"/>
-        <zip destfile="${sdt-wsdl-dist.dir}.zip" basedir="${sdt-wsdl-dist.dir}"/>
+    	<delete file="${sdt-wsdl-dist.dir}-${application.version}.${buildNumber}.zip"/>
+        <zip destfile="${sdt-wsdl-dist.dir}-${application.version}.${buildNumber}.zip" basedir="${sdt-wsdl-dist.dir}" />
+        <delete dir="${sdt-wsdl-dist.dir}"/>
+    </target>
+
+    <!-- Generate SDT Wsdl distribution for System Gateway-->
+    <target name="generate-sdt-wsdl-dist-gateway" description="Zip SDT Wsdl for distribution to System Gateway team">
+        <delete dir="${sdt-wsdl-dist.dir}"/>
+        <copy todir="${sdt-wsdl-dist.dir}/wsdl" overwrite="true">
+            <filelist dir="${producers-api.dir}/${resources.dir}/wsdl">
+                <file name="SdtGatewayEndpoint.wsdl"/>
+            </filelist>
+        </copy>
+        <delete file="${sdt-wsdl-dist.dir}-gateway-${application.version}.${buildNumber}.zip"/>
+        <zip destfile="${sdt-wsdl-dist.dir}-gateway-${application.version}.${buildNumber}.zip" basedir="${sdt-wsdl-dist.dir}" />
         <delete dir="${sdt-wsdl-dist.dir}"/>
     </target>
 
