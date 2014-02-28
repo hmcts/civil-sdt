@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION purge_bulk_submissions (nParam NUMBER,nBatch NUMBER) 
   CURSOR c1 (nParam NUMBER)
             IS SELECT rowid
                FROM bulk_submissions
-               WHERE created_date < (sysdate - nParam);
+               WHERE created_date < (trunc(sysdate) - nParam);
   nIteration   NUMBER;
   BEGIN
     nIteration := 0;
