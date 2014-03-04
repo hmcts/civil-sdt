@@ -14,10 +14,6 @@
                 <xs:annotation>
                     <xs:documentation>Paid</xs:documentation>
                 </xs:annotation></xs:enumeration>
-            <xs:enumeration value="WO">
-                <xs:annotation>
-                    <xs:documentation>Written Off</xs:documentation>
-                </xs:annotation></xs:enumeration>
             <xs:enumeration value="WD">
                 <xs:annotation>
                     <xs:documentation>Withdrawn</xs:documentation>
