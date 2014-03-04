@@ -136,6 +136,7 @@
 	<xs:simpleType name="createStatusCodeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Accepted" />
+            <xs:enumeration value="Awaiting Data" />
 			<xs:enumeration value="Initially Accepted" />
 			<xs:enumeration value="Rejected" />
 			<xs:enumeration value="Error" />
@@ -146,6 +147,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="Accepted" />
             <xs:enumeration value="Rejected" />
+            <xs:enumeration value="Resubmit Message" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -204,7 +206,8 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="Received" />
             <xs:enumeration value="Forwarded" />
-            <xs:enumeration value="Initially Accepted" />
+            <xs:enumeration value="Initially Accepted" />   
+            <xs:enumeration value="Awaiting Data" />
             <xs:enumeration value="Accepted" />
             <xs:enumeration value="Rejected" />
         </xs:restriction>

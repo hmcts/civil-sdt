@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="Accepted"/>
  *     &lt;enumeration value="Rejected"/>
+ *     &lt;enumeration value="Resubmit Message"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -28,7 +29,9 @@ public enum UpdateStatusCodeType {
     @XmlEnumValue("Accepted")
     ACCEPTED("Accepted"),
     @XmlEnumValue("Rejected")
-    REJECTED("Rejected");
+    REJECTED("Rejected"),
+    @XmlEnumValue("Resubmit Message")
+    RESUBMIT_MESSAGE("Resubmit Message");
     private final String value;
 
     UpdateStatusCodeType(String v) {

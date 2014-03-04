@@ -117,6 +117,7 @@
       <xs:simpleType name="createStatusCodeType">
         <xs:restriction base="xs:string">
           <xs:enumeration value="Accepted"/>
+          <xs:enumeration value="Awaiting Data"/>
           <xs:enumeration value="Initially Accepted"/>
           <xs:enumeration value="Rejected"/>
           <xs:enumeration value="Error"/>
@@ -126,6 +127,7 @@
         <xs:restriction base="xs:string">
           <xs:enumeration value="Accepted"/>
           <xs:enumeration value="Rejected"/>
+          <xs:enumeration value="Resubmit Message"/>
         </xs:restriction>
       </xs:simpleType>
       <xs:complexType name="errorType">
@@ -179,6 +181,7 @@
           <xs:enumeration value="Received"/>
           <xs:enumeration value="Forwarded"/>
           <xs:enumeration value="Initially Accepted"/>
+          <xs:enumeration value="Awaiting Data"/>
           <xs:enumeration value="Accepted"/>
           <xs:enumeration value="Rejected"/>
         </xs:restriction>
@@ -358,14 +361,6 @@
     <xs:schema targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" elementFormDefault="qualified" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"/>
-      <xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType"/>
-      <xs:complexType name="judgmentWarrantType">
-        <xs:sequence>
-          <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
-          <xs:element name="mcolWarrant" type="wnt:warrantType"/>
-        </xs:sequence>
-      </xs:complexType>
-      <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
       <xs:simpleType name="judgmentTypeType">
         <xs:restriction base="xs:string">
           <xs:enumeration value="A"/>
@@ -604,6 +599,14 @@
           <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
       </xs:complexType>
+      <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
+      <xs:complexType name="judgmentWarrantType">
+        <xs:sequence>
+          <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
+          <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType"/>
     </xs:schema>
     <!--ClaimStatusUpdate.xsd-->
     <xs:schema targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" elementFormDefault="qualified" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema">
@@ -652,20 +655,6 @@
         </xs:sequence>
       </xs:complexType>
       <xs:element name="mcolDefenceCriteria" type="tns:mcolDefenceCriteriaType"/>
-      <xs:complexType name="mcolDefenceDetailType">
-        <xs:sequence>
-          <xs:element name="claimNumber" type="base:claimNumberType"/>
-          <xs:element name="defendantResponse" type="tns:defendantResponseType"/>
-        </xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="defendantResponseType">
-        <xs:sequence>
-          <xs:element name="filedDate" type="xs:dateTime"/>
-          <xs:element name="raisedOnMcol" type="xs:boolean"/>
-          <xs:element name="responseType" type="tns:responseType"/>
-        </xs:sequence>
-        <xs:attribute name="defendantId" type="base:defendantIdType" use="required"/>
-      </xs:complexType>
       <xs:simpleType name="responseType">
         <xs:restriction base="xs:string">
           <xs:enumeration value="AS"/>
@@ -674,6 +663,20 @@
           <xs:enumeration value="PA"/>
         </xs:restriction>
       </xs:simpleType>
+      <xs:complexType name="defendantResponseType">
+        <xs:sequence>
+          <xs:element name="filedDate" type="xs:dateTime"/>
+          <xs:element name="raisedOnMcol" type="xs:boolean"/>
+          <xs:element name="responseType" type="tns:responseType"/>
+        </xs:sequence>
+        <xs:attribute name="defendantId" type="base:defendantIdType" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="mcolDefenceDetailType">
+        <xs:sequence>
+          <xs:element name="claimNumber" type="base:claimNumberType"/>
+          <xs:element name="defendantResponse" type="tns:defendantResponseType"/>
+        </xs:sequence>
+      </xs:complexType>
       <xs:element name="mcolDefenceDetail" type="tns:mcolDefenceDetailType"/>
     </xs:schema>
     <!--McolResponseDetail.xsd-->
@@ -766,15 +769,15 @@
     <!--BulkFeedbackRequest.xsd-->
     <xs:schema targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" elementFormDefault="qualified" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema">
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
-      <xs:complexType name="bulkFeedbackRequestType">
-        <xs:sequence>
-          <xs:element name="header" type="tns:headerType"/>
-        </xs:sequence>
-      </xs:complexType>
       <xs:complexType name="headerType">
         <xs:sequence>
           <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
           <xs:element name="sdtBulkReference" type="base:sdtBulkReferenceType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="bulkFeedbackRequestType">
+        <xs:sequence>
+          <xs:element name="header" type="tns:headerType"/>
         </xs:sequence>
       </xs:complexType>
       <xs:element name="bulkFeedbackRequest" type="tns:bulkFeedbackRequestType"/>
@@ -797,11 +800,6 @@
           </xs:extension>
         </xs:complexContent>
       </xs:complexType>
-      <xs:complexType name="responsesType">
-        <xs:sequence>
-          <xs:element name="response" type="tns:responseType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-      </xs:complexType>
       <xs:complexType name="responseType">
         <xs:sequence>
           <xs:element name="responseDetail">
@@ -813,8 +811,13 @@
           </xs:element>
           <xs:element name="status" type="base:individualStatusType"/>
         </xs:sequence>
-        <xs:attribute name="requestType" type="xs:string" use="required"/>
+        <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
         <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="responsesType">
+        <xs:sequence>
+          <xs:element name="response" type="tns:responseType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
       </xs:complexType>
       <xs:complexType name="bulkFeedbackResponseType">
         <xs:sequence>
@@ -828,13 +831,6 @@
     <xs:schema targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" elementFormDefault="qualified" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"/>
-      <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType"/>
-      <xs:complexType name="submitQueryRequestType">
-        <xs:sequence>
-          <xs:element name="header" type="tns:headerType"/>
-          <xs:element name="criteria" type="tns:criteriaType"/>
-        </xs:sequence>
-      </xs:complexType>
       <xs:complexType name="headerType">
         <xs:sequence>
           <xs:element name="sdtCustomerId" type="base:sdtCustomerIdType"/>
@@ -849,23 +845,34 @@
           </xs:element>
         </xs:sequence>
       </xs:complexType>
-      <xs:complexType name="criteriaType">
-        <xs:sequence>
-          <xs:element name="criterion" type="tns:criterionType"/>
-        </xs:sequence>
-      </xs:complexType>
       <xs:complexType name="criterionType">
         <xs:choice>
           <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
         </xs:choice>
         <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
       </xs:complexType>
+      <xs:complexType name="criteriaType">
+        <xs:sequence>
+          <xs:element name="criterion" type="tns:criterionType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="submitQueryRequestType">
+        <xs:sequence>
+          <xs:element name="header" type="tns:headerType"/>
+          <xs:element name="criteria" type="tns:criteriaType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType"/>
     </xs:schema>
     <!--SubmitQueryResponse.xsd-->
     <xs:schema targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" elementFormDefault="qualified" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
       <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"/>
-      <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType"/>
+      <xs:complexType name="resultsType">
+        <xs:choice>
+          <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+      </xs:complexType>
       <xs:complexType name="submitQueryResponseType">
         <xs:complexContent>
           <xs:extension base="base:abstractResponseType">
@@ -878,11 +885,7 @@
           </xs:extension>
         </xs:complexContent>
       </xs:complexType>
-      <xs:complexType name="resultsType">
-        <xs:choice>
-          <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:choice>
-      </xs:complexType>
+      <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType"/>
     </xs:schema>
   </types>
   <message name="submitBulkRequest">
@@ -1402,6 +1405,63 @@
                      <cla1:notificationType>WD</cla1:notificationType>
                   </bul:mcolClaimStatusUpdate>
                </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid - Sample for Awaiting Data Response"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>72</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 to 2000 repetitions:-->
+            <bul:request requestType="mcolClaim" requestId="72">
+               <!--You have a CHOICE of the next 5 items at this level-->
+               <bul:mcolClaim>
+                  <!--Optional:-->
+                  <cla:claimantReference>Awaiting_data</cla:claimantReference>
+                  <!--Optional:-->
+                  <cla:claimant>
+                     <cla:name>claimantForename claimantSurname</cla:name>
+                     <cla:address>
+                        <cla:line1>claimantAddress line 1</cla:line1>
+                        <cla:line2>claimantAddress line 2</cla:line2>
+                     </cla:address>
+                  </cla:claimant>
+                  <!--Optional:-->
+                  <cla:defendant1>
+                     <cla:name>defendant1Forename defendant1Surname</cla:name>
+                     <cla:address>
+                        <bas:line1>defendant1Address line1</bas:line1>
+                        <bas:line2>defendant1Address line2</bas:line2>
+                        <bas:postcode>RG42 2DL</bas:postcode>
+                     </cla:address>
+                  </cla:defendant1>
+                  <cla:sendParticularsSeparately>true</cla:sendParticularsSeparately>
+                  <cla:reserveRightToClaimInterest>true</cla:reserveRightToClaimInterest>
+                  <!--Optional:-->
+                  <cla:interest>
+               		<cla:dailyAmount>1000</cla:dailyAmount>
+               		<cla:owedDate>2013-08-15</cla:owedDate>
+               		<cla:claimDate>2013-08-16</cla:claimDate>
+               		<cla:claimAmountInterestBase>10</cla:claimAmountInterestBase>
+            	   </cla:interest>
+                  <cla:claimAmount>9999999</cla:claimAmount>
+                  <!--Optional:-->
+                  <cla:solicitorCost>10000</cla:solicitorCost>
+                  <!--1 to 24 repetitions:-->
+                  <cla:particulars>hello</cla:particulars>
+                  <cla:sotSignature>
+                     <bas:flag>true</bas:flag>
+                     <bas:name>John</bas:name>
+                  </cla:sotSignature>
+               </bul:mcolClaim>
+            </bul:request>
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>

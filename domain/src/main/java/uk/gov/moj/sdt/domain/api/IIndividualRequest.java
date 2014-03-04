@@ -280,6 +280,12 @@ public interface IIndividualRequest extends IDomainObject
     void markRequestAsInitiallyAccepted ();
 
     /**
+     * This method will mark the individual request object with "Awaiting Data" status
+     * and set the updated date.
+     */
+    void markRequestAsAwaitingData ();
+
+    /**
      * @return true if request can be enqueued else false.
      */
     boolean isEnqueueable ();
@@ -329,9 +335,19 @@ public interface IIndividualRequest extends IDomainObject
         FORWARDED ("Forwarded"),
 
         /**
+         * Awaiting Data.
+         */
+        AWAITING_DATA ("Awaiting Data"),
+
+        /**
          * Rejected.
          */
         REJECTED ("Rejected"),
+
+        /**
+         * Resubmit Message.
+         */
+        RESUBMIT_MESSAGE ("Resubmit Message"),
 
         /**
          * Initially Accepted.

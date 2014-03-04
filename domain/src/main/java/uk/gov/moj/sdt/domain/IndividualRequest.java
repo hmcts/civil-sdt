@@ -379,6 +379,15 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
+    public void markRequestAsAwaitingData ()
+    {
+        this.setRequestStatus (IndividualRequestStatus.AWAITING_DATA.getStatus ());
+        // Set the updated date
+        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+
+    }
+
+    @Override
     public boolean isEnqueueable ()
     {
         return IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ().equals (requestStatus);

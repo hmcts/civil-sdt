@@ -81,6 +81,10 @@ public final class IndividualRequestConsumerTransformer extends AbstractTransfor
         {
             domainObject.markRequestAsInitiallyAccepted ();
         }
+        else if (CreateStatusCodeType.AWAITING_DATA.equals (statusCode))
+        {
+            domainObject.markRequestAsAwaitingData ();
+        }
 
     }
 

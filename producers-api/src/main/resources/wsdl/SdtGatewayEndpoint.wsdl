@@ -220,6 +220,7 @@
                     <xs:enumeration value="Received" />
                     <xs:enumeration value="Forwarded" />
                     <xs:enumeration value="Initially Accepted" />
+                    <xs:enumeration value="Awaiting Data" />
                     <xs:enumeration value="Accepted" />
                     <xs:enumeration value="Rejected" />
                 </xs:restriction>

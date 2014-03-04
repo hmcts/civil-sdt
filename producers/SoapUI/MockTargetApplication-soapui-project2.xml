@@ -543,12 +543,27 @@
       </soap:Reason>
     </soap:Fault>
   </soap:Body>
-</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitIndividualResponse"/></con:response><con:dispatchConfig xsi:type="con:MockOperationQueryMatchDispatch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:query><con:name>Select on Request Type McolClaim</con:name><con:query>declare namespace ind='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema';
-//*:individualRequest/*:header[1]/*:requestType[1]</con:query><con:match>mcolClaim</con:match><con:response>ClaimResponse</con:response></con:query><con:query><con:name>Select on Request Type McolJudgment</con:name><con:query>declare namespace ind='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema';
+</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitIndividualResponse"/></con:response><con:response name="AwaitingDataResponse" encoding="UTF-8" outgoingWss=""><con:settings><con:setting id="WsdlSettings@enable-mtom">false</con:setting></con:settings><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+   <soap:Header/>
+   <soap:Body>
+      <ind:individualResponse>
+         <ind:header>
+            <ind:sdtRequestId>SDT_REQ_TEST_1</ind:sdtRequestId>
+         </ind:header>
+         <ind:status code="Awaiting Data">
+         </ind:status>
+      </ind:individualResponse>
+   </soap:Body>
+</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint/ITargetAppInternalEndpointPortType/submitIndividualResponse"/></con:response><con:dispatchConfig xsi:type="con:MockOperationQueryMatchDispatch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:query><con:name>Select on Request Type and Claimant Reference</con:name><con:query>declare namespace cla='http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema';
+declare namespace tireq='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema';
+//tireq:individualRequest/tireq:targetAppDetail[1]/tireq:mcolClaim[1]/cla:claimantReference[1]
+</con:query><con:match>Awaiting_data</con:match><con:response>AwaitingDataResponse</con:response></con:query><con:query><con:name>Select on Request Type McolJudgment</con:name><con:query>declare namespace ind='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema';
 //*:individualRequest/*:header[1]/*:requestType[1]</con:query><con:match>mcolJudgment</con:match><con:response>JudgmentResponse</con:response></con:query><con:query><con:name>Select on Request Type McolClaimStatusUpdate</con:name><con:query>declare namespace ind='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema';
 //*:individualRequest/*:header[1]/*:requestType[1]</con:query><con:match>mcolClaimStatusUpdate</con:match><con:response>ClaimStatusUpdateResponse</con:response></con:query><con:query><con:name>Select on Request Type McolWarrant</con:name><con:query>declare namespace ind='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema';
 //*:individualRequest/*:header[1]/*:requestType[1]</con:query><con:match>mcolWarrant</con:match><con:response>WarrantResponse</con:response></con:query><con:query><con:name>Select on Request Type McolJudgmentWarrant</con:name><con:query>declare namespace ind='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema';
-//*:individualRequest/*:header[1]/*:requestType[1]</con:query><con:match>mcolJudgmentWarrant</con:match><con:response>WarrantJudgmentResponse</con:response></con:query></con:dispatchConfig></con:mockOperation><con:mockOperation name="submitQuery" interface="TargetAppInternalEndpointHttpPortBinding" operation="submitQuery"><con:settings/><con:dispatchStyle>QUERY_MATCH</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+//*:individualRequest/*:header[1]/*:requestType[1]</con:query><con:match>mcolJudgmentWarrant</con:match><con:response>WarrantJudgmentResponse</con:response></con:query><con:query><con:name>Select on Request Type McolClaim</con:name><con:query>declare namespace ind='http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema';
+//*:individualRequest/*:header[1]/*:requestType[1]
+</con:query><con:match>mcolClaim</con:match><con:response>ClaimResponse</con:response></con:query></con:dispatchConfig></con:mockOperation><con:mockOperation name="submitQuery" interface="TargetAppInternalEndpointHttpPortBinding" operation="submitQuery"><con:settings/><con:dispatchStyle>QUERY_MATCH</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
       <sub:submitQueryResponse>

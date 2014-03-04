@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="Received"/>
  *     &lt;enumeration value="Forwarded"/>
  *     &lt;enumeration value="Initially Accepted"/>
+ *     &lt;enumeration value="Awaiting Data"/>
  *     &lt;enumeration value="Accepted"/>
  *     &lt;enumeration value="Rejected"/>
  *   &lt;/restriction>
@@ -34,6 +35,8 @@ public enum IndividualStatusCodeType {
     FORWARDED("Forwarded"),
     @XmlEnumValue("Initially Accepted")
     INITIALLY_ACCEPTED("Initially Accepted"),
+    @XmlEnumValue("Awaiting Data")
+    AWAITING_DATA("Awaiting Data"),
     @XmlEnumValue("Accepted")
     ACCEPTED("Accepted"),
     @XmlEnumValue("Rejected")

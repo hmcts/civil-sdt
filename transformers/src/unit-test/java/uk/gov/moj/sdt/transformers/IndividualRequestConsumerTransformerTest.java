@@ -113,6 +113,8 @@ public class IndividualRequestConsumerTransformerTest extends TestCase
         // Test the jaxb object has been transformed to a domain object
         Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.ACCEPTED.getStatus (),
                 domain.getRequestStatus ());
+        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
+        Assert.assertNotNull ("Request completed data should be populated", domain.getCompletedDate ());
     }
 
     /**
@@ -134,6 +136,29 @@ public class IndividualRequestConsumerTransformerTest extends TestCase
         // Test the jaxb object has been transformed to a domain object
         Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus (),
                 domain.getRequestStatus ());
+        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
+    }
+
+    /**
+     * Test the transformation from jaxb (IndividualResponseType) to domain (IIndividualRequest) object with status
+     * AWAITING DATA.
+     */
+    @Test
+    public void testTransformJaxbToDomainAwaitingData ()
+    {
+        // Set up the jaxb object to transform
+        final IndividualResponseType jaxb = new IndividualResponseType ();
+        final CreateStatusType statusType = new CreateStatusType ();
+        statusType.setCode (CreateStatusCodeType.AWAITING_DATA);
+        jaxb.setStatus (statusType);
+
+        final IIndividualRequest domain = new IndividualRequest ();
+        transformer.transformJaxbToDomain (jaxb, domain);
+
+        // Test the jaxb object has been transformed to a domain object
+        Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.AWAITING_DATA.getStatus (),
+                domain.getRequestStatus ());
+        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
     }
 
     /**
@@ -162,6 +187,8 @@ public class IndividualRequestConsumerTransformerTest extends TestCase
         // Test the jaxb object has been transformed to a domain object
         Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus (), domain
                 .getRequestStatus ().toString ());
+        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
+        Assert.assertNotNull ("Request completed data should be populated", domain.getCompletedDate ());
         Assert.assertEquals ("Error code is incorrect", "FAILURE", errorLog.getErrorCode ());
         Assert.assertEquals ("Error description is incorrect", "MCOL has Failed to process the request",
                 errorLog.getErrorText ());
@@ -193,6 +220,8 @@ public class IndividualRequestConsumerTransformerTest extends TestCase
         // Test the jaxb object has been transformed to a domain object
         Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus (), domain
                 .getRequestStatus ().toString ());
+        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
+        Assert.assertNotNull ("Request completed data should be populated", domain.getCompletedDate ());
         Assert.assertEquals ("Error code is incorrect", "ERROR", errorLog.getErrorCode ());
         Assert.assertEquals ("Error description is incorrect", "MCOL has found an error in processing the request",
                 errorLog.getErrorText ());

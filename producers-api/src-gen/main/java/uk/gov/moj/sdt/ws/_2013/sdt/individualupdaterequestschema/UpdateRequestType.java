@@ -21,7 +21,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="header" type="{http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema}headerType"/>
- *         &lt;element name="targetAppDetail">
+ *         &lt;element name="targetAppDetail" minOccurs="0">
  *           &lt;complexType>
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -51,7 +51,6 @@ public class UpdateRequestType {
 
     @XmlElement(required = true)
     protected HeaderType header;
-    @XmlElement(required = true)
     protected UpdateRequestType.TargetAppDetail targetAppDetail;
     @XmlElement(required = true)
     protected UpdateStatusType status;
@@ -162,8 +161,8 @@ public class UpdateRequestType {
          * 
          * @return
          *     possible object is
-         *     {@link Element }
          *     {@link Object }
+         *     {@link Element }
          *     
          */
         public Object getAny() {
@@ -175,8 +174,8 @@ public class UpdateRequestType {
          * 
          * @param value
          *     allowed object is
-         *     {@link Element }
          *     {@link Object }
+         *     {@link Element }
          *     
          */
         public void setAny(Object value) {

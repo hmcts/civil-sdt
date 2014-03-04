@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;simpleType name="createStatusCodeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="Accepted"/>
+ *     &lt;enumeration value="Awaiting Data"/>
  *     &lt;enumeration value="Initially Accepted"/>
  *     &lt;enumeration value="Rejected"/>
  *     &lt;enumeration value="Error"/>
@@ -29,6 +30,8 @@ public enum CreateStatusCodeType {
 
     @XmlEnumValue("Accepted")
     ACCEPTED("Accepted"),
+    @XmlEnumValue("Awaiting Data")
+    AWAITING_DATA("Awaiting Data"),
     @XmlEnumValue("Initially Accepted")
     INITIALLY_ACCEPTED("Initially Accepted"),
     @XmlEnumValue("Rejected")
