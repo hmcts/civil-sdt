@@ -8,8 +8,6 @@
     
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
 	
-    <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
-    
 	<xs:complexType name="submitQueryResponseType">
 		<xs:sequence>
             <xs:element name="targetAppCustomerId" type="xs:string" />
@@ -25,4 +23,6 @@
 		</xs:sequence>
 	</xs:complexType>
 	
+    <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
+    
 </xs:schema>

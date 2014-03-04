@@ -25,12 +25,6 @@
         </xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="responsesType">
-        <xs:sequence>
-            <xs:element name="response" type="tns:responseType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-    
     <xs:complexType name="responseType">
         <xs:sequence>
             <xs:element name="responseDetail">
@@ -46,6 +40,12 @@
         <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
     </xs:complexType>
 
+    <xs:complexType name="responsesType">
+        <xs:sequence>
+            <xs:element name="response" type="tns:responseType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
     <xs:complexType name="bulkFeedbackResponseType">
         <xs:sequence>
             <xs:element name="bulkRequestStatus" type="tns:bulkRequestStatusType"/>

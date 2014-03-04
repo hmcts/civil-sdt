@@ -8,7 +8,12 @@
 	
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
     
-    <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType"/>
+    <xs:complexType name="headerType">
+        <xs:sequence>
+            <xs:element name="targetAppCustomerId" type="xs:string" />
+            <xs:element name="criteriaType" type="base:criteriaTypeType"/>
+        </xs:sequence>
+    </xs:complexType>
     
 	<xs:complexType name="submitQueryRequestType">
 		<xs:sequence>
@@ -23,11 +28,6 @@
 		</xs:sequence>	
 	</xs:complexType>
     
-	<xs:complexType name="headerType">
-		<xs:sequence>
-			<xs:element name="targetAppCustomerId" type="xs:string" />
-            <xs:element name="criteriaType" type="base:criteriaTypeType"/>
-		</xs:sequence>
-	</xs:complexType>
+    <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType"/>
     
 </xs:schema>

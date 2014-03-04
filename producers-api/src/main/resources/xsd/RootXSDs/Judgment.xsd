@@ -10,17 +10,6 @@
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd"/>
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="Warrant.xsd"/>
     
-    <xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType"/>
-
-    <xs:complexType name="judgmentWarrantType">
-        <xs:sequence>
-            <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
-            <xs:element name="mcolWarrant" type="wnt:warrantType"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
-    
     <xs:simpleType name="judgmentTypeType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="A"/>
@@ -268,5 +257,16 @@
             <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
+    
+    <xs:complexType name="judgmentWarrantType">
+        <xs:sequence>
+            <xs:element name="mcolJudgment" type="tns:mcolJudgmentType"/>
+            <xs:element name="mcolWarrant" type="wnt:warrantType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="mcolJudgmentWarrant" type="tns:judgmentWarrantType"/>
 
 </xs:schema>

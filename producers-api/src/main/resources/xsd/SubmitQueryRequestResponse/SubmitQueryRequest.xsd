@@ -10,15 +10,6 @@
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" schemaLocation="../RootXSDs/McolQuery.xsd"/>
 	
-    <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType" />
-    
-	<xs:complexType name="submitQueryRequestType">
-		<xs:sequence>
-			<xs:element name="header" type="tns:headerType" />
-			<xs:element name="criteria" type="tns:criteriaType" />
-		</xs:sequence>
-	</xs:complexType>
-    
 	<xs:complexType name="headerType">
 		<xs:sequence>
 			<xs:element name="sdtCustomerId" type="base:sdtCustomerIdType" />
@@ -34,12 +25,6 @@
 		</xs:sequence>
 	</xs:complexType>
     
-	<xs:complexType name="criteriaType">
-        <xs:sequence>
-            <xs:element name="criterion" type="tns:criterionType" />
-        </xs:sequence>
-	</xs:complexType>
-    
     <xs:complexType name="criterionType">
         <xs:choice>
             <xs:element name="mcolDefenceCriteria" type="mqry:mcolDefenceCriteriaType"/>
@@ -47,4 +32,19 @@
         <xs:attribute name="criteriaType" type="base:criteriaTypeType" use="required"/>
     </xs:complexType>
 
+	<xs:complexType name="criteriaType">
+        <xs:sequence>
+            <xs:element name="criterion" type="tns:criterionType" />
+        </xs:sequence>
+	</xs:complexType>
+    
+    <xs:complexType name="submitQueryRequestType">
+        <xs:sequence>
+            <xs:element name="header" type="tns:headerType" />
+            <xs:element name="criteria" type="tns:criteriaType" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="submitQueryRequest" type="tns:submitQueryRequestType" />
+    
 </xs:schema>

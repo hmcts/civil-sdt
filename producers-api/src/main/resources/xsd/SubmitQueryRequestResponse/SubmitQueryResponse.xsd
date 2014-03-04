@@ -10,8 +10,12 @@
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema" schemaLocation="../RootXSDs/McolQuery.xsd"/>
     
-    <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
-
+    <xs:complexType name="resultsType">
+        <xs:choice>
+            <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:complexType>
+    
     <xs:complexType name="submitQueryResponseType">
         <xs:complexContent>
             <xs:extension base="base:abstractResponseType">
@@ -25,10 +29,6 @@
         </xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="resultsType">
-        <xs:choice>
-            <xs:element name="mcolDefenceDetail" type="mqry:mcolDefenceDetailType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:choice>
-    </xs:complexType>
-    
+    <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
+
 </xs:schema>

@@ -17,12 +17,14 @@
 
     <xs:element name="mcolDefenceCriteria" type="tns:mcolDefenceCriteriaType" />
 
-    <xs:complexType name="mcolDefenceDetailType">
-        <xs:sequence>
-            <xs:element name="claimNumber" type="base:claimNumberType" />
-            <xs:element name="defendantResponse" type="tns:defendantResponseType"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:simpleType name="responseType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AS"/>
+            <xs:enumeration value="DE"/>
+            <xs:enumeration value="DC"/>
+            <xs:enumeration value="PA"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="defendantResponseType">
         <xs:sequence>
@@ -33,14 +35,12 @@
         <xs:attribute name="defendantId" type="base:defendantIdType" use="required"/>
     </xs:complexType>
 
-    <xs:simpleType name="responseType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="AS"/>
-            <xs:enumeration value="DE"/>
-            <xs:enumeration value="DC"/>
-            <xs:enumeration value="PA"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:complexType name="mcolDefenceDetailType">
+        <xs:sequence>
+            <xs:element name="claimNumber" type="base:claimNumberType" />
+            <xs:element name="defendantResponse" type="tns:defendantResponseType"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:element name="mcolDefenceDetail" type="tns:mcolDefenceDetailType"/>
 

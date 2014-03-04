@@ -8,8 +8,12 @@
     
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
     
-    <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
-
+    <xs:complexType name="resultsType">
+        <xs:choice>
+            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+    </xs:complexType>
+    
     <xs:complexType name="submitQueryResponseType">
         <xs:complexContent>
             <xs:extension base="base:abstractResponseType">
@@ -23,10 +27,6 @@
         </xs:complexContent>
     </xs:complexType>
     
-    <xs:complexType name="resultsType">
-        <xs:choice>
-            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:choice>
-    </xs:complexType>
-    
+    <xs:element name="submitQueryResponse" type="tns:submitQueryResponseType" />
+
 </xs:schema>
