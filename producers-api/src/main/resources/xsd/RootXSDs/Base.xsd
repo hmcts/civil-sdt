@@ -69,7 +69,13 @@
 
 	<xs:complexType name="sotSignatureType">
 		<xs:sequence>
-            <xs:element name="flag" type="xs:boolean" fixed="true"/>
+            <xs:element name="flag">
+                <xs:simpleType>
+                    <xs:restriction base="xs:boolean">
+                        <xs:pattern value="true" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 			<xs:element name="name">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">

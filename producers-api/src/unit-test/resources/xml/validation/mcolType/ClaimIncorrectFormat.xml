@@ -51,7 +51,7 @@
   <tns:solicitorCost>-1</tns:solicitorCost>
   <tns:particulars>1234567890123456789012345678901234567890123456</tns:particulars>
   <tns:sotSignature>
-    <base:flag>true</base:flag>
+    <base:flag></base:flag>
     <base:name>123456789012345678901234567890</base:name>
   </tns:sotSignature>
 </tns:mcolClaim>

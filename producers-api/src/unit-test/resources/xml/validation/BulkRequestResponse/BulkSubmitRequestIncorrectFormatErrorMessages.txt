@@ -2,7 +2,8 @@ cvc-pattern-valid: Value '1234567890123456789012345' is not facet-valid with res
 cvc-type.3.1.3: The value '1234567890123456789012345' of element 'tns:sdtCustomerId' is not valid.
 cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to maxLength '32' for type 'customerReferenceType'.
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'tns:customerReference' is not valid.
-cvc-elt.5.2.2.2.2: The value 'false' of element 'tns1:flag' does not match the {value constraint} value 'true'.
+cvc-pattern-valid: Value 'false' is not facet-valid with respect to pattern 'true' for type '#AnonType_flagsotSignatureType'.
+cvc-type.3.1.3: The value 'false' of element 'tns1:flag' is not valid.
 cvc-maxLength-valid: Value '123456789012345678901234567890123' with length = '33' is not facet-valid with respect to maxLength '30' for type '#AnonType_namesotSignatureType'.
 cvc-type.3.1.3: The value '123456789012345678901234567890123' of element 'tns1:name' is not valid.
 cvc-maxLength-valid: Value '1234567890123456789012345' with length = '25' is not facet-valid with respect to maxLength '24' for type 'requestIdType'.

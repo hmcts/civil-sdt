@@ -58,7 +58,13 @@
       </xs:simpleType>
       <xs:complexType name="sotSignatureType">
         <xs:sequence>
-          <xs:element name="flag" type="xs:boolean" fixed="true"/>
+          <xs:element name="flag">
+            <xs:simpleType>
+              <xs:restriction base="xs:boolean">
+                <xs:pattern value="true"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
           <xs:element name="name">
             <xs:simpleType>
               <xs:restriction base="xs:string">
@@ -616,11 +622,6 @@
           <xs:enumeration value="MP">
             <xs:annotation>
               <xs:documentation>Paid</xs:documentation>
-            </xs:annotation>
-          </xs:enumeration>
-          <xs:enumeration value="WO">
-            <xs:annotation>
-              <xs:documentation>Written Off</xs:documentation>
             </xs:annotation>
           </xs:enumeration>
           <xs:enumeration value="WD">
