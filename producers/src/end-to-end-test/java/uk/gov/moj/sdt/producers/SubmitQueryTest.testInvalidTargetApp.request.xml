@@ -8,7 +8,9 @@ xmlns:mqry="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema"
     <tns:targetApplicationId>xxxx</tns:targetApplicationId>
   </tns:header>
   <tns:criteria>
-    <tns:criterion criteriaType="Error">
+    <tns:criterion criteriaType="mcolDefenceCriteria">
+        <tns:mcolCriteria>
+        </tns:mcolCriteria>
     </tns:criterion>
   </tns:criteria>
 </tns:submitQueryRequest>

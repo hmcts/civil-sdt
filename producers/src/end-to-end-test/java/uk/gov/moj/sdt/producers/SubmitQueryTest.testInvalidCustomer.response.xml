@@ -11,4 +11,6 @@
     </status>
     <ns2:sdtCustomerId>99999999</ns2:sdtCustomerId>
     <ns2:sdtService>SDT</ns2:sdtService>
+    <ns2:resultCount>0</ns2:resultCount>
+    <ns2:results/>
 </ns2:submitQueryResponse>

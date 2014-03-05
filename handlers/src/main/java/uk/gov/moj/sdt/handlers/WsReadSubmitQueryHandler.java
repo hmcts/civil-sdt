@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.handlers;
 
+import java.math.BigInteger;
 import java.util.GregorianCalendar;
 
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ import uk.gov.moj.sdt.utils.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.validators.exception.AbstractBusinessException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ResultsType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
@@ -153,6 +155,9 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
         submitQueryResponseType.setSdtService (AbstractTransformer.SDT_SERVICE);
         submitQueryResponseType.setSdtCustomerId (submitQueryRequestType.getHeader ().getSdtCustomerId ());
         submitQueryResponseType.setStatus (new StatusType ());
+        submitQueryResponseType.setResultCount (BigInteger.valueOf (0));
+        submitQueryResponseType.setResults (new ResultsType ());
+
         return submitQueryResponseType;
     }
 
