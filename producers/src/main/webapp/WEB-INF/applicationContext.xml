@@ -35,7 +35,7 @@
         	<ref bean="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor" />
         </jaxws:outFaultInterceptors>
         <jaxws:properties>
-            <entry key="schema-validation-enabled" value="false"/>
+            <entry key="schema-validation-enabled" value="true"/>
             <entry key="soap.env.ns.map"> 
                 <map> 
                     <entry key="base" value="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/> 
