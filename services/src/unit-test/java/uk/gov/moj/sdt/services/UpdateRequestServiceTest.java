@@ -59,6 +59,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -86,6 +87,11 @@ public class UpdateRequestServiceTest
     private UpdateRequestService updateRequestService;
 
     /**
+     * Mocked messaging utility.
+     */
+    private IMessagingUtility mockMessagingUtility;
+
+    /**
      * Method to do any pre-test set-up.
      */
     @Before
@@ -96,6 +102,9 @@ public class UpdateRequestServiceTest
         // Instantiate all the mocked objects and set them in the target application submission service
         mockIndividualRequestDao = EasyMock.createMock (IIndividualRequestDao.class);
         updateRequestService.setIndividualRequestDao (mockIndividualRequestDao);
+
+        mockMessagingUtility = EasyMock.createMock (IMessagingUtility.class);
+        updateRequestService.setMessagingUtility (mockMessagingUtility);
 
         final GenericXmlParser genericParser = new GenericXmlParser ();
         genericParser.setEnclosingTag ("targetAppDetail");
@@ -202,6 +211,62 @@ public class UpdateRequestServiceTest
     }
 
     /**
+     * Method to test message resubmission scenario for the update individual request method.
+     */
+    @Test
+    public void updateIndividualRequestResubmit ()
+    {
+        final IIndividualRequest individualRequestParam = this.getResubmitMessageIndividualRequestFromTargetApp ();
+
+        final IIndividualRequest individualRequest = new IndividualRequest ();
+        individualRequest.setSdtRequestReference (individualRequestParam.getSdtRequestReference ());
+        this.setUpIndividualRequest (individualRequest);
+
+        EasyMock.expect (
+                this.mockIndividualRequestDao.getRequestBySdtReference (individualRequestParam
+                        .getSdtRequestReference ())).andReturn (individualRequest);
+
+        this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ();
+
+        EasyMock.expect (
+                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
+
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+        mockIndividualRequestDao.persist (bulkSubmission);
+        EasyMock.expectLastCall ();
+
+        EasyMock.replay (mockIndividualRequestDao);
+
+        this.mockMessagingUtility.enqueueRequest (individualRequest);
+        EasyMock.expectLastCall ();
+
+        EasyMock.replay (mockMessagingUtility);
+
+        // Setup dummy target response
+        SdtContext.getContext ().setRawInXml ("response");
+
+        this.updateRequestService.updateIndividualRequest (individualRequestParam);
+        EasyMock.verify (mockIndividualRequestDao);
+        EasyMock.verify (mockMessagingUtility);
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals ("Individual request status is incorrect",
+                IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus (), individualRequest.getRequestStatus ());
+        Assert.assertNull ("Individual request should not have error", individualRequest.getErrorLog ());
+        Assert.assertEquals ("Forwarding attempts should be reset to 0", 0, individualRequest.getForwardingAttempts ());
+        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
+        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission ().getUpdatedDate ());
+        // CHECKSTYLE:ON
+
+    }
+
+    /**
      * This method is to test the scenario that the individual request from the
      * target app is not found in the database.
      */
@@ -275,6 +340,20 @@ public class UpdateRequestServiceTest
 
         final IErrorLog errorLog = new ErrorLog ("INVALID_NAME", "Invalid name");
         domainObject.markRequestAsRejected (errorLog);
+
+        return domainObject;
+    }
+
+    /**
+     * 
+     * @return the individual request as obtained from the update item transformer
+     */
+    private IIndividualRequest getResubmitMessageIndividualRequestFromTargetApp ()
+    {
+        final IIndividualRequest domainObject = new IndividualRequest ();
+        domainObject.setSdtRequestReference ("MCOL_IREQ_0001");
+
+        domainObject.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus ());
 
         return domainObject;
     }

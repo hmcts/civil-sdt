@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.IUpdateRequestService;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 
 /**
  * Service class implementing the IUpdateRequestService.
@@ -50,6 +51,11 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (UpdateRequestService.class);
 
+    /**
+     * Messaging utility for queueing messages in the messaging server.
+     */
+    private IMessagingUtility messagingUtility;
+
     @Override
     public void updateIndividualRequest (final IIndividualRequest individualRequestParam)
     {
@@ -60,6 +66,15 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
         // Proceed ahead if the Individual Request is found.
         if (individualRequest != null)
         {
+
+            // Resubmit message to target application by enqueuing it.
+            if (IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus ().equals (
+                    individualRequestParam.getRequestStatus ()))
+            {
+                getMessagingUtility ().enqueueRequest (individualRequest);
+                individualRequest.resetForwardingAttempts ();
+            }
+
             // Refresh the individual request from the database with the status and the error code
             // from the target application.
             if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ().equals (
@@ -80,9 +95,27 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
         else
         {
             LOGGER.warn ("Individual Request with Sdt Request Reference [" +
-                    individualRequestParam.getRequestStatus () + "] not found.");
+                    individualRequestParam.getSdtRequestReference () + "] not found.");
         }
 
     }
 
+    /**
+     * Get the messaging utility class reference.
+     * 
+     * @return the messaging utility
+     */
+    public IMessagingUtility getMessagingUtility ()
+    {
+        return messagingUtility;
+    }
+
+    /**
+     * 
+     * @param messagingUtility the messaging utility class.
+     */
+    public void setMessagingUtility (final IMessagingUtility messagingUtility)
+    {
+        this.messagingUtility = messagingUtility;
+    }
 }

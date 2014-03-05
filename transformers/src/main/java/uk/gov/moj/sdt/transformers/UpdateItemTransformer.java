@@ -34,6 +34,7 @@ import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -72,6 +73,10 @@ public class UpdateItemTransformer extends AbstractTransformer implements
         else if (UpdateStatusCodeType.ACCEPTED.equals (statusCode))
         {
             individualRequest.markRequestAsAccepted ();
+        }
+        else if (UpdateStatusCodeType.RESUBMIT_MESSAGE.equals (statusCode))
+        {
+            individualRequest.setRequestStatus (IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus ());
         }
 
         return individualRequest;

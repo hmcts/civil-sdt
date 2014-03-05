@@ -59,6 +59,7 @@
     <!-- Implementation for the Update Request Service -->
     <bean id="uk.gov.moj.sdt.services.api.IUpdateRequestService" class="uk.gov.moj.sdt.services.UpdateRequestService" 
     	parent="uk.gov.moj.sdt.services.AbstractSdtService">
+        <property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
     </bean>
     
     <!-- Implementation of the RetryMessageSend service -->

@@ -91,6 +91,32 @@ public class UpdateItemTransformerTest extends TestCase
 
     /**
      * Test the transformation from jaxb (UpdateRequestType) to domain (IIndividualRequest) object with status
+     * RESUBMIT_MESSAGE.
+     */
+    @Test
+    public void testTransformJaxbToDomainResubmitMessage ()
+    {
+        // Set up the jaxb object to transform
+        final String sdtRequestId = "MCOL-12200202-121212";
+        final UpdateRequestType updateRequestType = new UpdateRequestType ();
+        final HeaderType headerType = new HeaderType ();
+        headerType.setSdtRequestId (sdtRequestId);
+        updateRequestType.setHeader (headerType);
+
+        final UpdateStatusType status = new UpdateStatusType ();
+        status.setCode (UpdateStatusCodeType.RESUBMIT_MESSAGE);
+        updateRequestType.setStatus (status);
+
+        final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain (updateRequestType);
+
+        Assert.assertNotNull (domainObject);
+        Assert.assertEquals ("Found correct sdt request id", domainObject.getSdtRequestReference (), sdtRequestId);
+        Assert.assertEquals ("Found correct request status", UpdateStatusCodeType.RESUBMIT_MESSAGE.value (),
+                domainObject.getRequestStatus ());
+    }
+
+    /**
+     * Test the transformation from jaxb (UpdateRequestType) to domain (IIndividualRequest) object with status
      * ACCEPTED.
      */
     @Test
