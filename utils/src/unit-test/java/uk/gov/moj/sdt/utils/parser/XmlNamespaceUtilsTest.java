@@ -295,7 +295,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
     }
 
     /**
-     * Test the combining of individual namespace.
+     * Test the combining of individual namespaces.
      */
     @Test
     public void testCombinedNamespace ()
