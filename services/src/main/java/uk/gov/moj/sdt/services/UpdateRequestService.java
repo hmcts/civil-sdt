@@ -71,8 +71,8 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
             if (IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus ().equals (
                     individualRequestParam.getRequestStatus ()))
             {
-                getMessagingUtility ().enqueueRequest (individualRequest);
                 individualRequest.resetForwardingAttempts ();
+                getMessagingUtility ().enqueueRequest (individualRequest);
             }
 
             // Refresh the individual request from the database with the status and the error code

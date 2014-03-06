@@ -336,6 +336,9 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     {
         this.setRequestStatus (IndividualRequestStatus.ACCEPTED.getStatus ());
 
+        // Reset forward attempts
+        this.setForwardingAttempts (0);
+
         // Set the completed date only if the status is rejected or accepted.
         this.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
@@ -349,10 +352,14 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     {
         this.setRequestStatus (IndividualRequestStatus.REJECTED.getStatus ());
 
+        // Reset forward attempts
+        this.setForwardingAttempts (0);
+
         // Set the error log if there is one
         if (errorLog != null)
         {
             this.setErrorLog (errorLog);
+            errorLog.setIndividualRequest (this);
         }
 
         // Set the completed date only if the status is rejected or accepted.
@@ -361,18 +368,15 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         // Set the updated date
         this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
-        // Do the association to error log
-        if (errorLog != null)
-        {
-            errorLog.setIndividualRequest (this);
-        }
-
     }
 
     @Override
     public void markRequestAsInitiallyAccepted ()
     {
         this.setRequestStatus (IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus ());
+        // Reset forward attempts
+        this.setForwardingAttempts (0);
+
         // Set the updated date
         this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
@@ -382,6 +386,9 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void markRequestAsAwaitingData ()
     {
         this.setRequestStatus (IndividualRequestStatus.AWAITING_DATA.getStatus ());
+        // Reset forward attempts
+        this.setForwardingAttempts (0);
+
         // Set the updated date
         this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
 
