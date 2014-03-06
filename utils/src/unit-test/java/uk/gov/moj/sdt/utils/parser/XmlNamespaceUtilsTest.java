@@ -24,10 +24,10 @@
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
  * 
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
+ * $Id$
+ * $LastChangedRevision$
+ * $LastChangedDate$
+ * $LastChangedBy$ */
 
 package uk.gov.moj.sdt.utils.parser;
 
@@ -276,8 +276,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
         try
         {
-            @SuppressWarnings ("unused")
-            final Map<String, String> map =
+            @SuppressWarnings ("unused") final Map<String, String> map =
                     XmlNamespaceUtils.findMatchingNamespaces ("   <xsi:some-tag some-attribute=\"some value\">"
                             + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
                             + "       <aop:some-other-tag some-attribute=\"some value\">"
