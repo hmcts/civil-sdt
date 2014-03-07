@@ -70,7 +70,7 @@ public class GenericXmlParser
      * 
      * @return target app specific fragment
      */
-    public String parse ()
+    public String parse2 ()
     {
 
         String xmlResult = "";
@@ -111,6 +111,99 @@ public class GenericXmlParser
 
         return xmlResult;
 
+    }
+
+    /**
+     * Parses raw xml to extract target application specific fragment. The fragment is decorated with applicable
+     * namespace details.
+     * 
+     * @return target app specific fragment.
+     */
+    public String parse ()
+    {
+
+        String xmlResult = "";
+
+        String rawXml = SdtContext.getContext ().getRawInXml ();
+
+        // Remove linefeeds as they stop the regular expression working.
+        rawXml = rawXml.replace ('\n', ' ');
+        rawXml = rawXml.replace ('\r', ' ');
+
+        // Retrieve all namespaces
+        final Map<String, String> allNamespaces =
+                XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);
+
+        // Build search pattern for extraction.
+        final Pattern pattern =
+                Pattern.compile ("<[\\w]+:" + getEnclosingTag () + "(.*?)>(.*?)</[\\w]+:" + getEnclosingTag () + ">");
+        final Matcher matcher = pattern.matcher (rawXml);
+
+        if (matcher.find ())
+        {
+            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+
+            // Capture raw xml for element
+            xmlResult = matcher.group (2).trim ();
+
+            LOGGER.debug ("Result XML[" + xmlResult + "]");
+
+            // Find namespaces applicable for fragment
+            final Map<String, String> matchingNamespaces =
+                    XmlNamespaceUtils.findMatchingNamespaces (xmlResult, allNamespaces);
+
+            xmlResult = addNamespaces (xmlResult, matchingNamespaces);
+
+            LOGGER.debug ("result XML with namespaces[" + xmlResult + "]");
+        }
+
+        return xmlResult;
+
+    }
+
+    /**
+     * Prepare xml fragment with given namespaces embedded. When given xml fragment contains multiple occurrences of
+     * target application specific tag then namespace(s) are embedded in each occurrence.
+     * 
+     * @param xmlFragment fragment of xml that doesn't have namespace information.
+     * @param matchingNamespaces namespaces that need to be added.
+     * @return xml fragment with namespaces added.
+     */
+    private String addNamespaces (final String xmlFragment, final Map<String, String> matchingNamespaces)
+    {
+        // Find the target application specific tag which will occur one or more times.
+        Pattern pattern = Pattern.compile ("<([\\w]+:[\\w-]+)>");
+        Matcher matcher = pattern.matcher (xmlFragment);
+        String iteratingTag = null;
+
+        if (matcher.find ())
+        {
+            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+
+            // Capture raw xml for element
+            iteratingTag = matcher.group (1).trim ();
+        }
+
+        if (iteratingTag == null)
+        {
+            throw new IllegalStateException ("Target specific tag not found in xml fragment[" + xmlFragment + "]");
+        }
+
+        // Build search pattern for extracting content for repeating tag.
+        pattern = Pattern.compile ("<" + iteratingTag + ">.*?</" + iteratingTag + ">");
+        matcher = pattern.matcher (xmlFragment);
+
+        final StringBuilder result = new StringBuilder ();
+
+        while (matcher.find ())
+        {
+            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+            final String xmlResult = XmlNamespaceUtils.addNamespaces (matcher.group (), matchingNamespaces);
+            LOGGER.debug ("result XML[" + xmlResult + "]");
+            result.append (xmlResult);
+        }
+
+        return result.toString ();
     }
 
     /**

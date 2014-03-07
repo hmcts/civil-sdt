@@ -102,6 +102,40 @@ public class GenericXmlParserTest
     }
 
     /**
+     * Test the method to get target app response xml for submit query response when multiple records are returned in
+     * result.
+     * 
+     * @throws Exception if there is any IO problems
+     */
+    @Test
+    public void testParseSubmitQueryResponseSuccessForMultipleResults () throws Exception
+    {
+        LOGGER.debug ("scenario for submit query response when multiple records are returned in result.");
+
+        genericXmlParser.setEnclosingTag ("targetAppDetail");
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+
+        genericXmlParser.setReplacementNamespaces (replacementNamespaces);
+        // Load xml into SdtContext as if the inbound interceptor had run.
+        final String rawXml =
+                Utilities.getRawXml ("src/unit-test/resources/", "testSubmitQueryResponseMultipleResult.xml");
+
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        // Now call the parser.
+        final String result = this.genericXmlParser.parse ();
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals (
+                "Failed to find expected response",
+                "<sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"xmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"><mquer:claimNumber>13548968</mquer:claimNumber><mquer:defendantdefendantId=\"1\"><mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate><mquer:responseType>DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail><sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"xmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"><mquer:claimNumber>13548969</mquer:claimNumber><mquer:defendantdefendantId=\"2\"><mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate><mquer:responseType>DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail>",
+                result.replaceAll ("\\s+", ""));
+        // CHECKSTYLE:ON
+    }
+
+    /**
      * Test the method to get target app response xml for individual request that has been rejected.
      * 
      * @throws Exception if there is any IO problems
