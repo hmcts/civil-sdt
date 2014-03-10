@@ -683,7 +683,7 @@
                     <xs:element name="claimNumber" type="base:claimNumberType"/>
                     <xs:element name="jointJudgment" type="xs:boolean"/>
                     <xs:element name="judgmentType" type="tns:judgmentTypeType"/>
-                    <xs:element name="sentParticularsSeparately" type="xs:boolean" fixed="true" minOccurs="0"/>
+                    <xs:element name="sentParticularsSeparately" type="xs:boolean" minOccurs="0"/>
                     <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0"/>
                     <xs:element name="defendant1Address" type="base:addressType" minOccurs="0"/>
                     <xs:element name="defendant1DateOfBirth" type="xs:date" minOccurs="0"/>
