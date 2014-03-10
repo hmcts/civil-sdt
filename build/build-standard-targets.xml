@@ -367,7 +367,7 @@
 			<available file="${oc4j.deploy.dir}/${app.meta-inf}" type="dir" />
 			<then>
 				<!-- Delete the ear to be sure we create new one -->
-				<delete file="${deployable.component}" />
+				<delete file="${target.dir}/${deployable.component}" />
 				<delete dir="${oc4j.deploy.dir}/META-INF" quiet="true" />
 
 				<mkdir dir="${oc4j.deploy.dir}/META-INF" />
@@ -375,8 +375,8 @@
 					<fileset dir="${oc4j.deploy.dir}/${app.meta-inf}" />
 				</copy>
 
-				<echo level="info" message="zip: ${deployable.component} from ./target/${ant.project.name}.war" />
-				<zip destfile="${deployable.component}">
+				<echo level="info" message="zip: ${target.dir}/${deployable.component} from ./target/${ant.project.name}.war" />
+				<zip destfile="${target.dir}/${deployable.component}">
 					<fileset dir="./target" includes="${ant.project.name}.war" />
 					<fileset dir="${oc4j.deploy.dir}">
 						<include name="**/META-INF/*.*" />
@@ -400,7 +400,7 @@
 			<arg value="${oc4j.password}" />
 			<arg value="-deploy" />
 			<arg value="-file" />
-			<arg value="${deployable.component}" />
+			<arg value="${target.dir}/${deployable.component}" />
 			<arg value="-deploymentName" />
 			<arg value="${deployed.appname}" />
 			<arg value="-deploymentPlan" />
@@ -426,11 +426,10 @@
 		</java>
 	</target>
 
-	<target name="-deploy-remote-copy" if="remote-copy.exists" description="Remote copy the deployed file to the target area">
+	<target name="-deploy-remote-copy" if="remote-copy.exists" depends="-prepare-ear" description="Remote copy the deployed file to the target area">
 		<!-- Copy the war file to the remote host directory. -->
-		<ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
-		<sshexec host="${remote.copy.host}" username="${remote.copy.user}" password="${remote.copy.password}" command="mkdir -p ${remote.copy.dir}/${application.version}.${buildNumber}" />
-		<scp file="${target.dir}/${component.name}" todir="${remote.copy.user}:${remote.copy.password}@${remote.copy.host}:${remote.copy.dir}/${application.version}.${buildNumber}/${component.name}" trust="true" failonerror="false" />
+		<sshexec host="${remote.copy.host}" username="${remote.copy.user}" password="${remote.copy.password}" command="mkdir -p ${remote.copy.dir}/${application.version}.${buildNumber}" trust="true" failonerror="true" />
+		<scp file="${target.dir}/${deployable.component}" todir="${remote.copy.user}:${remote.copy.password}@${remote.copy.host}:${remote.copy.dir}/${application.version}.${buildNumber}/${deployable.component}" trust="true" failonerror="false" />
 	</target>
 
 	<target name="-deploy-remote-tc-server" if="remote-tc-server.exists" description="Remote copy to the autodeploy folder of the tc-server(can be reused to for WebLogic">
@@ -444,27 +443,10 @@
 	</target>
 
     <!-- Deploy an EAR file to weblogic application server -->
-    <target name="-deploy-to-weblogic" if="weblogic.exists" description="Deploy to weblogic application server">
+    <target name="-deploy-to-weblogic" if="weblogic.exists" depends="-prepare-ear" description="Deploy to weblogic application server">
         <if>
             <available file="${weblogic.deploy.dir}/${app.meta-inf}" type="dir" />
             <then>
-                <!-- Delete the ear to be sure we create new one -->
-                <delete file="${deployable.component}" />
-                <delete dir="${weblogic.deploy.dir}/META-INF" quiet="true" />
-
-                <mkdir dir="${weblogic.deploy.dir}/META-INF" />
-                <copy todir="${weblogic.deploy.dir}/META-INF">
-                    <fileset dir="${weblogic.deploy.dir}/${app.meta-inf}" />
-                </copy>
-
-                <echo level="info" message="zip: ${deployable.component} from ./target/${component.name}" />
-                <zip destfile="${deployable.component}">
-                    <fileset dir="./target" includes="${component.name}" />
-                    <fileset dir="${weblogic.deploy.dir}">
-                        <include name="**/META-INF/*.*" />
-                    </fileset>
-                </zip>
-
                 <antcall target="-deploy-weblogic" />
             </then>
         </if>
@@ -475,12 +457,37 @@
         <wldeploy action="deploy" verbose="true" debug="true" remote="true"
             upload="true"
         	name="${deployed.appname}" 
-            source="${deployable.component}"
+            source="${target.dir}/${deployable.component}"
             user="${weblogic.user}" 
         	password="${weblogic.password}"
             adminurl="${weblogic.adminurl}"
         	targets="${weblogic.targets}"
         />
+    </target>
+
+    <!-- Prepare an EAR file for the component -->
+    <target name="-prepare-ear">
+    <if>
+        <available file="${weblogic.deploy.dir}/${app.meta-inf}" type="dir" />
+        <then>
+            <!-- Delete the ear to be sure we create new one -->
+            <delete file="${target.dir}/${deployable.component}" />
+            <delete dir="${weblogic.deploy.dir}/META-INF" quiet="true" />
+
+            <mkdir dir="${weblogic.deploy.dir}/META-INF" />
+            <copy todir="${weblogic.deploy.dir}/META-INF">
+                <fileset dir="${weblogic.deploy.dir}/${app.meta-inf}" />
+            </copy>
+
+            <echo level="info" message="zip: ${target.dir}/${deployable.component} from ./target/${component.name}" />
+            <zip destfile="${target.dir}/${deployable.component}">
+                <fileset dir="./target" includes="${component.name}" />
+                <fileset dir="${weblogic.deploy.dir}">
+                    <include name="**/META-INF/*.*" />
+                </fileset>
+            </zip>
+        </then>
+    </if>
     </target>
 
 	<!-- Deploy a WAR file to application server -->
