@@ -75,11 +75,11 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
     {
         final StatusType status = jaxbInstance.getStatus ();
         final StatusCodeType statusCode = status.getCode ();
+        domainObject.setResultCount (jaxbInstance.getResultCount ().intValue ());
 
         if (StatusCodeType.OK.equals (statusCode))
         {
             domainObject.setStatus (StatusCodeType.OK.value ());
-            domainObject.setResultCount (jaxbInstance.getResultCount ().intValue ());
         }
         else if (StatusCodeType.ERROR.equals (statusCode))
         {
