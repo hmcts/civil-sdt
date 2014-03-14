@@ -68,55 +68,6 @@ public class GenericXmlParser
      * Parses raw xml to extract target application specific fragment. The fragment is decorated with applicable
      * namespace details.
      * 
-     * @return target app specific fragment
-     */
-    public String parse2 ()
-    {
-
-        String xmlResult = "";
-
-        String rawXml = SdtContext.getContext ().getRawInXml ();
-
-        // Remove linefeeds as they stop the regular expression working.
-        rawXml = rawXml.replace ('\n', ' ');
-        rawXml = rawXml.replace ('\r', ' ');
-
-        // Retrieve all namespaces
-        final Map<String, String> allNamespaces =
-                XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);
-
-        // Build search pattern for extraction.
-        final Pattern pattern =
-                Pattern.compile ("<[\\w]+:" + getEnclosingTag () + "(.*?)>(.*?)</[\\w]+:" + getEnclosingTag () + ">");
-        final Matcher matcher = pattern.matcher (rawXml);
-
-        if (matcher.find ())
-        {
-            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
-
-            // Capture raw xml for element
-            xmlResult = matcher.group (2).trim ();
-
-            LOGGER.debug ("result XML[" + xmlResult + "]");
-
-            // Find namespaces applicable for fragment
-            final Map<String, String> matchingNamespaces =
-                    XmlNamespaceUtils.findMatchingNamespaces (xmlResult, allNamespaces);
-
-            // Embed namespaces within fragment
-            xmlResult = XmlNamespaceUtils.addNamespaces (xmlResult, matchingNamespaces);
-
-            LOGGER.debug ("result XML with namespaces[" + xmlResult + "]");
-        }
-
-        return xmlResult;
-
-    }
-
-    /**
-     * Parses raw xml to extract target application specific fragment. The fragment is decorated with applicable
-     * namespace details.
-     * 
      * @return target app specific fragment.
      */
     public String parse ()
