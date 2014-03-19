@@ -5,8 +5,12 @@
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
-	<enableImports><![CDATA[false]]></enableImports>
+	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
+		<config>src/main/java/uk/gov/moj/sdt/interceptors/enricher/spring.context.xml</config>
+		<config>src/main/java/uk/gov/moj/sdt/interceptors/in/spring.context.xml</config>
+		<config>src/main/java/uk/gov/moj/sdt/interceptors/out/spring.context.xml</config>
+		<config>src/main/java/uk/gov/moj/sdt/interceptors/spring.context.xml</config>
 	</configs>
 	<configSets>
 	</configSets>

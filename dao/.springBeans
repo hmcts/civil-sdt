@@ -5,8 +5,10 @@
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
-	<enableImports><![CDATA[false]]></enableImports>
+	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
+		<config>src/main/java/uk/gov/moj/sdt/dao/spring.context.xml</config>
+		<config>src/main/resources/uk/gov/moj/sdt/dao/spring.hibernate.xml</config>
 	</configs>
 	<configSets>
 	</configSets>

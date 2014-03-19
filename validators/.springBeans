@@ -5,8 +5,9 @@
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
-	<enableImports><![CDATA[false]]></enableImports>
+	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
+		<config>src/main/java/uk/gov/moj/sdt/validators/spring.context.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
