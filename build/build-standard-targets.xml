@@ -496,6 +496,12 @@
 		<ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
 	</target>
 
+    <!-- Prepare distribution artefacts for web services -->
+    <target name="dist-ws-contract" description="Prepare distribution artefacts for web services">
+        <!-- Prepare distribution artefacts for web servies needed by this project, e.g. zip file -->
+        <ant antfile="build-extras.xml" dir="." target="dist-ws-contract-extras" inheritrefs="true" inheritAll="true" />
+    </target>
+
 	<!-- Run checkstyle -->
 	<target name="checkstyle" depends="" description="Generate checkstyle report">
 	</target>
