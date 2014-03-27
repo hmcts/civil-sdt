@@ -14,7 +14,7 @@
     <!-- Define the Error log -->
     <bean id="uk.gov.moj.sdt.producers.comx.utils.IErrorLogMCOLDefence6" class="uk.gov.moj.sdt.domain.ErrorLog">
     	<property name="errorCode" value="74"/>
-    	<property name="errorText" value="To Date must be later than From Date."/>
+    	<property name="errorText" value="To Date and Time must be later than From Date and Time"/>
     </bean>
     
 </beans>

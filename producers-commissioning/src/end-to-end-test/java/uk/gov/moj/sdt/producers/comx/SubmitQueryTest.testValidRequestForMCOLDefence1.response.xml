@@ -9,7 +9,7 @@
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>3XC12345</mquer:claimNumber>
+            <mquer:claimNumber>A0ZZ1234</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
@@ -21,7 +21,7 @@
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>3XC12345</mquer:claimNumber>
+            <mquer:claimNumber>A0ZZ1234</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="2">
@@ -33,7 +33,7 @@
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>3XC12346</mquer:claimNumber>
+            <mquer:claimNumber>A0ZZ1235</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
@@ -45,7 +45,7 @@
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>3XC12347</mquer:claimNumber>
+            <mquer:claimNumber>A0ZZ1236</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
@@ -57,7 +57,7 @@
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>3XC12348</mquer:claimNumber>
+            <mquer:claimNumber>A0ZZ1237</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
@@ -69,7 +69,7 @@
         <sub:mcolDefenceDetail
             xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
             xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-            <mquer:claimNumber>3XC12350</mquer:claimNumber>
+            <mquer:claimNumber>A0ZZ1238</mquer:claimNumber>
             <mquer:defendantResponse
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">

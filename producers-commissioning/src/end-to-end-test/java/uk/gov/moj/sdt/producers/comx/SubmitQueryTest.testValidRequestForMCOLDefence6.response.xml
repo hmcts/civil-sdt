@@ -2,9 +2,10 @@
 <ns2:submitQueryResponse xmlns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
     xmlns:ns2="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema">
     <status code="Error">
-    	<error>
-        	<code>74</code>
-            <description>To Date must be later than From Date.</description>
+        <error>
+            <code>74</code>
+            <description>To Date and Time must be later than From Date
+                and Time</description>
         </error>
     </status>
     <ns2:sdtCustomerId>12345678</ns2:sdtCustomerId>
