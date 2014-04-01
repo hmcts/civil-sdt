@@ -10,7 +10,6 @@
         <!-- Submission date, this maps to created date in bulk submission -->
         <property name="createdDate">
             <bean class="org.joda.time.LocalDateTime">
-                <!-- Use static date of 22 July 2013 -->
                  <constructor-arg index="0" value="2013"/>
                  <constructor-arg index="1" value="7"/>
                  <constructor-arg index="2" value="22"/>
@@ -25,22 +24,6 @@
     <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
     <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryA00000001" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
     	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionA00000001"/>
-    	<!-- Define the system specific response -->
-    	<property name="targetResponse">
-    		<value>
-    			<![CDATA[
-                  <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
-                     <mresp:claimNumber>12345678</mresp:claimNumber>
-                     <mresp:issueDate>2012-11-11</mresp:issueDate>
-                     <mresp:serviceDate>2012-11-11</mresp:serviceDate>
-                     <mresp:warrantNumber>12345678</mresp:warrantNumber>
-                     <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
-                     <mresp:enforcingCourtName>enforcing_court_name</mresp:enforcingCourtName>
-                     <mresp:fee>9999</mresp:fee>
-                  </ind:mcolResponseDetail>
-                ]]>
-			</value>
-    	</property>
     </bean>
     
     <!-- Create the individual requests via method invocation -->   	
@@ -59,8 +42,8 @@
        			<value>DUP_CUST_REQID</value>
        			<!-- Rejection Reason Description -->
        			<value>Duplicate User Request Identifier submitted USER_REQUEST_ID_A1.</value>
-       			<!-- Target response -->
-       			<value>false</value>
+                <!-- Target response detail -->
+				<value/>
 	       	</list>
    		</property>
  	</bean>

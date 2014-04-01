@@ -10,9 +10,8 @@
         <!-- Submission date, this maps to created date in bulk submission -->
         <property name="createdDate">
             <bean class="org.joda.time.LocalDateTime">
-                <!-- Use static date of 22 July 2013 -->
-                 <constructor-arg index="0" value="2013"/>
-                 <constructor-arg index="1" value="7"/>
+                 <constructor-arg index="0" value="2014"/>
+                 <constructor-arg index="1" value="1"/>
                  <constructor-arg index="2" value="22"/>
                  <constructor-arg index="3" value="13"/>
                  <constructor-arg index="4" value="0"/> 
@@ -25,22 +24,6 @@
     <!-- Define the Bulk Feedback Factory and pass in the Bulk Submission in the constructor -->
     <bean id="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactoryB00000002" class="uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory">    	
     	<constructor-arg ref="uk.gov.moj.sdt.domain.api.IBulkSumissionB00000002"/>
-    	<!-- Define the system specific response -->
-    	<property name="targetResponse">
-    		<value>
-    			<![CDATA[
-                  <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
-                     <mresp:claimNumber>12345678</mresp:claimNumber>
-                     <mresp:issueDate>2012-11-11</mresp:issueDate>
-                     <mresp:serviceDate>2012-11-11</mresp:serviceDate>
-                     <mresp:warrantNumber>12345678</mresp:warrantNumber>
-                     <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
-                     <mresp:enforcingCourtName>enforcing_court_name</mresp:enforcingCourtName>
-                     <mresp:fee>9999</mresp:fee>
-                  </ind:mcolResponseDetail>
-                ]]>
-			</value>
-    	</property>
     </bean>    
         
     <!-- Create the individual requests via method invocation -->   	
@@ -60,8 +43,8 @@
 	       			<value>DUP_CUST_REQID</value>
 	       			<!-- Rejection Reason Description -->
 	       			<value>Duplicate User Request Identifier submitted USER_REQUEST_ID_B1a.</value>
-	       			<!-- Target response -->
-	       			<value>false</value>
+	       			<!-- Target response detail-->
+	       			<value></value>
 	       		</list>
 	       		<list>	     				       		       		
 	       			<value>USER_REQUEST_ID_B1b</value>	       			
@@ -69,7 +52,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>DUPLD_CUST_REQID</value>	       			
 	       			<value>Unique Request Identifier has been specified more than once within the originating Bulk Request.</value>
-	       			<value>false</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	     				       		       		
 	       			<value>USER_REQUEST_ID_B1b</value>	       			
@@ -77,7 +60,7 @@
 	       			<value>Rejected</value>	       			
 	       			<value>DUPLD_CUST_REQID</value>	       			
 	       			<value>Unique Request Identifier has been specified more than once within the originating Bulk Request.</value>
-	       			<value>false</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	       					
 	       			<value>USER_REQUEST_ID_B2</value>	       			
@@ -85,15 +68,15 @@
 	       			<value>Rejected</value>	       			
 	       			<value>8</value>	       			
 	       			<value>First defendant's postcode is not in England or Wales.</value>
-	       			<value>true</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	  
 	       			<value>USER_REQUEST_ID_B3</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>24</value>	       			
-	       			<value>This judgment request is invalid on the referenced claim.</value>
-	       			<value>true</value>
+	       			<value>75</value>	       			
+	       			<value>Rejected by CCBC - rejection number 6.</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	       		   			
 	       			<value>USER_REQUEST_ID_B4</value>	       			
@@ -101,23 +84,33 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	       		  			
 	       			<value>USER_REQUEST_ID_B5</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>22</value>	       			
-	       			<value>Specified claim does not exist on MCOL.</value>
-	       			<value>true</value>
+	       			<value>24</value>	       			
+	       			<value>This judgment request is invalid on the referenced claim.</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	       		
 	       			<value>USER_REQUEST_ID_B6</value>	       			
 	       			<value>mcolWarrant</value>	       			
-	       			<value>Accepted</value>	       			
+	       			<value>Initially Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:warrantNumber>0Z000150</mresp:warrantNumber>
+                                <mresp:enforcingCourtCode>127</mresp:enforcingCourtCode>
+                                <mresp:enforcingCourtName>BIRMINGHAM</mresp:enforcingCourtName>
+                                <mresp:fee>10000</mresp:fee>
+                                <mresp:judgmentWarrantStatus>Warrant accepted by CCBC</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>		       		     		
 	       			<value>USER_REQUEST_ID_B7</value>	       			
@@ -125,7 +118,18 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:firstPaymentDate>2014-03-03</mresp:firstPaymentDate>
+                                <mresp:warrantNumber>0Z000151</mresp:warrantNumber>
+                                <mresp:enforcingCourtCode>127</mresp:enforcingCourtCode>
+                                <mresp:enforcingCourtName>BIRMINGHAM</mresp:enforcingCourtName>
+                                <mresp:fee>10000</mresp:fee>
+                                <mresp:judgmentWarrantStatus>Judgment accepted by CCBC. Warrant accepted by CCBC</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	  	       		   			
 	       			<value>USER_REQUEST_ID_B8</value>	       			
@@ -133,31 +137,46 @@
 	       			<value>Rejected</value>	       			
 	       			<value>67</value>	       			
 	       			<value>This claim status update is invalid on the referenced claim.</value>
-	       			<value>true</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	   	       		  			
 	       			<value>USER_REQUEST_ID_B9</value>	       			
 	       			<value>mcolWarrant</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>23</value>	       			
-	       			<value>Specified claim does not belong to the requesting customer.</value>
-	       			<value>true</value>
+	       			<value>28</value>	       			
+	       			<value>Defendant 2 is specified but there is only 1 defendant on the claim.</value>
+	       			<value></value>
 	       		</list>
 	       		<list>	  	       		   			
 	       			<value>USER_REQUEST_ID_B10</value>	       			
 	       			<value>mcolJudgmentWarrant</value>	       			
 	       			<value>Rejected</value>	       			
-	       			<value>22</value>	       			
-	       			<value>Specified claim does not exist on MCOL.</value>
-	       			<value>true</value>
+	       			<value>24</value>	       			
+	       			<value>This judgment request is invalid on the referenced claim.</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:judgmentWarrantStatus>Judgment Request error</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	     	       					
 	       			<value>USER_REQUEST_ID_B11</value>	       			
 	       			<value>mcolClaim</value>	       			
-	       			<value>Initially Accepted</value>	       			
+	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:claimNumber>A0ZZ0045</mresp:claimNumber>
+                                <mresp:issueDate>2014-02-23</mresp:issueDate>
+                                <mresp:serviceDate>2014-02-28</mresp:serviceDate>
+                                <mresp:fee>21000</mresp:fee>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B12</value>	       			
@@ -165,15 +184,32 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:warrantNumber>0Z000152</mresp:warrantNumber>
+                                <mresp:enforcingCourtCode>127</mresp:enforcingCourtCode>
+                                <mresp:enforcingCourtName>BIRMINGHAM</mresp:enforcingCourtName>
+                                <mresp:fee>10000</mresp:fee>
+                                <mresp:judgmentWarrantStatus>Warrant accepted by CCBC</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B13</value>	       			
-	       			<value>mcolClaim</value>	       			
+	       			<value>mcolJudgment</value>	       			
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:firstPaymentDate>2014-02-21</mresp:firstPaymentDate>
+                                <mresp:judgmentWarrantStatus>Judgment accepted by CCBC</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 				<list>	     			
 	       			<value>USER_REQUEST_ID_B14</value>	       			
@@ -181,7 +217,16 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:claimNumber>A0ZZ0046</mresp:claimNumber>
+                                <mresp:issueDate>2014-02-23</mresp:issueDate>
+                                <mresp:serviceDate>2014-02-28</mresp:serviceDate>
+                                <mresp:fee>34000</mresp:fee>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B15</value>	       			
@@ -189,7 +234,13 @@
 	       			<value>Accepted</value>	       			
 	       			<value></value>	       			
 	       			<value></value>
-	       			<value>true</value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:judgmentWarrantStatus>Judgment accepted by CCBC</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>	       		
 	       	</list>
 		</property>

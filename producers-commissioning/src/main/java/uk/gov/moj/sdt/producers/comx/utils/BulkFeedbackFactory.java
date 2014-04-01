@@ -79,19 +79,14 @@ public class BulkFeedbackFactory
     private static final int REJECTION_DESCRIPTION = 4;
 
     /**
-     * String index for target response.
+     * String index for target response detail.
      */
-    private static final int TARGET_RESPONSE = 5;
+    private static final int TARGET_RESPONSE_DETAIL = 5;
 
     /**
      * The bulk submission.
      */
     private IBulkSubmission bulkSubmission;
-
-    /**
-     * The system specific target response defined in the spring context xml.
-     */
-    private String targetResponse;
 
     /**
      * Map to store whether the individual request should have the target response injected or not.
@@ -118,13 +113,12 @@ public class BulkFeedbackFactory
      * @param requestStatus request status from individual request domain object
      * @param rejectionReasonCode error code from error message domain object
      * @param rejectionReasonDescription error text from error message domain object
-     * @param hasTargetResponse true is a target response should be populated
+     * @param targetResponseDetail response obtained from target application
      */
     public void createIndividualRequest (final String customerRequestReference, final String requestType,
                                          final String requestStatus, final String rejectionReasonCode,
-                                         final String rejectionReasonDescription, final boolean hasTargetResponse)
+                                         final String rejectionReasonDescription, final String targetResponseDetail)
     {
-
         // Create the individual request
         final IndividualRequest individualRequest = new IndividualRequest ();
         individualRequest.setRequestType (requestType);
@@ -138,11 +132,11 @@ public class BulkFeedbackFactory
             individualRequest.setErrorLog (errorLog);
         }
 
-        if (hasTargetResponse)
+        if (StringUtils.isNotBlank (targetResponseDetail))
         {
             // In commissioning add the static response to the map for the outbound interceptor to use
             // if there is one for the particular individual request
-            targetResponseMap.put (customerRequestReference, targetResponse);
+            targetResponseMap.put (customerRequestReference, targetResponseDetail);
         }
 
         // Add to the list
@@ -169,11 +163,11 @@ public class BulkFeedbackFactory
             final String requestStatus = individualRequestList.get (REQUEST_STATUS);
             final String rejectionReasonCode = individualRequestList.get (REJECTION_CODE);
             final String rejectionReasonDescription = individualRequestList.get (REJECTION_DESCRIPTION);
-            final Boolean targetResponse = Boolean.valueOf (individualRequestList.get (TARGET_RESPONSE));
+            final String targetResponseDetail = individualRequestList.get (TARGET_RESPONSE_DETAIL);
 
             // Create the individual request
             createIndividualRequest (customerRequestReference, requestType, requestStatus, rejectionReasonCode,
-                    rejectionReasonDescription, targetResponse.booleanValue ());
+                    rejectionReasonDescription, targetResponseDetail);
         }
     }
 
@@ -195,16 +189,6 @@ public class BulkFeedbackFactory
     public void setBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         this.bulkSubmission = bulkSubmission;
-    }
-
-    /**
-     * Set the target response.
-     * 
-     * @param targetResponse target response
-     */
-    public void setTargetResponse (final String targetResponse)
-    {
-        this.targetResponse = targetResponse;
     }
 
     /**
