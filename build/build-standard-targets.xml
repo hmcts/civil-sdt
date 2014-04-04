@@ -134,6 +134,22 @@
             </classpath>
         </java>
 	</target>
+	
+   <target name="generate-from-wsdl-client" if="wsdl.exists" depends="clean-src-gen-work" description="Generate CXF files from wsdl">
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+            <arg value="-d" />
+            <arg value="${src-gen-work.dir}" />
+            <arg value="-frontend" />
+            <arg value="jaxws21" />
+            <arg value="-b" />
+            <arg value="${resources.dir}/jaxb-bindings.xml" />
+            <arg value="${resources.dir}/wsdl/SdtEndpointDist.wsdl" />
+            <classpath>
+                <path refid="cxf.classpath" />
+            </classpath>
+        </java>
+    </target>
+
 
 	<!-- Compile all src/main/java source -->
 	<target name="-compile-src-gen" if="src-gen.exists" depends="init" description="Compile src directories">

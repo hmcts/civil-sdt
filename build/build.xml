@@ -313,7 +313,16 @@
         </subant>
     </target>
 
-    <!-- Run diagnostics report -->
+    <!-- Generate source code from WSDL for External Client -->
+    <target name="generate-from-wsdl-client" description="Generate code from WSDL for SDK project">
+        <subant antfile="build.xml" target="generate-from-wsdl-client" inheritrefs="true" inheritAll="false">
+            <filelist dir=".">
+                <file name="../sdt-consumer-sample/build.xml" />
+            </filelist>
+        </subant>
+    </target>
+	
+	<!-- Run diagnostics report -->
     <target name="diagnostics" depends="init" description="Output diagnostics of ANT">
         <diagnostics />
     </target>
