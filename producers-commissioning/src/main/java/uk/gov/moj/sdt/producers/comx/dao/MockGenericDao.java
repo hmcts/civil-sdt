@@ -37,12 +37,16 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 
 /**
  * Base class for Mock DAO classes containing helper methods for mock dao sub classes.
@@ -54,6 +58,15 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
  */
 public class MockGenericDao implements IGenericDao
 {
+    /**
+     * Logger for this class.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (MockGenericDao.class);
+
+    /**
+     * Incrementing unique value for service request id, simulating value returned by Hibernate.
+     */
+    private static Long nextServiceRequestId = 0L;
 
     /**
      * Pre-defined values for valid customer references.
@@ -98,6 +111,14 @@ public class MockGenericDao implements IGenericDao
     public <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final long id)
         throws DataAccessException
     {
+        // Create dummy service request to satisfy logging of outbound request.
+        if (IServiceRequest.class.isAssignableFrom (domainType))
+        {
+            final ServiceRequest serviceRequest = new ServiceRequest ();
+            serviceRequest.setId (id);
+            return domainType.cast (serviceRequest);
+        }
+
         return null;
     }
 
@@ -112,7 +133,29 @@ public class MockGenericDao implements IGenericDao
     @Override
     public void persist (final Object domainObject) throws DataAccessException
     {
+        if (IServiceRequest.class.isAssignableFrom (domainObject.getClass ()))
+        {
+            final IServiceRequest serviceRequest = IServiceRequest.class.cast (domainObject);
 
+            // Fake the request id if not set.
+            if (serviceRequest.getId () == null)
+            {
+                serviceRequest.setId (++nextServiceRequestId);
+            }
+
+            if (LOGGER.isWarnEnabled ())
+            {
+                // Note that log level is unusually set to warn to force this message to be logged under normal logging
+                // configuration as required by NFR which says we should log incoming and outgoing messages on SDT
+                // Commissioning. Since cannot log to the database, we log instead to the log4j file.
+                LOGGER.warn ("SDT Commissioning: service request id [" + serviceRequest.getId () +
+                        "], bulk customer [" + serviceRequest.getBulkCustomerId () + "], bulk reference [" +
+                        serviceRequest.getBulkReference () + "], request type [" + serviceRequest.getRequestType () +
+                        "], hostname [" + serviceRequest.getServerHostName () + "], request payload [" +
+                        serviceRequest.getRequestPayload () + "], response payload [" +
+                        serviceRequest.getResponsePayload () + "]");
+            }
+        }
     }
 
     @Override
