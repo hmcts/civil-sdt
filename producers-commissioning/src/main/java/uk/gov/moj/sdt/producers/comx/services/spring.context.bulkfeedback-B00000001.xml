@@ -157,7 +157,13 @@
 	       			<value>Rejected</value>	       			
 	       			<value>24</value>	       			
 	       			<value>This judgment request is invalid on the referenced claim.</value>
-	       			<value></value>
+                    <value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:judgmentWarrantStatus>Judgment Request error</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B11</value>	       			

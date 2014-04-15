@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="80"/>
+        <property name="numberOfRequest" value="79"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -355,7 +355,7 @@
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>44</value>	       			
-	       			<value>Installment amount must be less than the full claim amount.</value>
+	       			<value>Instalment amount must be less than the full claim amount.</value>
 	       			<value></value>
 	       		</list>
                 <list>                  
@@ -571,7 +571,7 @@
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>73</value>	       			
-	       			<value>Paid in full date not in the future.</value>
+	       			<value>Paid in full date cannot be in the future.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -604,7 +604,13 @@
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
 	       			<value>Judgment: Rejected by CCBC - rejection number 6</value>
-	       			<value></value>
+                    <value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:judgmentWarrantStatus>Judgment rejected by CCBC</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c75e</value>	       			
@@ -612,18 +618,16 @@
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
 	       			<value>Judgment: Rejected by CCBC - rejection number 6.  Warrant: Rejected by CCBC - rejection number 6.</value>
-	       			<value></value>
+                    <value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:judgmentWarrantStatus>Judgment rejected by CCBC. Warrant rejected by CCBC.</mresp:judgmentWarrantStatus>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c75f</value>	       			
-	       			<value>mcolJudgmentWarrant</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>75</value>	       			
-	       			<value>Judgment: Rejected by CCBC - rejection number 6.  Warrant: Rejected by CCBC - rejection number 6.</value>
-	       			<value></value>
-	       		</list>
-	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c75g</value>	       			
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
