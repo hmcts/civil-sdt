@@ -162,7 +162,6 @@
 			<filelist dir="${3rd-party.spring3.dir}">
 				<file name="${antlr.jar}" />
 				<file name="${asm.jar}" />
-				<file name="${ehcache-core.jar}" />
 				<file name="${hibernate-commons-annotations.jar}" />
 				<file name="${hibernate-core.jar}" />
 				<file name="${javassist.jar}" />
@@ -175,22 +174,18 @@
 				<file name="${org.springframework.context.support.jar}" />
 				<file name="${org.springframework.core.jar}" />
 				<file name="${org.springframework.expression.jar}" />
-                <file name="${org.springframework.jms.jar}" />
+                <file name="${org.springframework.transaction.jar}" />
 				<file name="${org.springframework.web.jar}" />
 				<file name="${slf4j-api.jar}" />
 				<file name="${slf4j-log4j12.jar}" />
 				<file name="${usertype-spi.jar}" />
-				<file name="${usertype.core.jar}" />
-                <file name="${org.springframework.transaction.jar}" />
 			</filelist>
 			<filelist dir="${3rd-party.dir}">
 				<file name="${activation.jar}" />
-				<file name="${annogen.jar}" />
 				<file name="${aopalliance.jar}" />
 				<file name="${aspectjrt.jar}" />
 				<file name="${aspectjweaver.jar}" />
 				<file name="${cglib.jar}" />
-				<file name="${commons-beanutils-core.jar}" />
 				<file name="${commons-collections.jar}" />
 				<file name="${commons-httpclient.jar}" />
 				<file name="${commons-io.jar}" />
@@ -199,8 +194,6 @@
 				<file name="${commons-logging.jar}" />
 				<file name="${cxf.jar}" />
 				<file name="${dom4j.jar}" />
-				<file name="${gateway-xmlbeans.jar}" />
-				<file name="${htmlparser.jar}" />
 				<file name="${httpasyncclient.jar}" />
 				<file name="${httpclient.jar}" />
 				<file name="${httpcore.jar}" />
@@ -208,9 +201,6 @@
 				<file name="${jaxb-impl.jar}" />
 				<file name="${jaxen.jar}" />
 				<file name="${jcip-annotations.jar}" />
-				<file name="${jdom2.jar}" />
-				<file name="${jmxtools.jar}" />
-				<file name="${jstl.jar}" />
 				<file name="${jug.jar}" />
 				<file name="${log4j.jar}" />
 				<file name="${logkit.jar}" />
@@ -220,12 +210,9 @@
 				<file name="${standard.jar}" />
 				<file name="${stax-ex.jar}" />
 				<file name="${stax2-api.jar}" />
-				<file name="${streambuffer.jar}" />
-				<file name="${string.jar}" />
 				<file name="${woodstox-core-asl.jar}" />
 				<file name="${wsdl4j.jar}" />
 				<file name="${xalan.jar}" />
-				<file name="${xbean-spring.jar}" />
 				<file name="${xercesImpl.jar}" />
 				<file name="${xmlschema-core.jar}" />
 			</filelist>

@@ -162,7 +162,6 @@
                 <file name="${ehcache-core.jar}" />
                 <file name="${hibernate-commons-annotations.jar}" />
                 <file name="${hibernate-core.jar}" />
-                <file name="${hibernate-ehcache.jar}" />
                 <file name="${hibernate-jpa.jar}" />
                 <file name="${javassist.jar}" />
                 <file name="${jboss-logging.jar}" />
@@ -204,19 +203,14 @@
 				<file name="${commons-logging.jar}" />
 				<file name="${cxf.jar}" />
 				<file name="${dom4j.jar}" />
-				<file name="${gateway-xmlbeans.jar}" />
-				<file name="${htmlparser.jar}" />
 				<file name="${httpasyncclient.jar}" />
 				<file name="${httpclient.jar}" />
 				<file name="${httpcore.jar}" />
 				<file name="${httpcore-nio.jar}" />
 				<file name="${jaxb-impl.jar}" />
 				<file name="${jaxen.jar}" />
-				<file name="${jboss-el.jar}" />
 				<file name="${jcip-annotations.jar}" />
-				<file name="${jdom2.jar}" />
 				<file name="${jms.jar}" />
-				<file name="${jmxtools.jar}" />
 				<file name="${jstl.jar}" />
 				<file name="${jug.jar}" />
 				<file name="${log4j.jar}" />
@@ -227,8 +221,6 @@
 				<file name="${standard.jar}" />
 				<file name="${stax-ex.jar}" />
 				<file name="${stax2-api.jar}" />
-				<file name="${streambuffer.jar}" />
-				<file name="${string.jar}" />
 				<file name="${woodstox-core-asl.jar}" />
 				<file name="${wsdl4j.jar}" />
 				<file name="${xalan.jar}" />
