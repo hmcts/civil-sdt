@@ -72,6 +72,12 @@ ALTER TABLE individual_requests           ADD CONSTRAINT ir_vn_nn  CHECK (versio
 ALTER TABLE individual_requests           ADD CONSTRAINT ir_dl_nn  CHECK (dead_letter           IS NOT NULL);
 
 --
+-- service_requests
+--
+
+ALTER TABLE service_requests              ADD CONSTRAINT sre_rt_nn  CHECK (request_timestamp    IS NOT NULL);
+
+--
 -- service_routings
 --
 
