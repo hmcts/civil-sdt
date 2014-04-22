@@ -26,7 +26,7 @@ GRANT SELECT ON TAR_APP_SEQ TO sdt_user;
 GRANT SELECT ON SDT_REF_SEQ TO sdt_user;
 GRANT SELECT ON SRV_REQ_SEQ TO sdt_user;
 
-GRANT SELECT,DELETE on bulk_submissions     TO sdt_bulk_user;
-GRANT SELECT,DELETE on individual_requests  TO sdt_bulk_user;
-GRANT SELECT,DELETE on error_logs           TO sdt_bulk_user;
-GRANT SELECT,DELETE on service_requests     TO sdt_bulk_user;
+GRANT SELECT,DELETE on bulk_submissions     TO sdt_batch_user;
+GRANT SELECT,DELETE on individual_requests  TO sdt_batch_user;
+GRANT SELECT,DELETE on error_logs           TO sdt_batch_user;
+GRANT SELECT,DELETE on service_requests     TO sdt_batch_user;
