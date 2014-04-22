@@ -25,3 +25,10 @@ CREATE SYNONYM SER_TYP_SEQ                FOR sdt_owner.SER_TYP_SEQ;
 CREATE SYNONYM TAR_APP_SEQ                FOR sdt_owner.TAR_APP_SEQ;
 CREATE SYNONYM SDT_REF_SEQ                FOR sdt_owner.SDT_REF_SEQ;
 CREATE SYNONYM SRV_REQ_SEQ                FOR sdt_owner.SRV_REQ_SEQ;
+
+alter session set current_schema=sdt_batch_user;
+
+CREATE SYNONYM bulk_submissions           FOR sdt_owner.bulk_submissions;
+CREATE SYNONYM error_logs                 FOR sdt_owner.error_logs;
+CREATE SYNONYM individual_requests        FOR sdt_owner.individual_requests;
+CREATE SYNONYM service_requests           FOR sdt_owner.service_requests;
