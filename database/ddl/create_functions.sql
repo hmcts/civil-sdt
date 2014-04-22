@@ -1,4 +1,4 @@
-ALTER SESSION SET current_schema=sdt_owner;
+ALTER SESSION SET current_schema=sdt_bulk_user;
 
 
 CREATE OR REPLACE FUNCTION purge_bulk_submissions (i_RetentionPeriod IN global_parameters.parameter_value%TYPE
