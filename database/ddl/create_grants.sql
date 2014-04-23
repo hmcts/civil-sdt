@@ -35,3 +35,4 @@ GRANT SELECT,DELETE on bulk_submissions     TO sdt_batch_user;
 GRANT SELECT,DELETE on individual_requests  TO sdt_batch_user;
 GRANT SELECT,DELETE on error_logs           TO sdt_batch_user;
 GRANT SELECT,DELETE on service_requests     TO sdt_batch_user;
+GRANT SELECT        on global_parameters    TO sdt_batch_user;
