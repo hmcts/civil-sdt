@@ -17,4 +17,4 @@ IDENTIFIED BY sdt_batch_user
 DEFAULT TABLESPACE users
 TEMPORARY TABLESPACE temp;
 
-GRANT CONNECT to sdt_batch_user;
+GRANT CONNECT,CREATE SYNONYM to sdt_batch_user;
