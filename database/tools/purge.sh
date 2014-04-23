@@ -34,17 +34,6 @@ begin
 
   dbms_output.put_line('Purging data earlier than ' || vcDate);
 
-  
-
-  nResult:= purge_bulk_submissions(nRetentionPeriod,nCommitBatchSize);
-  dbms_output.put_line('Deleted bulk_submissions : '||nResult);
-
-  nResult:= purge_individual_requests(nRetentionPeriod,nCommitBatchSize);
-  dbms_output.put_line('Deleted individual_requests : '||nResult);
-
-  nResult:= purge_error_logs(nRetentionPeriod,nCommitBatchSize);
-  dbms_output.put_line('Deleted error_logs : '||nResult);
-
   nResult:= purge_service_requests(nRetentionPeriod,nCommitBatchSize);
   dbms_output.put_line('Deleted service_requests : '||nResult);
 
