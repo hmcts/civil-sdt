@@ -1,7 +1,7 @@
 #!/bin/bash
-export ORACLE_SID=PDSPT041
+export ORACLE_SID=$3
 export ORACLE_HOME=/u01/app/oracle/product/10.2.0/db_1
-$ORACLE_HOME/bin/sqlplus -s barry/barry << LABEL1
+$ORACLE_HOME/bin/sqlplus -s $1/$2 << LABEL1
 
 set timing on
 set serveroutput on
