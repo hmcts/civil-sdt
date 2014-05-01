@@ -664,12 +664,14 @@ public class TargetApplicationSubmissionServiceTest
                 contactNameParameter);
 
         final IErrorMessage errorMsg = new ErrorMessage ();
-        errorMsg.setErrorCode ("SDT_CLIENT_ERR");
-        errorMsg.setErrorDescription ("SDT Client Error");
-        errorMsg.setErrorText ("SDT Client Error");
+        errorMsg.setErrorCode ("CUST_XML_ERR");
+        errorMsg.setErrorDescription ("SDT Client Data Error");
+        errorMsg.setErrorText ("Individual Request format could not be processed by "
+                + "the Target Application. Please check the data and resubmit the "
+                + "request, or contact {0} for assistance.");
 
-        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_CLIENT_ERR")).andReturn (
-                errorMsg);
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "CUST_XML_ERR"))
+                .andReturn (errorMsg);
 
         final String contactName = "Test";
 

@@ -192,7 +192,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
     /**
      * Updates the request object. This method updates the request status to Rejected
-     * and creates an entry in the error log table for the SDT_CLIENT_ERR error message.
+     * and creates an entry in the error log table for the CUST_XML_ERR error message.
      * This method is called after the service team has established that the DLQ request
      * is caused by the Client's data error.
      * 
@@ -208,7 +208,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         final IErrorMessage errorMessage =
                 this.getErrorMessagesCache ().getValue (IErrorMessage.class,
-                        IErrorMessage.ErrorCode.SDT_CLIENT_ERR.name ());
+                        IErrorMessage.ErrorCode.CUST_XML_ERR.name ());
 
         // Get the global parameter value for the Contact name
         final IGlobalParameter contactNameParameter =

@@ -158,8 +158,8 @@ public interface IErrorMessage extends IDomainObject
         TAR_APP_BUSY,
 
         /**
-         * Client error.
+         * Client data error.
          */
-        SDT_CLIENT_ERR
+        CUST_XML_ERR
     }
 }
