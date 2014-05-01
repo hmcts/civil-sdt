@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.api;
 
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+
 /**
  * This interface is for target application prior-submission and post-submission operations on
  * the individual request.
@@ -50,5 +52,18 @@ public interface ITargetApplicationSubmissionService
      * @param sdtRequestReference the unique SDT Request Reference associated with individual request
      */
     void processRequestToSubmit (final String sdtRequestReference);
+
+    /**
+     * Performs action on the SDT Individual Request depending on the given request status.
+     * If the given request status is FORWARDED, then re-sets the dead letter flag to false and leaves the request in
+     * FORWARDED state. If the given request status is REJECTED, then re-sets the dead letter flag to false
+     * and marks the request as REJECTED. An entry is made in the error log and performs an
+     * check on the bulk submission record to check if all the individual requests are either
+     * ACCEPTED or REJECTED and if so the bulk submission record is marked as COMPLETED.
+     * 
+     * @param individualRequest the SDT Individual Request object.
+     * @param requestStatus the status to be updated for the request. Can be either FORWARDED or REJECTED.
+     */
+    void processDLQRequest (final IIndividualRequest individualRequest, final String requestStatus);
 
 }

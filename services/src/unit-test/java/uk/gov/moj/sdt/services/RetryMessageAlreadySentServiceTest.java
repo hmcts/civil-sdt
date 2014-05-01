@@ -232,6 +232,83 @@ public class RetryMessageAlreadySentServiceTest
     }
 
     /**
+     * This method tests the all successful scenario of the queue pending message
+     * when the forwarding attempts of individual request has exceeded the max forwarding attempts.
+     * The method also tests for scenario where the request marked with dead letter
+     * flag is ignored and not picked up by the service method.
+     */
+    @Test
+    public void queuePendingDLQMessageExceededForwardingAttempts ()
+    {
+        final String sdtRequestRef = "TEST_1";
+        final String dlqSdtRequestRef = "TEST_2";
+        final IIndividualRequest individualRequest = new IndividualRequest ();
+
+        // Set-up the individual request object
+
+        individualRequest.setSdtRequestReference (sdtRequestRef);
+        setUpIndividualRequest (individualRequest);
+        individualRequest.setRequestStatus ("Forwarded");
+        individualRequest.setForwardingAttempts (5);
+
+        final IIndividualRequest dlqIndividualRequest = new IndividualRequest ();
+        dlqIndividualRequest.setSdtRequestReference (dlqSdtRequestRef);
+        setUpIndividualRequest (dlqIndividualRequest);
+        dlqIndividualRequest.setRequestStatus ("Forwarded");
+        dlqIndividualRequest.setForwardingAttempts (5);
+        dlqIndividualRequest.setDeadLetter (true);
+
+        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
+        individualRequests.add (individualRequest);
+        individualRequests.add (dlqIndividualRequest);
+
+        final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter ();
+        maxForwardingAttemptsParam.setName ("MAX_FORWARDING_ATTEMPTS");
+        maxForwardingAttemptsParam.setValue ("3");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn (
+                maxForwardingAttemptsParam);
+
+        final int maxForwardingAttempts = Integer.valueOf (maxForwardingAttemptsParam.getValue ());
+
+        final List<IIndividualRequest> returnedListOfRequests = new ArrayList<IIndividualRequest> ();
+        returnedListOfRequests.add (individualRequest);
+
+        EasyMock.expect (mockIndividualRequestDao.getPendingIndividualRequests (maxForwardingAttempts)).andReturn (
+                returnedListOfRequests);
+
+        for (IIndividualRequest individualRequestObj : returnedListOfRequests)
+        {
+
+            mockMessagingUtility.enqueueRequest (individualRequestObj);
+            EasyMock.expectLastCall ();
+
+            // Re-set the forwarding attempts on the individual request.
+            individualRequestObj.resetForwardingAttempts ();
+        }
+
+        mockIndividualRequestDao.persistBulk (returnedListOfRequests);
+        EasyMock.expectLastCall ();
+
+        EasyMock.replay (mockIndividualRequestDao);
+        EasyMock.replay (mockCacheable);
+        EasyMock.replay (mockMessagingUtility);
+
+        this.messageTaskService.queueMessages ();
+
+        EasyMock.verify (mockIndividualRequestDao);
+        EasyMock.verify (mockCacheable);
+        EasyMock.verify (mockMessagingUtility);
+
+        Assert.assertEquals ("Forwarding attempts on individual request", 0, returnedListOfRequests.get (0)
+                .getForwardingAttempts ());
+        Assert.assertEquals ("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
+                .getStatus (), returnedListOfRequests.get (0).getRequestStatus ());
+
+        Assert.assertTrue ("Test completed succesfully", true);
+
+    }
+
+    /**
      * This method tests the queue pending message method and the condition that
      * there are no pending messages to return from database.
      */

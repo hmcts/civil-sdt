@@ -97,5 +97,8 @@ VALUES (12,'DUP_CUST_REQID','Duplicate Unique Request Identifier submitted {0}.'
 INSERT INTO error_messages (error_message_id,error_code,error_text,error_description)
 VALUES (13,'REQ_NOT_ACK','Individual Request not acknowledged by Target Application. Please contact {0} for assistance.'
 ,'The Target Application does not send back an acknowledgement response within the expected period, or returns a response indicating that there was an error with the transmission.');
+INSERT INTO error_messages (error_message_id,error_code,error_text,error_description)
+VALUES (14,'SDT_CLIENT_ERR','Request could not be processed due to invalid data. Please check the data and re-submit the request or Please contact {0} for assistance.'
+,'Client data has caused SOAP Fault error and rejected the request.');
 
 COMMIT;

@@ -37,6 +37,7 @@ import javax.xml.ws.WebServiceException;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -140,7 +141,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             catch (final SoapFaultException e)
             {
                 // Update the individual request with the soap fault reason
-                this.updateRequestSoapError (individualRequest, e.getMessage ());
+                this.handleSoapFaultAndWebServiceException (individualRequest, e.getMessage ());
             }
             catch (final WebServiceException e)
             {
@@ -148,7 +149,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 LOGGER.error ("Exception calling target application for SDT reference [" +
                         individualRequest.getSdtRequestReference () + "] - " + e.getMessage ());
 
-                this.handleWebServiceException (individualRequest, e.getMessage ());
+                this.handleSoapFaultAndWebServiceException (individualRequest, e.getMessage ());
 
             }
         }
@@ -159,6 +160,78 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         }
 
         return;
+    }
+
+    @Override
+    public void processDLQRequest (final IIndividualRequest individualRequest, final String requestStatus)
+    {
+        // Format the request status parameter to the value acceptable by database.
+        final String requestStatusVal = StringUtils.capitalize (requestStatus.toLowerCase ());
+
+        // Re-set the Dead Letter flag to false.
+        individualRequest.setDeadLetter (false);
+
+        if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ().equals (requestStatusVal))
+        {
+            // If the request status is rejected, add an error log entry, mark as
+            // REJECTED and persist the record. Update the bulk submission status
+            // to COMPLETED by checking if all the individual requests are either
+            // REJECTED or ACCEPTED.
+            updateRequestRejected (individualRequest);
+
+        }
+        else
+        {
+            // If the request status is FORWARDED, update the status and
+            // persist the record in database.
+            individualRequest.setRequestStatus (requestStatusVal);
+            this.getIndividualRequestDao ().persist (individualRequest);
+        }
+
+    }
+
+    /**
+     * Updates the request object. This method updates the request status to Rejected
+     * and creates an entry in the error log table for the SDT_CLIENT_ERR error message.
+     * This method is called after the service team has established that the DLQ request
+     * is caused by the Client's data error.
+     * 
+     * @param individualRequest the individual request to be marked.
+     */
+    private void updateRequestRejected (final IIndividualRequest individualRequest)
+    {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Update individual request [" + individualRequest.getSdtBulkReference () +
+                    "] as status REJECTED following Service team's investigation of DLQ Request.");
+        }
+
+        final IErrorMessage errorMessage =
+                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
+                        IErrorMessage.ErrorCode.SDT_CLIENT_ERR.name ());
+
+        // Get the global parameter value for the Contact name
+        final IGlobalParameter contactNameParameter =
+                this.getGlobalParametersCache ().getValue (IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
+
+        final String contactName = contactNameParameter != null ? contactNameParameter.getValue () : "";
+
+        // Now create an ErrorLog object with the ErrorMessage object and the
+        // IndividualRequest object
+        final IErrorLog errorLog =
+                new ErrorLog (errorMessage.getErrorCode (), MessageFormat.format (errorMessage.getErrorText (),
+                        contactName));
+
+        // Please note that the SDT internal error field has already been set in this
+        // request object when the error was caught during the request evaluation by the
+        // MDB queue processing.
+
+        individualRequest.markRequestAsRejected (errorLog);
+
+        // now complete the request. We don't want to extract the raw target app response here
+        // so we set the second parameter as false.
+        this.updateCompletedRequest (individualRequest, false);
     }
 
     /**
@@ -252,61 +325,16 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
-     * Updates the request object. This method updates the request status to Rejected
-     * and sets the soap fault message in the internal error field of the request.
-     * 
-     * @param individualRequest the individual request to be marked.
-     * @param soapFaultError the soap fault message when the request has failed.
-     */
-    private void updateRequestSoapError (final IIndividualRequest individualRequest, final String soapFaultError)
-    {
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Update individual request [" + individualRequest.getSdtBulkReference () +
-                    "] as status REJECTED following soap error.");
-        }
-
-        final IErrorMessage errorMessage =
-                this.getErrorMessagesCache ().getValue (IErrorMessage.class,
-                        IErrorMessage.ErrorCode.SDT_INT_ERR.name ());
-
-        // Get the global parameter value for the Contact name
-        final IGlobalParameter contactNameParameter =
-                this.getGlobalParametersCache ().getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
-
-        final String contactName = contactNameParameter != null ? contactNameParameter.getValue () : "";
-
-        // Now create an ErrorLog object with the ErrorMessage object and the
-        // IndividualRequest object
-        final IErrorLog errorLog =
-                new ErrorLog (errorMessage.getErrorCode (), MessageFormat.format (errorMessage.getErrorText (),
-                        contactName));
-
-        // Truncate the soap fault error to 2,000 characters to fit
-        // inside the database column of length varchar2(4,000 bytes)
-
-        String internalError = soapFaultError;
-        if (soapFaultError != null && soapFaultError.length () > MAX_ALLOWED_CHARS)
-        {
-            internalError = soapFaultError.substring (0, MAX_ALLOWED_CHARS);
-        }
-        individualRequest.setInternalSystemError (internalError);
-
-        individualRequest.markRequestAsRejected (errorLog);
-
-        // now complete the request.
-        this.updateCompletedRequest (individualRequest);
-    }
-
-    /**
      * Store exception message as internal error. Mark the request as dead message and write to corresponding target
      * application's dead letter queue (DLQ).
      * 
      * @param individualRequest the individual request to be marked.
      * @param errorMessage the exception message when the request has failed.
      */
-    private void handleWebServiceException (final IIndividualRequest individualRequest, final String errorMessage)
+    // CHECKSTYLE:OFF
+    private void handleSoapFaultAndWebServiceException (final IIndividualRequest individualRequest,
+                                                        final String errorMessage)
+    // CHECKSTYLE:ON
     {
         if (LOGGER.isDebugEnabled ())
         {
@@ -535,4 +563,5 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     {
         this.errorMessagesCache = errorMessagesCache;
     }
+
 }

@@ -181,6 +181,21 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
     }
 
     /**
+     * Test stale individual request updated 1 day ago.
+     */
+    @Test
+    public void testStaleIndividualRequestWithDeadLetter ()
+    {
+        // Get requests that have been updated more than 12 hrs ago.
+        final List<IIndividualRequest> individualRequests = individualRequestDao.getStaleIndividualRequests (720);
+
+        Assert.assertNotNull (individualRequests);
+
+        Assert.assertEquals ("The individual requests size is not correct", 2, individualRequests.size ());
+
+    }
+
+    /**
      * Test get individual request not found.
      */
     @Test
@@ -204,6 +219,7 @@ public class IndividualRequestDaoTest extends AbstractTransactionalJUnit4SpringC
 
         Assert.assertNotNull (individualRequests);
         Assert.assertTrue ("Pending individual requests found", individualRequests.size () > 0);
+        Assert.assertEquals ("The pending requests size is not correct", 1, individualRequests.size ());
     }
 
     /**

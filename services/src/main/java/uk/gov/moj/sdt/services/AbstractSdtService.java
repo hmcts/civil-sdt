@@ -71,10 +71,28 @@ public abstract class AbstractSdtService
      */
     protected void updateCompletedRequest (final IIndividualRequest individualRequest)
     {
-        final String targetAppResponse = individualResponseXmlParser.parse ();
-        if (StringUtils.isNotBlank (targetAppResponse))
+        // Call the method with the populate target application response flag as true.
+        updateCompletedRequest (individualRequest, true);
+    }
+
+    /**
+     * Update the request object. This method is to be called to update the request object on
+     * completion i.e. successful response is received from the target application.
+     * 
+     * @param individualRequest the individual request to be marked as completed
+     * @param populateTargetAppResponse If this is true then extract the targetAppResponse from
+     *            the raw input xml.
+     */
+    protected void updateCompletedRequest (final IIndividualRequest individualRequest,
+                                           final boolean populateTargetAppResponse)
+    {
+        if (populateTargetAppResponse)
         {
-            individualRequest.setTargetApplicationResponse (targetAppResponse);
+            final String targetAppResponse = individualResponseXmlParser.parse ();
+            if (StringUtils.isNotBlank (targetAppResponse))
+            {
+                individualRequest.setTargetApplicationResponse (targetAppResponse);
+            }
         }
 
         // now persist the request.

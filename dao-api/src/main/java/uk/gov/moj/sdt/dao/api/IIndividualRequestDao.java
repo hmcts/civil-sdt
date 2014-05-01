@@ -68,12 +68,13 @@ public interface IIndividualRequestDao extends IGenericDao
 
     /**
      * Returns a list of individual requests that are not yet processed by
-     * the target application. The criteria used in this method is based on 2 conditions
+     * the target application. The criteria used in this method is based on 3 conditions
      * a. the forwarding attempts greater than the max allowed (passed as parameter to the method)
      * b. the status of individual request is Forwarded.
+     * c. the dead letter flag is false.
      * 
      * @param maxAllowedAttempts - the maximum number of forwarding attempts allowed.
-     * @return list of individual requests
+     * @return list of individual requests excluding any dead letter requests.
      * @throws DataAccessException hibernate exception
      */
     List<IIndividualRequest> getPendingIndividualRequests (final int maxAllowedAttempts) throws DataAccessException;
@@ -84,10 +85,11 @@ public interface IIndividualRequestDao extends IGenericDao
      * queue. Since in normal processing only the MDB reattempts to forward requests, these are in effect lost to the
      * system. Manual intervention is needed to requeue them. Currently this method is called only by the mbean
      * responsible for manually requesting the forwarding of rejected messages.
+     * Any requests that are flagged as dead letter are ignored.
      * 
      * @param minimumAgeInMinutes - the minimum number of minutes since a message was updated before it will be
      *            requeued.
-     * @return list of individual requests
+     * @return list of individual requests excluding the dead letter requests.
      * @throws DataAccessException hibernate exception
      */
     List<IIndividualRequest> getStaleIndividualRequests (final int minimumAgeInMinutes) throws DataAccessException;

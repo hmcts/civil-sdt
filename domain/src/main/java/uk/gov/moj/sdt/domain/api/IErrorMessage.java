@@ -155,6 +155,11 @@ public interface IErrorMessage extends IDomainObject
         /**
          * Target system maximum submit query threshold reached.
          */
-        TAR_APP_BUSY
+        TAR_APP_BUSY,
+
+        /**
+         * Client error.
+         */
+        SDT_CLIENT_ERR
     }
 }

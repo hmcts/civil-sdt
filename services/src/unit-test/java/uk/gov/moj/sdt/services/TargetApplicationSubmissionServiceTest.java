@@ -523,58 +523,32 @@ public class TargetApplicationSubmissionServiceTest
         this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
         EasyMock.expectLastCall ().andThrow (soapEx);
 
-        final IErrorMessage errorMsg = new ErrorMessage ();
-        errorMsg.setErrorCode ("SDT_INT_ERR");
-        errorMsg.setErrorDescription ("SDT Internal Error");
-        errorMsg.setErrorText ("SDT Internal Error");
-
-        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
-
-        final IGlobalParameter contactNameParam = new GlobalParameter ();
-        contactNameParam.setName ("CONTACT_DETAILS");
-        contactNameParam.setValue ("Test");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "CONTACT_DETAILS")).andReturn (
-                contactNameParam);
-
-        final String contactName = "Test";
-
-        // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
-        final IErrorLog errorLog =
-                new ErrorLog (errorMsg.getErrorCode (), MessageFormat.format (errorMsg.getErrorText (), contactName));
-
-        individualRequest.setErrorLog (errorLog);
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ());
-
         this.mockIndividualRequestDao.persist (individualRequest);
         EasyMock.expectLastCall ();
 
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
-
-        EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
-
-        mockIndividualRequestDao.persist (bulkSubmission);
+        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
+                EasyMock.eq (true));
         EasyMock.expectLastCall ();
 
         EasyMock.replay (mockIndividualRequestDao);
         EasyMock.replay (mockConsumerGateway);
+        EasyMock.replay (mockMessageWriter);
         EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockErrorMsgCacheable);
 
         this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
 
         EasyMock.verify (mockIndividualRequestDao);
         EasyMock.verify (mockConsumerGateway);
+        EasyMock.verify (mockMessageWriter);
         EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockErrorMsgCacheable);
 
-        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
-                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
-        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+        Assert.assertEquals ("Individual Request status not as expected",
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus (),
+                individualRequest.getRequestStatus ());
+
+        Assert.assertNull ("Bulk submission completed date should not be populated", individualRequest
                 .getBulkSubmission ().getCompletedDate ());
-        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
-                .getBulkSubmission ().getUpdatedDate ());
+
     }
 
     /**
@@ -664,6 +638,115 @@ public class TargetApplicationSubmissionServiceTest
                 .getBulkSubmission ().getCompletedDate ());
         Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
                 .getBulkSubmission ().getUpdatedDate ());
+    }
+
+    /**
+     * Test method to test the scenario where we get an individual request
+     * that is to be rejected.
+     */
+    @Test
+    public void processDlqRequestRejected ()
+    {
+        final String requestStatus = "REJECTED";
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest ();
+
+        // Set-up the individual request object
+
+        individualRequest.setSdtRequestReference (sdtRequestRef);
+        this.setUpIndividualRequest (individualRequest);
+        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
+
+        final IGlobalParameter contactNameParameter = new GlobalParameter ();
+        contactNameParameter.setValue ("Tester");
+        contactNameParameter.setName ("CONTACT_DETAILS");
+        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "CONTACT_DETAILS")).andReturn (
+                contactNameParameter);
+
+        final IErrorMessage errorMsg = new ErrorMessage ();
+        errorMsg.setErrorCode ("SDT_CLIENT_ERR");
+        errorMsg.setErrorDescription ("SDT Client Error");
+        errorMsg.setErrorText ("SDT Client Error");
+
+        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_CLIENT_ERR")).andReturn (
+                errorMsg);
+
+        final String contactName = "Test";
+
+        // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
+        final IErrorLog errorLog =
+                new ErrorLog (errorMsg.getErrorCode (), MessageFormat.format (errorMsg.getErrorText (), contactName));
+
+        individualRequest.setErrorLog (errorLog);
+        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ());
+
+        this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ();
+
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+
+        EasyMock.expect (
+                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
+                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
+
+        mockIndividualRequestDao.persist (bulkSubmission);
+        EasyMock.expectLastCall ();
+
+        EasyMock.replay (mockIndividualRequestDao);
+        EasyMock.replay (mockCacheable);
+        EasyMock.replay (mockErrorMsgCacheable);
+
+        this.targetAppSubmissionService.processDLQRequest (individualRequest, requestStatus);
+
+        EasyMock.verify (mockIndividualRequestDao);
+        EasyMock.verify (mockCacheable);
+        EasyMock.verify (mockErrorMsgCacheable);
+
+        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
+        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission ().getUpdatedDate ());
+        Assert.assertEquals ("Individual Request should not be marked as dead letter", false,
+                individualRequest.isDeadLetter ());
+
+    }
+
+    /**
+     * Test method to test the scenario where we get an individual request
+     * that is to be Forwarded.
+     */
+    @Test
+    public void processDlqRequestForwarded ()
+    {
+        final String requestStatus = "FORWARDED";
+        final String sdtRequestRef = "TEST_2";
+        final IIndividualRequest individualRequest = new IndividualRequest ();
+
+        // Set-up the individual request object
+
+        individualRequest.setSdtRequestReference (sdtRequestRef);
+        this.setUpIndividualRequest (individualRequest);
+        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ());
+
+        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
+
+        this.mockIndividualRequestDao.persist (individualRequest);
+        EasyMock.expectLastCall ();
+
+        EasyMock.replay (mockIndividualRequestDao);
+
+        this.targetAppSubmissionService.processDLQRequest (individualRequest, requestStatus);
+
+        EasyMock.verify (mockIndividualRequestDao);
+
+        Assert.assertEquals ("Individual Request should not be marked as dead letter", false,
+                individualRequest.isDeadLetter ());
+        Assert.assertEquals ("Individual Request status is not FORWARDED",
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus (),
+                individualRequest.getRequestStatus ());
+
     }
 
     /**

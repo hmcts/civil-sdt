@@ -15,6 +15,7 @@
         <property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
         <property name="messageWriter" ref="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"/>
         <property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
+        <property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>
     </bean>
 
 </beans>

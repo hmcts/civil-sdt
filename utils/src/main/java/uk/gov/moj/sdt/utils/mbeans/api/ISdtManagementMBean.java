@@ -78,4 +78,19 @@ public interface ISdtManagementMBean
      * @param minimumAgeInMinutes minimum age in minutes of unforwarded messages to be requeued.
      */
     void requeueOldIndividualRequests (int minimumAgeInMinutes);
+
+    /**
+     * Performs action on the SDT Individual Request depending on the given request status.
+     * If the given request status is FORWARDED, then re-sets the dead letter flag to false and leaves the request in
+     * FORWARDED state. If the given request status is REJECTED, then re-sets the dead letter flag to false
+     * and marks the request as REJECTED. An entry is made in the error log and performs an
+     * check on the bulk submission record to check if all the individual requests are either
+     * ACCEPTED or REJECTED and if so the bulk submission record is marked as COMPLETED.
+     * 
+     * @param sdtRequestReference the SDT Individual Request Reference
+     * @param requestStatus the status to be updated for the request. Can be either FORWARDED or REJECTED.
+     * @return error messages if there are any during the processing. If processing is successful, returns the string
+     *         "OK"
+     */
+    String processDLQRequest (final String sdtRequestReference, final String requestStatus);
 }

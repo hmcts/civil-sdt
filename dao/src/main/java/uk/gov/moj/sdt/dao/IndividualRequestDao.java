@@ -137,7 +137,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("Get pending individual requests in status FORWARDED that have not yet "
+            LOGGER.debug ("Get pending individual requests in status FORWARDED that have  "
                     + "reached their maximum forwarding attempts.");
         }
 
@@ -147,7 +147,8 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                         IIndividualRequest.class,
                         Restrictions.eq ("requestStatus",
                                 IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ()),
-                        Restrictions.ge ("forwardingAttempts", maxAllowedAttempts));
+                        Restrictions.ge ("forwardingAttempts", maxAllowedAttempts),
+                        Restrictions.eq ("deadLetter", false));
 
         return individualRequests;
     }
@@ -176,7 +177,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                                         IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()),
                                 Restrictions.eq ("requestStatus",
                                         IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ())),
-                        Restrictions.lt ("updatedDate", latestTime));
+                        Restrictions.lt ("updatedDate", latestTime), Restrictions.eq ("deadLetter", false));
 
         return individualRequests;
     }

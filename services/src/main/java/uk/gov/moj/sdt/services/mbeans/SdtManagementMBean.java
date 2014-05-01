@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
@@ -63,6 +64,34 @@ public final class SdtManagementMBean implements ISdtManagementMBean
      * Static logging object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (SdtManagementMBean.class);
+
+    /**
+     * Success message to return after successfully processing the SDT individual request.
+     */
+    private static final String OK_MESSAGE = "OK";
+
+    /**
+     * Error message to return if the mandatory parameters are missing.
+     */
+    private static final String MANDATORY_PARAMETERS_ERR_MSG =
+            "SDT Request Reference and the Request Status should be supplied.";
+
+    /**
+     * Error message to return if the invalid request status values are supplied.
+     */
+    private static final String INVALID_PARAM_VALUES_MSG =
+            "Invalid Request Status supplied. The Request Status should be either REJECTED or FORWARDED";
+
+    /**
+     * Expected Parameter values for the request status parameter of processDLQRequest method.
+     */
+    private static final String[] REQ_STATUS_PARAMVAL = {"FORWARDED", "REJECTED"};
+
+    /**
+     * Error message to return if the Sdt Request Reference parameter does not correspond
+     * to an Individual Request record in the database.
+     */
+    private static final String INVALID_SDT_REQUEST_REF_MSG = "SDT Request Reference supplied does not exist.";
 
     /**
      * Maximum value to which MDB pool size can be set.
@@ -92,6 +121,11 @@ public final class SdtManagementMBean implements ISdtManagementMBean
      * This variable holding the messaging utility reference.
      */
     private IMessagingUtility messagingUtility;
+
+    /**
+     * This variable holding the target application submission service.
+     */
+    private ITargetApplicationSubmissionService targetAppSubmissionService;
 
     /**
      * Constructor for {@link SdtManagementMBean}. This is called by Spring and should become the bean that all
@@ -178,6 +212,44 @@ public final class SdtManagementMBean implements ISdtManagementMBean
         }
     }
 
+    @Override
+    @Transactional (propagation = Propagation.REQUIRED)
+    public String processDLQRequest (final String sdtRequestReference, final String requestStatus)
+    {
+        IIndividualRequest individualRequest = null;
+
+        // Parameters validation.
+        if (sdtRequestReference == null || requestStatus == null)
+        {
+            return MANDATORY_PARAMETERS_ERR_MSG;
+        }
+        else
+        {
+            // Check the request status is either REJECTED or FORWARDED.
+            if ( !(REQ_STATUS_PARAMVAL[0].equals (requestStatus.toUpperCase ()) || REQ_STATUS_PARAMVAL[1]
+                    .equals (requestStatus.toUpperCase ())))
+            {
+                return INVALID_PARAM_VALUES_MSG;
+            }
+
+            // Check the SDT request reference is valid.
+            individualRequest = this.individualRequestDao.getRequestBySdtReference (sdtRequestReference);
+            if (individualRequest == null)
+            {
+                return INVALID_SDT_REQUEST_REF_MSG;
+            }
+
+        }
+
+        // Now that we have found the individual request record, perform the actions required.
+        if (individualRequest != null)
+        {
+            this.targetAppSubmissionService.processDLQRequest (individualRequest, requestStatus);
+        }
+
+        return OK_MESSAGE;
+    }
+
     /**
      * 
      * @param individualRequestDao the individual request dao object.
@@ -203,4 +275,14 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     {
         this.messagingUtility = messagingUtility;
     }
+
+    /**
+     * 
+     * @param targetAppSubmissionService the targetApplicationSubmissionService instance.
+     */
+    public void setTargetAppSubmissionService (final ITargetApplicationSubmissionService targetAppSubmissionService)
+    {
+        this.targetAppSubmissionService = targetAppSubmissionService;
+    }
+
 }
