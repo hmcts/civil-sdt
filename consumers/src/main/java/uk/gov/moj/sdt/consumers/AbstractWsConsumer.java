@@ -177,7 +177,7 @@ public abstract class AbstractWsConsumer
                                        final String errorReferenceContext)
         throws WebServiceException, OutageException, TimeoutException, SoapFaultException
     {
-        // If the target application is unavailable continue trying to send message indefinitely.
+        // If the target application is unavailable but caller does not wish to keep trying then re-throw exception.
         if ((wsException.getCause () instanceof ConnectException) && rethrowOnFailureToConnect)
         {
             // Target application must be unavailable - update stats.
