@@ -31,6 +31,9 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.hibernate.collection.spi.PersistentCollection;
+import org.hibernate.proxy.HibernateProxy;
+
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -117,8 +120,19 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
      */
     protected String getHashId (final Object object)
     {
-        return object == null ? null : object.getClass ().getSimpleName () + "@" +
-                Integer.toHexString (object.hashCode ());
+        if (PersistentCollection.class.isInstance (object))
+        {
+            return "PersistentCollection";
+        }
+        else if (HibernateProxy.class.isInstance (object))
+        {
+            return "HibernateProxy";
+        }
+        else
+        {
+            return object == null ? null : object.getClass ().getSimpleName () + "@" +
+                    Integer.toHexString (object.hashCode ());
+        }
     }
 
     @Override
