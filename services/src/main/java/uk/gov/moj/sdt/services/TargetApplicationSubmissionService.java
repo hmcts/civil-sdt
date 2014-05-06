@@ -184,7 +184,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         {
             // If the request status is FORWARDED, update the status and
             // persist the record in database.
-            individualRequest.setRequestStatus (requestStatusVal);
+            individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
+            individualRequest.setUpdatedDate (LocalDateTime.now ());
             this.getIndividualRequestDao ().persist (individualRequest);
         }
 
