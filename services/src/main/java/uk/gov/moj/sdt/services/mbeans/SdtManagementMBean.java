@@ -94,6 +94,13 @@ public final class SdtManagementMBean implements ISdtManagementMBean
     private static final String INVALID_SDT_REQUEST_REF_MSG = "SDT Request Reference supplied does not exist.";
 
     /**
+     * Error message to return if the SDT Request Reference parameter is not marked as Dead Letter
+     * Queue flag.
+     */
+    private static final String SDT_REQUEST_NOT_ON_DLQ_MSG =
+            "Cannot process the SDT Request as the SDT Request is not marked as DLQ.";
+
+    /**
      * Maximum value to which MDB pool size can be set.
      */
     private static final int MAX_POOL_SIZE = 50;
@@ -237,6 +244,12 @@ public final class SdtManagementMBean implements ISdtManagementMBean
             if (individualRequest == null)
             {
                 return INVALID_SDT_REQUEST_REF_MSG;
+            }
+
+            // Check that the DLQ Request flag is true.
+            if ( !individualRequest.isDeadLetter ())
+            {
+                return SDT_REQUEST_NOT_ON_DLQ_MSG;
             }
 
         }
