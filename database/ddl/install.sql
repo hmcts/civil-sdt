@@ -6,8 +6,8 @@
 @ddl/create_constraints
 @ddl/create_foreign_keys
 @ddl/create_sequences
+@ddl/create_procedures
 @ddl/create_synonyms
 @ddl/create_grants
-@ddl/create_procedures
 @ddl/create_data
 @ddl/dbunit_load
