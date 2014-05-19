@@ -3,7 +3,7 @@ ALTER SESSION SET current_schema=sdt_owner;
 
 CREATE OR REPLACE PROCEDURE purge (i_CommitInterval  IN NUMBER) AS
   fh1               UTL_FILE.FILE_TYPE;
-  i_RetentionPeriod global_parameters.parameter_value%TYPE
+  i_RetentionPeriod global_parameters.parameter_value%TYPE;
   filename          VARCHAR2(50);
   CURSOR c1 (nParam NUMBER)
             IS SELECT service_request_id
