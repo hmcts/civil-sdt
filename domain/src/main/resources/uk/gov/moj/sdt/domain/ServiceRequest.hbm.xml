@@ -9,6 +9,7 @@
 				<param name="sequence">srv_req_seq</param>
 			</generator>
 		</id>
+		<version name="version" access="field" column="VERSION_NUMBER"/>
 		<property name="bulkCustomerId" type="java.lang.String"
 			>
 			<column name="SDT_CUSTOMER_ID" />
