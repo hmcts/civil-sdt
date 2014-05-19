@@ -98,7 +98,7 @@ public final class SdtManagementMBean implements ISdtManagementMBean
      * Queue flag.
      */
     private static final String SDT_REQUEST_NOT_ON_DLQ_MSG =
-            "Cannot process the SDT Request as the SDT Request is not marked as DLQ.";
+            "SDT Request Reference supplied is not marked as dead letter and cannot be processed.";
 
     /**
      * Maximum value to which MDB pool size can be set.
