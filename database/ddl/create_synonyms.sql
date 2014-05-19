@@ -33,9 +33,7 @@ CREATE SYNONYM error_logs                 FOR sdt_owner.error_logs;
 CREATE SYNONYM individual_requests        FOR sdt_owner.individual_requests;
 CREATE SYNONYM service_requests           FOR sdt_owner.service_requests;
 CREATE SYNONYM global_parameters          FOR sdt_owner.global_parameters;
-CREATE SYNONYM purge_bulk_submissions     FOR sdt_owner.purge_bulk_submissions;
-CREATE SYNONYM purge_individual_requests  FOR sdt_owner.purge_individual_requests;
-CREATE SYNONYM purge_error_logs           FOR sdt_owner.purge_error_logs;
-CREATE SYNONYM purge_service_requests     FOR sdt_owner.purge_service_requests;
+CREATE SYNONYM purge                      FOR sdt_owner.purge;
+
 
 
