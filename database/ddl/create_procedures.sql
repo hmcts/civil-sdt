@@ -1,10 +1,10 @@
 ALTER SESSION SET current_schema=sdt_owner;
 
 
-CREATE OR REPLACE PROCEDURE purge (i_RetentionPeriod IN global_parameters.parameter_value%TYPE
-                                  ,i_CommitInterval  IN NUMBER) AS
-  fh1          UTL_FILE.FILE_TYPE;
-  filename     VARCHAR2(50);
+CREATE OR REPLACE PROCEDURE purge (i_CommitInterval  IN NUMBER) AS
+  fh1               UTL_FILE.FILE_TYPE;
+  i_RetentionPeriod global_parameters.parameter_value%TYPE
+  filename          VARCHAR2(50);
   CURSOR c1 (nParam NUMBER)
             IS SELECT service_request_id
                FROM service_requests
@@ -46,6 +46,10 @@ CREATE OR REPLACE PROCEDURE purge (i_RetentionPeriod IN global_parameters.parame
 
   nIteration   NUMBER;
   BEGIN
+    SELECT parameter_value
+    INTO i_RetentionPeriod 
+    FROM global_parameters
+    WHERE parameter_name = 'DATA_RETENTION_PERIOD';
     filename := 'sdt_purge_log'||to_char(sysdate,'yyyymmddhh24miss')||'.log';
     fh1 := UTL_FILE.FOPEN('SDT_PURGE_LOGDIR',filename,'W',255);
     UTL_FILE.PUT_LINE(fh1,'Purge logfile generated on '
