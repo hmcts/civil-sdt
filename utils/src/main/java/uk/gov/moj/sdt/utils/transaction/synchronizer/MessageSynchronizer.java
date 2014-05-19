@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.transaction.synchronizer;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -84,20 +85,17 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
     {
         final List<Runnable> synchronisationTasks = SdtContext.getContext ().getSynchronisationTasks ();
 
-        LOGGER.debug ("Transaction successfully committed, so executing the tasks in the list");
+        LOGGER.debug ("Transaction successfully committed, so executing the tasks in the list asynchronously");
 
-        for (Runnable runnableTask : synchronisationTasks)
-        {
-            LOGGER.debug ("Executing task " + runnableTask);
-            runnableTask.run ();
-        }
+        final ExecuteRunnable thread = new ExecuteRunnable (Collections.unmodifiableList (synchronisationTasks));
+        thread.start ();
+        LOGGER.debug ("Started asynchronouse thread to write messages.");
     }
 
     @Override
     public void afterCompletion (final int status)
     {
         LOGGER.debug ("Transaction completed with status " + (status == STATUS_COMMITTED ? "Committed" : "Rollback"));
-        SdtContext.getContext ().clearSynchronisationTasks ();
     }
 
     @Override
@@ -106,4 +104,45 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
         // Delegate processing to the execute method.
         this.execute (task);
     }
+
+    /**
+     * Custom thread to execute a collection of <code>Runnable</code> instances.
+     * 
+     * @author d276205
+     * 
+     */
+    private class ExecuteRunnable extends Thread
+    {
+        /**
+         * Runnable instances.
+         */
+        private List<Runnable> runnables;
+
+        /**
+         * Constructs an instance of ExecuteRunnable.
+         * 
+         * @param runnables collection of Runnable instances.
+         */
+        ExecuteRunnable (final List<Runnable> runnables)
+        {
+            if ((runnables == null) || (runnables.isEmpty ()))
+            {
+                throw new IllegalArgumentException ("The 'runnables' collection should neither be null nor empty");
+            }
+            this.runnables = runnables;
+        }
+
+        @Override
+        public void run ()
+        {
+            LOGGER.debug ("Processing " + runnables.size () + " instances of runnable");
+
+            for (Runnable runnable : runnables)
+            {
+                LOGGER.debug ("Executing task " + runnable);
+                runnable.run ();
+            }
+        }
+    }
+
 }
