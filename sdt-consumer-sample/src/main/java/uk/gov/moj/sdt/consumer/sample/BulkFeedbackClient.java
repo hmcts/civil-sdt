@@ -38,8 +38,7 @@ public class BulkFeedbackClient extends AbstractWebServiceClient
         BulkFeedbackRequestType request = new BulkFeedbackRequestType ();
 
         HeaderType headerType = new HeaderType ();
-        // headerType.setSdtBulkReference ("MCOL-20140328184740-000000217");
-        headerType.setSdtBulkReference ("MCOL_20130722000000_B00000001");
+        headerType.setSdtBulkReference ("MCOL-20140328184740-000000217");
         headerType.setSdtCustomerId (12345678);
 
         request.setHeader (headerType);
