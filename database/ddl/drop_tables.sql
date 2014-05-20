@@ -1,5 +1,6 @@
 alter session set current_schema=sdt_owner;
 
+DROP TABLE bulk_customer_applications;
 DROP TABLE bulk_customers;         
 DROP TABLE bulk_customer_services ;
 DROP TABLE bulk_submissions;       
