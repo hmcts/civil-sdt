@@ -10,18 +10,9 @@
     
     <xs:simpleType name="notificationType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="MP">
-                <xs:annotation>
-                    <xs:documentation>Paid</xs:documentation>
-                </xs:annotation></xs:enumeration>
-            <xs:enumeration value="WD">
-                <xs:annotation>
-                    <xs:documentation>Withdrawn</xs:documentation>
-                </xs:annotation></xs:enumeration>
-            <xs:enumeration value="DI">
-                <xs:annotation>
-                    <xs:documentation>Discontinued</xs:documentation>
-                </xs:annotation></xs:enumeration>
+            <xs:enumeration value="MP"/>
+            <xs:enumeration value="WD"/>
+            <xs:enumeration value="DI"/>
         </xs:restriction>
     </xs:simpleType>
 

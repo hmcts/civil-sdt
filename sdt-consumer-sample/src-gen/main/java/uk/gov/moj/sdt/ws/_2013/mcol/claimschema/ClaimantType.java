@@ -8,10 +8,6 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * 
- *                 Describes a claimant
- *             
- * 
  * <p>Java class for claimantType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

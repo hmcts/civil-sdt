@@ -11,8 +11,6 @@ import org.w3._2001.xmlschema.Adapter3;
 
 
 /**
- * Details when payment is to be paid in instalments. The amount cannot be greater than claim amount.
- * 
  * <p>Java class for instalmentPaymentType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

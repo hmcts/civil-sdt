@@ -9,11 +9,6 @@
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd"/>
     
     <xs:complexType name="claimantType">
-        <xs:annotation>
-            <xs:documentation>
-                Describes a claimant
-            </xs:documentation>
-        </xs:annotation>
         <xs:sequence>
             <xs:element name="name">
                 <xs:simpleType>
@@ -49,11 +44,7 @@
             <xs:element name="dailyAmount" type="xs:unsignedLong"/>
             <xs:element name="owedDate" type="xs:date"/>
             <xs:element name="claimDate" type="xs:date"/>
-            <xs:element name="claimAmountInterestBase" type="xs:unsignedLong">
-                <xs:annotation>
-                    <xs:documentation>Amount on which interest should be calculated.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
+            <xs:element name="claimAmountInterestBase" type="xs:unsignedLong"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -65,11 +56,6 @@
     </xs:simpleType>
 
     <xs:complexType name="correspondenceDetailType">
-        <xs:annotation>
-            <xs:documentation>
-                Describes correspondence details.
-            </xs:documentation>
-        </xs:annotation>
         <xs:sequence>
             <xs:element name="name">
                 <xs:simpleType>
@@ -92,11 +78,6 @@
     </xs:complexType>
 
     <xs:complexType name="defendantType">
-        <xs:annotation>
-            <xs:documentation>
-                Describes a defendant
-            </xs:documentation>
-        </xs:annotation>
         <xs:sequence>
             <xs:element name="name">
                 <xs:simpleType>
@@ -111,36 +92,18 @@
     </xs:complexType>
     
 	<xs:complexType name="claimType">
-        <xs:annotation>
-            <xs:documentation>Represents Claim document.</xs:documentation>
-        </xs:annotation>
         <xs:sequence>
 			<xs:element name="claimantReference" type="tns:claimantReferenceType" minOccurs="0"/>
-			<xs:element name="claimant" type="tns:claimantType" minOccurs="0">
-			    <xs:annotation>
-			        <xs:documentation>Should be populated if customer is a solicitor.</xs:documentation>
-			    </xs:annotation></xs:element>
-            <xs:element name="claimantCorrespondence" type="tns:correspondenceDetailType" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Should be populated if customer is not a solicitor.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
+			<xs:element name="claimant" type="tns:claimantType" minOccurs="0"/>
+            <xs:element name="claimantCorrespondence" type="tns:correspondenceDetailType" minOccurs="0"/>
 			<xs:element name="defendant1" type="tns:defendantType"/>
             <xs:element name="defendant2" type="tns:defendantType" minOccurs="0"/>
             <xs:element name="sendParticularsSeparately" type="xs:boolean"/>
             <xs:element name="reserveRightToClaimInterest" type="xs:boolean"/>
             <xs:element name="interest" type="tns:interestType" minOccurs="0"/>
 			<xs:element name="claimAmount" type="xs:unsignedLong"/>
-			<xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0" >
-			    <xs:annotation>
-			        <xs:documentation>Should be populated only if customer is solicitor.</xs:documentation>
-			    </xs:annotation>
-            </xs:element>
-            <xs:element name="particulars" type="tns:particularsType" minOccurs="1" maxOccurs="24">
-                <xs:annotation>
-                    <xs:documentation>Details about the claim</xs:documentation>
-                </xs:annotation>
-            </xs:element>
+			<xs:element name="solicitorCost" type="xs:unsignedLong" minOccurs="0" />
+            <xs:element name="particulars" type="tns:particularsType" minOccurs="1" maxOccurs="24"/>
             <xs:element name="sotSignature" type="base:sotSignatureType"/>
         </xs:sequence>
 	</xs:complexType>

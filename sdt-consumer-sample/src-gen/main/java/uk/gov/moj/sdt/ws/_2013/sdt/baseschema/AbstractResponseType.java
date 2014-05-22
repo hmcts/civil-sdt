@@ -36,8 +36,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 })
 @XmlSeeAlso({
     SubmitQueryResponseType.class,
-    BulkRequestStatusType.class,
-    BulkResponseType.class
+    BulkResponseType.class,
+    BulkRequestStatusType.class
 })
 public abstract class AbstractResponseType {
 

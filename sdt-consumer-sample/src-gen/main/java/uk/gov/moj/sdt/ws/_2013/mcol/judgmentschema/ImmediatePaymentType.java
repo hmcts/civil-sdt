@@ -7,8 +7,6 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Details when payment is to be paid immediately
- * 
  * <p>Java class for immediatePaymentType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

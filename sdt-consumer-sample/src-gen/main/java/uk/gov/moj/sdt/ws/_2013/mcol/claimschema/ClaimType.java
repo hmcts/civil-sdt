@@ -14,8 +14,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
 
 
 /**
- * Represents Claim document.
- * 
  * <p>Java class for claimType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

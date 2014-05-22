@@ -12,8 +12,6 @@ import org.w3._2001.xmlschema.Adapter2;
 
 
 /**
- * Details when payment is to be paid in full by a specified date (as opposed to immediately)
- * 
  * <p>Java class for fullPaymentType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

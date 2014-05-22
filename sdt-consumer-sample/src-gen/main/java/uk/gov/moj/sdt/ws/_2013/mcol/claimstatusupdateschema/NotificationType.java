@@ -25,23 +25,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum NotificationType {
 
-
-    /**
-     * Paid
-     * 
-     */
     MP,
-
-    /**
-     * Withdrawn
-     * 
-     */
     WD,
-
-    /**
-     * Discontinued
-     * 
-     */
     DI;
 
     public String value() {

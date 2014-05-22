@@ -26,9 +26,6 @@
     </xs:simpleType>
 
     <xs:complexType name="instalmentPaymentType">
-        <xs:annotation>
-            <xs:documentation>Details when payment is to be paid in instalments. The amount cannot be greater than claim amount.</xs:documentation>
-        </xs:annotation>
         <xs:sequence>
             <xs:element name="amount" type="xs:unsignedLong"/>
             <xs:element name="frequency" type="tns:instalmentFrequencyType"></xs:element>
@@ -36,23 +33,12 @@
     </xs:complexType>
 
     <xs:complexType name="fullPaymentType">
-        <xs:annotation>
-            <xs:documentation>Details when payment is to be paid in full by a specified date (as opposed to immediately)</xs:documentation>
-        </xs:annotation>
         <xs:sequence>
-            <xs:element name="fullByDate" type="xs:date">
-                <xs:annotation>
-                    <xs:documentation>The date by which defendant should pay the full amount. Should be in future and not tomorrow.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
+            <xs:element name="fullByDate" type="xs:date"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="immediatePaymentType">
-        <xs:annotation>
-            <xs:documentation>Details when payment is to be paid immediately</xs:documentation>
-        </xs:annotation>
-    </xs:complexType>
+    <xs:complexType name="immediatePaymentType"/>
 
     <xs:complexType name="paymentScheduleType">
         <xs:choice>

@@ -8,10 +8,6 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * 
- *                 Describes correspondence details.
- *             
- * 
  * <p>Java class for correspondenceDetailType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
