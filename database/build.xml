@@ -17,6 +17,12 @@
 	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
 	<import file="../build/build-setup-env.xml" />
 
+    <!-- STANDARD TARGETS -->
+    <import file="../build/build-standard-targets.xml" />
+
+    <!-- EXTRA TARGETS -->
+    <import file="build-extras.xml" />
+
 	<!-- General initialisation - ensure build directory (for classes) and dist 
 		directory (for jar) are present if they do not already exist -->
 	<target name="init" description="Create the distribution dirs">

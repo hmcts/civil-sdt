@@ -1,0 +1,45 @@
+<!-- ===========================================================================
+ = MCOL
+ =
+ = Name:        build.xml
+ = Description: Build file to build extra artefacts specific to a particular project.
+ =
+ = $Revision$
+ = $Author$
+ = $Date$
+ = $URL: $
+ =
+ = Copyright Logica UK Ltd. 2012
+ =========================================================================== -->
+
+<project name="database-extras" basedir=".">
+
+    <property name="deployable.component" value="sdt-db.zip" />
+
+    <!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
+    <import file="../build/build-setup-env.xml" />
+
+    <!-- Calls extra build deploy targets required by this project. -->
+    <target name="deploy-extras" if="remote-copy.exists" depends="-prepare-zip" description="Run extra targets for this project">
+        <!-- Copy the file to the remote host directory. -->
+        <sshexec host="${remote.copy.host}" username="${remote.copy.user}" password="${remote.copy.password}" command="mkdir -p ${remote.copy.dir}/${application.version}.${buildNumber}" trust="true" failonerror="true" />
+        <scp file="${target.dir}/${deployable.component}" todir="${remote.copy.user}:${remote.copy.password}@${remote.copy.host}:${remote.copy.dir}/${application.version}.${buildNumber}/${deployable.component}" trust="true" failonerror="false" />
+    </target>
+    
+    <target name="-prepare-zip" description="Zip database related artefacts">
+        <copy todir="${target.dir}/ddl" overwrite="true">
+            <fileset dir="ddl">
+                <include name="*.sql"/>
+            </fileset>
+        </copy>
+        <copy todir="${target.dir}/tools" overwrite="true">
+            <fileset dir="tools">
+                <include name="*.sh"/>
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <delete file="${target.dir}/${deployable.component}"/>
+        <zip destfile="${target.dir}/${deployable.component}" basedir="${target.dir}/" />
+    </target>
+
+</project>
