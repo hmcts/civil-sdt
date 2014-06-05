@@ -231,16 +231,10 @@
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_B15</value>	       			
 	       			<value>mcolJudgment</value>	       			
-	       			<value>Accepted</value>	       			
-	       			<value></value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>CUST_XML_ERR</value>	       			
+	       			<value>Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or  contact 'SDT Contact Details' for assistance</value>
 	       			<value></value>
-	       			<value>
-                        <![CDATA[
-                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
-                                <mresp:judgmentWarrantStatus>Judgment accepted by CCBC</mresp:judgmentWarrantStatus>
-                            </ind:mcolResponseDetail>
-                        ]]>
-                    </value>
 	       		</list>	       		
 	       	</list>
 		</property>
