@@ -9,6 +9,7 @@ DEFINE bs_service_request_id_i       = 'TABLESPACE users'
 DEFINE el_individual_request_id_i    = 'TABLESPACE users'
 DEFINE ir_bulk_reference_i           = 'TABLESPACE users'
 DEFINE ir_bulk_submission_id_i       = 'TABLESPACE users'
+DEFINE ir_sdt_request_reference_i    = 'TABLESPACE users'
 DEFINE sr_service_type_i             = 'TABLESPACE users'
 DEFINE sr_target_application_i       = 'TABLESPACE users'
 DEFINE st_service_type_name_i        = 'TABLESPACE users'
@@ -63,12 +64,16 @@ ON error_logs(individual_request_id)
 
 CREATE INDEX ir_bulk_reference_i
 ON individual_requests ( sdt_bulk_reference )
-&ir_bulk_reference_i
-;
+&ir_bulk_reference_i;
 
 CREATE INDEX ir_bulk_submission_id_i
 ON individual_requests ( bulk_submission_id )
 &ir_bulk_submission_id_i;
+
+CREATE INDEX ir_sdt_request_reference_i
+ON individual_requests( sdt_request_reference )
+&ir_sdt_request_reference_i;
+
 
 --
 -- service_routings
