@@ -9,7 +9,8 @@
       <tns:mcolDefenceDetail>
         <tns2:claimNumber>tns2:claimNumber</tns2:claimNumber>
         <tns2:defendantResponse defendantId="3">
-          <tns2:filedDate>2001-12-31T12:00:001</tns2:filedDate>
+          <tns2:filedDate>2001-12-31</tns2:filedDate>
+          <tns2:eventCreatedDateOnMcol>2001-12-31T12:00:00</tns2:eventCreatedDateOnMcol>
           <tns2:raisedOnMcol>true</tns2:raisedOnMcol>
           <tns2:responseType>DE1</tns2:responseType>
         </tns2:defendantResponse>

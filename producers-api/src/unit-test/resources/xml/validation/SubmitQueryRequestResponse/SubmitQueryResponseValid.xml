@@ -17,7 +17,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
     <tns:mcolDefenceDetail>
       <mquer:claimNumber>13548968</mquer:claimNumber>
       <mquer:defendantResponse defendantId="1">
-          <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+          <mquer:filedDate>2001-12-31</mquer:filedDate>
+          <mquer:eventCreatedDateOnMcol>2001-12-31T12:00:00</mquer:eventCreatedDateOnMcol>
           <mquer:raisedOnMcol>true</mquer:raisedOnMcol>
           <mquer:responseType>DE</mquer:responseType>
       </mquer:defendantResponse>

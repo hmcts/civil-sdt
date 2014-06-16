@@ -28,7 +28,8 @@
 
     <xs:complexType name="defendantResponseType">
         <xs:sequence>
-            <xs:element name="filedDate" type="xs:dateTime" />
+            <xs:element name="filedDate" type="xs:date" />
+            <xs:element name="eventCreatedDateOnMcol" type="xs:dateTime" />
             <xs:element name="raisedOnMcol" type="xs:boolean" />
             <xs:element name="responseType" type="tns:responseType" />
         </xs:sequence>
