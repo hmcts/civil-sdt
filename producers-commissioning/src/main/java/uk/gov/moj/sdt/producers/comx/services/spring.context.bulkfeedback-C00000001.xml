@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="79"/>
+        <property name="numberOfRequest" value="80"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -230,6 +230,14 @@
 	       			<value>Joint judgment cannot be requested for a claim with only 1 defendant.</value>
 	       			<value></value>
 	       		</list>
+                <list>                  
+                    <value>USER_REQUEST_ID_c26</value>                  
+                    <value>mcolJudgmentWarrant</value>                 
+                    <value>Rejected</value>                 
+                    <value>26</value>                   
+                    <value>Claim and defendant information must be consistent for a combined judgment and warrant request.</value>
+                    <value></value>
+                </list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c27</value>	       			
 	       			<value>mcolJudgment</value>	       			
