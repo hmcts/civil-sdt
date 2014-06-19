@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="80"/>
+        <property name="numberOfRequest" value="81"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -206,6 +206,14 @@
 	       			<value>Costs too high for the amount claimed.</value>
 	       			<value></value>
 	       		</list>
+                <list>                  
+                    <value>USER_REQUEST_ID_c22</value>                  
+                    <value>mcolJudgment</value>                 
+                    <value>Rejected</value>                 
+                    <value>22</value>                   
+                    <value>Defendant ID must be specified if not a joint judgment.</value>
+                    <value></value>
+                </list>
                 <list>	     			
 	       			<value>USER_REQUEST_ID_c23</value>	       			
 	       			<value>mcolJudgment</value>	       			
