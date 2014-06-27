@@ -34,6 +34,7 @@
         <property name="replacementNamespaces">
             <map>
                 <entry key="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema" value="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"/>
+                <entry key="http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema" value="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"/>
             </map>
         </property>
     </bean>

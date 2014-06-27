@@ -214,7 +214,7 @@ public class GenericXmlParserTest
 
         SdtContext.getContext ().setRawInXml (rawXml);
 
-        // Now call the parser to add the xml fragments into the payload of the individual reauests.
+        // Now call the parser to add the xml fragments into the payload of the individual requests.
         final String result = this.genericXmlParser.parse ();
 
         // CHECKSTYLE:OFF
@@ -222,4 +222,36 @@ public class GenericXmlParserTest
         // CHECKSTYLE:ON
     }
 
+    /**
+     * Test the method to get target app response xml for individual update.
+     * 
+     * @throws Exception if there is any IO problems
+     */
+    @Test
+    public void testParseIndividualUpdateRequestSuccess () throws Exception
+    {
+        genericXmlParser.setEnclosingTag ("targetAppDetail");
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+
+        genericXmlParser.setReplacementNamespaces (replacementNamespaces);
+
+        // Load xml into SdtContext as if the inbound interceptor had run.
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testIndividualUpdateRequest.xml");
+
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        // Now call the parser to add the xml fragments into the payload of the individual update request.
+        final String result = this.genericXmlParser.parse ();
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals (
+                "Failed to find expected response",
+                "<ureq:mcolResponseDetailxmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\"xmlns:ureq=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\"><ns4:claimNumber>A4XN5331</ns4:claimNumber><ns4:issueDate>2014-06-26Z</ns4:issueDate><ns4:serviceDate>2014-07-01Z</ns4:serviceDate><ns4:fee>10500</ns4:fee><ns4:judgmentWarrantStatus></ns4:judgmentWarrantStatus></ureq:mcolResponseDetail>",
+                result.replaceAll ("\\s+", ""));
+        // CHECKSTYLE:ON
+    }
 }
