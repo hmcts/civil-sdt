@@ -10,20 +10,20 @@
       <tns:request requestId="1_a-" requestType="mcolClaim">
         <tns:mcolClaim>
           <tns2:defendant1>
-            <tns2:name>tns2:name</tns2:name>
+            <tns2:name>tns2 name</tns2:name>
             <tns2:address>
-              <tns1:line1>tns1:line1</tns1:line1>
-              <tns1:line2>tns1:line2</tns1:line2>
+              <tns1:line1>tns1 line1</tns1:line1>
+              <tns1:line2>tns1 line2</tns1:line2>
               <tns1:postcode>FL23 2SD</tns1:postcode>
             </tns2:address>
           </tns2:defendant1>
           <tns2:sendParticularsSeparately>true</tns2:sendParticularsSeparately>
           <tns2:reserveRightToClaimInterest>true</tns2:reserveRightToClaimInterest>
           <tns2:claimAmount>0</tns2:claimAmount>
-          <tns2:particulars>tns2:particulars</tns2:particulars>
+          <tns2:particulars>tns2 particulars</tns2:particulars>
           <tns2:sotSignature>
             <tns1:flag>true</tns1:flag>
-            <tns1:name>tns2:name</tns1:name>
+            <tns1:name>tns2 name</tns1:name>
           </tns2:sotSignature>
         </tns:mcolClaim>
       </tns:request>

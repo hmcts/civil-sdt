@@ -4,6 +4,12 @@
 	targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
 	elementFormDefault="qualified" version="1.0">
 
+	<xs:simpleType name="sdtStringType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9.+-,£@?()/%_ ]+" />
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="sdtCustomerIdType">
         <xs:restriction base="xs:long">
             <xs:pattern value="[1-9][0-9]{7}" />
@@ -11,19 +17,19 @@
 	</xs:simpleType>
 
     <xs:simpleType name="targetApplicationIdType">
-        <xs:restriction base="xs:string">
+        <xs:restriction base="tns:sdtStringType">
             <xs:length value="4" />
         </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="requestTypeType">
-        <xs:restriction base="xs:string">
+        <xs:restriction base="tns:sdtStringType">
             <xs:maxLength value="50" />
         </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="criteriaTypeType">
-        <xs:restriction base="xs:string">
+        <xs:restriction base="tns:sdtStringType">
             <xs:maxLength value="50" />
         </xs:restriction>
     </xs:simpleType>
@@ -61,7 +67,7 @@
 	</xs:simpleType>
 
 	<xs:simpleType name="lineType">
-		<xs:restriction base="xs:string">
+		<xs:restriction base="tns:sdtStringType">
 			<xs:minLength value="1" />
 			<xs:maxLength value="30" />
 		</xs:restriction>
@@ -78,7 +84,7 @@
             </xs:element>
 			<xs:element name="name">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="tns:sdtStringType">
                         <xs:minLength value="1" />
                         <xs:maxLength value="30" />
                     </xs:restriction>
@@ -88,14 +94,14 @@
 	</xs:complexType>
 
 	<xs:simpleType name="courtCodeType">
-		<xs:restriction base="xs:string">
+		<xs:restriction base="tns:sdtStringType">
             <xs:minLength value="1" />
             <xs:maxLength value="3" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="courtNameType">
-		<xs:restriction base="xs:string">
+		<xs:restriction base="tns:sdtStringType">
 			<xs:minLength value="1" />
 			<xs:maxLength value="40" />
 		</xs:restriction>
@@ -126,7 +132,7 @@
 	</xs:simpleType>
 
 	<xs:simpleType name="sdtRequestIdType">
-		<xs:restriction base="xs:string">
+		<xs:restriction base="tns:sdtStringType">
 			<xs:minLength value="1" />
 			<xs:maxLength value="40" />
 		</xs:restriction>

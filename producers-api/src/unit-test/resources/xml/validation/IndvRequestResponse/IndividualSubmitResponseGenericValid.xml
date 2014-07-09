@@ -11,8 +11,8 @@ xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:tns1
   </tns:targetAppDetail>
   <tns:status code="Accepted">
     <tns1:error>
-      <tns1:code>tns1:code</tns1:code>
-      <tns1:description>tns1:description</tns1:description>
+      <tns1:code>tns1 code</tns1:code>
+      <tns1:description>tns1 description</tns1:description>
     </tns1:error>
   </tns:status>
 </tns:individualResponse>

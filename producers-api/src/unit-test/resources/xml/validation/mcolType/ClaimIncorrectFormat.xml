@@ -20,22 +20,22 @@
     </tns:address>
   </tns:claimantCorrespondence>
   <tns:defendant1>
-    <tns:name>base:name</tns:name>
+    <tns:name>base name</tns:name>
     <tns:address>
-      <base:line1>base:line1</base:line1>
-      <base:line2>base:line2</base:line2>
-      <base:line3>base:line3</base:line3>
-      <base:line4>base:line4</base:line4>
+      <base:line1>base line1</base:line1>
+      <base:line2>base line2</base:line2>
+      <base:line3>base line3</base:line3>
+      <base:line4>base line4</base:line4>
       <base:postcode>FL23 2SD</base:postcode>
     </tns:address>
   </tns:defendant1>
   <tns:defendant2>
-    <tns:name>base:name</tns:name>
+    <tns:name>base name</tns:name>
     <tns:address>
-      <base:line1>base:line1</base:line1>
-      <base:line2>base:line2</base:line2>
-      <base:line3>base:line3</base:line3>
-      <base:line4>base:line4</base:line4>
+      <base:line1>base line1</base:line1>
+      <base:line2>base line2</base:line2>
+      <base:line3>base line3</base:line3>
+      <base:line4>base line4</base:line4>
       <base:postcode>FL23 2SD</base:postcode>
     </tns:address>
   </tns:defendant2>

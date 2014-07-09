@@ -5,8 +5,8 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
   <tns:bulkRequestStatus>
       <base:status code="Ok">
           <base:error>
-            <base:code>base:code</base:code>
-            <base:description>base:description</base:description>
+            <base:code>base code</base:code>
+            <base:description>base description</base:description>
           </base:error>
       </base:status>
       <tns:customerReference>customerReference</tns:customerReference>
@@ -16,8 +16,8 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
       <tns:requestCount>0</tns:requestCount>
       <tns:bulkStatus code="Failed">
           <base:error>
-            <base:code>base:code</base:code>
-            <base:description>base:description</base:description>
+            <base:code>base code</base:code>
+            <base:description>base description</base:description>
           </base:error>
       </tns:bulkStatus>
   </tns:bulkRequestStatus>
@@ -30,14 +30,14 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
                 <rdns:serviceDate>2001-01-01</rdns:serviceDate>
                 <rdns:warrantNumber>12345678</rdns:warrantNumber>
                 <rdns:enforcingCourtCode>123</rdns:enforcingCourtCode>
-                <rdns:enforcingCourtName>tns:enforcingCourtName</rdns:enforcingCourtName>
+                <rdns:enforcingCourtName>tns enforcingCourtName</rdns:enforcingCourtName>
                 <rdns:fee>0</rdns:fee>
             </tns:mcolResponseDetail>
         </tns:responseDetail>
         <tns:status code="Accepted">
           <base:error>
-            <base:code>base:code</base:code>
-            <base:description>base:description</base:description>
+            <base:code>base code</base:code>
+            <base:description>base description</base:description>
           </base:error>
         </tns:status>
       </tns:response>

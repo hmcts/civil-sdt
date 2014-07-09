@@ -3,7 +3,7 @@
   <tns1:status code="UNKNOWN">
     <tns1:error>
       <tns1:code>123456789012345678901234567890123</tns1:code>
-      <tns1:description>tns1:description</tns1:description>
+      <tns1:description>tns1 description</tns1:description>
     </tns1:error>
   </tns1:status>
   <tns:customerReference>123456789012345678901234567890123</tns:customerReference>

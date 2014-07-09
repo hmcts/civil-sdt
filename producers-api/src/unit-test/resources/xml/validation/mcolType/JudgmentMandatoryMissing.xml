@@ -4,19 +4,19 @@
       <tns:jointJudgment>true</tns:jointJudgment>
       <tns:sentParticularsSeparately>true</tns:sentParticularsSeparately>
       <tns:defendant1Address>
-        <tns2:line1>tns2:line1</tns2:line1>
-        <tns2:line2>tns2:line2</tns2:line2>
-        <tns2:line3>tns2:line3</tns2:line3>
-        <tns2:line4>tns2:line4</tns2:line4>
+        <tns2:line1>tns2 line1</tns2:line1>
+        <tns2:line2>tns2 line2</tns2:line2>
+        <tns2:line3>tns2 line3</tns2:line3>
+        <tns2:line4>tns2 line4</tns2:line4>
 
         <tns2:postcode>FL23 2SD</tns2:postcode>
       </tns:defendant1Address>
       <tns:defendant1DateOfBirth>2001-01-01</tns:defendant1DateOfBirth>
       <tns:defendant2Address>
-        <tns2:line1>tns2:line1</tns2:line1>
-        <tns2:line2>tns2:line2</tns2:line2>
-        <tns2:line3>tns2:line3</tns2:line3>
-        <tns2:line4>tns2:line4</tns2:line4>
+        <tns2:line1>tns2 line1</tns2:line1>
+        <tns2:line2>tns2 line2</tns2:line2>
+        <tns2:line3>tns2 line3</tns2:line3>
+        <tns2:line4>tns2 line4</tns2:line4>
 
         <tns2:postcode>FL23 2SD</tns2:postcode>
       </tns:defendant2Address>

@@ -16,7 +16,7 @@
 			<xs:element name="targetApplicationId" type="base:targetApplicationIdType" />
             <xs:element name="queryReference" minOccurs="0"> 
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="base:sdtStringType">
                         <xs:minLength value="1"/>
                         <xs:maxLength value="20"/>
                     </xs:restriction>

@@ -9,7 +9,7 @@
 	<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="Base.xsd" />
     
     <xs:simpleType name="additionalNotesType">
-        <xs:restriction base="xs:string">
+        <xs:restriction base="base:sdtStringType">
             <xs:minLength value="1" />
             <xs:maxLength value="120" />
         </xs:restriction>

@@ -6,8 +6,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:/
   <tns:bulkRequestStatus>
       <base:status code="Ok">
           <base:error>
-            <base:code>base:code</base:code>
-            <base:description>base:description</base:description>
+            <base:code>base code</base:code>
+            <base:description>base description</base:description>
           </base:error>
       </base:status>
       <tns:customerReference>123456789012345678901234567890123</tns:customerReference>
