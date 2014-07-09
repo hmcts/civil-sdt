@@ -21,7 +21,7 @@
                         <mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
                         <mresp:enforcingCourtName>Court Code</mresp:enforcingCourtName>
                         <mresp:fee>0</mresp:fee>
-                        <mresp:judgmentWarrantStatus>tns additionalStatus</mresp:judgmentWarrantStatus>
+                        <mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus>
                     </ind:mcolResponseDetail>
                </ns2:responseDetail>
                <ns2:status code="Accepted"/>
