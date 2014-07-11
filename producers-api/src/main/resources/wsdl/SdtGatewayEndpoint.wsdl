@@ -19,7 +19,7 @@
 
 			<xs:simpleType name="sdtStringType">
 				<xs:restriction base="xs:string">
-					<xs:pattern value="[a-zA-Z0-9.+-,£@?()%/_ ]+" />
+					<xs:pattern value="[a-zA-Z0-9\-+.,£@?'()/%_ ]*" />
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -180,7 +180,7 @@
 				<xs:sequence>
 					<xs:element name="code">
 						<xs:simpleType>
-							<xs:restriction base="tns:sdtStringType">
+							<xs:restriction base="xs:string">
 								<xs:minLength value="1" />
 								<xs:maxLength value="32" />
 							</xs:restriction>
@@ -188,7 +188,7 @@
 					</xs:element>
 					<xs:element name="description">
 						<xs:simpleType>
-							<xs:restriction base="tns:sdtStringType">
+							<xs:restriction base="xs:string">
 								<xs:minLength value="1" />
 								<xs:maxLength value="255" />
 							</xs:restriction>
@@ -503,7 +503,7 @@
 					</xs:element>
 					<xs:element name="faxNumber" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="xs:string">
+							<xs:restriction base="base:sdtStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="24"/>
 							</xs:restriction>
@@ -511,7 +511,7 @@
 					</xs:element>
 					<xs:element name="email" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="xs:string">
+							<xs:restriction base="base:sdtStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="254"/>
 							</xs:restriction>
@@ -822,7 +822,7 @@
                     <xs:element name="mcolWarrant" type="wnt:warrantType"/>
                     <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
                 </xs:choice>
-                <xs:attribute name="requestType" type="xs:string" use="required"/>
+                <xs:attribute name="requestType" type="base:sdtStringType" use="required"/>
                 <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
             </xs:complexType>
             
