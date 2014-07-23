@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="targetApplicationId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}targetApplicationIdType"/>
  *         &lt;element name="queryReference" minOccurs="0">
  *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *             &lt;restriction base="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtStringType">
  *               &lt;minLength value="1"/>
  *               &lt;maxLength value="20"/>
  *             &lt;/restriction>

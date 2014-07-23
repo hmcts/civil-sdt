@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="targetAppCustomerId" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="targetAppCustomerId" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtStringType"/>
  *         &lt;element name="criteriaType" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}criteriaTypeType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
