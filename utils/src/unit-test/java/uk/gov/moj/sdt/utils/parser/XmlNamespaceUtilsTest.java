@@ -184,17 +184,17 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                         + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
 
                         "   <xsi:some-tag some-attribute=\"some value\">"
-                        + "       <xsi:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <xsi:some-other-tag some-attribute=\"some value\">" + "       <\\xsi:some-other-tag>"
-                        + "   <\\xsi:some-tag>" + "</beans>";
+                        + "       <xsi:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <xsi:some-other-tag some-attribute=\"some value\">" + "       </xsi:some-other-tag>"
+                        + "   </xsi:some-tag>" + "</beans>";
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
         final Map<String, String> map =
                 XmlNamespaceUtils.findMatchingNamespaces ("   <xsi:some-tag some-attribute=\"some value\">"
-                        + "       <xsi:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <xsi:some-other-tag some-attribute=\"some value\">" + "       <\\xsi:some-other-tag>"
-                        + "   <\\xsi:some-tag>", allNamespaces);
+                        + "       <xsi:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <xsi:some-other-tag some-attribute=\"some value\">" + "       </xsi:some-other-tag>"
+                        + "   </xsi:some-tag>", allNamespaces);
 
         Assert.assertEquals ("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
                 map.get ("xsi"));
@@ -214,29 +214,32 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                 "<beans xmlns=\"http://www.springframework.org/schema/beans\""
                         + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
                         + "xmlns:aop=\"http://www.springframework.org/schema/aop\""
+                        + "xmlns:abc=\"http://www.springframework.org/schema/abc\""
                         + "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans"
                         + "       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
                         + "       http://www.springframework.org/schema/aop"
-                        + "       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd\">" +
+                        + "       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd\">"
+                        + "       http://www.springframework.org/schema/abc"
+                        + "       http://www.springframework.org/schema/abc/spring-abc-2.5.xsd\">"
 
-                        "   <!-- Note all ids should be based on fully qualified names (interfaces where"
+                        + "   <!-- Note all ids should be based on fully qualified names (interfaces where"
                         + "       this is not ambiguous) and all classes should have an interface. -->" +
 
                         "   <bean id=\"uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean\" "
                         + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
 
                         "   <xsi:some-tag some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       <\\aop:some-other-tag>"
-                        + "   <\\xsi:some-tag>" + "</beans>";
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>" + "</beans>";
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
         final Map<String, String> map =
                 XmlNamespaceUtils.findMatchingNamespaces ("   <xsi:some-tag some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       <\\aop:some-other-tag>"
-                        + "   <\\xsi:some-tag>", allNamespaces);
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>", allNamespaces);
 
         Assert.assertEquals ("Missing fragment namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
                 map.get ("xsi"));
@@ -269,18 +272,18 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                         + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
 
                         "   <xsi:some-tag some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       <\\aop:some-other-tag>"
-                        + "   <\\xsi:some-tag>" + "</beans>";
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>" + "</beans>";
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
         try
         {
             @SuppressWarnings ("unused") final Map<String, String> map =
                     XmlNamespaceUtils.findMatchingNamespaces ("   <xsi:some-tag some-attribute=\"some value\">"
-                            + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
+                            + "       <aop:some-other-tag some-attribute=\"some value\"/>"
                             + "       <aop:some-other-tag some-attribute=\"some value\">"
-                            + "       <\\aop:some-other-tag>" + "   <\\xsi:some-tag>", allNamespaces);
+                            + "       </aop:some-other-tag>" + "   </xsi:some-tag>", allNamespaces);
 
             Assert.fail ("Failed to throw expected RuntimeException due to missing tag namespace.");
         }
@@ -289,7 +292,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
             Assert.assertEquals ("Unrecognised exception message:",
                     e.getMessage (),
                     // CHECKSTYLE:OFF
-                    "Namespace [aop] missing from incoming raw xml[   <xsi:some-tag some-attribute=\"some value\">       <aop:some-other-tag some-attribute=\"some value\"\\>       <aop:some-other-tag some-attribute=\"some value\">       <\\aop:some-other-tag>   <\\xsi:some-tag>]");
+                    "Namespace [aop] missing from incoming raw xml[   <xsi:some-tag some-attribute=\"some value\">       <aop:some-other-tag some-attribute=\"some value\"/>       <aop:some-other-tag some-attribute=\"some value\">       </aop:some-other-tag>   </xsi:some-tag>]");
             // CHECKSTYLE:ON
         }
     }
@@ -346,17 +349,17 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                         + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
 
                         "   <xsi:some-tag some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       <\\aop:some-other-tag>"
-                        + "   <\\xsi:some-tag>" + "</beans>";
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>" + "</beans>";
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
         final String xmlFragment =
                 "   <!--Comment--><xsi:some-tag some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       <\\aop:some-other-tag>"
-                        + "   <\\xsi:some-tag>";
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>";
 
         final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
 
@@ -364,11 +367,10 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         // CHECKSTYLE:OFF
         final String expected =
-                "   <!--Comment--><xsi:some-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag some-attribute=\"some value\"\\>"
-                        + "       <aop:some-other-tag some-attribute=\"some value\">"
-                        + "       <\\aop:some-other-tag>"
-                        + "   <\\xsi:some-tag>";
+                "   <!--Comment--><xsi:some-tag xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" some-attribute=\"some value\">"
+                        + "       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\">"
+                        + "       </aop:some-other-tag>" + "   </xsi:some-tag>";
 
         Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
 
@@ -407,10 +409,8 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
         final String xmlFragment =
-                "       <bul:mcolClaimStatusUpdate "
-                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"  "
-                        + "xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\">"
-                        + "  <cla1:claimNumber>claim123</cla1:claimNumber>" + "<cla1:defendantId>1</cla1:defendantId>"
+                "       <bul:mcolClaimStatusUpdate > " + "  <cla1:claimNumber>claim123</cla1:claimNumber>"
+                        + "<cla1:defendantId>1</cla1:defendantId>"
                         + "<cla1:notificationType>MP</cla1:notificationType>"
                         + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
 
@@ -420,11 +420,15 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final String expected =
                 "       <bul:mcolClaimStatusUpdate "
-                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" "
-                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">"
-                        + "  <cla1:claimNumber>claim123</cla1:claimNumber>" + "<cla1:defendantId>1</cla1:defendantId>"
-                        + "<cla1:notificationType>MP</cla1:notificationType>"
-                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" >"
+                        + "   <cla1:claimNumber xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/"
+                        + "ClaimStatusUpdateSchema\"" + ">claim123</cla1:claimNumber>"
+                        + "<cla1:defendantId xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\""
+                        + ">1</cla1:defendantId>"
+                        + "<cla1:notificationType xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/"
+                        + "ClaimStatusUpdateSchema\">MP</cla1:notificationType>"
+                        + "<cla1:paidInFullDate xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/"
+                        + "ClaimStatusUpdateSchema\">2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
 
         Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
     }
@@ -459,7 +463,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
-        final String xmlFragment =
+        String xmlFragment =
                 "       <bul:mcolClaimStatusUpdate "
                         + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"  "
                         + "xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\" somAttribute=\"abcd\">"
@@ -469,16 +473,22 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
 
+        xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
+
         final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
 
         final String expected =
                 "       <bul:mcolClaimStatusUpdate "
                         + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" "
-                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\" "
-                        + "somAttribute=\"abcd\">" + "  <cla1:claimNumber>claim123</cla1:claimNumber>"
-                        + "<cla1:defendantId>1</cla1:defendantId>"
-                        + "<cla1:notificationType>MP</cla1:notificationType>"
-                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+                        + "somAttribute=\"abcd\">"
+                        + "  <cla1:claimNumber xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/"
+                        + "ClaimStatusUpdateSchema\">claim123</cla1:claimNumber>"
+                        + "<cla1:defendantId xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/"
+                        + "ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationType "
+                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">"
+                        + "MP</cla1:notificationType><cla1:paidInFullDate "
+                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">"
+                        + "2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>";
 
         Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
     }
@@ -513,7 +523,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
-        final String xmlFragment =
+        String xmlFragment =
                 "       <bul:mcolClaimStatusUpdate "
                         + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"  "
                         + "xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\" somAttribute=\"abcd\" >"
@@ -523,16 +533,14 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
 
+        xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
+
         final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
 
+        // CHECKSTYLE:OFF
         final String expected =
-                "       <bul:mcolClaimStatusUpdate "
-                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" "
-                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\" "
-                        + "somAttribute=\"abcd\">" + "  <cla1:claimNumber>claim123</cla1:claimNumber>"
-                        + "<cla1:defendantId>1</cla1:defendantId>"
-                        + "<cla1:notificationType>MP</cla1:notificationType>"
-                        + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
+                "       <bul:mcolClaimStatusUpdate xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" somAttribute=\"abcd\" >  <cla1:claimNumber xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim123</cla1:claimNumber><cla1:defendantId xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationType xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDate xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>";
+        // CHECKSTYLE:ON
 
         Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
     }
