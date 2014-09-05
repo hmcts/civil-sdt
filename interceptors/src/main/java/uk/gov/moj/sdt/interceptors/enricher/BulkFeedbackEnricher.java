@@ -81,7 +81,6 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             // Get the map created by the service which contains the fragments of response to be inserted into the
             // outgoing XML.
             final Map<String, String> matchedRequestIdMap = new HashMap<String, String> ();
-            SdtContext.getContext ().getTargetApplicationRespMap ();
 
             if (LOGGER.isDebugEnabled ())
             {
@@ -96,10 +95,11 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             int rawXmlPos = 0;
 
             // Build a search pattern with this request id. Allow for any order of requestId and requestType
-            // attributes.
+            // attributes. Allow any characters in namespace prefix except > and / to void match on previous tag or end
+            // tags.
             Pattern pattern =
-                    Pattern.compile ("(<[\\w]+:response[ \\w\"=]*requestId=\"([\\w-]+)\"[ \\w\"=]*>)\\s*<([\\w]+:)"
-                            + "(responseDetail)/>\\s*(<[\\w]+:status)");
+                    Pattern.compile ("(<[\\S:&&[^>/]]*?response[ \\w\"=]*?requestId=\"([\\w-]+)\"[ \\w\"=]*>)\\s*"
+                            + "<([\\S:&&[^>/]]*?)(responseDetail)/>\\s*(<[\\S:&&[^>/]]*?status)");
 
             // Match it against the result of all previous match replacements.
             Matcher matcher = pattern.matcher (newXml);
@@ -117,6 +117,12 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                 // CHECKSTYLE:OFF
                 // Form the replacement string from the matched groups and the extra XML - populate with target
                 // application specific content.
+                // The replacementGroup =
+                // matching response tag plus attributes ||
+                // responseDetail namespace plus opening tag ||
+                // inserted non generic XML ||
+                // responseDetail namespace plus closing tag ||
+                // status namespace plus opening tag (without attributes)
                 String replacementGroup =
                         new StringBuilder ().append (matcher.group (1)).append ("<").append (matcher.group (3))
                                 .append (matcher.group (4)).append (">")
@@ -147,6 +153,8 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
                 matchedRequestIdMap.put (requestId, requestId);
             }
 
+            // See if there is any remaining XML to append from the original string based on the end point of the last
+            // match.
             if ( !(rawXmlPos > newXml.length ()))
             {
                 // Copy any remainder of the uncopied rawXml.
@@ -174,8 +182,8 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
 
             // Now check that there are no responses without case management specific content inserted.
             pattern =
-                    Pattern.compile ("<[\\w]+:response[ \\w\"=]*requestId=\"[ \\w]*\">\\s*<[\\w]+:responseDetail/>\\s*"
-                            + "<[\\w]+:status code=\"([ \\w]+)\"");
+                    Pattern.compile ("<[\\S:&&[^>/]]*?response[ \\w\"=]*?requestId=\"[ \\w]*?\">\\s*<[\\S:&&[^>/]]*?"
+                            + "responseDetail/>\\s*<[\\S:&&[^>/]]*?status code=\"([ \\w]+)\"");
             matcher = pattern.matcher (newXml);
             if (matcher.find ())
             {

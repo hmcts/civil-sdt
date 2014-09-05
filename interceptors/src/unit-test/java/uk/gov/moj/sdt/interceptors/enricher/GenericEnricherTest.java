@@ -73,7 +73,22 @@ public class GenericEnricherTest
         final String expected = "<ns1:submitQueryResponse><ns2:results>" +
         		"<record></record></ns2:results></ns1:submitQueryResponse>";
         Assert.assertEquals(expected, result);
-
+    }
+    
+    /**
+     * Test submit query enrichment where the insertion tag does not have a preceding namespace.
+     */
+    @Test
+    public void testSubmitQueryEnrichmentNoNamespaceSuccess ()
+    {
+        enricher.setInsertionTag ("results");
+        enricher.setParentTag ("submitQueryResponse");
+        
+        SdtContext.getContext ().setRawOutXml ("<record></record>");
+        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><results/></ns1:submitQueryResponse>");
+        final String expected = "<ns1:submitQueryResponse><results>" +
+                "<record></record></results></ns1:submitQueryResponse>";
+        Assert.assertEquals(expected, result);
     }
     
     /**

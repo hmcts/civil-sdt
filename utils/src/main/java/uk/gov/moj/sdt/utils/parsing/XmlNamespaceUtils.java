@@ -90,7 +90,10 @@ public final class XmlNamespaceUtils
     }
 
     /**
-     * Extract namespaces out of a piece of raw XML.
+     * Extract namespaces out of a piece of raw XML. Note that we find these both in the XML header, and as embedded
+     * namespace definition attributes. Note that we deliberately do not find any embedded (attribute style) default
+     * namespaces, since these do not have corresponding tags, and the map generated is specifically used to handle
+     * tags with namespace prefixes.
      * 
      * @param rawXml raw xml.
      * @param replacementNamespaces map containing replacement namespaces.
@@ -102,7 +105,7 @@ public final class XmlNamespaceUtils
         final Map<String, String> namespaces = new HashMap<String, String> ();
 
         // Build a search pattern to find all namespaces.
-        final Pattern pattern = Pattern.compile ("xmlns:(.*?)=\".*?\"");
+        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^>/]]*?)=\".*?\"");
 
         final Matcher matcher = pattern.matcher (rawXml);
 
@@ -137,7 +140,8 @@ public final class XmlNamespaceUtils
     }
 
     /**
-     * Find map of applicable namespaces for given xml fragment based on namespaces for entire xml.
+     * Find map of applicable namespaces for given xml fragment based on what namespaces have been used a tag prefixes.
+     * Look at the entire xml.
      * 
      * @param xmlFragment fragment of xml to which namespaces should apply.
      * @param allNamespaces namespaces for entire xml
@@ -150,7 +154,7 @@ public final class XmlNamespaceUtils
         final Map<String, String> matchingNamespaces = new HashMap<String, String> ();
 
         // Build a search pattern to find all start tag namespaces used in this xml fragment.
-        final Pattern pattern = Pattern.compile ("<([a-zA-Z0-9]+?):");
+        final Pattern pattern = Pattern.compile ("<([\\S:&&[^>/]]+?):");
 
         final Matcher matcher = pattern.matcher (xmlFragment);
 
@@ -190,77 +194,130 @@ public final class XmlNamespaceUtils
     }
 
     /**
-     * Adds namespaces to xml fragment.
+     * Adds namespaces to xml fragment. Assume that any embedded namespace definitions have been removed before this
+     * method is called.
      * 
      * @param xmlFragment xml to be decorated.
-     * @param namespaces namespaces to be added.
+     * @param matchingNamespaces namespaces to be added.
      * @return xml with namespace
      */
-    public static String addNamespaces (final String xmlFragment, final Map<String, String> namespaces)
+    public static String addNamespaces (final String xmlFragment, final Map<String, String> matchingNamespaces)
     {
         if (LOGGER.isDebugEnabled ())
         {
             LOGGER.debug ("Adding namespaces to fragment [" + xmlFragment + "]");
         }
 
-        String result = xmlFragment;
+        // Buffer for accumulating results.
+        final StringBuilder result = new StringBuilder ();
 
-        // Build pattern to identify first xml element for injection of namespace. In the pattern below, any namespaces
-        // already present need to be discarded and, although they are not wanted, they must be grouped in round
-        // brackets since this is the only way to put a repeater against them. What ends up in the group 2 is the
-        // last such namespace matched which is then discarded.
-        //
-        // group1 - qualified tag name of first tag
-        // group2 - namespaces added by CXL which are to be discarded
-        // group3 - rest of the tag contents
-        final Pattern pattern =
-                Pattern.compile ("(<[\\S&&[^:]]+?:[\\w-]+)[\\s]*(xmlns:[\\S&&[^>]]+[\\s]*)*([\\s\\S]*?)[\\s]*>");
+        // Point up to which text has been copied so far.
+        int copyPosition = 0;
 
+        // Look for all tags with any namespace prefix (excluding any attributes).
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^>/]]+?):([\\w-]+)");
         final Matcher matcher = pattern.matcher (xmlFragment);
-        if (matcher.find ())
+        while (matcher.find ())
         {
             if (LOGGER.isDebugEnabled ())
             {
                 LOGGER.debug ("Found matching group[" + matcher.group () + "]");
             }
 
-            // Build replacement xml concatenating xml for element and namespace(s)
-            final StringBuilder replacementXml = new StringBuilder ();
-            replacementXml.append (matcher.group (1));
-
-            // Add namespace details to first element
-            for (String value : namespaces.values ())
+            // Find if there is any uncopied text before the start of the match.
+            final int start = matcher.start ();
+            if (start > copyPosition)
             {
-                replacementXml.append (" ");
-                replacementXml.append (value);
+                // Some uncopied text precedes the start of the match point - copy it to results.
+                result.append (xmlFragment.substring (copyPosition, start));
             }
 
-            // CHECKSTYLE:OFF
-            if ( !(matcher.group (3).equals ("")))
-            {
-                // Add any attributes found.
-                replacementXml.append (" ");
-                replacementXml.append (matcher.group (3));
-            }
-            // CHECKSTYLE:ON
+            // Copy the match.
+            result.append (matcher.group (0));
 
-            // Add final backet.
-            replacementXml.append (">");
+            // Get prefix out of match (1st group).
+            final String prefix = matcher.group (1);
 
-            if (LOGGER.isDebugEnabled ())
-            {
-                LOGGER.debug ("Replacement string[" + replacementXml + "]");
-            }
+            // Append the corresponding namespace.
+            result.append (" " + matchingNamespaces.get (prefix));
 
-            result = matcher.replaceFirst (replacementXml.toString ());
+            // Update position to take account of copy of matched substring.
+            copyPosition = matcher.end ();
+        }
+
+        // Copy any remaining text not yet copied from original XML.
+        if (copyPosition < xmlFragment.length ())
+        {
+            // Some uncopied text follows the end of the last match point - copy it to results.
+            result.append (xmlFragment.substring (copyPosition));
         }
 
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("Enhanced fragment [" + result + "]");
+            LOGGER.debug ("Enhanced fragment [" + result.toString () + "]");
         }
 
-        return result;
+        return result.toString ();
+    }
 
+    /**
+     * Removes all embedded namespaces so that they can be re-added. Unless they are removed, it is difficult to
+     * distinguish them from other element attributes when adding embedded namespaces again (which is required before
+     * sending to target application to keep XSD checking happy). Note: do not remove default namespaces (which have no
+     * associated name) because there will be no corresponding prefix on the tag and these cannot be re-added as is
+     * required.
+     * 
+     * @param xmlFragment xml to be cleaned.
+     * @return xml without embedded namespaces.
+     */
+    public static String removeEmbeddedNamespaces (final String xmlFragment)
+    {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Removing namespaces from fragment [" + xmlFragment + "]");
+        }
+
+        // Buffer for accumulating results.
+        final StringBuilder result = new StringBuilder ();
+
+        // Build pattern to find all embedded namespace attributes in XML fragment. Note; default namespaces have no
+        // colon.
+        final Pattern pattern = Pattern.compile ("xmlns:[\\S]+[\\s]*");
+        final Matcher matcher = pattern.matcher (xmlFragment);
+
+        // Position of XML copied into results so far.
+        int copyPosition = 0;
+
+        while (matcher.find ())
+        {
+            final int start = matcher.start ();
+            if (start > copyPosition)
+            {
+                // Copy uncopied text preceding start of the match point to results.
+                result.append (xmlFragment.substring (copyPosition, start));
+            }
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found matching namespace[" + matcher.group () + "]");
+            }
+
+            // Update position to take account of copy of matched substring.
+            copyPosition = matcher.end ();
+        }
+
+        // Copy any remaining text not yet copied from original XML.
+        if (copyPosition < xmlFragment.length ())
+        {
+            // Some uncopied text follows the end of the last match point - copy it to results.
+            result.append (xmlFragment.substring (copyPosition));
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Cleaned fragment [" + result.toString () + "]");
+        }
+
+        return result.toString ();
     }
 }

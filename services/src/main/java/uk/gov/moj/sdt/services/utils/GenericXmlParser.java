@@ -87,7 +87,8 @@ public class GenericXmlParser
 
         // Build search pattern for extraction.
         final Pattern pattern =
-                Pattern.compile ("<[\\w]+:" + getEnclosingTag () + "(.*?)>(.*?)</[\\w]+:" + getEnclosingTag () + ">");
+                Pattern.compile ("<[\\S:&&[^>/]]*?" + getEnclosingTag () + "(.*?)>(.*?)</[\\S:&&[^>/]]*?" +
+                        getEnclosingTag () + ">");
         final Matcher matcher = pattern.matcher (rawXml);
 
         if (matcher.find ())
@@ -99,62 +100,20 @@ public class GenericXmlParser
 
             LOGGER.debug ("Result XML[" + xmlResult + "]");
 
-            // Find namespaces applicable for fragment
+            // Find namespaces applicable for fragment.
             final Map<String, String> matchingNamespaces =
                     XmlNamespaceUtils.findMatchingNamespaces (xmlResult, allNamespaces);
 
-            xmlResult = addNamespaces (xmlResult, matchingNamespaces);
+            // In preparation for adding namespace definitions, remove existing namespace definitions (which may be
+            // different) from XML fragment.
+            xmlResult = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlResult);
+
+            xmlResult = XmlNamespaceUtils.addNamespaces (xmlResult, matchingNamespaces);
 
             LOGGER.debug ("result XML with namespaces[" + xmlResult + "]");
         }
 
         return xmlResult;
-
-    }
-
-    /**
-     * Prepare xml fragment with given namespaces embedded. When given xml fragment contains multiple occurrences of
-     * target application specific tag then namespace(s) are embedded in each occurrence.
-     * 
-     * @param xmlFragment fragment of xml that doesn't have namespace information.
-     * @param matchingNamespaces namespaces that need to be added.
-     * @return xml fragment with namespaces added.
-     */
-    private String addNamespaces (final String xmlFragment, final Map<String, String> matchingNamespaces)
-    {
-        // Find the target application specific tag which will occur one or more times.
-        Pattern pattern = Pattern.compile ("<([\\w]+:[\\w-]+)>");
-        Matcher matcher = pattern.matcher (xmlFragment);
-        String iteratingTag = null;
-
-        if (matcher.find ())
-        {
-            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
-
-            // Capture raw xml for element
-            iteratingTag = matcher.group (1).trim ();
-        }
-
-        if (iteratingTag == null)
-        {
-            throw new IllegalStateException ("Target specific tag not found in xml fragment[" + xmlFragment + "]");
-        }
-
-        // Build search pattern for extracting content for repeating tag.
-        pattern = Pattern.compile ("<" + iteratingTag + ">.*?</" + iteratingTag + ">");
-        matcher = pattern.matcher (xmlFragment);
-
-        final StringBuilder result = new StringBuilder ();
-
-        while (matcher.find ())
-        {
-            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
-            final String xmlResult = XmlNamespaceUtils.addNamespaces (matcher.group (), matchingNamespaces);
-            LOGGER.debug ("result XML[" + xmlResult + "]");
-            result.append (xmlResult);
-        }
-
-        return result.toString ();
     }
 
     /**

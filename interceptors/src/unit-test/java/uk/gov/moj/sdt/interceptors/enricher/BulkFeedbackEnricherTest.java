@@ -107,6 +107,38 @@ public class BulkFeedbackEnricherTest
     }
 
     /**
+     * Test enrichment of single response (with no namespaces in front of tags) with no error.
+     */
+    @Test  
+    public void testSingleResponseNoNamespace ()
+    {
+        // Create map to hold fake responses from MCOL.
+        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        // CHECKSTYLE:OFF Line length is acceptable
+        targetApplicationRespMap
+                .put ("USER_REQUEST_ID_B1",
+                        "<mcolResponseDetail><claimNumber>12345678</claimNumber><issueDate>2012-11-11</issueDate><serviceDate>2012-11-11</serviceDate><warrantNumber>12345678</warrantNumber><enforcingCourtCode>123</enforcingCourtCode><enforcingCourtName>enforcing_court_name</enforcingCourtName><fee>9999</fee></mcolResponseDetail>");
+
+        // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
+        // from the SDT database.
+        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+
+        // Setup the XML to be enriched.
+        final String inXml =
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><bulkRequestStatus><customerReference>USER_FILE_REFERENCE_B1</customerReference><sdtBulkReference>MCOL_20130722_B00000001</sdtBulkReference><submittedDate>2013-07-22T13:00:00+01:00</submittedDate><sdtService>SDT Commissioning</sdtService><requestCount>16</requestCount><bulkStatus code=\"Validated\"/></bulkRequestStatus><responses><response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><responseDetail/><status code=\"Initially Accepted\"/></response></responses></bulkFeedbackResponse></soap:Body></soap:Envelope>";
+
+        // Call the enricher.
+        final String result = enricher.enrichXml (inXml);
+
+        // Check the enriched XML.
+        final String expected =
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><bulkRequestStatus><customerReference>USER_FILE_REFERENCE_B1</customerReference><sdtBulkReference>MCOL_20130722_B00000001</sdtBulkReference><submittedDate>2013-07-22T13:00:00+01:00</submittedDate><sdtService>SDT Commissioning</sdtService><requestCount>16</requestCount><bulkStatus code=\"Validated\"/></bulkRequestStatus><responses><response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><responseDetail><mcolResponseDetail><claimNumber>12345678</claimNumber><issueDate>2012-11-11</issueDate><serviceDate>2012-11-11</serviceDate><warrantNumber>12345678</warrantNumber><enforcingCourtCode>123</enforcingCourtCode><enforcingCourtName>enforcing_court_name</enforcingCourtName><fee>9999</fee></mcolResponseDetail></responseDetail><status code=\"Initially Accepted\"/></response></responses></bulkFeedbackResponse></soap:Body></soap:Envelope>";
+        // CHECKSTYLE:ON
+
+        Assert.assertEquals ("XML enriched by BulkFeedbackEnricher is not as expected:", expected, result);
+    }
+
+    /**
      * Test enrichment of single response with the position of the requestId and requestType attributes reversed.
      */
     @Test

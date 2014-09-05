@@ -70,7 +70,21 @@ public class SubmitQueryEnricherTest
         SdtContext.getContext ().setRawOutXml ("<record></record>");
         final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results>" +
-        		"<record></record></ns2:results></ns1:submitQueryResponse>";
+                "<record></record></ns2:results></ns1:submitQueryResponse>";
+        Assert.assertEquals(expected, result);
+
+    }
+    
+    /**
+     * Test success flow where insertion tag has no preceding namespace.
+     */
+    @Test
+    public void testSuccessNoNamespace ()
+    {
+        SdtContext.getContext ().setRawOutXml ("<record></record>");
+        final String result = enricher.enrichXml ("<submitQueryResponse><results/></submitQueryResponse>");
+        final String expected = "<submitQueryResponse><results>" +
+                "<record></record></results></submitQueryResponse>";
         Assert.assertEquals(expected, result);
 
     }

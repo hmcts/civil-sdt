@@ -96,7 +96,107 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find expected response",
-                "<sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"xmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"><mquer:claimNumber>13548968</mquer:claimNumber><mquer:defendantdefendantId=\"1\"><mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate><mquer:responseType>DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail>",
+                "<sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">13548968</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"defendantId=\"1\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail>",
+                result.replaceAll ("\\s+", ""));
+        // CHECKSTYLE:ON
+    }
+
+    /**
+     * Test the method to get target app response xml for submit query response.
+     * 
+     * @throws Exception if there is any IO problems
+     */
+    @Test
+    public void testParseSubmitQueryResponseNoNamespaceSuccess () throws Exception
+    {
+        LOGGER.debug ("test successful scenario for submit query response.");
+
+        genericXmlParser.setEnclosingTag ("targetAppDetail");
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+
+        genericXmlParser.setReplacementNamespaces (replacementNamespaces);
+        // Load xml into SdtContext as if the inbound interceptor had run.
+        final String rawXml =
+                Utilities.getRawXml ("src/unit-test/resources/", "testSubmitQueryResponseNoNamespace.xml");
+
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        // Now call the parser.
+        final String result = this.genericXmlParser.parse ();
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals (
+                "Failed to find expected response",
+                "<mcolDefenceDetail><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">13548968</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"defendantId=\"1\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">DE</mquer:responseType></mquer:defendant></mcolDefenceDetail>",
+                result.replaceAll ("\\s+", ""));
+        // CHECKSTYLE:ON
+    }
+
+    /**
+     * Test and embedded namespace - i.e. namespace defined as an attribute on tag.
+     * 
+     * @throws Exception if there is any IO problems
+     */
+    @Test
+    public void testSubmitQueryResponseEmbeddedNamespace () throws Exception
+    {
+        LOGGER.debug ("test successful scenario for submit query response.");
+
+        genericXmlParser.setEnclosingTag ("targetAppDetail");
+
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+        genericXmlParser.setReplacementNamespaces (replacementNamespaces);
+
+        // Load xml into SdtContext as if the inbound interceptor had run.
+        final String rawXml =
+                Utilities.getRawXml ("src/unit-test/resources/", "testSubmitQueryResponseEmbeddedNamespace.xml");
+
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        // Now call the parser.
+        final String result = this.genericXmlParser.parse ();
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals (
+                "Failed to find expected response",
+                "<ns1:mcolDefenceDetailxmlns:ns1=\"http://ws.sdt.moj.gov.uk/2013/mcol/QueryYyySchema\"someAttribute=\"someValue\"><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchemaMquer\">13548968</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchemaMquer\"defendantId=\"1\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchemaMquer\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchemaMquer\">DE</mquer:responseType></mquer:defendant></ns1:mcolDefenceDetail>",
+                result.replaceAll ("\\s+", ""));
+        // CHECKSTYLE:ON
+    }
+
+    /**
+     * Test and embedded default namespace - i.e. no colon and namespace name.
+     * 
+     * @throws Exception if there is any IO problems
+     */
+    @Test
+    public void testSubmitQueryResponseEmbeddedDefaultNamespace () throws Exception
+    {
+        LOGGER.debug ("test successful scenario for submit query response.");
+
+        genericXmlParser.setEnclosingTag ("targetAppDetail");
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+
+        genericXmlParser.setReplacementNamespaces (replacementNamespaces);
+        // Load xml into SdtContext as if the inbound interceptor had run.
+        final String rawXml =
+                Utilities.getRawXml ("src/unit-test/resources/", "testSubmitQueryResponseEmbeddedDefaultNamespace.xml");
+
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        // Now call the parser.
+        final String result = this.genericXmlParser.parse ();
+
+        // CHECKSTYLE:OFF
+        Assert.assertEquals (
+                "Failed to find expected response",
+                "<mcolDefenceDetailxmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/QueryXxxSchema\"><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">13548968</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"defendantId=\"1\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">DE</mquer:responseType></mquer:defendant></mcolDefenceDetail>",
                 result.replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }
@@ -130,7 +230,7 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find expected response",
-                "<sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"xmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"><mquer:claimNumber>13548968</mquer:claimNumber><mquer:defendantdefendantId=\"1\"><mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate><mquer:responseType>DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail><sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"xmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"><mquer:claimNumber>13548969</mquer:claimNumber><mquer:defendantdefendantId=\"2\"><mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate><mquer:responseType>DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail>",
+                "<sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">13548968</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"defendantId=\"1\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail><sub:mcolDefenceDetailxmlns:sub=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\"><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">13548969</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"defendantId=\"2\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">DE</mquer:responseType></mquer:defendant></sub:mcolDefenceDetail>",
                 result.replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }
@@ -189,7 +289,7 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find expected response",
-                "<ind:mcolResponseDetailxmlns:ind=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\"xmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\"><mresp:claimNumber>21346546</mresp:claimNumber><mresp:issueDate>2001-01-01</mresp:issueDate><mresp:serviceDate>2001-01-01</mresp:serviceDate><mresp:warrantNumber>12345678</mresp:warrantNumber><mresp:enforcingCourtCode>123</mresp:enforcingCourtCode><mresp:enforcingCourtName>CourtCode</mresp:enforcingCourtName><mresp:fee>0</mresp:fee><mresp:judgmentWarrantStatus>tns:additionalStatus</mresp:judgmentWarrantStatus></ind:mcolResponseDetail>",
+                "<ind:mcolResponseDetailxmlns:ind=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\"><mresp:claimNumberxmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">21346546</mresp:claimNumber><mresp:issueDatexmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">2001-01-01</mresp:issueDate><mresp:serviceDatexmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">2001-01-01</mresp:serviceDate><mresp:warrantNumberxmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">12345678</mresp:warrantNumber><mresp:enforcingCourtCodexmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">123</mresp:enforcingCourtCode><mresp:enforcingCourtNamexmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">CourtCode</mresp:enforcingCourtName><mresp:feexmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">0</mresp:fee><mresp:judgmentWarrantStatusxmlns:mresp=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">tns:additionalStatus</mresp:judgmentWarrantStatus></ind:mcolResponseDetail>",
                 result.replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }
@@ -250,7 +350,7 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find expected response",
-                "<ureq:mcolResponseDetailxmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\"xmlns:ureq=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\"><ns4:claimNumber>A4XN5331</ns4:claimNumber><ns4:issueDate>2014-06-26Z</ns4:issueDate><ns4:serviceDate>2014-07-01Z</ns4:serviceDate><ns4:fee>10500</ns4:fee><ns4:judgmentWarrantStatus></ns4:judgmentWarrantStatus></ureq:mcolResponseDetail>",
+                "<ureq:mcolResponseDetailxmlns:ureq=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\"><ns4:claimNumberxmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">A4XN5331</ns4:claimNumber><ns4:issueDatexmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">2014-06-26Z</ns4:issueDate><ns4:serviceDatexmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">2014-07-01Z</ns4:serviceDate><ns4:feexmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\">10500</ns4:fee><ns4:judgmentWarrantStatusxmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema\"></ns4:judgmentWarrantStatus></ureq:mcolResponseDetail>",
                 result.replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }
