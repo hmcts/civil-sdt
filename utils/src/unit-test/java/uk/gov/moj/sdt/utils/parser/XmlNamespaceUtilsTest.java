@@ -355,13 +355,75 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
-        final String xmlFragment =
+        String xmlFragment =
                 "   <!--Comment--><xsi:some-tag some-attribute=\"some value\">"
                         + "       <aop:some-other-tag some-attribute=\"some value\"/>"
                         + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
                         + "   </xsi:some-tag>";
 
         final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
+
+        // Remove namespaces to make test realistic as this is what production code does.
+        xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
+
+        final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
+
+        // CHECKSTYLE:OFF
+        final String expected =
+                "   <!--Comment--><xsi:some-tag xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" some-attribute=\"some value\">"
+                        + "       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\">"
+                        + "       </aop:some-other-tag>" + "   </xsi:some-tag>";
+
+        Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
+
+        // CHECKSTYLE:ON
+
+    }
+
+    /**
+     * Test addition of namespace to xml which already has namespaces present. These must be removed first.
+     */
+    @Test
+    public void testAddNamespacesAlreadyPresent ()
+    {
+
+        // Define text raw xml.
+        final String xml =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+
+                "<beans xmlns=\"http://www.springframework.org/schema/beans\""
+                        + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                        + "xmlns:aop=\"http://www.springframework.org/schema/aop\""
+                        + "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans"
+                        + "       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+                        + "       http://www.springframework.org/schema/aop"
+                        + "       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd\">" +
+
+                        "   <!-- Note all ids should be based on fully qualified names (interfaces where"
+                        + "       this is not ambiguous) and all classes should have an interface. -->" +
+
+                        "   <bean id=\"uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean\" "
+                        + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
+
+                        "   <xsi:some-tag some-attribute=\"some value\">"
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>" + "</beans>";
+
+        final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
+
+        String xmlFragment =
+                "   <!--Comment--><xsi:some-tag   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  "
+                        + "xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\">"
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>";
+
+        final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
+
+        // Remove namespaces to make test realistic as this is what production code does.
+        xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
 
         final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
 
@@ -408,13 +470,16 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
-        final String xmlFragment =
+        String xmlFragment =
                 "       <bul:mcolClaimStatusUpdate > " + "  <cla1:claimNumber>claim123</cla1:claimNumber>"
                         + "<cla1:defendantId>1</cla1:defendantId>"
                         + "<cla1:notificationType>MP</cla1:notificationType>"
                         + "<cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
 
         final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
+
+        // Remove namespaces to make test realistic as this is what production code does.
+        xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
 
         final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
 
@@ -473,6 +538,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
 
+        // Remove namespaces to make test realistic as this is what production code does.
         xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
 
         final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
@@ -533,6 +599,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
 
+        // Remove namespaces to make test realistic as this is what production code does.
         xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
 
         final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);

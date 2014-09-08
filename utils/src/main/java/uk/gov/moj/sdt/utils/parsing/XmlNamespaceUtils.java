@@ -282,7 +282,7 @@ public final class XmlNamespaceUtils
 
         // Build pattern to find all embedded namespace attributes in XML fragment. Note; default namespaces have no
         // colon.
-        final Pattern pattern = Pattern.compile ("xmlns:[\\S]+[\\s]*");
+        final Pattern pattern = Pattern.compile ("[\\s]*xmlns:[\\S]+\"");
         final Matcher matcher = pattern.matcher (xmlFragment);
 
         // Position of XML copied into results so far.

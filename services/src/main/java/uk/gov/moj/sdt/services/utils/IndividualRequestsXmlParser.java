@@ -113,6 +113,10 @@ public class IndividualRequestsXmlParser
             final Map<String, String> matchingNamespaces =
                     XmlNamespaceUtils.findMatchingNamespaces (individualRequestRawXml, allNamespaces);
 
+            // In preparation for adding namespace definitions, remove existing namespace definitions (which may be
+            // different) from XML fragment.
+            individualRequestRawXml = XmlNamespaceUtils.removeEmbeddedNamespaces (individualRequestRawXml);
+
             // Embed namespaces within fragment
             individualRequestRawXml = XmlNamespaceUtils.addNamespaces (individualRequestRawXml, matchingNamespaces);
 
