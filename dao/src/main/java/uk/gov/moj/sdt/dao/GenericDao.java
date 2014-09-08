@@ -318,7 +318,7 @@ public class GenericDao implements IGenericDao
         final Session session = this.getSessionFactory ().getCurrentSession ();
         final int maxBatchSize = 20;
 
-        int i = 0;
+        int i = 1;
         for (Object domainObject : domainObjectList)
         {
             session.saveOrUpdate (domainObject);
