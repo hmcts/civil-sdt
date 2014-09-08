@@ -385,7 +385,7 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
      * Test addition of namespace to xml which already has namespaces present. These must be removed first.
      */
     @Test
-    public void testAddNamespacesAlreadyPresent ()
+    public void testAddNamespacesAlreadyPresentNoSpaces ()
     {
 
         // Define text raw xml.
@@ -414,9 +414,8 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
 
         String xmlFragment =
-                "   <!--Comment--><xsi:some-tag   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  "
-                        + "xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                "   <!--Comment--><xsi:some-tag   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+                        + "<aop:some-other-tag some-attribute=\"some value\"/>"
                         + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
                         + "   </xsi:some-tag>";
 
@@ -429,8 +428,8 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         // CHECKSTYLE:OFF
         final String expected =
-                "   <!--Comment--><xsi:some-tag xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" some-attribute=\"some value\">"
-                        + "       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\"/>"
+                "   <!--Comment--><xsi:some-tag xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+                        + "<aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\"/>"
                         + "       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\">"
                         + "       </aop:some-other-tag>" + "   </xsi:some-tag>";
 
