@@ -87,7 +87,7 @@ public class GenericXmlParser
 
         // Build search pattern for extraction.
         final Pattern pattern =
-                Pattern.compile ("<[\\S:&&[^>/]]*?" + getEnclosingTag () + "(.*?)>(.*?)</[\\S:&&[^>/]]*?" +
+                Pattern.compile ("<[\\S:&&[^!>/]]*?" + getEnclosingTag () + "(.*?)>(.*?)</[\\S:&&[^!>/]]*?" +
                         getEnclosingTag () + ">");
         final Matcher matcher = pattern.matcher (rawXml);
 

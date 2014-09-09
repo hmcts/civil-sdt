@@ -89,8 +89,8 @@ public class IndividualRequestsXmlParser
         // Build a search pattern with this request id. Allow for any order of requestId
         // attributes.
         final Pattern pattern =
-                Pattern.compile ("<[\\S:&&[^>/]]*?request[ \\w\"=]*requestId=\"([\\w-]+)\"[ \\w\"=]*>(.*?)"
-                        + "</[\\S:&&[^>/]]*?request>");
+                Pattern.compile ("<[\\S:&&[^!>/]]*?request[ \\w\"=]*requestId=\"([\\w-]+)\"[ \\w\"=]*>(.*?)"
+                        + "</[\\S:&&[^!>/]]*?request>");
 
         final Matcher matcher = pattern.matcher (rawXml);
 

@@ -98,8 +98,8 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             // attributes. Allow any characters in namespace prefix except > and / to void match on previous tag or end
             // tags.
             Pattern pattern =
-                    Pattern.compile ("(<[\\S:&&[^>/]]*?response[ \\w\"=]*?requestId=\"([\\w-]+)\"[ \\w\"=]*>)\\s*"
-                            + "<([\\S:&&[^>/]]*?)(responseDetail)/>\\s*(<[\\S:&&[^>/]]*?status)");
+                    Pattern.compile ("(<[\\S:&&[^!>/]]*?response[ \\w\"=]*?requestId=\"([\\w-]+)\"[ \\w\"=]*>)\\s*"
+                            + "<([\\S:&&[^!>/]]*?)(responseDetail)/>\\s*(<[\\S:&&[^!>/]]*?status)");
 
             // Match it against the result of all previous match replacements.
             Matcher matcher = pattern.matcher (newXml);
@@ -182,8 +182,8 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
 
             // Now check that there are no responses without case management specific content inserted.
             pattern =
-                    Pattern.compile ("<[\\S:&&[^>/]]*?response[ \\w\"=]*?requestId=\"[ \\w]*?\">\\s*<[\\S:&&[^>/]]*?"
-                            + "responseDetail/>\\s*<[\\S:&&[^>/]]*?status code=\"([ \\w]+)\"");
+                    Pattern.compile ("<[\\S:&&[^!>/]]*?response[ \\w\"=]*?requestId=\"[ \\w]*?\">\\s*<[\\S:&&[^!>/]]*?"
+                            + "responseDetail/>\\s*<[\\S:&&[^!>/]]*?status code=\"([ \\w]+)\"");
             matcher = pattern.matcher (newXml);
             if (matcher.find ())
             {

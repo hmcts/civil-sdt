@@ -90,6 +90,37 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
     }
 
     /**
+     * Test the extraction of single namespace values with embedded comments in XML.
+     */
+    @Test
+    public void testComments ()
+    {
+        // Define text raw xml.
+        final String xml =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+
+                "<beans xmlns=\"http://www.springframework.org/schema/beans\""
+                        + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                        + "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans"
+                        + "       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+                        + "       http://www.springframework.org/schema/aop"
+                        + "       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd\">" +
+
+                        "   <!-- Note all ids should be based on fully qualified names (interfaces where"
+                        + "       this is not ambiguous) and all classes should have an interface. -->" +
+
+                        "   <bean id=\"uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean\" "
+                        + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
+
+                        "</beans>";
+
+        final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces (xml, null);
+        Assert.assertEquals ("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get ("xsi"));
+        Assert.assertEquals ("Incorrect number of namespaces", map.size (), 1);
+    }
+
+    /**
      * Test the extraction of multiple namespace values.
      */
     @Test
@@ -118,42 +149,6 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces (xml, null);
         Assert.assertEquals ("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
                 map.get ("xsi"));
-        Assert.assertEquals ("Missing namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
-                map.get ("aop"));
-        Assert.assertEquals ("Incorrect number of namespaces", map.size (), 2);
-    }
-
-    /**
-     * Test the extraction of multiple namespace values alongwith replacement of one namespace.
-     */
-    @Test
-    public void testMultipleNamespaceWithReplacement ()
-    {
-        // Define text raw xml.
-        final String xml =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-
-                "<beans xmlns=\"http://www.springframework.org/schema/beans\""
-                        + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                        + "xmlns:aop=\"http://www.springframework.org/schema/aop\""
-                        + "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans"
-                        + "       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
-                        + "       http://www.springframework.org/schema/aop"
-                        + "       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd\">" +
-
-                        "   <!-- Note all ids should be based on fully qualified names (interfaces where"
-                        + "       this is not ambiguous) and all classes should have an interface. -->" +
-
-                        "   <bean id=\"uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean\" "
-                        + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
-
-                        "</beans>";
-
-        final Map<String, String> replacements = new HashMap<String, String> ();
-        replacements.put ("http://www.w3.org/2001/XMLSchema-instance", "http://replaced/value");
-
-        final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces (xml, replacements);
-        Assert.assertEquals ("Missing namespace", "xmlns:xsi=\"http://replaced/value\"", map.get ("xsi"));
         Assert.assertEquals ("Missing namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
                 map.get ("aop"));
         Assert.assertEquals ("Incorrect number of namespaces", map.size (), 2);
@@ -240,6 +235,54 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                         + "       <aop:some-other-tag some-attribute=\"some value\"/>"
                         + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
                         + "   </xsi:some-tag>", allNamespaces);
+
+        Assert.assertEquals ("Missing fragment namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get ("xsi"));
+        Assert.assertEquals ("Missing fragment namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
+                map.get ("aop"));
+        Assert.assertEquals ("Incorrect number of namespaces matching fragment", map.size (), 2);
+    }
+
+    /**
+     * Test the application of multiple namespaces to xml fragment with comments containing colons which look like
+     * namespaces.
+     */
+    @Test
+    public void testCommentsWithColons ()
+    {
+        // Define text raw xml.
+        final String xml =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+
+                "<beans xmlns=\"http://www.springframework.org/schema/beans\""
+                        + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                        + "xmlns:aop=\"http://www.springframework.org/schema/aop\""
+                        + "xmlns:abc=\"http://www.springframework.org/schema/abc\""
+                        + "    xsi:schemaLocation=\"http://www.springframework.org/schema/beans"
+                        + "       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+                        + "       http://www.springframework.org/schema/aop"
+                        + "       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd\">"
+                        + "       http://www.springframework.org/schema/abc"
+                        + "       http://www.springframework.org/schema/abc/spring-abc-2.5.xsd\">"
+
+                        + "   <!-- Note all ids should be based on fully qualified names (interfaces where"
+                        + "       this is not ambiguous) and all classes should have an interface. -->" +
+
+                        "   <bean id=\"uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean\" "
+                        + "class=\"uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean\" />" +
+
+                        "   <xsi:some-tag some-attribute=\"some value\">"
+                        + "       <aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>"
+                        + "   </xsi:some-tag>" + "</beans>";
+
+        final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, null);
+
+        final Map<String, String> map =
+                XmlNamespaceUtils.findMatchingNamespaces ("   <xsi:some-tag some-attribute=\"some value\">"
+                        + "       <!--Optional:--><aop:some-other-tag some-attribute=\"some value\"/>"
+                        + "<!--Optional:--><aop:some-other-tag some-attribute=\"some value\">"
+                        + "       </aop:some-other-tag>" + "   </xsi:some-tag>", allNamespaces);
 
         Assert.assertEquals ("Missing fragment namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
                 map.get ("xsi"));

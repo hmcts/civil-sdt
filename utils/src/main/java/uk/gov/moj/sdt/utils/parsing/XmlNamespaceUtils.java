@@ -105,7 +105,7 @@ public final class XmlNamespaceUtils
         final Map<String, String> namespaces = new HashMap<String, String> ();
 
         // Build a search pattern to find all namespaces.
-        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^>/]]*?)=\".*?\"");
+        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^!>/]]*?)=\".*?\"");
 
         final Matcher matcher = pattern.matcher (rawXml);
 
@@ -154,7 +154,7 @@ public final class XmlNamespaceUtils
         final Map<String, String> matchingNamespaces = new HashMap<String, String> ();
 
         // Build a search pattern to find all start tag namespaces used in this xml fragment.
-        final Pattern pattern = Pattern.compile ("<([\\S:&&[^>/]]+?):");
+        final Pattern pattern = Pattern.compile ("<([\\S:&&[^!>/]]+?):");
 
         final Matcher matcher = pattern.matcher (xmlFragment);
 
@@ -215,7 +215,7 @@ public final class XmlNamespaceUtils
         int copyPosition = 0;
 
         // Look for all tags with any namespace prefix (excluding any attributes).
-        final Pattern pattern = Pattern.compile ("<([\\S&&[^>/]]+?):([\\w-]+)");
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]+?):([\\w-]+)");
         final Matcher matcher = pattern.matcher (xmlFragment);
         while (matcher.find ())
         {
