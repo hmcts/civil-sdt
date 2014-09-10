@@ -49,14 +49,14 @@ import org.slf4j.LoggerFactory;
 public final class XmlNamespaceUtils
 {
     /**
+     * key to default namespace.
+     */
+    public static final String DEFAULT_NAMESPACE = "default";
+
+    /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (XmlNamespaceUtils.class);
-
-    /**
-     * key to default namespace.
-     */
-    private static final String DEFAULT_NAMESPACE = "default";
 
     /**
      * No-args constructor.

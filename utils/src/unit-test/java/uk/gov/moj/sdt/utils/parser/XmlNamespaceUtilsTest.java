@@ -86,7 +86,9 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces (xml, null);
         Assert.assertEquals ("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
                 map.get ("xsi"));
-        Assert.assertEquals ("Incorrect number of namespaces", map.size (), 1);
+        Assert.assertEquals ("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get (XmlNamespaceUtils.DEFAULT_NAMESPACE));
+        Assert.assertEquals ("Incorrect number of namespaces", 2, map.size ());
     }
 
     /**
@@ -117,7 +119,9 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
         final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces (xml, null);
         Assert.assertEquals ("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
                 map.get ("xsi"));
-        Assert.assertEquals ("Incorrect number of namespaces", map.size (), 1);
+        Assert.assertEquals ("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get (XmlNamespaceUtils.DEFAULT_NAMESPACE));
+        Assert.assertEquals ("Incorrect number of namespaces", 2, map.size ());
     }
 
     /**
@@ -151,7 +155,9 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                 map.get ("xsi"));
         Assert.assertEquals ("Missing namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
                 map.get ("aop"));
-        Assert.assertEquals ("Incorrect number of namespaces", map.size (), 2);
+        Assert.assertEquals ("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get (XmlNamespaceUtils.DEFAULT_NAMESPACE));
+        Assert.assertEquals ("Incorrect number of namespaces", 3, map.size ());
     }
 
     /**
@@ -193,7 +199,9 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
 
         Assert.assertEquals ("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
                 map.get ("xsi"));
-        Assert.assertEquals ("Incorrect number of namespaces matching fragment", map.size (), 1);
+        Assert.assertEquals ("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get (XmlNamespaceUtils.DEFAULT_NAMESPACE));
+        Assert.assertEquals ("Incorrect number of namespaces matching fragment", 2, map.size ());
     }
 
     /**
@@ -240,7 +248,9 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                 map.get ("xsi"));
         Assert.assertEquals ("Missing fragment namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
                 map.get ("aop"));
-        Assert.assertEquals ("Incorrect number of namespaces matching fragment", map.size (), 2);
+        Assert.assertEquals ("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get (XmlNamespaceUtils.DEFAULT_NAMESPACE));
+        Assert.assertEquals ("Incorrect number of namespaces matching fragment", 3, map.size ());
     }
 
     /**
@@ -288,7 +298,9 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
                 map.get ("xsi"));
         Assert.assertEquals ("Missing fragment namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
                 map.get ("aop"));
-        Assert.assertEquals ("Incorrect number of namespaces matching fragment", map.size (), 2);
+        Assert.assertEquals ("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get (XmlNamespaceUtils.DEFAULT_NAMESPACE));
+        Assert.assertEquals ("Incorrect number of namespaces matching fragment", 3, map.size ());
     }
 
     /**

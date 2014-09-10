@@ -113,8 +113,8 @@ public class GenericXmlParserTest
 
         genericXmlParser.setEnclosingTag ("targetAppDetail");
         final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
-        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema",
-                "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema");
 
         genericXmlParser.setReplacementNamespaces (replacementNamespaces);
         // Load xml into SdtContext as if the inbound interceptor had run.
@@ -129,7 +129,7 @@ public class GenericXmlParserTest
         // CHECKSTYLE:OFF
         Assert.assertEquals (
                 "Failed to find expected response",
-                "<mcolDefenceDetail><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">13548968</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"defendantId=\"1\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">DE</mquer:responseType></mquer:defendant></mcolDefenceDetail>",
+                "<mcolDefenceDetailxmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema\"><mquer:claimNumberxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">13548968</mquer:claimNumber><mquer:defendantxmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"defendantId=\"1\"><mquer:filedDatexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">2001-12-31T12:00:00</mquer:filedDate><mquer:responseTypexmlns:mquer=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">DE</mquer:responseType></mquer:defendant></mcolDefenceDetail>",
                 result.replaceAll ("\\s+", ""));
         // CHECKSTYLE:ON
     }
