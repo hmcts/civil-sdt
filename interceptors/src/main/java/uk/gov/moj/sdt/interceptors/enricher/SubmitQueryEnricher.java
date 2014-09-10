@@ -75,6 +75,10 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
             String replacementXml = SdtContext.getContext ().getRawOutXml ();
 
             // Build search pattern for insertion point.
+            //
+            // Search for:
+            // optional tag prefix (excluding comments, end tag, and other tags)
+            // insertion tag (without attributes)
             final Pattern pattern = Pattern.compile ("<[\\S:&&[^!>/]]*?" + getInsertionTag () + "/>");
             final Matcher matcher = pattern.matcher (newXml);
 

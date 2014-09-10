@@ -279,6 +279,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
      */
     private String removeVariantText (final String xml, final String tag)
     {
+        // Remove tag and tag contents with optional namespace prefix.
         final Pattern pattern = Pattern.compile ("(<[\\S:&&[^!>/]]*?" + tag + ">).*(</[\\S:&&[^!>/]]*?" + tag + ">)");
 
         // Match it against the result of all previous match replacements.

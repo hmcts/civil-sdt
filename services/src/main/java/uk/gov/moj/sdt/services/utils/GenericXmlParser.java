@@ -86,6 +86,11 @@ public class GenericXmlParser
                 XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);
 
         // Build search pattern for extraction.
+        //
+        // Search for:
+        // optional namespace prefix and start tag enclosing XML to be extracted and any attributes
+        // enclosed XML
+        // optional namespace prefix and end tag enclosing XML to be extracted and any attributes
         final Pattern pattern =
                 Pattern.compile ("<[\\S:&&[^!>/]]*?" + getEnclosingTag () + "(.*?)>(.*?)</[\\S:&&[^!>/]]*?" +
                         getEnclosingTag () + ">");

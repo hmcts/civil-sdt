@@ -54,6 +54,11 @@ public final class XmlNamespaceUtils
     private static final Logger LOGGER = LoggerFactory.getLogger (XmlNamespaceUtils.class);
 
     /**
+     * key to default namespace.
+     */
+    private static final String DEFAULT_NAMESPACE = "default";
+
+    /**
      * No-args constructor.
      */
     private XmlNamespaceUtils ()
@@ -102,10 +107,38 @@ public final class XmlNamespaceUtils
     public static Map<String, String> extractAllNamespaces (final String rawXml,
                                                             final Map<String, String> replacementNamespaces)
     {
-        final Map<String, String> namespaces = new HashMap<String, String> ();
+        final Map<String, String> extractedNamespaces = new HashMap<String, String> ();
 
-        // Build a search pattern to find all namespaces.
-        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^!>/]]*?)=\".*?\"");
+        // Get all namespaces with prefixes.
+        extractAllPrefixNamespaces (rawXml, extractedNamespaces, replacementNamespaces);
+
+        // Get the toplevel default namespace if it exists.
+        extractDefaultNamespaces (rawXml, extractedNamespaces, replacementNamespaces);
+
+        return extractedNamespaces;
+    }
+
+    /**
+     * Extract namespaces out of a piece of raw XML which have a prefix. Note that we find these both in the XML header,
+     * and as embedded namespace definition attributes. Note that we deliberately do not find any embedded (attribute
+     * style) default namespaces, since this is handled by a separate method.
+     * 
+     * @param rawXml raw xml.
+     * @param extractedNamespaces map containing extracted namespaces.
+     * @param replacementNamespaces map containing replacement namespaces.
+     */
+    private static void extractAllPrefixNamespaces (final String rawXml, final Map<String, String> extractedNamespaces,
+                                                    final Map<String, String> replacementNamespaces)
+    {
+        // Build a search pattern to find all prefixed namespaces.
+        //
+        // Search for:
+        // non default namespace definition prefix
+        // url
+        //
+        // Capture:
+        // namespace prefix
+        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^!>/]]*?)=[\"\'].*?[\"\']");
 
         final Matcher matcher = pattern.matcher (rawXml);
 
@@ -117,7 +150,9 @@ public final class XmlNamespaceUtils
 
             if (replacementNamespaces != null)
             {
-                // Replace namespace value if mapping found in replacement namespaces map.
+                // Replace all namespaces matching entries in replacementNamespaces. This 'translation' is necessary
+                // because the namespaces required for target application messages are not present in the incoming SDT
+                // messages, but since an equivalent of them is present, it is convenient to do this translation.
                 final Set<String> keys = replacementNamespaces.keySet ();
                 for (String key : keys)
                 {
@@ -133,10 +168,73 @@ public final class XmlNamespaceUtils
                 LOGGER.debug ("Extracting namespace with key [" + namespaceKey + "], value [" + namespaceValue + "]");
             }
 
-            namespaces.put (namespaceKey, namespaceValue);
+            extractedNamespaces.put (namespaceKey, namespaceValue);
         }
 
-        return namespaces;
+        return;
+    }
+
+    /**
+     * Extract the single default namespace in the soap envelope since this is needed for tags which have no prefix when
+     * building XML to be sent to the target application. When the request is sent to the target application SOAP does
+     * not add a default namespace if one is not present in the WSDL, and therefore all tags lacking a prefix namespace
+     * which reside in the non-generic target application section need to have the default namespace added explicitly.
+     * This is also necessary because the replacement may need to translate this default namespace and only works if it
+     * is explicitly present on the tag. Default namespaces are those with no namespace name in their definition, e.g.
+     * xmlns="<url>".
+     * 
+     * @param rawXml raw xml.
+     * @param extractedNamespaces map containing extracted namespaces.
+     * @param replacementNamespaces map containing replacement namespaces.
+     */
+    private static void extractDefaultNamespaces (final String rawXml, final Map<String, String> extractedNamespaces,
+                                                  final Map<String, String> replacementNamespaces)
+    {
+        // Find a tag with a default namespace definition attribute, and all nested tags within it which are in scope.
+        //
+        // Search for:
+        // optional name space and some tag name
+        // any attributes before the end of the start tag
+        // an embedded default namespace
+        //
+        // Capture:
+        // prefix and tag name
+        // namespace definition
+        final Pattern pattern =
+        // Pattern.compile ("<([\\S&&[^!>/]]*?[\\w-]+)[^>]*?xmlns=[\"\'].*?[\"\'][^>]*?>(.*?)</\\1>");
+                Pattern.compile ("<([\\S&&[^!>/]]*?[\\w-]+)[^>]*?(xmlns=[\"\'][\\S&&[^>]]*?[\"\'])");
+
+        final Matcher matcher = pattern.matcher (rawXml);
+
+        if (matcher.find ())
+        {
+            // Capture the raw XML associated with this request.
+            final String tagName = matcher.group (1);
+            String namespaceValue = matcher.group (2);
+
+            if (replacementNamespaces != null)
+            {
+                // Replace namespace value if mapping found in replacement namespaces map.
+                final Set<String> keys = replacementNamespaces.keySet ();
+                for (String key : keys)
+                {
+                    if (namespaceValue.contains (key))
+                    {
+                        namespaceValue = "xmlns=\"" + replacementNamespaces.get (key) + "\"";
+                    }
+                }
+            }
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Extracting default namespace from tag name [" + tagName + "], value [" + namespaceValue +
+                        "]");
+            }
+
+            extractedNamespaces.put (DEFAULT_NAMESPACE, namespaceValue);
+        }
+
+        return;
     }
 
     /**
@@ -154,7 +252,13 @@ public final class XmlNamespaceUtils
         final Map<String, String> matchingNamespaces = new HashMap<String, String> ();
 
         // Build a search pattern to find all start tag namespaces used in this xml fragment.
-        final Pattern pattern = Pattern.compile ("<([\\S:&&[^!>/]]+?):");
+        //
+        // Search for:
+        // Compulsory namespace prefix, excluding comments, end tag and other tags
+        //
+        // Capture:
+        // namespace prefix
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]+?):");
 
         final Matcher matcher = pattern.matcher (xmlFragment);
 
@@ -190,6 +294,13 @@ public final class XmlNamespaceUtils
             LOGGER.debug ("Found matching namespaces for fragment [" + xmlFragment + "]:" + matchingNamespaces);
         }
 
+        // Always treat default namespace as a match
+        if (allNamespaces.containsKey (DEFAULT_NAMESPACE))
+        {
+            // Copy namespace to the set of matching namespaces for this fragment.
+            matchingNamespaces.put (DEFAULT_NAMESPACE, allNamespaces.get (DEFAULT_NAMESPACE));
+        }
+
         return matchingNamespaces;
     }
 
@@ -203,9 +314,28 @@ public final class XmlNamespaceUtils
      */
     public static String addNamespaces (final String xmlFragment, final Map<String, String> matchingNamespaces)
     {
+        // Add embedded namespace to all tags with namespace prefix.
+        String generatedXml = addPrefixNamespaces (xmlFragment, matchingNamespaces);
+
+        // Add default namespace to all tags with no namespace prefix and no default namespace.
+        generatedXml = addDefaultNamespaces (generatedXml, matchingNamespaces);
+
+        return generatedXml;
+    }
+
+    /**
+     * Adds prefix namespaces to xml fragment. Assume that any embedded namespace definitions have been removed before
+     * this method is called. Corresponding embedded namespaces are added to each tag with a namespace prefix.
+     * 
+     * @param xmlFragment xml to be decorated.
+     * @param matchingNamespaces namespaces to be added.
+     * @return xml with namespace
+     */
+    private static String addPrefixNamespaces (final String xmlFragment, final Map<String, String> matchingNamespaces)
+    {
         if (LOGGER.isDebugEnabled ())
         {
-            LOGGER.debug ("Adding namespaces to fragment [" + xmlFragment + "]");
+            LOGGER.debug ("Adding prefix namespaces to fragment [" + xmlFragment + "]");
         }
 
         // Buffer for accumulating results.
@@ -215,7 +345,14 @@ public final class XmlNamespaceUtils
         int copyPosition = 0;
 
         // Look for all tags with any namespace prefix (excluding any attributes).
-        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]+?):([\\w-]+)");
+        //
+        // Search for:
+        // compulsory namespace prefix, excluding comments, end tag and other tags
+        // tag name
+        //
+        // Capture:
+        // namespace prefix
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]+?):[\\w-]+");
         final Matcher matcher = pattern.matcher (xmlFragment);
         while (matcher.find ())
         {
@@ -261,6 +398,88 @@ public final class XmlNamespaceUtils
     }
 
     /**
+     * Adds default namespace to xml fragment. Assume that any embedded namespace definitions have been removed before
+     * this method is called. Embedded default namespaces are added to each tag with no namespace prefix and no existing
+     * default namesace definition.
+     * 
+     * @param xmlFragment xml to be decorated.
+     * @param matchingNamespaces namespaces to be added.
+     * @return xml with embedded default namespace
+     */
+    private static String addDefaultNamespaces (final String xmlFragment, final Map<String, String> matchingNamespaces)
+    {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Adding default namespaces to fragment [" + xmlFragment + "]");
+        }
+
+        // Buffer for accumulating results.
+        final StringBuilder result = new StringBuilder ();
+
+        // Point up to which text has been copied so far.
+        int copyPosition = 0;
+
+        // Look for all tags without any namespace prefix and without any default namespace definition.
+        //
+        // Search for:
+        // tag name without namespace prefix
+        // optional tag attributes
+        //
+        // Capture:
+        // tag name
+        // tag attributes
+        final Pattern pattern = Pattern.compile ("<([\\w-]+)[\\s]*?([^:>]*?)>");
+        final Matcher matcher = pattern.matcher (xmlFragment);
+        while (matcher.find ())
+        {
+            // Ignore match if there is a default namespace definition in the tag.
+            if (matcher.group (2).contains ("xmlns="))
+            {
+                continue;
+            }
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+            }
+
+            // Find if there is any uncopied text before the start of the match.
+            final int start = matcher.start ();
+            if (start > copyPosition)
+            {
+                // Some uncopied text precedes the start of the match point - copy it to results.
+                result.append (xmlFragment.substring (copyPosition, start));
+            }
+
+            // Copy the match.
+            result.append ("<" + matcher.group (1));
+
+            // Append the default namespace.
+            result.append (" " + matchingNamespaces.get (DEFAULT_NAMESPACE));
+
+            // Copy any attributes.
+            result.append (matcher.group (2) + ">");
+
+            // Update position to take account of copy of matched substring.
+            copyPosition = matcher.end ();
+        }
+
+        // Copy any remaining text not yet copied from original XML.
+        if (copyPosition < xmlFragment.length ())
+        {
+            // Some uncopied text follows the end of the last match point - copy it to results.
+            result.append (xmlFragment.substring (copyPosition));
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Enhanced fragment [" + result.toString () + "]");
+        }
+
+        return result.toString ();
+    }
+
+    /**
      * Removes all embedded namespaces so that they can be re-added. Unless they are removed, it is difficult to
      * distinguish them from other element attributes when adding embedded namespaces again (which is required before
      * sending to target application to keep XSD checking happy). Note: do not remove default namespaces (which have no
@@ -282,7 +501,10 @@ public final class XmlNamespaceUtils
 
         // Build pattern to find all embedded namespace attributes in XML fragment. Note; default namespaces have no
         // colon.
-        final Pattern pattern = Pattern.compile ("[\\s]*xmlns:[\\S]+\"");
+        //
+        // Search for:
+        // non default namespace definition
+        final Pattern pattern = Pattern.compile ("[\\s]*xmlns:[\\S]+[\"\']");
         final Matcher matcher = pattern.matcher (xmlFragment);
 
         // Position of XML copied into results so far.

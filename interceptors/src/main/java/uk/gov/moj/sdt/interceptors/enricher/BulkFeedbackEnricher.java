@@ -94,11 +94,26 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             // Current position in rawXml to copy from.
             int rawXmlPos = 0;
 
-            // Build a search pattern with this request id. Allow for any order of requestId and requestType
-            // attributes. Allow any characters in namespace prefix except > and / to void match on previous tag or end
-            // tags.
+            // Build a search pattern to iterate over all responses. Allow for any order of requestId and requestType
+            // attributes.
+            // Search for:
+            // optional namespace prefix (excluding comments (!), other tags (>), matching end tags (/))
+            // and response tag
+            // any attributes
+            // requestId attribute and its value in single or double quotes
+            // any attributes
+            // optional namespace prefix and the responseDetail start tag
+            // optional namespace prefix and the status start tag
+            //
+            // Capture: 
+            // entire response start tag (1), 
+            // request id value (2), 
+            // responseDetail namespace prefix (3),
+            // responseDetail (4)
+            // status namespace plus opening tag (without attributes) (5)
             Pattern pattern =
-                    Pattern.compile ("(<[\\S:&&[^!>/]]*?response[ \\w\"=]*?requestId=\"([\\w-]+)\"[ \\w\"=]*>)\\s*"
+                    Pattern.compile ("(<[\\S:&&[^!>/]]*?response[ \\w\"\'=]*?"
+                            + "requestId=[\"\']([\\w-]+)[\"\'][ \\w\"\'=]*>)\\s*"
                             + "<([\\S:&&[^!>/]]*?)(responseDetail)/>\\s*(<[\\S:&&[^!>/]]*?status)");
 
             // Match it against the result of all previous match replacements.
@@ -181,13 +196,26 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher
             }
 
             // Now check that there are no responses without case management specific content inserted.
+            //
+            // Search for:
+            // optional namespace prefix (excluding comments (!), other tags (>), matching end tags (/))
+            // and response tag
+            // any attributes
+            // requestId attribute and its value in single or double quotes
+            // any attributes
+            // optional namespace prefix and the responseDetail start tag
+            // optional namespace prefix and the status start tag
+            //
+            // Capture:
+            // status code value (1)
             pattern =
-                    Pattern.compile ("<[\\S:&&[^!>/]]*?response[ \\w\"=]*?requestId=\"[ \\w]*?\">\\s*<[\\S:&&[^!>/]]*?"
-                            + "responseDetail/>\\s*<[\\S:&&[^!>/]]*?status code=\"([ \\w]+)\"");
+                    Pattern.compile ("<[\\S:&&[^!>/]]*?response[ \\w\"\'=]*?"
+                            + "requestId=[\"\'][ \\w]*?[\"\']>\\s*<[\\S:&&[^!>/]]*?"
+                            + "responseDetail/>\\s*<[\\S:&&[^!>/]]*?status code=[\"\']([ \\w]+)[\"\']");
             matcher = pattern.matcher (newXml);
             if (matcher.find ())
             {
-                // Ignore rejected responses which do not need to be enhanced.
+                // Use the captured status code to ignore rejected responses which do not need to be enhanced.
                 if ( !matcher.group (1).equals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()))
                 {
                     // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
