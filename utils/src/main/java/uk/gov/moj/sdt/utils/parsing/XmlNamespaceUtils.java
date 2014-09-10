@@ -113,7 +113,7 @@ public final class XmlNamespaceUtils
         extractAllPrefixNamespaces (rawXml, extractedNamespaces, replacementNamespaces);
 
         // Get the toplevel default namespace if it exists.
-        extractDefaultNamespaces (rawXml, extractedNamespaces, replacementNamespaces);
+        extractDefaultNamespace (rawXml, extractedNamespaces, replacementNamespaces);
 
         return extractedNamespaces;
     }
@@ -187,8 +187,8 @@ public final class XmlNamespaceUtils
      * @param extractedNamespaces map containing extracted namespaces.
      * @param replacementNamespaces map containing replacement namespaces.
      */
-    private static void extractDefaultNamespaces (final String rawXml, final Map<String, String> extractedNamespaces,
-                                                  final Map<String, String> replacementNamespaces)
+    private static void extractDefaultNamespace (final String rawXml, final Map<String, String> extractedNamespaces,
+                                                 final Map<String, String> replacementNamespaces)
     {
         // Find a tag with a default namespace definition attribute, and all nested tags within it which are in scope.
         //
@@ -200,9 +200,7 @@ public final class XmlNamespaceUtils
         // Capture:
         // prefix and tag name
         // namespace definition
-        final Pattern pattern =
-        // Pattern.compile ("<([\\S&&[^!>/]]*?[\\w-]+)[^>]*?xmlns=[\"\'].*?[\"\'][^>]*?>(.*?)</\\1>");
-                Pattern.compile ("<([\\S&&[^!>/]]*?[\\w-]+)[^>]*?(xmlns=[\"\'][\\S&&[^>]]*?[\"\'])");
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]*?[\\w-]+)[^>]*?(xmlns=[\"\'][\\S&&[^>]]*?[\"\'])");
 
         final Matcher matcher = pattern.matcher (rawXml);
 
@@ -235,6 +233,92 @@ public final class XmlNamespaceUtils
         }
 
         return;
+    }
+
+    /**
+     * Translate default namespaces if they match the values in the replacementNamespaces. These must be
+     * left in place since if removed we would lose information and they could not be re-applied.
+     * 
+     * @param xmlFragment xml to act upon.
+     * @param replacementNamespaces map containing replacement namespaces.
+     * @return the translated XML with replaced default namespace values.
+     */
+    public static String translateDefaultNamespaces (final String xmlFragment,
+                                                     final Map<String, String> replacementNamespaces)
+    {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Translating default namespaces for fragment [" + xmlFragment + "]");
+        }
+
+        // Buffer for accumulating results.
+        final StringBuilder result = new StringBuilder ();
+
+        // Point up to which text has been copied so far.
+        int copyPosition = 0;
+
+        // Find a tag with a default namespace definition attribute, and all nested tags within it which are in scope.
+        //
+        // Search for:
+        // optional name space and some tag name
+        // any attributes before the end of the start tag
+        // an embedded default namespace
+        //
+        // Capture:
+        // prefix and tag name
+        // namespace definition
+        final Pattern pattern = Pattern.compile ("xmlns=[\"\'][\\S&&[^>]]*?[\"\']");
+        final Matcher matcher = pattern.matcher (xmlFragment);
+
+        while (matcher.find ())
+        {
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+            }
+
+            // Find if there is any uncopied text before the start of the match.
+            final int start = matcher.start ();
+            if (start > copyPosition)
+            {
+                // Some uncopied text precedes the start of the match point - copy it to results.
+                result.append (xmlFragment.substring (copyPosition, start));
+            }
+
+            String namespaceValue = matcher.group (0);
+            if (replacementNamespaces != null)
+            {
+                // Replace namespace value if mapping found in replacement namespaces map.
+                final Set<String> keys = replacementNamespaces.keySet ();
+                for (String key : keys)
+                {
+                    if (namespaceValue.contains (key))
+                    {
+                        namespaceValue = "xmlns=\"" + replacementNamespaces.get (key) + "\"";
+                    }
+                }
+            }
+
+            // Copy the match.
+            result.append (namespaceValue);
+
+            // Update position to take account of copy of matched substring.
+            copyPosition = matcher.end ();
+        }
+
+        // Copy any remaining text not yet copied from original XML.
+        if (copyPosition < xmlFragment.length ())
+        {
+            // Some uncopied text follows the end of the last match point - copy it to results.
+            result.append (xmlFragment.substring (copyPosition));
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Enhanced fragment [" + result.toString () + "]");
+        }
+
+        return result.toString ();
     }
 
     /**
@@ -419,7 +503,10 @@ public final class XmlNamespaceUtils
         // Point up to which text has been copied so far.
         int copyPosition = 0;
 
-        // Look for all tags without any namespace prefix and without any default namespace definition.
+        boolean finished = false;
+
+        // Look for top level without any namespace prefix and without any default namespace definition. By adding the
+        // default namespace to this tag, it applies to all that fall within its scope.
         //
         // Search for:
         // tag name without namespace prefix
@@ -428,9 +515,9 @@ public final class XmlNamespaceUtils
         // Capture:
         // tag name
         // tag attributes
-        final Pattern pattern = Pattern.compile ("<([\\w-]+)[\\s]*?([^:>]*?)>");
+        final Pattern pattern = Pattern.compile ("(^[\\s]*?<[\\w-]+)[\\s]*?([^:>]*?)>");
         final Matcher matcher = pattern.matcher (xmlFragment);
-        while (matcher.find ())
+        while (matcher.find () && !finished)
         {
             // Ignore match if there is a default namespace definition in the tag.
             if (matcher.group (2).contains ("xmlns="))
@@ -452,7 +539,7 @@ public final class XmlNamespaceUtils
             }
 
             // Copy the match.
-            result.append ("<" + matcher.group (1));
+            result.append (matcher.group (1));
 
             // Append the default namespace.
             result.append (" " + matchingNamespaces.get (DEFAULT_NAMESPACE));
@@ -462,6 +549,10 @@ public final class XmlNamespaceUtils
 
             // Update position to take account of copy of matched substring.
             copyPosition = matcher.end ();
+
+            // Only look for first match - lower level tags will be covered by this one or else have their own
+            // overriding namespace which we should not interfere with.
+            finished = true;
         }
 
         // Copy any remaining text not yet copied from original XML.

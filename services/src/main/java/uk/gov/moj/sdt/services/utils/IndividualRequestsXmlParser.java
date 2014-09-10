@@ -124,6 +124,10 @@ public class IndividualRequestsXmlParser
             // different) from XML fragment.
             individualRequestRawXml = XmlNamespaceUtils.removeEmbeddedNamespaces (individualRequestRawXml);
 
+            // Translate any embedded default namespaces to their target application equivalent.
+            individualRequestRawXml =
+                    XmlNamespaceUtils.translateDefaultNamespaces (individualRequestRawXml, replacementNamespaces);
+
             // Embed namespaces within fragment
             individualRequestRawXml = XmlNamespaceUtils.addNamespaces (individualRequestRawXml, matchingNamespaces);
 

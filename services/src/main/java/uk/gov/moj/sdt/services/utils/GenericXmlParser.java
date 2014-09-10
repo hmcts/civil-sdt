@@ -113,6 +113,9 @@ public class GenericXmlParser
             // different) from XML fragment.
             xmlResult = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlResult);
 
+            // Translate any embedded default namespaces to their target application equivalent.
+            xmlResult = XmlNamespaceUtils.translateDefaultNamespaces (xmlResult, replacementNamespaces);
+
             xmlResult = XmlNamespaceUtils.addNamespaces (xmlResult, matchingNamespaces);
 
             LOGGER.debug ("result XML with namespaces[" + xmlResult + "]");
