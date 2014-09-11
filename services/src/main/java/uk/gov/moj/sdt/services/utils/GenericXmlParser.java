@@ -81,6 +81,9 @@ public class GenericXmlParser
         rawXml = rawXml.replace ('\n', ' ');
         rawXml = rawXml.replace ('\r', ' ');
 
+        // Get rid of comments to simplify subsequent processing.
+        rawXml = XmlNamespaceUtils.removeComments (rawXml);
+
         // Retrieve all namespaces
         final Map<String, String> allNamespaces =
                 XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);

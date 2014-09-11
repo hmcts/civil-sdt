@@ -138,7 +138,7 @@ public final class XmlNamespaceUtils
         //
         // Capture:
         // namespace prefix
-        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^!>/]]*?)=[\"\'].*?[\"\']");
+        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^>/]]*?)=[\"\'].*?[\"\']");
 
         final Matcher matcher = pattern.matcher (rawXml);
 
@@ -200,7 +200,7 @@ public final class XmlNamespaceUtils
         // Capture:
         // prefix and tag name
         // namespace definition
-        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]*?[\\w-]+)[^>]*?(xmlns=[\"\'][\\S&&[^>]]*?[\"\'])");
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^>/]]*?[\\w-]+)[^>]*?(xmlns=[\"\'][\\S&&[^>]]*?[\"\'])");
 
         final Matcher matcher = pattern.matcher (rawXml);
 
@@ -342,7 +342,7 @@ public final class XmlNamespaceUtils
         //
         // Capture:
         // namespace prefix
-        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]+?):");
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^>/]]+?):");
 
         final Matcher matcher = pattern.matcher (xmlFragment);
 
@@ -390,7 +390,7 @@ public final class XmlNamespaceUtils
 
     /**
      * Adds namespaces to xml fragment. Assume that any embedded namespace definitions have been removed before this
-     * method is called.
+     * method is called. Assume XML comments already removed.
      * 
      * @param xmlFragment xml to be decorated.
      * @param matchingNamespaces namespaces to be added.
@@ -436,7 +436,7 @@ public final class XmlNamespaceUtils
         //
         // Capture:
         // namespace prefix
-        final Pattern pattern = Pattern.compile ("<([\\S&&[^!>/]]+?):[\\w-]+");
+        final Pattern pattern = Pattern.compile ("<([\\S&&[^>/]]+?):[\\w-]+");
         final Matcher matcher = pattern.matcher (xmlFragment);
         while (matcher.find ())
         {
@@ -596,6 +596,67 @@ public final class XmlNamespaceUtils
         // Search for:
         // non default namespace definition
         final Pattern pattern = Pattern.compile ("[\\s]*xmlns:[\\S]+[\"\']");
+        final Matcher matcher = pattern.matcher (xmlFragment);
+
+        // Position of XML copied into results so far.
+        int copyPosition = 0;
+
+        while (matcher.find ())
+        {
+            final int start = matcher.start ();
+            if (start > copyPosition)
+            {
+                // Copy uncopied text preceding start of the match point to results.
+                result.append (xmlFragment.substring (copyPosition, start));
+            }
+
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found matching namespace[" + matcher.group () + "]");
+            }
+
+            // Update position to take account of copy of matched substring.
+            copyPosition = matcher.end ();
+        }
+
+        // Copy any remaining text not yet copied from original XML.
+        if (copyPosition < xmlFragment.length ())
+        {
+            // Some uncopied text follows the end of the last match point - copy it to results.
+            result.append (xmlFragment.substring (copyPosition));
+        }
+
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Cleaned fragment [" + result.toString () + "]");
+        }
+
+        return result.toString ();
+    }
+
+    /**
+     * Removes all XML comments - this simplifies subsequent searches by removing the need to cope with comments in
+     * regular expressions.
+     * 
+     * @param xmlFragment xml to be cleaned.
+     * @return xml without embedded namespaces.
+     */
+    public static String removeComments (final String xmlFragment)
+    {
+        if (LOGGER.isDebugEnabled ())
+        {
+            LOGGER.debug ("Removing comments from fragment [" + xmlFragment + "]");
+        }
+
+        // Buffer for accumulating results.
+        final StringBuilder result = new StringBuilder ();
+
+        // Build pattern to find all embedded namespace attributes in XML fragment. Note; default namespaces have no
+        // colon.
+        //
+        // Search for:
+        // non default namespace definition
+        final Pattern pattern = Pattern.compile ("<!--.*?-->");
         final Matcher matcher = pattern.matcher (xmlFragment);
 
         // Position of XML copied into results so far.

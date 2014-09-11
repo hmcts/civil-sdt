@@ -78,7 +78,10 @@ public class IndividualRequestsXmlParser
         final Iterator<IIndividualRequest> iter = individualRequests.iterator ();
 
         // Match it against the result of all previous match replacements.
-        final String rawXml = SdtContext.getContext ().getRawInXml ();
+        String rawXml = SdtContext.getContext ().getRawInXml ();
+
+        // Get rid of comments to simplify subsequent processing.
+        rawXml = XmlNamespaceUtils.removeComments (rawXml);
 
         // Retrieve all namespaces
         final Map<String, String> allNamespaces =
