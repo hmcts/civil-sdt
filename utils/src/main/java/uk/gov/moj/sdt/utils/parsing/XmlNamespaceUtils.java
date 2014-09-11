@@ -482,9 +482,12 @@ public final class XmlNamespaceUtils
     }
 
     /**
-     * Adds default namespace to xml fragment. Assume that any embedded namespace definitions have been removed before
-     * this method is called. Embedded default namespaces are added to each tag with no namespace prefix and no existing
-     * default namesace definition.
+     * Adds default namespace to xml fragment. An embedded default namespace is added only to the first tag encountered
+     * which is assumed to include all other tags in its scope. By adding the default namespace to this tag, it
+     * applies to all other tags that fall within its scope. Note that the target tag may already have a prefixed
+     * namespace, and the default namespace being added is for the benefit of other tags within its scope. Note that
+     * this may be added needlessly since we do not search any further than the first tag and do not know if there are
+     * any tags which lack prefixes and need the default namespace definition.
      * 
      * @param xmlFragment xml to be decorated.
      * @param matchingNamespaces namespaces to be added.
@@ -497,6 +500,12 @@ public final class XmlNamespaceUtils
             LOGGER.debug ("Adding default namespaces to fragment [" + xmlFragment + "]");
         }
 
+        if ( !matchingNamespaces.containsKey (DEFAULT_NAMESPACE))
+        {
+            // Do not go any further as there is no default namespace to add.
+            return xmlFragment;
+        }
+
         // Buffer for accumulating results.
         final StringBuilder result = new StringBuilder ();
 
@@ -505,21 +514,25 @@ public final class XmlNamespaceUtils
 
         boolean finished = false;
 
-        // Look for top level without any namespace prefix and without any default namespace definition. By adding the
-        // default namespace to this tag, it applies to all that fall within its scope.
+        // Look for top level without default namespace definition. Because we cannot NOT match on a string, we must do
+        // the match and then ignore it if the string is found.
         //
         // Search for:
-        // tag name without namespace prefix
-        // optional tag attributes
+        // possible leading whitespace
+        // tag name with possible namespace prefix
+        // possible white space
+        // optional tag attributes which can include embedded prefixed namespaces
+        // closing tag character
         //
         // Capture:
-        // tag name
+        // tag prefix + name
         // tag attributes
-        final Pattern pattern = Pattern.compile ("(^[\\s]*?<[\\w-]+)[\\s]*?([^:>]*?)>");
+        final Pattern pattern = Pattern.compile ("(^[\\s]*?<[\\S&&[^>]]+)([\\s]*?[^>]*?>)");
         final Matcher matcher = pattern.matcher (xmlFragment);
         while (matcher.find () && !finished)
         {
-            // Ignore match if there is a default namespace definition in the tag.
+            // Ignore match if there is a default namespace definition in the tag already (but not if there is a prefix
+            // namespace definition).
             if (matcher.group (2).contains ("xmlns="))
             {
                 continue;
@@ -545,13 +558,13 @@ public final class XmlNamespaceUtils
             result.append (" " + matchingNamespaces.get (DEFAULT_NAMESPACE));
 
             // Copy any attributes.
-            result.append (matcher.group (2) + ">");
+            result.append (matcher.group (2));
 
             // Update position to take account of copy of matched substring.
             copyPosition = matcher.end ();
 
             // Only look for first match - lower level tags will be covered by this one or else have their own
-            // overriding namespace which we should not interfere with.
+            // overriding namespace which we must not interfere with.
             finished = true;
         }
 
