@@ -686,7 +686,7 @@ public final class XmlNamespaceUtils
 
             if (LOGGER.isDebugEnabled ())
             {
-                LOGGER.debug ("Found matching namespace[" + matcher.group () + "]");
+                LOGGER.debug ("Found matching comment [" + matcher.group () + "]");
             }
 
             // Update position to take account of copy of matched substring.
