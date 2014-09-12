@@ -49,9 +49,12 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.Assert;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
+import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
@@ -65,6 +68,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  */
 public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 {
+    /**
+     * Logger object.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (XmlNamespaceUtils.class);
+
     /**
      * Setup the test.
      */
@@ -214,6 +222,11 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
             actualXml = removeVariantText (actualXml, "sdtBulkReference");
             actualXml = removeVariantText (actualXml, "submittedDate");
             actualXml = removeLineFeeds (actualXml);
+
+            if ( !actualXml.equals (expectedXml))
+            {
+                LOGGER.error ("expected [" + expectedXml + "], actual [" + actualXml + "]");
+            }
 
             // Check xml.
             Assert.assertEquals ("Expected XML [" + resourceName + "] does not match, ", expectedXml, actualXml);
