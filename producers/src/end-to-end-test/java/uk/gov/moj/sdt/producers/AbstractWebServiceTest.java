@@ -83,7 +83,15 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
         JaxbRequestType request = this.getJaxbFromXml (requestClass);
 
         // Call the remote service.
-        JaxbResponseType response = this.callTestWebService (request);
+        JaxbResponseType response;
+        try
+        {
+            response = this.callTestWebService (request);
+        }
+        catch (RuntimeException e)
+        {
+            throw e;
+        }
 
         // Check the response returned by the web service.
         this.checkXmlFromJaxb (response);

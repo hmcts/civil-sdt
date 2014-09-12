@@ -32,8 +32,9 @@
 package uk.gov.moj.sdt.producers;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.ws.soap.SOAPFaultException;
 
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,8 +53,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  */
 @RunWith (SpringJUnit4ClassRunner.class)
 @ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
 public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType>
 {
 
@@ -61,7 +61,6 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
      * Method to call remote submit query endpoint to be tested.
      */
     @Test
-    @Ignore
     public void testValid ()
     {
         this.callWebService (SubmitQueryRequestType.class);
@@ -71,10 +70,17 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
      * Method to call remote submit query endpoint to be tested.
      */
     @Test
-    @Ignore
     public void testErrorResult ()
     {
-        this.callWebService (SubmitQueryRequestType.class);
+        try
+        {
+            this.callWebService (SubmitQueryRequestType.class);
+        }
+        catch (SOAPFaultException e)
+        {
+            Assert.assertTrue ("Unexpected exception message in SOAPFaultException [" + e.getMessage () + "]", e
+                    .getMessage ().contains ("The content of element 'criterion' is not complete"));
+        }
     }
 
     /**
