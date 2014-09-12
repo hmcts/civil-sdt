@@ -30,6 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.in;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
@@ -107,12 +110,15 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
     {
         final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
 
+        // Get the raw XML.
+        final String rawXml = SdtContext.getContext ().getRawInXml ();
+
         // Prepare log message for Hibernate.
         final IServiceRequest serviceRequest = new ServiceRequest ();
-        serviceRequest.setBulkCustomerId (extractBulkCustomerId ());
-        serviceRequest.setRequestPayload (SdtContext.getContext ().getRawInXml ());
+        serviceRequest.setBulkCustomerId (extractBulkCustomerId (rawXml));
+        serviceRequest.setRequestPayload (rawXml);
         serviceRequest.setRequestDateTime (new LocalDateTime ());
-        serviceRequest.setRequestType (extractRequestType ());
+        serviceRequest.setRequestType (extractRequestType (rawXml));
 
         // Get the server Host Name
         final String hostName = ServerHostName.getHostName ();
@@ -129,28 +135,12 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
      * Retrieve the Request Type from the inbound xmlMessage. Assumes inbound message has already been setup by the
      * XmlInboundInterceptor.
      * 
+     * @param xml raw XML from which to extract bulk customer id.
      * @return the request type (for example 'bulkRequest')
      */
-    private String extractRequestType ()
+    private String extractRequestType (final String xml)
     {
-        String requestType = "";
-        final String requestTypePattern = "requestType=\"";
-        final String message = SdtContext.getContext ().getRawInXml ();
-        final int startPos = message.indexOf (requestTypePattern);
-
-        //Ensure that search pattern is found
-        if (startPos > -1)
-        {
-            // the next node contains the request type
-            final String content = message.substring (startPos + requestTypePattern.length ());
-
-            if (content.length () > 0)
-            {
-                final int endPos = content.indexOf ("\"");
-                requestType = content.substring (0, endPos);
-            }
-        }
-        return requestType;
+        return extractNodeAttributeValue ("request", "requestType", xml);
     }
 
     /**
@@ -160,42 +150,102 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
      * Always available as part of a submission
      * </p>
      * 
+     * @param xml raw XML from which to extract bulk customer id.
      * @return the bulk customer id
      */
-    private String extractBulkCustomerId ()
+    private String extractBulkCustomerId (final String xml)
     {
-        return extractValue ("sdtCustomerId");
+        return extractNodeValue ("sdtCustomerId", xml);
     }
 
     /**
-     * Simple method to extract a text value from a String of xml.
+     * Method to extract a text value belonging to a specified node from a string of xml.
      * <p>
-     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses simple String
-     * functionality to locate and extract a String.
+     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses a regular
+     * expression to locate and extract a String.
      * </p>
      * 
-     * @param nodeName The name of an xml node e.g. 'customerId'
+     * @param nodeName the name of an xml node from which to extract value.
+     * @param xml raw XML from which to extract bulk customer id.
      * @return the content of the node or null
      */
-    private String extractValue (final String nodeName)
+    private String extractNodeValue (final String nodeName, final String xml)
     {
-        final String xmlMessage = SdtContext.getContext ().getRawInXml ();
+        String nodeValue = "";
 
-        String nodeContent = "";
-        if (nodeName == null || null == xmlMessage || xmlMessage.length () < nodeName.length ())
+        // Find given tag and extract its value.
+        //
+        // Search for:
+        // optional namespace and given start tag name
+        // any attributes before the end of the start tag
+        // end of start tag
+        // tag value
+        // given end tag
+        // an embedded default namespace
+        //
+        // Capture:
+        // tag value
+        final Pattern pattern =
+                Pattern.compile ("<[\\S&&[^>/]]*?" + nodeName + "[^>]*?>(.*?)</[\\S&&[^>/]]*?" + nodeName);
+        final Matcher matcher = pattern.matcher (xml);
+
+        if (matcher.find ())
         {
-            return "";
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+            }
+
+            // Copy the match.
+            nodeValue = matcher.group (1);
         }
 
-        int startPos = xmlMessage.indexOf (nodeName);
-        if (startPos != -1)
+        return nodeValue;
+    }
+
+    /**
+     * Method to extract an attribute value belonging to a specified node from a string of xml.
+     * <p>
+     * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses a regular
+     * expression to locate and extract a String.
+     * </p>
+     * 
+     * @param nodeName the name of an xml node from which to extract value.
+     * @param attributeName the name of the attribute from which to extract value.
+     * @param xml raw XML from which to extract bulk customer id.
+     * @return the content of the node or null
+     */
+    private String extractNodeAttributeValue (final String nodeName, final String attributeName, final String xml)
+    {
+        String attributeValue = "";
+
+        // Find given node and extract ivalue of named attribute.
+        //
+        // Search for:
+        // optional namespace and given start tag name
+        // any attributes before the end of the start tag
+        // end of start tag
+        // tag value
+        // given end tag
+        // an embedded default namespace
+        //
+        // Capture:
+        // tag value
+        final Pattern pattern =
+                Pattern.compile ("<[\\S&&[^>/]]*?" + nodeName + ".*?" + attributeName + "=[\"\']([^>\"\']*?)[\"\']");
+        final Matcher matcher = pattern.matcher (xml);
+
+        if (matcher.find ())
         {
-            startPos += nodeName.length ();
-            nodeContent = xmlMessage.substring (startPos);
-            final int endPos = nodeContent.indexOf ("<");
-            nodeContent = nodeContent.substring (1, endPos);
+            if (LOGGER.isDebugEnabled ())
+            {
+                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+            }
+
+            // Copy the match.
+            attributeValue = matcher.group (1);
         }
 
-        return nodeContent;
+        return attributeValue;
     }
 }
