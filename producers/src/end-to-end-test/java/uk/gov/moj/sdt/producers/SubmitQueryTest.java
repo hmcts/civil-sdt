@@ -35,6 +35,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -61,6 +62,7 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
      * Method to call remote submit query endpoint to be tested.
      */
     @Test
+    @Ignore
     public void testValid ()
     {
         this.callWebService (SubmitQueryRequestType.class);
