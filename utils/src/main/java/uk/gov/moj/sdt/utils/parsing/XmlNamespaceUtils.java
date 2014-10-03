@@ -134,11 +134,13 @@ public final class XmlNamespaceUtils
         //
         // Search for:
         // non default namespace definition prefix
-        // url
+        // namespace name without '=' character
+        // '=' character
+        // url surrounded by single or double quotes
         //
         // Capture:
         // namespace prefix
-        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^>/]]*?)=[\"\'].*?[\"\']");
+        final Pattern pattern = Pattern.compile ("xmlns:([\\S&&[^=]]*?)=[\"\']\\S*?[\"\']");
 
         final Matcher matcher = pattern.matcher (rawXml);
 
@@ -194,12 +196,12 @@ public final class XmlNamespaceUtils
         //
         // Search for:
         // optional name space and some tag name
-        // any attributes before the end of the start tag
+        // any attributes before the default namespace
         // an embedded default namespace
         //
         // Capture:
         // prefix and tag name
-        // namespace definition
+        // default namespace definition
         final Pattern pattern = Pattern.compile ("<([\\S&&[^>/]]*?[\\w-]+)[^>]*?(xmlns=[\"\'][\\S&&[^>]]*?[\"\'])");
 
         final Matcher matcher = pattern.matcher (rawXml);
@@ -260,13 +262,11 @@ public final class XmlNamespaceUtils
         // Find a tag with a default namespace definition attribute, and all nested tags within it which are in scope.
         //
         // Search for:
-        // optional name space and some tag name
-        // any attributes before the end of the start tag
         // an embedded default namespace
+        // namespace URL surrounded by single or double quotes
         //
         // Capture:
-        // prefix and tag name
-        // namespace definition
+        // entire matching string
         final Pattern pattern = Pattern.compile ("xmlns=[\"\'][\\S&&[^>]]*?[\"\']");
         final Matcher matcher = pattern.matcher (xmlFragment);
 
@@ -338,6 +338,7 @@ public final class XmlNamespaceUtils
         // Build a search pattern to find all start tag namespaces used in this xml fragment.
         //
         // Search for:
+        // Opening brace
         // Compulsory namespace prefix, excluding comments, end tag and other tags
         //
         // Capture:
@@ -515,9 +516,10 @@ public final class XmlNamespaceUtils
         boolean finished = false;
 
         // Look for top level without default namespace definition. Because we cannot NOT match on a string, we must do
-        // the match and then ignore it if the string is found.
+        // the match and then ignore it if the default namespace string is found.
         //
         // Search for:
+        // start of string
         // possible leading whitespace
         // tag name with possible namespace prefix
         // possible white space
@@ -607,8 +609,16 @@ public final class XmlNamespaceUtils
         // colon.
         //
         // Search for:
+        // optional preceding white space
         // non default namespace definition
-        final Pattern pattern = Pattern.compile ("[\\s]*xmlns:[\\S]+[\"\']");
+        // namespace name
+        // equals sign
+        // namespace URL surrounded by single or double quotes
+        //
+        // Capture:
+        // entire matching string
+        final Pattern pattern = Pattern.compile ("[\\s]*xmlns:([\\S&&[^=]]+?)=[\"\'].*?[\"\']");
+        // "[\\s]*xmlns:[\\S][\\S]+[\"\']");
         final Matcher matcher = pattern.matcher (xmlFragment);
 
         // Position of XML copied into results so far.

@@ -1516,6 +1516,194 @@ public class XmlNamespaceUtilsTest extends SdtUnitTestBase
     }
 
     /**
+     * Test handling ofaddition of default namespace when tag already has its own default namespace
+     * definition, and the tag concerned has an apostrophe in the text.
+     */
+    @Test
+    public void testDefaultNamespaceAlreadyPresentWithApostrophe ()
+    {
+        // CHECKSTYLE:OFF
+
+        // Define text raw xml.
+        String xml =
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" "
+                        + "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\""
+                        + "xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\""
+                        + "xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" "
+                        + "xmlns:jud=\"http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema\" "
+                        + "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\" "
+                        + "xmlns:war=\"http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema\">"
+                        + "  "
+                        + "   <soap:Header/>"
+                        + "   <soap:Body>"
+                        + "      <bul:bulkRequest>"
+                        + "         <bul:header>"
+                        + "            <bul:sdtCustomerId>12341515</bul:sdtCustomerId>"
+                        + "            <bul:targetApplicationId>mcol</bul:targetApplicationId>"
+                        + "            <bul:requestCount>1</bul:requestCount>"
+                        + "            <bul:customerReference>S4_11091158</bul:customerReference>"
+                        + "         </bul:header>"
+                        + "         <bul:requests>"
+                        + "            <!--1 to 2000 repetitions:-->"
+                        + "            <bul:request requestType=\"mcolClaim\" "
+                        + "            requestId=\"S4_11091158\">"
+                        + "               <!--You have a CHOICE of the next 5 items at this level-->"
+                        + "               <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\">"
+                        + "               <claimantReference>HOPA99</claimantReference>"
+                        + "                  <claimant>"
+                        + "                     <name>Test Claimant Name</name>"
+                        + "                     <address>"
+                        + "                        <line1>Chaucer House</line1>"
+                        + "                        <line2>The Office Park</line2>"
+                        + "                        <!--Optional:-->"
+                        + "                        <line3>Leatherhead</line3>"
+                        + "                        <!--Optional:-->"
+                        + "                        <line4>Surrey</line4>"
+                        + "                        <!--Optional:-->"
+                        + "                        <postcode>KT22 7LP</postcode>"
+                        + "                     </address>"
+                        + "                  </claimant>"
+                        + "                  <defendant1>"
+                        + "                     <name>claimantCorrespondence name</name>"
+                        + "                     <address>"
+                        + "                        <!-- VARIOUS COMBINATIONS THAT USE APOSTROPHES --> "
+                        + "                        <!-- Embedded namespace with no space. --> "
+                        + "                        <ns3:line1 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</ns3:line1>"
+                        + "                        <!-- Using global namespace. --> "
+                        + "                        <bas:line2>KING'S LYNN</bas:line2>"
+                        + "                        <!-- Inline but space at the start of element value --> "
+                        + "                        <ns3:line3 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\"> KING'S LYNN</ns3:line3>"
+                        + "                        <!-- Inline but apostrophe not in the first word of the element value --> "
+                        + "                        <ns3:line4 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Someword KING'S LYNN</ns3:line4>"
+                        + "                        <bas:postcode>KT22 7LP</bas:postcode>"
+                        + "                     </address>"
+                        + "                  </defendant1>"
+                        + "                  <!--Optional:-->"
+                        + "                  <defendant2>"
+                        + "                     <name>claimantCorrespondence name2</name>"
+                        + "                     <address>"
+                        + "                        <!-- VARIOUS COMBINATIONS THAT USE APOSTROPHES --> "
+                        + "                        <!-- Inline but xmlns without prefix --> "
+                        + "                        <!-- Various combinations that use apostrophe --> "
+                        + "                        <line1 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</line1>"
+                        + "                        <!-- Multiple apostrophes. --> "
+                        + "                        <ns3:line2 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">'KING'S LYN'N'</ns3:line2>"
+                        + "                        <!--Optional:-->"
+                        + "                        <bas:line3>Leatherhead</bas:line3>"
+                        + "                        <!--Optional:-->"
+                        + "                        <bas:line4>Surrey</bas:line4>"
+                        + "                        <bas:postcode>KT22 7LP</bas:postcode>"
+                        + "                     </address>" + "                  </defendant2>"
+                        + "                  <sendParticularsSeparately>true</sendParticularsSeparately>"
+                        + "                  <reserveRightToClaimInterest>true</reserveRightToClaimInterest>"
+                        + "                  <!--Optional:-->" + "                  <interest>"
+                        + "                     <dailyAmount>200</dailyAmount>"
+                        + "                     <owedDate>2013-10-01</owedDate>"
+                        + "                     <claimDate>2014-02-17</claimDate>"
+                        + "                     <claimAmountInterestBase>100</claimAmountInterestBase>"
+                        + "                  </interest>" + "                  <claimAmount>204600</claimAmount>"
+                        + "                  <!--Optional:-->" + "                  <!--1 to 24 repetitions:-->"
+                        + "                  <particulars>Rent Owed to Landlord</particulars>"
+                        + "                  <sotSignature>" + "                     <bas:flag>true</bas:flag>"
+                        + "                     <bas:name>JB</bas:name>" + "                  </sotSignature>"
+                        + "               </mcolClaim>" + "            </bul:request>" + "         </bul:requests>"
+                        + "      </bul:bulkRequest>" + "   </soap:Body>" + "</soap:Envelope>";
+
+        // Setup translation from SDT to MCOL namespace for non-generic
+        final Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+        replacementNamespaces.put ("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
+                "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
+
+        // Get rid of comments to simplify subsequent processing.
+        xml = XmlNamespaceUtils.removeComments (xml);
+
+        final Map<String, String> allNamespaces = XmlNamespaceUtils.extractAllNamespaces (xml, replacementNamespaces);
+
+        String xmlFragment =
+                "               <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\">"
+                        + "               <claimantReference>HOPA99</claimantReference>"
+                        + "                  <claimant>"
+                        + "                     <name>Test Claimant Name</name>"
+                        + "                     <address>"
+                        + "                        <line1>Chaucer House</line1>"
+                        + "                        <line2>The Office Park</line2>"
+                        + "                        <!--Optional:-->"
+                        + "                        <line3>Leatherhead</line3>"
+                        + "                        <!--Optional:-->"
+                        + "                        <line4>Surrey</line4>"
+                        + "                        <!--Optional:-->"
+                        + "                        <postcode>KT22 7LP</postcode>"
+                        + "                     </address>"
+                        + "                  </claimant>"
+                        + "                  <defendant1>"
+                        + "                     <name>claimantCorrespondence name</name>"
+                        + "                     <address>"
+                        + "                        <!-- VARIOUS COMBINATIONS THAT USE APOSTROPHES --> "
+                        + "                        <!-- Embedded namespace with no space. --> "
+                        + "                        <ns3:line1 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</ns3:line1>"
+                        + "                        <!-- Using global namespace. --> "
+                        + "                        <bas:line2>KING'S LYNN</bas:line2>"
+                        + "                        <!-- Inline but space at the start of element value --> "
+                        + "                        <ns3:line3 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\"> KING'S LYNN</ns3:line3>"
+                        + "                        <!-- Inline but apostrophe not in the first word of the element value --> "
+                        + "                        <ns3:line4 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Someword KING'S LYNN</ns3:line4>"
+                        + "                        <bas:postcode>KT22 7LP</bas:postcode>"
+                        + "                     </address>"
+                        + "                  </defendant1>"
+                        + "                  <!--Optional:-->"
+                        + "                  <defendant2>"
+                        + "                     <name>claimantCorrespondence name2</name>"
+                        + "                     <address>"
+                        + "                        <!-- VARIOUS COMBINATIONS THAT USE APOSTROPHES --> "
+                        + "                        <!-- Inline but xmlns without prefix --> "
+                        + "                        <!-- Various combinations that use apostrophe --> "
+                        + "                        <line1 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</line1>"
+                        + "                        <!-- Multiple apostrophes. --> "
+                        + "                        <ns3:line2 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">'KING'S LYN'N'</ns3:line2>"
+                        + "                        <!--Optional:-->"
+                        + "                        <bas:line3>Leatherhead</bas:line3>"
+                        + "                        <!--Optional:-->"
+                        + "                        <bas:line4>Surrey</bas:line4>"
+                        + "                        <bas:postcode>KT22 7LP</bas:postcode>"
+                        + "                     </address>" + "                  </defendant2>"
+                        + "                  <sendParticularsSeparately>true</sendParticularsSeparately>"
+                        + "                  <reserveRightToClaimInterest>true</reserveRightToClaimInterest>"
+                        + "                  <!--Optional:-->" + "                  <interest>"
+                        + "                     <dailyAmount>200</dailyAmount>"
+                        + "                     <owedDate>2013-10-01</owedDate>"
+                        + "                     <claimDate>2014-02-17</claimDate>"
+                        + "                     <claimAmountInterestBase>100</claimAmountInterestBase>"
+                        + "                  </interest>" + "                  <claimAmount>204600</claimAmount>"
+                        + "                  <!--Optional:-->" + "                  <!--1 to 24 repetitions:-->"
+                        + "                  <particulars>Rent Owed to Landlord</particulars>"
+                        + "                  <sotSignature>" + "                     <bas:flag>true</bas:flag>"
+                        + "                     <bas:name>JB</bas:name>" + "                  </sotSignature>"
+                        + "               </mcolClaim>";
+
+        // CHECKSTYLE:ON
+
+        // Get rid of comments to simplify subsequent processing.
+        xmlFragment = XmlNamespaceUtils.removeComments (xmlFragment);
+
+        final Map<String, String> matched = XmlNamespaceUtils.findMatchingNamespaces (xmlFragment, allNamespaces);
+
+        // Remove namespaces to facilitate adding new namespaces.
+        xmlFragment = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlFragment);
+
+        // Translate any embedded default namespaces to their target application equivalent.
+        xmlFragment = XmlNamespaceUtils.translateDefaultNamespaces (xmlFragment, replacementNamespaces);
+
+        final String result = XmlNamespaceUtils.addNamespaces (xmlFragment, matched);
+
+        // CHECKSTYLE:OFF
+        final String expected =
+                "               <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">               <claimantReference>HOPA99</claimantReference>                  <claimant>                     <name>Test Claimant Name</name>                     <address>                        <line1>Chaucer House</line1>                        <line2>The Office Park</line2>                                                <line3>Leatherhead</line3>                                                <line4>Surrey</line4>                                                <postcode>KT22 7LP</postcode>                     </address>                  </claimant>                  <defendant1>                     <name>claimantCorrespondence name</name>                     <address>                                                                          <ns3:line1 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</ns3:line1>                                                 <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</bas:line2>                                                 <ns3:line3 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\"> KING'S LYNN</ns3:line3>                                                 <ns3:line4 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Someword KING'S LYNN</ns3:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant1>                                    <defendant2>                     <name>claimantCorrespondence name2</name>                     <address>                                                                                                   <line1 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</line1>                                                 <ns3:line2 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">'KING'S LYN'N'</ns3:line2>                                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Leatherhead</bas:line3>                                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Surrey</bas:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant2>                  <sendParticularsSeparately>true</sendParticularsSeparately>                  <reserveRightToClaimInterest>true</reserveRightToClaimInterest>                                    <interest>                     <dailyAmount>200</dailyAmount>                     <owedDate>2013-10-01</owedDate>                     <claimDate>2014-02-17</claimDate>                     <claimAmountInterestBase>100</claimAmountInterestBase>                  </interest>                  <claimAmount>204600</claimAmount>                                                      <particulars>Rent Owed to Landlord</particulars>                  <sotSignature>                     <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>                     <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">JB</bas:name>                  </sotSignature>               </mcolClaim>";
+        // CHECKSTYLE:ON
+
+        Assert.assertEquals ("Generated xml fragment is incorrect", expected, result);
+    }
+
+    /**
      * Test addition of namespace to xml with default namespace to be applied from higher level. Ensure all instance of
      * embedded default namespaces that qualify for translation are translated. In this case mcolClaim already has a
      * default embedded namespace which must be translated.
