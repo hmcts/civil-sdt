@@ -19,7 +19,7 @@
 
 			<xs:simpleType name="sdtStringType">
 				<xs:restriction base="xs:string">
-					<xs:pattern value="[a-zA-Z0-9\-+.,£@?'()/%_ &amp;]*" />
+					<xs:pattern value="[a-zA-Z0-9\-\+\.,£@\?'\(\)/%_ &amp;\!]*" />
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -57,7 +57,7 @@
 				<xs:restriction base="xs:string">
 					<xs:minLength value="1" />
 					<xs:maxLength value="32" />
-					<xs:pattern value="[0-9a-zA-Z_-]+"/>
+					<xs:pattern value="[0-9a-zA-Z_\-]+"/>
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -126,6 +126,13 @@
 				</xs:restriction>
 			</xs:simpleType>
 
+			<xs:simpleType name="nonUKPostcodeType">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="8" />
+					<xs:pattern value="[0-9a-zA-Z ]+"/>
+				</xs:restriction>
+			</xs:simpleType>
+
 			<xs:complexType name="addressType">
 				<xs:sequence>
 					<xs:element name="line1" type="tns:lineType" />
@@ -140,7 +147,7 @@
 				<xs:restriction base="xs:string">
 					<xs:minLength value="1" />
 					<xs:maxLength value="24" />
-					<xs:pattern value="[0-9a-zA-Z_-]+"/>
+					<xs:pattern value="[0-9a-zA-Z_\-]+"/>
 				</xs:restriction>
 			</xs:simpleType>
 
@@ -220,8 +227,6 @@
 
 			<xs:simpleType name="bulkStatusCodeType">
 				<xs:restriction base="xs:string">
-					<xs:enumeration value="Uploaded" />
-					<xs:enumeration value="Failed" />
 					<xs:enumeration value="Validated" />
 					<xs:enumeration value="Completed" />
 				</xs:restriction>
@@ -258,7 +263,7 @@
 				</xs:sequence>
 			</xs:complexType>
 
-		</xs:schema>        
+		</xs:schema>     
 		<!-- Claim.xsd -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 			targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema"
@@ -286,7 +291,7 @@
 								<xs:element name="line2" type="base:lineType" />
 								<xs:element name="line3" type="base:lineType" minOccurs="0" />
 								<xs:element name="line4" type="base:lineType" minOccurs="0" />
-								<xs:element name="postcode" type="base:postcodeType" minOccurs="0"/>
+								<xs:element name="postcode" type="base:nonUKPostcodeType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -331,7 +336,7 @@
 							<xs:sequence>
 								<xs:element name="line1" type="base:lineType" />
 								<xs:element name="line2" type="base:lineType" />
-								<xs:element name="postcode" type="base:postcodeType" minOccurs="0"/>
+								<xs:element name="postcode" type="base:nonUKPostcodeType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element> 
@@ -372,6 +377,7 @@
 			<xs:element name="mcolClaim" type="tns:claimType"/>
 
 		</xs:schema>
+
 
 		<!-- Warrant.xsd -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"

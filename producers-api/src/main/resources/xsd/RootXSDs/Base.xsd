@@ -6,7 +6,7 @@
 
 	<xs:simpleType name="sdtStringType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="[a-zA-Z0-9\-+.,£@?'()/%_ &amp;]*" />
+			<xs:pattern value="[a-zA-Z0-9\-\+\.,£@\?'\(\)/%_ &amp;\!]*" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -44,7 +44,7 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1" />
 			<xs:maxLength value="32" />
-            <xs:pattern value="[0-9a-zA-Z_-]+"/>
+            <xs:pattern value="[0-9a-zA-Z_\-]+"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -113,6 +113,13 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="nonUKPostcodeType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="8" />
+            <xs:pattern value="[0-9a-zA-Z ]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="addressType">
 		<xs:sequence>
 			<xs:element name="line1" type="tns:lineType" />
@@ -127,7 +134,7 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1" />
 			<xs:maxLength value="24" />
-            <xs:pattern value="[0-9a-zA-Z_-]+"/>
+            <xs:pattern value="[0-9a-zA-Z_\-]+"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -207,8 +214,6 @@
 
     <xs:simpleType name="bulkStatusCodeType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Uploaded" />
-            <xs:enumeration value="Failed" />
             <xs:enumeration value="Validated" />
             <xs:enumeration value="Completed" />
         </xs:restriction>

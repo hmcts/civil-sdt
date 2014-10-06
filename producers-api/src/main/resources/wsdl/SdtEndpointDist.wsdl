@@ -93,7 +93,7 @@
 
 	<service name="SdtEndpoint">
 		<port name="SdtEndpointPort" binding="tns:SdtEndpointHttpPortBinding">
-			<soap:address location="http://ws.sdt.moj.gov.uk/sdt/service" />
+			<soap:address location="https://commissioning.justice.gov.uk/producers-comx/service/sdtapi" />
 		</port>
 	</service>
 

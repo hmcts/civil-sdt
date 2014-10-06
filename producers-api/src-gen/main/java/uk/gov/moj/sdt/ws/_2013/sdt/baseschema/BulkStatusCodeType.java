@@ -14,8 +14,6 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;simpleType name="bulkStatusCodeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="Uploaded"/>
- *     &lt;enumeration value="Failed"/>
  *     &lt;enumeration value="Validated"/>
  *     &lt;enumeration value="Completed"/>
  *   &lt;/restriction>
@@ -27,10 +25,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum BulkStatusCodeType {
 
-    @XmlEnumValue("Uploaded")
-    UPLOADED("Uploaded"),
-    @XmlEnumValue("Failed")
-    FAILED("Failed"),
     @XmlEnumValue("Validated")
     VALIDATED("Validated"),
     @XmlEnumValue("Completed")
