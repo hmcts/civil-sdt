@@ -127,7 +127,7 @@ public class BulkFeedbackTransformerTest extends TestCase
         final String sdtBulkReference = "A123456789";
         final String customerRef = "C10000123";
         final LocalDateTime createdDate = new LocalDateTime ();
-        final String submissionStatus = "Uploaded";
+        final String submissionStatus = "Validated";
 
         domain.setNumberOfRequest (numberOfRequest);
         domain.setSdtBulkReference (sdtBulkReference);

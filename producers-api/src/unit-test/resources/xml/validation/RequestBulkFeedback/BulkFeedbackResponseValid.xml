@@ -14,11 +14,7 @@ xmlns:rdns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" xmlns:xsi="
       <tns:submittedDate>2001-12-31T12:00:00</tns:submittedDate>
       <tns:sdtService>mcol</tns:sdtService>
       <tns:requestCount>0</tns:requestCount>
-      <tns:bulkStatus code="Failed">
-          <base:error>
-            <base:code>base code</base:code>
-            <base:description>base description</base:description>
-          </base:error>
+      <tns:bulkStatus code="Completed">
       </tns:bulkStatus>
   </tns:bulkRequestStatus>
   <tns:responses>
