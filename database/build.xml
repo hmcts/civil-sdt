@@ -53,7 +53,7 @@
 	</target>
 
 	<!-- Build zip file -->
-	<target name="dist" description="Generate the distribution">
+	<target name="dist" depends="init" description="Generate the distribution">
 	</target>
 
 	<!-- Dummy target - nothing to do but satisfy higher level build file -->
