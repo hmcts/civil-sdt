@@ -470,13 +470,13 @@
 
     <!-- several of these values are set in the individual build-extras files allowing the deployment of multiple apps-->
     <target name="-deploy-weblogic">
-        <wldeploy action="undeploy" verbose="true" debug="true"
+        <!--wldeploy action="undeploy" verbose="true" debug="true"
         	name="${deployed.appname}" 
             user="${weblogic.user}" 
         	password="${weblogic.password}"
             adminurl="${weblogic.adminurl}"
         	targets="${weblogic.targets}"
-        />
+        /-->
         <wldeploy action="deploy" verbose="true" debug="true" remote="true"
             upload="true"
         	name="${deployed.appname}" 
