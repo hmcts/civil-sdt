@@ -17,6 +17,10 @@
     <property name="deployed.appname" value="producers-comx" />
     <property name="deployable.component" value="producers-comx.ear" />
     <property name="app.meta-inf" value="PRODUCERS-COMX-META-INF" />
+	<property name="weblogic.user" value="${my.weblogic1.user}" />
+	<property name="weblogic.password" value="${my.weblogic1.password}" />
+	<property name="weblogic.adminurl" value="${my.weblogic1.adminurl}" />
+	<property name="weblogic.targets" value="${my.weblogic1.targets}" />
 
 	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
 	<import file="../build/build-setup-env.xml" />
