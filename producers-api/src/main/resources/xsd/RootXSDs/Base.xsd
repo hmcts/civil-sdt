@@ -6,7 +6,7 @@
 
 	<xs:simpleType name="sdtStringType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="[a-zA-Z0-9\-\+\.,£@\?'\(\)/%_ &amp;!]*" />
+			<xs:pattern value="[a-zA-Z0-9\-\+\.,£@\?'\(\)/%_ &amp;!:]*" />
 		</xs:restriction>
 	</xs:simpleType>
 
