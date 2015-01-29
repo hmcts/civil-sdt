@@ -879,7 +879,7 @@
 						<xs:simpleType>
 							<xs:restriction base="base:sdtStringType">
 								<xs:minLength value="1" />
-								<xs:maxLength value="253" />
+								<xs:maxLength value="3000" />
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
