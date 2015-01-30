@@ -696,6 +696,7 @@
                     <xs:element name="defendantId" type="base:defendantIdType" minOccurs="0" />
                     <xs:element name="notificationType" type="tns:notificationType" />
                     <xs:element name="paidInFullDate" type="xs:date"   minOccurs="0" />
+					<xs:element name="section38Compliancy" type="xs:boolean" minOccurs="0" />
                 </xs:sequence>
             </xs:complexType>
         
