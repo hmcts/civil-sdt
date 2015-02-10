@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="81"/>
+        <property name="numberOfRequest" value="92"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -350,6 +350,22 @@
 	       			<value>Second defendant's date of birth must be in the past.</value>
 	       			<value></value>
 	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c40</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>40</value>	       			
+	       			<value>Compliance to section 38 of CPR specified in error</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c41</value>	       			
+	       			<value>mcolClaimStatusUpdate</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>41</value>	       			
+	       			<value>Compliance to section 38 of CPR must be true if discontinued update is requested</value>
+	       			<value></value>
+	       		</list>
                 <list>                  
                     <value>USER_REQUEST_ID_c42</value>                  
                     <value>mcolClaimStatusUpdate</value>                 
@@ -390,6 +406,22 @@
                     <value>Case data could not be populated: INVALID PARTICULARS OF CLAIM.</value>
                     <value></value>
                 </list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c47</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>47</value>	       			
+	       			<value>This application to set aside judgment is invalid on the referenced claim</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c48</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>48</value>	       			
+	       			<value>There is no active judgment for this application to set aside judgment</value>
+	       			<value></value>
+	       		</list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c49</value>	       			
 	       			<value>mcolJudgment</value>	       			
@@ -439,6 +471,14 @@
                     <value></value>
                 </list>
 	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c53</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>53</value>	       			
+	       			<value>Application to set aside cannot be made for the requested defendant(s)</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c54</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
@@ -476,6 +516,14 @@
 	       			<value>Rejected</value>	       			
 	       			<value>58</value>	       			
 	       			<value>Warrant cannot be requested for this defendant.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c59</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>59</value>	       			
+	       			<value>Other detail must be specified if applicant type is Other</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -651,6 +699,22 @@
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c75g</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>75</value>	       			
+	       			<value>Rejected by CCBC - rejection number 97.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c76</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>76</value>	       			
+	       			<value>Other detail must not be specified if applicant type is not Other</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c79</value>	       			
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
@@ -696,6 +760,30 @@
 	       			<value>Rejected</value>	       			
 	       			<value>84</value>	       			
 	       			<value>Update type of Discontinued not allowed once judgment has been issued.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c85</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>85</value>	       			
+	       			<value>Representing who must be specified if applicant type is Legal Representative</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c86</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>86</value>	       			
+	       			<value>Service address should only be supplied if serving target is specified</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c87</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>87</value>	       			
+	       			<value>Evidence must be provided if supporting information choice is 'EV'</value>
 	       			<value></value>
 	       		</list>
 	       	</list>

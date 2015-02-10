@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="17"/>
+        <property name="numberOfRequest" value="18"/>
         <property name="submissionStatus" value="Completed"/>   
     </bean>
     
@@ -240,6 +240,21 @@
 	       			<value>CUST_XML_ERR</value>	       			
 	       			<value>Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or  contact 'SDT Contact Details' for assistance</value>
 	       			<value></value>
+	       		</list>	       		
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_B16</value>	       			
+	       			<value>mcolSetAside</value>	       			
+	       			<value>Accepted</value>	       			
+	       			<value></value>	       			
+	       			<value></value>
+	       			<value>
+                        <![CDATA[
+                            <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
+                                <mresp:issueDate>2014-01-23</mresp:issueDate>
+                                <mresp:fee>5000</mresp:fee>
+                            </ind:mcolResponseDetail>
+                        ]]>
+                    </value>
 	       		</list>	       		
 	       	</list>
 		</property>

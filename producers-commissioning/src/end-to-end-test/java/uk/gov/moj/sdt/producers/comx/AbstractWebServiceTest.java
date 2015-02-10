@@ -264,7 +264,11 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
         }
 
         // Convert back to String.
-        return new String (outChars, 0, i2);
+        String toreturn = new String (outChars, 0, i2).replaceAll (">\\s*<", "><");
+        toreturn = toreturn.replaceAll ("\\s>", ">");
+        toreturn = toreturn.replaceAll ("\\s/>", "/>");
+
+        return toreturn;
     }
 
     /**
