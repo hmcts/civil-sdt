@@ -133,7 +133,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="applicationHandling" type="tns:applicationHandlingType" minOccurs="0"/>
+			<xs:element name="applicationHandling" type="tns:applicationHandlingType" />
 
 			<xs:element name="hearingTimeEstimates" type="tns:hearingTimeEstimateType"
 				minOccurs="0" />

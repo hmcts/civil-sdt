@@ -884,7 +884,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element name="applicationHandling" type="tns:applicationHandlingType" minOccurs="1"/>
+					<xs:element name="applicationHandling" type="tns:applicationHandlingType" />
 		
 					<xs:element name="hearingTimeEstimates" type="tns:hearingTimeEstimateType"
 						minOccurs="0" />
