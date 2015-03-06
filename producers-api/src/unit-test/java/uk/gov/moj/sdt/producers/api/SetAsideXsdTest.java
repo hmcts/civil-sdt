@@ -94,6 +94,18 @@ public class SetAsideXsdTest extends SdtXmlTestBase
     }
 
     /**
+     * Tests that expected errors are reported for missing mandatory fields.
+     */
+    public void testInvalidXmlMandatoryMissingDefendantId ()
+    {
+        final String condition = "MandatoryMissingDefendantId";
+        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
+        final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
+
+        this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
+    }
+
+    /**
      * Tests that expected errors are reported for incorrect format of fields.
      */
     public void testInvalidXmlIncorrectFormat ()

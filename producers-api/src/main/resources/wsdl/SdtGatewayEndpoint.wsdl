@@ -873,7 +873,7 @@
 						minOccurs="1" />
 		
 					<xs:element name="defendantId" type="base:defendantIdType"
-						minOccurs="0" />
+						minOccurs="1" />
 					<xs:element name="applicantType" type="tns:applicantType"
 						minOccurs="1" />
 					<xs:element name="orderAndDetails" minOccurs="1">

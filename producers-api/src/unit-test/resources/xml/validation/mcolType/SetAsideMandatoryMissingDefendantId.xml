@@ -2,6 +2,7 @@
 <tns:mcolSetAside xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/SetAsideSchema"
 	xmlns:tns1="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://ws.sdt.moj.gov.uk/2013/mcol/SetAsideSchema ../../../../../main/resources/xsd/RootXSDs/SetAside.xsd "> 
+	<tns:claimNumber>claim123</tns:claimNumber>
 	<tns:applicantType>
 		<tns:applicantType>C</tns:applicantType>
 		<tns:otherDetail>Something</tns:otherDetail>
