@@ -12,7 +12,7 @@
         <xs:sequence>
             <xs:element name="name">
                 <xs:simpleType>
-                    <xs:restriction base="base:sdtStringType">
+                    <xs:restriction base="base:sdtNonBlankStringType">
                         <xs:minLength value="1" />
                         <xs:maxLength value="60" />
                     </xs:restriction>
@@ -21,8 +21,8 @@
             <xs:element name="address">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="line1" type="base:lineType" />
-                        <xs:element name="line2" type="base:lineType" />
+                        <xs:element name="line1" type="base:nonBlankLineType" />
+                        <xs:element name="line2" type="base:nonBlankLineType" />
                         <xs:element name="line3" type="base:lineType" minOccurs="0" />
                         <xs:element name="line4" type="base:lineType" minOccurs="0" />
                         <xs:element name="postcode" type="base:nonUKPostcodeType" minOccurs="0"/>
@@ -49,7 +49,7 @@
     </xs:complexType>
     
     <xs:simpleType name="claimantReferenceType">
-        <xs:restriction base="base:sdtStringType">
+        <xs:restriction base="base:sdtNonBlankStringType">
             <xs:minLength value="1" />
             <xs:maxLength value="24" />
         </xs:restriction>
@@ -59,7 +59,7 @@
         <xs:sequence>
             <xs:element name="name">
                 <xs:simpleType>
-                    <xs:restriction base="base:sdtStringType">
+                    <xs:restriction base="base:sdtNonBlankStringType">
                         <xs:minLength value="1" />
                         <xs:maxLength value="30" />
                     </xs:restriction>
@@ -68,8 +68,8 @@
             <xs:element name="address"> 
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="line1" type="base:lineType" />
-                        <xs:element name="line2" type="base:lineType" />
+                        <xs:element name="line1" type="base:nonBlankLineType" />
+                        <xs:element name="line2" type="base:nonBlankLineType" />
                         <xs:element name="postcode" type="base:nonUKPostcodeType" minOccurs="0"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -81,7 +81,7 @@
         <xs:sequence>
             <xs:element name="name">
                 <xs:simpleType>
-                    <xs:restriction base="base:sdtStringType">
+                    <xs:restriction base="base:sdtNonBlankStringType">
                         <xs:minLength value="1" />
                         <xs:maxLength value="60" />
                     </xs:restriction>

@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;/element>
  *         &lt;element name="name">
  *           &lt;simpleType>
- *             &lt;restriction base="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtStringType">
+ *             &lt;restriction base="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sdtNonBlankStringType">
  *               &lt;minLength value="1"/>
  *               &lt;maxLength value="30"/>
  *             &lt;/restriction>

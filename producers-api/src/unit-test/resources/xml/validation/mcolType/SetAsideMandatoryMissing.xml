@@ -19,9 +19,9 @@
 	<tns:servingTarget>
 		<tns:serveApplicationTo>service to</tns:serveApplicationTo>
 		<tns:serviceAddress>
-			<tns:line2>line2</tns:line2>
-			<tns:line3>line3</tns:line3>
-			<tns:line4>line4</tns:line4>
+			<tns:line2></tns:line2>
+			<tns:line3></tns:line3>
+			<tns:line4></tns:line4>
 			<tns:postcode>postcode</tns:postcode>
 		</tns:serviceAddress>
 	</tns:servingTarget>

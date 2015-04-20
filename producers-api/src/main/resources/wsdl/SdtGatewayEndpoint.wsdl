@@ -7,7 +7,8 @@
 	xmlns:bfresp="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema"
     xmlns:qreq="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema"
     xmlns:qresp="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema"
-	targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint">
+    xmlns:sas="http://ws.sdt.moj.gov.uk/2013/mcol/SetAsideSchema"
+    targetNamespace="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint">
 
 	<types>
 
@@ -22,6 +23,13 @@
 					<xs:pattern value="[a-zA-Z0-9\-\+\.,£@\?'\(\)/%_ &amp;!:]*" />
 				</xs:restriction>
 			</xs:simpleType>
+
+			<xs:simpleType name="sdtNonBlankStringType">
+				<xs:restriction base="tns:sdtStringType">
+					<xs:pattern value="(\s*[^\s]\s*)+"/>
+				</xs:restriction>
+			</xs:simpleType>
+
 
 			<xs:simpleType name="sdtCustomerIdType">
 				<xs:restriction base="xs:long">
@@ -86,6 +94,13 @@
 				</xs:restriction>
 			</xs:simpleType>
 
+			<xs:simpleType name="nonBlankLineType">
+				<xs:restriction base="tns:sdtNonBlankStringType">
+					<xs:minLength value="1" />
+					<xs:maxLength value="30" />
+				</xs:restriction>
+			</xs:simpleType>
+			
 			<xs:complexType name="sotSignatureType">
 				<xs:sequence>
 					<xs:element name="flag">
@@ -97,7 +112,7 @@
 					</xs:element>
 					<xs:element name="name">
 						<xs:simpleType>
-							<xs:restriction base="tns:sdtStringType">
+							<xs:restriction base="tns:sdtNonBlankStringType">
 								<xs:minLength value="1" />
 								<xs:maxLength value="30" />
 							</xs:restriction>
@@ -107,14 +122,14 @@
 			</xs:complexType>
 
 			<xs:simpleType name="courtCodeType">
-				<xs:restriction base="tns:sdtStringType">
+				<xs:restriction base="tns:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="3" />
 				</xs:restriction>
 			</xs:simpleType>
 
 			<xs:simpleType name="courtNameType">
-				<xs:restriction base="tns:sdtStringType">
+				<xs:restriction base="tns:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="40" />
 				</xs:restriction>
@@ -135,8 +150,8 @@
 
 			<xs:complexType name="addressType">
 				<xs:sequence>
-					<xs:element name="line1" type="tns:lineType" />
-					<xs:element name="line2" type="tns:lineType" />
+					<xs:element name="line1" type="tns:nonBlankLineType" />
+					<xs:element name="line2" type="tns:nonBlankLineType" />
 					<xs:element name="line3" type="tns:lineType" minOccurs="0" />
 					<xs:element name="line4" type="tns:lineType" minOccurs="0" />
 					<xs:element name="postcode" type="tns:postcodeType" />
@@ -152,7 +167,7 @@
 			</xs:simpleType>
 
 			<xs:simpleType name="sdtRequestIdType">
-				<xs:restriction base="tns:sdtStringType">
+				<xs:restriction base="tns:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="40" />
 				</xs:restriction>
@@ -278,7 +293,7 @@
 				<xs:sequence>
 					<xs:element name="name">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1" />
 								<xs:maxLength value="60" />
 							</xs:restriction>
@@ -287,8 +302,8 @@
 					<xs:element name="address">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="line1" type="base:lineType" />
-								<xs:element name="line2" type="base:lineType" />
+								<xs:element name="line1" type="base:nonBlankLineType" />
+								<xs:element name="line2" type="base:nonBlankLineType" />
 								<xs:element name="line3" type="base:lineType" minOccurs="0" />
 								<xs:element name="line4" type="base:lineType" minOccurs="0" />
 								<xs:element name="postcode" type="base:nonUKPostcodeType" minOccurs="0"/>
@@ -315,7 +330,7 @@
 			</xs:complexType>
 			
 			<xs:simpleType name="claimantReferenceType">
-				<xs:restriction base="base:sdtStringType">
+				<xs:restriction base="base:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="24" />
 				</xs:restriction>
@@ -325,7 +340,7 @@
 				<xs:sequence>
 					<xs:element name="name">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1" />
 								<xs:maxLength value="30" />
 							</xs:restriction>
@@ -334,8 +349,8 @@
 					<xs:element name="address"> 
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="line1" type="base:lineType" />
-								<xs:element name="line2" type="base:lineType" />
+								<xs:element name="line1" type="base:nonBlankLineType" />
+								<xs:element name="line2" type="base:nonBlankLineType" />
 								<xs:element name="postcode" type="base:nonUKPostcodeType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
@@ -347,7 +362,7 @@
 				<xs:sequence>
 					<xs:element name="name">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1" />
 								<xs:maxLength value="60" />
 							</xs:restriction>
@@ -390,7 +405,7 @@
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" />
 			
 			<xs:simpleType name="additionalNotesType">
-				<xs:restriction base="base:sdtStringType">
+				<xs:restriction base="base:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="120" />
 				</xs:restriction>
@@ -464,16 +479,23 @@
 			</xs:complexType>
 		 
 			<xs:simpleType name="payeeLineType">
-				<xs:restriction base="base:sdtStringType">
+				<xs:restriction base="base:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="35" />
 				</xs:restriction>
 			</xs:simpleType>
 
+		    <xs:simpleType name="payeeNonBlankLineType">
+		        <xs:restriction base="base:sdtNonBlankStringType">
+		            <xs:minLength value="1" />
+		            <xs:maxLength value="35" />
+		        </xs:restriction>
+		    </xs:simpleType>
+
 			<xs:complexType name="payeeAddressType">
 				<xs:sequence>
-					<xs:element name="line1" type="tns:payeeLineType" />
-					<xs:element name="line2" type="tns:payeeLineType" />
+					<xs:element name="line1" type="tns:payeeNonBlankLineType" />
+					<xs:element name="line2" type="tns:payeeNonBlankLineType" />
 					<xs:element name="line3" type="tns:payeeLineType" minOccurs="0" />
 					<xs:element name="line4" type="tns:payeeLineType" minOccurs="0" />
 					<xs:element name="line5" type="tns:payeeLineType" minOccurs="0" />
@@ -485,7 +507,7 @@
 				<xs:sequence>
 					<xs:element name="name">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="70"/>
 							</xs:restriction>
@@ -501,7 +523,7 @@
 					</xs:element>
 					<xs:element name="dxNumber" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="35"/>
 							</xs:restriction>
@@ -509,7 +531,7 @@
 					</xs:element>
 					<xs:element name="faxNumber" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="24"/>
 							</xs:restriction>
@@ -517,7 +539,7 @@
 					</xs:element>
 					<xs:element name="email" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="254"/>
 							</xs:restriction>
@@ -525,7 +547,7 @@
 					</xs:element>
 					<xs:element name="pcm" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="2"/>
 							</xs:restriction>
@@ -533,7 +555,7 @@
 					</xs:element>
 					<xs:element name="reference" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="24"/>
 							</xs:restriction>
@@ -541,7 +563,7 @@
 					</xs:element>
 					<xs:element name="bankAccountNumber" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="8"/>
 							</xs:restriction>
@@ -549,7 +571,7 @@
 					</xs:element>
 					<xs:element name="bankAccountHolder" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="70"/>
 							</xs:restriction>
@@ -557,7 +579,7 @@
 					</xs:element>
 					<xs:element name="bankSortCode" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="8"/>
 							</xs:restriction>
@@ -565,7 +587,7 @@
 					</xs:element>
 					<xs:element name="bankName" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="30"/>
 							</xs:restriction>
@@ -573,7 +595,7 @@
 					</xs:element>
 					<xs:element name="bankInfo1" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="30"/>
 							</xs:restriction>
@@ -581,7 +603,7 @@
 					</xs:element>
 					<xs:element name="bankInfo2" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="30"/>
 							</xs:restriction>
@@ -589,7 +611,7 @@
 					</xs:element>
 					<xs:element name="slipCodeline1" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="58"/>
 							</xs:restriction>
@@ -597,7 +619,7 @@
 					</xs:element>
 					<xs:element name="slipCodeline2" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="58"/>
 							</xs:restriction>
@@ -605,7 +627,7 @@
 					</xs:element>
 					<xs:element name="giroAccountNumber" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="8"/>
 							</xs:restriction>
@@ -613,7 +635,7 @@
 					</xs:element>
 					<xs:element name="giroTransCode1" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="9"/>
 							</xs:restriction>
@@ -621,7 +643,7 @@
 					</xs:element>
 					<xs:element name="giroTransCode2" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="9"/>
 							</xs:restriction>
@@ -629,7 +651,7 @@
 					</xs:element>
 					<xs:element name="apacsTransCode" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1"/>
 								<xs:maxLength value="2"/>
 							</xs:restriction>
@@ -760,8 +782,10 @@
 			xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
 			elementFormDefault="qualified" version="1.0">
 		
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+
 			<xs:simpleType name="setAsideStringType">
-				<xs:restriction base="base:sdtStringType">
+				<xs:restriction base="base:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="34" />
 				</xs:restriction>
@@ -781,7 +805,7 @@
 					<xs:element name="applicantType" type="tns:applicationTypeType" minOccurs="1"/>
 					<xs:element name="otherDetail" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1" />
 								<xs:maxLength value="53" />
 							</xs:restriction>
@@ -825,8 +849,8 @@
 		
 			<xs:complexType name="serviceAddressType">
 				<xs:sequence>
-					<xs:element name="line1" type="base:lineType" minOccurs="1" />
-					<xs:element name="line2" type="base:lineType" minOccurs="1" />
+					<xs:element name="line1" type="base:nonBlankLineType" minOccurs="1" />
+					<xs:element name="line2" type="base:nonBlankLineType minOccurs="1" />
 					<xs:element name="line3" type="base:lineType" minOccurs="0" />
 					<xs:element name="line4" type="base:lineType" minOccurs="0" />
 					<xs:element name="postcode" type="base:nonUKPostcodeType"
@@ -852,7 +876,7 @@
 			</xs:simpleType>
 		
 			<xs:simpleType name="evidenceType">
-				<xs:restriction base="base:sdtStringType">
+				<xs:restriction base="base:sdtNonBlankStringType">
 					<xs:minLength value="1" />
 					<xs:maxLength value="8000" />
 				</xs:restriction>
@@ -878,7 +902,7 @@
 						minOccurs="1" />
 					<xs:element name="orderAndDetails" minOccurs="1">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="1" />
 								<xs:maxLength value="3000" />
 							</xs:restriction>
@@ -890,7 +914,7 @@
 						minOccurs="0" />
 					<xs:element name="trialDetails" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="0" />
 								<xs:maxLength value="34" />
 							</xs:restriction>
@@ -898,7 +922,7 @@
 					</xs:element>
 					<xs:element name="judgeLevel" minOccurs="0">
 						<xs:simpleType>
-							<xs:restriction base="base:sdtStringType">
+							<xs:restriction base="base:sdtNonBlankStringType">
 								<xs:minLength value="0" />
 								<xs:maxLength value="34" />
 							</xs:restriction>

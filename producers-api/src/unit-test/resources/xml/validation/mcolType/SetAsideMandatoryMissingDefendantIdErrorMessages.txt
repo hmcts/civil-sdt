@@ -4,6 +4,6 @@ cvc-complex-type.2.4.b: The content of element 'tns:sotSignature' is not complet
 cvc-elt.3.1: Attribute 'http://www.w3.org/2001/XMLSchema-instance,nil' must not appear on element 'tns:orderAndDetails', because the {nillable} property of 'tns:orderAndDetails' is false.
 cvc-elt.3.1: Attribute 'http://www.w3.org/2001/XMLSchema-instance,nil' must not appear on element 'tns:supportingInformation', because the {nillable} property of 'tns:supportingInformation' is false.
 cvc-enumeration-valid: Value '' is not facet-valid with respect to enumeration '[WS, SC, EV]'. It must be a value from the enumeration.
-cvc-minLength-valid: Value '' with length = '0' is not facet-valid with respect to minLength '1' for type '#AnonType_orderAndDetailssetAsideType'.
+cvc-pattern-valid: Value '' is not facet-valid with respect to pattern '(\s*[^\s]\s*)+' for type '#AnonType_orderAndDetailssetAsideType'.
 cvc-type.3.1.3: The value '' of element 'tns:orderAndDetails' is not valid.
 cvc-type.3.1.3: The value '' of element 'tns:supportingInformation' is not valid.

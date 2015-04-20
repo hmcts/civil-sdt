@@ -17,8 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="line1" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType"/>
- *         &lt;element name="line2" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType"/>
+ *         &lt;element name="line1" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}nonBlankLineType"/>
+ *         &lt;element name="line2" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}nonBlankLineType"/>
  *         &lt;element name="line3" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType" minOccurs="0"/>
  *         &lt;element name="line4" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}lineType" minOccurs="0"/>
  *         &lt;element name="postcode" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}postcodeType"/>

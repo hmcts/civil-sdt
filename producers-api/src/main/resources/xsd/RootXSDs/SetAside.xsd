@@ -10,7 +10,7 @@
 
 
 	<xs:simpleType name="setAsideStringType">
-		<xs:restriction base="base:sdtStringType">
+		<xs:restriction base="base:sdtNonBlankStringType">
 			<xs:minLength value="1" />
 			<xs:maxLength value="34" />
 		</xs:restriction>
@@ -30,7 +30,7 @@
 			<xs:element name="applicantType" type="tns:applicationTypeType" minOccurs="1"/>
 			<xs:element name="otherDetail" minOccurs="0">
 				<xs:simpleType>
-					<xs:restriction base="base:sdtStringType">
+					<xs:restriction base="base:sdtNonBlankStringType">
 						<xs:minLength value="1" />
 						<xs:maxLength value="53" />
 					</xs:restriction>
@@ -74,8 +74,8 @@
 
 	<xs:complexType name="serviceAddressType">
 		<xs:sequence>
-			<xs:element name="line1" type="base:lineType" minOccurs="1" />
-			<xs:element name="line2" type="base:lineType" minOccurs="1" />
+			<xs:element name="line1" type="base:nonBlankLineType" minOccurs="1" />
+			<xs:element name="line2" type="base:nonBlankLineType" minOccurs="1" />
 			<xs:element name="line3" type="base:lineType" minOccurs="0" />
 			<xs:element name="line4" type="base:lineType" minOccurs="0" />
 			<xs:element name="postcode" type="base:nonUKPostcodeType"
@@ -101,7 +101,7 @@
 	</xs:simpleType>
 
 	<xs:simpleType name="evidenceType">
-		<xs:restriction base="base:sdtStringType">
+		<xs:restriction base="base:sdtNonBlankStringType">
 			<xs:minLength value="1" />
 			<xs:maxLength value="8000" />
 		</xs:restriction>
@@ -127,7 +127,7 @@
 				minOccurs="1" />
 			<xs:element name="orderAndDetails" minOccurs="1">
 				<xs:simpleType>
-					<xs:restriction base="base:sdtStringType">
+					<xs:restriction base="base:sdtNonBlankStringType">
 						<xs:minLength value="1" />
 						<xs:maxLength value="3000" />
 					</xs:restriction>
@@ -139,7 +139,7 @@
 				minOccurs="0" />
 			<xs:element name="trialDetails" minOccurs="0">
 				<xs:simpleType>
-					<xs:restriction base="base:sdtStringType">
+					<xs:restriction base="base:sdtNonBlankStringType">
 						<xs:minLength value="0" />
 						<xs:maxLength value="34" />
 					</xs:restriction>
@@ -147,7 +147,7 @@
 			</xs:element>
 			<xs:element name="judgeLevel" minOccurs="0">
 				<xs:simpleType>
-					<xs:restriction base="base:sdtStringType">
+					<xs:restriction base="base:sdtNonBlankStringType">
 						<xs:minLength value="0" />
 						<xs:maxLength value="34" />
 					</xs:restriction>
