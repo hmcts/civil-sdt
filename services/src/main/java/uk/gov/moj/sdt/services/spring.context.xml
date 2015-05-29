@@ -37,6 +37,8 @@
     	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
     	<property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator"/>
     	<property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
+    	<property name="concurrencyMap" ref="concurrencyMapRef"/>
+    	<property name="errorMessagesCache" ref="uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache"/>
     </bean>   
     
     <!-- Implementation for Target Application Submission Service -->

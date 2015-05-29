@@ -31,7 +31,9 @@
 package uk.gov.moj.sdt.services;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -47,6 +49,7 @@ import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.ServiceRouting;
@@ -54,16 +57,19 @@ import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 /**
  * Test class for BulkSubmissionService.
@@ -119,6 +125,16 @@ public class BulkSubmissionServiceTest
     private IMessagingUtility mockMessagingUtility;
 
     /**
+     * 
+     */
+    private Map<String, String> mockConcurrencyMap;
+
+    /**
+     * 
+     */
+    private ICacheable mockErrorMessagesCache;
+
+    /**
      * Setup of the mock dao and injection of other objects.
      */
     @Before
@@ -147,6 +163,13 @@ public class BulkSubmissionServiceTest
 
         mockMessagingUtility = EasyMock.createMock (IMessagingUtility.class);
         bulkSubmissionService.setMessagingUtility (mockMessagingUtility);
+
+        mockConcurrencyMap = EasyMock.createMock (HashMap.class);
+        bulkSubmissionService.setConcurrencyMap (mockConcurrencyMap);
+
+        mockErrorMessagesCache = EasyMock.createMock (ICacheable.class);
+        bulkSubmissionService.setErrorMessagesCache (mockErrorMessagesCache);
+
     }
 
     /**
@@ -170,6 +193,19 @@ public class BulkSubmissionServiceTest
 
         // Replay the EasyMock
         EasyMock.replay (mockGenericDao);
+
+        EasyMock.expect (mockBulkCustomerDao.getBulkCustomerBySdtId (10)).andReturn (bulkSubmission.getBulkCustomer ());
+
+        EasyMock.replay (mockBulkCustomerDao);
+
+        final String key =
+                bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+
+        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (null);
+
+        EasyMock.expect (mockConcurrencyMap.put (key, null)).andReturn (null);
+
+        EasyMock.replay (mockConcurrencyMap);
 
         // Put a dummy value into the SdtContext
         SdtContext.getContext ().setServiceRequestId (new Long (1));
@@ -216,6 +252,19 @@ public class BulkSubmissionServiceTest
         // Replay the EasyMock
         EasyMock.replay (mockGenericDao);
 
+        EasyMock.expect (mockBulkCustomerDao.getBulkCustomerBySdtId (10)).andReturn (bulkSubmission.getBulkCustomer ());
+
+        EasyMock.replay (mockBulkCustomerDao);
+
+        final String key =
+                bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+
+        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (null);
+
+        EasyMock.expect (mockConcurrencyMap.put (key, null)).andReturn (null);
+
+        EasyMock.replay (mockConcurrencyMap);
+
         // Put a dummy value into the SdtContext
         SdtContext.getContext ().setServiceRequestId (new Long (1));
 
@@ -226,6 +275,65 @@ public class BulkSubmissionServiceTest
         EasyMock.verify (mockGenericDao);
 
         Assert.assertTrue ("Expected to pass", true);
+    }
+
+    /**
+     * This method tests bulk submission concurrency issue
+     * 2 valid and 1 invalid request.
+     * 
+     * @throws IOException if there is any issue
+     */
+    @Test (expected = CustomerReferenceNotUniqueException.class)
+    public void testSubmissionWithConcurrenyIssue () throws IOException
+    {
+        final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testXMLValid3.xml");
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        // Activate Mock Generic Dao
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
+        addValidIndividualRequest (bulkSubmission, "ICustReq124");
+        addValidIndividualRequest (bulkSubmission, "ICustReq125");
+
+        LOGGER.debug ("Size of Individual Requests in Bulk Submission is " +
+                bulkSubmission.getIndividualRequests ().size ());
+
+        mockGenericDao.persist (bulkSubmission);
+        EasyMock.expectLastCall ();
+
+        // Mock the serviceRequest fetch
+        final IServiceRequest serviceRequest = new ServiceRequest ();
+        EasyMock.expect (mockGenericDao.fetch (IServiceRequest.class, 1)).andReturn (serviceRequest);
+
+        // Replay the EasyMock
+        EasyMock.replay (mockGenericDao);
+
+        EasyMock.expect (mockBulkCustomerDao.getBulkCustomerBySdtId (10)).andReturn (bulkSubmission.getBulkCustomer ());
+
+        EasyMock.replay (mockBulkCustomerDao);
+
+        final String key =
+                bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+
+        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (new String ("SDTBULKREFERENCE"));
+
+        EasyMock.replay (mockConcurrencyMap);
+
+        final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ();
+        final IErrorMessage errorMessage = new ErrorMessage ();
+        errorMessage.setErrorCode (errorCodeStr);
+        errorMessage.setErrorDescription ("Some Discription");
+        errorMessage.setErrorText ("Some Text");
+
+        EasyMock.expect (mockErrorMessagesCache.getValue (IErrorMessage.class, errorCodeStr)).andReturn (errorMessage);
+
+        EasyMock.replay (mockErrorMessagesCache);
+        // Put a dummy value into the SdtContext
+        SdtContext.getContext ().setServiceRequestId (new Long (1));
+
+        // Call the bulk submission service
+        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+
+        Assert.fail ("Should have thrown exception");
     }
 
     /**

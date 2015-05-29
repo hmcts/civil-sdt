@@ -30,8 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -42,15 +45,19 @@ import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -97,11 +104,25 @@ public class BulkSubmissionService implements IBulkSubmissionService
      */
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
 
+    /**
+     * The concurrencyMap to hold sdtCustId+custRef and BulkRef. This is used to prevent the customer sending two
+     * requests close together which both get processed at the same time, causing duplicates. The normal check on a
+     * duplicate does not work until the first bulk request has been persisted.
+     */
+    private Map<String, String> concurrencyMap;
+
+    /**
+     * 
+     */
+    private ICacheable errorMessagesCache;
+
     @Override
     @Transactional (propagation = Propagation.REQUIRED)
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         enrich (bulkSubmission);
+
+        this.checkConcurrent (bulkSubmission);
 
         enrich (bulkSubmission.getIndividualRequests ());
 
@@ -301,4 +322,54 @@ public class BulkSubmissionService implements IBulkSubmissionService
     {
         this.messagingUtility = messagingUtility;
     }
+
+    /**
+     * Queues the valid individual requests on the messaging server.
+     * 
+     * @param bulkSubmission the bulk submission being processed.
+     * @throws uk.gov.moj.sdt.validators.exception.AbstractBusinessException super class of the exception to be thrown.
+     */
+    private synchronized void checkConcurrent (final IBulkSubmission bulkSubmission)
+    {
+        final String key =
+                bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+
+        final String previousBulkReference = concurrencyMap.get (key);
+        if (previousBulkReference != null)
+        {
+            final List<String> replacements = new ArrayList<String> ();
+            replacements.add (String.valueOf (bulkSubmission.getCustomerReference ()));
+            replacements.add (Utilities.formatDateTimeForMessage (new LocalDateTime (System.currentTimeMillis ())));
+            replacements.add (previousBulkReference);
+            final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ();
+            final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+
+            throw new CustomerReferenceNotUniqueException (errorCodeStr, errorMessage.getErrorText (), replacements);
+
+        }
+
+        // Set concurrency map for this user and customer reference.
+        concurrencyMap.put (key, bulkSubmission.getSdtBulkReference ());
+    }
+
+    /**
+     * Set concurrency map.
+     * 
+     * @param concurrencyMap map holding in flight bulk requests.
+     */
+    public void setConcurrencyMap (final Map<String, String> concurrencyMap)
+    {
+        this.concurrencyMap = concurrencyMap;
+    }
+
+    /**
+     * Set the error message cache.
+     * 
+     * @param errorMessagesCache cache of error messages.
+     */
+    public void setErrorMessagesCache (final ICacheable errorMessagesCache)
+    {
+        this.errorMessagesCache = errorMessagesCache;
+    }
+
 }

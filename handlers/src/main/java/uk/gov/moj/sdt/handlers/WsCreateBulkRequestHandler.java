@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +82,13 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      */
     private ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer;
 
+    /**
+     * The concurrencyMap to hold sdtCustId+custRef and BulkRef. This is used to prevent the customer sending two
+     * requests close together which both get processed at the same time, causing duplicates. The normal check on a
+     * duplicate does not work until the first bulk request has been persisted.
+     */
+    private Map<String, String> concurrencyMap;
+    
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
     {
@@ -138,6 +146,12 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
             // Measure total time spent in use case.
             final long endTime = new GregorianCalendar ().getTimeInMillis ();
             SdtMetricsMBean.getMetrics ().addBulkSubmitTime (endTime - startTime);
+
+            final String key =
+                    bulkRequestType.getHeader ().getSdtCustomerId () + bulkRequestType.getHeader ().getCustomerReference ();
+            
+            // Set concurrency map for this user and customer reference.
+            concurrencyMap.remove (key);
         }
 
         return bulkResponseType;
@@ -237,4 +251,15 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     {
         this.bulkSubmissionValidator = bulkSubmissionValidator;
     }
+
+    /**
+     * Set concurrency map.
+     * 
+     * @param concurrencyMap map holding in flight bulk requests.
+     */
+    public void setConcurrencyMap (final Map<String, String> concurrencyMap)
+    {
+        this.concurrencyMap = concurrencyMap;
+    }
+    
 }
