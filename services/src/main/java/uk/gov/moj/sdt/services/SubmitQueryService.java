@@ -252,12 +252,6 @@ public class SubmitQueryService implements ISubmitQueryService {
 				.getValue(IErrorMessage.class,
 						IErrorMessage.ErrorCode.SDT_INT_ERR.name());
 
-		/**
-		 * IErrorLog errorLog = null; errorLog = new ErrorLog
-		 * (errorMessageParam.getErrorCode (), errorMessageParam.getErrorText
-		 * ()); submitQueryRequest.reject (errorLog);
-		 **/
-
 		final List<String> replacements = new ArrayList<String>();
 		replacements.add(getContactDetails());
 		final String errorText = MessageFormat.format(

@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,6 +42,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -80,6 +84,13 @@ import uk.gov.moj.sdt.utils.Utilities;
 		"classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml" })
 public class SubmitQueryServiceIntTest extends
 		AbstractTransactionalJUnit4SpringContextTests {
+
+	/**
+	 * Logger object.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(SubmitQueryServiceIntTest.class);
+
 	/**
 	 * Test subject.
 	 */
@@ -124,15 +135,15 @@ public class SubmitQueryServiceIntTest extends
 		try {
 			accessibleSubmitQueryService
 					.invoke(submitQueryService, submitQuery);
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (final IllegalAccessException e) {
+			LOGGER.debug(e.getMessage());
+			assertTrue("IllegalAccessException please debug test", false);
+		} catch (final IllegalArgumentException e) {
+			LOGGER.debug(e.getMessage());
+			assertTrue("IllegalArgumentException please debug test", false);
+		} catch (final InvocationTargetException e) {
+			LOGGER.debug(e.getMessage());
+			assertTrue("InvocationTargetException please debug test", false);
 		}
 		// submitQueryService.updateRequestSoapError(submitQuery);
 
@@ -175,8 +186,6 @@ public class SubmitQueryServiceIntTest extends
 
 		submitQuery.setBulkCustomer(bulkCustomer);
 
-		// TODO : set other variables in submit query
-
 		return submitQuery;
 	}
 
@@ -206,11 +215,11 @@ public class SubmitQueryServiceIntTest extends
 			method = clazzUnderTest.getDeclaredMethod(methodName, paramTypes);
 			method.setAccessible(true);
 		} catch (final SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.debug(e.getMessage());
+			assertTrue("SecurityException please debug test", false);
 		} catch (final NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.debug(e.getMessage());
+			assertTrue("NoSuchMethodException please debug test", false);
 		}
 		return method;
 	}
