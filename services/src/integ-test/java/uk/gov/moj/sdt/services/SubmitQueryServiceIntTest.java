@@ -69,159 +69,169 @@ import uk.gov.moj.sdt.utils.Utilities;
  * @author Manoj kulkarni
  * 
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-		"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
-		"classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
-		"classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
-		"classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
-		"classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
-		"classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
-		"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-		"classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-		"classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-		"classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-		"classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml" })
-public class SubmitQueryServiceIntTest extends
-		AbstractTransactionalJUnit4SpringContextTests {
+@RunWith (SpringJUnit4ClassRunner.class)
+@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
+        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
+        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
+        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
+        "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
+        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
+        "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
+        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
+        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+public class SubmitQueryServiceIntTest extends AbstractTransactionalJUnit4SpringContextTests
+{
 
-	/**
-	 * Logger object.
-	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SubmitQueryServiceIntTest.class);
+    /**
+     * Logger object.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryServiceIntTest.class);
 
-	/**
-	 * Test subject.
-	 */
-	private SubmitQueryService submitQueryService;
+    /**
+     * Test subject.
+     */
+    private SubmitQueryService submitQueryService;
 
-	/**
-	 * Setup the test.
-	 */
-	@Before
-	public void setUp() {
-		DBUnitUtility.loadDatabase(this.getClass(), true);
+    /**
+     * Setup the test.
+     */
+    @Before
+    public void setUp ()
+    {
+        DBUnitUtility.loadDatabase (this.getClass (), true);
 
-		submitQueryService = (SubmitQueryService) this.applicationContext
-				.getBean("uk.gov.moj.sdt.services.api.ISubmitQueryService");
+        submitQueryService =
+                (SubmitQueryService) this.applicationContext
+                        .getBean ("uk.gov.moj.sdt.services.api.ISubmitQueryService");
 
-	}
+    }
 
-	/**
-	 * This method tests for persistence of a single submission.
-	 * 
-	 * @throws IOException
-	 *             if there is any error reading from the test file.
-	 */
-	@Test
-	@Rollback(false)
-	public void updateRequestSoapError() throws IOException {
-		final String rawXml = Utilities.getRawXml("src/integ-test/resources/",
-				"testSampleErrorRequest.xml");
-		SdtContext.getContext().setRawInXml(rawXml);
+    /**
+     * This method tests for persistence of a single submission.
+     * 
+     * @throws IOException
+     *             if there is any error reading from the test file.
+     */
+    @Test
+    @Rollback (false)
+    public void updateRequestSoapError () throws IOException
+    {
+        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testSampleErrorRequest.xml");
+        SdtContext.getContext ().setRawInXml (rawXml);
 
-		final ISubmitQueryRequest submitQuery = this.createSubmitQuery();
+        final ISubmitQueryRequest submitQuery = this.createSubmitQuery ();
 
-		// Set the service request id so it can be retrieved in the
-		// saveBulkSubmission code
-		// SdtContext.getContext ().setServiceRequestId (new Long (10800));
+        // Set the service request id so it can be retrieved in the
+        // saveBulkSubmission code
+        // SdtContext.getContext ().setServiceRequestId (new Long (10800));
 
-		final Method accessibleSubmitQueryService = this.makeMethodAccesible(
-				SubmitQueryService.class, "updateRequestSoapError",
-				ISubmitQueryRequest.class);
+        final Method accessibleSubmitQueryService =
+                this.makeMethodAccesible (SubmitQueryService.class, "updateRequestSoapError", ISubmitQueryRequest.class);
 
-		// Call the bulk submission service
-		try {
-			accessibleSubmitQueryService
-					.invoke(submitQueryService, submitQuery);
-		} catch (final IllegalAccessException e) {
-			LOGGER.debug(e.getMessage());
-			assertTrue("IllegalAccessException please debug test", false);
-		} catch (final IllegalArgumentException e) {
-			LOGGER.debug(e.getMessage());
-			assertTrue("IllegalArgumentException please debug test", false);
-		} catch (final InvocationTargetException e) {
-			LOGGER.debug(e.getMessage());
-			assertTrue("InvocationTargetException please debug test", false);
-		}
-		// submitQueryService.updateRequestSoapError(submitQuery);
+        // Call the bulk submission service
+        try
+        {
+            accessibleSubmitQueryService.invoke (submitQueryService, submitQuery);
+        }
+        catch (final IllegalAccessException e)
+        {
+            LOGGER.debug (e.getMessage ());
+            assertTrue ("IllegalAccessException please debug test", false);
+        }
+        catch (final IllegalArgumentException e)
+        {
+            LOGGER.debug (e.getMessage ());
+            assertTrue ("IllegalArgumentException please debug test", false);
+        }
+        catch (final InvocationTargetException e)
+        {
+            LOGGER.debug (e.getMessage ());
+            assertTrue ("InvocationTargetException please debug test", false);
+        }
+        // submitQueryService.updateRequestSoapError(submitQuery);
 
-		Assert.assertEquals(submitQuery.getErrorLog().getErrorText(),
-				"A system error has occurred. Please contact tbc for assistance.");
-	}
+        Assert.assertEquals (submitQuery.getErrorLog ().getErrorText (),
+                "A system error has occurred. Please contact tbc for assistance.");
+    }
 
-	/**
-	 * @return SubmitQueryRequest object for the testing.
-	 */
-	private ISubmitQueryRequest createSubmitQuery() {
-		final ISubmitQueryRequest submitQuery = new SubmitQueryRequest();
-		final IBulkCustomer bulkCustomer = new BulkCustomer();
-		final ITargetApplication targetApp = new TargetApplication();
+    /**
+     * @return SubmitQueryRequest object for the testing.
+     */
+    private ISubmitQueryRequest createSubmitQuery ()
+    {
+        final ISubmitQueryRequest submitQuery = new SubmitQueryRequest ();
+        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+        final ITargetApplication targetApp = new TargetApplication ();
 
-		targetApp.setId(1L);
-		targetApp.setTargetApplicationCode("MCOL");
-		targetApp.setTargetApplicationName("MCOL");
-		final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
+        targetApp.setId (1L);
+        targetApp.setTargetApplicationCode ("MCOL");
+        targetApp.setTargetApplicationName ("MCOL");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
 
-		final IServiceRouting serviceRouting = new ServiceRouting();
-		serviceRouting.setId(1L);
-		serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
+        final IServiceRouting serviceRouting = new ServiceRouting ();
+        serviceRouting.setId (1L);
+        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
 
-		final IServiceType serviceType = new ServiceType();
-		serviceType.setId(1L);
-		serviceType.setName("RequestTest1");
-		serviceType.setDescription("RequestTestDesc1");
-		serviceType.setStatus("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType ();
+        serviceType.setId (1L);
+        serviceType.setName ("RequestTest1");
+        serviceType.setDescription ("RequestTestDesc1");
+        serviceType.setStatus ("RequestTestStatus");
 
-		serviceRouting.setServiceType(serviceType);
+        serviceRouting.setServiceType (serviceType);
 
-		serviceRoutings.add(serviceRouting);
+        serviceRoutings.add (serviceRouting);
 
-		targetApp.setServiceRoutings(serviceRoutings);
+        targetApp.setServiceRoutings (serviceRoutings);
 
-		submitQuery.setTargetApplication(targetApp);
+        submitQuery.setTargetApplication (targetApp);
 
-		bulkCustomer.setSdtCustomerId(2L);
+        bulkCustomer.setSdtCustomerId (2L);
 
-		submitQuery.setBulkCustomer(bulkCustomer);
+        submitQuery.setBulkCustomer (bulkCustomer);
 
-		return submitQuery;
-	}
+        return submitQuery;
+    }
 
-	/**
-	 * Retrieve a field in its accessible state.
-	 * 
-	 * <p>
-	 * Scenario: field exists without a getter and is protected or private. This
-	 * allows you to inspect that field's state e.g.
-	 * <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
+    /**
+     * Retrieve a field in its accessible state.
+     * 
+     * <p>
+     * Scenario: field exists without a getter and is protected or private. This allows you to inspect that field's
+     * state e.g. <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
                 ServiceRequest.class, "requestDateTime", LocalDateTime.class,
                 serviceRequest)</code>
-	 * </p>
-	 * 
-	 * @param clazzUnderTest
-	 *            This is the class that owns the method
-	 * @param methodName
-	 *            this is the method name
-	 * @param paramTypes
-	 *            the arguments
-	 * @return the method in its accesible form.
-	 */
-	public Method makeMethodAccesible(final Class<?> clazzUnderTest,
-			final String methodName, final Class<?>... paramTypes) {
-		Method method = null;
-		try {
-			method = clazzUnderTest.getDeclaredMethod(methodName, paramTypes);
-			method.setAccessible(true);
-		} catch (final SecurityException e) {
-			LOGGER.debug(e.getMessage());
-			assertTrue("SecurityException please debug test", false);
-		} catch (final NoSuchMethodException e) {
-			LOGGER.debug(e.getMessage());
-			assertTrue("NoSuchMethodException please debug test", false);
-		}
-		return method;
-	}
+     * </p>
+     * 
+     * @param clazzUnderTest
+     *            This is the class that owns the method
+     * @param methodName
+     *            this is the method name
+     * @param paramTypes
+     *            the arguments
+     * @return the method in its accesible form.
+     */
+    public Method makeMethodAccesible (final Class<?> clazzUnderTest, final String methodName,
+                                       final Class<?>... paramTypes)
+    {
+        Method method = null;
+        try
+        {
+            method = clazzUnderTest.getDeclaredMethod (methodName, paramTypes);
+            method.setAccessible (true);
+        }
+        catch (final SecurityException e)
+        {
+            LOGGER.debug (e.getMessage ());
+            assertTrue ("SecurityException please debug test", false);
+        }
+        catch (final NoSuchMethodException e)
+        {
+            LOGGER.debug (e.getMessage ());
+            assertTrue ("NoSuchMethodException please debug test", false);
+        }
+        return method;
+    }
 
 }
