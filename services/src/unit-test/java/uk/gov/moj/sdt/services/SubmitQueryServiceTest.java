@@ -292,7 +292,7 @@ public class SubmitQueryServiceTest
         final IErrorMessage errorMsg = new ErrorMessage ();
         errorMsg.setErrorCode ("SDT_INT_ERR");
         errorMsg.setErrorDescription ("SDT Internal Error.");
-        errorMsg.setErrorText ("SDT Internal Error {0}.");
+        errorMsg.setErrorText ("SDT Internal Error, please report to {0}");
         EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
 
         final IGlobalParameter contactNameParameter = new GlobalParameter ();
@@ -317,6 +317,9 @@ public class SubmitQueryServiceTest
         Assert.assertEquals ("Raw output xml should be null", null, SdtContext.getContext ().getRawOutXml ());
 
         Assert.assertTrue ("Expected to pass", true);
+
+        Assert.assertEquals ("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog ()
+                .getErrorText ());
     }
 
     /**
@@ -354,9 +357,14 @@ public class SubmitQueryServiceTest
         final IErrorMessage errorMsg = new ErrorMessage ();
         errorMsg.setErrorCode ("SDT_INT_ERR");
         errorMsg.setErrorDescription ("SDT Internal Error.");
-        errorMsg.setErrorText ("SDT Internal Error.");
-
+        errorMsg.setErrorText ("SDT Internal Error, please report to {0}");
         EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "SDT_INT_ERR")).andReturn (errorMsg);
+
+        final IGlobalParameter contactNameParameter = new GlobalParameter ();
+        contactNameParameter.setValue ("Tester");
+        contactNameParameter.setName ("CONTACT_DETAILS");
+        EasyMock.expect (this.mockGlobalParamCache.getValue (IGlobalParameter.class, "CONTACT_DETAILS")).andReturn (
+                contactNameParameter);
 
         EasyMock.replay (mockConsumerGateway);
         EasyMock.replay (mockGlobalParamCache);
@@ -374,6 +382,9 @@ public class SubmitQueryServiceTest
         Assert.assertEquals ("Raw output xml should be null", null, SdtContext.getContext ().getRawOutXml ());
 
         Assert.assertTrue ("Expected to pass", true);
+
+        Assert.assertEquals ("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog ()
+                .getErrorText ());
     }
 
     /**
