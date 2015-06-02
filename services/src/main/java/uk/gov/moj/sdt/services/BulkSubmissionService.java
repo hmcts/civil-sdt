@@ -37,8 +37,6 @@ import java.util.Map;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -66,7 +64,6 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
  * @author Manoj Kulkarni
  * 
  */
-@Transactional (propagation = Propagation.SUPPORTS)
 public class BulkSubmissionService implements IBulkSubmissionService
 {
     /**
@@ -117,7 +114,6 @@ public class BulkSubmissionService implements IBulkSubmissionService
     private ICacheable errorMessagesCache;
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRED)
     public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
     {
         enrich (bulkSubmission);

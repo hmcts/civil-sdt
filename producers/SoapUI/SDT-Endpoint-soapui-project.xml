@@ -1409,6 +1409,54 @@
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="concurrent1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>abc1223456</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 or more repetitions:-->
+            <bul:request requestType="mcolClaimStatusUpdate" requestId="1">
+               <bul:mcolClaimStatusUpdate>
+                  <cla1:claimNumber>claim123</cla1:claimNumber>
+                  <cla1:defendantId>1</cla1:defendantId>
+                  <cla1:notificationType>MP</cla1:notificationType>
+                  <cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>
+               </bul:mcolClaimStatusUpdate>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="concurrent2"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>abc1223456</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 or more repetitions:-->
+            <bul:request requestType="mcolClaimStatusUpdate" requestId="1">
+               <bul:mcolClaimStatusUpdate>
+                  <cla1:claimNumber>claim123</cla1:claimNumber>
+                  <cla1:defendantId>1</cla1:defendantId>
+                  <cla1:notificationType>MP</cla1:notificationType>
+                  <cla1:paidInFullDate>2012-01-01</cla1:paidInFullDate>
+               </bul:mcolClaimStatusUpdate>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
 </soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>

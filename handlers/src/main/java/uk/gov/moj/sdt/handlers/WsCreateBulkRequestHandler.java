@@ -88,7 +88,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      * duplicate does not work until the first bulk request has been persisted.
      */
     private Map<String, String> concurrencyMap;
-    
+
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
     {
@@ -148,8 +148,9 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
             SdtMetricsMBean.getMetrics ().addBulkSubmitTime (endTime - startTime);
 
             final String key =
-                    bulkRequestType.getHeader ().getSdtCustomerId () + bulkRequestType.getHeader ().getCustomerReference ();
-            
+                    bulkRequestType.getHeader ().getSdtCustomerId () +
+                            bulkRequestType.getHeader ().getCustomerReference ();
+
             // Set concurrency map for this user and customer reference.
             concurrencyMap.remove (key);
         }
@@ -261,5 +262,5 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     {
         this.concurrencyMap = concurrencyMap;
     }
-    
+
 }
