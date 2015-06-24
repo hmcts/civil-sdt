@@ -37,7 +37,7 @@
     	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
     	<property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator"/>
     	<property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
-    	<property name="concurrencyMap" ref="concurrencyMapRef"/>
+    	<property name="concurrencyMap" ref="uk.gov.moj.sdt.services.concurrencyMap"/>
     	<property name="errorMessagesCache" ref="uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache"/>
     </bean>   
     
@@ -71,4 +71,5 @@
     	<property name="globalParametersCache" ref="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache"/>
     </bean>
                           
+	<bean id="uk.gov.moj.sdt.services.concurrencyMap" class="java.util.HashMap"/>                     
 </beans>
