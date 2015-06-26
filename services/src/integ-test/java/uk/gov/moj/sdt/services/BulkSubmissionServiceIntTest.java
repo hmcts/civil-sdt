@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.services;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.LocalDateTime;
@@ -40,9 +41,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -58,6 +60,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
+import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -79,17 +82,31 @@ import uk.gov.moj.sdt.utils.Utilities;
         "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4SpringContextTests
+public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
 {
+    /**
+     * Logger object.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionServiceIntTest.class);
+
     /**
      * Test subject.
      */
     private IBulkSubmissionService bulkSubmissionService;
 
     /**
+     * Map holding the concurrency information for each thread. This needs to be cleared in the test as the test calls
+     * the service only and it is the handler above the service in the real application which is responsible for
+     * clearing the map. If it is not cleared, all tests but the first will fail because the map will still have the
+     * previous test information in it.
+     */
+    protected Map<String, String> concurrencyMap;
+
+    /**
      * Setup the test.
      */
     @Before
+    @SuppressWarnings ("unchecked")
     public void setUp ()
     {
         DBUnitUtility.loadDatabase (this.getClass (), true);
@@ -98,6 +115,9 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
                 (IBulkSubmissionService) this.applicationContext
                         .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
 
+        // Get the concurrency map so we can clear it after test.
+        concurrencyMap =
+                (Map<String, String>) this.applicationContext.getBean ("uk.gov.moj.sdt.services.concurrencyMap");
     }
 
     /**
@@ -119,6 +139,8 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+
+        clearConcurrencyMap (bulkSubmission);
 
         Assert.assertNotNull (bulkSubmission.getPayload ());
 
@@ -161,6 +183,8 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+
+        clearConcurrencyMap (bulkSubmission);
 
         Assert.assertNotNull (bulkSubmission.getPayload ());
 
@@ -244,6 +268,7 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
     }
 
     /**
+     * Helper method to setup a single request.
      * 
      * @param bulkSubmission bulk submission record.
      * @param customerReference customer reference.
@@ -266,4 +291,17 @@ public class BulkSubmissionServiceIntTest extends AbstractTransactionalJUnit4Spr
         return individualRequest;
     }
 
+    /**
+     * Clear out the concurrency map after the last test, else subsequent tests will fail.
+     * 
+     * @param bulkSubmission bulk submission record.
+     */
+    private void clearConcurrencyMap (final IBulkSubmission bulkSubmission)
+    {
+        final String key =
+                bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+
+        // Set concurrency map for this user and customer reference.
+        concurrencyMap.remove (key);
+    }
 }

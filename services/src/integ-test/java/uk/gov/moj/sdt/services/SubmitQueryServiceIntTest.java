@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -59,6 +58,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -80,7 +80,7 @@ import uk.gov.moj.sdt.utils.Utilities;
         "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class SubmitQueryServiceIntTest extends AbstractTransactionalJUnit4SpringContextTests
+public class SubmitQueryServiceIntTest extends AbstractIntegrationTest
 {
 
     /**
@@ -104,7 +104,6 @@ public class SubmitQueryServiceIntTest extends AbstractTransactionalJUnit4Spring
         submitQueryService =
                 (SubmitQueryService) this.applicationContext
                         .getBean ("uk.gov.moj.sdt.services.api.ISubmitQueryService");
-
     }
 
     /**
@@ -193,45 +192,4 @@ public class SubmitQueryServiceIntTest extends AbstractTransactionalJUnit4Spring
 
         return submitQuery;
     }
-
-    /**
-     * Retrieve a field in its accessible state.
-     * 
-     * <p>
-     * Scenario: field exists without a getter and is protected or private. This allows you to inspect that field's
-     * state e.g. <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
-                ServiceRequest.class, "requestDateTime", LocalDateTime.class,
-                serviceRequest)</code>
-     * </p>
-     * 
-     * @param clazzUnderTest
-     *            This is the class that owns the method
-     * @param methodName
-     *            this is the method name
-     * @param paramTypes
-     *            the arguments
-     * @return the method in its accesible form.
-     */
-    public Method makeMethodAccesible (final Class<?> clazzUnderTest, final String methodName,
-                                       final Class<?>... paramTypes)
-    {
-        Method method = null;
-        try
-        {
-            method = clazzUnderTest.getDeclaredMethod (methodName, paramTypes);
-            method.setAccessible (true);
-        }
-        catch (final SecurityException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue ("SecurityException please debug test", false);
-        }
-        catch (final NoSuchMethodException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue ("NoSuchMethodException please debug test", false);
-        }
-        return method;
-    }
-
 }
