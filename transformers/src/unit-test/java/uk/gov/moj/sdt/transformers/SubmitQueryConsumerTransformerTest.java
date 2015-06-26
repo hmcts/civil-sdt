@@ -34,14 +34,13 @@ import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -53,7 +52,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQue
  * @author D274994
  * 
  */
-public class SubmitQueryConsumerTransformerTest extends TestCase
+public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase
 {
     /**
      * Placeholder for submit query consumer transformer.
@@ -63,8 +62,7 @@ public class SubmitQueryConsumerTransformerTest extends TestCase
     /**
      * Set up variables for the test.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         Constructor<SubmitQueryConsumerTransformer> c;
         try

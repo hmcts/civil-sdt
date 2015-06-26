@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Unit tests for {@link IndividualRequest}.
@@ -47,7 +48,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
  * @author Saurabh Agarwal
  * 
  */
-public class IndividualRequestTest
+public class IndividualRequestTest extends AbstractSdtUnitTestBase
 {
     /**
      * Test subject.

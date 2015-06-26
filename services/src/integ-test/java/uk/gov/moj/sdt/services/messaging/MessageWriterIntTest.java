@@ -43,10 +43,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -65,7 +65,7 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
         "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class MessageWriterIntTest extends AbstractJUnit4SpringContextTests
+public class MessageWriterIntTest extends AbstractIntegrationTest
 {
     /**
      * Logger object.

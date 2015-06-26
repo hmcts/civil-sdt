@@ -35,10 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.joda.time.LocalDateTime;
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -46,6 +44,7 @@ import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
@@ -59,9 +58,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
  * @author d130680
  * 
  */
-public class BulkRequestTransformerTest extends TestCase
+public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase
 {
-
     /**
      * Bulk request transformer.
      */
@@ -70,8 +68,7 @@ public class BulkRequestTransformerTest extends TestCase
     /**
      * Set up variables for the test.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         Constructor<BulkRequestTransformer> c;
         try
@@ -236,6 +233,5 @@ public class BulkRequestTransformerTest extends TestCase
         Assert.assertNotNull ("The submitted date is found", jaxb.getSubmittedDate ());
 
         Assert.assertEquals ("The status code is as expected", jaxb.getStatus ().getCode ().value (), "Ok");
-
     }
 }

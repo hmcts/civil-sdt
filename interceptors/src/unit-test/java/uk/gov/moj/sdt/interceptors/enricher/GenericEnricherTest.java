@@ -35,6 +35,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -43,7 +44,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author d276205
  * 
  */
-public class GenericEnricherTest
+public class GenericEnricherTest extends AbstractSdtUnitTestBase
 {
     /**
      * Subject for test.

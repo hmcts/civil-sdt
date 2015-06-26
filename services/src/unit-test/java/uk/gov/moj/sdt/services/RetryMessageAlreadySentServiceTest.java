@@ -57,6 +57,7 @@ import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Test class for the RetryMessageAlreadySentService.
@@ -64,7 +65,7 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
  * @author Manoj Kulkarni
  * 
  */
-public class RetryMessageAlreadySentServiceTest
+public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase
 {
     /**
      * Mocked Individual Request Dao object.

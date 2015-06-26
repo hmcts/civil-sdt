@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
@@ -48,7 +49,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
  * @author d130680
  * 
  */
-public class GlobalParametersCacheTest
+public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase
 {
 
     /**

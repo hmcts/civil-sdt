@@ -32,10 +32,7 @@ package uk.gov.moj.sdt.transformers;
 
 import java.lang.reflect.Constructor;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusCodeType;
@@ -57,7 +55,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
  * @author Manoj Kulkarni
  * 
  */
-public class UpdateItemTransformerTest extends TestCase
+public class UpdateItemTransformerTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger object.
@@ -72,8 +70,7 @@ public class UpdateItemTransformerTest extends TestCase
     /**
      * Set up variables for the test.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         Constructor<UpdateItemTransformer> c;
         try

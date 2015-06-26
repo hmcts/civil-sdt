@@ -43,6 +43,7 @@ import org.junit.Test;
 
 import uk.gov.moj.sdt.services.TargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Test class for Message reader implementation.
@@ -50,7 +51,7 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
  * @author Manoj Kulkarni
  * 
  */
-public class IndividualRequestMdbTest
+public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase
 {
     /**
      * Mock service for the message processing.

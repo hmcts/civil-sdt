@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Robin Compston
  */
-public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
+public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBase
 {
 
     /**
@@ -75,16 +76,16 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
      */
     protected String badLine = ""; // SUPPRESS CHECKSTYLE Just some identifier.
 
-    /**
-     * Constructs a new {@link AbstractSdtGoodFileTestBase}.
-     * 
-     * @param testName Name of this test.
-     */
-    public AbstractSdtGoodFileTestBase (final String testName)
-    {
-        super (testName);
-    }
-
+    // /**
+    // * Constructs a new {@link AbstractSdtGoodFileTestBase}.
+    // *
+    // * @param testName Name of this test.
+    // */
+    // public AbstractSdtGoodFileTestBase (final String testName)
+    // {
+    // super (testName);
+    // }
+    //
     /**
      * Compares the contents two named text files and returns true if they are exatcly the same. Note - Any data not
      * required to be compared, e.g. run dates and timing information etc. should be placed outside of the "test
@@ -307,8 +308,8 @@ public abstract class AbstractSdtGoodFileTestBase extends SdtUnitTestBase
                         + "ignored for comparison purposes.");
             }
 
-            AbstractSdtGoodFileTestBase.fail ("Comparison failure between out file [" + outFilePath +
-                    "] and good file [" + goodFilePath + "].\nFirst mismatch: \n" + this.badLine);
+            Assert.fail ("Comparison failure between out file [" + outFilePath + "] and good file [" + goodFilePath +
+                    "].\nFirst mismatch: \n" + this.badLine);
         }
         else
         {

@@ -35,10 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.joda.time.LocalDateTime;
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -47,6 +45,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
@@ -61,7 +60,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponseType;
  * @author d130680
  * 
  */
-public class BulkFeedbackTransformerTest extends TestCase
+public class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase
 {
 
     /**
@@ -72,8 +71,7 @@ public class BulkFeedbackTransformerTest extends TestCase
     /**
      * Set up variables for the test.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         Constructor<BulkFeedbackTransformer> c;
         try

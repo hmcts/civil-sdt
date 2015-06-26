@@ -49,6 +49,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
@@ -56,7 +57,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
  * 
  * @author Manoj Kulkarni
  */
-public class SdtManagementMBeanTest
+public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase
 {
     /**
      * Success message to return after successfully processing the SDT individual request.

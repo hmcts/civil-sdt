@@ -60,6 +60,7 @@ import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -68,7 +69,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author Manoj Kulkarni
  * 
  */
-public class UpdateRequestServiceTest
+public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger for debugging.

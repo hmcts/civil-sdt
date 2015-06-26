@@ -44,17 +44,8 @@ import org.junit.Test;
  * @author d130680
  * 
  */
-public class UtilitiesTest extends SdtUnitTestBase
+public class UtilitiesTest extends AbstractSdtUnitTestBase
 {
-
-    /**
-     * Constructer.
-     */
-    public UtilitiesTest ()
-    {
-        super (UtilitiesTest.class.getName ());
-    }
-
     /**
      * Test the tokenisation works.
      */
@@ -85,6 +76,5 @@ public class UtilitiesTest extends SdtUnitTestBase
         Assert.assertEquals ("The quick brown fox jumped over the lazy brown dog", s);
 
     }
-
 
 }

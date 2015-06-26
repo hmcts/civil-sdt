@@ -39,7 +39,7 @@ import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Base class for unit testing validators.
@@ -47,19 +47,8 @@ import uk.gov.moj.sdt.utils.SdtUnitTestBase;
  * @author d276205
  * 
  */
-public abstract class AbstractValidatorUnitTest extends SdtUnitTestBase
+public abstract class AbstractValidatorUnitTest extends AbstractSdtUnitTestBase
 {
-    /**
-     * Creates an instance.
-     * 
-     * @param testName name of test
-     */
-    public AbstractValidatorUnitTest (final String testName)
-    {
-        super (testName);
-
-    }
-
     /**
      * create a bulk customer.
      * 

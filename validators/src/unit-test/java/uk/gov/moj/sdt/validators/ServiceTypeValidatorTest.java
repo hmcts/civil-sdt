@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.ServiceType;
@@ -47,27 +46,15 @@ import uk.gov.moj.sdt.domain.ServiceType;
 
 public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest
 {
-
     /**
      * Test subject.
      */
     private ServiceTypeValidator validator;
 
     /**
-     * Constructor for test.
-     * 
-     * @param testName name of this test class.
-     */
-    public ServiceTypeValidatorTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Setup of the Validator and Domain class instance.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         // subject of test
         validator = new ServiceTypeValidator ();
@@ -83,5 +70,4 @@ public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest
 
         // Nothing to verify as validator implementation is empty.
     }
-
 }

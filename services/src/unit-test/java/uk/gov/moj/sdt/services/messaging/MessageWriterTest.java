@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Test class for testing the MessageWriter implementation.
@@ -52,7 +53,7 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
  * @author Manoj Kulkarni
  * 
  */
-public class MessageWriterTest
+public class MessageWriterTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger object.

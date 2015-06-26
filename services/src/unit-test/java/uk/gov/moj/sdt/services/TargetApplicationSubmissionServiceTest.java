@@ -73,6 +73,7 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -81,7 +82,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author Manoj Kulkarni
  * 
  */
-public class TargetApplicationSubmissionServiceTest
+public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger for debugging.

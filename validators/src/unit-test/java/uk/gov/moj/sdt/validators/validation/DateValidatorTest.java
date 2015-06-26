@@ -30,11 +30,11 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators.validation;
 
-import junit.framework.TestCase;
-
 import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.junit.Test;
 
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.validators.DateValidator;
 
 /**
@@ -43,7 +43,7 @@ import uk.gov.moj.sdt.validators.DateValidator;
  * @author d301488
  * 
  */
-public class DateValidatorTest extends TestCase
+public class DateValidatorTest extends AbstractSdtUnitTestBase
 {
 
     /**
@@ -51,6 +51,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: TRUE as the date given is within the range.
      */
+    @Test
     public void testIsDateWitinRangeTrue ()
     {
 
@@ -68,6 +69,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: TRUE - as the date given is on the same day as the end date.
      */
+    @Test
     public void testIsDateWitinRangeSameDate ()
     {
         final LocalDate dateToTest = new LocalDate ();
@@ -85,6 +87,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: FALSE as the date given is NOT within the range.
      */
+    @Test
     public void testIsDateWitinRangeFalseEnd ()
     {
         final LocalDate dateToTest = new LocalDate ().plusMonths (12);
@@ -103,6 +106,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: Method returns FALSE as the date given is NOT within the range.
      */
+    @Test
     public void testIsDateWitinRangeFalseStart ()
     {
         final LocalDate dateToTest = new LocalDate ().minusMonths (12);
@@ -119,6 +123,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: TRUE as the date given is BEFORE the given date.
      */
+    @Test
     public void testIsDateBeforeTrue ()
     {
         final LocalDate dateToTest = new LocalDate ();
@@ -134,6 +139,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: FALSE as the date given is AFTER the end date.
      */
+    @Test
     public void testIsDateBeforeFalse ()
     {
         final LocalDate dateToTest = new LocalDate ().plusMonths (12);
@@ -149,6 +155,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: TRUE as the date given is AFTER the given date.
      */
+    @Test
     public void testIsDateAfterTrue ()
     {
         final LocalDate dateToTest = new LocalDate ().plusMonths (12);
@@ -164,6 +171,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: FALSE as the date given is BEFORE the range.
      */
+    @Test
     public void testIsDateAfterFalse ()
     {
         final LocalDate dateToTest = new LocalDate ();
@@ -179,6 +187,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: TRUE the date given is within 10 days of today.
      */
+    @Test
     public void testIsDateWitinXDaysWITHIN ()
     {
         final LocalDate dateToTest = new LocalDate ().minusDays (5);
@@ -192,6 +201,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: TRUE the date given is within 10 days of today.
      */
+    @Test
     public void testIsDateWitinXDaysONBOUNDARY ()
     {
         final LocalDate dateToTest = new LocalDate ().minusDays (10);
@@ -205,6 +215,7 @@ public class DateValidatorTest extends TestCase
      * 
      * Expected: TRUE the date given is within 10 days of today.
      */
+    @Test
     public void testIsDateWitinXDaysOUTSIDE ()
     {
         final LocalDate dateToTest = new LocalDate ().minusDays (15);

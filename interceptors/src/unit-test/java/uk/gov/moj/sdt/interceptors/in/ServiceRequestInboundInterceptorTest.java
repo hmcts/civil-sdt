@@ -45,8 +45,8 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
 
 /**
  * Test class.
@@ -54,22 +54,12 @@ import uk.gov.moj.sdt.utils.SdtUnitTestBase;
  * @author d195274
  * 
  */
-public class ServiceRequestInboundInterceptorTest extends SdtUnitTestBase
+public class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger (ServiceRequestInboundInterceptorTest.class);
-
-    /**
-     * Constructor.
-     * 
-     * @param testName ronseal
-     */
-    public ServiceRequestInboundInterceptorTest (final String testName)
-    {
-        super (testName);
-    }
 
     /**
      * Build a mocked dao.

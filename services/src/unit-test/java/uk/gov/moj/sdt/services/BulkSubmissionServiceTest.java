@@ -67,6 +67,7 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
@@ -77,7 +78,7 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
  * @author Manoj Kulkarni
  * 
  */
-public class BulkSubmissionServiceTest
+public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger for debugging.

@@ -41,6 +41,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 
@@ -50,7 +51,7 @@ import uk.gov.moj.sdt.utils.Utilities;
  * @author Robin Compston.
  * 
  */
-public class BulkFeedbackEnricherTest
+public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger object.

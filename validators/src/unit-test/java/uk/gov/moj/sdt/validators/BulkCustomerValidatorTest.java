@@ -35,7 +35,6 @@ import static org.easymock.EasyMock.replay;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
@@ -102,20 +101,9 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest
     private long sdtCustomerId = 12345;
 
     /**
-     * Constructor for test.
-     * 
-     * @param testName name of this test class.
-     */
-    public BulkCustomerValidatorTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Setup of the Validator and Domain class instance.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
 
         validator = new BulkCustomerValidator ();

@@ -40,11 +40,11 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
+import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 
 /**
  * Test class for SdtBulkReferenceGenerator.
@@ -64,7 +64,7 @@ import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 @Transactional
-public class SdtBulkReferenceGeneratorIntTest extends AbstractTransactionalJUnit4SpringContextTests
+public class SdtBulkReferenceGeneratorIntTest extends AbstractIntegrationTest
 {
     /**
      * Logger object.

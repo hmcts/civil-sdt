@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 
@@ -53,7 +54,7 @@ import uk.gov.moj.sdt.utils.Utilities;
  * @author D303894
  * 
  */
-public class IndividualRequestsXmlParserTest
+public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger instance.

@@ -36,7 +36,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,7 @@ import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
@@ -61,7 +60,7 @@ import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
  * @author d164190
  * 
  */
-public class SdtValidatorTest extends SdtUnitTestBase
+public class SdtValidatorTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger object.
@@ -94,22 +93,10 @@ public class SdtValidatorTest extends SdtUnitTestBase
     private IGlobalParameter globalParam;
 
     /**
-     * Constructor.
-     * 
-     * @param testName final String
-     */
-    public SdtValidatorTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Set up test artefact.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
-
         mockErrorMessagesCache = EasyMock.createMock (ICacheable.class);
         mockGlobalParameterCache = EasyMock.createMock (ICacheable.class);
 
@@ -363,5 +350,4 @@ public class SdtValidatorTest extends SdtUnitTestBase
             Assert.assertTrue ("Substitution value incorrect", e.getMessage ().contains ("MCOL000009876"));
         }
     }
-
 }

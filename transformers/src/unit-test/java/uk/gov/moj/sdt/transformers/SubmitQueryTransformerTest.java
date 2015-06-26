@@ -33,15 +33,14 @@ package uk.gov.moj.sdt.transformers;
 import java.lang.reflect.Constructor;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
@@ -52,9 +51,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d130680
  * 
  */
-public class SubmitQueryTransformerTest extends TestCase
+public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase
 {
-
     /**
      * Submit query transformer.
      */
@@ -63,8 +61,7 @@ public class SubmitQueryTransformerTest extends TestCase
     /**
      * Set up variables for the test.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         Constructor<SubmitQueryTransformer> c;
         try

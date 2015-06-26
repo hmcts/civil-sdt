@@ -38,7 +38,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 
 /**
@@ -46,18 +46,8 @@ import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
  * 
  * @author Robin Compston
  */
-public class XmlNamespaceUtilsTest extends SdtUnitTestBase
+public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase
 {
-    /**
-     * Constructs a new {@link XmlNamespaceUtilsTest}.
-     * 
-     * @param testName name of this test.
-     */
-    public XmlNamespaceUtilsTest (final String testName)
-    {
-        super (testName);
-    }
-
     /**
      * Test the extraction of single namespace values.
      */

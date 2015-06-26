@@ -102,9 +102,9 @@ public class BulkSubmissionService implements IBulkSubmissionService
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
 
     /**
-     * The concurrencyMap to hold sdtCustId+custRef and BulkRef. This is used to prevent the customer sending two
-     * requests close together which both get processed at the same time, causing duplicates. The normal check on a
-     * duplicate does not work until the first bulk request has been persisted.
+     * The concurrencyMap to hold bulk reference keyed on sdtCustId + custRef. This is used to prevent the customer
+     * sending two requests close together which both get processed at the same time, causing duplicates. The normal
+     * check on a duplicate does not work until the first bulk request has been persisted.
      */
     private Map<String, String> concurrencyMap;
 

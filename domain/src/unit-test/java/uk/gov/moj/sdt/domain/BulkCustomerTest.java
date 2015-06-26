@@ -42,6 +42,7 @@ import org.junit.Test;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Unit tests for {@link BulkCustomer}.
@@ -49,7 +50,7 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  * @author d276205
  * 
  */
-public class BulkCustomerTest
+public class BulkCustomerTest extends AbstractSdtUnitTestBase
 {
     /**
      * Test subject.

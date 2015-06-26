@@ -36,7 +36,6 @@ import static org.easymock.EasyMock.replay;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,14 +77,12 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
      * The IBulkFeedbackRequest.
      * 
      */
-
     private IBulkFeedbackRequest bulkFeedbackRequest;
 
     /**
      * The Dao.
      * 
      */
-
     private IBulkSubmission bulkSubmission;
 
     /**
@@ -130,20 +127,9 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
     private int dataRetentionPeriod;
 
     /**
-     * Constructor for test.
-     * 
-     * @param testName name of this test class.
-     */
-    public BulkFeedbackRequestValidatorTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Setup of the Validator and Domain class instance.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
 
         validator = new BulkFeedbackRequestValidator ();
@@ -241,5 +227,4 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
         }
 
     }
-
 }

@@ -42,14 +42,14 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
-import uk.gov.moj.sdt.utils.SdtUnitTestBase;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Class to test performance logging.
  * 
  * @author Robin Compston.
  */
-public class PerformanceLevelTest extends SdtUnitTestBase
+public class PerformanceLevelTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logging object. Note this must not be in the same hierarchy as other sdt loggers so that it can be turned off and
@@ -67,18 +67,8 @@ public class PerformanceLevelTest extends SdtUnitTestBase
      */
     private File performanceLogFile;
 
-    /**
-     * Constructs a new {@link PerformanceLogger}.
-     * 
-     * @param testName name of this test.
-     */
-    public PerformanceLevelTest (final String testName)
-    {
-        super (testName);
-    }
-
     @Override
-    protected void setUp () throws Exception
+    protected void setUpLocalTests () throws Exception
     {
         // Clear performance log.
         performanceLogFile = new File (PERFORMANCE_LOG_PATH);

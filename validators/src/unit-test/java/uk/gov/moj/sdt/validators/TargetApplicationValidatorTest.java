@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.TargetApplication;
@@ -47,27 +46,15 @@ import uk.gov.moj.sdt.domain.TargetApplication;
 
 public class TargetApplicationValidatorTest extends AbstractValidatorUnitTest
 {
-
     /**
      * Test subject.
      */
     private TargetApplicationValidator validator;
 
     /**
-     * Constructor for test.
-     * 
-     * @param testName name of this test class.
-     */
-    public TargetApplicationValidatorTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Setup of the Validator and Domain class instance.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         // subject of test
         validator = new TargetApplicationValidator ();
@@ -83,5 +70,4 @@ public class TargetApplicationValidatorTest extends AbstractValidatorUnitTest
 
         // Nothing to verify as validator implementation is empty.
     }
-
 }

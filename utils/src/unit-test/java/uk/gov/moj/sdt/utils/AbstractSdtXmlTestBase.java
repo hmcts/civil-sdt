@@ -50,6 +50,7 @@ import javax.xml.validation.SchemaFactory;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -61,7 +62,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author Robin Compston
  */
-public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
+public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
 {
     /**
      * Directory containing 'good' files against which new XML output is checked
@@ -97,23 +98,12 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
     /**
      * Logging object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SdtXmlTestBase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtXmlTestBase.class);
 
     /**
      * Flag to detect whether parsing error was encountered.
      */
     private boolean errorEncountered;
-
-    /**
-     * Constructs a new {@link SdtXmlTestBase}.
-     * 
-     * @param testName
-     *            Name of this test.
-     */
-    public SdtXmlTestBase (final String testName)
-    {
-        super (testName);
-    }
 
     /**
      * For now we just need to return true, tests inheriting this will need to
@@ -168,10 +158,10 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         {
             // Make sure the expected XML output file exists.
             final String xmlOutPath =
-                    Utilities.checkFileExists (SdtXmlTestBase.XML_OUTPUT_DIR, xmlFileName + ".out", true);
+                    Utilities.checkFileExists (AbstractSdtXmlTestBase.XML_OUTPUT_DIR, xmlFileName + ".out", true);
 
             // Create Writer for the formatter to use.
-            SdtXmlTestBase.LOGGER.debug ("File to write is: " + xmlOutPath);
+            AbstractSdtXmlTestBase.LOGGER.debug ("File to write is: " + xmlOutPath);
             final BufferedWriter bw = new BufferedWriter (new FileWriter (xmlOutPath));
 
             // Format XML output as pretty.
@@ -180,17 +170,18 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
             bw.close ();
 
             // Check good file also exists.
-            SdtXmlTestBase.LOGGER.debug ("Written file: " + xmlOutPath);
+            AbstractSdtXmlTestBase.LOGGER.debug ("Written file: " + xmlOutPath);
             final String xmlGoodPath =
-                    Utilities.checkFileExists (SdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
+                    Utilities.checkFileExists (AbstractSdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
 
             // compare the output and the good file.
-            SdtXmlTestBase.LOGGER.info ("Comparing XML file " + xmlOutPath + " against good file " + xmlGoodPath);
+            AbstractSdtXmlTestBase.LOGGER.info ("Comparing XML file " + xmlOutPath + " against good file " +
+                    xmlGoodPath);
             return this.compareTestOutputFiles (xmlOutPath, xmlGoodPath, useDelimiters);
         }
         catch (final IOException e)
         {
-            SdtXmlTestBase.LOGGER.error ("Exception: ", e);
+            AbstractSdtXmlTestBase.LOGGER.error ("Exception: ", e);
             return false;
         }
     }
@@ -213,10 +204,11 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         errorEncountered = false;
 
         // Make sure the XML file to be validated exists.
-        final String xmlPath = Utilities.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, xmlPathname, false);
+        final String xmlPath =
+                Utilities.checkFileExists (AbstractSdtXmlTestBase.XML_VALIDATION_DIR, xmlPathname, false);
 
         // Make sure the XSD file that is to be checked exists.
-        final String xsdPath = Utilities.checkFileExists (SdtXmlTestBase.XSD_DIR, xsdPathname, false);
+        final String xsdPath = Utilities.checkFileExists (AbstractSdtXmlTestBase.XSD_DIR, xsdPathname, false);
 
         final List<String> expectedErrorMessages = getExpectedErrorMessages (errorFilePathname);
 
@@ -259,7 +251,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
             public void error (final SAXParseException e) throws SAXException
             {
                 // Record that we hit an error during parsing.
-                SdtXmlTestBase.this.errorEncountered = true;
+                AbstractSdtXmlTestBase.this.errorEncountered = true;
 
                 LOGGER.debug (e.getMessage ());
 
@@ -273,8 +265,8 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 {
                     LOGGER.error ("Parser encountered unexpected error - expected message: [" + e.getMessage () +
                             "], actual message: [" + e.getMessage () + "]");
-                    SdtXmlTestBase.fail ("Parser encountered unexpected error: expected [" + e.getMessage () +
-                            "], actual [" + e.getMessage () + "]");
+                    Assert.fail ("Parser encountered unexpected error: expected [" + e.getMessage () + "], actual [" +
+                            e.getMessage () + "]");
                 }
 
             }
@@ -300,7 +292,8 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
 
         if (errorFilePathname != null)
         {
-            errorFilePath = Utilities.checkFileExists (SdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
+            errorFilePath =
+                    Utilities.checkFileExists (AbstractSdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
             LOGGER.debug ("Error message file - " + errorFilePath);
         }
         else
@@ -341,25 +334,25 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
         catch (final IOException e)
         {
             LOGGER.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
-            SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
+            Assert.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
         catch (final SAXException e)
         {
             LOGGER.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname +
                     "] on line " + ((SAXParseException) e).getLineNumber (), e);
-            SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
+            Assert.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
         catch (final ParserConfigurationException e)
         {
             LOGGER.error ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
-            SdtXmlTestBase.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
+            Assert.fail ("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
 
         // Has no error been reported and yet we expected one?
         if ( !this.errorEncountered && errorFilePathname != null)
         {
             LOGGER.error ("Parser failed to encounter all expected error(s).  The following errors were not found:");
-            SdtXmlTestBase.fail ("Parser failed to encounter all expected error(s)");
+            Assert.fail ("Parser failed to encounter all expected error(s)");
         }
 
         // If there was not an exception thrown (so remainingExpectedErrors is not null) and there are errors still in
@@ -372,7 +365,7 @@ public class SdtXmlTestBase extends AbstractSdtGoodFileTestBase
             {
                 LOGGER.error (remainingError);
             }
-            SdtXmlTestBase.fail ("Parser failed to encounter all expected error(s)");
+            Assert.fail ("Parser failed to encounter all expected error(s)");
         }
     }
 }

@@ -37,12 +37,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
@@ -56,6 +52,7 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
 import uk.gov.moj.sdt.transformers.BulkFeedbackTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
@@ -66,11 +63,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackRespon
  * @author Sally Vonka
  * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/handlers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml"})
-public class WsReadBulkFeedbackRequestHandlerTest
+public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase
 {
     /**
      * Bulk Feedback Service for testing.
@@ -101,8 +94,7 @@ public class WsReadBulkFeedbackRequestHandlerTest
      * /**
      * Setup of the mock dao and injection of other objects.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler ();
 
@@ -193,5 +185,4 @@ public class WsReadBulkFeedbackRequestHandlerTest
         bulkCustomerApplications.add (bulkCustomerApp);
         return bulkCustomerApplications;
     }
-
 }

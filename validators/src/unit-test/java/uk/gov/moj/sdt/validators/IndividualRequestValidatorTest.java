@@ -36,7 +36,6 @@ import static org.easymock.EasyMock.replay;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -120,22 +119,10 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
     private int dataRetentionPeriod = 90;
 
     /**
-     * Constructor for test.
-     * 
-     * @param testName name of this test class.
-     */
-    public IndividualRequestValidatorTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Setup of the Validator and Domain class instance.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
-
         // subject of test
         validator = new IndividualRequestValidator ();
 

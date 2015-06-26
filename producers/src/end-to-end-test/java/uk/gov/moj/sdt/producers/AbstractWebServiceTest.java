@@ -53,6 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
@@ -66,7 +67,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  *            the type of the endpoint to be called.
  * @author Robin Compston
  */
-public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
+public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends AbstractSdtUnitTestBase
 {
     /**
      * Logger object.

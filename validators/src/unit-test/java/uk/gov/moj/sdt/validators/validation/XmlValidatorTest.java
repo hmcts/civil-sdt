@@ -34,10 +34,11 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Test;
 
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.XmlValidationDetails;
 import uk.gov.moj.sdt.validators.XmlValidator;
@@ -48,7 +49,7 @@ import uk.gov.moj.sdt.validators.XmlValidator;
  * @author Simon Holmes
  * 
  */
-public class XmlValidatorTest extends TestCase
+public class XmlValidatorTest extends AbstractSdtUnitTestBase
 {
     /**
      * Path of the xsd.
@@ -62,6 +63,7 @@ public class XmlValidatorTest extends TestCase
      * 
      * @throws IOException an IO Exception
      */
+    @Test
     public void testValidateXmlValidXml () throws IOException
     {
 
@@ -88,6 +90,7 @@ public class XmlValidatorTest extends TestCase
      * 
      * @throws IOException an IO Exception
      */
+    @Test
     public void testValidateXmlInvalidXml () throws IOException
     {
 
@@ -114,6 +117,7 @@ public class XmlValidatorTest extends TestCase
      * 
      * @throws IOException an IO Exception
      */
+    @Test
     public void testValidateXmlNoXsd () throws IOException
     {
         final String xsdPath = "invalidDir/FileDoesNotExist.xsd";

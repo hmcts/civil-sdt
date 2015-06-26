@@ -38,11 +38,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 
 /**
@@ -62,7 +62,7 @@ import uk.gov.moj.sdt.test.utils.DBUnitUtility;
         "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class IndividualRequestMdbIntTest extends AbstractTransactionalJUnit4SpringContextTests
+public class IndividualRequestMdbIntTest extends AbstractIntegrationTest
 {
     /**
      * Setup the test.

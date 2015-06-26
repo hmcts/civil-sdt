@@ -35,9 +35,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -52,6 +50,7 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -65,9 +64,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
  * @author d164190
  * 
  */
-public class IndividualRequestConsumerTransformerTest extends TestCase
+public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTestBase
 {
-
     /**
      * Individual Request Consumer Transformer.
      */
@@ -76,8 +74,7 @@ public class IndividualRequestConsumerTransformerTest extends TestCase
     /**
      * Set up variables for the test.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
         Constructor<IndividualRequestConsumerTransformer> c;
         try
@@ -278,5 +275,4 @@ public class IndividualRequestConsumerTransformerTest extends TestCase
         bulkCustomerApplications.add (bulkCustomerApp);
         return bulkCustomerApplications;
     }
-
 }

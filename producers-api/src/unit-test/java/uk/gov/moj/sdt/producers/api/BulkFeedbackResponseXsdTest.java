@@ -30,7 +30,9 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.producers.api;
 
-import uk.gov.moj.sdt.utils.SdtXmlTestBase;
+import org.junit.Test;
+
+import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
 
 /**
  * Test case for BulkFeedbackResponse type.
@@ -38,9 +40,8 @@ import uk.gov.moj.sdt.utils.SdtXmlTestBase;
  * @author Saurabh Agarwal
  * 
  */
-public class BulkFeedbackResponseXsdTest extends SdtXmlTestBase
+public class BulkFeedbackResponseXsdTest extends AbstractSdtXmlTestBase
 {
-
     /**
      * The name of the xsd.
      */
@@ -62,33 +63,25 @@ public class BulkFeedbackResponseXsdTest extends SdtXmlTestBase
     private static final String XSD_PATH = XSD_DIR + XSD_NAME + ".xsd";
 
     /**
-     * Constructs a new {@link BulkFeedbackResponseXsdTest}.
-     * 
-     * @param testName Name of this test.
-     */
-    public BulkFeedbackResponseXsdTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Tests XML file is valid.
      */
+    @Test
     public void testValidXml ()
     {
         final String condition = "Valid";
-        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
+        final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         this.validateXsd (xmlPath, XSD_PATH, null);
     }
 
     /**
      * Tests that expected errors are reported for missing mandatory fields.
      */
+    @Test
     public void testInvalidXmlMandatoryMissing ()
     {
         final String condition = "MandatoryMissing";
-        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
-        final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
+        final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
+        final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
 
         this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
     }
@@ -99,10 +92,9 @@ public class BulkFeedbackResponseXsdTest extends SdtXmlTestBase
     public void testInvalidXmlIncorrectFormat ()
     {
         final String condition = "IncorrectFormat";
-        final String xmlPath = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.XML_FILE_SUFFIX;
-        final String errorFilePathname = XML_DIR + XSD_NAME + condition + SdtXmlTestBase.ERROR_FILE_SUFFIX;
+        final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
+        final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
 
         this.validateXsd (xmlPath, XSD_PATH, errorFilePathname);
     }
-
 }

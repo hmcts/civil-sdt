@@ -36,7 +36,6 @@ import static org.easymock.EasyMock.replay;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,22 +112,10 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest
     private IErrorMessage errorMessage;
 
     /**
-     * Constructor for test.
-     * 
-     * @param testName name of this test class.
-     */
-    public SubmitQueryRequestValidatorTest (final String testName)
-    {
-        super (testName);
-    }
-
-    /**
      * Setup of the Validator and Domain class instance.
      */
-    @Before
-    public void setUp ()
+    public void setUpLocalTests ()
     {
-
         // subject of test
         validator = new SubmitQueryRequestValidator ();
 
@@ -151,7 +138,6 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ())).andReturn (globalParameter);
         replay (globalParameterCache);
         validator.setGlobalParameterCache (globalParameterCache);
-
     }
 
     /**
@@ -199,7 +185,6 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest
                             ". Please contact " + contact + " for assistance.");
             // CHECKSTYLE:OFF
         }
-
     }
 
     /**
@@ -219,7 +204,5 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest
         validator.setBulkCustomerDao (mockIBulkCustomerDao);
 
         submitQueryRequest.accept (validator, null);
-
     }
-
 }

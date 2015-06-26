@@ -46,6 +46,7 @@ import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -53,7 +54,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author d195274
  *
  */
-public class FaultOutboundInterceptorTest
+public class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase
 {
     /**
      * Error message returned when a fault occurs.

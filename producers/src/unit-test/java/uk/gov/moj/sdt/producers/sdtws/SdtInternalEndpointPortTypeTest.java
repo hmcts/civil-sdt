@@ -39,6 +39,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.HeaderType;
@@ -51,7 +52,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
  * @author d276205
  * 
  */
-public class SdtInternalEndpointPortTypeTest
+public class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase
 {
 
     /**

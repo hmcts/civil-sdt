@@ -67,6 +67,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -75,7 +76,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author Sally Vonka
  * 
  */
-public class BulkFeedbackServiceTest
+public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase
 {
     /**
      * Logger for debugging.

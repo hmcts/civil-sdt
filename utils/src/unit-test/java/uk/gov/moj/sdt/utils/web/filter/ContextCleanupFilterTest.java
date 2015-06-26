@@ -42,6 +42,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -50,7 +51,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author Manoj Kulkarni
  * 
  */
-public class ContextCleanupFilterTest
+public class ContextCleanupFilterTest extends AbstractSdtUnitTestBase
 {
     /**
      * ContextCleanupFilter instance for testing.

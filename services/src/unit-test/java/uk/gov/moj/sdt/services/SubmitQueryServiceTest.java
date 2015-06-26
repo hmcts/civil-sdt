@@ -65,6 +65,7 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -73,7 +74,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * @author 274994
  * 
  */
-public class SubmitQueryServiceTest
+public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase
 {
     /**
      * Submit Query Service object.
