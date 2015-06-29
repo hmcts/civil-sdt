@@ -179,7 +179,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
      * @throws IOException if there is any error in reading the file.
      */
     @Test
-    public void saveBulkSubmission () throws IOException
+    public void testSaveBulkSubmission () throws IOException
     {
         SdtContext.getContext ().setRawInXml (Utilities.getRawXml ("src/unit-test/resources/", "testXMLValid2.xml"));
 
@@ -284,7 +284,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
      * 
      * @throws IOException if there is any issue
      */
-    @Test (expected = CustomerReferenceNotUniqueException.class)
+    @Test
     public void testSubmissionWithConcurrenyIssue () throws IOException
     {
         final String rawXml = Utilities.getRawXml ("src/unit-test/resources/", "testXMLValid3.xml");
@@ -331,10 +331,21 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
         // Put a dummy value into the SdtContext
         SdtContext.getContext ().setServiceRequestId (new Long (1));
 
-        // Call the bulk submission service
-        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+        try
+        {
+            // Call the bulk submission service
+            bulkSubmissionService.saveBulkSubmission (bulkSubmission);
 
-        Assert.fail ("Should have thrown exception");
+            Assert.fail ("Should have thrown exception");
+        }
+        catch (final Throwable e)
+        {
+            if ( !(e instanceof CustomerReferenceNotUniqueException) ||
+                    !e.getMessage ().equals ("Failed with code [DUP_CUST_FILEID]; message[Some Text]"))
+            {
+                Assert.fail ("Unexpected exception returned" + e.getStackTrace ());
+            }
+        }
     }
 
     /**

@@ -64,6 +64,7 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
@@ -127,7 +128,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
      */
     @Test
     @Rollback (false)
-    public void saveSingleSubmission () throws IOException
+    public void testSaveSingleSubmission () throws IOException
     {
         final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testSampleRequest.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
@@ -169,7 +170,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
      */
     @Test
     @Rollback (false)
-    public void saveMultipleSubmissions () throws IOException
+    public void testSaveMultipleSubmissions () throws IOException
     {
         final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testLargeSampleRequest.xml");
         SdtContext.getContext ().setRawInXml (rawXml);
@@ -203,6 +204,75 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
             Assert.assertNotNull (request.getSdtRequestReference ());
             Assert.assertNotNull (request.getRequestPayload ());
         }
+    }
+
+    /**
+     * This method tests for an exception raised by the second of two duplicate submissions. The first of these should
+     * work and the second fail. The submissions are identified as duplicates because they have the same customer and
+     * customer reference. This error is simulated in the integration test by not clearing the concurrency map after the
+     * first submission. This would normally be done by the handler. By leaving the map populated with the reference
+     * from the first submission the service layer acts as if there are two duplicate submission in memory concurrently.
+     * 
+     * @throws IOException if there is any error reading from the test file.
+     */
+    @Test
+    @Rollback (false)
+    public void testConcurrentDuplicateSubmissions () throws IOException
+    {
+        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testLargeSampleRequest.xml");
+        SdtContext.getContext ().setRawInXml (rawXml);
+
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission (62);
+
+        bulkSubmission.setNumberOfRequest (62L);
+
+        // Set the service request id so it can be retrieved in the saveBulkSubmission code
+        SdtContext.getContext ().setServiceRequestId (new Long (10800));
+
+        // Call the bulk submission service
+        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+
+        // DO NOT CLEAR concurrencyMap.
+
+        Assert.assertNotNull (bulkSubmission.getPayload ());
+
+        Assert.assertEquals (62L, bulkSubmission.getNumberOfRequest ());
+
+        Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
+        Assert.assertNotNull (individualRequests);
+        Assert.assertEquals (62, individualRequests.size ());
+
+        for (IIndividualRequest request : individualRequests)
+        {
+
+            Assert.assertNotNull (request.getSdtBulkReference ());
+            Assert.assertNotNull (request.getSdtRequestReference ());
+            Assert.assertNotNull (request.getRequestPayload ());
+        }
+
+        try
+        {
+            // Call the bulk submission service for second time without clearing the concurrencyMap from the first call.
+            bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+
+            Assert.fail ("Should have thrown exception");
+        }
+        catch (final Throwable e)
+        {
+            if ( !(e instanceof CustomerReferenceNotUniqueException) ||
+                    !e.getMessage ().matches (
+                            "Failed with code \\[DUP_CUST_FILEID\\]; "
+                                    + "message\\[Duplicate User File Reference 10711 supplied. This was "
+                                    + "previously used to submit a Bulk Request on .*? and "
+                                    + "the SDT Bulk Reference \\S*? was allocated.\\]"))
+            {
+                Assert.fail ("Unexpected exception returned\n" + e.getStackTrace ());
+            }
+        }
+
+        clearConcurrencyMap (bulkSubmission);
     }
 
     /**
