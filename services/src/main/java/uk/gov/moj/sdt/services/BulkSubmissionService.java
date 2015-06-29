@@ -109,7 +109,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
     private Map<String, String> concurrencyMap;
 
     /**
-     * 
+     * Cache of error messages read from database and treated as static data.
      */
     private ICacheable errorMessagesCache;
 

@@ -64,6 +64,8 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
         LOGGER.debug ("saveBulkSubmission called for customer[" +
                 bulkSubmission.getBulkCustomer ().getSdtCustomerId () + "]");
 
+        // Do not save to the database or put in the queue since this is the commissioning system.
+
         // Set the SDT Bulk Reference for the handler's transformer to use
         bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
                 .getTargetApplication ().getTargetApplicationCode ()));
