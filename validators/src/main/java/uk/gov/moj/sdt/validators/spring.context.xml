@@ -27,6 +27,7 @@
     	parent="uk.gov.moj.sdt.validators.AbstractSdtValidator"
         class="uk.gov.moj.sdt.validators.BulkSubmissionValidator">        
         <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" />                                       
+    	<property name="concurrencyMap" ref="uk.gov.moj.sdt.validators.concurrencyMap"/>
     </bean>
 
     <bean id="uk.gov.moj.sdt.validators.api.IServiceTypeValidator" 
@@ -63,4 +64,5 @@
 	<bean id="uk.gov.moj.sdt.validators.api.IErrorLogValidator" class="uk.gov.moj.sdt.validators.ErrorLogValidator">
 	</bean>
 
+	<bean id="uk.gov.moj.sdt.validators.concurrencyMap" class="java.util.HashMap"/>                     
 </beans>

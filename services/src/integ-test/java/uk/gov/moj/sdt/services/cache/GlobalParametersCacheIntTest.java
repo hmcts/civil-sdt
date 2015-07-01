@@ -64,7 +64,8 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
         "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
         "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class GlobalParametersCacheIntTest extends AbstractIntegrationTest
 {
     /**

@@ -44,6 +44,4 @@
     <bean id="uk.gov.moj.sdt.services.api.IUpdateRequestService" 
     	class="uk.gov.moj.sdt.producers.comx.services.MockUpdateRequestService">
     </bean>
-                          
-	<bean id="uk.gov.moj.sdt.services.concurrencyMap" class="java.util.HashMap"/>                     
 </beans>

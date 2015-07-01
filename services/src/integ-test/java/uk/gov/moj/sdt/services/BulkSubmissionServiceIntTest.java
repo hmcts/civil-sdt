@@ -31,6 +31,7 @@
 package uk.gov.moj.sdt.services;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,8 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 /**
@@ -82,7 +85,8 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
         "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
         "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
+        "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
 {
     /**
@@ -101,7 +105,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
      * clearing the map. If it is not cleared, all tests but the first will fail because the map will still have the
      * previous test information in it.
      */
-    protected Map<String, String> concurrencyMap;
+    protected Map<String, IInFlightMessage> concurrencyMap;
 
     /**
      * Setup the test.
@@ -118,7 +122,9 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
 
         // Get the concurrency map so we can clear it after test.
         concurrencyMap =
-                (Map<String, String>) this.applicationContext.getBean ("uk.gov.moj.sdt.services.concurrencyMap");
+                (Map<String, IInFlightMessage>) this.applicationContext
+                        .getBean ("uk.gov.moj.sdt.validators.concurrencyMap");
+
     }
 
     /**
@@ -137,6 +143,12 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
         SdtContext.getContext ().setServiceRequestId (new Long (10800));
+
+        // Setup concurrency map as if validator had done it.
+        IInFlightMessage inFlightMessage = new InFlightMessage ();
+        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
+        String key = bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+        concurrencyMap.put (key, inFlightMessage);
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
@@ -181,6 +193,12 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
         SdtContext.getContext ().setServiceRequestId (new Long (10800));
+
+        // Setup concurrency map as if validator had done it.
+        IInFlightMessage inFlightMessage = new InFlightMessage ();
+        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
+        String key = bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+        concurrencyMap.put (key, inFlightMessage);
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);
@@ -228,6 +246,12 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
         SdtContext.getContext ().setServiceRequestId (new Long (10800));
+
+        // Setup concurrency map as if validator had done it.
+        IInFlightMessage inFlightMessage = new InFlightMessage ();
+        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
+        String key = bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+        concurrencyMap.put (key, inFlightMessage);
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission (bulkSubmission);

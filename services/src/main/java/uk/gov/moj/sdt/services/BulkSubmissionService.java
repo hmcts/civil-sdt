@@ -54,6 +54,7 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
@@ -106,7 +107,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
      * sending two requests close together which both get processed at the same time, causing duplicates. The normal
      * check on a duplicate does not work until the first bulk request has been persisted.
      */
-    private Map<String, String> concurrencyMap;
+    private Map<String, IInFlightMessage> concurrencyMap;
 
     /**
      * Cache of error messages read from database and treated as static data.
@@ -320,32 +321,48 @@ public class BulkSubmissionService implements IBulkSubmissionService
     }
 
     /**
-     * Queues the valid individual requests on the messaging server.
+     * Checks for two in flight submissions with the same customer and customer reference. If found, only the first is
+     * allowed to proceed and the second is errored off as a duplicate. The tricky bit is that the error should contain
+     * the SDT_BULK_REFERENCE assigned to the successful submission, but it is not until just before this point that
+     * this is assigned. Therefore the entry in the concurrency map is set just before the point in the validator where
+     * the database is checked for a duplicate. If no duplicate is found in the database.
      * 
      * @param bulkSubmission the bulk submission being processed.
      * @throws uk.gov.moj.sdt.validators.exception.AbstractBusinessException super class of the exception to be thrown.
      */
-    private synchronized void checkConcurrent (final IBulkSubmission bulkSubmission)
+    private void checkConcurrent (final IBulkSubmission bulkSubmission)
     {
-        final String key =
-                bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
-
-        final String previousBulkReference = concurrencyMap.get (key);
-        if (previousBulkReference != null)
+        synchronized (concurrencyMap)
         {
-            final List<String> replacements = new ArrayList<String> ();
-            replacements.add (String.valueOf (bulkSubmission.getCustomerReference ()));
-            replacements.add (Utilities.formatDateTimeForMessage (new LocalDateTime (System.currentTimeMillis ())));
-            replacements.add (previousBulkReference);
-            final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ();
-            final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+            final String key =
+                    bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
 
-            throw new CustomerReferenceNotUniqueException (errorCodeStr, errorMessage.getErrorText (), replacements);
+            final IInFlightMessage inFlightMessage = concurrencyMap.get (key);
+            final String winningSdtBulkReference = inFlightMessage.getSdtBulkReference ();
+            if (winningSdtBulkReference == null)
+            {
+                // No thread has won yet - we are the winner. Store SDT bulk reference for other threads to report it
+                // and to indicate to other threads that there has been a winner.
+                inFlightMessage.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
+            }
+            else
+            {
+                // Another thread has beaten us - report the SDT bulk reference of the winning thread to the client.
+                final List<String> replacements = new ArrayList<String> ();
+                replacements.add (String.valueOf (bulkSubmission.getCustomerReference ()));
+                replacements.add (Utilities.formatDateTimeForMessage (new LocalDateTime (System.currentTimeMillis ())));
+                replacements.add (winningSdtBulkReference);
+                final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ();
+                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
 
+                LOGGER.error ("Concurrent message detected for customer [" +
+                        bulkSubmission.getBulkCustomer ().getSdtCustomerId () + "], customer reference [" +
+                        bulkSubmission.getCustomerReference () + "], with SDT bulk reference [" +
+                        bulkSubmission.getSdtBulkReference () + "]. Returning original SDT bulk reference [" +
+                        winningSdtBulkReference + "].");
+                throw new CustomerReferenceNotUniqueException (errorCodeStr, errorMessage.getErrorText (), replacements);
+            }
         }
-
-        // Set concurrency map for this user and customer reference.
-        concurrencyMap.put (key, bulkSubmission.getSdtBulkReference ());
     }
 
     /**
@@ -353,7 +370,7 @@ public class BulkSubmissionService implements IBulkSubmissionService
      * 
      * @param concurrencyMap map holding in flight bulk requests.
      */
-    public void setConcurrencyMap (final Map<String, String> concurrencyMap)
+    public void setConcurrencyMap (final Map<String, IInFlightMessage> concurrencyMap)
     {
         this.concurrencyMap = concurrencyMap;
     }
@@ -367,5 +384,4 @@ public class BulkSubmissionService implements IBulkSubmissionService
     {
         this.errorMessagesCache = errorMessagesCache;
     }
-
 }

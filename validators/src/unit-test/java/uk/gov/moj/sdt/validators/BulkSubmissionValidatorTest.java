@@ -35,6 +35,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -60,6 +61,7 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
@@ -164,6 +166,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest
 
         // subject of test
         validator = new BulkSubmissionValidator ();
+        validator.setConcurrencyMap (new HashMap<String, IInFlightMessage> ());
 
         // mock BulkCustomer object
         mockIBulkCustomerDao = EasyMock.createMock (IBulkCustomerDao.class);

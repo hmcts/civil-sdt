@@ -70,6 +70,8 @@ import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 /**
@@ -128,7 +130,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
     /**
      * 
      */
-    private Map<String, String> mockConcurrencyMap;
+    private Map<String, IInFlightMessage> mockConcurrencyMap;
 
     /**
      * 
@@ -202,10 +204,13 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
         final String key =
                 bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
 
-        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (null);
+        // Setup concurrency map as if validator had done it.
+        IInFlightMessage inFlightMessage = new InFlightMessage ();
+        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
+        inFlightMessage.getCompetingThreads ().put (Thread.currentThread (), Thread.currentThread ());
 
-        EasyMock.expect (mockConcurrencyMap.put (key, null)).andReturn (null);
-
+        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (inFlightMessage);
+        EasyMock.expect (mockConcurrencyMap.put (key, inFlightMessage)).andReturn (inFlightMessage);
         EasyMock.replay (mockConcurrencyMap);
 
         // Put a dummy value into the SdtContext
@@ -260,10 +265,13 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
         final String key =
                 bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
 
-        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (null);
+        // Setup concurrency map as if validator had done it.
+        IInFlightMessage inFlightMessage = new InFlightMessage ();
+        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
+        inFlightMessage.getCompetingThreads ().put (Thread.currentThread (), Thread.currentThread ());
 
-        EasyMock.expect (mockConcurrencyMap.put (key, null)).andReturn (null);
-
+        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (inFlightMessage);
+        EasyMock.expect (mockConcurrencyMap.put (key, inFlightMessage)).andReturn (inFlightMessage);
         EasyMock.replay (mockConcurrencyMap);
 
         // Put a dummy value into the SdtContext
@@ -315,8 +323,14 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase
         final String key =
                 bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
 
-        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (new String ("SDTBULKREFERENCE"));
+        // Setup concurrency map as if validator had done it.
+        IInFlightMessage inFlightMessage = new InFlightMessage ();
+        inFlightMessage.setSdtBulkReference ("SDTBULKREFERENCE");
+        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
+        inFlightMessage.getCompetingThreads ().put (Thread.currentThread (), Thread.currentThread ());
 
+        EasyMock.expect (mockConcurrencyMap.get (key)).andReturn (inFlightMessage);
+        EasyMock.expect (mockConcurrencyMap.put (key, inFlightMessage)).andReturn (inFlightMessage);
         EasyMock.replay (mockConcurrencyMap);
 
         final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ();

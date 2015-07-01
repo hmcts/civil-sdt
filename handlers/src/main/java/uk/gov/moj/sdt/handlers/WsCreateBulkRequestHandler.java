@@ -44,6 +44,7 @@ import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.transformers.AbstractTransformer;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
@@ -87,7 +88,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      * requests close together which both get processed at the same time, causing duplicates. The normal check on a
      * duplicate does not work until the first bulk request has been persisted.
      */
-    private Map<String, String> concurrencyMap;
+    private Map<String, IInFlightMessage> concurrencyMap;
 
     @Override
     public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
@@ -151,8 +152,28 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
                     bulkRequestType.getHeader ().getSdtCustomerId () +
                             bulkRequestType.getHeader ().getCustomerReference ();
 
-            // Set concurrency map for this user and customer reference.
-            concurrencyMap.remove (key);
+            // Clean up concurrency map for this thread.
+            final IInFlightMessage inFlightMessage = concurrencyMap.get (key);
+
+            // Did processing proceed far enough to create an in flight message?
+            if (inFlightMessage != null)
+            {
+                // Yes. Has it registered in the thread list?
+                final Map<Thread, Thread> competingThreads = inFlightMessage.getCompetingThreads ();
+                if (competingThreads != null)
+                {
+                    // Remove this thread from list.
+                    inFlightMessage.getCompetingThreads ().remove (Thread.currentThread ());
+                }
+
+                // Clean up concurrency map for this customer/customer reference if no threads still using it. The
+                // information is needed while there are still threads that are using it and have not yet reported a
+                // duplicate concurrent error back to the client, even though the winning thread is now finished.
+                if (inFlightMessage.getCompetingThreads () == null || inFlightMessage.getCompetingThreads ().isEmpty ())
+                {
+                    concurrencyMap.remove (key);
+                }
+            }
         }
 
         return bulkResponseType;
@@ -258,7 +279,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      * 
      * @param concurrencyMap map holding in flight bulk requests.
      */
-    public void setConcurrencyMap (final Map<String, String> concurrencyMap)
+    public void setConcurrencyMap (final Map<String, IInFlightMessage> concurrencyMap)
     {
         this.concurrencyMap = concurrencyMap;
     }

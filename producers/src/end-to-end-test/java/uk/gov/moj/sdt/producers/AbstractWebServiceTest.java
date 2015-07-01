@@ -116,7 +116,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      * @return the JAXB object loaded with XML associated with this test class.
      */
     @SuppressWarnings ("unchecked")
-    private JaxbRequestType getJaxbFromXml (Class<JaxbRequestType> requestClass)
+    protected JaxbRequestType getJaxbFromXml (Class<JaxbRequestType> requestClass)
     {
         JaxbRequestType request = null;
 
@@ -162,7 +162,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      *            the JAXB object returned by the web service.
      * @return the XML corresponding to the given JAXB object tree.
      */
-    private void checkXmlFromJaxb (JaxbResponseType response)
+    protected void checkXmlFromJaxb (JaxbResponseType response)
     {
         try
         {
@@ -219,9 +219,12 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             // will not match otherwise.
             expectedXml = removeVariantText (expectedXml, "sdtBulkReference");
             expectedXml = removeVariantText (expectedXml, "submittedDate");
+            // Following only needed for concurrent duplicate test since customer reference keeps changing.
+            expectedXml = removeVariantText (expectedXml, "customerReference");
             expectedXml = removeLineFeeds (expectedXml);
             actualXml = removeVariantText (actualXml, "sdtBulkReference");
             actualXml = removeVariantText (actualXml, "submittedDate");
+            actualXml = removeVariantText (actualXml, "customerReference");
             actualXml = removeLineFeeds (actualXml);
 
             if ( !actualXml.equals (expectedXml))
@@ -369,5 +372,4 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         return client;
 
     }
-
 }

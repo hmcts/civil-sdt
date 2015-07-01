@@ -31,8 +31,10 @@
 package uk.gov.moj.sdt.validators;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
@@ -44,6 +46,8 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 
@@ -59,6 +63,13 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
      * Bulk submission dao.
      */
     private IBulkSubmissionDao bulkSubmissionDao;
+
+    /**
+     * The concurrencyMap to hold in flight message data keyed on sdtCustId + custRef. This is used to prevent the
+     * customer sending two requests close together which both get processed at the same time, causing duplicates. The
+     * normal check on a duplicate does not work until the first bulk request has been persisted.
+     */
+    private Map<String, IInFlightMessage> concurrencyMap;
 
     /**
      * No-argument Constructor.
@@ -86,6 +97,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         final IBulkSubmission invalidBulkSubmission =
                 bulkSubmissionDao.getBulkSubmission (bulkCustomer, sdtCustomerReference, dataRetention);
 
+        // Check that this custom has not already submitted a bulk submission with this customer reference.
         if (invalidBulkSubmission != null)
         {
             replacements = new ArrayList<String> ();
@@ -94,6 +106,8 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             replacements.add (invalidBulkSubmission.getSdtBulkReference ());
             createValidationException (replacements, IErrorMessage.ErrorCode.DUP_CUST_FILEID);
         }
+
+        addInFlightMessage (bulkSubmission);
 
         // Check the request count matches
         if (bulkSubmission.getNumberOfRequest () != bulkSubmission.getIndividualRequests ().size ())
@@ -167,6 +181,45 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             bulkSubmission.setErrorText (getErrorMessage (replacements, IErrorMessage.ErrorCode.NO_VALID_REQS));
             bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus ());
 
+        }
+    }
+
+    /**
+     * Set concurrency map.
+     * 
+     * @param concurrencyMap map holding in flight bulk requests.
+     */
+    public void setConcurrencyMap (final Map<String, IInFlightMessage> concurrencyMap)
+    {
+        this.concurrencyMap = concurrencyMap;
+    }
+
+    /**
+     * Add an in flight message entry to the concurrencyMap for this customer/customer reference. This will be used to
+     * used to detect concurrent in flight submissions with the same customer and customer reference.
+     * 
+     * @param bulkSubmission the bulk submission being processed.
+     * @throws uk.gov.moj.sdt.validators.exception.AbstractBusinessException super class of the exception to be thrown.
+     */
+    private void addInFlightMessage (final IBulkSubmission bulkSubmission)
+    {
+        synchronized (concurrencyMap)
+        {
+            final String key =
+                    bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+
+            // Do we already have this message in flight?
+            IInFlightMessage inFlightMessage = concurrencyMap.get (key);
+            if (inFlightMessage == null)
+            {
+                // No - this is the first thread with this message.
+                inFlightMessage = new InFlightMessage ();
+                inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
+                concurrencyMap.put (key, inFlightMessage);
+            }
+
+            // Add this thread to list of competing threads handling this message.
+            inFlightMessage.getCompetingThreads ().put (Thread.currentThread (), Thread.currentThread ());
         }
     }
 }

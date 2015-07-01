@@ -213,7 +213,7 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
      * 
      * @return the JAXB object loaded with XML associated with this test class.
      */
-    private BulkRequestType getJaxbFromXml (Class<BulkRequestType> requestClass)
+    protected BulkRequestType getJaxbFromXml (Class<BulkRequestType> requestClass)
     {
         BulkRequestType request = null;
 
