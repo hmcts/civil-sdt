@@ -35,7 +35,9 @@ import java.util.Map;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 
 /**
- * A class to represent an in-flight message tree being walked by the tree walker.
+ * A class to represent an in-flight message. Several threads may be trying to process this if the customer has sent it
+ * more than once. Only one of them must allowed to win the race. The winner is the first to write the sdt bulk
+ * reference into this object.
  * 
  * @author Robin Compston
  * 
