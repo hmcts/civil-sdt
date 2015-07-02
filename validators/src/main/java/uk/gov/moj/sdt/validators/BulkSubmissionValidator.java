@@ -92,6 +92,8 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         final String sdtCustomerReference = bulkSubmission.getCustomerReference ();
         List<String> replacements = null;
 
+        addInFlightMessage (bulkSubmission);
+
         // Get the data retention period
         final int dataRetention = super.getDataRetentionPeriod ();
         final IBulkSubmission invalidBulkSubmission =
@@ -106,8 +108,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             replacements.add (invalidBulkSubmission.getSdtBulkReference ());
             createValidationException (replacements, IErrorMessage.ErrorCode.DUP_CUST_FILEID);
         }
-
-        addInFlightMessage (bulkSubmission);
 
         // Check the request count matches
         if (bulkSubmission.getNumberOfRequest () != bulkSubmission.getIndividualRequests ().size ())
