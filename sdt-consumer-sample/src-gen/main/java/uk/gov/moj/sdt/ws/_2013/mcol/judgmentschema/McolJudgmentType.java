@@ -37,7 +37,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
  *         &lt;element name="interest" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
  *         &lt;element name="solicitorCost" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
  *         &lt;element name="deductedAmount" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
- *         &lt;element name="judgmentAmount" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
+ *         &lt;element name="claimAmountAdmitted" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
+ *         &lt;element name="courtFee" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
+ *         &lt;element name="legalCosts" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" minOccurs="0"/>
  *         &lt;element name="payee" type="{http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema}payeeType" minOccurs="0"/>
  *         &lt;element name="sotSignature" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}sotSignatureType"/>
  *       &lt;/sequence>
@@ -63,7 +65,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
     "interest",
     "solicitorCost",
     "deductedAmount",
-    "judgmentAmount",
+    "claimAmountAdmitted",
+    "courtFee",
+    "legalCosts",
     "payee",
     "sotSignature"
 })
@@ -103,7 +107,15 @@ public class McolJudgmentType {
     @XmlElement(type = String.class)
     @XmlJavaTypeAdapter(Adapter3 .class)
     @XmlSchemaType(name = "unsignedLong")
-    protected Long judgmentAmount;
+    protected Long claimAmountAdmitted;
+    @XmlElement(type = String.class)
+    @XmlJavaTypeAdapter(Adapter3 .class)
+    @XmlSchemaType(name = "unsignedLong")
+    protected Long courtFee;
+    @XmlElement(type = String.class)
+    @XmlJavaTypeAdapter(Adapter3 .class)
+    @XmlSchemaType(name = "unsignedLong")
+    protected Long legalCosts;
     protected PayeeType payee;
     @XmlElement(required = true)
     protected SotSignatureType sotSignature;
@@ -413,27 +425,75 @@ public class McolJudgmentType {
     }
 
     /**
-     * Gets the value of the judgmentAmount property.
+     * Gets the value of the claimAmountAdmitted property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public Long getJudgmentAmount() {
-        return judgmentAmount;
+    public Long getClaimAmountAdmitted() {
+        return claimAmountAdmitted;
     }
 
     /**
-     * Sets the value of the judgmentAmount property.
+     * Sets the value of the claimAmountAdmitted property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setJudgmentAmount(Long value) {
-        this.judgmentAmount = value;
+    public void setClaimAmountAdmitted(Long value) {
+        this.claimAmountAdmitted = value;
+    }
+
+    /**
+     * Gets the value of the courtFee property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public Long getCourtFee() {
+        return courtFee;
+    }
+
+    /**
+     * Sets the value of the courtFee property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCourtFee(Long value) {
+        this.courtFee = value;
+    }
+
+    /**
+     * Gets the value of the legalCosts property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public Long getLegalCosts() {
+        return legalCosts;
+    }
+
+    /**
+     * Sets the value of the legalCosts property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setLegalCosts(Long value) {
+        this.legalCosts = value;
     }
 
     /**

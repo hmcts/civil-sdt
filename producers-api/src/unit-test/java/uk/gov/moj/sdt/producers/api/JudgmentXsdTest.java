@@ -74,6 +74,21 @@ public class JudgmentXsdTest extends AbstractSdtXmlTestBase
     }
 
     /**
+     * Tests XML file is valid for a Judgment by Admission following a part admission.
+     * In this scenario the user can optionally enter:
+     * 1. A claim amount admitted value.
+     * 2. A court fee
+     * 3. A legal costs fee.
+     */
+    @Test
+    public void testValidJudByAdmAfterPAXml ()
+    {
+        final String condition = "ValidAdmissionAfterPA";
+        final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
+        this.validateXsd (xmlPath, XSD_PATH, null);
+    }
+
+    /**
      * Tests that expected errors are reported for missing mandatory fields.
      */
     @Test
