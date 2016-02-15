@@ -32,6 +32,9 @@
       <tns:interest>-1</tns:interest>
       <tns:solicitorCost>-1</tns:solicitorCost>
       <tns:deductedAmount>-1</tns:deductedAmount>
+      <tns:claimAmountAdmitted>-1</tns:claimAmountAdmitted>
+      <tns:courtFee>-1</tns:courtFee>
+      <tns:legalCosts>-1</tns:legalCosts>
 
     <tns:sotSignature>
       <tns2:flag>true</tns2:flag>
