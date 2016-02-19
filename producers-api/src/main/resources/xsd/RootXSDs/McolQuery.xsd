@@ -32,6 +32,7 @@
             <xs:element name="eventCreatedDateOnMcol" type="xs:dateTime" />
             <xs:element name="raisedOnMcol" type="xs:boolean" />
             <xs:element name="responseType" type="tns:responseType" />
+            <xs:element name="defence" type="base:defenceType" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="defendantId" type="base:defendantIdType" use="required"/>
     </xs:complexType>

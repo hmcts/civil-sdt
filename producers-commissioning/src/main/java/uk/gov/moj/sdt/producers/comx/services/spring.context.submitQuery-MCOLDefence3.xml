@@ -19,6 +19,7 @@
                       		<mquer:eventCreatedDateOnMcol>2014-01-02T10:04:21</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                       		<mquer:responseType>DE</mquer:responseType>
+                      		<mquer:defence>Not guilty</mquer:defence>
                  		</mquer:defendantResponse>
                  	</sub:mcolDefenceDetail>
                  	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
@@ -28,6 +29,7 @@
                       		<mquer:eventCreatedDateOnMcol>2014-01-02T11:45:01</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                       		<mquer:responseType>PA</mquer:responseType>
+                      		<mquer:defence>Not guilty</mquer:defence>
                  		</mquer:defendantResponse>
                  	</sub:mcolDefenceDetail>
                  	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
@@ -46,6 +48,7 @@
                       		<mquer:eventCreatedDateOnMcol>2014-01-03T18:03:32</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                       		<mquer:responseType>DE</mquer:responseType>
+                      		<mquer:defence>Not guilty</mquer:defence>
                  		</mquer:defendantResponse>
                  	</sub:mcolDefenceDetail>
                  	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
@@ -64,6 +67,7 @@
                  			<mquer:eventCreatedDateOnMcol>2014-01-03T14:31:42</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DE</mquer:responseType>
+                      		<mquer:defence>Not guilty</mquer:defence>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
@@ -73,6 +77,7 @@
                  			<mquer:eventCreatedDateOnMcol>2014-01-03T14:31:42</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DE</mquer:responseType>
+                      		<mquer:defence>Not guilty</mquer:defence>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
@@ -82,6 +87,7 @@
                  			<mquer:eventCreatedDateOnMcol>2014-01-03T15:12:54</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>PA</mquer:responseType>
+                      		<mquer:defence>Not guilty</mquer:defence>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
@@ -91,6 +97,7 @@
                  			<mquer:eventCreatedDateOnMcol>2014-01-03T16:02:46</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DC</mquer:responseType>
+                      		<mquer:defence>I was not born</mquer:defence>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
                 	<sub:mcolDefenceDetail xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema" xmlns:mquer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
@@ -100,6 +107,7 @@
                  			<mquer:eventCreatedDateOnMcol>2014-01-03T17:16:15</mquer:eventCreatedDateOnMcol>
                             <mquer:raisedOnMcol>false</mquer:raisedOnMcol>
                  			<mquer:responseType>DC</mquer:responseType>
+                            <mquer:defence>I was dead</mquer:defence>
                  		</mquer:defendantResponse>
                 	</sub:mcolDefenceDetail>
                 ]]>

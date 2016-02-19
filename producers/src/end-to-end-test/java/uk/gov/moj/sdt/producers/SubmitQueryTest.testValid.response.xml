@@ -15,8 +15,10 @@
                 xmlns:ns5="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
                 xmlns="" defendantId="1">
                 <mquer:filedDate>2001-12-31T12:00:00</mquer:filedDate>
+                <mquer:eventCreatedDateOnMcol>2002-01-02T10:04:21</mquer:eventCreatedDateOnMcol>
                 <mquer:raisedOnMcol>true</mquer:raisedOnMcol>
                 <mquer:responseType>DE</mquer:responseType>
+                <mquer:defence>Not guilty</mquer:defence>
             </mquer:defendantResponse>
         </sub:mcolDefenceDetail>
     </ns2:results>

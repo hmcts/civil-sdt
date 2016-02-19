@@ -15,6 +15,7 @@
           <tns2:eventCreatedDateOnMcol>2001-12-31T12:00:00</tns2:eventCreatedDateOnMcol>
           <tns2:raisedOnMcol>true</tns2:raisedOnMcol>
           <tns2:responseType>DE</tns2:responseType>
+          <!--  optional <tns2:defence>Good alibi.</tns2:defence>  -->
         </tns2:defendantResponse>
       </tns:mcolDefenceDetail>
   </tns:results>
