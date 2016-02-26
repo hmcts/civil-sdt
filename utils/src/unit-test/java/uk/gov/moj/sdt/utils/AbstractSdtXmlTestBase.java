@@ -263,10 +263,8 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 }
                 else
                 {
-                    LOGGER.error ("Parser encountered unexpected error - expected message: [" + e.getMessage () +
-                            "], actual message: [" + e.getMessage () + "]");
-                    Assert.fail ("Parser encountered unexpected error: expected [" + e.getMessage () + "], actual [" +
-                            e.getMessage () + "]");
+                    LOGGER.error ("Parser encountered unexpected error: [" + e.getMessage () + "]");
+                    Assert.fail ("Parser encountered unexpected error: [" + e.getMessage () + "]");
                 }
 
             }
