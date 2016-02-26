@@ -1466,7 +1466,7 @@
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
       <sub:submitQueryRequest>
@@ -1480,6 +1480,35 @@
                <sub:mcolDefenceCriteria>
                   <quer:fromDate>2009-12-01</quer:fromDate>
                   <quer:toDate>2009-12-02</quer:toDate>
+               </sub:mcolDefenceCriteria>
+            </sub:criterion>
+         </sub:criteria>
+      </sub:submitQueryRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitQueryRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="max-defences"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<!-- Before running this query:
+1. Load DBUNIT test data associated with SubmitQueryMaxTest 
+(in MCOL).
+2. Load DBUNIT test data associated with SubmitQueryTest 
+(in SDT). 
+3. Change SERVICE_ROUTINGS table to point to development MCOL 
+not the mock target application to ensure
+communication between SDT and MCOL. (The correct values are 
+in create_data.sql but these get replaced when the test data 
+is loaded.) -->
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
+   <soap:Header/>
+   <soap:Body>
+      <sub:submitQueryRequest>
+         <sub:header>
+            <sub:sdtCustomerId>12345679</sub:sdtCustomerId>
+            <sub:targetApplicationId>mcol</sub:targetApplicationId>
+		  <sub:queryReference>optional</sub:queryReference>
+         </sub:header>
+         <sub:criteria>
+            <sub:criterion criteriaType="mcolDefenceCriteria">
+               <sub:mcolDefenceCriteria>
+                  <quer:fromDate>2016-01-01T00:00:01</quer:fromDate>
+                  <quer:toDate>2016-01-02T23:59:59</quer:toDate>
                </sub:mcolDefenceCriteria>
             </sub:criterion>
          </sub:criteria>
