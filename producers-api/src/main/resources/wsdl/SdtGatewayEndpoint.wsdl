@@ -278,6 +278,13 @@
 				</xs:sequence>
 			</xs:complexType>
 
+            <xs:simpleType name="defenceType">
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="0" />
+                    <xs:maxLength value="8000" />
+                </xs:restriction>
+            </xs:simpleType>
+
 		</xs:schema>     
 		<!-- Claim.xsd -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
