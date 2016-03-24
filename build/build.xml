@@ -129,9 +129,14 @@
 		</parallel>	
 	</target>
 
-    <!-- Create SDT schema and objects -->
-    <target name="build-db" depends="init" description="Builds the DB by creating schema and schema objects">
-        <ant antfile="build.xml" dir="${database.dir}" target="build-all-databases" inheritrefs="true" inheritAll="false" />
+    <!-- Create baseline SDT schema and objects and migrate forward to current -->
+    <target name="build-baseline-database" depends="init" description="Builds the DB by creating schema and schema objects">
+        <ant antfile="build.xml" dir="${database.dir}" target="build-baseline-database" inheritrefs="true" inheritAll="false" />
+    </target>
+
+    <!-- Create current SDT schema and objects -->
+    <target name="build-current-database" depends="init" description="Builds the DB by creating schema and schema objects">
+        <ant antfile="build.xml" dir="${database.dir}" target="build-current-database" inheritrefs="true" inheritAll="false" />
     </target>
 
     <!-- Configures all template files required for build -->

@@ -12,7 +12,7 @@
  = Copyright Logica UK Ltd. 2013
  =========================================================================== -->
 
-<project name="database" basedir="." default="build-all-databases">
+<project name="database" basedir="." default="build-current-database">
 
 	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
 	<import file="../build/build-setup-env.xml" />
@@ -28,7 +28,10 @@
 	<target name="init" description="Create the distribution dirs">
 		<mkdir dir="${target.dir}" />
 		<mkdir dir="${lib.app.dir}" />
-		<mkdir dir="${logs.dir}" />
+        <mkdir dir="${logs.dir}" />
+        <mkdir dir="${logs.dir}/production" />
+        <mkdir dir="${logs.dir}/migration" />
+        <mkdir dir="${logs.dir}/populate-data" />
 	</target>
 
 	<!-- Delete the build and distribution folders -->
@@ -74,9 +77,9 @@
 
 	<!-- Run sqlplus script with optional parameters -->
 	<target name="-run-sql" description="This task runs an sqlplus script">
-		<echo level="info" message="Running: sqlplus -SL ${db.sys.user}/password@${db.sid} as sysdba ${script} ${param1} ${param2} ${param3}" />
-		<exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-name}.log">
-			<arg value="-SL" />
+		<echo level="info" message="Running: sqlplus -L ${db.sys.user}/password@${db.sid} as sysdba ${script} ${param1} ${param2} ${param3} for type ${script-type}, script ${script-name}" />
+		<exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-type}/${script-name}.log">
+			<arg value="-L" />
 			<arg value="${db.sys.user}/${db.system.pass}@${db.sid}" />
 			<arg value="as" />
 			<arg value="sysdba" />
@@ -117,25 +120,213 @@
 		</fail>
 	</target>
 
-	<!-- build live database -->
-	<target name="build-database" depends="init" description="This task runs the database build scripts">
-		<delete dir="${logs.dir}" />
-		<mkdir dir="${logs.dir}" />
+	<!-- Build all databases at baseline version -->
+	<target name="create-baseline-schemas" depends="init" description="This task runs the baseline database build scripts">
 
 		<antcall target="-run-sql">
-			<param name="script-name" value="install" />
-			<param name="script" value="ddl/install.sql" />
+			<param name="script-name" value="drop_users" />
+			<param name="script-type" value="production" />
+			<param name="script" value="utils/drop_users.sql" />
 			<param name="param1" value="" />
 			<param name="param2" value="" />
 			<param name="param3" value="" />
 		</antcall>
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="create_users" />
+			<param name="script-type" value="production" />
+			<param name="script" value="utils/create_users.sql" />
+			<param name="param1" value="" />
+			<param name="param2" value="" />
+			<param name="param3" value="" />
+		</antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_owner_ddl" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_ddl.sql" />
+            <param name="param1" value="baseline" />
+            <param name="param2" value="SDT_OWNER" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_owner_grants" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_grants.sql" />
+            <param name="param1" value="baseline" />
+            <param name="param2" value="SDT_OWNER" />
+            <param name="param3" value="" />
+        </antcall>
+
 	</target>
 
-	<target name="upgrade-database" depends="init" description="This task runs the database migration scripts">
+	<!-- Build all databases at latest version -->
+	<target name="create-current-schemas" depends="init" description="This task runs the current database build scripts">
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="drop_users" />
+			<param name="script-type" value="production" />
+			<param name="script" value="utils/drop_users.sql" />
+			<param name="param1" value="" />
+			<param name="param2" value="" />
+			<param name="param3" value="" />
+		</antcall>
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="create_users" />
+			<param name="script-type" value="production" />
+			<param name="script" value="utils/create_users.sql" />
+			<param name="param1" value="" />
+			<param name="param2" value="" />
+			<param name="param3" value="" />
+		</antcall>
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="create_sdt_owner_ddl" />
+			<param name="script-type" value="production" />
+			<param name="script" value="utils/install_all_ddl.sql" />
+			<param name="param1" value="current" />
+			<param name="param2" value="SDT_OWNER" />
+			<param name="param3" value="" />
+		</antcall>
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="create_sdt_owner_grants" />
+			<param name="script-type" value="production" />
+			<param name="script" value="utils/install_all_grants.sql" />
+			<param name="param1" value="current" />
+			<param name="param2" value="SDT_OWNER" />
+			<param name="param3" value="" />
+		</antcall>
+
 	</target>
 
-	<!-- Build all databases  -->
-	<target name="build-all-databases" depends="build-database, upgrade-database" description="Generate the database schema">
+	<!-- Run the migration scripts to move from the baseline to the current version. These migration scripts 
+	are used to evolve the production database. -->
+	<!-- Migrate all schemas from the baseline version to the current version -->
+	<target name="migrate-baseline-database" depends="init" description="Migrate the baseline database to the current version">
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="01_fix_version_number_default_values" />
+			<param name="script-type" value="migration" />
+			<param name="script" value="utils/sql_wrapper.sql" />
+			<param name="param1" value="mig/001_2.0.0/01_fix_version_number_default_values.sql" />
+			<param name="param2" value="" /> 
+			<param name="param3" value="" />
+		</antcall>
+
+		<!-- end of migration/upgrade -->
+
+		<antcall target="-run-sql">
+			<param name="script-name" value="compile_invalid_objects" />
+			<param name="script-type" value="migration" />
+			<param name="script" value="utils/compile_invalid_objects.sql" />
+			<param name="param1" value="" />
+			<param name="param2" value="" />
+			<param name="param3" value="" />
+		</antcall>
+
+	</target>
+
+    <!-- Prepare for data population by disabling constraints and triggers -->
+    <target name="-populate-start" depends="init" description="Prepare for data population by disabling constraints and triggers">
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="disable_fk_constraints" />
+            <param name="script-type" value="populate-data" />
+            <param name="script" value="utils/fk_constraints.sql" />
+            <param name="param1" value="disable" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
+        
+        <antcall target="-run-sql">
+            <param name="script-name" value="disable_triggers" />
+            <param name="script-type" value="populate-data" />
+            <param name="script" value="utils/triggers.sql" />
+            <param name="param1" value="disable" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="truncate_tables" />
+            <param name="script-type" value="populate-data" />
+            <param name="script" value="utils/truncate_tables.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
+        
+    </target>
+    
+    <!-- Populate Reference Data -->
+    <target name="-populate-reference-data" depends="init" description="This task populates the transactional data">
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_reference_data" />
+            <param name="script-type" value="populate-data" />
+            <param name="script" value="data/create_reference_data.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
+
+    </target>
+    
+    <!-- Populate Transactional Data -->
+    <target name="-populate-transactional-data" depends="init" description="This task populates the transactional data">
+
+    </target>
+        
+    <!-- Reset sequences to be higher than all data just added -->
+    <target name="-reset-sequences" depends="init" description="This task resets sequences to take account of data added to the database">
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="reset_sequence" />
+            <param name="script-type" value="populate-data" />
+            <param name="script" value="utils/reset_sequence.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
+
+    </target>
+    
+    <!-- Complete data population by re-enabling constraints and triggers -->
+    <target name="-populate-finish" depends="init" description="Complete data population by re-enabling constraints and triggers">
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="enable_fk_constraints" />
+            <param name="script-type" value="populate-data" />
+            <param name="script" value="utils/fk_constraints.sql" />
+            <param name="param1" value="enable" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="enable_triggers" />
+            <param name="script-type" value="populate-data" />
+            <param name="script" value="utils/triggers.sql" />
+            <param name="param1" value="enable" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
+
+    </target>
+    
+    <!-- Populate Transactional Data -->
+    <target name="populate-data" depends="-populate-start, -populate-reference-data, -populate-transactional-data, -reset-sequences, -populate-finish" description="This task populates the transactional data">
+    </target>
+    
+	<!-- Build all databases at baseline version -->
+	<target name="build-baseline-database" depends="create-baseline-schemas, migrate-baseline-database, populate-data" description="Create the baseline schema (the version of the schemas to which migration scripts are applied)">
+	</target>
+
+	<!-- Build all databases at latest version -->
+	<target name="build-current-database" depends="create-current-schemas, populate-data" description="Create the current schema (the version of the schemas which is used in development)">
 	</target>
 
 	<!-- Calls extra targets required by this project. -->
