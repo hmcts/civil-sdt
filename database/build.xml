@@ -159,6 +159,42 @@
             <param name="param3" value="" />
         </antcall>
 
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_ddl" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_ddl.sql" />
+            <param name="param1" value="baseline" />
+            <param name="param2" value="SDT_USER" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_grants" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_grants.sql" />
+            <param name="param1" value="baseline" />
+            <param name="param2" value="SDT_USER" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_ddl" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_ddl.sql" />
+            <param name="param1" value="baseline" />
+            <param name="param2" value="SDT_BATCH_USER" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_grants" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_grants.sql" />
+            <param name="param1" value="baseline" />
+            <param name="param2" value="SDT_BATCH_USER" />
+            <param name="param3" value="" />
+        </antcall>
+		
 	</target>
 
 	<!-- Build all databases at latest version -->
@@ -200,6 +236,42 @@
 			<param name="param3" value="" />
 		</antcall>
 
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_ddl" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_ddl.sql" />
+            <param name="param1" value="current" />
+            <param name="param2" value="SDT_USER" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_grants" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_grants.sql" />
+            <param name="param1" value="current" />
+            <param name="param2" value="SDT_USER" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_ddl" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_ddl.sql" />
+            <param name="param1" value="current" />
+            <param name="param2" value="SDT_BATCH_USER" />
+            <param name="param3" value="" />
+        </antcall>
+
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_user_grants" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_grants.sql" />
+            <param name="param1" value="current" />
+            <param name="param2" value="SDT_BATCH_USER" />
+            <param name="param3" value="" />
+        </antcall>
+		
 	</target>
 
 	<!-- Run the migration scripts to move from the baseline to the current version. These migration scripts 
