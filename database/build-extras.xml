@@ -27,9 +27,9 @@
     </target>
     
     <target name="-prepare-zip" description="Zip database related artefacts">
-        <copy todir="${target.dir}/ddl" overwrite="true">
-            <fileset dir="ddl">
-                <include name="*.sql"/>
+        <copy todir="${target.dir}/baseline" overwrite="true">
+            <fileset dir="baseline">
+                <include name="**/*.sql"/>
             </fileset>
         </copy>
         <copy todir="${target.dir}/tools" overwrite="true">
