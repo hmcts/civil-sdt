@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="92"/>
+        <property name="numberOfRequest" value="96"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -374,14 +374,6 @@
                     <value>Claim status update already submitted for this claim.</value>
                     <value></value>
                 </list>
-                <list>                  
-                    <value>USER_REQUEST_ID_c43</value>                  
-                    <value>mcolClaimStatusUpdate</value>                 
-                    <value>Rejected</value>                 
-                    <value>43</value>                   
-                    <value>Defendant cannot be specified as there is a joint judgment.</value>
-                    <value></value>
-                </list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c44</value>	       			
 	       			<value>mcolJudgment</value>	       			
@@ -715,38 +707,6 @@
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c79</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>79</value>	       			
-	       			<value>Solicitor's costs on judgment cannot be specified when requesting a judgment by admission following a part admission.</value>
-	       			<value></value>
-	       		</list>
-	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c80</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>80</value>	       			
-	       			<value>Deducted amount cannot be specified when requesting a judgment by admission following a part admission.</value>
-	       			<value></value>
-	       		</list>
-	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c81</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>81</value>	       			
-	       			<value>Judgment amount can only be specified when requesting a judgment by admission following a part admission.</value>
-	       			<value></value>
-	       		</list>
-	       		<list>	     			
-	       			<value>USER_REQUEST_ID_c82</value>	       			
-	       			<value>mcolJudgment</value>	       			
-	       			<value>Rejected</value>	       			
-	       			<value>82</value>	       			
-	       			<value>Judgment amount must be specified when requesting a judgment by admission following a part admission.</value>
-	       			<value></value>
-	       		</list>
-	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c83</value>	       			
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
@@ -784,6 +744,78 @@
 	       			<value>Rejected</value>	       			
 	       			<value>87</value>	       			
 	       			<value>Evidence must be provided if supporting information choice is 'EV'</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c89</value>	       			
+	       			<value>mcolWarrant</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>89</value>       			
+	       			<value>Address previously supplied for the defendant is not in England or Wales.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c90</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>90</value>       			
+	       			<value>Claim amount admitted can only be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c91</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>91</value>       			
+	       			<value>Claim amount admitted must be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c92</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>92</value>       			
+	       			<value>Claim legal costs admitted can only be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c93</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>93</value>       			
+	       			<value>Claim legal costs must be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c94</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>94</value>       			
+	       			<value>Claim court fees can only be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c95</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>95</value>       			
+	       			<value>Claim court fees must be specified when requesting a judgment by admission following a part admission.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c96</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>96</value>       			
+	       			<value>Claim legal costs can only be claimed by customers enrolled as a solicitor on MCOL.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c97</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>97</value>       			
+	       			<value>Claim amount admitted cannot be greater than the original claim amount, including interest up to date of claim but not legal costs or court fees.</value>
 	       			<value></value>
 	       		</list>
 	       	</list>

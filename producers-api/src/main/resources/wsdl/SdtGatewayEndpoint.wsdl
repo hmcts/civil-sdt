@@ -860,7 +860,7 @@
 			<xs:complexType name="serviceAddressType">
 				<xs:sequence>
 					<xs:element name="line1" type="base:nonBlankLineType" minOccurs="1" />
-					<xs:element name="line2" type="base:nonBlankLineType minOccurs="1" />
+					<xs:element name="line2" type="base:nonBlankLineType" minOccurs="1" />
 					<xs:element name="line3" type="base:lineType" minOccurs="0" />
 					<xs:element name="line4" type="base:lineType" minOccurs="0" />
 					<xs:element name="postcode" type="base:nonUKPostcodeType"
