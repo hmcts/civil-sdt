@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="96"/>
+        <property name="numberOfRequest" value="97"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -816,6 +816,14 @@
 	       			<value>Rejected</value>	       			
 	       			<value>97</value>       			
 	       			<value>Claim amount admitted cannot be greater than the original claim amount, including interest up to date of claim but not legal costs or court fees.</value>
+	       			<value></value>
+	       		</list>
+	       		<list>	     			
+	       			<value>USER_REQUEST_ID_c98</value>	       			
+	       			<value>mcolJudgment</value>	       			
+	       			<value>Rejected</value>	       			
+	       			<value>98</value>       			
+	       			<value>Claim amount admitted cannot be zero.</value>
 	       			<value></value>
 	       		</list>
 	       	</list>
