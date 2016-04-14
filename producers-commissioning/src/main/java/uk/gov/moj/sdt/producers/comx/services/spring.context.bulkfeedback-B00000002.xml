@@ -238,7 +238,7 @@
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>CUST_XML_ERR</value>	       			
-	       			<value>Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or  contact 'SDT Contact Details' for assistance</value>
+	       			<value>Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or  contact 'SDT Contact Details' for assistance.</value>
 	       			<value></value>
 	       		</list>	       		
 	       		<list>	     			

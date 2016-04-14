@@ -4,8 +4,7 @@
     <status code="Error">
         <error>
             <code>77</code>
-            <description>No claim response notifications found for
-                requested period</description>
+            <description>No defence notifications found for requested period.</description>
         </error>
     </status>
     <ns2:sdtCustomerId>12345678</ns2:sdtCustomerId>

@@ -355,7 +355,7 @@
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>40</value>	       			
-	       			<value>Compliance to section 38 of CPR specified in error</value>
+	       			<value>Compliance to section 38 of CPR specified in error.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -363,7 +363,7 @@
 	       			<value>mcolClaimStatusUpdate</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>41</value>	       			
-	       			<value>Compliance to section 38 of CPR must be true if discontinued update is requested</value>
+	       			<value>Compliance to section 38 of CPR must be true if discontinued update is requested.</value>
 	       			<value></value>
 	       		</list>
                 <list>                  
@@ -403,7 +403,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>47</value>	       			
-	       			<value>This application to set aside judgment is invalid on the referenced claim</value>
+	       			<value>This application to set aside judgment is invalid on the referenced claim.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -411,7 +411,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>48</value>	       			
-	       			<value>There is no active judgment for this application to set aside judgment</value>
+	       			<value>There is no active judgment for this application to set aside judgment.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -467,7 +467,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>53</value>	       			
-	       			<value>Application to set aside cannot be made for the requested defendant(s)</value>
+	       			<value>Application to set aside cannot be made for the requested defendant(s).</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -515,7 +515,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>59</value>	       			
-	       			<value>Other detail must be specified if applicant type is Other</value>
+	       			<value>Other detail must be specified if applicant type is Other.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -635,7 +635,7 @@
 	       			<value>mcolClaim</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Rejected by CCBC - rejection number 24</value>
+	       			<value>Rejected by CCBC - rejection number 24.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -643,7 +643,7 @@
 	       			<value>mcolJudgment</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Judgement: Rejected by CCBC - rejection number 6</value>
+	       			<value>Judgement: Rejected by CCBC - rejection number 6.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -651,7 +651,7 @@
 	       			<value>mcolWarrant</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Warrant: Rejected by CCBC - rejection number 6</value>
+	       			<value>Warrant: Rejected by CCBC - rejection number 6.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -659,7 +659,7 @@
 	       			<value>mcolJudgmentWarrant</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>75</value>	       			
-	       			<value>Judgment: Rejected by CCBC - rejection number 6</value>
+	       			<value>Judgment: Rejected by CCBC - rejection number 6.</value>
                     <value>
                         <![CDATA[
                             <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
@@ -703,7 +703,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>76</value>	       			
-	       			<value>Other detail must not be specified if applicant type is not Other</value>
+	       			<value>Other detail must not be specified if applicant type is not Other.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -727,7 +727,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>85</value>	       			
-	       			<value>Representing who must be specified if applicant type is Legal Representative</value>
+	       			<value>Representing who must be specified if applicant type is Legal Representative.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -735,7 +735,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>86</value>	       			
-	       			<value>Service address should only be supplied if serving target is specified</value>
+	       			<value>Service address should only be supplied if serving target is specified.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			
@@ -743,7 +743,7 @@
 	       			<value>mcolSetAside</value>	       			
 	       			<value>Rejected</value>	       			
 	       			<value>87</value>	       			
-	       			<value>Evidence must be provided if supporting information choice is 'EV'</value>
+	       			<value>Evidence must be provided if supporting information choice is 'EV'.</value>
 	       			<value></value>
 	       		</list>
 	       		<list>	     			

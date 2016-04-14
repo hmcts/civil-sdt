@@ -5,7 +5,7 @@
         <error>
             <code>74</code>
             <description>To Date and Time must be later than From Date
-                and Time</description>
+                and Time.</description>
         </error>
     </status>
     <ns2:sdtCustomerId>12345678</ns2:sdtCustomerId>

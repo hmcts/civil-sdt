@@ -14,7 +14,7 @@
     <!-- Define the Error log -->
     <bean id="uk.gov.moj.sdt.producers.comx.utils.IErrorLogMCOLDefence2" class="uk.gov.moj.sdt.domain.ErrorLog">
     	<property name="errorCode" value="77"/>
-    	<property name="errorText" value="No claim response notifications found for requested period"/>
+    	<property name="errorText" value="No defence notifications found for requested period."/>
     </bean>
     
 </beans>
