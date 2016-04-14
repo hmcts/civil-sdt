@@ -177,7 +177,7 @@
    <ns2:status code="Rejected">
     <error>
      <code>CUST_XML_ERR</code>
-     <description>Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or contact 'SDT Contact Details' for assistance</description>
+     <description>Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or contact 'SDT Contact Details' for assistance.</description>
     </error>
    </ns2:status>
   </ns2:response>
