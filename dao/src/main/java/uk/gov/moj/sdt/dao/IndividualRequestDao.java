@@ -168,7 +168,11 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         final LocalDateTime now = new LocalDateTime ();
         final LocalDateTime latestTime = now.minusMinutes (minimumAgeInMinutes);
 
-        // Call the generic dao to do this query
+        // Call the generic dao to do this query.
+        // Only look for requests that are
+        // 1. either have received or forwarded status
+        // 2. either have no updated date set (null) or have updated date older than minimumAgeInMinutes set.
+        // 3. are not on the dead letter queue
         final List<IIndividualRequest> individualRequests =
                 this.queryAsList (
                         IIndividualRequest.class,
@@ -177,7 +181,8 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                                         IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ()),
                                 Restrictions.eq ("requestStatus",
                                         IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ())),
-                        Restrictions.lt ("updatedDate", latestTime), Restrictions.eq ("deadLetter", false));
+                        Restrictions.or (Restrictions.lt ("updatedDate", latestTime),
+                                Restrictions.isNull ("updatedDate")), Restrictions.eq ("deadLetter", false));
 
         return individualRequests;
     }
