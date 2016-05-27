@@ -94,6 +94,11 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher
 
                 LOGGER.debug ("Replacement string[" + replacementXml + "]");
 
+                // Escape any $ in the string, otherwise matcher may crash depending on what comes after $. N.B. Do not
+                // use replaceAll or anything making use of java.util.regex.Matcher because this will produce the
+                // problem we are trying to avoid.
+                replacementXml = this.escapeUnescapedCharacters ('$', replacementXml);
+
                 // Inject the system specific response into the current envelope.
                 newXml = matcher.replaceFirst (replacementXml);
             }

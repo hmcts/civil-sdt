@@ -68,14 +68,14 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase
     {
         enricher.setInsertionTag ("results");
         enricher.setParentTag ("submitQueryResponse");
-        
+
         SdtContext.getContext ().setRawOutXml ("<record></record>");
         final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
-        final String expected = "<ns1:submitQueryResponse><ns2:results>" +
-        		"<record></record></ns2:results></ns1:submitQueryResponse>";
-        Assert.assertEquals(expected, result);
+        final String expected =
+                "<ns1:submitQueryResponse><ns2:results>" + "<record></record></ns2:results></ns1:submitQueryResponse>";
+        Assert.assertEquals (expected, result);
     }
-    
+
     /**
      * Test submit query enrichment where the insertion tag does not have a preceding namespace.
      */
@@ -84,32 +84,49 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase
     {
         enricher.setInsertionTag ("results");
         enricher.setParentTag ("submitQueryResponse");
-        
+
         SdtContext.getContext ().setRawOutXml ("<record></record>");
         final String result = enricher.enrichXml ("<ns1:submitQueryResponse><results/></ns1:submitQueryResponse>");
-        final String expected = "<ns1:submitQueryResponse><results>" +
-                "<record></record></results></ns1:submitQueryResponse>";
-        Assert.assertEquals(expected, result);
+        final String expected =
+                "<ns1:submitQueryResponse><results>" + "<record></record></results></ns1:submitQueryResponse>";
+        Assert.assertEquals (expected, result);
     }
-    
+
     /**
      * Test individual request enrichment.
      */
     @Test
-    //CHECKSTYLE:OFF
-    public void testIndRequestEnrichment(){
+    // CHECKSTYLE:OFF
+            public
+            void testIndRequestEnrichment ()
+    {
         enricher.setInsertionTag ("targetAppDetail");
         enricher.setParentTag ("individualRequest");
 
         SdtContext.getContext ().setRawOutXml ("<claim></claim>");
-        
-        final String requestHeader = "<ind:header><ind:sdtRequestId>?</ind:sdtRequestId><ind:targetAppCustomerId>?</ind:targetAppCustomerId><ind:requestType>?</ind:requestType></ind:header>";
-        final String result = enricher.enrichXml ("<ns1:individualRequest>"+
-         requestHeader+"<ind:targetAppDetail/></ns1:individualRequest>");
-        final String expected = "<ns1:individualRequest>" + requestHeader + "<ind:targetAppDetail>" +
-                "<claim></claim></ind:targetAppDetail></ns1:individualRequest>";
-        Assert.assertEquals(expected, result);
+
+        final String requestHeader =
+                "<ind:header><ind:sdtRequestId>?</ind:sdtRequestId><ind:targetAppCustomerId>?</ind:targetAppCustomerId><ind:requestType>?</ind:requestType></ind:header>";
+        final String result =
+                enricher.enrichXml ("<ns1:individualRequest>" + requestHeader +
+                        "<ind:targetAppDetail/></ns1:individualRequest>");
+        final String expected =
+                "<ns1:individualRequest>" + requestHeader + "<ind:targetAppDetail>" +
+                        "<claim></claim></ind:targetAppDetail></ns1:individualRequest>";
+        Assert.assertEquals (expected, result);
     }
-    //CHECKSTYLE:ON
-    
+
+    // CHECKSTYLE:ON
+
+    /**
+     * Test the addition of an escape character to all instances of specified character which have not already been
+     * escaped.
+     */
+    @Test
+    public void testEscapeUnescapedCharacters ()
+    {
+        final String result =
+                enricher.escapeUnescapedCharacters ('$', "$abcd$$abcd\\$$abcd$\\$abcd\\r\\\\abcd\\\\$abcd$");
+        Assert.assertEquals ("\\$abcd\\$\\$abcd\\$\\$abcd\\$\\$abcd\\r\\\\abcd\\\\\\$abcd\\$", result);
+    }
 }

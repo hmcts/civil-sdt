@@ -130,4 +130,55 @@ public abstract class AbstractSdtEnricher implements ISdtEnricher
         this.insertionTag = insertionTag;
     }
 
+    /**
+     * Prefix all instances of target character not already escaped in text with an escape character.
+     * 
+     * @param targetCharacter character all occurrences of which are to be escaped if not already escaped.
+     * @param text string in which all instances of target character are to be escaped.
+     * @return the fully escaped string.
+     */
+    protected String escapeUnescapedCharacters (final char targetCharacter, final String text)
+    {
+        final StringBuffer result = new StringBuffer ();
+
+        int cursor = 0;
+        boolean escaped = false;
+
+        // Parse through all input characters.
+        while (cursor < text.length ())
+        {
+            final char next = text.charAt (cursor);
+
+            // Is it the escape character?
+            if (next == '\\')
+            {
+                // Toggle to handle escaped escape.
+                escaped = !escaped;
+            }
+            // Is it a dollar?
+            else if (next == targetCharacter)
+            {
+                // No action if already escaped.
+                if ( !escaped)
+                {
+                    result.append ('\\');
+                }
+
+                // No further opportunity.
+                escaped = false;
+            }
+            else
+            {
+                // Switch off escaped as it does not affect the target character now which is all we care about.
+                escaped = false;
+            }
+
+            // Copy into results.
+            result.append (next);
+
+            cursor++;
+        }
+
+        return result.toString ();
+    }
 }
