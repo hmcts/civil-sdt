@@ -26,20 +26,18 @@
         <scp file="${target.dir}/${deployable.component}" todir="${remote.copy.user}:${remote.copy.password}@${remote.copy.host}:${remote.copy.dir}/${application.version}.${buildNumber}/${deployable.component}" trust="true" failonerror="false" />
     </target>
     
-    <target name="-prepare-zip" description="Zip database related artefacts">
-        <copy todir="${target.dir}/baseline" overwrite="true">
-            <fileset dir="baseline">
-                <include name="**/*.sql"/>
-            </fileset>
-        </copy>
-        <copy todir="${target.dir}/tools" overwrite="true">
-            <fileset dir="tools">
-                <include name="*.sh"/>
-                <include name="*.properties"/>
-            </fileset>
-        </copy>
-        <delete file="${target.dir}/${deployable.component}"/>
-        <zip destfile="${target.dir}/${deployable.component}" basedir="${target.dir}/" />
+    <!-- Calls extra build deploy targets required by this project. -->
+    <target name="-prepare-zip" depends="" description="Zip database related artefacts">
+        <if>
+            <isset property="mig.release"/>
+            <then>
+                <zip destfile="${target.dir}/${component.name}">
+                    <fileset dir="mig/">
+                        <include name="**/${mig.release}*/*"/>
+                    </fileset>
+                </zip>
+            </then>
+        </if>
     </target>
 
 </project>
