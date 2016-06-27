@@ -20,7 +20,7 @@
     <import file="../build/build-setup-env.xml" />
 
     <!-- Calls extra build deploy targets required by this project. -->
-    <target name="deploy-extras" if="remote-copy.exists" depends="-prepare-zip" description="Run extra targets for this project">
+    <target name="deploy-extras" depends="-prepare-zip" description="Run extra targets for this project">
         <!-- Copy the file to the remote host directory. -->
         <sshexec host="${remote.copy.host}" username="${remote.copy.user}" password="${remote.copy.password}" command="mkdir -p ${remote.copy.dir}/${application.version}.${buildNumber}" trust="true" failonerror="true" />
         <scp file="${target.dir}/${deployable.component}" todir="${remote.copy.user}:${remote.copy.password}@${remote.copy.host}:${remote.copy.dir}/${application.version}.${buildNumber}/${deployable.component}" trust="true" failonerror="false" />
