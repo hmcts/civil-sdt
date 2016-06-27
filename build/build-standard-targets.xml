@@ -443,6 +443,9 @@
 	</target>
 
 	<target name="-deploy-remote-copy" if="remote-copy.exists" depends="-prepare-ear" description="Remote copy the deployed file to the target area">
+        <!-- Copy the war file to the remote host directory. -->
+        <ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
+
 		<!-- Copy the war file to the remote host directory. -->
 		<sshexec host="${remote.copy.host}" username="${remote.copy.user}" password="${remote.copy.password}" command="mkdir -p ${remote.copy.dir}/${application.version}.${buildNumber}" trust="true" failonerror="true" />
 		<scp file="${target.dir}/${deployable.component}" todir="${remote.copy.user}:${remote.copy.password}@${remote.copy.host}:${remote.copy.dir}/${application.version}.${buildNumber}/${deployable.component}" trust="true" failonerror="false" />
@@ -450,6 +453,7 @@
 
 	<target name="-deploy-remote-tc-server" if="remote-tc-server.exists" description="Remote copy to the autodeploy folder of the tc-server(can be reused to for WebLogic">
 		<echo>Copying the war to the remote Application server Hot Deploy directory</echo>
+
 		<!-- Copy the war file to the remote host directory. -->
 		<ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
 
