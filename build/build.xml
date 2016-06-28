@@ -34,6 +34,7 @@
     	<file name="../handlers/build.xml" />
         <file name="../producers/build.xml" />
         <file name="../producers-commissioning/build.xml" />
+        <file name="../database/build.xml" />
     </filelist>
 
     <!-- List of projects for which deploy is needed in order - note dirset cannot control order of execution -->
