@@ -1,7 +1,7 @@
 <!-- ===========================================================================
  = SDT
  =
- = Name:    	build.xml
+ = Name:        build.xml
  = Description: Build file for a specific project.
  =
  = $Revision: $
@@ -14,8 +14,8 @@
 
 <project name="database" basedir="." default="build-current-database">
 
-	<!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
-	<import file="../build/build-setup-env.xml" />
+    <!-- LOAD STANDARD PROPERTIES FROM ENVIRONMENT VARIABLES AND PROPERTY FILES -->
+    <import file="../build/build-setup-env.xml" />
 
     <!-- STANDARD TARGETS -->
     <import file="../build/build-standard-targets.xml" />
@@ -23,123 +23,123 @@
     <!-- EXTRA TARGETS -->
     <import file="build-extras.xml" />
 
-	<!-- General initialisation - ensure build directory (for classes) and dist 
-		directory (for jar) are present if they do not already exist -->
-	<target name="init" description="Create the distribution dirs">
-		<mkdir dir="${target.dir}" />
-		<mkdir dir="${lib.app.dir}" />
+    <!-- General initialisation - ensure build directory (for classes) and dist 
+        directory (for jar) are present if they do not already exist -->
+    <target name="init" description="Create the distribution dirs">
+        <mkdir dir="${target.dir}" />
+        <mkdir dir="${lib.app.dir}" />
         <mkdir dir="${logs.dir}" />
         <mkdir dir="${logs.dir}/production" />
         <mkdir dir="${logs.dir}/migration" />
         <mkdir dir="${logs.dir}/populate-data" />
-	</target>
+    </target>
 
-	<!-- Delete the build and distribution folders -->
-	<target name="clean" description="Cleanup the build and distribution dirs">
-		<delete dir="${target.dir}" />
-		<delete dir="${lib.app.dir}" />
-		<delete dir="${logs.dir}" />
-	</target>
+    <!-- Delete the build and distribution folders -->
+    <target name="clean" description="Cleanup the build and distribution dirs">
+        <delete dir="${target.dir}" />
+        <delete dir="${lib.app.dir}" />
+        <delete dir="${logs.dir}" />
+    </target>
 
-	<!-- Copies <any name>.template files to <any name> substituting any matching properties in memory -->
-	<target name="configure-property-files" description="Copies files in the project with the pattern '*.template' to '*', dropping the .template suffix">
-		<echo level="info" message="Templatising all configuration files" />
-		<copy todir="${basedir}" overwrite="true">
-			<fileset dir="${basedir}">
-				<include name="**/*.template" />
-			</fileset>
-			<filterchain>
-				<filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
-			</filterchain>
-			<mapper type="glob" from="*.template" to="*" />
-		</copy>
-	</target>
+    <!-- Copies <any name>.template files to <any name> substituting any matching properties in memory -->
+    <target name="configure-property-files" description="Copies files in the project with the pattern '*.template' to '*', dropping the .template suffix">
+        <echo level="info" message="Templatising all configuration files" />
+        <copy todir="${basedir}" overwrite="true">
+            <fileset dir="${basedir}">
+                <include name="**/*.template" />
+            </fileset>
+            <filterchain>
+                <filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+            </filterchain>
+            <mapper type="glob" from="*.template" to="*" />
+        </copy>
+    </target>
 
-	<!-- Build zip file -->
-	<target name="dist" depends="init" description="Generate the distribution">
-	</target>
+    <!-- Build zip file -->
+    <target name="dist" depends="init" description="Generate the distribution">
+    </target>
 
-	<!-- Dummy target - nothing to do but satisfy higher level build file -->
-	<target name="dist-tests" description="Generate the test distribution">
-	</target>
+    <!-- Dummy target - nothing to do but satisfy higher level build file -->
+    <target name="dist-tests" description="Generate the test distribution">
+    </target>
 
-	<!-- Dummy target - nothing to do but satisfy higher level build file -->
-	<target name="run-unit-tests" description="Run unit tests">
-	</target>
+    <!-- Dummy target - nothing to do but satisfy higher level build file -->
+    <target name="run-unit-tests" description="Run unit tests">
+    </target>
 
-	<!-- Dummy target - nothing to do but satisfy higher level build file -->
-	<target name="run-integration-tests" description="Run integration tests">
-	</target>
+    <!-- Dummy target - nothing to do but satisfy higher level build file -->
+    <target name="run-integration-tests" description="Run integration tests">
+    </target>
 
-	<!-- Dummy target - nothing to do but satisfy higher level build file -->
-	<target name="run-end-to-end-tests" description="Run end-to-end tests">
-	</target>
+    <!-- Dummy target - nothing to do but satisfy higher level build file -->
+    <target name="run-endtoend-tests" description="Run end-to-end tests">
+    </target>
 
-	<!-- Run sqlplus script with optional parameters -->
-	<target name="-run-sql" description="This task runs an sqlplus script">
-		<echo level="info" message="Running: sqlplus -L ${db.sys.user}/password@${db.sid} as sysdba ${script} ${param1} ${param2} ${param3} for type ${script-type}, script ${script-name}" />
-		<exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-type}/${script-name}.log">
-			<arg value="-L" />
-			<arg value="${db.sys.user}/${db.system.pass}@${db.sid}" />
-			<arg value="as" />
-			<arg value="sysdba" />
-			<arg value="@${script}" />
-			<arg value="${param1}" />
-			<arg value="${param2}" />
-			<arg value="${param3}" />
-		</exec>
+    <!-- Run sqlplus script with optional parameters -->
+    <target name="-run-sql" description="This task runs an sqlplus script">
+        <echo level="info" message="Running: sqlplus -L ${db.sys.user}/password@${db.sid} as sysdba ${script} ${param1} ${param2} ${param3} for type ${script-type}, script ${script-name}" />
+        <exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-type}/${script-name}.log">
+            <arg value="-L" />
+            <arg value="${db.sys.user}/${db.system.pass}@${db.sid}" />
+            <arg value="as" />
+            <arg value="sysdba" />
+            <arg value="@${script}" />
+            <arg value="${param1}" />
+            <arg value="${param2}" />
+            <arg value="${param3}" />
+        </exec>
 
-		<fail message="An error occurred while running sqlplus script - see logs/${script-type}/${script-name}.log for details.">
-			<condition>
-				<not>
-					<equals arg1="${sql.result}" arg2="0" />
-				</not>
-			</condition>
-		</fail>
-	</target>
+        <fail message="An error occurred while running sqlplus script - see logs/${script-type}/${script-name}.log for details.">
+            <condition>
+                <not>
+                    <equals arg1="${sql.result}" arg2="0" />
+                </not>
+            </condition>
+        </fail>
+    </target>
 
-	<!-- Run sqlldr script with optional parameters -->
-	<target name="-run-sqlldr" description="This task runs an sqlldr script">
-		<echo level="info" message="Running (from ${script-dir}): sqlldr userid=${db.system.user}/password@${db.sid} bad=${script-name}.bad control=${script-name}.ctl data=${script-name}.csv skip=1 errors=0 log=${orig_working_dir}/logs/${script-type}/${script-name}.log" />
-		<exec executable="sqlldr" resultproperty="sql.result" failonerror="true" dir="${script-dir}" output="logs/${script-name}.log">
-			<arg value="userid=${db.system.user}/${db.system.pass}@${db.sid}" />
-			<arg value="bad=${script-name}.bad" />
-			<arg value="control=${script-name}.ctl" />
-			<arg value="data=${script-name}.csv" />
-			<arg value="skip=1" />
-			<arg value="errors=0" />
-			<arg value="log=${orig_working_dir}/logs/live/mcol.card_scheme.log" />
-		</exec>
+    <!-- Run sqlldr script with optional parameters -->
+    <target name="-run-sqlldr" description="This task runs an sqlldr script">
+        <echo level="info" message="Running (from ${script-dir}): sqlldr userid=${db.system.user}/password@${db.sid} bad=${script-name}.bad control=${script-name}.ctl data=${script-name}.csv skip=1 errors=0 log=${orig_working_dir}/logs/${script-type}/${script-name}.log" />
+        <exec executable="sqlldr" resultproperty="sql.result" failonerror="true" dir="${script-dir}" output="logs/${script-name}.log">
+            <arg value="userid=${db.system.user}/${db.system.pass}@${db.sid}" />
+            <arg value="bad=${script-name}.bad" />
+            <arg value="control=${script-name}.ctl" />
+            <arg value="data=${script-name}.csv" />
+            <arg value="skip=1" />
+            <arg value="errors=0" />
+            <arg value="log=${orig_working_dir}/logs/live/mcol.card_scheme.log" />
+        </exec>
 
-		<fail message="An error occurred while running sqlldr - see logs/${script-type}/${script-name}.log for details.">
-			<condition>
-				<not>
-					<equals arg1="${sql.result}" arg2="0" />
-				</not>
-			</condition>
-		</fail>
-	</target>
+        <fail message="An error occurred while running sqlldr - see logs/${script-type}/${script-name}.log for details.">
+            <condition>
+                <not>
+                    <equals arg1="${sql.result}" arg2="0" />
+                </not>
+            </condition>
+        </fail>
+    </target>
 
-	<!-- Build all databases at baseline version -->
-	<target name="create-baseline-schemas" depends="init" description="This task runs the baseline database build scripts">
+    <!-- Build all databases at baseline version -->
+    <target name="create-baseline-schemas" depends="init" description="This task runs the baseline database build scripts">
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="drop_users" />
-			<param name="script-type" value="production" />
-			<param name="script" value="utils/drop_users.sql" />
-			<param name="param1" value="" />
-			<param name="param2" value="" />
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="drop_users" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/drop_users.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="create_users" />
-			<param name="script-type" value="production" />
-			<param name="script" value="utils/create_users.sql" />
-			<param name="param1" value="" />
-			<param name="param2" value="" />
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_users" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/create_users.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
 
         <antcall target="-run-sql">
             <param name="script-name" value="create_sdt_owner_ddl" />
@@ -194,47 +194,47 @@
             <param name="param2" value="SDT_BATCH_USER" />
             <param name="param3" value="" />
         </antcall>
-		
-	</target>
+        
+    </target>
 
-	<!-- Build all databases at latest version -->
-	<target name="create-current-schemas" depends="init" description="This task runs the current database build scripts">
+    <!-- Build all databases at latest version -->
+    <target name="create-current-schemas" depends="init" description="This task runs the current database build scripts">
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="drop_users" />
-			<param name="script-type" value="production" />
-			<param name="script" value="utils/drop_users.sql" />
-			<param name="param1" value="" />
-			<param name="param2" value="" />
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="drop_users" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/drop_users.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="create_users" />
-			<param name="script-type" value="production" />
-			<param name="script" value="utils/create_users.sql" />
-			<param name="param1" value="" />
-			<param name="param2" value="" />
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_users" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/create_users.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="create_sdt_owner_ddl" />
-			<param name="script-type" value="production" />
-			<param name="script" value="utils/install_all_ddl.sql" />
-			<param name="param1" value="current" />
-			<param name="param2" value="SDT_OWNER" />
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_owner_ddl" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_ddl.sql" />
+            <param name="param1" value="current" />
+            <param name="param2" value="SDT_OWNER" />
+            <param name="param3" value="" />
+        </antcall>
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="create_sdt_owner_grants" />
-			<param name="script-type" value="production" />
-			<param name="script" value="utils/install_all_grants.sql" />
-			<param name="param1" value="current" />
-			<param name="param2" value="SDT_OWNER" />
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="create_sdt_owner_grants" />
+            <param name="script-type" value="production" />
+            <param name="script" value="utils/install_all_grants.sql" />
+            <param name="param1" value="current" />
+            <param name="param2" value="SDT_OWNER" />
+            <param name="param3" value="" />
+        </antcall>
 
         <antcall target="-run-sql">
             <param name="script-name" value="create_sdt_user_ddl" />
@@ -271,35 +271,35 @@
             <param name="param2" value="SDT_BATCH_USER" />
             <param name="param3" value="" />
         </antcall>
-		
-	</target>
+        
+    </target>
 
-	<!-- Run the migration scripts to move from the baseline to the current version. These migration scripts 
-	are used to evolve the production database. -->
-	<!-- Migrate all schemas from the baseline version to the current version -->
-	<target name="migrate-baseline-database" depends="init" description="Migrate the baseline database to the current version">
+    <!-- Run the migration scripts to move from the baseline to the current version. These migration scripts 
+    are used to evolve the production database. -->
+    <!-- Migrate all schemas from the baseline version to the current version -->
+    <target name="migrate-baseline-database" depends="init" description="Migrate the baseline database to the current version">
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="01_fix_version_number_default_values" />
-			<param name="script-type" value="migration" />
-			<param name="script" value="utils/sql_wrapper.sql" />
-			<param name="param1" value="mig/001_2.0.0/01_fix_version_number_default_values.sql" />
-			<param name="param2" value="" /> 
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="01_fix_version_number_default_values" />
+            <param name="script-type" value="migration" />
+            <param name="script" value="utils/sql_wrapper.sql" />
+            <param name="param1" value="mig/001_2.0.0/01_fix_version_number_default_values.sql" />
+            <param name="param2" value="" /> 
+            <param name="param3" value="" />
+        </antcall>
 
-		<!-- end of migration/upgrade -->
+        <!-- end of migration/upgrade -->
 
-		<antcall target="-run-sql">
-			<param name="script-name" value="compile_invalid_objects" />
-			<param name="script-type" value="migration" />
-			<param name="script" value="utils/compile_invalid_objects.sql" />
-			<param name="param1" value="" />
-			<param name="param2" value="" />
-			<param name="param3" value="" />
-		</antcall>
+        <antcall target="-run-sql">
+            <param name="script-name" value="compile_invalid_objects" />
+            <param name="script-type" value="migration" />
+            <param name="script" value="utils/compile_invalid_objects.sql" />
+            <param name="param1" value="" />
+            <param name="param2" value="" />
+            <param name="param3" value="" />
+        </antcall>
 
-	</target>
+    </target>
 
     <!-- Prepare for data population by disabling constraints and triggers -->
     <target name="-populate-start" depends="init" description="Prepare for data population by disabling constraints and triggers">
@@ -393,17 +393,17 @@
     <target name="populate-data" depends="-populate-start, -populate-reference-data, -populate-transactional-data, -reset-sequences, -populate-finish" description="This task populates the transactional data">
     </target>
     
-	<!-- Build all databases at baseline version -->
-	<target name="build-baseline-database" depends="create-baseline-schemas, migrate-baseline-database, populate-data" description="Create the baseline schema (the version of the schemas to which migration scripts are applied)">
-	</target>
+    <!-- Build all databases at baseline version -->
+    <target name="build-baseline-database" depends="create-baseline-schemas, migrate-baseline-database, populate-data" description="Create the baseline schema (the version of the schemas to which migration scripts are applied)">
+    </target>
 
-	<!-- Build all databases at latest version -->
-	<target name="build-current-database" depends="create-current-schemas, populate-data" description="Create the current schema (the version of the schemas which is used in development)">
-	</target>
+    <!-- Build all databases at latest version -->
+    <target name="build-current-database" depends="create-current-schemas, populate-data" description="Create the current schema (the version of the schemas which is used in development)">
+    </target>
 
-	<!-- Calls extra targets required by this project. -->
-	<target name="extras" depends="" description="Run extra targets for this project">
-		<echo level="info" message="Running extra targets for project: ${ant.project.name}" />
-	</target>
+    <!-- Calls extra targets required by this project. -->
+    <target name="extras" depends="" description="Run extra targets for this project">
+        <echo level="info" message="Running extra targets for project: ${ant.project.name}" />
+    </target>
 
 </project>
