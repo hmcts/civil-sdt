@@ -108,8 +108,7 @@
     <!-- Start server instance. This should only be run on Hudson box or it interferes with Eclipse 
          tc-server integration. -->
     <target name="-start-tc-server" if="isUnix" description="Start the server instance of tc-server">
-        <exec executable="${app.server.dir}/tcruntime-ctl.sh" failonerror="true" dir="${app.server.dir}" >
-            <arg value="${app.server.instancename}" />
+    	<exec executable="${app.server.dir}/bin/startup.bat" failonerror="true" dir="${app.server.dir}" >
             <arg value="start" />
         </exec>
     </target>
@@ -117,8 +116,7 @@
     <!-- Stop server instance. This should only be run on Hudson box or it interferes with Eclipse 
          tc-server integration. -->
     <target name="-stop-tc-server" if="isUnix" description="Stop the server instance of tc-server">
-        <exec executable="${app.server.dir}/tcruntime-ctl.sh" failonerror="false" dir="${app.server.dir}" >
-            <arg value="${app.server.instancename}" />
+    	<exec executable="${app.server.dir}/bin/shutdown.bat" failonerror="false" dir="${app.server.dir}" >
             <arg value="stop" />
             <arg value="--force" />
         </exec>
@@ -173,7 +171,7 @@
         </subant>
 
 		<!-- Copy log4j.xml file into the tc-server area if this is tc-server -->
-		<copy todir="${app.server.dir}/${app.server.instancename}/conf" overwrite="true">
+		<copy todir="${app.server.dir}/conf" overwrite="true">
 			<fileset dir="${utils.dir}/${src.dir}">
 				<include name="log4j.xml" />
 			</fileset>
