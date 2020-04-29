@@ -77,10 +77,9 @@
 
     <!-- Run sqlplus script with optional parameters -->
     <target name="-run-sql" description="This task runs an sqlplus script">
-        <echo level="info" message="Running: sqlplus -L ${db.sys.user}/password@${db.sid} as sysdba ${script} ${param1} ${param2} ${param3} for type ${script-type}, script ${script-name}" />
-        <exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-type}/${script-name}.log">
+    	<echo level="info" message="Running: sqlplus -L ${db.sys.user}/${db.system.pass}@${db.hostname}:${db.port}/${db.sid} as sysdba ${script} ${param1} ${param2} ${param3} for type ${script-type}, script ${script-name}" />        <exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-type}/${script-name}.log">
             <arg value="-L" />
-			<arg value="${db.sys.user}/${db.system.pass}@${db.hostname}:${db.port}/${db.sid}" />
+    		<arg value="${db.sys.user}/${db.system.pass}@${db.hostname}:${db.port}/${db.sid}" />
             <arg value="as" />
             <arg value="sysdba" />
             <arg value="@${script}" />
