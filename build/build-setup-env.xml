@@ -18,7 +18,7 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
 	<!-- Add Tigris SVNANT -->
-	<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" />
+   <!--	<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" /> -->
 
 	<!-- Get ANT to tell us the directory where this script lives. -->
 	<dirname file="${ant.file.build-setup-env}" property="this.dir" />
@@ -78,6 +78,20 @@
 	<property name="test.properties" value="${env.test_PROPERTIES}" />
 	<property file="${test.properties}" />
 
+	<!-- Templatise the maven library locations and checkstyle - to set paths for windows/mac -->
+	  <copy todir="../build" overwrite="true">
+	    <fileset dir="../build">
+	      <include name="sdt_3rd_party.userlibraries.template" />
+	      <include name="sdt_checkstyle.xml.template" />
+	      <include name="sdt_test_checkstyle.xml.template" />
+	    </fileset>
+	    <filterchain>
+	      <filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />
+	    </filterchain>
+	    <mapper type="glob" from="*.template" to="*" />
+	  </copy>
+	
+	
 	<!-- Derive name of jar file from ANT project name -->
 	<property name="dist.jar" value="${ant.project.name}.jar" />
 
@@ -184,10 +198,12 @@
 	</if>
 
 	<!-- svnSetting is necessary for linux -->
+	<!--
 	<svnSetting javahl="false" svnkit="true" id="svn.settings" />
 	<svn refid="svn.settings">
 		<status path="${basedir}" revisionProperty="buildNumber" />
 	</svn>
+	-->
 
 </project>
 

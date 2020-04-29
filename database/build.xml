@@ -80,7 +80,7 @@
         <echo level="info" message="Running: sqlplus -L ${db.sys.user}/password@${db.sid} as sysdba ${script} ${param1} ${param2} ${param3} for type ${script-type}, script ${script-name}" />
         <exec executable="sqlplus" resultproperty="sql.result" failonerror="true" dir="." output="logs/${script-type}/${script-name}.log">
             <arg value="-L" />
-            <arg value="${db.sys.user}/${db.system.pass}@${db.sid}" />
+			<arg value="${db.sys.user}/${db.system.pass}@${db.hostname}:${db.port}/${db.sid}" />
             <arg value="as" />
             <arg value="sysdba" />
             <arg value="@${script}" />
@@ -102,7 +102,7 @@
     <target name="-run-sqlldr" description="This task runs an sqlldr script">
         <echo level="info" message="Running (from ${script-dir}): sqlldr userid=${db.system.user}/password@${db.sid} bad=${script-name}.bad control=${script-name}.ctl data=${script-name}.csv skip=1 errors=0 log=${orig_working_dir}/logs/${script-type}/${script-name}.log" />
         <exec executable="sqlldr" resultproperty="sql.result" failonerror="true" dir="${script-dir}" output="logs/${script-name}.log">
-            <arg value="userid=${db.system.user}/${db.system.pass}@${db.sid}" />
+			<arg value="userid=${db.system.user}/${db.system.pass}@${db.hostname}:${db.port}/${db.sid}" />
             <arg value="bad=${script-name}.bad" />
             <arg value="control=${script-name}.ctl" />
             <arg value="data=${script-name}.csv" />
