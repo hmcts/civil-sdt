@@ -734,6 +734,7 @@
         	
         	<html destdir="${basedir}/${coverage.dir}"/>
         	<csv destfile="${basedir}/${coverage.dir}/coverage.csv"/>
+			<xml destfile="${basedir}/${coverage.dir}/coverage.xml" />
         </jacoco:report>
     </target>
 
