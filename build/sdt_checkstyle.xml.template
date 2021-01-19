@@ -222,7 +222,7 @@
   <module name="SuppressWithNearbyCommentFilter"/>
   <module name="Header">
     <property name="severity" value="error"/>
-    <property name="headerFile" value="${drive}/development/workspaces/sdt/trunk/app/build/sdt_checkstyle_header.txt"/>
+    <property name="headerFile" value="${drive}/development/workspaces/sdt/app/build/sdt_checkstyle_header.txt"/>
     <property name="ignoreLines" value="3,27,28,29,30,31,32,33,34,35,36,37,38,39,40"/>
     <property name="fileExtensions" value="java"/>
   </module>
