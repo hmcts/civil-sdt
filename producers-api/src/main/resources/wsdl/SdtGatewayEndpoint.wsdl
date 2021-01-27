@@ -952,6 +952,37 @@
 		
 		</xs:schema>
 		        
+        <!-- BreathingSpace.xsd -->
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema" 
+            targetNamespace="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema"
+            xmlns:base="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+            elementFormDefault="qualified"
+            version="1.0">
+
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
+
+            <xs:simpleType name="breathingSpaceNotificationType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="BS"/>
+                    <xs:enumeration value="BC"/>
+                    <xs:enumeration value="MH"/>
+                    <xs:enumeration value="MC"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:complexType name="breathingSpaceType">
+                <xs:sequence>
+                    <xs:element name="claimNumber" type="base:claimNumberType" />
+                    <xs:element name="defendantId" type="base:defendantIdType" />
+                    <xs:element name="breathingSpaceNotificationType" type="tns:breathingSpaceNotificationType" />
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:element name="mcolBreathingSpace" type="tns:breathingSpaceType"/>
+
+        </xs:schema>
+
         <!-- McolResponseDetail.xsd -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 			xmlns:tns="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema" 
@@ -999,6 +1030,7 @@
             xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema"
             xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
 			xmlns:sas="http://ws.sdt.moj.gov.uk/2013/mcol/SetAsideSchema"
+            xmlns:brthsp="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema"
             version="1.0">
             
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"/>
@@ -1007,6 +1039,7 @@
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema"/>
             <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"/>
 			<xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/SetAsideSchema"/>
+            <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema"/>
             
             
             <xs:simpleType name="requestCountType">
@@ -1032,6 +1065,7 @@
                     <xs:element name="mcolWarrant" type="wnt:warrantType"/>
                     <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
 					<xs:element name="mcolSetAside" type="sas:setAsideType"/>
+                    <xs:element name="mcolBreathingSpace" type="brthsp:breathingSpaceType"/>
                 </xs:choice>
                 <xs:attribute name="requestType" type="base:sdtStringType" use="required"/>
                 <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
