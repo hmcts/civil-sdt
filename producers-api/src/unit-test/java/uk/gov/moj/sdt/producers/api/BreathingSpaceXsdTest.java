@@ -41,7 +41,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
  * @author Paul Ridout
  *
  */
-public class BreathingSpaceXsdText extends AbstractSdtXmlTestBase
+public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
 {
     /**
      * The name of the xsd.
