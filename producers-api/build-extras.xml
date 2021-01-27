@@ -78,6 +78,7 @@
                 <file name="McolResponseDetail.xsd" />
                 <file name="Warrant.xsd" />
             	<file name="SetAside.xsd" />
+                <file name="BreathingSpace.xsd" />
             </filelist>
         </copy>
         <delete file="${target.dir}/${sdt-ws-contract-dist-client.zip}"/>
