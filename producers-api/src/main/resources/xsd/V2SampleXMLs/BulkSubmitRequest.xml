@@ -15,6 +15,7 @@
             <mcolWarrant></mcolWarrant>
             <mcolJudgmentWarrant></mcolJudgmentWarrant>
             <mcolClaimStatusUpdate></mcolClaimStatusUpdate>
+            <mcolBreathingSpace></mcolBreathingSpace>
             <pcolRequest></pcolRequest>
         </request>
         <request requestType="pcolClaim" requestId="request identifier">
