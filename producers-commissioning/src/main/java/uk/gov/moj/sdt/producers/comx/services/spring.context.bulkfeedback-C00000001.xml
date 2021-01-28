@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="97"/>
+        <property name="numberOfRequest" value="106"/>
         <property name="submissionStatus" value="Completed"/>
     </bean>
     
@@ -698,6 +698,38 @@
 	       			<value>Rejected by CCBC - rejection number 97.</value>
 	       			<value></value>
 	       		</list>
+                <list>
+                    <value>USER_REQUEST_ID_c75h</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>75</value>
+                    <value>Rejected by CCBC - rejection number 9.</value>
+                    <value></value>
+                </list>
+                <list>
+                    <value>USER_REQUEST_ID_c75i</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>75</value>
+                    <value>Rejected by CCBC - rejection number 26.</value>
+                    <value></value>
+                </list>
+                <list>
+                    <value>USER_REQUEST_ID_c75j</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>75</value>
+                    <value>Rejected by CCBC - rejection number 27.</value>
+                    <value></value>
+                </list>
+                <list>
+                    <value>USER_REQUEST_ID_c75k</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>75</value>
+                    <value>Rejected by CCBC - rejection number 32.</value>
+                    <value></value>
+                </list>
 	       		<list>	     			
 	       			<value>USER_REQUEST_ID_c76</value>	       			
 	       			<value>mcolSetAside</value>	       			
@@ -826,6 +858,46 @@
 	       			<value>Claim amount admitted cannot be zero.</value>
 	       			<value></value>
 	       		</list>
+                <list>
+                    <value>USER_REQUEST_ID_c99</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>99</value>
+                    <value>This breathing space request is invalid on the referenced claim.</value>
+                    <value></value>
+                </list>
+                <list>
+                    <value>USER_REQUEST_ID_c100</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>100</value>
+                    <value>The defendant is already in active Breathing Space.</value>
+                    <value></value>
+                </list>
+                <list>
+                    <value>USER_REQUEST_ID_c101</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>101</value>
+                    <value>The defendant is not currently in active Breathing Space.</value>
+                    <value></value>
+                </list>
+                <list>
+                    <value>USER_REQUEST_ID_c102</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>102</value>
+                    <value>Incorrect Breathing Space ceasing event type.</value>
+                    <value></value>
+                </list>
+                <list>
+                    <value>USER_REQUEST_ID_c103</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Rejected</value>
+                    <value>103</value>
+                    <value>A party on the case is currently in active breathing space.</value>
+                    <value></value>
+                </list>
 	       	</list>
 		</property>
 	</bean>

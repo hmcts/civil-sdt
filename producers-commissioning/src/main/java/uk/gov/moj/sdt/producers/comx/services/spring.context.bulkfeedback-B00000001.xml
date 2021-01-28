@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="18"/>
+        <property name="numberOfRequest" value="19"/>
         <property name="submissionStatus" value="Validated"/>       
     </bean>
     
@@ -226,6 +226,14 @@
                         ]]>
 	       			</value>
 	       		</list>
+                <list>
+                    <value>USER_REQUEST_ID_B17</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Initially Accepted</value>
+                    <value></value>
+                    <value></value>
+                    <value></value>
+                </list>
      		</list>
    		</property>
  	</bean>

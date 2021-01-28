@@ -17,7 +17,7 @@
                  <constructor-arg index="4" value="0"/> 
             </bean>
         </property>
-        <property name="numberOfRequest" value="18"/>
+        <property name="numberOfRequest" value="19"/>
         <property name="submissionStatus" value="Completed"/>   
     </bean>
     
@@ -255,7 +255,15 @@
                             </ind:mcolResponseDetail>
                         ]]>
                     </value>
-	       		</list>	       		
+	       		</list>
+                <list>
+                    <value>USER_REQUEST_ID_B17</value>
+                    <value>mcolBreathingSpace</value>
+                    <value>Accepted</value>
+                    <value></value>
+                    <value></value>
+                    <value></value>
+                </list>
 	       	</list>
 		</property>
 	</bean>    
