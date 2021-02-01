@@ -7,7 +7,8 @@
     xmlns:clm="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" 
     xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" 
     xmlns:clmupd="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema"
-    xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" 
+    xmlns:wnt="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema"
+    xmlns:brthsp="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema"
     version="1.0">
     
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" schemaLocation="../RootXSDs/Base.xsd"/>
@@ -15,6 +16,7 @@
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" schemaLocation="../RootXSDs/Judgment.xsd"/>
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" schemaLocation="../RootXSDs/ClaimStatusUpdate.xsd"/>
     <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema" schemaLocation="../RootXSDs/Warrant.xsd"/>
+    <xs:import namespace="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema" schemaLocation="../RootXSDs/BreathingSpace.xsd"/>
     
     <xs:simpleType name="requestCountType">
         <xs:restriction base="xs:long">
@@ -38,6 +40,7 @@
             <xs:element name="mcolClaimStatusUpdate" type="clmupd:claimStatusUpdateType"/>
             <xs:element name="mcolWarrant" type="wnt:warrantType"/>
             <xs:element name="mcolJudgmentWarrant" type="jud:judgmentWarrantType"/>
+            <xs:element name="mcolBreathingSpace" type="brthsp:breathingSpaceType"/>
         </xs:choice>
         <xs:attribute name="requestType" type="base:requestTypeType" use="required"/>
         <xs:attribute name="requestId" type="base:requestIdType" use="required"/>
