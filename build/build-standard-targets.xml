@@ -97,7 +97,7 @@
 
 	<target name="generate-from-wsdl" if="wsdl.exists" depends="clean-src-gen-work" description="Generate CXF files from wsdl">
 		<!-- TODO - find way of collecting up all wsdl files using wild card -->
-        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true" jvm="${java1.6-exec}">
             <arg value="-d" />
             <arg value="${src-gen-work.dir}" />
             <arg value="-frontend" />
@@ -109,7 +109,7 @@
                 <path refid="cxf.classpath" />
             </classpath>
         </java>
-        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true" jvm="${java1.6-exec}">
             <arg value="-d" />
             <arg value="${src-gen-work.dir}" />
             <arg value="-frontend" />
@@ -121,7 +121,7 @@
                 <path refid="cxf.classpath" />
             </classpath>
         </java>
-        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true" jvm="${java1.6-exec}">
             <arg value="-d" />
             <arg value="${src-gen-work.dir}" />
             <arg value="-frontend" />
