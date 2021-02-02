@@ -1466,6 +1466,31 @@
          </bul:requests>
       </bul:bulkRequest>
    </soap:Body>
+</soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Valid - Breathing Space"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:brthsp="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>10</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 to 2000 repetitions:-->
+            <bul:request requestType="mcolBreathingSpace" requestId="10">
+                <bul:mcolBreathingSpace>
+                    <!-- Specified claim number must exist and have status issued, part admission or defence -->
+                    <brthsp:claimNumber>H0PR0001</brthsp:claimNumber>
+                    <!-- Defendant id must be 1 or 2 -->
+                    <brthsp:defendantId>1</brthsp:defendantId>
+                    <!-- Breathing space notification type must be BS, BC, MH or MC -->
+                    <brthsp:breathingSpaceNotificationType>BC</brthsp:breathingSpaceNotificationType>
+                </bul:mcolBreathingSpace>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
 </soap:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint/ISdtEndpointPortType/submitBulkRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="" name="submitQuery" bindingOperationName="submitQuery" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="valid"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8889/producers/service/sdtapi</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
    <soap:Header/>
    <soap:Body>
