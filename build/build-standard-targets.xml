@@ -136,7 +136,7 @@
 	</target>
 	
    <target name="generate-from-wsdl-client" if="wsdl.exists" depends="clean-src-gen-work" description="Generate CXF files from wsdl">
-        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+        <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true" jvm="${java1.6-exec}">
             <arg value="-d" />
             <arg value="${src-gen-work.dir}" />
             <arg value="-frontend" />
