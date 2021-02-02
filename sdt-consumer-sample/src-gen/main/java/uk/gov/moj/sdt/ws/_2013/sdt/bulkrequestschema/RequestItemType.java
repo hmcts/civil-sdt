@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import uk.gov.moj.sdt.ws._2013.mcol.breathingspaceschema.BreathingSpaceType;
 import uk.gov.moj.sdt.ws._2013.mcol.claimschema.ClaimType;
 import uk.gov.moj.sdt.ws._2013.mcol.claimstatusupdateschema.ClaimStatusUpdateType;
 import uk.gov.moj.sdt.ws._2013.mcol.judgmentschema.JudgmentWarrantType;
@@ -27,6 +28,7 @@ import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantType;
  *         &lt;element name="mcolClaimStatusUpdate" type="{http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema}claimStatusUpdateType"/>
  *         &lt;element name="mcolWarrant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema}warrantType"/>
  *         &lt;element name="mcolJudgmentWarrant" type="{http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema}judgmentWarrantType"/>
+ *         &lt;element name="mcolBreathingSpace" type="{http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema}breathingSpaceType"/>
  *       &lt;/choice>
  *       &lt;attribute name="requestType" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestTypeType" />
  *       &lt;attribute name="requestId" use="required" type="{http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema}requestIdType" />
@@ -43,7 +45,8 @@ import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantType;
     "mcolJudgment",
     "mcolClaimStatusUpdate",
     "mcolWarrant",
-    "mcolJudgmentWarrant"
+    "mcolJudgmentWarrant",
+    "mcolBreathingSpace"
 })
 public class RequestItemType {
 
@@ -52,6 +55,7 @@ public class RequestItemType {
     protected ClaimStatusUpdateType mcolClaimStatusUpdate;
     protected WarrantType mcolWarrant;
     protected JudgmentWarrantType mcolJudgmentWarrant;
+    protected BreathingSpaceType mcolBreathingSpace;
     @XmlAttribute(name = "requestType", required = true)
     protected String requestType;
     @XmlAttribute(name = "requestId", required = true)
@@ -175,6 +179,30 @@ public class RequestItemType {
      */
     public void setMcolJudgmentWarrant(JudgmentWarrantType value) {
         this.mcolJudgmentWarrant = value;
+    }
+
+    /**
+     * Gets the value of the mcolBreathingSpace property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BreathingSpaceType }
+     *     
+     */
+    public BreathingSpaceType getMcolBreathingSpace() {
+        return mcolBreathingSpace;
+    }
+
+    /**
+     * Sets the value of the mcolBreathingSpace property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BreathingSpaceType }
+     *     
+     */
+    public void setMcolBreathingSpace(BreathingSpaceType value) {
+        this.mcolBreathingSpace = value;
     }
 
     /**
