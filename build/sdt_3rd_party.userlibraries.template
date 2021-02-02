@@ -80,9 +80,9 @@
         <archive path="${drive}/development/3rd-party/jars/spring3/usertype.spi-3.0.0.CR3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/servlet-api-2.5-20081211.jar"/>
         <archive path="${drive}/development/3rd-party/jars/dbunit-2.4.8.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/easymock-3.1.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/easymock-3.1.jar" source="${drive}/development/3rd-party/sources/easymock-3.1-sources.jar"/>
 		<archive path="${drive}/development/3rd-party/jars/objenesis-1.2.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.test-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.test-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/junit-4.10.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring3/junit-4.10.jar" source="${drive}/development/3rd-party/sources/junit-4.10-sources.jar"/>
     </library>
 </eclipse-userlibraries>
