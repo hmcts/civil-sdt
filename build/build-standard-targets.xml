@@ -523,6 +523,12 @@
 		<ant antfile="build-extras.xml" dir="." target="deploy-extras" inheritrefs="true" inheritAll="true" />
 	</target>
 
+	<!-- Generate EAR file to upload to Nexus -->
+	<target name="generate-ear" depends="" description="Deploy to application server">
+		<!-- generate EAR file to deploy to nexus using existing target -->
+		<antcall target="-prepare-ear" />
+	</target>
+
     <!-- Prepare distribution artefacts for web services -->
     <target name="dist-ws-contract" description="Prepare distribution artefacts for web services">
         <!-- Prepare distribution artefacts for web servies needed by this project, e.g. zip file -->
