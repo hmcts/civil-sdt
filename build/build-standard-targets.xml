@@ -524,7 +524,7 @@
 	</target>
 
 	<!-- Generate EAR file to upload to Nexus -->
-	<target name="generate-ear" depends="" description="Deploy to application server">
+	<target name="generate-ear" depends="" description="Generate EAR file">
 		<!-- generate EAR file to deploy to nexus using existing target -->
 		<antcall target="-prepare-ear" />
 	</target>
