@@ -226,9 +226,8 @@
 
     <!-- Compile and create distribution ear for upload to nexus -->
     <target name="generate-ear-for-nexus" depends="init, dist-all" description="Generate EAR binaries for upload to Nexus">
-        <subant antfile="build.xml" target="deploy" inheritrefs="true" inheritAll="false">
+        <subant antfile="build.xml" target="generate-ear" inheritrefs="true" inheritAll="false">
             <filelist refid="remote-deploy-project-list" />
-            <target name="generate-ear" />
         </subant>
     </target>
 
