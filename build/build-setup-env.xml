@@ -78,12 +78,10 @@
 	<property name="test.properties" value="${env.test_PROPERTIES}" />
 	<property file="${test.properties}" />
 
-	<!-- Templatise the maven library locations and checkstyle - to set paths for windows/mac -->
+	<!-- Templatise the maven library locations - to set paths for windows/mac -->
 	  <copy todir="../build" overwrite="true">
 	    <fileset dir="../build">
 	      <include name="sdt_3rd_party.userlibraries.template" />
-	      <include name="sdt_checkstyle.xml.template" />
-	      <include name="sdt_test_checkstyle.xml.template" />
 	    </fileset>
 	    <filterchain>
 	      <filterreader classname="org.apache.tools.ant.filters.ExpandProperties" />

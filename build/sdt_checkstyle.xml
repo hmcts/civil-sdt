@@ -5,7 +5,7 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: sdt_test_checkstyle
+    Checkstyle-Configuration: sdt_checkstyle
     Description: none
 -->
 <module name="Checker">
@@ -31,7 +31,7 @@
     </module>
     <module name="MethodName">
       <property name="severity" value="error"/>
-      <property name="format" value="^[a-z][a-zA-Z0-9]{0,100}$"/>
+      <property name="format" value="^[a-z][a-zA-Z0-9]{0,29}$"/>
     </module>
     <module name="ParameterName">
       <property name="severity" value="error"/>
@@ -90,6 +90,11 @@
       <property name="severity" value="error"/>
       <property name="tokens" value="LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_IF,LITERAL_FOR,LITERAL_TRY,LITERAL_WHILE,STATIC_INIT"/>
     </module>
+    <module name="EmptyBlock">
+      <property name="severity" value="error"/>
+      <property name="option" value="text"/>
+      <property name="tokens" value="LITERAL_CATCH"/>
+    </module>
     <module name="NeedBraces">
       <property name="severity" value="error"/>
     </module>
@@ -113,14 +118,16 @@
       <property name="tokens" value="PARAMETER_DEF,VARIABLE_DEF"/>
     </module>
     <module name="IllegalCatch">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+      <property name="severity" value="error"/>
     </module>
     <module name="IllegalType">
       <property name="severity" value="error"/>
       <property name="tokens" value="METHOD_DEF,PARAMETER_DEF,VARIABLE_DEF"/>
     </module>
     <module name="InnerAssignment">
+      <property name="severity" value="error"/>
+    </module>
+    <module name="MagicNumber">
       <property name="severity" value="error"/>
     </module>
     <module name="MissingCtor">
@@ -162,7 +169,7 @@
     </module>
     <module name="CyclomaticComplexity">
       <property name="severity" value="error"/>
-      <property name="max" value="30"/>
+      <property name="max" value="20"/>
     </module>
     <module name="ArrayTypeStyle">
       <property name="severity" value="error"/>
@@ -170,7 +177,6 @@
     <module name="TodoComment">
       <property name="severity" value="warning"/>
       <property name="format" value="TODO"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="error"/>
     </module>
     <module name="TrailingComment">
       <property name="severity" value="error"/>
@@ -200,11 +206,6 @@
       <property name="severity" value="error"/>
       <property name="allowStaticMemberImports" value="true"/>
     </module>
-    <module name="EmptyBlock">
-      <property name="severity" value="error"/>
-      <property name="option" value="text"/>
-      <property name="tokens" value="LITERAL_CATCH"/>
-    </module>
     <module name="LineLength">
       <property name="severity" value="error"/>
       <property name="max" value="120"/>
@@ -214,15 +215,14 @@
     <property name="severity" value="error"/>
   </module>
   <module name="JavadocPackage">
-    <property name="severity" value="ignore"/>
+    <property name="severity" value="error"/>
     <property name="allowLegacy" value="true"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="error"/>
   </module>
   <module name="SuppressionCommentFilter"/>
   <module name="SuppressWithNearbyCommentFilter"/>
   <module name="Header">
     <property name="severity" value="error"/>
-    <property name="headerFile" value="${drive}/development/workspaces/sdt/app/build/sdt_checkstyle_header.txt"/>
+    <property name="headerFile" value="${config_loc}/sdt_checkstyle_header.txt"/>
     <property name="ignoreLines" value="3,27,28,29,30,31,32,33,34,35,36,37,38,39,40"/>
     <property name="fileExtensions" value="java"/>
   </module>
