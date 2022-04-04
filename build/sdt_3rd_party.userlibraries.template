@@ -76,7 +76,7 @@
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.oxm-3.1.2.RELEASE.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.transaction-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.transaction-sources-3.1.2.RELEASE.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.web-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.web-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/slf4j-api-1.7.25.jar" source="${drive}/development/3rd-party/sources/spring3/slf4j-api-1.7.25-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring3/slf4j-api-1.7.25.jar" source="${drive}/development/3rd-party/sources/slf4j-api-1.7.25-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/usertype.core-3.0.0.CR3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/usertype.spi-3.0.0.CR3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/servlet-api-2.5-20081211.jar"/>
