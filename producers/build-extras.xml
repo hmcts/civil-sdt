@@ -186,7 +186,6 @@
                 <file name="${org.springframework.transaction.jar}" />
                 <file name="${org.springframework.web.jar}" />
                 <file name="${slf4j-api.jar}" />
-                <file name="${slf4j-log4j12.jar}" />
                 <file name="${usertype-spi.jar}" />
                 <file name="${usertype.core.jar}" />
 			</filelist>
@@ -217,7 +216,9 @@
 				<file name="${jms.jar}" />
 				<file name="${jstl.jar}" />
 				<file name="${jug.jar}" />
-				<file name="${log4j.jar}" />
+				<file name="${log4j-api.jar}" />
+				<file name="${log4j-core.jar}" />
+				<file name="${log4j-slf4j-impl.jar}" />
 				<file name="${logkit.jar}" />
 				<file name="${neethi.jar}" />
 				<file name="${resolver.jar}" />

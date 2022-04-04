@@ -12,7 +12,7 @@
 		<!-- <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property> -->
 		<!-- <property name="cache.use_query_cache">true</property> -->
 
-		<!-- NEVER CHANGE THIS PROPERTY TO 'true'. USE A LOCAL log4j.xml TO OUTPUT 
+		<!-- NEVER CHANGE THIS PROPERTY TO 'true'. USE A LOCAL log4j2.xml TO OUTPUT 
 			EVERYTHING YOU WISH TO LOG -->
 		<property name="hibernate.show_sql">false</property>
 		<property name="hibernate.format_sql">true</property>

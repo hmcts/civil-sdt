@@ -157,7 +157,6 @@
 				<include name="${org.springframework.web.servlet.jar}" />
 				<include name="${org.springframework.webflow.jar}" />
 				<include name="${slf4j-api.jar}" />
-				<include name="${slf4j-log4j12.jar}" />
 				<include name="${usertype-spi.jar}" />
 				<include name="${usertype.core.jar}" />
 				<include name="${usertype.jodatime.jar}" />
@@ -210,7 +209,9 @@
 				<include name="${jta.jar}" />
 				<include name="${jug.jar}" />
 				<include name="${jul-to-slf4j.jar}" />
-				<include name="${log4j.jar}" />
+				<include name="${log4j-api.jar}" />
+				<include name="${log4j-core.jar}" />
+				<include name="${log4j-slf4j-impl.jar}" />
 				<include name="${logkit.jar}" />
 				<include name="${mail.jar}" />
 				<include name="${neethi.jar}" />

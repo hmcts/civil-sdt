@@ -30,7 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.logging;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
@@ -128,7 +130,7 @@ public final class PerformanceLogger
      * Logging object. Note its name must not be in the same hierarchy as other SDT loggers so that it can be turned off
      * and on independently. Note also, this is a log4j logger not an SLF4J logger.
      */
-    private static final Logger LOGGER = Logger.getLogger ("sdt.performance");
+    private static final Logger LOGGER = LogManager.getLogger ("sdt.performance");
 
     /**
      * Length of a formatted line.
@@ -191,7 +193,7 @@ public final class PerformanceLogger
             }
 
             // Write message to 'performance.log'.
-            LOGGER.log (PerformanceLevel.PERFORMANCE,
+            LOGGER.log (Level.getLevel ("perf"),
                     "active flags=" + binaryLoggingFlags + ", logging point=" + binaryLoggingPoint + ", reference=" +
                             loggingContext.getLoggingId () + ": " + logMessage.toString ());
         }

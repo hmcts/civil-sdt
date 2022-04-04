@@ -170,10 +170,10 @@
             <filelist refid="deploy-project-list" />
         </subant>
 
-		<!-- Copy log4j.xml file into the tc-server area if this is tc-server -->
+		<!-- Copy log4j2.xml file into the tc-server area if this is tc-server -->
 		<copy todir="${app.server.dir}/conf" overwrite="true">
 			<fileset dir="${utils.dir}/${src.dir}">
-				<include name="log4j.xml" />
+				<include name="log4j2.xml" />
 			</fileset>
 		</copy>
     	

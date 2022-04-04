@@ -34,7 +34,6 @@ package uk.gov.moj.sdt.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
@@ -58,7 +57,7 @@ public abstract class AbstractSdtUnitTestBase
     /**
      * Name of log4j configuration file (in classpath).
      */
-    private static final String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
+    // private static final String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
 
     /**
      * Watcher to detect current test name.
@@ -85,7 +84,7 @@ public abstract class AbstractSdtUnitTestBase
     private void init ()
     {
         // Initialize log4j for test purposes.
-        DOMConfigurator.configure (LOG4J_XML_FILE);
+        // DOMConfigurator.configure (LOG4J_XML_FILE);
     }
 
     /**

@@ -86,7 +86,7 @@
 		<if>
 			<available file="${src.dir}/${log4j.config.filename}" type="file" />
 			<then>
-				<copy tofile="${src.dir}/log4j.xml" overwrite="true">
+				<copy tofile="${src.dir}/log4j2.xml" overwrite="true">
 					<fileset dir="${src.dir}" casesensitive="false">
 						<include name="${log4j.config.filename}" />
 					</fileset>

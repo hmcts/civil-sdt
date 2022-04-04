@@ -32,7 +32,9 @@
         <archive path="${drive}/development/3rd-party/jars/jmxtools-1.2.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jstl-2.4.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jug-2.0.0-lgpl.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/log4j-1.2.16.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/log4j-api-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-api-2.12.4-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/log4j-core-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-core-2.12.4-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/log4j-slf4j-impl-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-slf4j-impl-2.12.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/logkit-1.0.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/neethi-3.0.2.jar"/>
         <archive path="${drive}/development/3rd-party/jars/ojdbc-14.jar"/>
@@ -74,14 +76,13 @@
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.oxm-3.1.2.RELEASE.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.transaction-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.transaction-sources-3.1.2.RELEASE.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.web-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.web-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/slf4j-api-1.6.1.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/slf4j-log4j12-1.6.1.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring3/slf4j-api-1.7.25.jar" source="${drive}/development/3rd-party/sources/spring3/slf4j-api-1.7.25-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/usertype.core-3.0.0.CR3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/usertype.spi-3.0.0.CR3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/servlet-api-2.5-20081211.jar"/>
         <archive path="${drive}/development/3rd-party/jars/dbunit-2.4.8.jar"/>
         <archive path="${drive}/development/3rd-party/jars/easymock-3.1.jar" source="${drive}/development/3rd-party/sources/easymock-3.1-sources.jar"/>
-		<archive path="${drive}/development/3rd-party/jars/objenesis-1.2.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/objenesis-1.2.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.test-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.test-sources-3.1.2.RELEASE.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/junit-4.10.jar" source="${drive}/development/3rd-party/sources/junit-4.10-sources.jar"/>
     </library>
