@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.utils;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -191,55 +190,5 @@ public abstract class AbstractSdtUnitTestBase
     {
         final Method method = ReflectionUtils.findMethod (clazzUnderTest, methodName);
         ReflectionUtils.makeAccessible (method);
-    }
-
-    /**
-     * Make a default (no arg) class constructor accessible.
-     * 
-     * <p>
-     * Scenario: Class has a private constructor, e.g. a private default constructor used to prevent class from being
-     * instantiated.
-     * 
-     * @param <T> The class type
-     * @param clazzUnderTest The class that owns the constructor
-     * @return The constructor
-     */
-    public <T> Constructor<T> makeConstructorAccessible (final Class<T> clazzUnderTest)
-    {
-        final Class<?>[] paramTypes = null;
-        return makeConstructorAccessible (clazzUnderTest, paramTypes);
-    }
-
-    /**
-     * Make a class constructor accessible.
-     * 
-     * <p>
-     * Scenario: Class has a private constructor, e.g. a private default constructor used to prevent class from being
-     * instantiated.
-     * 
-     * @param <T> The class type
-     * @param clazzUnderTest The class that owns the constructor
-     * @param paramTypes The constructor arguments
-     * @return The constructor
-     */
-    public <T> Constructor<T> makeConstructorAccessible (final Class<T> clazzUnderTest, final Class<?>... paramTypes)
-    {
-        Constructor<T> clazzConstructor = null;
-
-        try
-        {
-            clazzConstructor = clazzUnderTest.getDeclaredConstructor (paramTypes);
-            clazzConstructor.setAccessible (true);
-        }
-        catch (final SecurityException e)
-        {
-            LOGGER.debug (e.getMessage ());
-        }
-        catch (final NoSuchMethodException e)
-        {
-            LOGGER.debug (e.getMessage ());
-        }
-
-        return clazzConstructor;
     }
 }

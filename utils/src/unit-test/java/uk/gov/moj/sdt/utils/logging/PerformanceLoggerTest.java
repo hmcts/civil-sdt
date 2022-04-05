@@ -32,13 +32,11 @@ package uk.gov.moj.sdt.utils.logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Constructor;
 import java.nio.channels.FileChannel;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -127,31 +125,5 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase
         {
             Assert.fail ("Failed to find contents [" + contents + "] in performance log.");
         }
-    }
-
-    /**
-     * Test performance logger name.
-     */
-    @Test
-    public void testPerformanceLoggerName ()
-    {
-        final Constructor<PerformanceLogger> testConstructor = makeConstructorAccessible (PerformanceLogger.class);
-
-        try
-        {
-            // Create a new instance of performance logger
-            final PerformanceLogger perfLogger = testConstructor.newInstance ();
-
-            // Get logger and check name
-            final Logger theLogger =
-                    (Logger) getAccesibleField (PerformanceLogger.class, "LOGGER", Logger.class, perfLogger);
-            Assert.assertEquals ("Performance logger did not have expected logger name", "sdt.performance",
-                    theLogger.getName ());
-        }
-        catch (final Exception e)
-        {
-            Assert.fail ("Failed to create instance of performance logger: " + e.getMessage ());
-        }
-
     }
 }
