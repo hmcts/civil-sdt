@@ -2,12 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- Submit Query Request definition -->
 	<bean id="uk.gov.moj.sdt.domain.api.ISubmitQueryRequestMCOLDefence3" class="uk.gov.moj.sdt.domain.SubmitQueryRequest">                
         <property name="resultCount" value="10"/>
-        <property name="errorLog"> <ref local="uk.gov.moj.sdt.producers.comx.utils.IErrorLogMCOLDefence3"/></property>
+        <property name="errorLog"> <ref bean="uk.gov.moj.sdt.producers.comx.utils.IErrorLogMCOLDefence3"/></property>
         <property name="status" value="Error"/>
         <property name="targetApplicationResponse">
         	<value>
