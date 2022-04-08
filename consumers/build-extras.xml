@@ -129,7 +129,7 @@
 				<include name="${antlr.jar}" />
 				<include name="${ehcache-core.jar}" />
 				<include name="${hibernate-commons-annotations.jar}" />
-				<include name="${hibernate-core.jar}" />				
+				<include name="${hibernate-core.jar}" />
 				<include name="${hibernate-ehcache.jar}" />
 				<include name="${hibernate-jpa.jar}" />
 				<include name="${javassist.jar}" />
@@ -137,8 +137,14 @@
 				<include name="${jboss-transaction-api.jar}" />
 				<include name="${joda-time.jar}" />
 				<include name="${junit.jar}" />
+				<include name="${slf4j-api.jar}" />
+				<include name="${usertype-spi.jar}" />
+				<include name="${usertype.core.jar}" />
+				<include name="${usertype.jodatime.jar}" />
+			</fileset>
+			<fileset dir="${3rd-party.spring4.dir}" casesensitive="false">
+				<include name="${ognl.jar}" />
 				<include name="${org.springframework.aop.jar}" />
-				<include name="${org.springframework.asm.jar}" />
 				<include name="${org.springframework.beans.jar}" />
 				<include name="${org.springframework.binding.jar}" />
 				<include name="${org.springframework.context.jar}" />
@@ -147,19 +153,12 @@
 				<include name="${org.springframework.expression.jar}" />
 				<include name="${org.springframework.jdbc.jar}" />
 				<include name="${org.springframework.jms.jar}" />
-				<include name="${org.springframework.js.jar}" />
-				<include name="${org.springframework.js.resources.jar}" />
+				<include name="${org.springframework.messaging.jar}" />
 				<include name="${org.springframework.orm.jar}" />
 				<include name="${org.springframework.oxm.jar}" />
 				<include name="${org.springframework.test.jar}" />
 				<include name="${org.springframework.transaction.jar}" />
 				<include name="${org.springframework.web.jar}" />
-				<include name="${org.springframework.web.servlet.jar}" />
-				<include name="${org.springframework.webflow.jar}" />
-				<include name="${slf4j-api.jar}" />
-				<include name="${usertype-spi.jar}" />
-				<include name="${usertype.core.jar}" />
-				<include name="${usertype.jodatime.jar}" />
 			</fileset>
 			<fileset dir="${3rd-party.dir}" casesensitive="false">
 				<include name="${activation.jar}" />
@@ -169,6 +168,7 @@
 				<include name="${aopalliance.jar}" />
 				<include name="${asm-attrs.jar}" />
 				<include name="${asm.jar}" />
+				<include name="${asm-5.0.4.jar}" />
 				<include name="${aspectjrt.jar}" />
 				<include name="${aspectjweaver.jar}" />
 				<include name="${c3p0.jar}" />
@@ -184,7 +184,16 @@
 				<include name="${commons-lang.jar}" />
 				<include name="${commons-logging-api.jar}" />
 				<include name="${commons-logging.jar}" />
-				<include name="${cxf.jar}" />
+				<include name="${cxf-core.jar}" />
+				<include name="${cxf-rt-bindings-soap.jar}" />
+				<include name="${cxf-rt-bindings-xml.jar}" />
+				<include name="${cxf-rt-databinding-jaxb.jar}" />
+				<include name="${cxf-rt-frontend-jaxws.jar}" />
+				<include name="${cxf-rt-frontend-simple.jar}" />
+				<include name="${cxf-rt-transports-http.jar}" />
+				<include name="${cxf-rt-ws-addr.jar}" />
+				<include name="${cxf-rt-ws-policy.jar}" />
+				<include name="${cxf-rt-wsdl.jar}" />
 				<include name="${dom4j.jar}" />
 				<include name="${ehcache.jar}" />
 				<include name="${gateway-xmlbeans.jar}" />
@@ -194,6 +203,7 @@
 				<include name="${httpcore.jar}" />
 				<include name="${httpcore-nio.jar}" />
 				<include name="${itext.jar}" />
+				<include name="${jaxb-core.jar}" />
 				<include name="${jaxb-impl.jar}" />
 				<include name="${jaxen.jar}" />
 				<include name="${jaxws-rt.jar}" />
@@ -241,6 +251,7 @@
 				<include name="${xbean-spring.jar}" />
 				<include name="${xercesImpl.jar}" />
 				<include name="${xml-apis.jar}" />
+				<include name="${xml-resolver.jar}" />
 				<include name="${xmlbeans.jar}" />
 				<include name="${xmlParserAPIs.jar}" />
 				<include name="${xmlschema-core.jar}" />

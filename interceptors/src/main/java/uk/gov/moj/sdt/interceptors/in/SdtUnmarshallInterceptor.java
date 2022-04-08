@@ -33,10 +33,10 @@ package uk.gov.moj.sdt.interceptors.in;
 import java.lang.reflect.Field;
 
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.interceptor.DocLiteralInInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.phase.PhaseInterceptorChain;
+import org.apache.cxf.wsdl.interceptors.DocLiteralInInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

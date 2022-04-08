@@ -5,6 +5,7 @@
         <archive path="${drive}/development/3rd-party/jars/activemq-all-5.6.0-disc.jar"/>
         <archive path="${drive}/development/3rd-party/jars/annogen-0.1.0.jar"/>
         <archive path="${drive}/development/3rd-party/jars/aopalliance-1.0.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/asm-5.0.4.jar" source="${drive}/development/3rd-party/sources/asm-5.0.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/aspectjrt-1.7.4.jar"/>
         <archive path="${drive}/development/3rd-party/jars/aspectjweaver-1.7.4.jar"/>
         <archive path="${drive}/development/3rd-party/jars/cglib-2.2.2.jar"/>
@@ -13,9 +14,18 @@
         <archive path="${drive}/development/3rd-party/jars/commons-httpclient-3.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/commons-io-2.4.jar" source="${drive}/development/3rd-party/sources/commons-io-2.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/commons-lang-2.4.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/commons-logging-1.1.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/commons-logging-1.2.jar" source="${drive}/development/3rd-party/sources/commons-logging-1.2-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/commons-logging-api-1.0.4.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/cxf-2.7.5.jar" source="${drive}/development/3rd-party/sources/apache-cxf-2.7.5-src.zip"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-core-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-core-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-bindings-soap-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-bindings-soap-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-bindings-xml-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-bindings-xml-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-databinding-jaxb-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-databinding-jaxb-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-frontend-jaxws-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-frontend-jaxws-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-frontend-simple-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-frontend-simple-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-transports-http-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-transports-http-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-ws-addr-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-ws-addr-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-ws-policy-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-ws-policy-3.1.18-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/cxf-rt-wsdl-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-wsdl-3.1.18-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/dom4j-1.6.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/gateway-xmlbeans-1.0.jar"/>
         <archive path="${drive}/development/3rd-party/jars/htmlparser-1.6.jar"/>
@@ -23,7 +33,8 @@
         <archive path="${drive}/development/3rd-party/jars/httpclient-4.2.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/httpcore-4.2.2.jar"/>
         <archive path="${drive}/development/3rd-party/jars/httpcore-nio-4.2.2.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/jaxb-impl-2.1.9.jar" source="${drive}/development/3rd-party/sources/jaxb-impl-2.1.9-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/jaxb-core-2.2.11.jar" source="${drive}/development/3rd-party/sources/jaxb-core-2.2.11-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/jaxb-impl-2.2.11.jar" source="${drive}/development/3rd-party/sources/jaxb-impl-2.2.11-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jaxen-1.1-beta-11.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jboss-el-2.0.1.GA.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jcip-annotations-1.0.jar"/>
@@ -36,7 +47,7 @@
         <archive path="${drive}/development/3rd-party/jars/log4j-core-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-core-2.12.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/log4j-slf4j-impl-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-slf4j-impl-2.12.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/logkit-1.0.1.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/neethi-3.0.2.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/neethi-3.1.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/ojdbc-14.jar"/>
         <archive path="${drive}/development/3rd-party/jars/resolver-2.9.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/serializer-2.9.1.jar"/>
@@ -45,12 +56,13 @@
         <archive path="${drive}/development/3rd-party/jars/stax2-api-3.1.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/streambuffer-0.8.jar"/>
         <archive path="${drive}/development/3rd-party/jars/string-1.1.0.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/woodstox-core-asl-4.2.0.jar" source="${drive}/development/3rd-party/sources/woodstox-core-src-4.2.0.zip"/>
-        <archive path="${drive}/development/3rd-party/jars/wsdl4j-1.6.2.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/woodstox-core-asl-4.4.1.jar" source="${drive}/development/3rd-party/sources/woodstox-core-asl-4.4.1-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/wsdl4j-1.6.3.jar" source="${drive}/development/3rd-party/sources/wsdl4j-1.6.3-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xalan-2.7.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xbean-spring-3.6.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xercesImpl-2.9.1.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/xmlschema-core-2.0.3.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/xml-resolver-1.2.jar" source="${drive}/development/3rd-party/sources/xml-resolver-1.2-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/xmlschema-core-2.2.3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/antlr-2.7.7.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/asm-3.3.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/ehcache-core-2.4.3.jar"/>
@@ -62,20 +74,21 @@
         <archive path="${drive}/development/3rd-party/jars/spring3/jboss-logging-3.1.0.GA.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/jboss-transaction-api_1.1_spec-1.0.0.Final.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/joda-time-2.1.jar" source="${drive}/development/3rd-party/sources/joda-time-2.1-sources.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.aop-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.aop-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.asm-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.beans-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.beans-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.binding-2.3.1.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.context-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.context-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.context.support-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.core-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.core-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.expression-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.jdbc-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.jms-3.1.4.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.jms-sources-3.1.4.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.orm-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.orm-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.oxm-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.transaction-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.transaction-sources-3.1.2.RELEASE.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.web-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.web-sources-3.1.2.RELEASE.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/ognl-2.6.11.jar" source="${drive}/development/3rd-party/sources/ognl-2.6.11-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-aop-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-aop-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-beans-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-beans-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-binding-2.4.8.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-binding-2.4.8.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-context-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-context-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-context-support-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-context-support-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-core-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-core-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-expression-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-expression-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-jdbc-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-jdbc-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-jms-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-jms-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-messaging-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-messaging-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-orm-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-orm-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-oxm-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-oxm-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-tx-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-tx-4.3.26.RELEASE-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-web-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-web-4.3.26.RELEASE-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/slf4j-api-1.7.25.jar" source="${drive}/development/3rd-party/sources/slf4j-api-1.7.25-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/usertype.core-3.0.0.CR3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/usertype.spi-3.0.0.CR3.jar"/>
@@ -83,7 +96,7 @@
         <archive path="${drive}/development/3rd-party/jars/dbunit-2.4.8.jar"/>
         <archive path="${drive}/development/3rd-party/jars/easymock-3.1.jar" source="${drive}/development/3rd-party/sources/easymock-3.1-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/objenesis-1.2.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/org.springframework.test-3.1.2.RELEASE.jar" source="${drive}/development/3rd-party/sources/org.springframework.test-sources-3.1.2.RELEASE.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/spring4/spring-test-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-test-4.3.26.RELEASE-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/junit-4.10.jar" source="${drive}/development/3rd-party/sources/junit-4.10-sources.jar"/>
     </library>
 </eclipse-userlibraries>

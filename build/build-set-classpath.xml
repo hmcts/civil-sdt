@@ -21,6 +21,7 @@
 			<file name="${activemq-all.jar}" />
 			<file name="${annogen.jar}" />
 			<file name="${aopalliance.jar}" />
+			<file name="${asm-5.0.4.jar}" />
 			<file name="${aspectjrt.jar}" />
 			<file name="${aspectjweaver.jar}" />
 			<file name="${cglib.jar}" />
@@ -31,7 +32,16 @@
 			<file name="${commons-lang.jar}" />
 			<file name="${commons-logging-api.jar}" />
 			<file name="${commons-logging.jar}" />
-			<file name="${cxf.jar}" />
+			<file name="${cxf-core.jar}" />
+			<file name="${cxf-rt-bindings-soap.jar}" />
+			<file name="${cxf-rt-bindings-xml.jar}" />
+			<file name="${cxf-rt-databinding-jaxb.jar}" />
+			<file name="${cxf-rt-frontend-jaxws.jar}" />
+			<file name="${cxf-rt-frontend-simple.jar}" />
+			<file name="${cxf-rt-transports-http.jar}" />
+			<file name="${cxf-rt-ws-addr.jar}" />
+			<file name="${cxf-rt-ws-policy.jar}" />
+			<file name="${cxf-rt-wsdl.jar}" />
 			<file name="${dom4j.jar}" />
 			<file name="${gateway-xmlbeans.jar}" />
 			<file name="${htmlparser.jar}" />
@@ -39,6 +49,7 @@
 			<file name="${httpclient.jar}" />
 			<file name="${httpcore.jar}" />
 			<file name="${httpcore-nio.jar}" />
+			<file name="${jaxb-core.jar}" />
 			<file name="${jaxb-impl.jar}" />
 			<file name="${jaxen.jar}" />
 			<file name="${jboss-el.jar}" />
@@ -67,6 +78,7 @@
 			<file name="${xalan.jar}" />
 			<file name="${xbean-spring.jar}" />
 			<file name="${xercesImpl.jar}" />
+			<file name="${xml-resolver.jar}" />
 			<file name="${xmlschema-core.jar}" />
 		</filelist>
 	</path>
@@ -85,8 +97,17 @@
             <file name="${jboss-logging.jar}" />
             <file name="${jboss-transaction-api.jar}" />
             <file name="${joda-time.jar}" />
+            <file name="${slf4j-api.jar}" />
+            <file name="${usertype-spi.jar}" />
+            <file name="${usertype.core.jar}" />
+        </filelist>
+	</path>
+	
+	<!--Add Spring 4 related libraries used by SDT -->
+    <path id="3rd-party.spring4.dir">
+        <filelist dir="${3rd-party.spring4.dir}">
+            <file name="${ognl.jar}" />
             <file name="${org.springframework.aop.jar}" />
-            <file name="${org.springframework.asm.jar}" />
             <file name="${org.springframework.beans.jar}" />
             <file name="${org.springframework.binding.jar}" />
             <file name="${org.springframework.context.jar}" />
@@ -95,15 +116,13 @@
             <file name="${org.springframework.expression.jar}" />
             <file name="${org.springframework.jdbc.jar}" />
             <file name="${org.springframework.jms.jar}" />
+            <file name="${org.springframework.messaging.jar}" />
             <file name="${org.springframework.orm.jar}" />
             <file name="${org.springframework.oxm.jar}" />
             <file name="${org.springframework.transaction.jar}" />
             <file name="${org.springframework.web.jar}" />
-            <file name="${slf4j-api.jar}" />
-            <file name="${usertype-spi.jar}" />
-            <file name="${usertype.core.jar}" />
         </filelist>
-	</path>
+    </path>
 	
 	<!--Add test related third party libraries -->
     <path id="3rd-party.test.dir">
@@ -114,6 +133,8 @@
         </filelist>
         <filelist dir="${3rd-party.spring3.dir}">
             <file name="${junit.jar}" />
+        </filelist>
+        <filelist dir="${3rd-party.spring4.dir}">
             <file name="${org.springframework.test.jar}" />
         </filelist>
     </path>
@@ -136,6 +157,7 @@
 	<path id="build.src.classpath">
 		<path refid="3rd-party.dir" />
 		<path refid="3rd-party.spring3.dir" />
+		<path refid="3rd-party.spring4.dir" />
 		<path refid="lib.app.dir" />
 	</path>
 
@@ -143,6 +165,7 @@
 	<path id="build.src-gen.classpath">
 		<path refid="3rd-party.dir" />
 		<path refid="3rd-party.spring3.dir" />
+		<path refid="3rd-party.spring4.dir" />
 		<path refid="lib.app.dir" />
 	</path>
 
@@ -150,6 +173,7 @@
     <path id="build.unit.test.classpath">
         <path refid="3rd-party.dir" />
     	<path refid="3rd-party.spring3.dir" />
+    	<path refid="3rd-party.spring4.dir" />
     	<path refid="3rd-party.test.dir" />
         <path refid="lib.app.dir" />
         <path refid="lib.test.dir" />
@@ -158,8 +182,9 @@
     <!-- Set classpath for integration tests -->
     <path id="build.integ.test.classpath">
         <path refid="3rd-party.dir" />
-    	<path refid="3rd-party.spring3.dir" /> 
-        <path refid="3rd-party.test.dir" />    	
+    	<path refid="3rd-party.spring3.dir" />
+    	<path refid="3rd-party.spring4.dir" />
+        <path refid="3rd-party.test.dir" />
         <path refid="lib.app.dir" />
         <path refid="lib.test.dir" />
     </path>
@@ -168,6 +193,7 @@
 	<path id="build.endtoend.test.classpath">
         <path refid="3rd-party.dir" />
     	<path refid="3rd-party.spring3.dir" /> 
+    	<path refid="3rd-party.spring4.dir" />
         <path refid="3rd-party.test.dir" />
         <path refid="lib.app.dir" />
         <path refid="lib.test.dir" />
