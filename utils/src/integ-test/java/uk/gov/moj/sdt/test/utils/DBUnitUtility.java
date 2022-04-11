@@ -49,8 +49,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import oracle.jdbc.pool.OracleDataSource;
-
 import org.apache.commons.lang.time.DateUtils;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
@@ -70,6 +68,8 @@ import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import oracle.jdbc.pool.OracleDataSource;
 
 /**
  * The Class DBUnitUtility.
@@ -178,8 +178,8 @@ public final class DBUnitUtility
                 // Create a DBUnit Dataset builder using the target schemas DTD
                 final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder ();
                 builder.setDtdMetadata (true);
-                builder.setMetaDataSetFromDtd (DBUnitUtility.class
-                        .getResourceAsStream ("/DTD/" + targetSchema + ".dtd"));
+                builder.setMetaDataSetFromDtd (
+                        DBUnitUtility.class.getResourceAsStream ("/DTD/" + targetSchema + ".dtd"));
                 builder.setColumnSensing (true);
                 final IDataSet referenceDataset = builder.build (refDataStream);
                 filter = new ExcludeTableFilter (referenceDataset.getTableNames ());
@@ -640,6 +640,8 @@ public final class DBUnitUtility
                     dbConnection.getConfig ().setProperty (DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
                             new OracleDataTypeFactory ());
 
+                    dbConnection.getConnection ().setAutoCommit (false);
+
                     // Cache the connection for this schema.
                     allConnections.put (schema, dbConnection);
                 }
@@ -695,9 +697,8 @@ public final class DBUnitUtility
         PreparedStatement s = null;
         ResultSet rs = null;
         final String modifier = enabled ? "ENABLE" : "DISABLE";
-        String queryToExecute =
-                "SELECT 'ALTER TRIGGER ' || owner || '.' || trigger_name || ' " + modifier +
-                        "' FROM all_triggers WHERE owner = ?";
+        String queryToExecute = "SELECT 'ALTER TRIGGER ' || owner || '.' || trigger_name || ' " + modifier +
+                "' FROM all_triggers WHERE owner = ?";
         try
         {
             s = dbConn.prepareStatement (queryToExecute);

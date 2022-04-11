@@ -129,10 +129,9 @@
         <filelist dir="${3rd-party.dir}">
             <file name="${dbunit.jar}" />
             <file name="${easymock.jar}" />
-        	<file name="${objenesis.jar}" />
-        </filelist>
-        <filelist dir="${3rd-party.spring3.dir}">
+            <file name="${objenesis.jar}" />
             <file name="${junit.jar}" />
+            <file name="${hamcrest-core.jar}" />
         </filelist>
         <filelist dir="${3rd-party.spring4.dir}">
             <file name="${org.springframework.test.jar}" />

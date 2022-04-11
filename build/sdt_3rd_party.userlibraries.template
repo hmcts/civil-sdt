@@ -48,7 +48,7 @@
         <archive path="${drive}/development/3rd-party/jars/log4j-slf4j-impl-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-slf4j-impl-2.12.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/logkit-1.0.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/neethi-3.1.1.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/ojdbc-14.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/ojdbc6.jar"/>
         <archive path="${drive}/development/3rd-party/jars/resolver-2.9.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/serializer-2.9.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/standard-2.4.jar"/>
@@ -97,6 +97,7 @@
         <archive path="${drive}/development/3rd-party/jars/easymock-3.4.jar" source="${drive}/development/3rd-party/sources/easymock-3.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/objenesis-2.2.jar" source="${drive}/development/3rd-party/sources/objenesis-2.2-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring4/spring-test-4.3.26.RELEASE.jar" source="${drive}/development/3rd-party/sources/spring-test-4.3.26.RELEASE-sources.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/spring3/junit-4.10.jar" source="${drive}/development/3rd-party/sources/junit-4.10-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/junit-4.12.jar" source="${drive}/development/3rd-party/sources/junit-4.12-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/hamcrest-core-1.3.jar" source="${drive}/development/3rd-party/sources/hamcrest-core-1.3.jar"/>
     </library>
 </eclipse-userlibraries>

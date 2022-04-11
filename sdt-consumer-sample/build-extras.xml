@@ -136,7 +136,6 @@
 				<include name="${jboss-logging.jar}" />
 				<include name="${jboss-transaction-api.jar}" />
 				<include name="${joda-time.jar}" />
-				<include name="${junit.jar}" />
 				<include name="${slf4j-api.jar}" />
 				<include name="${usertype-spi.jar}" />
 				<include name="${usertype.core.jar}" />
