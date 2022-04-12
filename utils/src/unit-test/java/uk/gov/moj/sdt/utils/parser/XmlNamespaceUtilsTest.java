@@ -34,9 +34,9 @@ package uk.gov.moj.sdt.utils.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import junit.framework.Assert;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 

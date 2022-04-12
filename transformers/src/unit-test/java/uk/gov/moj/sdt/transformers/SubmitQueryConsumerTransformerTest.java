@@ -33,8 +33,7 @@ package uk.gov.moj.sdt.transformers;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;

@@ -33,9 +33,8 @@ package uk.gov.moj.sdt.validators.validation;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;

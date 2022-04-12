@@ -33,9 +33,9 @@ package uk.gov.moj.sdt.validators;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import junit.framework.Assert;
 
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
