@@ -194,7 +194,7 @@
 			</filelist>
 			<filelist dir="${3rd-party.dir}">
 				<file name="${activation.jar}" />
-				<file name="${activemq-all.jar}" />
+				<file name="${activemq-client.jar}" />
 				<file name="${annogen.jar}" />
 				<file name="${aopalliance.jar}" />
 				<file name="${asm-5.0.4.jar}" />
@@ -219,6 +219,9 @@
 				<file name="${cxf-rt-ws-policy.jar}" />
 				<file name="${cxf-rt-wsdl.jar}" />
 				<file name="${dom4j.jar}" />
+				<file name="${geronimo-j2ee-management_1.1_spec.jar}" />
+				<file name="${geronimo-jms_1.1_spec.jar}" />
+				<file name="${hawtbuf.jar}" />
 				<file name="${httpasyncclient.jar}" />
 				<file name="${httpclient.jar}" />
 				<file name="${httpcore.jar}" />

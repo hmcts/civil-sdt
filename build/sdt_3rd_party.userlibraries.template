@@ -2,7 +2,12 @@
 <eclipse-userlibraries version="2">
     <library name="3rd-party" systemlibrary="false">
         <archive path="${drive}/development/3rd-party/jars/activation-1.1.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/activemq-all-5.6.0-disc.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/activemq-broker-5.14.5.jar" source="${drive}/development/3rd-party/sources/activemq-broker-5.14.5-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/activemq-client-5.14.5.jar" source="${drive}/development/3rd-party/sources/activemq-client-5.14.5-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/activemq-jms-pool-5.14.5.jar" source="${drive}/development/3rd-party/sources/activemq-jms-pool-5.14.5-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/activemq-openwire-legacy-5.14.5.jar" source="${drive}/development/3rd-party/sources/activemq-openwire-legacy-5.14.5-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/activemq-pool-5.14.5.jar" source="${drive}/development/3rd-party/sources/activemq-pool-5.14.5-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/activemq-spring-5.14.5.jar" source="${drive}/development/3rd-party/sources/activemq-spring-5.14.5-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/annogen-0.1.0.jar"/>
         <archive path="${drive}/development/3rd-party/jars/aopalliance-1.0.jar"/>
         <archive path="${drive}/development/3rd-party/jars/asm-5.0.4.jar" source="${drive}/development/3rd-party/sources/asm-5.0.4-sources.jar"/>
@@ -16,6 +21,7 @@
         <archive path="${drive}/development/3rd-party/jars/commons-lang-2.4.jar"/>
         <archive path="${drive}/development/3rd-party/jars/commons-logging-1.2.jar" source="${drive}/development/3rd-party/sources/commons-logging-1.2-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/commons-logging-api-1.0.4.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/commons-pool2-2.4.2.jar" source="${drive}/development/3rd-party/sources/commons-pool2-2.4.2-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/cxf-core-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-core-3.1.18-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/cxf-rt-bindings-soap-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-bindings-soap-3.1.18-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/cxf-rt-bindings-xml-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-bindings-xml-3.1.18-sources.jar"/>
@@ -28,6 +34,10 @@
         <archive path="${drive}/development/3rd-party/jars/cxf-rt-wsdl-3.1.18.jar" source="${drive}/development/3rd-party/sources/cxf-rt-wsdl-3.1.18-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/dom4j-1.6.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/gateway-xmlbeans-1.0.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/geronimo-j2ee-management_1.1_spec-1.0.1.jar" source="${drive}/development/3rd-party/sources/geronimo-j2ee-management_1.1_spec-1.0.1-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/geronimo-jms_1.1_spec-1.1.1.jar" source="${drive}/development/3rd-party/sources/geronimo-jms_1.1_spec-1.1.1-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/geronimo-jta_1.0.1B_spec-1.0.1.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/hawtbuf-1.11.jar" source="${drive}/development/3rd-party/sources/hawtbuf-1.11-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/htmlparser-1.6.jar"/>
         <archive path="${drive}/development/3rd-party/jars/httpasyncclient-4.0-beta3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/httpclient-4.2.1.jar"/>

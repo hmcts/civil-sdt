@@ -15,7 +15,10 @@
 	
 	<!-- The following port is deliberately wrong -->
 	<amq:connectionFactory id="amqConnectionFactoryBad" brokerURL="tcp://localhost:55555">
- 	</amq:connectionFactory>
+		<amq:trustedPackages>
+			<value>uk.gov.moj.sdt.services.messaging</value>
+		</amq:trustedPackages>
+	</amq:connectionFactory>
 	
 	<bean id="connectionFactoryBad" class="org.springframework.jms.connection.CachingConnectionFactory">
 		<constructor-arg ref="amqConnectionFactoryBad"/>
@@ -38,6 +41,9 @@
 	
 		
 	<amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:61616">
+		<amq:trustedPackages>
+			<value>uk.gov.moj.sdt.services.messaging</value>
+		</amq:trustedPackages>
  	</amq:connectionFactory>
 	
 	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">

@@ -18,7 +18,7 @@
 	<path id="3rd-party.dir">
 		<filelist dir="${3rd-party.dir}">
 			<file name="${activation.jar}" />
-			<file name="${activemq-all.jar}" />
+			<file name="${activemq-client.jar}" />
 			<file name="${annogen.jar}" />
 			<file name="${aopalliance.jar}" />
 			<file name="${asm-5.0.4.jar}" />
@@ -44,6 +44,9 @@
 			<file name="${cxf-rt-wsdl.jar}" />
 			<file name="${dom4j.jar}" />
 			<file name="${gateway-xmlbeans.jar}" />
+			<file name="${geronimo-j2ee-management_1.1_spec.jar}" />
+			<file name="${geronimo-jms_1.1_spec.jar}" />
+			<file name="${hawtbuf.jar}" />
 			<file name="${htmlparser.jar}" />
 			<file name="${httpasyncclient.jar}" />
 			<file name="${httpclient.jar}" />
@@ -127,8 +130,15 @@
 	<!--Add test related third party libraries -->
     <path id="3rd-party.test.dir">
         <filelist dir="${3rd-party.dir}">
+            <file name="${activemq-broker.jar}" />
+            <file name="${activemq-jms-pool.jar}" />
+            <file name="${activemq-openwire-legacy.jar}" />
+            <file name="${activemq-pool.jar}" />
+            <file name="${activemq-spring.jar}" />
+            <file name="${commons-pool2.jar}" />
             <file name="${dbunit.jar}" />
             <file name="${easymock.jar}" />
+            <file name="${geronimo-jta_1.0.1B_spec.jar}" />
             <file name="${objenesis.jar}" />
             <file name="${junit.jar}" />
             <file name="${hamcrest-core.jar}" />

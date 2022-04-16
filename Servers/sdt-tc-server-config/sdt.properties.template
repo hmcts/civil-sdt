@@ -63,3 +63,8 @@ sdt.producers-comx.log4j.configlocation=${sdt.producers-comx.log4j.configlocatio
 
 #Log4j configuration file for Production app
 sdt.producers.log4j.configlocation=${sdt.producers.log4j.configlocation}
+
+# ApacheMQ trusted packages
+# List of comma separated packages that are permitted to be used in object messages.
+# Can be set to * to permit all packages.  See https://activemq.apache.org/objectmessage.
+org.apache.activemq.SERIALIZABLE_PACKAGES=uk.gov.moj.sdt.services.messaging

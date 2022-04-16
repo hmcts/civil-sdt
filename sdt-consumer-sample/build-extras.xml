@@ -161,7 +161,7 @@
 			</fileset>
 			<fileset dir="${3rd-party.dir}" casesensitive="false">
 				<include name="${activation.jar}" />
-				<include name="${activemq-all.jar}" />
+				<include name="${activemq-client.jar}" />
 				<include name="${annogen.jar}" />
 				<include name="${antlr.jar}" />
 				<include name="${aopalliance.jar}" />
@@ -196,6 +196,9 @@
 				<include name="${dom4j.jar}" />
 				<include name="${ehcache.jar}" />
 				<include name="${gateway-xmlbeans.jar}" />
+				<include name="${geronimo-j2ee-management_1.1_spec.jar}" />
+				<include name="${geronimo-jms_1.1_spec.jar}" />
+				<include name="${hawtbuf.jar}" />
 				<include name="${htmlparser.jar}" />
 				<include name="${httpasyncclient.jar}" />
 				<include name="${httpclient.jar}" />
