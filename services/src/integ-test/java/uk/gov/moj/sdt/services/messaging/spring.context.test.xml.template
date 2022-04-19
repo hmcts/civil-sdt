@@ -15,8 +15,9 @@
 	
 	<!-- The following port is deliberately wrong -->
 	<amq:connectionFactory id="amqConnectionFactoryBad" brokerURL="tcp://localhost:55555">
+		<!-- List of packages that are permitted to be used in object messages.  Add value elements for additional packages. -->
 		<amq:trustedPackages>
-			<value>uk.gov.moj.sdt.services.messaging</value>
+			<value>${sdt.amq.trusted.package.messaging}</value>
 		</amq:trustedPackages>
 	</amq:connectionFactory>
 	
@@ -40,9 +41,10 @@
  	</bean>
 	
 		
-	<amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:61616">
+	<amq:connectionFactory id="amqConnectionFactory" brokerURL="${sdt.jms.broker.url}">
+		<!-- List of packages that are permitted to be used in object messages.  Add value elements for additional packages. -->
 		<amq:trustedPackages>
-			<value>uk.gov.moj.sdt.services.messaging</value>
+			<value>${sdt.amq.trusted.package.messaging}</value>
 		</amq:trustedPackages>
  	</amq:connectionFactory>
 	
