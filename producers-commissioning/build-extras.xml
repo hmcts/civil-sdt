@@ -192,7 +192,6 @@
 				<file name="${aspectjrt.jar}" />
 				<file name="${aspectjweaver.jar}" />
 				<file name="${cglib.jar}" />
-				<file name="${commons-collections.jar}" />
 				<file name="${commons-httpclient.jar}" />
 				<file name="${commons-io.jar}" />
 				<file name="${commons-lang.jar}" />

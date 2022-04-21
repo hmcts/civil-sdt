@@ -172,10 +172,7 @@
 				<include name="${aspectjweaver.jar}" />
 				<include name="${c3p0.jar}" />
 				<include name="${cglib.jar}" />
-				<include name="${commons-beanutils-core.jar}" />
-				<include name="${commons-beanutils.jar}" />
 				<include name="${commons-codec.jar}" />
-				<include name="${commons-collections.jar}" />
 				<include name="${commons-configuration.jar}" />
 				<include name="${commons-digester.jar}" />
 				<include name="${commons-httpclient.jar}" />
