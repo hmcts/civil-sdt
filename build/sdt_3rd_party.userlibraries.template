@@ -44,7 +44,6 @@
         <archive path="${drive}/development/3rd-party/jars/httpcore-nio-4.2.2.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jaxb-core-2.2.11.jar" source="${drive}/development/3rd-party/sources/jaxb-core-2.2.11-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jaxb-impl-2.2.11.jar" source="${drive}/development/3rd-party/sources/jaxb-impl-2.2.11-sources.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/jaxen-1.1-beta-11.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jboss-el-2.0.1.GA.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jcip-annotations-1.0.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jdom2-2.0.4.jar"/>
@@ -67,9 +66,7 @@
         <archive path="${drive}/development/3rd-party/jars/string-1.1.0.jar"/>
         <archive path="${drive}/development/3rd-party/jars/woodstox-core-asl-4.4.1.jar" source="${drive}/development/3rd-party/sources/woodstox-core-asl-4.4.1-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/wsdl4j-1.6.3.jar" source="${drive}/development/3rd-party/sources/wsdl4j-1.6.3-sources.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/xalan-2.7.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xbean-spring-3.6.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/xercesImpl-2.9.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xml-resolver-1.2.jar" source="${drive}/development/3rd-party/sources/xml-resolver-1.2-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xmlschema-core-2.2.3.jar"/>
         <archive path="${drive}/development/3rd-party/jars/spring3/antlr-2.7.7.jar"/>

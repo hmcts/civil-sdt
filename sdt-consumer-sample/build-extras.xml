@@ -204,7 +204,6 @@
 				<include name="${itext.jar}" />
 				<include name="${jaxb-core.jar}" />
 				<include name="${jaxb-impl.jar}" />
-				<include name="${jaxen.jar}" />
 				<include name="${jaxws-rt.jar}" />
 				<include name="${jaxws-spring.jar}" />
 				<include name="${jboss-el.jar}" />
@@ -226,8 +225,6 @@
 				<include name="${neethi.jar}" />
 				<include name="${ojdbc.jar}" />
 				<include name="${openws.jar}" />
-				<include name="${org.apache.xalan-xalan}" />
-				<include name="${org.apache.xerces-xercesImpl}" />
 				<include name="${persistence-api.jar}" />
 				<include name="${qas-proweb.jar}" />
 				<include name="${resolver.jar}" />
@@ -246,9 +243,7 @@
 				<include name="${wsdl4j.jar}" />
 				<include name="${wss4j.jar}" />
 				<include name="${wstx-asl.jar}" />
-				<include name="${xalan.jar}" />
 				<include name="${xbean-spring.jar}" />
-				<include name="${xercesImpl.jar}" />
 				<include name="${xml-apis.jar}" />
 				<include name="${xml-resolver.jar}" />
 				<include name="${xmlbeans.jar}" />

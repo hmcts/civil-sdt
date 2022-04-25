@@ -52,7 +52,6 @@
 			<file name="${httpcore-nio.jar}" />
 			<file name="${jaxb-core.jar}" />
 			<file name="${jaxb-impl.jar}" />
-			<file name="${jaxen.jar}" />
 			<file name="${jboss-el.jar}" />
 			<file name="${jcip-annotations.jar}" />
 			<file name="${jdom2.jar}" />
@@ -76,9 +75,7 @@
 			<file name="${string.jar}" />
 			<file name="${woodstox-core-asl.jar}" />
 			<file name="${wsdl4j.jar}" />
-			<file name="${xalan.jar}" />
 			<file name="${xbean-spring.jar}" />
-			<file name="${xercesImpl.jar}" />
 			<file name="${xml-resolver.jar}" />
 			<file name="${xmlschema-core.jar}" />
 		</filelist>
