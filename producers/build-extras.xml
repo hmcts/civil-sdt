@@ -237,7 +237,6 @@
 				<file name="${neethi.jar}" />
 				<file name="${resolver.jar}" />
 				<file name="${serializer.jar}" />
-				<file name="${standard.jar}" />
 				<file name="${stax-ex.jar}" />
 				<file name="${stax2-api.jar}" />
 				<file name="${woodstox-core-asl.jar}" />

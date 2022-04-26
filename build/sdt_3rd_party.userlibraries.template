@@ -59,7 +59,6 @@
         <archive path="${drive}/development/3rd-party/jars/ojdbc6.jar"/>
         <archive path="${drive}/development/3rd-party/jars/resolver-2.9.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/serializer-2.9.1.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/standard-2.4.jar"/>
         <archive path="${drive}/development/3rd-party/jars/stax-ex-1.2.jar"/>
         <archive path="${drive}/development/3rd-party/jars/stax2-api-3.1.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/streambuffer-0.8.jar"/>

@@ -230,7 +230,6 @@
 				<include name="${resolver.jar}" />
 				<include name="${serializer.jar}" />
 				<include name="${springmodules-validation.jar}" />
-				<include name="${standard.jar}" />
 				<include name="${stax-api.jar}" />
 				<include name="${stax-ex.jar}" />
 				<include name="${stax2-api.jar}" />
@@ -247,7 +246,6 @@
 				<include name="${xml-apis.jar}" />
 				<include name="${xml-resolver.jar}" />
 				<include name="${xmlbeans.jar}" />
-				<include name="${xmlParserAPIs.jar}" />
 				<include name="${xmlschema-core.jar}" />
 				<include name="${xmlsec.jar}" />
 				<include name="${xmltooling.jar}" />
