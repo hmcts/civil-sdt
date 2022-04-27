@@ -57,7 +57,6 @@
 			<file name="${jdom2.jar}" />
 			<file name="${jms.jar}" />
 			<file name="${jmxtools.jar}" />
-			<file name="${jstl.jar}" />
 			<file name="${jug.jar}" />
 			<file name="${log4j-api.jar}" />
 			<file name="${log4j-core.jar}" />

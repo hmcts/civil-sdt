@@ -49,7 +49,6 @@
         <archive path="${drive}/development/3rd-party/jars/jdom2-2.0.4.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jms-1.1.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jmxtools-1.2.1.jar"/>
-        <archive path="${drive}/development/3rd-party/jars/jstl-2.4.jar"/>
         <archive path="${drive}/development/3rd-party/jars/jug-2.0.0-lgpl.jar"/>
         <archive path="${drive}/development/3rd-party/jars/log4j-api-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-api-2.12.4-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/log4j-core-2.12.4.jar" source="${drive}/development/3rd-party/sources/log4j-core-2.12.4-sources.jar"/>

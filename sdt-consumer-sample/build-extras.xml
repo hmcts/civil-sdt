@@ -213,7 +213,6 @@
 				<include name="${jms.jar}" />
 				<include name="${jmxtools.jar}" />
 				<include name="${joda-time-hibernate.jar}" />
-				<include name="${jstl.jar}" />
 				<include name="${jta.jar}" />
 				<include name="${jug.jar}" />
 				<include name="${jul-to-slf4j.jar}" />
