@@ -73,6 +73,8 @@
 			<file name="${string.jar}" />
 			<file name="${woodstox-core-asl.jar}" />
 			<file name="${wsdl4j.jar}" />
+			<!-- Note: Xalan is needed for SDT to work on weblogic -->
+			<file name="${xalan.jar}" />
 			<file name="${xbean-spring.jar}" />
 			<file name="${xml-resolver.jar}" />
 			<file name="${xmlschema-core.jar}" />

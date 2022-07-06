@@ -127,6 +127,7 @@
         <copy todir="${consumers.target.dir}/WEB-INF/lib" overwrite="true">
 			<fileset dir="${3rd-party.spring3.dir}" casesensitive="false">
 				<include name="${antlr.jar}" />
+				<include name="${asm.jar}" />
 				<include name="${ehcache-core.jar}" />
 				<include name="${hibernate-commons-annotations.jar}" />
 				<include name="${hibernate-core.jar}" />				
@@ -166,7 +167,6 @@
 				<include name="${antlr.jar}" />
 				<include name="${aopalliance.jar}" />
 				<include name="${asm-attrs.jar}" />
-				<include name="${asm.jar}" />
 				<include name="${asm-5.0.4.jar}" />
 				<include name="${aspectjrt.jar}" />
 				<include name="${aspectjweaver.jar}" />
@@ -229,7 +229,6 @@
 				<include name="${resolver.jar}" />
 				<include name="${serializer.jar}" />
 				<include name="${springmodules-validation.jar}" />
-				<include name="${stax-api.jar}" />
 				<include name="${stax-ex.jar}" />
 				<include name="${stax2-api.jar}" />
 				<include name="${streambuffer.jar}" />
@@ -241,6 +240,8 @@
 				<include name="${wsdl4j.jar}" />
 				<include name="${wss4j.jar}" />
 				<include name="${wstx-asl.jar}" />
+				<!-- Note: Xalan is needed for SDT to work on weblogic -->
+				<include name="${xalan.jar}" />
 				<include name="${xbean-spring.jar}" />
 				<include name="${xml-apis.jar}" />
 				<include name="${xml-resolver.jar}" />

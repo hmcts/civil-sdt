@@ -64,6 +64,7 @@
         <archive path="${drive}/development/3rd-party/jars/string-1.1.0.jar"/>
         <archive path="${drive}/development/3rd-party/jars/woodstox-core-asl-4.4.1.jar" source="${drive}/development/3rd-party/sources/woodstox-core-asl-4.4.1-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/wsdl4j-1.6.3.jar" source="${drive}/development/3rd-party/sources/wsdl4j-1.6.3-sources.jar"/>
+        <archive path="${drive}/development/3rd-party/jars/xalan-2.7.2.jar" source="${drive}/development/3rd-party/sources/xalan-2.7.2-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xbean-spring-3.6.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xml-resolver-1.2.jar" source="${drive}/development/3rd-party/sources/xml-resolver-1.2-sources.jar"/>
         <archive path="${drive}/development/3rd-party/jars/xmlschema-core-2.2.3.jar"/>
