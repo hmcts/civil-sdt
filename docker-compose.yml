@@ -1,14 +1,14 @@
 version: '2.1'
 
 services:
-  spring-boot-template:
+  civil-sdt:
     build:
       context: .
       args:
         - http_proxy
         - https_proxy
         - no_proxy
-    image: hmctspublic.azurecr.io/spring-boot/template
+    image: hmcts/civil-sdt
     environment:
       # these environment variables are used by java-logging library
       - ROOT_APPENDER
