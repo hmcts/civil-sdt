@@ -1,11 +1,11 @@
 java:
   applicationPort: 4550
-  image: 'hmctspublic.azurecr.io/rpe/civil-sdt:latest'
-  ingressHost: rpe-civil-sdt-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-  aadIdentityName: rpe
+  image: 'hmctspublic.azurecr.io/civil/sdt:latest'
+  ingressHost: civil-sdt-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+  aadIdentityName: sdt
 #  Uncomment once the vault containing the app insights key has been set up
 #  keyVaults:
-#    rpe:
+#    sdt:
 #      secrets:
 #        - name: AppInsightsInstrumentationKey
 #          alias: azure.application-insights.instrumentation-key
