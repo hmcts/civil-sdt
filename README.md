@@ -1,16 +1,14 @@
-# Spring Boot application template
+# Civil SDT application
 
-[![Build Status](https://travis-ci.org/hmcts/spring-boot-template.svg?branch=master)](https://travis-ci.org/hmcts/spring-boot-template)
+[![Build Status](https://travis-ci.org/hmcts/civil-sdt.svg?branch=master)](https://travis-ci.org/hmcts/civil-sdt)
 
 ## Purpose
 
-The purpose of this template is to speed up the creation of new Spring applications within HMCTS
-and help keep the same standards across multiple teams. If you need to create a new app, you can
-simply use this one as a starting point and build on top of it.
+The purpose of this application is to securly transfer data
 
 ## What's inside
 
-The template is a working application with a minimal setup. It contains:
+This application with a minimal setup. It contains:
  * application skeleton
  * setup script to prepare project
  * common plugins and libraries
@@ -27,7 +25,7 @@ The application exposes health endpoint (http://localhost:4550/health) and metri
 
 ## Plugins
 
-The template contains the following plugins:
+The application contains the following plugins:
 
   * checkstyle
 
@@ -125,7 +123,7 @@ Create docker image:
   docker-compose build
 ```
 
-Run the distribution (created in `build/install/spring-boot-template` directory)
+Run the distribution (created in `build/install/civil-sdt` directory)
 by executing the following command:
 
 ```bash
@@ -133,7 +131,7 @@ by executing the following command:
 ```
 
 This will start the API container exposing the application's port
-(set to `4550` in this template app).
+(set to `4550` in this app).
 
 In order to test if the application is up, you can call its health endpoint:
 
