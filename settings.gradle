@@ -1,2 +1,4 @@
 rootProject.name = 'civil-sdt'
+include 'utils'
+include 'domain'
 
