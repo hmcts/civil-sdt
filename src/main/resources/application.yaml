@@ -17,7 +17,7 @@ springdoc:
 #If you use a database then uncomment below lines and update db properties accordingly
 spring:
   config:
-    import: "optional:configtree:/mnt/secrets/rpe/"
+    import: "optional:configtree:/mnt/secrets/"
   application:
     name: Civil SDT
 #  datasource:
@@ -44,4 +44,4 @@ spring:
 
 azure:
   application-insights:
-    instrumentation-key: ${rpe.AppInsightsInstrumentationKey:00000000-0000-0000-0000-000000000000}
+    instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:00000000-0000-0000-0000-000000000000}
