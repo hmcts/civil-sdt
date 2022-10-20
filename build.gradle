@@ -12,6 +12,7 @@ plugins {
   id 'org.sonarqube' version '3.4.0.2513'
   id 'uk.gov.hmcts.java' version '0.12.0'
   id "com.jfrog.bintray" version "1.8.5" apply false
+  id "info.solidsoft.pitest" version '1.5.1' apply(false)
 }
 
 group = 'uk.gov.hmcts.reform'
@@ -190,7 +191,9 @@ dependencies {
   implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
 
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
-
+  
+  implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+  
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
 

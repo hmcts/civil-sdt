@@ -31,10 +31,10 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.joda.time.LocalDateTime;
-
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+
+import java.time.LocalDateTime;
 
 /**
  * Error log.
@@ -152,7 +152,7 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
     @Override
     public String toString ()
     {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        final StringBuilder sb = new StringBuilder (getHashId (this) + "[");
         sb.append (super.toString ());
         sb.append (", individualRequest=").append (getHashId (this.getIndividualRequest ()));
         sb.append (", createdDate=").append (this.getCreatedDate ());

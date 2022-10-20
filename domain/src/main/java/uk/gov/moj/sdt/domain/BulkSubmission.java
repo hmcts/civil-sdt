@@ -31,16 +31,15 @@
 
 package uk.gov.moj.sdt.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joda.time.LocalDateTime;
-
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * For a Submit Bulk Request, the SDT application records the
@@ -118,7 +117,7 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     /**
      * List of individual requests.
      */
-    private List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest> ();
+    private List<IIndividualRequest> individualRequests = new ArrayList<> ();
 
     /**
      * Service request is an audit log for incoming and outgoing request.
@@ -334,7 +333,7 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     @Override
     public String toString ()
     {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        final StringBuilder sb = new StringBuilder (getHashId (this) + "[");
         sb.append (super.toString ());
         sb.append (", bulkCustomer=").append (this.getBulkCustomer ());
         sb.append (", targetApplication=").append (this.getTargetApplication ());

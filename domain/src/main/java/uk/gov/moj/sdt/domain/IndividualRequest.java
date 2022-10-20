@@ -31,13 +31,13 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.LocalDateTime;
-
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+
+import java.time.LocalDateTime;
 
 /**
  * When processing an Individual Request within the Bulk Request, the SDT application records
@@ -328,7 +328,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     {
         this.setRequestStatus (IndividualRequestStatus.FORWARDED.getStatus ());
         this.setForwardingAttempts (this.getForwardingAttempts () + 1);
-        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        this.setUpdatedDate (LocalDateTime.now());
     }
 
     @Override
@@ -340,10 +340,10 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         this.setForwardingAttempts (0);
 
         // Set the completed date only if the status is rejected or accepted.
-        this.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        this.setCompletedDate (LocalDateTime.now());
 
         // Set the updated date
-        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        this.setUpdatedDate (LocalDateTime.now());
 
     }
 
@@ -363,10 +363,10 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         }
 
         // Set the completed date only if the status is rejected or accepted.
-        this.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        this.setCompletedDate (LocalDateTime.now());
 
         // Set the updated date
-        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        this.setUpdatedDate (LocalDateTime.now());
 
     }
 
@@ -378,7 +378,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         this.setForwardingAttempts (0);
 
         // Set the updated date
-        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        this.setUpdatedDate (LocalDateTime.now());
 
     }
 
@@ -390,7 +390,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         this.setForwardingAttempts (0);
 
         // Set the updated date
-        this.setUpdatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
+        this.setUpdatedDate (LocalDateTime.now());
 
     }
 
@@ -451,7 +451,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     @Override
     public String toString ()
     {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        final StringBuilder sb = new StringBuilder (getHashId (this) + "[");
         sb.append (super.toString ());
         sb.append (", bulkSubmission=").append (getHashId (this.getBulkSubmission ()));
         sb.append (", customerRequestReference=").append (this.getCustomerRequestReference ());

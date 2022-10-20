@@ -30,9 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.domain;
 
-import org.joda.time.LocalDateTime;
-
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
+
+import java.time.LocalDateTime;
 
 /**
  * Audit log for incoming and outgoing request.
@@ -85,7 +85,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     private String serverHostName;
 
     /**
-     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setRequestDateTime(org.joda.time.LocalDateTime)
+     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setRequestDateTime(java.time.LocalDateTime)
      * @param requestDateTime
      *            the time the request is received.
      */
@@ -96,7 +96,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     }
 
     /**
-     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setResponseDateTime(org.joda.time.LocalDateTime)
+     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setResponseDateTime(java.time.LocalDateTime)
      * @param responseDateTime
      *            the time the response is sent.
      */
@@ -224,7 +224,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     @Override
     public String toString ()
     {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
+        final StringBuilder sb = new StringBuilder (getHashId (this) + "[");
         sb.append (super.toString ());
         sb.append (", requestDateTime=").append (this.getRequestDateTime ());
         sb.append (", responseDateTime=").append (this.getResponseDateTime ());

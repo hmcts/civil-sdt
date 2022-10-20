@@ -30,17 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A utilities class to hold common methods.
@@ -91,18 +86,18 @@ public final class Utilities
                 final boolean success = targetDirectory.mkdir ();
                 if (success)
                 {
-                    Utilities.LOGGER.debug ("Directory: " + dirName + " created.");
+                    Utilities.LOGGER.debug ("Directory: {} created.", dirName);
                 }
                 else
                 {
-                    Utilities.LOGGER.error ("** ERROR - Unable to create the directory [" + dirName + "]");
+                    Utilities.LOGGER.error ("** ERROR - Unable to create the directory [{}]", dirName);
                     throw new IOException ("** ERROR - Unable to create the directory [" +
                             targetDirectory.getAbsolutePath () + "]");
                 }
             }
             else
             {
-                Utilities.LOGGER.error ("** ERROR - directory [" + dirName + "] not found");
+                Utilities.LOGGER.error ("** ERROR - directory [{}] not found", dirName);
                 throw new IOException ("** ERROR - directory [" + targetDirectory.getAbsolutePath () + "] not found");
             }
         }
@@ -117,18 +112,18 @@ public final class Utilities
                 final boolean success = targetFile.createNewFile ();
                 if (success)
                 {
-                    Utilities.LOGGER.debug ("File: " + pathname + " created.");
+                    Utilities.LOGGER.debug ("File: {} created.", pathname);
                 }
                 else
                 {
-                    Utilities.LOGGER.error ("** ERROR - Unable to create the file [" + pathname + "]");
+                    Utilities.LOGGER.error ("** ERROR - Unable to create the file [{}]", pathname);
                     throw new IOException ("** ERROR - Unable to create the file [" + targetFile.getAbsolutePath () +
                             "]");
                 }
             }
             else
             {
-                Utilities.LOGGER.error ("** ERROR - Unable to find the file [" + pathname + "]");
+                Utilities.LOGGER.error ("** ERROR - Unable to find the file [{}]", pathname);
                 throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getAbsolutePath () + "]");
             }
         }
@@ -150,8 +145,8 @@ public final class Utilities
         // If the file exists.
         if ( !targetFile.exists ())
         {
-            Utilities.LOGGER.error ("** ERROR - Unable to find the file [" + targetFile.getName () + "]");
-            throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getName () + "]");
+            Utilities.LOGGER.error ("** ERROR - Unable to find the file [{}]", targetFile.getName());
+            throw new IOException ("** ERROR - Unable to find the file [" + targetFile.getName() + "]");
         }
         return targetFile;
     }
@@ -188,57 +183,6 @@ public final class Utilities
         }
 
         return textToReplace;
-    }
-
-    /**
-     * Converts Joda {@link LocalDateTime} into {@link Calendar}.
-     * 
-     * @param localDateTime local date time instance.
-     * @return Calendar
-     */
-    public static Calendar convertLocalDateTimeToCalendar (final LocalDateTime localDateTime)
-    {
-        final Calendar calendar = Calendar.getInstance ();
-        calendar.setTime (localDateTime.toDate ());
-        return calendar;
-    }
-
-    /**
-     * Formats a LocalDateTime into a string.
-     * 
-     * @param localDateTime local date time object
-     * @return formatted date
-     */
-    public static String formatDateTimeForMessage (final LocalDateTime localDateTime)
-    {
-        final Date d = localDateTime.toDate ();
-        final SimpleDateFormat formatter = new SimpleDateFormat ("dd-MMM-yyyy HH:mm");
-        final String formattedDate = formatter.format (d);
-        return formattedDate;
-    }
-
-    /**
-     * Obtain xml contents from given file. Removes line feeds from content so that regular expressions work as
-     * expected.
-     * 
-     * @param dirName directory for the file.
-     * @param fileName name of the file.
-     * @return raw xml read from the file.
-     * @throws IOException in case of errors during read operation
-     */
-    public static String getRawXml (final String dirName, final String fileName) throws IOException
-    {
-        String message = "";
-
-        final File myFile = new File (Utilities.checkFileExists (dirName, fileName, false));
-
-        message = FileUtils.readFileToString (myFile);
-
-        // Remove linefeeds as they stop the regular expression working.
-        message = message.replace ('\n', ' ');
-        message = message.replace ('\r', ' ');
-        return message;
-
     }
 
 }

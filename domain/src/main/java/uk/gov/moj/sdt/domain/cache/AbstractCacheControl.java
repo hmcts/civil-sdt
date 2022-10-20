@@ -71,7 +71,7 @@ public abstract class AbstractCacheControl implements ICacheable
         // Should cache be discarded?
         if (this.uncacheRequired ())
         {
-            LOGGER.debug ("Uncaching " + this.getClass ().getCanonicalName ());
+            LOGGER.debug ("Uncaching {}", this.getClass ().getCanonicalName ());
 
             this.uncache ();
         }
@@ -86,6 +86,7 @@ public abstract class AbstractCacheControl implements ICacheable
      * @param key key to cached object to be retrieved.
      * @return the Object from the cache.
      */
+
     /**
      * Gets the value associated with the parameter from the cache.
      * 
@@ -117,7 +118,7 @@ public abstract class AbstractCacheControl implements ICacheable
     {
         if (this.localCacheResetControl < managementMBean.getCacheResetControl ())
         {
-            LOGGER.debug ("Uncache required for " + this.getClass ().getCanonicalName ());
+            LOGGER.debug ("Uncache required for {}", this.getClass ().getCanonicalName ());
 
             // Bring current value up to date and report uncache required.
             this.localCacheResetControl = managementMBean.getCacheResetControl ();

@@ -31,7 +31,7 @@
 
 package uk.gov.moj.sdt.domain.api;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 /**
  * Interface for all classes implementing {@link IErrorLog}.

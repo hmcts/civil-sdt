@@ -175,6 +175,21 @@ docker image rm <image-id>
 
 There is no need to remove postgres and java or similar core images.
 
+
+## Modules
+
+The application is structured as a multi-module project. The modules are:
+
+### domain
+
+Domain logic.
+
+### utils
+
+Utilitu logic.
+
+
+
 ### Other
 
 Hystrix offers much more than Circuit Breaker pattern implementation or command monitoring.
