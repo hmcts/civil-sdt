@@ -27,8 +27,6 @@ spring:
     password: ${SDT_DB_PASSWORD:postgres}
     properties:
       charSet: UTF-8
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
     hikari:
       minimumIdle: 2
       maximumPoolSize: 10
@@ -39,6 +37,7 @@ spring:
   jpa:
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:
             # silence the 'wall-of-text' - unnecessary exception throw about blob types
