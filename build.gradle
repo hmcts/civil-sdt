@@ -14,7 +14,7 @@ plugins {
   id "com.jfrog.bintray" version "1.8.5" apply false
 }
 
-group = 'uk.gov.hmcts.reform'
+group = 'uk.gov.hmcts.civil.sdt'
 version = '0.0.1'
 
 java {
@@ -193,7 +193,7 @@ ext {
 }
 
 allprojects {
-  group 'uk.gov.hmcts.ccd.definition'
+  group 'uk.gov.hmcts.civil.sdt'
   version '0.0.1-SNAPSHOT'
 
   repositories {
