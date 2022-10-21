@@ -219,7 +219,6 @@ allprojects {
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
     implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
     implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.11.1"
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.20.0'
     implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
@@ -268,10 +267,10 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
   implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
 
-  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
-  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
+  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
   implementation group: 'io.rest-assured', name: 'rest-assured'
 
   testImplementation(platform('org.junit:junit-bom:5.8.2'))
