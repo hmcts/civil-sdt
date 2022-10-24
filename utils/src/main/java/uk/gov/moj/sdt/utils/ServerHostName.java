@@ -30,12 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Utility class to return the server's IP Address.

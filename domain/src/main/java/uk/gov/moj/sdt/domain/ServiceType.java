@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,12 +36,10 @@ import uk.gov.moj.sdt.domain.api.IServiceType;
 /**
  * Each defined target application will have a set of associated Request Types.
  * E.g. Claim,, Judgment, Warrant, JudgmentWarrant and ClaimUpate.
- * 
+ *
  * @author d130680
- * 
  */
-public class ServiceType extends AbstractDomainObject implements IServiceType
-{
+public class ServiceType extends AbstractDomainObject implements IServiceType {
 
     /**
      * Request type name.
@@ -49,7 +47,7 @@ public class ServiceType extends AbstractDomainObject implements IServiceType
     private String name;
 
     /**
-     * Request type status.
+     * Request type status.¬
      */
     private String status;
 
@@ -59,50 +57,43 @@ public class ServiceType extends AbstractDomainObject implements IServiceType
     private String description;
 
     @Override
-    public String getName ()
-    {
+    public String getName() {
         return name;
     }
 
     @Override
-    public void setName (final String name)
-    {
+    public void setName(final String name) {
         this.name = name;
     }
 
     @Override
-    public String getStatus ()
-    {
+    public String getStatus() {
         return status;
     }
 
     @Override
-    public void setStatus (final String status)
-    {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
     @Override
-    public String getDescription ()
-    {
+    public String getDescription() {
         return description;
     }
 
     @Override
-    public void setDescription (final String description)
-    {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", name=").append (this.getName ());
-        sb.append (", status=").append (this.getStatus ());
-        sb.append (", webServiceEndpoint=").append (this.getDescription ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", name=").append(this.getName());
+        sb.append(", status=").append(this.getStatus());
+        sb.append(", webServiceEndpoint=").append(this.getDescription());
+        sb.append("]");
+        return sb.toString();
     }
 }

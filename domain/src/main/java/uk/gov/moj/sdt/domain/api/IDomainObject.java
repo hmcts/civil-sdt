@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: IWsCreateHandler.java 16467 2013-06-07 17:09:50Z agarwals $
  * $LastChangedRevision: 16467 $
  * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
@@ -35,29 +35,28 @@ import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
 
 /**
  * Marker interface for domain objects.
- * 
+ *
  * @author Robin Compston
  */
-public interface IDomainObject extends IVisitable
-{
+public interface IDomainObject extends IVisitable {
     /**
      * Get primary key.
-     * 
+     *
      * @return primary key
      */
-    Long getId ();
+    Long getId();
 
     /**
      * Set primary key.
-     * 
+     *
      * @param id primary key
      */
-    void setId (final Long id);
+    void setId(final Long id);
 
     /**
      * Get Hibernate version id.
-     * 
+     *
      * @return Hibernate version id
      */
-    int getVersion ();
+    int getVersion();
 }

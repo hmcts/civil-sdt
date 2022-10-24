@@ -39,15 +39,14 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
  * @author Robin Compston
  * 
  */
-public interface ICacheable
-{
+public interface ICacheable {
     /**
      * Gets the value associated with the parameter from the cache.
      * 
-     * @param <DomainType> of entity to retrieved.
+     * @param <DomainType> of entity to be retrieved.
      * @param domainType of entity to load.
      * @param key the keyword identifying the cached parameter.
      * @return DomainType instance retrieved.
      */
-    <DomainType extends IDomainObject> DomainType getValue (final Class<DomainType> domainType, final String key);
+    <DomainType extends IDomainObject> DomainType getValue(final Class<DomainType> domainType, final String key);
 }

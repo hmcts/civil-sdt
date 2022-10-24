@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,80 +35,78 @@ import java.time.LocalDateTime;
 
 /**
  * Interface for all classes implementing {@link IErrorLog}.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IErrorLog extends IDomainObject
-{
+public interface IErrorLog extends IDomainObject {
     /**
      * Get the Individual Request.
-     * 
+     *
      * @return individual request
      */
-    IIndividualRequest getIndividualRequest ();
+    IIndividualRequest getIndividualRequest();
 
     /**
      * Set the Individual Request.
-     * 
+     *
      * @param individualRequest individual request
      */
-    void setIndividualRequest (final IIndividualRequest individualRequest);
+    void setIndividualRequest(final IIndividualRequest individualRequest);
 
     /**
      * Get created date.
-     * 
+     *
      * @return created date
      */
-    LocalDateTime getCreatedDate ();
+    LocalDateTime getCreatedDate();
 
     /**
      * Set created date.
-     * 
+     *
      * @param createdDate created dated
      */
-    void setCreatedDate (final LocalDateTime createdDate);
+    void setCreatedDate(final LocalDateTime createdDate);
 
     /**
      * Get updated date.
-     * 
+     *
      * @return updated date
      */
-    LocalDateTime getUpdatedDate ();
+    LocalDateTime getUpdatedDate();
 
     /**
      * Set updated date.
-     * 
+     *
      * @param updatedDate updated date
      */
-    void setUpdatedDate (final LocalDateTime updatedDate);
+    void setUpdatedDate(final LocalDateTime updatedDate);
 
     /**
      * Get error text.
-     * 
+     *
      * @return error text
      */
-    String getErrorText ();
+    String getErrorText();
 
     /**
      * Set error text.
-     * 
+     *
      * @param errorText error text
      */
-    void setErrorText (final String errorText);
+    void setErrorText(final String errorText);
 
     /**
      * Get error code.
-     * 
+     *
      * @return error code
      */
-    String getErrorCode ();
+    String getErrorCode();
 
     /**
      * Set error code.
-     * 
+     *
      * @param errorCode error code
      */
-    void setErrorCode (final String errorCode);
+    void setErrorCode(final String errorCode);
 
 }

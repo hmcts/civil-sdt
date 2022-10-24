@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,35 +23,33 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.domain.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * An abstract class to provide a cache/uncache facility to classes that cache data from the database.
- * 
+ *
  * @author Robin Compston
- * 
  */
-@Transactional (propagation = Propagation.SUPPORTS)
-public abstract class AbstractCacheControl implements ICacheable
-{
+@Transactional(propagation = Propagation.SUPPORTS)
+public abstract class AbstractCacheControl implements ICacheable {
     /**
      * Static logging object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractCacheControl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCacheControl.class);
 
     /**
      * MBean which holds value controlling uncache operation.
@@ -64,78 +62,72 @@ public abstract class AbstractCacheControl implements ICacheable
     private int localCacheResetControl;
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRED)
-    public final <DomainType extends IDomainObject> DomainType getValue (final Class<DomainType> domainType,
-                                                                         final String key)
-    {
+    @Transactional(propagation = Propagation.REQUIRED)
+
+    @SuppressWarnings("squid:S5852")
+    public <DomainType extends IDomainObject> DomainType getValue(final Class<DomainType> domainType,
+                                                                  final String key) {
         // Should cache be discarded?
-        if (this.uncacheRequired ())
-        {
-            LOGGER.debug ("Uncaching {}", this.getClass ().getCanonicalName ());
+        if (this.uncacheRequired()) {
+            LOGGER.debug("Uncaching {}", this.getClass().getCanonicalName());
 
-            this.uncache ();
+            this.uncache();
         }
-
-        return this.getSpecificValue (domainType, key);
+        return this.getSpecificValue(domainType, key);
     }
 
     /**
      * Get the implementation specific value from the sub class. This should be responsible for loading the cache if it
      * is not loaded and then returning the value to the caller.
-     * 
+     *
      * @param key key to cached object to be retrieved.
      * @return the Object from the cache.
      */
 
     /**
      * Gets the value associated with the parameter from the cache.
-     * 
-     * @param <DomainType> of entity to retrieved.
-     * @param domainType of entity to load.
-     * @param key key to cached object to be retrieved.
+     *
+     * @param <DomainType> of entity to be retrieved.
+     * @param domainType   of entity to load.
+     * @param key          key to cached object to be retrieved.
      * @return DomainType instance retrieved.
      */
-    protected abstract <DomainType extends IDomainObject> DomainType
-            getSpecificValue (final Class<DomainType> domainType, final String key);
+    protected abstract <DomainType extends IDomainObject> DomainType getSpecificValue(
+            final Class<DomainType> domainType, final String key);
 
     /**
      * Load the cache with appropriate source data for this cache object. Each implementing class must load its own
      * specific data. Note that the map itself is an instance variable and will already exist.
      */
-    protected abstract void loadCache ();
+    protected abstract void loadCache();
 
     /**
      * Clears the cache so that fresh values can be loaded from source.
      */
-    protected abstract void uncache ();
+    protected abstract void uncache();
 
     /**
      * Check whether an uncache is required.
-     * 
+     *
      * @return true - uncache required, false - uncache not required.
      */
-    protected final boolean uncacheRequired ()
-    {
-        if (this.localCacheResetControl < managementMBean.getCacheResetControl ())
-        {
-            LOGGER.debug ("Uncache required for {}", this.getClass ().getCanonicalName ());
-
+    protected final boolean uncacheRequired() {
+        if (this.localCacheResetControl < managementMBean.getCacheResetControl()) {
+            LOGGER.debug("Uncache required for {}", this.getClass().getCanonicalName());
             // Bring current value up to date and report uncache required.
-            this.localCacheResetControl = managementMBean.getCacheResetControl ();
 
+            this.localCacheResetControl = managementMBean.getCacheResetControl();
             return true;
         }
-
         return false;
     }
 
     /**
      * Allow Spring to wire up the bean.
-     * 
+     *
      * @param managementMBean new value of the management bean.
      */
-    public void setManagementMBean (final ISdtManagementMBean managementMBean)
-    {
+    public void setManagementMBean(final ISdtManagementMBean managementMBean) {
         this.managementMBean = managementMBean;
     }
 }

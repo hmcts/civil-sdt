@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,72 +23,69 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.domain.api;
 
 /**
  * Interface for classes implementing {@link IRequesType}.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IServiceType extends IDomainObject
-{
+public interface IServiceType extends IDomainObject {
 
     /**
      * Get name.
-     * 
+     *
      * @return name
      */
-    String getName ();
+    String getName();
 
     /**
      * Set name.
-     * 
+     *
      * @param name name
      */
-    void setName (final String name);
+    void setName(final String name);
 
     /**
      * Get status.
-     * 
+     *
      * @return status
      */
-    String getStatus ();
+    String getStatus();
 
     /**
      * Set status.
-     * 
+     *
      * @param status status
      */
-    void setStatus (final String status);
+    void setStatus(final String status);
 
     /**
      * Get description.
-     * 
+     *
      * @return description
      */
-    String getDescription ();
+    String getDescription();
 
     /**
      * Set description.
-     * 
+     *
      * @param description description
      */
-    void setDescription (final String description);
+    void setDescription(final String description);
 
     /**
      * Enum for the service type name.
-     * 
+     *
      * @author Manoj Kulkarni
-     * 
      */
-    public enum ServiceTypeName
-    {
+    public enum ServiceTypeName {
         /**
          * Submit query service type name.
          */

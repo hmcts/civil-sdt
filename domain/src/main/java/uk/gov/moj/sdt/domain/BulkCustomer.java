@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -40,17 +40,15 @@ import java.util.Set;
 /**
  * Bulk Customer Information manually set up and maintained
  * for the SDT application for each registered Target Application.
- * 
+ *
  * @author d130680
- * 
  */
-public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
-{
+public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer {
 
     /**
-     * The bulk customer applications that this customer can work with.e.g. 'MCOL'
+     * The bulk customer applications that this customer can work with.e.g. 'MCOL'.
      */
-    private Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
+    private Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
 
     /**
      * This is a manually allocated and maintained value.
@@ -58,25 +56,20 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     private long sdtCustomerId;
 
     @Override
-    public long getSdtCustomerId ()
-    {
+    public long getSdtCustomerId() {
         return sdtCustomerId;
     }
 
     @Override
-    public void setSdtCustomerId (final long sdtCustomerId)
-    {
+    public void setSdtCustomerId(final long sdtCustomerId) {
         this.sdtCustomerId = sdtCustomerId;
     }
 
     @Override
-    public boolean hasAccess (final String targetApplicationCode)
-    {
-        for (IBulkCustomerApplication bulkCustomerApplication : bulkCustomerApplications)
-        {
-            if (bulkCustomerApplication.getTargetApplication ().getTargetApplicationCode ()
-                    .equalsIgnoreCase (targetApplicationCode))
-            {
+    public boolean hasAccess(final String targetApplicationCode) {
+        for (IBulkCustomerApplication bulkCustomerApplication : bulkCustomerApplications) {
+            if (bulkCustomerApplication.getTargetApplication().getTargetApplicationCode().equalsIgnoreCase(
+                    targetApplicationCode)) {
                 return true;
             }
         }
@@ -84,26 +77,20 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     }
 
     @Override
-    public void setBulkCustomerApplications (final Set<IBulkCustomerApplication> bulkCustomerApplications)
-    {
+    public void setBulkCustomerApplications(final Set<IBulkCustomerApplication> bulkCustomerApplications) {
         this.bulkCustomerApplications = bulkCustomerApplications;
-
     }
 
     @Override
-    public Set<IBulkCustomerApplication> getBulkCustomerApplications ()
-    {
+    public Set<IBulkCustomerApplication> getBulkCustomerApplications() {
         return bulkCustomerApplications;
     }
 
     @Override
-    public IBulkCustomerApplication getBulkCustomerApplication (final String targetApplicationCode)
-    {
-        for (IBulkCustomerApplication bulkCustomerApplication : bulkCustomerApplications)
-        {
-            if (bulkCustomerApplication.getTargetApplication ().getTargetApplicationCode ()
-                    .equalsIgnoreCase (targetApplicationCode))
-            {
+    public IBulkCustomerApplication getBulkCustomerApplication(final String targetApplicationCode) {
+        for (IBulkCustomerApplication bulkCustomerApplication : bulkCustomerApplications) {
+            if (bulkCustomerApplication.getTargetApplication().getTargetApplicationCode().equalsIgnoreCase(
+                    targetApplicationCode)) {
                 return bulkCustomerApplication;
             }
         }
@@ -111,12 +98,11 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", sdtCustomerId=").append (this.getSdtCustomerId ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", sdtCustomerId=").append(this.getSdtCustomerId());
+        sb.append("]");
+        return sb.toString();
     }
 }

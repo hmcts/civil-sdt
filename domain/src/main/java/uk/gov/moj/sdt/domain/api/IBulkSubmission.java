@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -31,267 +31,263 @@
 
 package uk.gov.moj.sdt.domain.api;
 
-import java.util.List;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Interface for all classes implementing {@link IBulkSubmission}.
- * 
+ *
  * @author Manoj Kulkarni
  */
-public interface IBulkSubmission extends IDomainObject
-{
+public interface IBulkSubmission extends IDomainObject {
 
     /**
      * Get the Bulk Customer.
-     * 
+     *
      * @return bulk customer
      */
-    IBulkCustomer getBulkCustomer ();
+    IBulkCustomer getBulkCustomer();
 
     /**
      * Set the Bulk Customer.
-     * 
+     *
      * @param bulkCustomer bulk customer
      */
-    void setBulkCustomer (final IBulkCustomer bulkCustomer);
+    void setBulkCustomer(final IBulkCustomer bulkCustomer);
 
     /**
      * Get the Target Application.
-     * 
+     *
      * @return target application
      */
-    ITargetApplication getTargetApplication ();
+    ITargetApplication getTargetApplication();
 
     /**
      * Set the Target Application.
-     * 
+     *
      * @param targetApplication target application
      */
-    void setTargetApplication (final ITargetApplication targetApplication);
+    void setTargetApplication(final ITargetApplication targetApplication);
 
     /**
      * Get SDT bulk reference.
-     * 
+     *
      * @return SDT bulk reference
      */
-    String getSdtBulkReference ();
+    String getSdtBulkReference();
 
     /**
      * Set SDT bulk reference.
-     * 
+     *
      * @param sdtBulkReference SDT bulk reference
      */
-    void setSdtBulkReference (final String sdtBulkReference);
+    void setSdtBulkReference(final String sdtBulkReference);
 
     /**
      * Get customer reference.
-     * 
+     *
      * @return customer reference
      */
-    String getCustomerReference ();
+    String getCustomerReference();
 
     /**
      * Set customer reference.
-     * 
+     *
      * @param customerReference customer reference
      */
-    void setCustomerReference (final String customerReference);
+    void setCustomerReference(final String customerReference);
 
     /**
      * Get created date.
-     * 
+     *
      * @return created date
      */
-    LocalDateTime getCreatedDate ();
+    LocalDateTime getCreatedDate();
 
     /**
      * Set created date.
-     * 
+     *
      * @param localDateTime created dated
      */
-    void setCreatedDate (final LocalDateTime localDateTime);
+    void setCreatedDate(final LocalDateTime localDateTime);
 
     /**
      * Get number of request.
-     * 
+     *
      * @return number of request
      */
-    long getNumberOfRequest ();
+    long getNumberOfRequest();
 
     /**
      * Set number of request.
-     * 
+     *
      * @param numberOfRequest number of request
      */
-    void setNumberOfRequest (final long numberOfRequest);
+    void setNumberOfRequest(final long numberOfRequest);
 
     /**
      * Get submission status.
-     * 
+     *
      * @return submission status
      */
-    String getSubmissionStatus ();
+    String getSubmissionStatus();
 
     /**
      * Set submission status.
-     * 
+     *
      * @param submissionStatus submission status
      */
-    void setSubmissionStatus (final String submissionStatus);
+    void setSubmissionStatus(final String submissionStatus);
 
     /**
      * Get completed date.
-     * 
+     *
      * @return completed date
      */
-    LocalDateTime getCompletedDate ();
+    LocalDateTime getCompletedDate();
 
     /**
      * Set completed date.
-     * 
+     *
      * @param completedDate completed date
      */
-    void setCompletedDate (final LocalDateTime completedDate);
+    void setCompletedDate(final LocalDateTime completedDate);
 
     /**
      * Get updated date.
-     * 
+     *
      * @return updated date
      */
-    LocalDateTime getUpdatedDate ();
+    LocalDateTime getUpdatedDate();
 
     /**
      * Set updated date.
-     * 
+     *
      * @param updatedDate updated date
      */
-    void setUpdatedDate (final LocalDateTime updatedDate);
+    void setUpdatedDate(final LocalDateTime updatedDate);
 
     /**
      * Get the XML payload.
-     * 
+     *
      * @return xml payload
      */
-    String getPayload ();
+    String getPayload();
 
     /**
      * Set the XML payload.
-     * 
+     *
      * @param bs xml payload
      */
-    void setPayload (final String bs);
+    void setPayload(final String bs);
 
     /**
      * Get list of individual request.
-     * 
+     *
      * @return list of individual requests
      */
-    List<IIndividualRequest> getIndividualRequests ();
+    List<IIndividualRequest> getIndividualRequests();
 
     /**
      * Set list of individual request.
-     * 
+     *
      * @param individualRequests list of individual request
      */
-    void setIndividualRequests (final List<IIndividualRequest> individualRequests);
+    void setIndividualRequests(final List<IIndividualRequest> individualRequests);
 
     /**
      * Add given individual request.
-     * 
+     *
      * @param individualRequest individual request
      */
-    void addIndividualRequest (final IIndividualRequest individualRequest);
+    void addIndividualRequest(final IIndividualRequest individualRequest);
 
     /**
      * Get service request.
-     * 
+     *
      * @return service request
      */
-    IServiceRequest getServiceRequest ();
+    IServiceRequest getServiceRequest();
 
     /**
      * Set service request.
-     * 
+     *
      * @param serviceRequest service request
      */
-    void setServiceRequest (final IServiceRequest serviceRequest);
+    void setServiceRequest(final IServiceRequest serviceRequest);
 
     /**
      * Get error text.
-     * 
+     *
      * @return error text
      */
-    String getErrorText ();
+    String getErrorText();
 
     /**
      * Set error text.
-     * 
+     *
      * @param errorText error text
      */
-    void setErrorText (final String errorText);
+    void setErrorText(final String errorText);
 
     /**
      * Get error code.
-     * 
+     *
      * @return error code
      */
-    String getErrorCode ();
+    String getErrorCode();
 
     /**
      * Set error code.
-     * 
+     *
      * @param errorCode error code
      */
-    void setErrorCode (final String errorCode);
+    void setErrorCode(final String errorCode);
 
     /**
      * Error status.
-     * 
+     *
      * @return true if there are errors else false.
      */
-    boolean hasError ();
+    boolean hasError();
 
     /**
      * Marks the bulk submission as Validated unless the submission is in "Completed" status.
      */
-    void markAsValidated ();
+    void markAsValidated();
 
     /**
      * Marks the bulk submission as completed.
      */
-    void markAsCompleted ();
+    void markAsCompleted();
 
     /**
      * The status of the Bulk Request - one of "Uploaded", "Failed", "
      * Validated", or "Completed" to reflect the current status of SDT processing. Maintained by SDT.
-     * 
+     *
      * @author d130680
-     * 
      */
-    public enum BulkRequestStatus
-    {
+    public enum BulkRequestStatus {
 
         /**
          * Uploaded.
          */
-        UPLOADED ("Uploaded"),
+        UPLOADED("Uploaded"),
 
         /**
          * Failed.
          */
-        FAILED ("Failed"),
+        FAILED("Failed"),
 
         /**
          * Validated.
          */
-        VALIDATED ("Validated"),
+        VALIDATED("Validated"),
 
         /**
          * Completed.
          */
-        COMPLETED ("Completed");
+        COMPLETED("Completed");
 
         /**
          * Bulk request status.
@@ -300,22 +296,20 @@ public interface IBulkSubmission extends IDomainObject
 
         /**
          * Constructor.
-         * 
+         *
          * @param s status
          */
-        private BulkRequestStatus (final String s)
-        {
+        private BulkRequestStatus(final String s) {
 
             this.status = s;
         }
 
         /**
          * Get the bulk request status.
-         * 
+         *
          * @return bulk request status
          */
-        public String getStatus ()
-        {
+        public String getStatus() {
             return status;
         }
     }

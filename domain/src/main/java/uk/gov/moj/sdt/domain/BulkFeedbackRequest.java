@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,12 +36,10 @@ import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 
 /**
  * Get Bulk Feedback request domain object.
- * 
+ *
  * @author d130680
- * 
  */
-public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFeedbackRequest
-{
+public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFeedbackRequest {
 
     /**
      * Bulk Customer.
@@ -54,37 +52,32 @@ public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFe
     private String sdtBulkReference;
 
     @Override
-    public IBulkCustomer getBulkCustomer ()
-    {
+    public IBulkCustomer getBulkCustomer() {
         return bulkCustomer;
     }
 
     @Override
-    public void setBulkCustomer (final IBulkCustomer bulkCustomer)
-    {
+    public void setBulkCustomer(final IBulkCustomer bulkCustomer) {
         this.bulkCustomer = bulkCustomer;
     }
 
     @Override
-    public String getSdtBulkReference ()
-    {
+    public String getSdtBulkReference() {
         return sdtBulkReference;
     }
 
     @Override
-    public void setSdtBulkReference (final String sdtBulkReference)
-    {
+    public void setSdtBulkReference(final String sdtBulkReference) {
         this.sdtBulkReference = sdtBulkReference;
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", bulkCustomer=").append (this.getBulkCustomer ());
-        sb.append (", sdtBulkReference=").append (this.getSdtBulkReference ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", bulkCustomer=").append(this.getBulkCustomer());
+        sb.append(", sdtBulkReference=").append(this.getSdtBulkReference());
+        sb.append("]");
+        return sb.toString();
     }
 }

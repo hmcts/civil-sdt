@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -31,26 +31,24 @@
 
 package uk.gov.moj.sdt.domain;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType.ServiceTypeName;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * Target Application that the Bulk Customer has been set up to submit messages to.
- * 
+ *
  * @author d130680
- * 
  */
-public class TargetApplication extends AbstractDomainObject implements ITargetApplication
-{
+public class TargetApplication extends AbstractDomainObject implements ITargetApplication {
     /**
      * A collection of all service types that can be used with this target application.
      */
-    private Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+    private Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
     /**
      * Target application code.
@@ -63,67 +61,55 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
     private String targetApplicationName;
 
     @Override
-    public String getTargetApplicationCode ()
-    {
+    public String getTargetApplicationCode() {
         return targetApplicationCode;
     }
 
     @Override
-    public void setTargetApplicationCode (final String targetApplicationCode)
-    {
+    public void setTargetApplicationCode(final String targetApplicationCode) {
         this.targetApplicationCode = targetApplicationCode;
     }
 
     @Override
-    public String getTargetApplicationName ()
-    {
+    public String getTargetApplicationName() {
         return targetApplicationName;
     }
 
     @Override
-    public void setTargetApplicationName (final String targetApplicationName)
-    {
+    public void setTargetApplicationName(final String targetApplicationName) {
         this.targetApplicationName = targetApplicationName;
     }
 
     @Override
-    public Set<IServiceRouting> getServiceRoutings ()
-    {
+    public Set<IServiceRouting> getServiceRoutings() {
         return serviceRoutings;
     }
 
     @Override
-    public void setServiceRoutings (final Set<IServiceRouting> serviceRoutings)
-    {
+    public void setServiceRoutings(final Set<IServiceRouting> serviceRoutings) {
         this.serviceRoutings = serviceRoutings;
     }
 
     @Override
-    public IServiceRouting getServiceRouting (final ServiceTypeName serviceTypeName)
-    {
-        final Set<IServiceRouting> serviceRoutings = this.getServiceRoutings ();
-        final Iterator<IServiceRouting> iterator = serviceRoutings.iterator ();
-        while (iterator.hasNext ())
-        {
-            final IServiceRouting serviceRouting = iterator.next ();
-            if (serviceRouting.getServiceType ().getName ().toUpperCase ().equals (serviceTypeName.name ()))
-            {
+    public IServiceRouting getServiceRouting(final ServiceTypeName serviceTypeName) {
+        final Iterator<IServiceRouting> iterator = serviceRoutings.iterator();
+        while (iterator.hasNext()) {
+            final IServiceRouting serviceRouting = iterator.next();
+            if (serviceRouting.getServiceType().getName().toUpperCase().equals(serviceTypeName.name())) {
                 return serviceRouting;
             }
         }
-
         return null;
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", serviceRoutings=").append (getHashId (this.getServiceRoutings ()));
-        sb.append (", targetApplicationCode=").append (this.getTargetApplicationCode ());
-        sb.append (", targetApplicationName=").append (this.getTargetApplicationName ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", serviceRoutings=").append(getHashId(this.getServiceRoutings()));
+        sb.append(", targetApplicationCode=").append(this.getTargetApplicationCode());
+        sb.append(", targetApplicationName=").append(this.getTargetApplicationName());
+        sb.append("]");
+        return sb.toString();
     }
 }

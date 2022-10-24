@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -37,12 +37,10 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * SDT will maintain routing information for target applications based on the Request Type Tag.
- * 
+ *
  * @author d130680
- * 
  */
-public class ServiceRouting extends AbstractDomainObject implements IServiceRouting
-{
+public class ServiceRouting extends AbstractDomainObject implements IServiceRouting {
 
     /**
      * Target application.
@@ -60,50 +58,43 @@ public class ServiceRouting extends AbstractDomainObject implements IServiceRout
     private String webServiceEndpoint;
 
     @Override
-    public ITargetApplication getTargetApplication ()
-    {
+    public ITargetApplication getTargetApplication() {
         return targetApplication;
     }
 
     @Override
-    public void setTargetApplication (final ITargetApplication targetApplication)
-    {
+    public void setTargetApplication(final ITargetApplication targetApplication) {
         this.targetApplication = targetApplication;
     }
 
     @Override
-    public IServiceType getServiceType ()
-    {
+    public IServiceType getServiceType() {
         return serviceType;
     }
 
     @Override
-    public void setServiceType (final IServiceType serviceType)
-    {
+    public void setServiceType(final IServiceType serviceType) {
         this.serviceType = serviceType;
     }
 
     @Override
-    public String getWebServiceEndpoint ()
-    {
+    public String getWebServiceEndpoint() {
         return webServiceEndpoint;
     }
 
     @Override
-    public void setWebServiceEndpoint (final String webServiceEndpoint)
-    {
+    public void setWebServiceEndpoint(final String webServiceEndpoint) {
         this.webServiceEndpoint = webServiceEndpoint;
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", targetApplication=").append (this.getTargetApplication ());
-        sb.append (", serviceType=").append (this.getServiceType ());
-        sb.append (", webServiceEndpoint=").append (this.getWebServiceEndpoint ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", targetApplication=").append(this.getTargetApplication());
+        sb.append(", serviceType=").append(this.getServiceType());
+        sb.append(", webServiceEndpoint=").append(this.getWebServiceEndpoint());
+        sb.append("]");
+        return sb.toString();
     }
 }
