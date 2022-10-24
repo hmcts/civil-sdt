@@ -5,6 +5,6 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
-    <suppress checks="MethodTypeParameterName" files="[\\/]domain[\\/]src[\\/]main[\\/]java[\\/]uk[\\/]gov[\\/]moj[\\/]sdt[\\/]domain[\\/]visitor[\\/]AbstractCacheControl\.java"/>
-    <suppress checks="MethodTypeParameterName" files="[\\/]domain[\\/]src[\\/]main[\\/]java[\\/]uk[\\/]gov[\\/]moj[\\/]sdt[\\/]domain[\\/]cache[\\/]api[\\/]AbstractCacheControl\.java"/>
+    <suppress checks="MethodTypeParameterName" files="AbstractCacheControl\.java"/>
+    <suppress checks="MethodTypeParameterName" files="ICacheable\.java"/>
 </suppressions>
