@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,15 +23,19 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.web.filter;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.utils.SdtContext;
 
+import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -39,52 +43,40 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * This filter class is for cleaning up the Sdt Context from the thread local.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class ContextCleanupFilter implements Filter
-{
+public class ContextCleanupFilter implements Filter {
 
     /**
      * Logger for this class.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (ContextCleanupFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContextCleanupFilter.class);
 
     @Override
-    public void init (final FilterConfig filterConfig) throws ServletException
-    {
+    public void init(final FilterConfig filterConfig) throws ServletException {
         // the code to be called during initialisation of the filter.
 
     }
 
     @Override
-    public void doFilter (final ServletRequest servletRequest, final ServletResponse servletResponse,
-                          final FilterChain filterChain) throws IOException, ServletException
-    {
-        try
-        {
-            filterChain.doFilter (servletRequest, servletResponse);
-        }
-        finally
-        {
+    public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse,
+                         final FilterChain filterChain) throws IOException, ServletException {
+        try {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
             // After the request has been processed, clean up from the ThreadLocal.
-            SdtContext.getContext ().remove ();
+            SdtContext.getContext().remove();
 
-            LOGGER.debug ("Performed remove operation on the SdtContext");
+            LOGGER.debug("Performed remove operation on the SdtContext");
         }
     }
 
     @Override
-    public void destroy ()
-    {
+    public void destroy() {
         // code to be called when the filter is destroyed.
     }
 }

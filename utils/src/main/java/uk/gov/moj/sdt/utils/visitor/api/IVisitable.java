@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: IWsCreateHandler.java 16467 2013-06-07 17:09:50Z agarwals $
  * $LastChangedRevision: 16467 $
  * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
@@ -33,16 +33,15 @@ package uk.gov.moj.sdt.utils.visitor.api;
 
 /**
  * Marker interface for domain objects.
- * 
+ *
  * @author Robin Compston.
  */
-public interface IVisitable
-{
+public interface IVisitable {
     /**
      * Accept visitor in order to implement visitor pattern.
-     * 
+     *
      * @param visitor the visitor which is going to to act on this {@link IVisitable}.
-     * @param tree the tree being walked in order to apply visitors.
+     * @param tree    the tree being walked in order to apply visitors.
      */
-    void accept (IVisitor visitor, ITree tree);
+    void accept(IVisitor visitor, ITree tree);
 }

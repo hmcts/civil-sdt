@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,27 +23,26 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
+
 package uk.gov.moj.sdt.utils.visitor.api;
 
 /**
  * An interface to implement the visitor pattern.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public interface IVisitor
-{
+public interface IVisitor {
     /**
      * Method call to link {@link IVisitable} with {@link IVisitor}.
-     * 
+     *
      * @param object object which visitor is to act upon.
-     * @param tree tree which is being walked.
+     * @param tree   tree which is being walked.
      */
-    void visit (Object object, ITree tree);
+    void visit(Object object, ITree tree);
 
 }

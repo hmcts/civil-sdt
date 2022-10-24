@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,51 +23,51 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.parsing.api;
 
 import java.util.Map;
 
 /**
  * Interface for XmlNamespaceParser.
- * 
+ *
  * @author Robin Compston
  */
-public interface IXmlNamespaceUtils
-{
+public interface IXmlNamespaceUtils {
 
     /**
      * Extract namesspaces out of a piece of raw XML.
-     * 
+     *
      * @param rawXml the raw XML out of which names spaces are to be extracted.
      */
-    void extractNamespaces (final String rawXml);
+    void extractNamespaces(final String rawXml);
 
     /**
      * Get the extracted namesspaces map.
-     * 
+     *
      * @return the extracted namesspaces map.
      */
-    Map<String, String> getNamespaces ();
+    Map<String, String> getNamespaces();
 
     /**
      * Find map of applicable namespaces for given xml fragment based on namespaces in entire xml.
-     * 
+     *
      * @param xmlFragment fragment of xml to which namespaces should apply.
      * @return map of applicable namespaces.
      */
-    Map<String, String> findMatchingNamespaces (final String xmlFragment);
+    Map<String, String> findMatchingNamespaces(final String xmlFragment);
 
     /**
      * Combine a number of namespace maps into a single namespace map without duplicates.
-     * 
+     *
      * @param namespaceMap an individual namespace map which should be combined with any other individual namespace
-     *            maps.
+     *                     maps.
      * @return map of individual namespace maps combined so far.
      */
-    Map<String, String> combineNamespaces (final Map<String, String> namespaceMap);
+    Map<String, String> combineNamespaces(final Map<String, String> namespaceMap);
 }

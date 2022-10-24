@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,11 +23,12 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,13 +40,10 @@ import java.net.UnknownHostException;
 
 /**
  * Utility class to return the server's IP Address.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-// CHECKSTYLE:OFF
-public class ServerHostName
-{
+class ServerHostName {
     /**
      * Constant to indicate that the host name is not yet known.
      */
@@ -54,30 +52,28 @@ public class ServerHostName
     /**
      * Logger for this class.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (ServerHostName.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerHostName.class);
 
     /**
      * The host name of the server machine.
      */
     private static String hostName;
 
+    private ServerHostName() {
+    }
+
     /**
      * Gets the host name of the server machine.
-     * 
+     *
      * @return the host name of the server machine.
      */
-    public static String getHostName ()
-    {
-        if (StringUtils.isEmpty (hostName) || UNKNOWN_HOST_NAME.equals (hostName))
-        {
-            try
-            {
-                hostName = InetAddress.getLocalHost ().getHostName ();
-            }
-            catch (final UnknownHostException e)
-            {
+    public static String getHostName() {
+        if (StringUtils.isEmpty(hostName) || UNKNOWN_HOST_NAME.equals(hostName)) {
+            try {
+                hostName = InetAddress.getLocalHost().getHostName();
+            } catch (final UnknownHostException e) {
                 hostName = UNKNOWN_HOST_NAME;
-                LOGGER.warn ("An exception occured while retrieving host name", e);
+                LOGGER.warn("An exception occured while retrieving host name", e);
             }
         }
         return hostName;

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,27 +23,26 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
+
 package uk.gov.moj.sdt.utils.concurrent;
 
-import java.util.Map;
-
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
+
+import java.util.Map;
 
 /**
  * A class to represent an in-flight message. Several threads may be trying to process this if the customer has sent it
  * more than once. Only one of them must allowed to win the race. The winner is the first to write the sdt bulk
  * reference into this object.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class InFlightMessage implements IInFlightMessage
-{
+public class InFlightMessage implements IInFlightMessage {
     /**
      * Object which is at the parent (inverted tree) of the tree.
      */
@@ -55,26 +54,22 @@ public class InFlightMessage implements IInFlightMessage
     private String sdtBulkReference;
 
     @Override
-    public Map<Thread, Thread> getCompetingThreads ()
-    {
+    public Map<Thread, Thread> getCompetingThreads() {
         return this.competingThreads;
     }
 
     @Override
-    public void setCompetingThreads (final Map<Thread, Thread> competingThreads)
-    {
+    public void setCompetingThreads(final Map<Thread, Thread> competingThreads) {
         this.competingThreads = competingThreads;
     }
 
     @Override
-    public String getSdtBulkReference ()
-    {
+    public String getSdtBulkReference() {
         return this.sdtBulkReference;
     }
 
     @Override
-    public void setSdtBulkReference (final String sdtBulkReference)
-    {
+    public void setSdtBulkReference(final String sdtBulkReference) {
         this.sdtBulkReference = sdtBulkReference;
     }
 }

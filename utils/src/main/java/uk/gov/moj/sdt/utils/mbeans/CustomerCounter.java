@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,30 +23,29 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.mbeans;
+
+import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
-
 /**
  * Class to count unique users.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public final class CustomerCounter implements ICustomerCounter
-{
+public final class CustomerCounter implements ICustomerCounter {
     /**
      * Map of unique bulk customers seen by system.
      */
-    private Map<String, String> uniqueBulkCustomers = new HashMap<String, String> ();
+    private Map<String, String> uniqueBulkCustomers = new HashMap<>();
 
     /**
      * Local store of unique bulk customer count.
@@ -54,29 +53,25 @@ public final class CustomerCounter implements ICustomerCounter
     private long uniqueBulkCustomerCount;
 
     @Override
-    public synchronized void updateBulkCustomerCount (final String customer)
-    {
-        if (customer == null)
-        {
+    public synchronized void updateBulkCustomerCount(final String customer) {
+        if (customer == null) {
             return;
         }
 
         // Have the SdtMetrics been reset?
-        if (SdtMetricsMBean.getMetrics ().getActiveBulkCustomers () < uniqueBulkCustomerCount)
-        {
+        if (SdtMetricsMBean.getMetrics().getActiveBulkCustomers() < uniqueBulkCustomerCount) {
             // Clear map.
-            uniqueBulkCustomers = new HashMap<String, String> ();
+            uniqueBulkCustomers = new HashMap<>();
         }
 
-        if ( !uniqueBulkCustomers.containsKey (customer))
-        {
+        if (!uniqueBulkCustomers.containsKey(customer)) {
             // Add this customer to the map, since we have not seen them before.
-            uniqueBulkCustomers.put (customer, customer);
+            uniqueBulkCustomers.put(customer, customer);
 
             // Update metrics.
-            SdtMetricsMBean.getMetrics ().upActiveBulkCustomers ();
+            SdtMetricsMBean.getMetrics().upActiveBulkCustomers();
         }
 
-        uniqueBulkCustomerCount = SdtMetricsMBean.getMetrics ().getActiveBulkCustomers ();
+        uniqueBulkCustomerCount = SdtMetricsMBean.getMetrics().getActiveBulkCustomers();
     }
 }

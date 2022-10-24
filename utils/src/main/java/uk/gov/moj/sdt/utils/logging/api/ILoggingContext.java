@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,22 +23,22 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.logging.api;
 
 import java.io.Serializable;
 
 /**
  * The interface for the class that holds Logging related information for a thread.
- * 
+ *
  * @author Robin Compston
  */
-public interface ILoggingContext extends Serializable
-{
+public interface ILoggingContext extends Serializable {
     /**
      * Serial version UID used by the Java serialization mechanism.
      */
@@ -46,50 +46,50 @@ public interface ILoggingContext extends Serializable
 
     /**
      * The getter method of property <code>loggingFlags</code>.
-     * 
+     *
      * @return <code>loggingFlags</code>.
      */
-    int getLoggingFlags ();
+    int getLoggingFlags();
 
     /**
      * The setter method of property <code>loggingFlags</code>.
-     * 
+     *
      * @param loggingFlags property loggingFlags.
      */
-    void setLoggingFlags (int loggingFlags);
+    void setLoggingFlags(int loggingFlags);
 
     /**
      * The getter method for major logging id.
-     * 
+     *
      * @return major logging id.
      */
-    long getMajorLoggingId ();
+    long getMajorLoggingId();
 
     /**
      * The setter method of property <code>majorLoggingId</code>.
-     * 
+     *
      * @param majorLoggingId property majorLoggingId.
      */
-    void setMajorLoggingId (long majorLoggingId);
+    void setMajorLoggingId(long majorLoggingId);
 
     /**
      * The getter method for minor logging id.
-     * 
+     *
      * @return minor logging id.
      */
-    long getMinorLoggingId ();
+    long getMinorLoggingId();
 
     /**
      * The setter method of property <code>minorLoggingId</code>.
-     * 
+     *
      * @param minorLoggingId property minorLoggingId.
      */
-    void setMinorLoggingId (long minorLoggingId);
+    void setMinorLoggingId(long minorLoggingId);
 
     /**
      * The getter method for logging id.
-     * 
+     *
      * @return logging id.
      */
-    String getLoggingId ();
+    String getLoggingId();
 }
