@@ -48,7 +48,3 @@ services:
 volumes:
   civil-sdt-database-data:
 
-networks:
-  civil-sdt:
-    external: true
-
