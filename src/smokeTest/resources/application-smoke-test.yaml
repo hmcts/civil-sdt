@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:11:1:///civil_sdt_smoke
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: ${SDT_DB_USERNAME:postgres}
+    password: ${SDT_DB_PASSWORD:test}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: postgresql
+  flyway:
+    enabled: false
+sdt:
+  tx-timeout:
+    default:  1000
