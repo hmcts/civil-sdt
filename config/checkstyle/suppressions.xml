@@ -8,4 +8,5 @@
   <suppress checks="MethodTypeParameterName" files="[\\/]src[\\/]main[\\/]java[\\/]uk[\\/]gov[\\/]moj[\\/]sdt[\\/]domain[\\/]cache[\\/]AbstractCacheControl\.java"/>
   <suppress checks="MethodTypeParameterName" files="[\\/]src[\\/]main[\\/]java[\\/]uk[\\/]gov[\\/]moj[\\/]sdt[\\/]domain[\\/]cache[\\/]api[\\/]ICacheable\.java"/>
   <suppress checks="MethodTypeParameterName" files="[\\/]src[\\/]main[\\/]java[\\/]uk[\\/]gov[\\/]moj[\\/]sdt[\\/]domain[\\/]cache[\\/]api[\\/]ICacheable\.java"/>
+  <suppress checks=".*" files="[\\/]src[\\/]main[\\/]java[\\/]uk[\\/]gov[\\/]moj[\\/]sdt[\\/]"/>
 </suppressions>
