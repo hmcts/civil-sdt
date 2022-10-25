@@ -7,3 +7,5 @@ java:
     SDT_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
     SDT_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     SDT_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+  postgresql:
+    enabled: true
