@@ -2,7 +2,6 @@
 
 @Library("Infrastructure")
 
-
 def type = "java"
 def product = "civil"
 def component = "sdt"
