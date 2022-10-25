@@ -4,7 +4,6 @@
 
 def type = "java"
 def product = "civil"
-
 def component = "sdt"
 
 withPipeline(type, product, component) {
