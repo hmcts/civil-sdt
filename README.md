@@ -62,6 +62,7 @@ The application contains the following plugins:
     using `dependency 'groupId:artifactId:version'`
     or `dependency group:'group', name:'name', version:version'`.
 
+
   * org.springframework.boot
 
     http://projects.spring.io/spring-boot/
