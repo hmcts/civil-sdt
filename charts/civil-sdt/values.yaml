@@ -10,3 +10,13 @@ java:
 #        - name: AppInsightsInstrumentationKey
 #          alias: azure.application-insights.instrumentation-key
   environment:
+    SDT_DB_PORT: 5432
+    SDT_DB_NAME: civil_sdt
+    SDT_DB_HOST: civil-sdt-postgres-db-v11-{{ .Values.global.environment }}.postgres.database.azure.com
+  keyVaults:
+    civil_sdt:
+      secrets:
+        - name: civil-sdt-POSTGRES-USER
+          alias: SDT_DB_USERNAME
+        - name: civil-sdt-POSTGRES-PASS
+          alias: SDT_DB_PASSWORD

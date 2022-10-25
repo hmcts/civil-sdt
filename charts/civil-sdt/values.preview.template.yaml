@@ -2,3 +2,8 @@ java:
   # Don't modify below here
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
+  environment:
+    SDT_DB_HOST: "{{ .Release.Name }}-postgresql"
+    SDT_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
+    SDT_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
+    SDT_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
