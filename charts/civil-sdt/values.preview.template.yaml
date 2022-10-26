@@ -9,3 +9,8 @@ java:
     SDT_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
   postgresql:
     enabled: true
+  keyVaults:
+    civil:
+      resourceGroup: civil
+      secrets:
+        - name: AppInsightsInstrumentationKey
