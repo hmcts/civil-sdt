@@ -53,7 +53,7 @@ public class GenericEnricher extends AbstractSdtEnricher {
     @Override
     public String enrichXml(final String message) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Message before enrichment [" + message + "]");
+            LOGGER.debug("Message before enrichment [{}]", message);
         }
 
         // Assume no change to input.
@@ -83,7 +83,7 @@ public class GenericEnricher extends AbstractSdtEnricher {
 
             if (matcher.find()) {
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Found matching group[" + matcher.group() + "]");
+                    LOGGER.debug("Found matching group[{}]", matcher.group());
                 }
 
                 // Get the string matching the regular expression.
@@ -93,7 +93,7 @@ public class GenericEnricher extends AbstractSdtEnricher {
                 replacementXml = changeToStartTag(singleLineTag) + replacementXml + changeToEndTag(singleLineTag);
 
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Replacement string[" + replacementXml + "]");
+                    LOGGER.debug("Replacement string[{}]", replacementXml);
                 }
 
                 // Escape any $ in the string, otherwise matcher may crash depending on what comes after $. N.B. Do not
@@ -106,7 +106,7 @@ public class GenericEnricher extends AbstractSdtEnricher {
             }
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Message after enrichment [" + newXml + "]");
+                LOGGER.debug("Message after enrichment [{}]", newXml);
             }
 
         } else {

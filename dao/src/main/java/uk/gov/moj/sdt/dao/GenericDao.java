@@ -494,7 +494,7 @@ public class GenericDao implements IGenericDao {
         LOGGER.debug("queryAsCount(): domainType={}", domainType);
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tdomain type=" + domainType.getName());
             for (Criterion criterion : restrictions) {
                 detail.append("\n\trestriction=" + criterion.toString());

@@ -97,12 +97,12 @@ public class GenericXmlParser {
         final Matcher matcher = pattern.matcher(rawXml);
 
         if (matcher.find()) {
-            LOGGER.debug("Found matching group[" + matcher.group() + "]");
+            LOGGER.debug("Found matching group[{}]", matcher.group());
 
             // Capture raw xml for element
             xmlResult = matcher.group(2).trim();
 
-            LOGGER.debug("Result XML[" + xmlResult + "]");
+            LOGGER.debug("Result XML[{}]", xmlResult);
 
             // Find namespaces applicable for fragment.
             final Map<String, String> matchingNamespaces =
