@@ -2,7 +2,7 @@
  = SDT Project
  =
  = Name:        build-setup-env.xml
- = Description: Top level build file to define environment and standard properties. 
+ = Description: Top level build file to define environment and standard properties.
  =
  = $Revision: $
  = $Author: $
@@ -23,8 +23,8 @@
 	<!-- Get ANT to tell us the directory where this script lives. -->
 	<dirname file="${ant.file.build-setup-env}" property="this.dir" />
 
-	<!-- Make environment variables available to this script. 
-         Provides all environment variables as Ant properties prefixed by "env.", 
+	<!-- Make environment variables available to this script.
+         Provides all environment variables as Ant properties prefixed by "env.",
          for example, CLASSPATH would be accessible in Ant as ${env.CLASSPATH}. -->
 	<property environment="env" />
 
@@ -79,8 +79,8 @@
 	<property file="${test.properties}" />
 
 	<!-- Templatise the maven library locations - to set paths for windows/mac -->
-	  <copy todir="../build" overwrite="true">
-	    <fileset dir="../build">
+	  <copy todir="" overwrite="true">
+	    <fileset dir="">
 	      <include name="sdt_3rd_party.userlibraries.template" />
 	    </fileset>
 	    <filterchain>
@@ -88,8 +88,8 @@
 	    </filterchain>
 	    <mapper type="glob" from="*.template" to="*" />
 	  </copy>
-	
-	
+
+
 	<!-- Derive name of jar file from ANT project name -->
 	<property name="dist.jar" value="${ant.project.name}.jar" />
 
