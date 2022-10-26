@@ -4,6 +4,17 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
+dependencies {
+    implementation project(":domain")
+    implementation project(":utils")
+    implementation project(":producers-api")
+    implementation project(":validators")
+    testImplementation project(":domain").sourceSets.main.output
+    testImplementation project(":utils").sourceSets.main.output
+    testImplementation project(":producers-api").sourceSets.main.output
+    testImplementation project(":validators").sourceSets.main.output
+}
+
 jar {
     enabled = true
     baseName = 'civil-sdt-handlers-api'

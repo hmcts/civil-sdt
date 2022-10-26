@@ -99,14 +99,17 @@ allprojects {
     implementation 'net.minidev:json-smart:2.4.7'
   }
 
-  // Global constraints
+ext['jackson.version'] = '2.14.0-rc1'
+ext['snakeyaml.version'] = '1.33'
+ext['spring-security.version'] = '5.7.3'
+
   dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
 
@@ -165,6 +168,8 @@ subprojects { subproject ->
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-cache')
+
+    implementation group: 'com.sun.xml.ws', name: 'jaxws-ri', version: '3.0.2'
 
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
 
