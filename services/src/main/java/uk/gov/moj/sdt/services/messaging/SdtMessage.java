@@ -44,7 +44,7 @@ public class SdtMessage implements Serializable, ISdtMessage {
     /**
      *
      */
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * This variable holds the sdtRequestReference of the individual request

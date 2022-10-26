@@ -85,7 +85,7 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryServiceIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryServiceIntTest.class);
 
     /**
      * Test subject.

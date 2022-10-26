@@ -76,7 +76,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionValidatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionValidatorTest.class);
 
     /**
      * Subject for test.

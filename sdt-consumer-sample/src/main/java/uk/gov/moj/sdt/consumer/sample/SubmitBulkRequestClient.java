@@ -24,7 +24,7 @@ public class SubmitBulkRequestClient extends AbstractWebServiceClient {
     /**
      * Logger instance.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitBulkRequestClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitBulkRequestClient.class);
 
     /**
      * Calls Submit Bulk web service on SDT endpoint.

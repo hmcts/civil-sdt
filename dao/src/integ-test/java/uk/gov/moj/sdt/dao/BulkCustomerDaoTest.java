@@ -55,7 +55,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDaoTest.class);
 
     /**
      * Default constructor for {@link BulkCustomerDaoTest}.

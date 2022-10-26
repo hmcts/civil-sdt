@@ -23,8 +23,8 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _McolDefenceCriteria_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema", "mcolDefenceCriteria");
-    private final static QName _McolDefenceDetail_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema", "mcolDefenceDetail");
+    private static final QName _McolDefenceCriteria_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema", "mcolDefenceCriteria");
+    private static final QName _McolDefenceDetail_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema", "mcolDefenceDetail");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: uk.gov.moj.sdt.ws._2013.mcol.queryschema

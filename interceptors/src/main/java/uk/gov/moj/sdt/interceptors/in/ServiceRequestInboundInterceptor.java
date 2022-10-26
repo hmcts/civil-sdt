@@ -68,7 +68,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
     /**
      * Logger for this class.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptor.class);
 
     /**
      * Create instance of {@link PerformanceLoggerInboundInterceptor}.

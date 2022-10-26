@@ -42,7 +42,7 @@ public class LoggingContext implements ILoggingContext {
     /**
      * {@link com.logica.ibra.ext.model.api.IIbraontext#SERIAL_VERSION_UID}.
      */
-    private final static long serialVersionUID = ILoggingContext.SERIAL_VERSION_UID;
+    private static final long serialVersionUID = ILoggingContext.SERIAL_VERSION_UID;
 
     /**
      * Global logging id used by all threads.

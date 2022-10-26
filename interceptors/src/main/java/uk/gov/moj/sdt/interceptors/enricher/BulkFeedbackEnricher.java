@@ -51,7 +51,7 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackEnricher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackEnricher.class);
 
     @Override
     public String enrichXml(final String message) {

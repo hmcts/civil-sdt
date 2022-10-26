@@ -56,7 +56,7 @@ public class ErrorMessageDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ErrorMessageDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorMessageDaoTest.class);
 
     /**
      * Default constructor for {@link BulkCustomerDaoTest}.

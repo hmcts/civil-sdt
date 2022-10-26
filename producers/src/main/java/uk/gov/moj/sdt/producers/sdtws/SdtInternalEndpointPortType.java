@@ -53,7 +53,7 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SdtInternalEndpointPortType.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdtInternalEndpointPortType.class);
 
     /**
      * Update item handler for handling individual request update.

@@ -51,12 +51,12 @@ public abstract class AbstractSdtUnitTestBase {
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtUnitTestBase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtUnitTestBase.class);
 
     /**
      * Name of log4j configuration file (in classpath).
      */
-    // private final static String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
+    // private static final String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
 
     /**
      * Watcher to detect current test name.

@@ -59,7 +59,7 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtInterceptor.class);
 
     /**
      * List of enrichers to use. An enricher is a class which adds content to the outgoing XML before sending it.

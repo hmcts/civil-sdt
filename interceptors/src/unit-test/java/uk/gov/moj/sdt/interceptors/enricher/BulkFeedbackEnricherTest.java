@@ -53,7 +53,7 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackEnricherTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackEnricherTest.class);
 
     /**
      * Subject for test.

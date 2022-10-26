@@ -51,7 +51,7 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.

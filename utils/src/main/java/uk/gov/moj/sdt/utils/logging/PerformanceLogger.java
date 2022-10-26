@@ -47,110 +47,110 @@ public final class PerformanceLogger {
     /**
      * Inbound interceptor.
      */
-    public final static Long LOGGING_POINT_1 = 1L << 0;
+    public static final Long LOGGING_POINT_1 = 1L << 0;
 
     /**
      * Indicates the receipt of new web service message.
      */
-    public final static Long LOGGING_POINT_2 = 1L << 1;
+    public static final Long LOGGING_POINT_2 = 1L << 1;
 
     /**
      * Call to database.
      */
-    public final static Long LOGGING_POINT_3 = 1L << 2;
+    public static final Long LOGGING_POINT_3 = 1L << 2;
 
     /**
      * Response from database.
      */
-    public final static Long LOGGING_POINT_4 = 1L << 3;
+    public static final Long LOGGING_POINT_4 = 1L << 3;
 
     /**
      * Enqueue individual message.
      */
-    public final static Long LOGGING_POINT_5 = 1L << 4;
+    public static final Long LOGGING_POINT_5 = 1L << 4;
 
     /**
      * Dequeue individual message.
      */
-    public final static Long LOGGING_POINT_6 = 1L << 5;
+    public static final Long LOGGING_POINT_6 = 1L << 5;
 
     /**
      * Forward request to target application.
      */
-    public final static Long LOGGING_POINT_7 = 1L << 6;
+    public static final Long LOGGING_POINT_7 = 1L << 6;
 
     /**
      * Response from target application.
      */
-    public final static Long LOGGING_POINT_8 = 1L << 7;
+    public static final Long LOGGING_POINT_8 = 1L << 7;
 
     /**
      * Server response to web service.
      */
-    public final static Long LOGGING_POINT_9 = 1L << 8;
+    public static final Long LOGGING_POINT_9 = 1L << 8;
 
     /**
      * Outbound interceptor.
      */
-    public final static Long LOGGING_POINT_10 = 1L << 9;
+    public static final Long LOGGING_POINT_10 = 1L << 9;
 
     /**
      * Fault interceptor.
      */
-    public final static Long LOGGING_POINT_11 = 1L << 10;
+    public static final Long LOGGING_POINT_11 = 1L << 10;
 
     /**
      * Start tree walker.
      */
-    public final static Long LOGGING_POINT_12 = 1L << 11;
+    public static final Long LOGGING_POINT_12 = 1L << 11;
 
     /**
      * End tree walker.
      */
-    public final static Long LOGGING_POINT_13 = 1L << 12;
+    public static final Long LOGGING_POINT_13 = 1L << 12;
 
     /**
      * Turn on detail for all other logging points.
      */
-    public final static Long LOGGING_POINT_16 = 1L << 15;
+    public static final Long LOGGING_POINT_16 = 1L << 15;
 
     // CHECKSTYLE:ON
 
     /**
      * Logging Flag value when all flags are enabled.
      */
-    public final static long ALL_FLAGS_ENABLED = Long.MAX_VALUE;
+    public static final long ALL_FLAGS_ENABLED = Long.MAX_VALUE;
 
     /**
      * Number of bit we want to see in log (least significant).
      */
-    public final static int FLAG_BIT_LENGTH = 16;
+    public static final int FLAG_BIT_LENGTH = 16;
 
     /**
      * Logging object. Note its name must not be in the same hierarchy as other SDT loggers so that it can be turned off
      * and on independently. Note also, this is a log4j logger not an SLF4J logger.
      */
-    private final static Logger LOGGER = LogManager.getLogger("sdt.performance");
+    private static final Logger LOGGER = LogManager.getLogger("sdt.performance");
 
     /**
      * Length of a formatted line.
      */
-    private final static int LINE_LENGTH = 16;
+    private static final int LINE_LENGTH = 16;
 
     /**
      * Length of a formatted line.
      */
-    private final static int LABEL_LENGTH = 6;
+    private static final int LABEL_LENGTH = 6;
 
     /**
      * Length of block of ascii.
      */
-    private final static int ASCII_BLOCK = 4;
+    private static final int ASCII_BLOCK = 4;
 
     /**
      * Length of block of ascii.
      */
-    private final static int ASCII_WIDTH = 56;
+    private static final int ASCII_WIDTH = 56;
 
     /**
      * Default Constructor.

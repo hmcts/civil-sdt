@@ -57,7 +57,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.

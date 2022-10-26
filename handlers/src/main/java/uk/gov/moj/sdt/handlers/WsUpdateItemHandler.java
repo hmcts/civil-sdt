@@ -56,7 +56,7 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(WsUpdateItemHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsUpdateItemHandler.class);
 
     /**
      * Service class to process the update item.

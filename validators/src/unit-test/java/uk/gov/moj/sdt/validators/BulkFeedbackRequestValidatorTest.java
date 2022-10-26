@@ -64,7 +64,7 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackRequestValidatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackRequestValidatorTest.class);
 
     /**
      * Subject for test.

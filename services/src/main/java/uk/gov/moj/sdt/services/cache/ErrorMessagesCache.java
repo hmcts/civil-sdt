@@ -51,7 +51,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ErrorMessagesCache.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorMessagesCache.class);
 
     /**
      * The map of error messages.

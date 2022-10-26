@@ -49,7 +49,7 @@ public abstract class AbstractSdtService {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtService.class);
 
     /**
      * Individual Request Dao to perform operations on the individual request object.

@@ -92,8 +92,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 
         // Check the response returned by the web service.
         this.checkXmlFromJaxb (response);
-
-        return;
     }
 
     /**
@@ -222,8 +220,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
             e.printStackTrace ();
             Assert.fail ("Failure to marshall response from web service [" + response.toString () + "]");
         }
-
-        return;
     }
 
     /**

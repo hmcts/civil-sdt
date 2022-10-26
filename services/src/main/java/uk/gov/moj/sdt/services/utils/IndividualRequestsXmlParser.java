@@ -53,7 +53,7 @@ public class IndividualRequestsXmlParser {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestsXmlParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestsXmlParser.class);
 
     /**
      * Contains mapping of namespaces to be replaced.

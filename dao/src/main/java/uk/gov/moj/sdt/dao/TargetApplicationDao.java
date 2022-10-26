@@ -51,7 +51,7 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(TargetApplicationDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TargetApplicationDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.

@@ -69,7 +69,7 @@ public class SubmitQueryService implements ISubmitQueryService {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryService.class);
 
     /**
      * The consumer gateway that will perform the call to the target application

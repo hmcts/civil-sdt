@@ -50,7 +50,7 @@ public class GenericXmlParser {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(GenericXmlParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericXmlParser.class);
 
     /**
      * Mapping of namespaces to be replaced.

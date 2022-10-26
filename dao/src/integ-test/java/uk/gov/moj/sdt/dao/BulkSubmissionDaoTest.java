@@ -66,7 +66,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDaoTest.class);
 
     /**
      * Bulk Submission DAO.

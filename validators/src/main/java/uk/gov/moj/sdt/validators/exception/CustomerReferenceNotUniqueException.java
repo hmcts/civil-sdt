@@ -41,7 +41,7 @@ public class CustomerReferenceNotUniqueException extends AbstractBusinessExcepti
     /**
      * The Constant serialVersionUID.
      */
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * SDT Customer Reference not unique across data retention period.

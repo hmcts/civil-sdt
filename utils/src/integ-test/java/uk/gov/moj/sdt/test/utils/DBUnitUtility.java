@@ -81,7 +81,7 @@ public final class DBUnitUtility {
     /**
      * The logger.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(DBUnitUtility.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DBUnitUtility.class);
 
     /**
      * Map of database connections for all schemas (one each).

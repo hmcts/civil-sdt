@@ -62,7 +62,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestConsumer.class);
 
     /**
      * Consumer transformer for individual request.

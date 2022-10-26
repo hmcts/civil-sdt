@@ -41,7 +41,7 @@ public class InvalidBulkReferenceException extends AbstractBusinessException {
     /**
      * The Constant serialVersionUID.
      */
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The supplied SDT Bulk Reference is not listed against the Bulk Customer's Bulk Submissions detail.

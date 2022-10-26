@@ -57,7 +57,7 @@ public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
     /**
      * Logger instance.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestsXmlParserTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestsXmlParserTest.class);
 
     /**
      * The individual request xml parser instance for testing.

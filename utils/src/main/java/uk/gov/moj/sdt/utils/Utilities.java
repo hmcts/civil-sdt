@@ -49,12 +49,12 @@ public final class Utilities {
     /**
      * File separator for pathnames.
      */
-    protected final static String FILE_SEPARATOR = "/";
+    protected static final String FILE_SEPARATOR = "/";
 
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(Utilities.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Utilities.class);
 
     /**
      * No-args constructor.

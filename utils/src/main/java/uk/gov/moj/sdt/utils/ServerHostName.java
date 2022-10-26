@@ -47,12 +47,12 @@ public class ServerHostName {
     /**
      * Constant to indicate that the host name is not yet known.
      */
-    private final static String UNKNOWN_HOST_NAME = "UNKNOWN";
+    private static final String UNKNOWN_HOST_NAME = "UNKNOWN";
 
     /**
      * Logger for this class.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ServerHostName.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerHostName.class);
 
     /**
      * The host name of the server machine.

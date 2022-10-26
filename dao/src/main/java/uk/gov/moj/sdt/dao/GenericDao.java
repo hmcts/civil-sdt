@@ -71,7 +71,7 @@ public class GenericDao implements IGenericDao {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(GenericDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericDao.class);
 
     /**
      * The Hibernate session factory needed to acquire the session.
@@ -165,7 +165,7 @@ public class GenericDao implements IGenericDao {
     public final <DomainType extends IDomainObject> DomainType[] query(final Class<DomainType> domainType,
                                                                        final Criterion... restrictions)
             throws DataAccessException {
-        LOGGER.debug("query(): domainType=" + domainType);
+        LOGGER.debug("query(): domainType={}", domainType);
 
         // Get a list of results from Hibernate.
         final List<?> domainObjects = queryAsList(domainType, restrictions);
@@ -183,10 +183,10 @@ public class GenericDao implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("queryAsList(): domainType=" + domainType);
+        LOGGER.debug("queryAsList(): domainType={}", domainType);
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tdomain type=" + domainType.getName());
             for (Criterion criterion : restrictions) {
                 detail.append("\n\trestriction=" + criterion.toString());
@@ -218,7 +218,7 @@ public class GenericDao implements IGenericDao {
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             if (domainObjects == null || domainObjects.size() == 0) {
                 detail.append("\n\n\tdomain object=\n");
             } else {
@@ -276,10 +276,10 @@ public class GenericDao implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("Persist domain object list " + domainObjectList.toString());
+        LOGGER.debug("Persist domain object list {}", domainObjectList.toString());
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tdomain object list=" + domainObjectList.toString() + "\n");
 
             // Write message to 'performance.log' for this logging point.
@@ -307,7 +307,7 @@ public class GenericDao implements IGenericDao {
         SdtMetricsMBean.getMetrics().upDatabaseWritesCount();
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tdomain object list=" + domainObjectList.toString() + "\n");
 
             // Write message to 'performance.log' for this logging point.
@@ -402,7 +402,7 @@ public class GenericDao implements IGenericDao {
                                                                       final Criterion... restrictions) {
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("uniqueResult(): domainType=" + domainType);
+        LOGGER.debug("uniqueResult(): domainType={}", domainType);
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
             final StringBuffer detail = new StringBuffer();
@@ -455,7 +455,7 @@ public class GenericDao implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("queryAsList(): domainType=" + domainType);
+        LOGGER.debug("queryAsList(): domainType={}", domainType);
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
             final String detail = "\n\n\tdomain type=" + domainType.getName() + "\n\tcriteria=" + criteria + "\n";
@@ -491,7 +491,7 @@ public class GenericDao implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("queryAsCount(): domainType=" + domainType);
+        LOGGER.debug("queryAsCount(): domainType={}", domainType);
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
             final StringBuffer detail = new StringBuffer();

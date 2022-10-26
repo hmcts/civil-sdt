@@ -51,7 +51,7 @@ public final class SdtContext {
     /**
      * Thread local holder available throughout thread.
      */
-    private final static ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * The state of current performance logging options.

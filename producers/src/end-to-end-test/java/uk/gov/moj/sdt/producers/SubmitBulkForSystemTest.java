@@ -69,22 +69,22 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
     /**
      * Logger instance.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitBulkForSystemTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitBulkForSystemTest.class);
 
     /**
      * Constant to define number of worker threads to process concurrent requests.
      */
-    private final static int MAX_WORKER_THREADS = 1;
+    private static final int MAX_WORKER_THREADS = 1;
 
     /**
      * Constant to define number of individual requests per bulk.
      */
-    private final static int IND_REQ_PER_BULK = 2000;
+    private static final int IND_REQ_PER_BULK = 2000;
 
     /**
      * Maximum number of requests to execute on the threads.
      */
-    private final static int MAX_REQUESTS = 1;
+    private static final int MAX_REQUESTS = 1;
 
     /**
      * Current number of worker threads.

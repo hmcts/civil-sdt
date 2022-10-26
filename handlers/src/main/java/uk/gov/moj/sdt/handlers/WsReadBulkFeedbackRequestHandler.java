@@ -61,7 +61,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(WsReadBulkFeedbackRequestHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsReadBulkFeedbackRequestHandler.class);
 
     /**
      * Injected Get Bulk Feedback service.

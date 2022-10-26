@@ -61,7 +61,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SdtEndpointPortType.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdtEndpointPortType.class);
 
     /**
      * Handles bulk submission request.

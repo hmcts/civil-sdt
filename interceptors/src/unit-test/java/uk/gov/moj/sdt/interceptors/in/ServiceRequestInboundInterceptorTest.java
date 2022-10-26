@@ -57,7 +57,7 @@ public class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBas
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptorTest.class);
 
     /**
      * Build a mocked dao.

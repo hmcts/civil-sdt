@@ -19,9 +19,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 public class BulkFeedbackClient extends AbstractWebServiceClient {
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackClient.class);
 
-    private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-YYYY HH:mm:SS");
+    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-YYYY HH:mm:SS");
 
     private BulkFeedbackResponseType getFeedback(final BulkFeedbackRequestType request) {
         // Get the SOAP proxy client.

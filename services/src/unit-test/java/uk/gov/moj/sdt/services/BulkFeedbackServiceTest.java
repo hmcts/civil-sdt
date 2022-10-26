@@ -81,7 +81,7 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Logger for debugging.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackServiceTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackServiceTest.class);
 
     /**
      * Bulk Feedback Service for testing.

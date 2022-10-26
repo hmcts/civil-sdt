@@ -47,7 +47,7 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(UpdateRequestService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateRequestService.class);
 
     /**
      * Messaging utility for queueing messages in the messaging server.

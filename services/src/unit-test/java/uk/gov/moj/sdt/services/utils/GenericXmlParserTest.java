@@ -52,7 +52,7 @@ public class GenericXmlParserTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(GenericXmlParserTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericXmlParserTest.class);
 
     /**
      * The xml parser instance for testing.

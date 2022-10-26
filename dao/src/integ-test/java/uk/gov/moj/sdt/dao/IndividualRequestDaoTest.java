@@ -67,7 +67,7 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestDaoTest.class);
 
     /**
      * *Individual Request DAO.

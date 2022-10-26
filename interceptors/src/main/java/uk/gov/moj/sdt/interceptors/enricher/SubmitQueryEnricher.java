@@ -49,7 +49,7 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryEnricher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryEnricher.class);
 
     @Override
     public String enrichXml(final String message) {

@@ -60,7 +60,7 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryRequestValidatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryRequestValidatorTest.class);
 
     /**
      * SubmitQueryRequestValidator.

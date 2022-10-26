@@ -85,7 +85,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     /**
      * Logger for debugging.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(TargetApplicationSubmissionServiceTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TargetApplicationSubmissionServiceTest.class);
 
     /**
      * Target Application Submision Service object.

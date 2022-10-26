@@ -49,7 +49,7 @@ public abstract class AbstractCacheControl implements ICacheable {
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractCacheControl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCacheControl.class);
 
     /**
      * MBean which holds value controlling uncache operation.

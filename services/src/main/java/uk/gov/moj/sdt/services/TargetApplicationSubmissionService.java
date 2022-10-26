@@ -69,12 +69,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
 
     /**
      * The maximum allowed characters for the soap fault error description.
      */
-    private final static int MAX_ALLOWED_CHARS = 2000;
+    private static final int MAX_ALLOWED_CHARS = 2000;
 
     /**
      * Individual Request Dao to perform operations on the individual request object.

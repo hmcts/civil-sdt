@@ -58,7 +58,7 @@ public class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(UpdateItemTransformerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateItemTransformerTest.class);
 
     /**
      * Update Item Transformer for the unit testing.

@@ -41,7 +41,7 @@ public class RequestCountMismatchException extends AbstractBusinessException {
     /**
      * The Constant serialVersionUID.
      */
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Total of individual requests should match the request count.

@@ -17,10 +17,10 @@ import javax.xml.ws.Service;
         targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint")
 public class SdtEndpoint extends Service {
 
-    public final static URL WSDL_LOCATION;
+    public static final URL WSDL_LOCATION;
 
-    public final static QName SERVICE = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", "SdtEndpoint");
-    public final static QName SdtEndpointPort = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", "SdtEndpointPort");
+    public static final QName SERVICE = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", "SdtEndpoint");
+    public static final QName SdtEndpointPort = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", "SdtEndpointPort");
 
     static {
         URL url = SdtEndpoint.class.getResource("src/main/resources/wsdl/SdtEndpoint.wsdl");

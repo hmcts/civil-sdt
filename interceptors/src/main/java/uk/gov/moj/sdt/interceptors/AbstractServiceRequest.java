@@ -49,7 +49,7 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractServiceRequest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractServiceRequest.class);
 
     /**
      * The persistence class for this interceptor.

@@ -52,12 +52,12 @@ import java.util.Set;
  */
 public final class NonVisitableTreeWalker extends AbstractTreeWalker {
 
-    private final static String LOG_FAILURE_TO_GET_BEAN_INFO = "Failure to get bean info from {}";
-    private final static String EXCEPTION_FAILURE_TO_GET_BEAN_INFO = "Failure to get bean info from ";
+    private static final String LOG_FAILURE_TO_GET_BEAN_INFO = "Failure to get bean info from {}";
+    private static final String EXCEPTION_FAILURE_TO_GET_BEAN_INFO = "Failure to get bean info from ";
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(NonVisitableTreeWalker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NonVisitableTreeWalker.class);
 
     /**
      * Default private constructor for utility class.

@@ -61,7 +61,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
     /**
      * Thirty seconds in milliseconds.
      */
-    final static int THIRTY_SECONDS = 30000;
+    static final int THIRTY_SECONDS = 30000;
 
     /**
      * Method to call remote submit bulk endpoint to be tested.

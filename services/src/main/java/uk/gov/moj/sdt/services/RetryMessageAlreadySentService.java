@@ -55,13 +55,13 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService 
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(RetryMessageAlreadySentService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RetryMessageAlreadySentService.class);
 
     /**
      * The default forwarding attempts is set to 3. This value should never be used
      * but just in case the database global parameter is not set, this will be used.
      */
-    private final static int DEFAULT_MAX_FORWARDING_ATTEMPTS = 3;
+    private static final int DEFAULT_MAX_FORWARDING_ATTEMPTS = 3;
 
     /**
      * Individual Request Dao to perform operations on the individual request object.

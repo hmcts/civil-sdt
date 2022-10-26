@@ -16,7 +16,7 @@ public abstract class AbstractWebServiceClient {
     /**
      * Constant to define location of Spring context file.
      */
-    public final static String APP_CONTEXT_LOCATION = "classpath*:/uk/gov/moj/sdt/consumer/sample/spring.context.xml";
+    public static final String APP_CONTEXT_LOCATION = "classpath*:/uk/gov/moj/sdt/consumer/sample/spring.context.xml";
 
     /**
      * SDT Endpoint to be called.

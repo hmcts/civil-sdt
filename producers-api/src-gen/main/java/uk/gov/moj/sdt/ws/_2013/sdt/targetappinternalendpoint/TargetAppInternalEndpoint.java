@@ -17,10 +17,10 @@ import javax.xml.ws.Service;
         targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint")
 public class TargetAppInternalEndpoint extends Service {
 
-    public final static URL WSDL_LOCATION;
+    public static final URL WSDL_LOCATION;
 
-    public final static QName SERVICE = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint", "TargetAppInternalEndpoint");
-    public final static QName TargetAppInternalEndpointPort = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint", "TargetAppInternalEndpointPort");
+    public static final QName SERVICE = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint", "TargetAppInternalEndpoint");
+    public static final QName TargetAppInternalEndpointPort = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint", "TargetAppInternalEndpointPort");
 
     static {
         URL url = TargetAppInternalEndpoint.class.getResource("src/main/resources/wsdl/TargetAppInternalEndpoint.wsdl");

@@ -59,7 +59,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
     /**
      * Logger for logging messages.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestMdb.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestMdb.class);
 
     /**
      * Target Application Submission Service.

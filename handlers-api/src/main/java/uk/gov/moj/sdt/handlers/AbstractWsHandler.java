@@ -48,7 +48,7 @@ public abstract class AbstractWsHandler {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractWsHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWsHandler.class);
 
     /**
      * Handle given business exception by transforming into error type and setting on given response type.

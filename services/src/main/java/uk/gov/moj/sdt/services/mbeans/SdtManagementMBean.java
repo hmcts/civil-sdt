@@ -61,47 +61,47 @@ public final class SdtManagementMBean implements ISdtManagementMBean {
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SdtManagementMBean.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdtManagementMBean.class);
 
     /**
      * Success message to return after successfully processing the SDT individual request.
      */
-    private final static String OK_MESSAGE = "OK";
+    private static final String OK_MESSAGE = "OK";
 
     /**
      * Error message to return if the mandatory parameters are missing.
      */
-    private final static String MANDATORY_PARAMETERS_ERR_MSG =
+    private static final String MANDATORY_PARAMETERS_ERR_MSG =
             "SDT Request Reference and the Request Status should be supplied.";
 
     /**
      * Error message to return if the invalid request status values are supplied.
      */
-    private final static String INVALID_PARAM_VALUES_MSG =
+    private static final String INVALID_PARAM_VALUES_MSG =
             "Invalid Request Status supplied. The Request Status should be either REJECTED or FORWARDED";
 
     /**
      * Expected Parameter values for the request status parameter of processDLQRequest method.
      */
-    private final static String[] REQ_STATUS_PARAMVAL = {"FORWARDED", "REJECTED"};
+    private static final String[] REQ_STATUS_PARAMVAL = {"FORWARDED", "REJECTED"};
 
     /**
      * Error message to return if the Sdt Request Reference parameter does not correspond
      * to an Individual Request record in the database.
      */
-    private final static String INVALID_SDT_REQUEST_REF_MSG = "SDT Request Reference supplied does not exist.";
+    private static final String INVALID_SDT_REQUEST_REF_MSG = "SDT Request Reference supplied does not exist.";
 
     /**
      * Error message to return if the SDT Request Reference parameter is not marked as Dead Letter
      * Queue flag.
      */
-    private final static String SDT_REQUEST_NOT_ON_DLQ_MSG =
+    private static final String SDT_REQUEST_NOT_ON_DLQ_MSG =
             "SDT Request Reference supplied is not marked as dead letter and cannot be processed.";
 
     /**
      * Maximum value to which MDB pool size can be set.
      */
-    private final static int MAX_POOL_SIZE = 50;
+    private static final int MAX_POOL_SIZE = 50;
     /**
      * The current value of a flag which controls whether individual
      * {@link uk.gov.moj.sdt.domain.cache.AbstractCacheControl} instances need to be

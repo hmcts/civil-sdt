@@ -54,7 +54,7 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao 
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.

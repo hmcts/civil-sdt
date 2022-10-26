@@ -61,7 +61,7 @@ public class MockGenericDao implements IGenericDao
     /**
      * Logger for this class.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger (MockGenericDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger (MockGenericDao.class);
 
     /**
      * Incrementing unique value for service request id, simulating value returned by Hibernate.
@@ -71,7 +71,7 @@ public class MockGenericDao implements IGenericDao
     /**
      * Pre-defined values for valid customer references.
      */
-    private final static List<String> DUPLICATE_REFERENCE;
+    private static final List<String> DUPLICATE_REFERENCE;
 
     static
     {

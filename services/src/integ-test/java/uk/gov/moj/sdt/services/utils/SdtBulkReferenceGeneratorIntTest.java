@@ -68,7 +68,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SdtBulkReferenceGeneratorIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdtBulkReferenceGeneratorIntTest.class);
 
     /**
      * Test method for the SDT bulk reference generation.

@@ -53,12 +53,12 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
     /**
      * File separator for pathnames.
      */
-    protected final static String FILE_SEPARATOR = "/";
+    protected static final String FILE_SEPARATOR = "/";
 
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtGoodFileTestBase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtGoodFileTestBase.class);
 
     /**
      * Flag to say whether comparison with good file is required.

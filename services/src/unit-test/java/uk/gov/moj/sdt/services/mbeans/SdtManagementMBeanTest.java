@@ -62,52 +62,52 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
     /**
      * Success message to return after successfully processing the SDT individual request.
      */
-    private final static String OK_MESSAGE = "OK";
+    private static final String OK_MESSAGE = "OK";
 
     /**
      * Error message to return if the mandatory parameters are missing.
      */
-    private final static String MANDATORY_PARAMETERS_ERR_MSG =
+    private static final String MANDATORY_PARAMETERS_ERR_MSG =
             "SDT Request Reference and the Request Status should be supplied.";
 
     /**
      * Error message to return if the invalid request status values are supplied.
      */
-    private final static String INVALID_PARAM_VALUES_MSG =
+    private static final String INVALID_PARAM_VALUES_MSG =
             "Invalid Request Status supplied. The Request Status should be either REJECTED or FORWARDED";
 
     /**
      * Error message to return if the Sdt Request Reference parameter does not correspond
      * to an Individual Request record in the database.
      */
-    private final static String INVALID_SDT_REQUEST_REF_MSG = "SDT Request Reference supplied does not exist.";
+    private static final String INVALID_SDT_REQUEST_REF_MSG = "SDT Request Reference supplied does not exist.";
 
     /**
      * Error message to return if the SDT Request Reference parameter is not marked as Dead Letter
      * Queue flag.
      */
-    private final static String SDT_REQUEST_NOT_ON_DLQ_MSG =
+    private static final String SDT_REQUEST_NOT_ON_DLQ_MSG =
             "SDT Request Reference supplied is not marked as dead letter and cannot be processed.";
 
     /**
      * Queue name for testing.
      */
-    private final static String TEST_QUEUE_NAME = "TestQ";
+    private static final String TEST_QUEUE_NAME = "TestQ";
 
     /**
      * Pool size for testing.
      */
-    private final static int TEST_POOL_SIZE = 10;
+    private static final int TEST_POOL_SIZE = 10;
 
     /**
      * Sdt Request Reference for testing.
      */
-    private final static String TEST_SDT_REQ_REF = "Sdt_Req_Test";
+    private static final String TEST_SDT_REQ_REF = "Sdt_Req_Test";
 
     /**
      * Number of minutes to check that the request is not gone stale.
      */
-    private final static int TEST_STALE_DURATION = 90;
+    private static final int TEST_STALE_DURATION = 90;
 
     /**
      * The SdtManagementMBean that is under test.

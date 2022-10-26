@@ -97,7 +97,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SdtMetricsMBean.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdtMetricsMBean.class);
 
     /**
      * The singleton instance of this class created by Spring.
@@ -107,12 +107,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
     /**
      * The singleton instance of this class created by Spring.
      */
-    private final static double MILLISECONDS = 1000;
+    private static final double MILLISECONDS = 1000;
 
     /**
      * Constant to convert nanoseconds to milliseconds.
      */
-    private final static long NANO_TO_MILLI = 1000000;
+    private static final long NANO_TO_MILLI = 1000000;
 
     /**
      * Current active value of performance logging flags which control what performance logging points are active.

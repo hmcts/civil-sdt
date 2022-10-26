@@ -64,7 +64,7 @@ public class XmlValidator implements IXmlValidator {
     /**
      * Logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(XmlValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlValidator.class);
 
     /**
      * The xml that requires validation.

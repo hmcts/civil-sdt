@@ -50,12 +50,12 @@ public final class XmlNamespaceUtils {
     /**
      * key to default namespace.
      */
-    public final static String DEFAULT_NAMESPACE = "default";
+    public static final String DEFAULT_NAMESPACE = "default";
 
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(XmlNamespaceUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlNamespaceUtils.class);
 
     /**
      * No-args constructor.

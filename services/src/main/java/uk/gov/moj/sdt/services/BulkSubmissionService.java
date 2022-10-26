@@ -69,7 +69,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
     /**
      * Logger for debugging.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionService.class);
 
     /**
      * Generic Dao property for doing the task of persisting the domain objects.

@@ -58,12 +58,12 @@ public abstract class AbstractWsConsumer {
     /**
      * Thirty seconds in milliseconds.
      */
-    protected final static long THIRTY_SECONDS = 30000;
+    protected static final long THIRTY_SECONDS = 30000;
 
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractWsConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWsConsumer.class);
 
     /**
      * The map to hold the TargetApp Internal End Point with the key

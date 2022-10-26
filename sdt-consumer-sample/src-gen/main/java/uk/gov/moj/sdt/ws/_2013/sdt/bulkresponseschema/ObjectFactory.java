@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _BulkResponse_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema", "bulkResponse");
+    private static final QName _BulkResponse_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema", "bulkResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema

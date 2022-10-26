@@ -40,7 +40,7 @@ public class TimeoutException extends RuntimeException {
     /**
      * The Constant serialVersionUID.
      */
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Error code.

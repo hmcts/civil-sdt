@@ -51,7 +51,7 @@ public abstract class AbstractIntegrationTest extends AbstractTransactionalJUnit
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
     /**
      * Watcher to detect current test name.
@@ -69,8 +69,6 @@ public abstract class AbstractIntegrationTest extends AbstractTransactionalJUnit
         protected void starting(final Description description) {
             LOGGER.info("Start Test: " + description.getClassName() + "." + description.getMethodName() + ".");
         }
-
-        ;
     };
 
     /**

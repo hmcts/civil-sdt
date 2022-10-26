@@ -69,7 +69,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(MessageWriterIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriterIntTest.class);
 
     /**
      * Test method to test the sending of message.

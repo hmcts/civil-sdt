@@ -82,12 +82,12 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase {
     /**
      * Connection time out constant.
      */
-    private final static long CONNECTION_TIME_OUT = 30000;
+    private static final long CONNECTION_TIME_OUT = 30000;
 
     /**
      * Received time out constant.
      */
-    private final static long RECEIVE_TIME_OUT = 60000;
+    private static final long RECEIVE_TIME_OUT = 60000;
 
     /**
      * Consumer transformer for individual request.

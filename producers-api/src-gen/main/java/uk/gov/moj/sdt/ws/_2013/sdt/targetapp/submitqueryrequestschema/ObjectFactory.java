@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _SubmitQueryRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema", "submitQueryRequest");
+    private static final QName _SubmitQueryRequest_QNAME = new QName("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema", "submitQueryRequest");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema

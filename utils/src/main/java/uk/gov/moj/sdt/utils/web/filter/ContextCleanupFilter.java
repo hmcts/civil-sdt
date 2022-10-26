@@ -54,7 +54,7 @@ public class ContextCleanupFilter implements Filter {
     /**
      * Logger for this class.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ContextCleanupFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContextCleanupFilter.class);
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {

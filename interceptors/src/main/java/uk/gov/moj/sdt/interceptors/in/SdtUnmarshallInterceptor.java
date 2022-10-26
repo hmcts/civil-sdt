@@ -54,7 +54,7 @@ public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SdtUnmarshallInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdtUnmarshallInterceptor.class);
 
     /**
      * Test interceptor to prove concept.

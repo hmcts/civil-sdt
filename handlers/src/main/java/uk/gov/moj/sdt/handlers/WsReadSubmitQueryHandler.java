@@ -61,7 +61,7 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(WsReadSubmitQueryHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsReadSubmitQueryHandler.class);
 
     /**
      * Submit Query service to return response.

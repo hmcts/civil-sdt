@@ -51,7 +51,7 @@ import uk.gov.moj.sdt.utils.visitor.api.ITree;
  * @author Robin Compston
  */
 public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor {
-    private final static String METHOD_UNEXPECTED_MSG =
+    private static final String METHOD_UNEXPECTED_MSG =
             "Missing visitor implementation: this method should never be called.";
 
     @Override

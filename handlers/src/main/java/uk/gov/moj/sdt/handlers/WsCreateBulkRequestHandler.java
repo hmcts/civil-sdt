@@ -64,7 +64,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(WsCreateBulkRequestHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsCreateBulkRequestHandler.class);
 
     /**
      * Bulk Submission service.

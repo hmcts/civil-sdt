@@ -55,7 +55,7 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(GlobalParametersCache.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalParametersCache.class);
 
     /**
      * DAO to retrieve error messages.

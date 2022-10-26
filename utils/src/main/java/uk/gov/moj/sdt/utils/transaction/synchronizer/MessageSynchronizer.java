@@ -50,7 +50,7 @@ public class MessageSynchronizer extends TransactionSynchronizationAdapter imple
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(MessageSynchronizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageSynchronizer.class);
 
     @Override
     public void execute(final Runnable command) {

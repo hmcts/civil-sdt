@@ -56,7 +56,7 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(MessageWriterTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriterTest.class);
 
     /**
      * JMS Template for mocking.

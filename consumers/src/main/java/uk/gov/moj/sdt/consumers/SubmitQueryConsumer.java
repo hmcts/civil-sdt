@@ -58,7 +58,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryConsumer.class);
 
     /**
      * transformer for submit query request.

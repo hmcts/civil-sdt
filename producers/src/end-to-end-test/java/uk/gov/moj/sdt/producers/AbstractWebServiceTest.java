@@ -69,7 +69,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(XmlNamespaceUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlNamespaceUtils.class);
 
     /**
      * Setup the test.

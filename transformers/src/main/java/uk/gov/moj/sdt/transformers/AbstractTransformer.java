@@ -40,6 +40,6 @@ public abstract class AbstractTransformer {
     /**
      * Constant for SDT service.
      */
-    public final static String SDT_SERVICE = "SDT";
+    public static final String SDT_SERVICE = "SDT";
 
 }

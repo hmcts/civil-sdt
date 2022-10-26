@@ -62,7 +62,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(GenericDaoTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericDaoTest.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.

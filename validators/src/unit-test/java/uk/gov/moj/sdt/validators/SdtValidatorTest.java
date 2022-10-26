@@ -61,7 +61,7 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SdtValidatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdtValidatorTest.class);
 
     /**
      * Mock Error messages cache.

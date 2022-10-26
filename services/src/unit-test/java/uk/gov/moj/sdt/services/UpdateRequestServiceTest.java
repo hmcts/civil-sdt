@@ -73,7 +73,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
      * Logger for debugging.
      */
     @SuppressWarnings("unused")
-    private final static Logger LOGGER = LoggerFactory.getLogger(UpdateRequestServiceTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateRequestServiceTest.class);
 
     /**
      * Mocked Individual Request Dao object.

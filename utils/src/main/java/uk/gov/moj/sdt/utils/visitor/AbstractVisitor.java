@@ -48,12 +48,12 @@ import java.util.Map;
  */
 public abstract class AbstractVisitor implements IVisitor {
 
-    private final static String CANNOT_FIND_MSG = "Cannot find visit method for target bean";
+    private static final String CANNOT_FIND_MSG = "Cannot find visit method for target bean";
 
     /**
      * Static logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractVisitor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractVisitor.class);
 
     /**
      * Map containing all registers {@link IVisitor}s which can be retrieved as needed by the

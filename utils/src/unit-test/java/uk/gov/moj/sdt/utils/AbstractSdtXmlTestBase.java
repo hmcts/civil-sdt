@@ -67,37 +67,37 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
      * Directory containing 'good' files against which new XML output is checked
      * when running XSLT transforms.
      */
-    public final static String XML_GOOD_DIR = "./test/xml/good";
+    public static final String XML_GOOD_DIR = "./test/xml/good";
 
     /**
      * Directory to which XML is written by tests when running XSLT transforms.
      */
-    public final static String XML_OUTPUT_DIR = "./test/xml/output";
+    public static final String XML_OUTPUT_DIR = "./test/xml/output";
 
     /**
      * Directory containing XML files used to validate XSD files.
      */
-    public final static String XML_VALIDATION_DIR = "src/unit-test/resources/xml/validation";
+    public static final String XML_VALIDATION_DIR = "src/unit-test/resources/xml/validation";
 
     /**
      * Directory containing XML files used to validate XSD files.
      */
-    public final static String XSD_DIR = "src/main/resources/xsd";
+    public static final String XSD_DIR = "src/main/resources/xsd";
 
     /**
      * Suffix for XML files.
      */
-    public final static String XML_FILE_SUFFIX = ".xml";
+    public static final String XML_FILE_SUFFIX = ".xml";
 
     /**
      * Suffix for file containing error messages.
      */
-    public final static String ERROR_FILE_SUFFIX = "ErrorMessages.txt";
+    public static final String ERROR_FILE_SUFFIX = "ErrorMessages.txt";
 
     /**
      * Logging object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtXmlTestBase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtXmlTestBase.class);
 
     /**
      * Flag to detect whether parsing error was encountered.

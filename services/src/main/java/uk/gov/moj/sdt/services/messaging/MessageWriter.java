@@ -55,12 +55,12 @@ public class MessageWriter implements IMessageWriter {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(MessageWriter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriter.class);
 
     /**
      * Default suffix for DLQ name.
      */
-    private final static String DLQ_SUFFIX = ".DLQ";
+    private static final String DLQ_SUFFIX = ".DLQ";
 
     /**
      * The last id used for a queued message.

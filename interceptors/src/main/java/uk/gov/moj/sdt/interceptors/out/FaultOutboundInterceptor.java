@@ -54,7 +54,7 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Logger object.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(FaultOutboundInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FaultOutboundInterceptor.class);
 
     /**
      * Test interceptor to prove concept.
