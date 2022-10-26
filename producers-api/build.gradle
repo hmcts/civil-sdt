@@ -1,6 +1,6 @@
 apply plugin: 'info.solidsoft.pitest'
 
-sourceSets.main.java.srcDirs += "src-gen"
+sourceSets.main.java.srcDirs += "src-gen.main"
 
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
