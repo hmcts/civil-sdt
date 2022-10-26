@@ -5,14 +5,15 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 
 
 /**
  * <p>Java class for updateResponseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="updateResponseType">
  *   &lt;complexContent>
@@ -24,12 +25,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "updateResponseType", propOrder = {
-    "status"
+        "status"
 })
 public class UpdateResponseType {
 
@@ -38,11 +37,9 @@ public class UpdateResponseType {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StatusType }
-     *     
+     *
+     * @return possible object is
+     * {@link StatusType }
      */
     public StatusType getStatus() {
         return status;
@@ -50,11 +47,9 @@ public class UpdateResponseType {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link StatusType }
      */
     public void setStatus(StatusType value) {
         this.status = value;

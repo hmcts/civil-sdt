@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: AbstractWsHandler.java 16915 2013-08-23 16:12:22Z agarwals $
  * $LastChangedRevision: 16915 $
  * $LastChangedDate: 2013-08-23 17:12:22 +0100 (Fri, 23 Aug 2013) $
@@ -41,45 +41,43 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 
 /**
  * Base class for web service handlers that provides common methods for workflow.
- * 
+ *
  * @author d276205
  */
-public abstract class AbstractWsHandler
-{
+public abstract class AbstractWsHandler {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractWsHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractWsHandler.class);
 
     /**
      * Handle given business exception by transforming into error type and setting on given response type.
-     * 
+     *
      * @param businessException business exception
-     * @param responseType response to be modified.
+     * @param responseType      response to be modified.
      */
     // CHECKSTYLE:OFF
-    protected void handleBusinessException (final IBusinessException businessException,
-                                            final AbstractResponseType responseType)
+    protected void handleBusinessException(final IBusinessException businessException,
+                                           final AbstractResponseType responseType)
     // CHECKSTYLE:ON
     {
-        LOGGER.error ("Business error - " + businessException);
+        LOGGER.error("Business error - {}", businessException);
 
-        final ErrorType errorType = new ErrorType ();
-        errorType.setCode (businessException.getErrorCode ());
-        errorType.setDescription (businessException.getErrorDescription ());
+        final ErrorType errorType = new ErrorType();
+        errorType.setCode(businessException.getErrorCode());
+        errorType.setDescription(businessException.getErrorDescription());
 
-        populateError (responseType.getStatus (), errorType);
+        populateError(responseType.getStatus(), errorType);
     }
 
     /**
      * Populates error and status details in given status type object.
-     * 
+     *
      * @param statusType status type.
-     * @param errorType error.
+     * @param errorType  error.
      */
-    private void populateError (final StatusType statusType, final ErrorType errorType)
-    {
-        statusType.setError (errorType);
-        statusType.setCode (StatusCodeType.ERROR);
+    private void populateError(final StatusType statusType, final ErrorType errorType) {
+        statusType.setError(errorType);
+        statusType.setCode(StatusCodeType.ERROR);
     }
 }

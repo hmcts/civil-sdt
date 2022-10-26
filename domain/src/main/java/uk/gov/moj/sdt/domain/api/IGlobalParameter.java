@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,63 +33,59 @@ package uk.gov.moj.sdt.domain.api;
 
 /**
  * Interface for all classes implementing {@link IGlobalParameter}.
- * 
+ *
  * @author Manoj Kulkarni.
- * 
  */
-public interface IGlobalParameter extends IDomainObject
-{
+public interface IGlobalParameter extends IDomainObject {
 
     /**
      * Get the parameter name.
-     * 
+     *
      * @return parameter name
      */
-    String getName ();
+    String getName();
 
     /**
      * Set the parameter name.
-     * 
+     *
      * @param name parameter name
      */
-    void setName (final String name);
+    void setName(final String name);
 
     /**
      * Get the parameter value.
-     * 
+     *
      * @return parameter value
      */
-    String getValue ();
+    String getValue();
 
     /**
      * Set the parameter value.
-     * 
+     *
      * @param value parameter value
      */
-    void setValue (final String value);
+    void setValue(final String value);
 
     /**
      * Get the parameter description.
-     * 
+     *
      * @return parameter description
      */
-    String getDescription ();
+    String getDescription();
 
     /**
      * Set the parameter description.
-     * 
+     *
      * @param description parameter description
      */
-    void setDescription (final String description);
+    void setDescription(final String description);
 
     /**
      * Enum of global parameter cache keys.
-     * 
+     *
      * @author d130680
-     * 
      */
-    public enum ParameterKey
-    {
+    public enum ParameterKey {
         /**
          * Duration in days, to retain data in the tables subject to a prescribed purge.
          */

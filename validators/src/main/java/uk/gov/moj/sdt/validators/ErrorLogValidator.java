@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ServiceTypeValidator.java 17075 2013-09-18 14:58:39Z kulkarnim $
  * $LastChangedRevision: 17075 $
  * $LastChangedDate: 2013-09-18 15:58:39 +0100 (Wed, 18 Sep 2013) $
@@ -36,23 +36,19 @@ import uk.gov.moj.sdt.validators.api.IErrorLogValidator;
 
 /**
  * Implementation of {@link ErrorLogValidator}.
- * 
+ *
  * @author Son Loi
- * 
  */
-public class ErrorLogValidator extends AbstractSdtValidator implements IErrorLogValidator
-{
+public class ErrorLogValidator extends AbstractSdtValidator implements IErrorLogValidator {
 
     /**
      * No-argument Constructor.
      */
-    public ErrorLogValidator ()
-    {
+    public ErrorLogValidator() {
     }
 
     @Override
-    public void visit (final IErrorLog errorLog, final ITree tree)
-    {
+    public void visit(final IErrorLog errorLog, final ITree tree) {
         // Do nothing since no validation is required
     }
 

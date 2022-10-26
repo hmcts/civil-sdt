@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,12 +35,10 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
 /**
  * Error message.
- * 
+ *
  * @author d130680
- * 
  */
-public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
-{
+public class ErrorMessage extends AbstractDomainObject implements IErrorMessage {
     /**
      * The error code.
      */
@@ -57,50 +55,43 @@ public class ErrorMessage extends AbstractDomainObject implements IErrorMessage
     private String errorDescription;
 
     @Override
-    public String getErrorCode ()
-    {
+    public String getErrorCode() {
         return errorCode;
     }
 
     @Override
-    public void setErrorCode (final String errorCode)
-    {
+    public void setErrorCode(final String errorCode) {
         this.errorCode = errorCode;
     }
 
     @Override
-    public String getErrorText ()
-    {
+    public String getErrorText() {
         return errorText;
     }
 
     @Override
-    public void setErrorText (final String errorText)
-    {
+    public void setErrorText(final String errorText) {
         this.errorText = errorText;
     }
 
     @Override
-    public String getErrorDescription ()
-    {
+    public String getErrorDescription() {
         return errorDescription;
     }
 
     @Override
-    public void setErrorDescription (final String errorDescription)
-    {
+    public void setErrorDescription(final String errorDescription) {
         this.errorDescription = errorDescription;
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", errorCode=").append (this.getErrorCode ());
-        sb.append (", errorText=").append (this.getErrorText ());
-        sb.append (", errorDescription=").append (this.getErrorDescription ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", errorCode=").append(this.getErrorCode());
+        sb.append(", errorText=").append(this.getErrorText());
+        sb.append(", errorDescription=").append(this.getErrorDescription());
+        sb.append("]");
+        return sb.toString();
     }
 }

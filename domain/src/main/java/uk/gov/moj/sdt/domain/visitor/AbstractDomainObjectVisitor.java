@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,11 +23,12 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
+
 package uk.gov.moj.sdt.domain.visitor;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -46,57 +47,50 @@ import uk.gov.moj.sdt.utils.visitor.api.ITree;
  * Implement default visit methods. These should never be called and therefore raise exceptions. In each case the
  * implementation of {@link IDomainObjectVisitor} should overload the one visit method it implements and the others
  * should not be called by that class.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor
-{
+public abstract class AbstractDomainObjectVisitor extends AbstractVisitor implements IDomainObjectVisitor {
+    private final static String METHOD_UNEXPECTED_MSG =
+            "Missing visitor implementation: this method should never be called.";
+
     @Override
-    public void visit (final IBulkCustomer bulkCustomer, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final IBulkCustomer bulkCustomer, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 
     @Override
-    public void visit (final IBulkSubmission bulkSubmission, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final IBulkSubmission bulkSubmission, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 
     @Override
-    public void visit (final IServiceType serviceType, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final IServiceType serviceType, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 
     @Override
-    public void visit (final ITargetApplication targetApplication, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final ITargetApplication targetApplication, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 
     @Override
-    public void visit (final IIndividualRequest individualRequest, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final IIndividualRequest individualRequest, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 
     @Override
-    public void visit (final ISubmitQueryRequest submitQueryRequest, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final ISubmitQueryRequest submitQueryRequest, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 
     @Override
-    public void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 
     @Override
-    public void visit (final IErrorLog errorLog, final ITree tree)
-    {
-        throw new UnsupportedOperationException ("Missing visitor implementation: this method should never be called.");
+    public void visit(final IErrorLog errorLog, final ITree tree) {
+        throw new UnsupportedOperationException(METHOD_UNEXPECTED_MSG);
     }
 }

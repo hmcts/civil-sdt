@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,48 +23,47 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
+
 package uk.gov.moj.sdt.utils.concurrent.api;
 
 import java.util.Map;
 
 /**
  * Interface for classes implementing {@link IInFlightMessage}.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public interface IInFlightMessage
-{
+public interface IInFlightMessage {
     /**
      * Getter for competingThreads map.
-     * 
+     *
      * @return competingThreads map.
      */
-    Map<Thread, Thread> getCompetingThreads ();
+    Map<Thread, Thread> getCompetingThreads();
 
     /**
      * Setter for competingThreads map.
-     * 
+     *
      * @param competingThreads new competingThreads map.
      */
-    void setCompetingThreads (final Map<Thread, Thread> competingThreads);
+    void setCompetingThreads(final Map<Thread, Thread> competingThreads);
 
     /**
      * Getter for sdtBulkReference.
-     * 
+     *
      * @return sdtBulkReference.
      */
-    String getSdtBulkReference ();
+    String getSdtBulkReference();
 
     /**
      * Setter for sdtBulkReference.
-     * 
+     *
      * @param sdtBulkReference new sdtBulkReference.
      */
-    void setSdtBulkReference (final String sdtBulkReference);
+    void setSdtBulkReference(final String sdtBulkReference);
 }

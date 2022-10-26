@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -39,40 +39,34 @@ import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 /**
  * Class to intercept outgoing messages to audit them.
- * 
+ *
  * @author d195274
- * 
  */
-public class PerformanceLoggerOutboundInterceptor extends AbstractServiceRequest
-{
+public class PerformanceLoggerOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Default constructor.
      */
-    public PerformanceLoggerOutboundInterceptor ()
-    {
-        super (Phase.PREPARE_SEND_ENDING);
-        addAfter (ServiceRequestOutboundInterceptor.class.getName ());
+    public PerformanceLoggerOutboundInterceptor() {
+        super(Phase.PREPARE_SEND_ENDING);
+        addAfter(ServiceRequestOutboundInterceptor.class.getName());
     }
 
     /**
      * Create instance of {@link PerformanceLoggerOutboundInterceptor}.
-     * 
+     *
      * @param phase the phase of the CXF interceptor chain.
      */
-    public PerformanceLoggerOutboundInterceptor (final String phase)
-    {
-        super (phase);
+    public PerformanceLoggerOutboundInterceptor(final String phase) {
+        super(phase);
     }
 
     @Override
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
+    public void handleMessage(final SoapMessage message) throws Fault {
         // Write message to 'performance.log' for this logging point.
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_10))
-        {
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_10,
+        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_10)) {
+            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_10,
                     "PerformanceLoggerOutboundInterceptor handling message",
-                    "\n\n\t" + PerformanceLogger.format (this.readOutputMessage (message)) + "\n");
+                    "\n\n\t" + PerformanceLogger.format(this.readOutputMessage(message)) + "\n");
         }
     }
 }

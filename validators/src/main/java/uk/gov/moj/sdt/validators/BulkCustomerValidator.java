@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
@@ -40,33 +40,28 @@ import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
 
 /**
  * Implementation of bulk customer validation.
- * 
+ *
  * @author Simon Holmes
- * 
  */
-public class BulkCustomerValidator extends AbstractSdtValidator implements IBulkCustomerValidator
-{
+public class BulkCustomerValidator extends AbstractSdtValidator implements IBulkCustomerValidator {
     /**
      * No-argument Constructor.
      */
-    public BulkCustomerValidator ()
-    {
+    public BulkCustomerValidator() {
     }
 
     @Override
-    public void visit (final IBulkCustomer bulkCustomer, final ITree tree)
-    {
+    public void visit(final IBulkCustomer bulkCustomer, final ITree tree) {
         final IBulkCustomer bulkCustomerFound =
-                getBulkCustomerDao ().getBulkCustomerBySdtId (bulkCustomer.getSdtCustomerId ());
+                getBulkCustomerDao().getBulkCustomerBySdtId(bulkCustomer.getSdtCustomerId());
 
-        if (bulkCustomerFound == null)
-        {
+        if (bulkCustomerFound == null) {
             // Setup values for placeholder in message and create business exception.
-            final List<String> parameters = new ArrayList<String> ();
-            parameters.add (Long.toString (bulkCustomer.getSdtCustomerId ()));
-            parameters.add (getContactDetails ());
+            final List<String> parameters = new ArrayList<>();
+            parameters.add(Long.toString(bulkCustomer.getSdtCustomerId()));
+            parameters.add(getContactDetails());
 
-            createValidationException (parameters, IErrorMessage.ErrorCode.CUST_ID_INVALID);
+            createValidationException(parameters, IErrorMessage.ErrorCode.CUST_ID_INVALID);
         }
     }
 }

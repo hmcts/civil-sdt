@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,7 +36,9 @@ import java.util.regex.Pattern;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-import org.joda.time.LocalDateTime;
+
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -51,51 +53,46 @@ import uk.gov.moj.sdt.utils.ServerHostName;
 
 /**
  * Class to intercept incoming messages and log them to the database.
- * 
+ *
  * <p>
  * Generates <code>ServiceDomain</code> domain objects and by means of a Thread Local <SdtContext> instance keeps track
  * of the persisted entity.
- * 
+ * <p>
  * Outbound message interceptors in the same thread can then access the persisted entity to update as required.
  * </p>
- * 
+ *
  * @author d195274
- * 
  */
-public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
-{
+public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
 
     /**
      * Logger for this class.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (ServiceRequestInboundInterceptor.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptor.class);
 
     /**
      * Create instance of {@link PerformanceLoggerInboundInterceptor}.
      */
-    public ServiceRequestInboundInterceptor ()
-    {
-        super (Phase.RECEIVE);
-        addAfter (XmlInboundInterceptor.class.getName ());
+    public ServiceRequestInboundInterceptor() {
+        super(Phase.RECEIVE);
+        addAfter(XmlInboundInterceptor.class.getName());
     }
 
     /**
      * Create instance of {@link PerformanceLoggerInboundInterceptor}.
-     * 
+     *
      * @param phase phase of the CXF interceptor chain in which this interceptor should run.
      */
-    public ServiceRequestInboundInterceptor (final String phase)
-    {
-        super (phase);
+    public ServiceRequestInboundInterceptor(final String phase) {
+        super(phase);
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
-    public void handleMessage (final SoapMessage soapMessage) throws Fault
-    {
-        LOGGER.debug ("ServiceRequestInboundInterceptor handle incoming message being processed");
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handleMessage(final SoapMessage soapMessage) throws Fault {
+        LOGGER.debug("ServiceRequestInboundInterceptor handle incoming message being processed");
 
-        logMessage ();
+        logMessage();
     }
 
     /**
@@ -104,43 +101,40 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
      * Incoming messages, once persisted, will generate an id which is stored on a ThreadLocal class to make it
      * available when the outbound service request interceptor runs.
      * </p>
-     * 
      */
-    private void logMessage ()
-    {
-        final IGenericDao serviceRequestDao = this.getServiceRequestDao ();
+    private void logMessage() {
+        final IGenericDao serviceRequestDao = this.getServiceRequestDao();
 
         // Get the raw XML.
-        final String rawXml = SdtContext.getContext ().getRawInXml ();
+        final String rawXml = SdtContext.getContext().getRawInXml();
 
         // Prepare log message for Hibernate.
-        final IServiceRequest serviceRequest = new ServiceRequest ();
-        serviceRequest.setBulkCustomerId (extractBulkCustomerId (rawXml));
-        serviceRequest.setRequestPayload (rawXml);
-        serviceRequest.setRequestDateTime (new LocalDateTime ());
-        serviceRequest.setRequestType (extractRequestType (rawXml));
+        final IServiceRequest serviceRequest = new ServiceRequest();
+        serviceRequest.setBulkCustomerId(extractBulkCustomerId(rawXml));
+        serviceRequest.setRequestPayload(rawXml);
+        serviceRequest.setRequestDateTime(new LocalDateTime());
+        serviceRequest.setRequestType(extractRequestType(rawXml));
 
         // Get the server Host Name
-        final String hostName = ServerHostName.getHostName ();
-        serviceRequest.setServerHostName (hostName);
+        final String hostName = ServerHostName.getHostName();
+        serviceRequest.setServerHostName(hostName);
 
-        serviceRequestDao.persist (serviceRequest);
+        serviceRequestDao.persist(serviceRequest);
 
         // Retrieve the id assigned in by Hibernate and store it for the outbound service interceptor to use later.
-        final Long serviceRequestID = serviceRequest.getId ();
-        SdtContext.getContext ().setServiceRequestId (serviceRequestID);
+        final Long serviceRequestID = serviceRequest.getId();
+        SdtContext.getContext().setServiceRequestId(serviceRequestID);
     }
 
     /**
      * Retrieve the Request Type from the inbound xmlMessage. Assumes inbound message has already been setup by the
      * XmlInboundInterceptor.
-     * 
+     *
      * @param xml raw XML from which to extract bulk customer id.
      * @return the request type (for example 'bulkRequest')
      */
-    private String extractRequestType (final String xml)
-    {
-        return extractNodeAttributeValue ("request", "requestType", xml);
+    private String extractRequestType(final String xml) {
+        return extractNodeAttributeValue("request", "requestType", xml);
     }
 
     /**
@@ -149,13 +143,12 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
      * <p>
      * Always available as part of a submission
      * </p>
-     * 
+     *
      * @param xml raw XML from which to extract bulk customer id.
      * @return the bulk customer id
      */
-    private String extractBulkCustomerId (final String xml)
-    {
-        return extractNodeValue ("sdtCustomerId", xml);
+    private String extractBulkCustomerId(final String xml) {
+        return extractNodeValue("sdtCustomerId", xml);
     }
 
     /**
@@ -164,13 +157,12 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
      * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses a regular
      * expression to locate and extract a String.
      * </p>
-     * 
+     *
      * @param nodeName the name of an xml node from which to extract value.
-     * @param xml raw XML from which to extract bulk customer id.
+     * @param xml      raw XML from which to extract bulk customer id.
      * @return the content of the node or null
      */
-    private String extractNodeValue (final String nodeName, final String xml)
-    {
+    private String extractNodeValue(final String nodeName, final String xml) {
         String nodeValue = "";
 
         // Find given tag and extract its value.
@@ -186,18 +178,16 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         // Capture:
         // tag value
         final Pattern pattern =
-                Pattern.compile ("<[\\S&&[^>/]]*?" + nodeName + "[^>]*?>(.*?)</[\\S&&[^>/]]*?" + nodeName);
-        final Matcher matcher = pattern.matcher (xml);
+                Pattern.compile("<[\\S&&[^>/]]*?" + nodeName + "[^>]*?>(.*?)</[\\S&&[^>/]]*?" + nodeName);
+        final Matcher matcher = pattern.matcher(xml);
 
-        if (matcher.find ())
-        {
-            if (LOGGER.isDebugEnabled ())
-            {
-                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+        if (matcher.find()) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Found matching group[" + matcher.group() + "]");
             }
 
             // Copy the match.
-            nodeValue = matcher.group (1);
+            nodeValue = matcher.group(1);
         }
 
         return nodeValue;
@@ -209,14 +199,13 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
      * This method does not use the whole framework of generating a DOM and parsing that. Instead it uses a regular
      * expression to locate and extract a String.
      * </p>
-     * 
-     * @param nodeName the name of an xml node from which to extract value.
+     *
+     * @param nodeName      the name of an xml node from which to extract value.
      * @param attributeName the name of the attribute from which to extract value.
-     * @param xml raw XML from which to extract bulk customer id.
+     * @param xml           raw XML from which to extract bulk customer id.
      * @return the content of the node or null
      */
-    private String extractNodeAttributeValue (final String nodeName, final String attributeName, final String xml)
-    {
+    private String extractNodeAttributeValue(final String nodeName, final String attributeName, final String xml) {
         String attributeValue = "";
 
         // Find given node and extract ivalue of named attribute.
@@ -232,18 +221,16 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest
         // Capture:
         // tag value
         final Pattern pattern =
-                Pattern.compile ("<[\\S&&[^>/]]*?" + nodeName + ".*?" + attributeName + "=[\"\']([^>\"\']*?)[\"\']");
-        final Matcher matcher = pattern.matcher (xml);
+                Pattern.compile("<[\\S&&[^>/]]*?" + nodeName + ".*?" + attributeName + "=[\"\']([^>\"\']*?)[\"\']");
+        final Matcher matcher = pattern.matcher(xml);
 
-        if (matcher.find ())
-        {
-            if (LOGGER.isDebugEnabled ())
-            {
-                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+        if (matcher.find()) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Found matching group[" + matcher.group() + "]");
             }
 
             // Copy the match.
-            attributeValue = matcher.group (1);
+            attributeValue = matcher.group(1);
         }
 
         return attributeValue;

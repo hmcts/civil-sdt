@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -46,12 +46,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 
 /**
  * Unit tests for SubmitQueryTransformer.
- * 
+ *
  * @author d130680
- * 
  */
-public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase
-{
+public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Submit query transformer.
      */
@@ -60,19 +58,15 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests ()
-    {
+    public void setUpLocalTests() {
         Constructor<SubmitQueryTransformer> c;
-        try
-        {
+        try {
             // Make the constructor visible so we can get a new instance of it.
-            c = SubmitQueryTransformer.class.getDeclaredConstructor ();
-            c.setAccessible (true);
-            transformer = c.newInstance ();
-        }
-        catch (final Exception e)
-        {
-            e.printStackTrace ();
+            c = SubmitQueryTransformer.class.getDeclaredConstructor();
+            c.setAccessible(true);
+            transformer = c.newInstance();
+        } catch (final Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -81,28 +75,27 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase
      * Test the transformation from jaxb to domain object.
      */
     @Test
-    public void testTransformJaxbToDomain ()
-    {
+    public void testTransformJaxbToDomain() {
 
         // Set up the jaxb object to transform
-        final SubmitQueryRequestType jaxb = new SubmitQueryRequestType ();
+        final SubmitQueryRequestType jaxb = new SubmitQueryRequestType();
         final long sdtCustomerId = 123;
         final String targetApplicationId = "mcol";
 
         // Set the header
-        final HeaderType header = new HeaderType ();
-        header.setSdtCustomerId (sdtCustomerId);
-        header.setTargetApplicationId (targetApplicationId);
-        jaxb.setHeader (header);
+        final HeaderType header = new HeaderType();
+        header.setSdtCustomerId(sdtCustomerId);
+        header.setTargetApplicationId(targetApplicationId);
+        jaxb.setHeader(header);
 
         // Call the transformer
-        final ISubmitQueryRequest domain = transformer.transformJaxbToDomain (jaxb);
+        final ISubmitQueryRequest domain = transformer.transformJaxbToDomain(jaxb);
 
         // Test the jaxb object has been transformed domain object
-        Assert.assertEquals ("SDT Customer ID does not match", sdtCustomerId, domain.getBulkCustomer ()
-                .getSdtCustomerId ());
-        Assert.assertEquals ("Target Application ID does not match", targetApplicationId, domain
-                .getTargetApplication ().getTargetApplicationCode ());
+        Assert.assertEquals("SDT Customer ID does not match", sdtCustomerId, domain.getBulkCustomer()
+                .getSdtCustomerId());
+        Assert.assertEquals("Target Application ID does not match", targetApplicationId, domain
+                .getTargetApplication().getTargetApplicationCode());
 
     }
 
@@ -110,28 +103,27 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase
      * Test the from transformation domain to jaxb object.
      */
     @Test
-    public void testTransformDomainToJaxb ()
-    {
+    public void testTransformDomainToJaxb() {
         // Set up the domain object to transform
         final int sdtCustomerId = 123;
         final int resultCount = 15;
 
         // Create the domain object
-        final ISubmitQueryRequest domain = new SubmitQueryRequest ();
+        final ISubmitQueryRequest domain = new SubmitQueryRequest();
 
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setSdtCustomerId (sdtCustomerId);
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setSdtCustomerId(sdtCustomerId);
 
-        domain.setBulkCustomer (bulkCustomer);
-        domain.setResultCount (resultCount);
+        domain.setBulkCustomer(bulkCustomer);
+        domain.setResultCount(resultCount);
 
         // Call the transformer
-        final SubmitQueryResponseType jaxb = transformer.transformDomainToJaxb (domain);
+        final SubmitQueryResponseType jaxb = transformer.transformDomainToJaxb(domain);
 
         // Test the domain object has been transformed to a jaxb object
-        Assert.assertEquals ("SDT Customer ID does not match", sdtCustomerId, jaxb.getSdtCustomerId ());
-        Assert.assertEquals ("Result count does not match", resultCount, jaxb.getResultCount ().longValue ());
-        Assert.assertEquals ("SDT Service does not match", AbstractTransformer.SDT_SERVICE, jaxb.getSdtService ());
-        Assert.assertNotNull ("ResultsType should not be null", jaxb.getResults ());
+        Assert.assertEquals("SDT Customer ID does not match", sdtCustomerId, jaxb.getSdtCustomerId());
+        Assert.assertEquals("Result count does not match", resultCount, jaxb.getResultCount().longValue());
+        Assert.assertEquals("SDT Service does not match", AbstractTransformer.SDT_SERVICE, jaxb.getSdtService());
+        Assert.assertNotNull("ResultsType should not be null", jaxb.getResults());
     }
 }

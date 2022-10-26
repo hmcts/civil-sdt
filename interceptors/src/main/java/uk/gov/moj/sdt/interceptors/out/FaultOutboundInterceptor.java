@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -45,75 +45,67 @@ import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 /**
  * Interceptor class which handles faults.
- * 
+ * <p>
  * Stores original error message.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class FaultOutboundInterceptor extends AbstractServiceRequest
-{
+public class FaultOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (FaultOutboundInterceptor.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(FaultOutboundInterceptor.class);
 
     /**
      * Test interceptor to prove concept.
      */
-    public FaultOutboundInterceptor ()
-    {
-        super (Phase.MARSHAL);
+    public FaultOutboundInterceptor() {
+        super(Phase.MARSHAL);
 
         // Assume that the interceptor will run after the default SOAP interceptor.
-        getAfter ().add (Soap11FaultOutInterceptor.class.getName ());
-        getAfter ().add (Soap12FaultOutInterceptor.class.getName ());
+        getAfter().add(Soap11FaultOutInterceptor.class.getName());
+        getAfter().add(Soap12FaultOutInterceptor.class.getName());
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handleMessage(final SoapMessage message) throws Fault {
         // Get the fault detected during SOAP validation.
-        final Fault fault = (Fault) message.getContent (Exception.class);
+        final Fault fault = (Fault) message.getContent(Exception.class);
 
         // Show the error of the original exception instead of the unhelpful CXF fault message.
-        final Throwable t = getOriginalCause (fault.getCause ());
+        final Throwable t = getOriginalCause(fault.getCause());
         String msg = "Error cause unknown";
-        if (null != t)
-        {
-            msg = t.getMessage ();
+        if (null != t) {
+            msg = t.getMessage();
         }
 
-        final String errorMsg = "Error encounted: " + fault.getFaultCode () + ": " + fault.getMessage () +
+        final String errorMsg = "Error encounted: " + fault.getFaultCode() + ": " + fault.getMessage() +
                 ", sending this message in SOAP fault: " + msg;
-        LOGGER.error (errorMsg);
-        persistEnvelope (errorMsg);
+        LOGGER.error(errorMsg);
+        persistEnvelope(errorMsg);
 
         // Write message to 'performance.log' for this logging point.
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_11))
-        {
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_11,
+        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_11)) {
+            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_11,
                     "FaultOutboundInterceptor handling message",
-                    "\n\n\tmessage=" + "Error encounted: " + fault.getFaultCode () + ": " + fault.getMessage () +
-                    ", sending this message in SOAP fault: " + msg + "\n");
+                    "\n\n\tmessage=" + "Error encounted: " + fault.getFaultCode() + ": " + fault.getMessage() +
+                            ", sending this message in SOAP fault: " + msg + "\n");
         }
 
-        fault.setMessage (msg);
+        fault.setMessage(msg);
     }
 
     /**
      * Method to retrieve the original error message. This method is recursive.
-     * 
+     *
      * @param t the fault
      * @return the original wrapped error
      */
-    private Throwable getOriginalCause (final Throwable t)
-    {
-        if (null == t || null == t.getCause () || t.getCause ().equals (t))
-        {
+    private Throwable getOriginalCause(final Throwable t) {
+        if (null == t || null == t.getCause() || t.getCause().equals(t)) {
             return t;
         }
-        return getOriginalCause (t.getCause ());
+        return getOriginalCause(t.getCause());
     }
 }

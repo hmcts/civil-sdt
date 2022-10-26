@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,350 +23,350 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.mbeans.api;
 
 /**
  * Interface for all classes implementing {@link CopyOfISdtMetricsMBean}.
- * 
+ *
  * @author Robin Compston
  */
-public interface ISdtMetricsMBean
-{
+public interface ISdtMetricsMBean {
     /**
      * Get the current time.
-     * 
+     *
      * @return the formatted current time.
      */
-    String getTime ();
+    String getTime();
 
     /**
      * Get the current OS stats for CPU and memory.
-     * 
+     *
      * @return String containing OS stats.
      */
-    String getOsStats ();
+    String getOsStats();
 
     /**
      * Get the number of active customers using the system. Public because needed by handlers to reset unique customer
      * map.
-     * 
+     *
      * @return the number of active customers using the system.
      */
-    long getActiveBulkCustomers ();
+    long getActiveBulkCustomers();
 
     /**
      * Get summary of bulk submit statistics.
-     * 
+     *
      * @return summary of bulk submit statistics.
      */
-    String getBulkSubmitStats ();
+    String getBulkSubmitStats();
 
     /**
      * Get summary of bulk feedback statistics.
-     * 
+     *
      * @return summary of bulk feedback statistics.
      */
-    String getBulkFeedbackStats ();
+    String getBulkFeedbackStats();
 
     /**
      * Get summary of submit query statistics.
-     * 
+     *
      * @return summary of submit query statistics.
      */
-    String getSubmitQueryStats ();
+    String getSubmitQueryStats();
 
     /**
      * Get summary of status statistics.
-     * 
+     *
      * @return summary of status update statistics.
      */
-    String getStatusUpdateStats ();
+    String getStatusUpdateStats();
 
     /**
      * Get the domain objects statistics.
-     * 
+     *
      * @return the domain objects statistics.
      */
-    String getDomainObjectsStats ();
+    String getDomainObjectsStats();
 
     /**
      * Get the database call statistics.
-     * 
+     *
      * @return the database statistics.
      */
-    String getDatabaseCallsStats ();
+    String getDatabaseCallsStats();
 
     /**
      * Get the database read statistics.
-     * 
+     *
      * @return the database statistics.
      */
-    String getDatabaseReadsStats ();
+    String getDatabaseReadsStats();
 
     /**
      * Get the database write statistics.
-     * 
+     *
      * @return the database statistics.
      */
-    String getDatabaseWritesStats ();
+    String getDatabaseWritesStats();
 
     /**
      * Get the active customers statistics.
-     * 
+     *
      * @return the active customers statistics.
      */
-    String getActiveCustomersStats ();
+    String getActiveCustomersStats();
 
     /**
      * Get the request queue statistics.
-     * 
+     *
      * @return the request queue statistics.
      */
-    String getRequestQueueStats ();
+    String getRequestQueueStats();
 
     /**
      * Get the target application response statistics.
-     * 
+     *
      * @return the target application response statistics.
      */
-    String getTargetAppStats ();
+    String getTargetAppStats();
 
     /**
      * Get the error and exception statistics.
-     * 
+     *
      * @return the error and exception statistics.
      */
-    String getErrorStats ();
+    String getErrorStats();
 
     /**
      * Get the last references assigned.
-     * 
+     *
      * @return the last references assigned.
      */
-    String getLastRefStats ();
+    String getLastRefStats();
 
     /**
      * Get the current active performance logging string.
-     * 
+     *
      * @return the current active performance logging string.
      */
-    String getPerformanceLoggingString ();
+    String getPerformanceLoggingString();
 
     /**
      * Get the current active performance logging flags.
-     * 
+     *
      * @return the current active performance logging flags.
      */
-    short getPerformanceLoggingFlags ();
+    short getPerformanceLoggingFlags();
 
     /**
      * Reset all metrics to initial value.
      */
-    void reset ();
+    void reset();
 
     /**
      * Set the value of the performance logging flags.
-     * 
+     *
      * @param performanceLoggingFlags new value of performance logging flags.
      */
-    void setPerformanceLoggingFlags (short performanceLoggingFlags);
+    void setPerformanceLoggingFlags(short performanceLoggingFlags);
 
     /**
      * Increment count of bulk submits.
      */
-    void upBulkSubmitCount ();
+    void upBulkSubmitCount();
 
     /**
      * Add latest bulk submit time to total.
-     * 
+     *
      * @param bulkSubmitTime time to add to total bulk submit time.
      */
-    void addBulkSubmitTime (final long bulkSubmitTime);
+    void addBulkSubmitTime(final long bulkSubmitTime);
 
     /**
      * Increment count of bulk Feedbacks.
      */
-    void upBulkFeedbackCount ();
+    void upBulkFeedbackCount();
 
     /**
      * Add latest bulk Feedback time to total.
-     * 
+     *
      * @param bulkFeedbackTime time to add to total bulk feedback time.
      */
-    void addBulkFeedbackTime (final long bulkFeedbackTime);
+    void addBulkFeedbackTime(final long bulkFeedbackTime);
 
     /**
      * Increment count of submit querys.
      */
-    void upSubmitQueryCount ();
+    void upSubmitQueryCount();
 
     /**
      * Add latest submit query time to total.
-     * 
+     *
      * @param submitQueryTime time to add to total submit query time.
      */
-    void addSubmitQueryTime (final long submitQueryTime);
+    void addSubmitQueryTime(final long submitQueryTime);
 
     /**
      * Increment count of status updates.
      */
-    void upStatusUpdateCount ();
+    void upStatusUpdateCount();
 
     /**
      * Add latest status update time to total.
-     * 
+     *
      * @param statusUpdateTime time to add to total status update time.
      */
-    void addStatusUpdateTime (final long statusUpdateTime);
+    void addStatusUpdateTime(final long statusUpdateTime);
 
     /**
      * Increment the domain objects count.
      */
-    void upDomainObjectsCount ();
+    void upDomainObjectsCount();
 
     /**
      * Decrement the domain objects count.
      */
-    void downDomainObjectsCount ();
+    void downDomainObjectsCount();
 
     /**
      * Increment the database reads count.
      */
-    void upDatabaseReadsCount ();
+    void upDatabaseReadsCount();
 
     /**
      * Add to the total database reads time.
-     * 
+     *
      * @param databaseReadsTime time to add to database reads time.
      */
-    void addDatabaseReadsTime (final long databaseReadsTime);
+    void addDatabaseReadsTime(final long databaseReadsTime);
 
     /**
      * Increment the database writes count.
      */
-    void upDatabaseWritesCount ();
+    void upDatabaseWritesCount();
 
     /**
      * Add to the total database writes time.
-     * 
+     *
      * @param databaseWritesTime time to add to database writes time.
      */
-    void addDatabaseWritesTime (final long databaseWritesTime);
+    void addDatabaseWritesTime(final long databaseWritesTime);
 
     /**
      * Increment the active bulk customers count.
      */
-    void upActiveBulkCustomers ();
+    void upActiveBulkCustomers();
 
     /**
      * Increment the request count.
      */
-    void upRequestCount ();
+    void upRequestCount();
 
     /**
      * Increment the queued request count.
      */
-    void upRequestQueueCount ();
+    void upRequestQueueCount();
 
     /**
      * Add latest request queued time to total.
-     * 
+     *
      * @param requestQueuedTime latest request queued time to total.
      */
-    void addRequestQueueTime (final long requestQueuedTime);
+    void addRequestQueueTime(final long requestQueuedTime);
 
     /**
      * Increment request length.
      */
-    void upRequestQueueLength ();
+    void upRequestQueueLength();
 
     /**
      * Decrement request length.
      */
-    void decrementRequestQueueLength ();
+    void decrementRequestQueueLength();
 
     /**
      * Increment the request requeues count.
      */
-    void upRequestRequeues ();
+    void upRequestRequeues();
 
     /**
      * Add latest target application response time to total.
-     * 
+     *
      * @param targetAppResponseTime latest target application response.
      */
-    void addTargetAppResponseTime (final long targetAppResponseTime);
+    void addTargetAppResponseTime(final long targetAppResponseTime);
 
     /**
      * Increment the number of calls to target applications.
      */
-    void upTargetAppCallCount ();
+    void upTargetAppCallCount();
 
     /**
      * Increment the number of times the target application was unavailable.
      */
-    void upTargetAppUnavailable ();
+    void upTargetAppUnavailable();
 
     /**
      * Increment the target application miscellaneous errors.
      */
-    void upTargetAppMiscErrors ();
+    void upTargetAppMiscErrors();
 
     /**
      * Increment the target application SOAP errors.
      */
-    void upTargetAppSoapErrors ();
+    void upTargetAppSoapErrors();
 
     /**
      * Increment the target application response timeout count.
      */
-    void upTargetAppResponseTimeouts ();
+    void upTargetAppResponseTimeouts();
 
     /**
      * Increment the XML validation failure count.
      */
-    void upXmlValidationFailureCount ();
+    void upXmlValidationFailureCount();
 
     /**
      * Increment the business exception count.
      */
-    void upBusinessExceptionCount ();
+    void upBusinessExceptionCount();
 
     /**
      * Set the last business exception encountered.
-     * 
+     *
      * @param lastBusinessException the last business exception.
      */
-    void setLastBusinessException (final String lastBusinessException);
+    void setLastBusinessException(final String lastBusinessException);
 
     /**
      * Set the last bulk submit reference assigned by the system.
-     * 
+     *
      * @param lastBulkSubmitRef the last bulk submit reference assigned.
      */
-    void setLastBulkSubmitRef (final String lastBulkSubmitRef);
+    void setLastBulkSubmitRef(final String lastBulkSubmitRef);
 
     /**
      * Set the last bulk request reference assigned by the system.
-     * 
+     *
      * @param lastBulkRequestRef the last bulk request reference assigned.
      */
-    void setLastBulkRequestRef (final String lastBulkRequestRef);
+    void setLastBulkRequestRef(final String lastBulkRequestRef);
 
     /**
      * Count the number of distinct web customers using the system since last reset.
-     * 
+     *
      * @param customer the unique identifier of the customer who called the web service.
      */
-    void updateBulkCustomerCount (final String customer);
+    void updateBulkCustomerCount(final String customer);
 
     /**
      * Write current value of metrics to a time-stamped file.
      */
-    void dumpMetrics ();
+    void dumpMetrics();
 }

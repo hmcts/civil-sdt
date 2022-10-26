@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -39,12 +39,10 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Tests for {@link uk.gov.moj.sdt.interceptors.enricher.GenericEnricher}.
- * 
+ *
  * @author d276205
- * 
  */
-public class GenericEnricherTest extends AbstractSdtUnitTestBase
-{
+public class GenericEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Subject for test.
      */
@@ -54,41 +52,38 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase
      * Setup.
      */
     @Before
-    public void setUp ()
-    {
-        enricher = new GenericEnricher ();
+    public void setUp() {
+        enricher = new GenericEnricher();
     }
 
     /**
      * Test submit query enrichment.
      */
     @Test
-    public void testSubmitQueryEnrichmentSuccess ()
-    {
-        enricher.setInsertionTag ("results");
-        enricher.setParentTag ("submitQueryResponse");
+    public void testSubmitQueryEnrichmentSuccess() {
+        enricher.setInsertionTag("results");
+        enricher.setParentTag("submitQueryResponse");
 
-        SdtContext.getContext ().setRawOutXml ("<record></record>");
-        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
+        SdtContext.getContext().setRawOutXml("<record></record>");
+        final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected =
                 "<ns1:submitQueryResponse><ns2:results>" + "<record></record></ns2:results></ns1:submitQueryResponse>";
-        Assert.assertEquals (expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     /**
      * Test submit query enrichment where the insertion tag does not have a preceding namespace.
      */
     @Test
-    public void testSubmitQueryEnrichmentNoNamespaceSuccess ()
-    {
-        enricher.setInsertionTag ("results");
-        enricher.setParentTag ("submitQueryResponse");
+    public void testSubmitQueryEnrichmentNoNamespaceSuccess() {
+        enricher.setInsertionTag("results");
+        enricher.setParentTag("submitQueryResponse");
 
-        SdtContext.getContext ().setRawOutXml ("<record></record>");
-        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><results/></ns1:submitQueryResponse>");
+        SdtContext.getContext().setRawOutXml("<record></record>");
+        final String result = enricher.enrichXml("<ns1:submitQueryResponse><results/></ns1:submitQueryResponse>");
         final String expected =
                 "<ns1:submitQueryResponse><results>" + "<record></record></results></ns1:submitQueryResponse>";
-        Assert.assertEquals (expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     /**
@@ -96,23 +91,21 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase
      */
     @Test
     // CHECKSTYLE:OFF
-            public
-            void testIndRequestEnrichment ()
-    {
-        enricher.setInsertionTag ("targetAppDetail");
-        enricher.setParentTag ("individualRequest");
+    public void testIndRequestEnrichment() {
+        enricher.setInsertionTag("targetAppDetail");
+        enricher.setParentTag("individualRequest");
 
-        SdtContext.getContext ().setRawOutXml ("<claim></claim>");
+        SdtContext.getContext().setRawOutXml("<claim></claim>");
 
         final String requestHeader =
                 "<ind:header><ind:sdtRequestId>?</ind:sdtRequestId><ind:targetAppCustomerId>?</ind:targetAppCustomerId><ind:requestType>?</ind:requestType></ind:header>";
         final String result =
-                enricher.enrichXml ("<ns1:individualRequest>" + requestHeader +
+                enricher.enrichXml("<ns1:individualRequest>" + requestHeader +
                         "<ind:targetAppDetail/></ns1:individualRequest>");
         final String expected =
                 "<ns1:individualRequest>" + requestHeader + "<ind:targetAppDetail>" +
                         "<claim></claim></ind:targetAppDetail></ns1:individualRequest>";
-        Assert.assertEquals (expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     // CHECKSTYLE:ON
@@ -122,10 +115,9 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase
      * escaped.
      */
     @Test
-    public void testEscapeUnescapedCharacters ()
-    {
+    public void testEscapeUnescapedCharacters() {
         final String result =
-                enricher.escapeUnescapedCharacters ('$', "$abcd$$abcd\\$$abcd$\\$abcd\\r\\\\abcd\\\\$abcd$");
-        Assert.assertEquals ("\\$abcd\\$\\$abcd\\$\\$abcd\\$\\$abcd\\r\\\\abcd\\\\\\$abcd\\$", result);
+                enricher.escapeUnescapedCharacters('$', "$abcd$$abcd\\$$abcd$\\$abcd\\r\\\\abcd\\\\$abcd$");
+        Assert.assertEquals("\\$abcd\\$\\$abcd\\$\\$abcd\\$\\$abcd\\r\\\\abcd\\\\\\$abcd\\$", result);
     }
 }

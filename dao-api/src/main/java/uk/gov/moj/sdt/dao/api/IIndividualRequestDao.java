@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -39,32 +39,31 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Interface for all classes implementing {@link IIndividualRequestDao}.
- * 
+ *
  * @author d130680
  */
-public interface IIndividualRequestDao extends IGenericDao
-{
+public interface IIndividualRequestDao extends IGenericDao {
     /**
      * Check the customer reference is unique across data retention period. Return the individual request if the check
      * fails or null if it succeeds.
-     * 
-     * @param bulkCustomer bulk customer
+     *
+     * @param bulkCustomer      bulk customer
      * @param customerReference customer reference
-     * @param dataRetention the data retention period to use
+     * @param dataRetention     the data retention period to use
      * @return null if the individual request is unique or the non unique individual request object
      * @throws DataAccessException Hibernate exception
      */
-    IIndividualRequest getIndividualRequest (final IBulkCustomer bulkCustomer, final String customerReference,
-                                             final int dataRetention) throws DataAccessException;
+    IIndividualRequest getIndividualRequest(final IBulkCustomer bulkCustomer, final String customerReference,
+                                            final int dataRetention) throws DataAccessException;
 
     /**
      * Returns the individual request object for the given Sdt Reference Id.
-     * 
+     *
      * @param sdtReferenceId the unique SDT reference Id
      * @return the Individual Request object associated with the Sdt reference Id.
      * @throws DataAccessException Hibernate exception
      */
-    IIndividualRequest getRequestBySdtReference (final String sdtReferenceId) throws DataAccessException;
+    IIndividualRequest getRequestBySdtReference(final String sdtReferenceId) throws DataAccessException;
 
     /**
      * Returns a list of individual requests that are not yet processed by
@@ -72,12 +71,12 @@ public interface IIndividualRequestDao extends IGenericDao
      * a. the forwarding attempts greater than the max allowed (passed as parameter to the method)
      * b. the status of individual request is Forwarded.
      * c. the dead letter flag is false.
-     * 
+     *
      * @param maxAllowedAttempts - the maximum number of forwarding attempts allowed.
      * @return list of individual requests excluding any dead letter requests.
      * @throws DataAccessException hibernate exception
      */
-    List<IIndividualRequest> getPendingIndividualRequests (final int maxAllowedAttempts) throws DataAccessException;
+    List<IIndividualRequest> getPendingIndividualRequests(final int maxAllowedAttempts) throws DataAccessException;
 
     /**
      * Returns a list of individual requests that have been received and never forwarded with zero or more attempts to
@@ -86,11 +85,11 @@ public interface IIndividualRequestDao extends IGenericDao
      * system. Manual intervention is needed to requeue them. Currently this method is called only by the mbean
      * responsible for manually requesting the forwarding of rejected messages.
      * Any requests that are flagged as dead letter are ignored.
-     * 
+     *
      * @param minimumAgeInMinutes - the minimum number of minutes since a message was updated before it will be
-     *            requeued.
+     *                            requeued.
      * @return list of individual requests excluding the dead letter requests.
      * @throws DataAccessException hibernate exception
      */
-    List<IIndividualRequest> getStaleIndividualRequests (final int minimumAgeInMinutes) throws DataAccessException;
+    List<IIndividualRequest> getStaleIndividualRequests(final int minimumAgeInMinutes) throws DataAccessException;
 }

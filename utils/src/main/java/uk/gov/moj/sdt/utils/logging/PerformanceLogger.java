@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,217 +23,206 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.logging;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
 
 /**
+ * Performance Logger.
+ *
  * @author Robin Compston
- * 
  */
-public final class PerformanceLogger
-{
+public final class PerformanceLogger {
     // CHECKSTYLE:OFF
     /**
      * Inbound interceptor.
      */
-    public static final Long LOGGING_POINT_1 = 1L << 0;
+    public final static Long LOGGING_POINT_1 = 1L << 0;
 
     /**
      * Indicates the receipt of new web service message.
      */
-    public static final Long LOGGING_POINT_2 = 1L << 1;
+    public final static Long LOGGING_POINT_2 = 1L << 1;
 
     /**
      * Call to database.
      */
-    public static final Long LOGGING_POINT_3 = 1L << 2;
+    public final static Long LOGGING_POINT_3 = 1L << 2;
 
     /**
      * Response from database.
      */
-    public static final Long LOGGING_POINT_4 = 1L << 3;
+    public final static Long LOGGING_POINT_4 = 1L << 3;
 
     /**
      * Enqueue individual message.
      */
-    public static final Long LOGGING_POINT_5 = 1L << 4;
+    public final static Long LOGGING_POINT_5 = 1L << 4;
 
     /**
      * Dequeue individual message.
      */
-    public static final Long LOGGING_POINT_6 = 1L << 5;
+    public final static Long LOGGING_POINT_6 = 1L << 5;
 
     /**
      * Forward request to target application.
      */
-    public static final Long LOGGING_POINT_7 = 1L << 6;
+    public final static Long LOGGING_POINT_7 = 1L << 6;
 
     /**
      * Response from target application.
      */
-    public static final Long LOGGING_POINT_8 = 1L << 7;
+    public final static Long LOGGING_POINT_8 = 1L << 7;
 
     /**
      * Server response to web service.
      */
-    public static final Long LOGGING_POINT_9 = 1L << 8;
+    public final static Long LOGGING_POINT_9 = 1L << 8;
 
     /**
      * Outbound interceptor.
      */
-    public static final Long LOGGING_POINT_10 = 1L << 9;
+    public final static Long LOGGING_POINT_10 = 1L << 9;
 
     /**
      * Fault interceptor.
      */
-    public static final Long LOGGING_POINT_11 = 1L << 10;
+    public final static Long LOGGING_POINT_11 = 1L << 10;
 
     /**
      * Start tree walker.
      */
-    public static final Long LOGGING_POINT_12 = 1L << 11;
+    public final static Long LOGGING_POINT_12 = 1L << 11;
 
     /**
      * End tree walker.
      */
-    public static final Long LOGGING_POINT_13 = 1L << 12;
+    public final static Long LOGGING_POINT_13 = 1L << 12;
 
     /**
      * Turn on detail for all other logging points.
      */
-    public static final Long LOGGING_POINT_16 = 1L << 15;
+    public final static Long LOGGING_POINT_16 = 1L << 15;
 
     // CHECKSTYLE:ON
 
     /**
      * Logging Flag value when all flags are enabled.
      */
-    public static final long ALL_FLAGS_ENABLED = Long.MAX_VALUE;
+    public final static long ALL_FLAGS_ENABLED = Long.MAX_VALUE;
 
     /**
      * Number of bit we want to see in log (least significant).
      */
-    public static final int FLAG_BIT_LENGTH = 16;
+    public final static int FLAG_BIT_LENGTH = 16;
 
     /**
      * Logging object. Note its name must not be in the same hierarchy as other SDT loggers so that it can be turned off
      * and on independently. Note also, this is a log4j logger not an SLF4J logger.
      */
-    private static final Logger LOGGER = LogManager.getLogger ("sdt.performance");
+    private final static Logger LOGGER = LogManager.getLogger("sdt.performance");
 
     /**
      * Length of a formatted line.
      */
-    private static final int LINE_LENGTH = 16;
+    private final static int LINE_LENGTH = 16;
 
     /**
      * Length of a formatted line.
      */
-    private static final int LABEL_LENGTH = 6;
+    private final static int LABEL_LENGTH = 6;
 
     /**
      * Length of block of ascii.
      */
-    private static final int ASCII_BLOCK = 4;
+    private final static int ASCII_BLOCK = 4;
 
     /**
      * Length of block of ascii.
      */
-    private static final int ASCII_WIDTH = 56;
+    private final static int ASCII_WIDTH = 56;
 
     /**
      * Default Constructor.
      */
-    private PerformanceLogger ()
-    {
+    private PerformanceLogger() {
     }
 
     /**
      * Log performance message on behalf of server or (via LoggingService) client.
-     * 
-     * @param caller the method calling of the logging service.
+     *
+     * @param caller       the method calling of the logging service.
      * @param loggingPoint the performance logging point for which this message is being logged.
-     * @param message the message to be logged.
-     * @param detail the detail to be logged.
+     * @param message      the message to be logged.
+     * @param detail       the detail to be logged.
      */
-    public static void log (final Class<?> caller, final long loggingPoint, final String message, final String detail)
-    {
-        final ILoggingContext loggingContext = SdtContext.getContext ().getLoggingContext ();
+    public static void log(final Class<?> caller, final long loggingPoint, final String message, final String detail) {
+        final ILoggingContext loggingContext = SdtContext.getContext().getLoggingContext();
 
         // Check if this logger is active.
-        if ((loggingContext.getLoggingFlags () & loggingPoint) > 0L)
-        {
+        if ((loggingContext.getLoggingFlags() & loggingPoint) > 0L) {
             // Convert loggingPoint to bit String for easy viewing.
             final String binaryLoggingPoint =
-                    PerformanceLogger.pad (Long.toBinaryString (loggingPoint), true, "0",
+                    PerformanceLogger.pad(Long.toBinaryString(loggingPoint), true, "0",
                             PerformanceLogger.FLAG_BIT_LENGTH);
 
             // Convert loggingFlags to bit String for easy viewing.
             final String binaryLoggingFlags =
-                    PerformanceLogger.pad (Long.toBinaryString (loggingContext.getLoggingFlags ()), true, "0",
+                    PerformanceLogger.pad(Long.toBinaryString(loggingContext.getLoggingFlags()), true, "0",
                             PerformanceLogger.FLAG_BIT_LENGTH);
 
-            final StringBuffer logMessage = new StringBuffer (message);
+            final StringBuilder logMessage = new StringBuilder(message);
 
             // Add detail if switched on - note this applies to all other active logging points.
-            if ((loggingContext.getLoggingFlags () & PerformanceLogger.LOGGING_POINT_16) > 0L)
-            {
-                logMessage.append (detail);
+            if ((loggingContext.getLoggingFlags() & PerformanceLogger.LOGGING_POINT_16) > 0L) {
+                logMessage.append(detail);
             }
 
             // Write message to 'performance.log'.
-            LOGGER.log (Level.getLevel ("perf"),
-                    "active flags=" + binaryLoggingFlags + ", logging point=" + binaryLoggingPoint + ", reference=" +
-                            loggingContext.getLoggingId () + ": " + logMessage.toString ());
+            LOGGER.log(Level.getLevel("perf"),
+                    "active flags={}, logging point={}, reference={}: {}", binaryLoggingFlags,
+                    binaryLoggingPoint, loggingContext.getLoggingId(), logMessage);
         }
     }
 
     /**
      * Check if performance logging is enabled for this logging point.
-     * 
+     *
      * @param loggingPoint the logging point to be checked.
      * @return true - performance logging enabled for this point; false - performance logging not enabled for this.
      */
-    public static boolean isPerformanceEnabled (final long loggingPoint)
-    {
-        final ILoggingContext loggingContext = SdtContext.getContext ().getLoggingContext ();
+    public static boolean isPerformanceEnabled(final long loggingPoint) {
+        final ILoggingContext loggingContext = SdtContext.getContext().getLoggingContext();
 
         // Check if performance logging is active for this logging point.
-        if ((loggingContext.getLoggingFlags () & loggingPoint) > 0L)
-        {
-            return true;
-        }
-
-        return false;
+        return ((loggingContext.getLoggingFlags() & loggingPoint) > 0L);
     }
 
     /**
      * Render long string in more readable form.
-     * 
+     *
      * @param input the string to be rendered.
      * @return the rendered string.
      */
-    public static String format (final String input)
-    {
+    public static String format(final String input) {
         // Create buffer to work with.
-        final byte[] buffer = input.getBytes ();
+        final byte[] buffer = input.getBytes();
 
         // Line label for current line.
         int lineNum = 0;
 
         // To hold formatted output.
-        final StringBuffer output = new StringBuffer ();
+        final StringBuilder output = new StringBuilder();
 
         // Keep track of overall position.
         int position = 0;
@@ -245,93 +234,81 @@ public final class PerformanceLogger
         short linePosition = 0;
 
         // Hold ascii portion of a line.
-        StringBuffer ascii = new StringBuffer ();
+        StringBuilder ascii = new StringBuilder();
 
         // Hold text portion of a line.
-        StringBuffer text = new StringBuffer ();
+        StringBuilder text = new StringBuilder();
 
         // Continue formatting till none left.
-        while (position < end)
-        {
+        while (position < end) {
             byte current = buffer[position];
 
             // Insert readability delimiter.
-            if ((linePosition % ASCII_BLOCK) == 0)
-            {
-                ascii.append ("  ");
+            if ((linePosition % ASCII_BLOCK) == 0) {
+                ascii.append("  ");
             }
 
             // Store ascii and text separately.
-            ascii.append (pad (Integer.toHexString ((int) current).toUpperCase (), true, "0", 2)).append (" ");
-            if (current == '\n' || current == '\r' || current == '\t')
-            {
+            ascii.append(pad(Integer.toHexString(current).toUpperCase(), true, "0", 2)).append(" ");
+            if (current == '\n' || current == '\r' || current == '\t') {
                 // Convert linefeeds, carriage returns and tabs to space to avoid their effect on display.
                 current = ' ';
             }
-            text.append ((char) current);
+            text.append((char) current);
 
             // Update counters.
             position++;
             linePosition++;
 
             // At end of line append the text gathered so far.
-            if ( !(linePosition < LINE_LENGTH) || !(position < end))
-            {
-                if (ascii.length () < ASCII_WIDTH)
-                {
-                    ascii = new StringBuffer (pad (ascii.toString (), false, " ", ASCII_WIDTH));
+            if ((linePosition >= LINE_LENGTH) || position >= end) {
+                if (ascii.length() < ASCII_WIDTH) {
+                    ascii = new StringBuilder(pad(ascii.toString(), false, " ", ASCII_WIDTH));
                 }
 
                 linePosition = 0;
-                output.append ("\n\t");
-                output.append (pad (Integer.toHexString (lineNum * LINE_LENGTH), true, " ", LABEL_LENGTH));
-                output.append (":  ");
-                output.append (ascii);
-                output.append ("    ");
-                output.append (text);
+                output.append("\n\t");
+                output.append(pad(Integer.toHexString(lineNum * LINE_LENGTH), true, " ", LABEL_LENGTH));
+                output.append(":  ");
+                output.append(ascii);
+                output.append("    ");
+                output.append(text);
                 lineNum++;
-                ascii = new StringBuffer ();
-                text = new StringBuffer ();
+                ascii = new StringBuilder();
+                text = new StringBuilder();
             }
         }
 
-        return output.toString ();
+        return output.toString();
     }
 
     /**
      * Left pad a String to a fixed length. Reduce length if too long.
-     * 
-     * @param in the input String.
-     * @param left pad left or lad right.
-     * @param padChar the character with which to left pad the String.
+     *
+     * @param in             the input String.
+     * @param left           pad left or lad right.
+     * @param padChar        the character with which to left pad the String.
      * @param requiredLength the required length of he output String
      * @return the padded input String.
      */
-    public static String pad (final String in, final boolean left, final String padChar, final int requiredLength)
-    {
+    public static String pad(final String in, final boolean left, final String padChar, final int requiredLength) {
         String out = in;
 
         // Reduce length if too long.
-        int len = in.length ();
-        if (len >= requiredLength)
-        {
-            out = in.substring (len - requiredLength);
-            len = out.length ();
+        int len = in.length();
+        if (len >= requiredLength) {
+            out = in.substring(len - requiredLength);
+            len = out.length();
         }
 
         // Left pad with zeros if too short.
-        for (int i = 0; i < (requiredLength - len); i++)
-        {
-            if (left)
-            {
+        for (int i = 0; i < (requiredLength - len); i++) {
+            if (left) {
                 out = padChar + out;
-            }
-            else
-            {
+            } else {
                 out = out + padChar;
             }
         }
-
         return out;
     }
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -52,19 +52,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 
 /**
  * Consumer for the Individual Request processing.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
 // CHECKSTYLE:OFF
-public class IndividualRequestConsumer extends AbstractWsConsumer implements IIndividualRequestConsumer
-{
+public class IndividualRequestConsumer extends AbstractWsConsumer implements IIndividualRequestConsumer {
     // CHECKSTYLE:ON
 
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestConsumer.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestConsumer.class);
 
     /**
      * Consumer transformer for individual request.
@@ -83,181 +81,159 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     private boolean rethrowOnFailureToConnect;
 
     @Override
-    public void processIndividualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
-                                          final long receiveTimeOut) throws OutageException, TimeoutException
-    {
+    public void processIndividualRequest(final IIndividualRequest individualRequest, final long connectionTimeOut,
+                                         final long receiveTimeOut) throws OutageException, TimeoutException {
         // Transform domain object to web service object
-        LOGGER.debug ("Transform from IIndividualRequest to IndividualRequestType");
-        final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb (individualRequest);
+        LOGGER.debug("Transform from IIndividualRequest to IndividualRequestType");
+        final IndividualRequestType individualRequestType = this.transformer.transformDomainToJaxb(individualRequest);
 
         // Process and call the end point web service
-        LOGGER.debug ("Invoke target application service for individual request");
+        LOGGER.debug("Invoke target application service for individual request");
         final IndividualResponseType responseType =
-                this.invokeTargetAppService (individualRequestType, individualRequest, connectionTimeOut,
+                this.invokeTargetAppService(individualRequestType, individualRequest, connectionTimeOut,
                         receiveTimeOut);
 
-        LOGGER.debug ("Transform from IndividualResponseType to IIndividualRequest");
-        this.transformer.transformJaxbToDomain (responseType, individualRequest);
+        LOGGER.debug("Transform from IndividualResponseType to IIndividualRequest");
+        this.transformer.transformJaxbToDomain(responseType, individualRequest);
     }
 
     /**
-     * 
-     * @param request the individual request JAXB model
-     * @param iRequest the individual request domain object
+     * @param request           the individual request JAXB model
+     * @param iRequest          the individual request domain object
      * @param connectionTimeOut the connection time out from the global parameter value
-     * @param receiveTimeOut the receive time out from the global parameter value.
+     * @param receiveTimeOut    the receive time out from the global parameter value.
      * @return the IndividualResponseType object after calling the web service of target app.
-     * @throws OutageException if there is a service outage
+     * @throws OutageException  if there is a service outage
      * @throws TimeoutException if the read timed out within the time specified
      */
-    private IndividualResponseType invokeTargetAppService (final IndividualRequestType request,
-                                                           final IIndividualRequest iRequest,
-                                                           final long connectionTimeOut, final long receiveTimeOut)
-        throws OutageException, TimeoutException
-    {
+    private IndividualResponseType invokeTargetAppService(final IndividualRequestType request,
+                                                          final IIndividualRequest iRequest,
+                                                          final long connectionTimeOut, final long receiveTimeOut)
+            throws OutageException, TimeoutException {
         final IServiceRouting serviceRouting =
-                iRequest.getBulkSubmission ().getTargetApplication ()
-                        .getServiceRouting (IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL);
+                iRequest.getBulkSubmission().getTargetApplication()
+                        .getServiceRouting(IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL);
 
-        final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint ();
-        final String targetAppCode = iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
+        final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint();
+        final String targetAppCode = iRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
 
         // Get the client interface
         final ITargetAppInternalEndpointPortType client =
-                getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name (), webServiceEndPoint,
+                getClient(targetAppCode, IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name(), webServiceEndPoint,
                         connectionTimeOut, receiveTimeOut);
 
         int attemptCount = 0;
 
         // Loop until the target application becomes available.
-        while (true)
-        {
+        while (true) {
             long startTime = 0;
 
-            try
-            {
-                SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
+            try {
+                SdtMetricsMBean.getMetrics().upTargetAppCallCount();
 
                 attemptCount++;
 
-                LOGGER.debug ("Submitting individual request[" + iRequest.getSdtRequestReference () +
+                LOGGER.debug("Submitting individual request[" + iRequest.getSdtRequestReference() +
                         "] to target application[" + targetAppCode + "], attempt[" + attemptCount + "]");
 
-                if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
-                {
-                    final StringBuffer detail = new StringBuffer ();
-                    detail.append ("\n\n\tsdt request reference=" + iRequest.getSdtRequestReference () +
-                            "\n\tcustomer request reference=" + iRequest.getCustomerRequestReference () +
-                            "\n\tline number=" + iRequest.getLineNumber () + "\n\trequest type=" +
-                            iRequest.getRequestType () + "\n\tforwarding attempts=" +
-                            iRequest.getForwardingAttempts () + "\n\tpayload=" + iRequest.getRequestPayload () +
+                if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_7)) {
+                    final StringBuffer detail = new StringBuffer();
+                    detail.append("\n\n\tsdt request reference=" + iRequest.getSdtRequestReference() +
+                            "\n\tcustomer request reference=" + iRequest.getCustomerRequestReference() +
+                            "\n\tline number=" + iRequest.getLineNumber() + "\n\trequest type=" +
+                            iRequest.getRequestType() + "\n\tforwarding attempts=" +
+                            iRequest.getForwardingAttempts() + "\n\tpayload=" + iRequest.getRequestPayload() +
                             "\n\n\ttarget application=" +
-                            serviceRouting.getTargetApplication ().getTargetApplicationName () + "\n\tendpoint=" +
-                            serviceRouting.getWebServiceEndpoint () + "\n");
+                            serviceRouting.getTargetApplication().getTargetApplicationName() + "\n\tendpoint=" +
+                            serviceRouting.getWebServiceEndpoint() + "\n");
 
                     // Write message to 'performance.log' for this logging point.
-                    PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_7,
-                            "Send individual request to target application", detail.toString ());
+                    PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_7,
+                            "Send individual request to target application", detail.toString());
                 }
 
                 // Measure response time.
-                startTime = new GregorianCalendar ().getTimeInMillis ();
+                startTime = new GregorianCalendar().getTimeInMillis();
 
                 // Call the specific business method for this text - note that a single test can only use one web
                 // service business method.
-                final IndividualResponseType individualResponseType = client.submitIndividual (request);
+                final IndividualResponseType individualResponseType = client.submitIndividual(request);
 
-                if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_8))
-                {
-                    final StringBuffer detail = new StringBuffer ();
-                    detail.append ("\n\n\tsdt request reference=" +
-                            individualResponseType.getHeader ().getSdtRequestId () + "\n\tstatus code=" +
-                            individualResponseType.getStatus ().getCode ().name ());
-                    if (individualResponseType.getStatus ().getError () != null)
-                    {
-                        detail.append ("\n\terror code=" + individualResponseType.getStatus ().getError ().getCode () +
+                if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_8)) {
+                    final StringBuffer detail = new StringBuffer();
+                    detail.append("\n\n\tsdt request reference=" +
+                            individualResponseType.getHeader().getSdtRequestId() + "\n\tstatus code=" +
+                            individualResponseType.getStatus().getCode().name());
+                    if (individualResponseType.getStatus().getError() != null) {
+                        detail.append("\n\terror code=" + individualResponseType.getStatus().getError().getCode() +
                                 "\n\terror description=" +
-                                individualResponseType.getStatus ().getError ().getDescription ());
+                                individualResponseType.getStatus().getError().getDescription());
                     }
-                    detail.append ("\n");
+                    detail.append("\n");
 
                     // Write message to 'performance.log' for this logging point.
-                    PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_8,
-                            "receive individual request response from target application", detail.toString ());
+                    PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_8,
+                            "receive individual request response from target application", detail.toString());
                 }
 
                 return individualResponseType;
-            }
-            catch (final WebServiceException f)
-            {
-                LOGGER.error ("Target application [" +
-                        iRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationName () +
-                        "] error sending individual request [" + iRequest.getSdtRequestReference () + "]", f);
+            } catch (final WebServiceException f) {
+                LOGGER.error("Target application [" +
+                        iRequest.getBulkSubmission().getTargetApplication().getTargetApplicationName() +
+                        "] error sending individual request [" + iRequest.getSdtRequestReference() + "]", f);
 
                 // The following will throw a further exception unless we are here because the target application is
                 // unavailable.
-                super.handleClientErrors (getRethrowOnFailureToConnect (), f, iRequest.getSdtRequestReference ());
+                super.handleClientErrors(getRethrowOnFailureToConnect(), f, iRequest.getSdtRequestReference());
 
-                try
-                {
+                try {
                     // Delay before re-attempting to send to target application.
-                    Thread.sleep (connectionTimeOut);
+                    Thread.sleep(connectionTimeOut);
+                } catch (final InterruptedException e) {
+                    LOGGER.error("Sleep operation interrupted while re-attempting to send to target application", e);
                 }
-                catch (final InterruptedException e)
-                {
-                    LOGGER.error ("Sleep operation interrupted while re-attempting to send to target application", e);
-                }
-            }
-            finally
-            {
+            } finally {
                 // Measure total time spent in target application.
-                final long endTime = new GregorianCalendar ().getTimeInMillis ();
-                SdtMetricsMBean.getMetrics ().addTargetAppResponseTime (endTime - startTime);
+                final long endTime = new GregorianCalendar().getTimeInMillis();
+                SdtMetricsMBean.getMetrics().addTargetAppResponseTime(endTime - startTime);
             }
         }
     }
 
     /**
-     * 
      * @param transformer the transformer
      */
     // CHECKSTYLE:OFF
-    public
-            void
-            setTransformer (final IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer)
-    {
+    public void
+    setTransformer(final IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer) {
         this.transformer = transformer;
     }
 
     // CHECKSTYLE:ON
 
     /**
-     * 
      * @return the transformer for IndividualRequestConsumer
      */
     public IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest>
-            getTransformer ()
-    {
+    getTransformer() {
         return this.transformer;
     }
 
     /**
      * Get the value for the rethrowOnFailureToConnect flag.
-     * 
+     *
      * @return rethrowOnFailureToConnect flag
      */
-    public boolean getRethrowOnFailureToConnect ()
-    {
+    public boolean getRethrowOnFailureToConnect() {
         return rethrowOnFailureToConnect;
     }
 
     /**
      * Set the value for the rethrowOnFailureToConnect.
-     * 
+     *
      * @param rethrowOnFailureToConnect - true will throw the connection fail error.
      */
-    public void setRethrowOnFailureToConnect (final boolean rethrowOnFailureToConnect)
-    {
+    public void setRethrowOnFailureToConnect(final boolean rethrowOnFailureToConnect) {
         this.rethrowOnFailureToConnect = rethrowOnFailureToConnect;
     }
 }

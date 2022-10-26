@@ -9,14 +9,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter1;
 
 
 /**
  * <p>Java class for defendantResponseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="defendantResponseType">
  *   &lt;complexContent>
@@ -33,25 +34,23 @@ import org.w3._2001.xmlschema.Adapter1;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "defendantResponseType", propOrder = {
-    "filedDate",
-    "eventCreatedDateOnMcol",
-    "raisedOnMcol",
-    "responseType",
-    "defence"
+        "filedDate",
+        "eventCreatedDateOnMcol",
+        "raisedOnMcol",
+        "responseType",
+        "defence"
 })
 public class DefendantResponseType {
 
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlJavaTypeAdapter(Adapter1.class)
     @XmlSchemaType(name = "dateTime")
     protected Calendar filedDate;
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlJavaTypeAdapter(Adapter1.class)
     @XmlSchemaType(name = "dateTime")
     protected Calendar eventCreatedDateOnMcol;
     protected boolean raisedOnMcol;
@@ -63,11 +62,9 @@ public class DefendantResponseType {
 
     /**
      * Gets the value of the filedDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getFiledDate() {
         return filedDate;
@@ -75,11 +72,9 @@ public class DefendantResponseType {
 
     /**
      * Sets the value of the filedDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setFiledDate(Calendar value) {
         this.filedDate = value;
@@ -87,11 +82,9 @@ public class DefendantResponseType {
 
     /**
      * Gets the value of the eventCreatedDateOnMcol property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getEventCreatedDateOnMcol() {
         return eventCreatedDateOnMcol;
@@ -99,11 +92,9 @@ public class DefendantResponseType {
 
     /**
      * Sets the value of the eventCreatedDateOnMcol property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEventCreatedDateOnMcol(Calendar value) {
         this.eventCreatedDateOnMcol = value;
@@ -111,7 +102,6 @@ public class DefendantResponseType {
 
     /**
      * Gets the value of the raisedOnMcol property.
-     * 
      */
     public boolean isRaisedOnMcol() {
         return raisedOnMcol;
@@ -119,7 +109,6 @@ public class DefendantResponseType {
 
     /**
      * Sets the value of the raisedOnMcol property.
-     * 
      */
     public void setRaisedOnMcol(boolean value) {
         this.raisedOnMcol = value;
@@ -127,11 +116,9 @@ public class DefendantResponseType {
 
     /**
      * Gets the value of the responseType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ResponseType }
-     *     
+     *
+     * @return possible object is
+     * {@link ResponseType }
      */
     public ResponseType getResponseType() {
         return responseType;
@@ -139,11 +126,9 @@ public class DefendantResponseType {
 
     /**
      * Sets the value of the responseType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ResponseType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ResponseType }
      */
     public void setResponseType(ResponseType value) {
         this.responseType = value;
@@ -151,11 +136,9 @@ public class DefendantResponseType {
 
     /**
      * Gets the value of the defence property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDefence() {
         return defence;
@@ -163,11 +146,9 @@ public class DefendantResponseType {
 
     /**
      * Sets the value of the defence property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDefence(String value) {
         this.defence = value;
@@ -175,11 +156,9 @@ public class DefendantResponseType {
 
     /**
      * Gets the value of the defendantId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDefendantId() {
         return defendantId;
@@ -187,11 +166,9 @@ public class DefendantResponseType {
 
     /**
      * Sets the value of the defendantId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDefendantId(String value) {
         this.defendantId = value;

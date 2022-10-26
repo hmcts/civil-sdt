@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,23 +23,22 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
+
 package uk.gov.moj.sdt.utils.visitor;
 
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 
 /**
  * A class to represent a tree being walked by the tree walker.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class Tree implements ITree
-{
+public class Tree implements ITree {
     /**
      * Object which is at the root (inverted tree) of the tree.
      */
@@ -51,26 +50,22 @@ public class Tree implements ITree
     private Object parent;
 
     @Override
-    public Object getRoot ()
-    {
+    public Object getRoot() {
         return this.root;
     }
 
     @Override
-    public void setRoot (final Object root)
-    {
+    public void setRoot(final Object root) {
         this.root = root;
     }
 
     @Override
-    public Object getParent ()
-    {
+    public Object getParent() {
         return this.parent;
     }
 
     @Override
-    public void setParent (final Object parent)
-    {
+    public void setParent(final Object parent) {
         this.parent = parent;
     }
 }

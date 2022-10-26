@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -48,17 +48,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 
 /**
  * Handler for the update item web service.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@Transactional (propagation = Propagation.REQUIRED)
-public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateItemHandler
-{
+@Transactional(propagation = Propagation.REQUIRED)
+public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateItemHandler {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (WsUpdateItemHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WsUpdateItemHandler.class);
 
     /**
      * Service class to process the update item.
@@ -74,94 +72,80 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
     // CHECKSTYLE:ON
 
     @Override
-    public UpdateResponseType updateItem (final UpdateRequestType updateRequestType)
-    {
-        if (LOGGER.isInfoEnabled ())
-        {
-            LOGGER.info ("Update item started for sdt request id[" + updateRequestType.getHeader ().getSdtRequestId () +
+    public UpdateResponseType updateItem(final UpdateRequestType updateRequestType) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Update item started for sdt request id[" + updateRequestType.getHeader().getSdtRequestId() +
                     "]");
         }
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upStatusUpdateCount ();
+        SdtMetricsMBean.getMetrics().upStatusUpdateCount();
 
         // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final long startTime = new GregorianCalendar().getTimeInMillis();
 
         // Initialise response.
-        LOGGER.debug ("Setup initial update request response");
-        UpdateResponseType updateResponseType = new UpdateResponseType ();
+        LOGGER.debug("Setup initial update request response");
+        UpdateResponseType updateResponseType = new UpdateResponseType();
 
-        try
-        {
-            updateResponseType.setStatus (new StatusType ());
+        try {
+            updateResponseType.setStatus(new StatusType());
 
             // Transform to domain object.
-            LOGGER.debug ("Transform from UpdateRequestType to IIndividualRequest");
-            final IIndividualRequest individualRequest = getTransformer ().transformJaxbToDomain (updateRequestType);
+            LOGGER.debug("Transform from UpdateRequestType to IIndividualRequest");
+            final IIndividualRequest individualRequest = getTransformer().transformJaxbToDomain(updateRequestType);
 
             // No need to validate, call the service layer to process the object
-            LOGGER.debug ("Process individual request");
-            this.getUpdateRequestService ().updateIndividualRequest (individualRequest);
+            LOGGER.debug("Process individual request");
+            this.getUpdateRequestService().updateIndividualRequest(individualRequest);
 
             // Transform domain to Jaxb
-            LOGGER.debug ("Transform from IIndividualRequest to UpdateResponseType");
-            updateResponseType = getTransformer ().transformDomainToJaxb (individualRequest);
-        }
-        finally
-        {
-            if (LOGGER.isInfoEnabled ())
-            {
-                LOGGER.info ("Update item completed for sdt request id[" +
-                        updateRequestType.getHeader ().getSdtRequestId () + "]");
+            LOGGER.debug("Transform from IIndividualRequest to UpdateResponseType");
+            updateResponseType = getTransformer().transformDomainToJaxb(individualRequest);
+        } finally {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Update item completed for sdt request id[" +
+                        updateRequestType.getHeader().getSdtRequestId() + "]");
             }
 
             // Measure total time spent in use case.
-            final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            SdtMetricsMBean.getMetrics ().addStatusUpdateTime (endTime - startTime);
+            final long endTime = new GregorianCalendar().getTimeInMillis();
+            SdtMetricsMBean.getMetrics().addStatusUpdateTime(endTime - startTime);
         }
 
         return updateResponseType;
     }
 
     /**
-     * 
      * @return the transformer for the update item
      */
     public ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest>
-            getTransformer ()
-    {
+    getTransformer() {
         return transformer;
     }
 
     /**
-     * 
      * @param transformer the Update Item transformer.
      */
     // CHECKSTYLE:OFF
-    public
-            void
-            setTransformer (final ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest> transformer)
+    public void
+    setTransformer(final ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest> transformer)
     // CHECKSTYLE:ON
     {
         this.transformer = transformer;
     }
 
     /**
-     * 
      * @return the update request service.
      */
-    public IUpdateRequestService getUpdateRequestService ()
-    {
+    public IUpdateRequestService getUpdateRequestService() {
         return updateRequestService;
     }
 
     /**
-     * 
      * @param updateRequestService the Update Request Service for the update item processing.
      */
-    public void setUpdateRequestService (final IUpdateRequestService updateRequestService)
-    {
+    public void setUpdateRequestService(final IUpdateRequestService updateRequestService) {
         this.updateRequestService = updateRequestService;
     }
 }

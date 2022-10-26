@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,22 +33,19 @@ package uk.gov.moj.sdt.services.api;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
- * 
  * Interface for the Bulk Submission Service.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IBulkSubmissionService
-{
+public interface IBulkSubmissionService {
     /**
      * This method handles the task for persisting bulk submission
      * and associated individual requests, validating individual requests and
      * enqueue the valid individual request to the message queue.
-     * 
+     *
      * @param bulkSubmission the bulk submission domain object holding the
-     *            information about the bulk submission request.
+     *                       information about the bulk submission request.
      */
-    void saveBulkSubmission (final IBulkSubmission bulkSubmission);
+    void saveBulkSubmission(final IBulkSubmission bulkSubmission);
 
 }

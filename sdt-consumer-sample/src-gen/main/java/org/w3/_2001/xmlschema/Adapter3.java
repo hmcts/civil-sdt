@@ -4,8 +4,7 @@ package org.w3._2001.xmlschema;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class Adapter3
-    extends XmlAdapter<String, Long>
-{
+        extends XmlAdapter<String, Long> {
 
 
     public Long unmarshal(String value) {

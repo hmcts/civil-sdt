@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,31 +23,30 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.transaction.synchronizer.api;
 
 import java.util.concurrent.Executor;
 
 /**
  * Interface for the classes implementing the IMessageSynchronizer.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IMessageSynchronizer extends Executor
-{
+public interface IMessageSynchronizer extends Executor {
 
     /**
      * Synchronises the message writing task in JMS with the
      * transaction so that the task is executed only after the commit is performed on
      * the database.
-     * 
+     *
      * @param task the task wrapped in a Runnable thread to be executed.
      */
-    void synchronizeTask (final Runnable task);
+    void synchronizeTask(final Runnable task);
 
 }

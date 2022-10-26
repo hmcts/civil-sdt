@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -59,12 +59,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackRespon
 
 /**
  * Test class for BulkSubmissionService.
- * 
+ *
  * @author Sally Vonka
- * 
  */
-public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase
-{
+public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
     /**
      * Bulk Feedback Service for testing.
      */
@@ -83,52 +81,41 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
     // CHECKSTYLE:ON
     /**
      * The BulkFeedbackRequestType.
-     * 
      */
     private BulkFeedbackRequestType bulkFeedbackRequestType;
 
     /**
      * Bulk Customer to use for the test.
-     * 
-     * 
+     * <p>
+     * <p>
      * /**
      * Setup of the mock dao and injection of other objects.
      */
-    public void setUpLocalTests ()
-    {
-        wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler ();
+    public void setUpLocalTests() {
+        wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler();
 
-        mockBulkFeedbackService = EasyMock.createMock (IBulkFeedbackService.class);
+        mockBulkFeedbackService = EasyMock.createMock(IBulkFeedbackService.class);
         // ITransformer transformer = new BulkFeedbackTransformer();
         Constructor<BulkFeedbackTransformer> c;
-        try
-        {
+        try {
             // Make the constructor visible so we can get a new instance of it.
-            c = BulkFeedbackTransformer.class.getDeclaredConstructor ();
-            c.setAccessible (true);
-            transformer = c.newInstance ();
-        }
-        catch (final InstantiationException e)
-        {
-            e.printStackTrace ();
-        }
-        catch (final IllegalAccessException e)
-        {
-            e.printStackTrace ();
-        }
-        catch (final InvocationTargetException e)
-        {
-            e.printStackTrace ();
-        }
-        catch (final NoSuchMethodException e)
-        {
-            e.printStackTrace ();
+            c = BulkFeedbackTransformer.class.getDeclaredConstructor();
+            c.setAccessible(true);
+            transformer = c.newInstance();
+        } catch (final InstantiationException e) {
+            e.printStackTrace();
+        } catch (final IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (final InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (final NoSuchMethodException e) {
+            e.printStackTrace();
         }
 
-        wsReadBulkFeedbackReqHandler.setBulkFeedbackService (mockBulkFeedbackService);
-        wsReadBulkFeedbackReqHandler.setTransformer (transformer);
+        wsReadBulkFeedbackReqHandler.setBulkFeedbackService(mockBulkFeedbackService);
+        wsReadBulkFeedbackReqHandler.setTransformer(transformer);
 
-        bulkFeedbackRequestType = new BulkFeedbackRequestType ();
+        bulkFeedbackRequestType = new BulkFeedbackRequestType();
     }
 
     /**
@@ -136,53 +123,51 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
      */
     @Test
     @Ignore
-    public void testGetBulkFeedback () throws IOException
-    {
+    public void testGetBulkFeedback() throws IOException {
         final long customerId = 12345678;
-        final IBulkFeedbackRequest bulkFeedbackRequestDomain = new BulkFeedbackRequest ();
-        final BulkCustomer bulkCustomer = new BulkCustomer ();
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
+        final IBulkFeedbackRequest bulkFeedbackRequestDomain = new BulkFeedbackRequest();
+        final BulkCustomer bulkCustomer = new BulkCustomer();
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
         // final BulkFeedbackRequestType bulkFeedbackRequest = new BulkFeedbackRequestType();
 
-        bulkCustomer.setSdtCustomerId (customerId);
-        bulkCustomer.setBulkCustomerApplications (createBulkCustomerApplications ("MCOL"));
-        bulkFeedbackRequestDomain.setBulkCustomer (bulkCustomer);
-        bulkFeedbackRequestDomain.setSdtBulkReference ("MCOL-10012013010101-100099999");
+        bulkCustomer.setSdtCustomerId(customerId);
+        bulkCustomer.setBulkCustomerApplications(createBulkCustomerApplications("MCOL"));
+        bulkFeedbackRequestDomain.setBulkCustomer(bulkCustomer);
+        bulkFeedbackRequestDomain.setSdtBulkReference("MCOL-10012013010101-100099999");
 
-        bulkSubmission.setSdtBulkReference ("MCOL-10012013010101-100099999");
+        bulkSubmission.setSdtBulkReference("MCOL-10012013010101-100099999");
 
-        final HeaderType headerType = new HeaderType ();
-        headerType.setSdtBulkReference ("MCOL-10012013010101-100099999");
-        headerType.setSdtCustomerId ((long) customerId);
+        final HeaderType headerType = new HeaderType();
+        headerType.setSdtBulkReference("MCOL-10012013010101-100099999");
+        headerType.setSdtCustomerId((long) customerId);
 
-        bulkFeedbackRequestType.setHeader (headerType);
+        bulkFeedbackRequestType.setHeader(headerType);
 
-        EasyMock.expect (mockBulkFeedbackService.getBulkFeedback (bulkFeedbackRequestDomain))
-                .andReturn (bulkSubmission);
-        EasyMock.replay (mockBulkFeedbackService);
+        EasyMock.expect(mockBulkFeedbackService.getBulkFeedback(bulkFeedbackRequestDomain))
+                .andReturn(bulkSubmission);
+        EasyMock.replay(mockBulkFeedbackService);
 
-        wsReadBulkFeedbackReqHandler.getBulkFeedback (bulkFeedbackRequestType);
+        wsReadBulkFeedbackReqHandler.getBulkFeedback(bulkFeedbackRequestType);
 
-        EasyMock.verify (mockBulkFeedbackService);
+        EasyMock.verify(mockBulkFeedbackService);
 
     }
 
     /**
      * the list of applications for a customer.
-     * 
+     *
      * @param applicationName the application name
      * @return the set of bulk customer applications for this customer
      */
-    private Set<IBulkCustomerApplication> createBulkCustomerApplications (final String applicationName)
-    {
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
+    private Set<IBulkCustomerApplication> createBulkCustomerApplications(final String applicationName) {
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication>();
 
-        final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication ();
-        bulkCustomerApp.setCustomerApplicationId ("appId");
-        final ITargetApplication application = new TargetApplication ();
-        application.setTargetApplicationCode (applicationName);
-        bulkCustomerApp.setTargetApplication (application);
-        bulkCustomerApplications.add (bulkCustomerApp);
+        final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication();
+        bulkCustomerApp.setCustomerApplicationId("appId");
+        final ITargetApplication application = new TargetApplication();
+        application.setTargetApplicationCode(applicationName);
+        bulkCustomerApp.setTargetApplication(application);
+        bulkCustomerApplications.add(bulkCustomerApp);
         return bulkCustomerApplications;
     }
 }

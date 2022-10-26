@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: WsCreateBulkRequestHandler.java 16487 2013-06-11 12:54:20Z compstonr $
  * $LastChangedRevision: 16487 $
  * $LastChangedDate: 2013-06-11 13:54:20 +0100 (Tue, 11 Jun 2013) $
@@ -53,17 +53,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusT
 
 /**
  * Handles bulk feedback submission request flow.
- * 
+ *
  * @author d301488
- * 
  */
-@Transactional (propagation = Propagation.REQUIRED)
-public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implements IWsReadBulkRequestHandler
-{
+@Transactional(propagation = Propagation.REQUIRED)
+public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implements IWsReadBulkRequestHandler {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (WsReadBulkFeedbackRequestHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WsReadBulkFeedbackRequestHandler.class);
 
     /**
      * Injected Get Bulk Feedback service.
@@ -73,67 +71,59 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
     /**
      * The transformer associated with this handler.
      */
-    private ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, 
-        IBulkFeedbackRequest, IBulkSubmission> transformer;
+    private ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
+            IBulkFeedbackRequest, IBulkSubmission> transformer;
 
     @Override
-    public BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest)
-    {
-        if (LOGGER.isInfoEnabled ())
-        {
-            LOGGER.info ("Bulk feedback started for customer[" + bulkFeedbackRequest.getHeader ().getSdtCustomerId () +
-                    "], customer reference[" + bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "]");
+    public BulkFeedbackResponseType getBulkFeedback(final BulkFeedbackRequestType bulkFeedbackRequest) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Bulk feedback started for customer[" + bulkFeedbackRequest.getHeader().getSdtCustomerId() +
+                    "], customer reference[" + bulkFeedbackRequest.getHeader().getSdtBulkReference() + "]");
         }
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upBulkFeedbackCount ();
+        SdtMetricsMBean.getMetrics().upBulkFeedbackCount();
 
         // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final long startTime = new GregorianCalendar().getTimeInMillis();
 
         // Update number of customers using the system.
-        SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
-                Long.toString (bulkFeedbackRequest.getHeader ().getSdtCustomerId ()));
+        SdtMetricsMBean.getMetrics().updateBulkCustomerCount(
+                Long.toString(bulkFeedbackRequest.getHeader().getSdtCustomerId()));
 
         // Initialise response;
-        LOGGER.debug ("Setup initial bulk feedback response");
-        BulkFeedbackResponseType response = createResponse (bulkFeedbackRequest);
+        LOGGER.debug("Setup initial bulk feedback response");
+        BulkFeedbackResponseType response = createResponse(bulkFeedbackRequest);
 
-        try
-        {
+        try {
             // Transform Web service object to Domain object.
-            LOGGER.debug ("Transform from BulkFeedbackRequestType to IBulkFeedbackRequest");
+            LOGGER.debug("Transform from BulkFeedbackRequestType to IBulkFeedbackRequest");
             final IBulkFeedbackRequest bulkFeedbackRequestDomain =
-                    getTransformer ().transformJaxbToDomain (bulkFeedbackRequest);
+                    getTransformer().transformJaxbToDomain(bulkFeedbackRequest);
 
             // Validate the domain object
-            LOGGER.debug ("Validate bulk feedback");
-            validateDomain (bulkFeedbackRequestDomain);
+            LOGGER.debug("Validate bulk feedback");
+            validateDomain(bulkFeedbackRequestDomain);
 
             // Process validated request
-            LOGGER.debug ("Process bulk feedback");
-            final IBulkSubmission bulkSubmission = bulkFeedbackService.getBulkFeedback (bulkFeedbackRequestDomain);
+            LOGGER.debug("Process bulk feedback");
+            final IBulkSubmission bulkSubmission = bulkFeedbackService.getBulkFeedback(bulkFeedbackRequestDomain);
 
             // Get the jaxb response object from the bulk submission domain object
-            LOGGER.debug ("Transform from IBulkFeedbackRequest to BulkFeedbackResponseType");
-            response = getTransformer ().transformDomainToJaxb (bulkSubmission);
-        }
-        catch (final AbstractBusinessException be)
-        {
-            handleBusinessException (be, response.getBulkRequestStatus ());
-        }
-        finally
-        {
-            if (LOGGER.isInfoEnabled ())
-            {
-                LOGGER.info ("Bulk feedback completed for customer[" +
-                        bulkFeedbackRequest.getHeader ().getSdtCustomerId () + "], customer reference[" +
-                        bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "]");
+            LOGGER.debug("Transform from IBulkFeedbackRequest to BulkFeedbackResponseType");
+            response = getTransformer().transformDomainToJaxb(bulkSubmission);
+        } catch (final AbstractBusinessException be) {
+            handleBusinessException(be, response.getBulkRequestStatus());
+        } finally {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Bulk feedback completed for customer[" +
+                        bulkFeedbackRequest.getHeader().getSdtCustomerId() + "], customer reference[" +
+                        bulkFeedbackRequest.getHeader().getSdtBulkReference() + "]");
             }
 
             // Measure total time spent in use case.
-            final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            SdtMetricsMBean.getMetrics ().addBulkFeedbackTime (endTime - startTime);
+            final long endTime = new GregorianCalendar().getTimeInMillis();
+            SdtMetricsMBean.getMetrics().addBulkFeedbackTime(endTime - startTime);
         }
 
         return response;
@@ -141,66 +131,60 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
 
     /**
      * Create Response and initialise status.
-     * 
+     *
      * @param bulkFeedbackRequest bulk feedback request.
      * @return instance of BulkFeedbackResponseType
      */
-    private BulkFeedbackResponseType createResponse (final BulkFeedbackRequestType bulkFeedbackRequest)
-    {
-        final BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
-        final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType ();
-        bulkRequestStatusType.setSdtService (AbstractTransformer.SDT_SERVICE);
+    private BulkFeedbackResponseType createResponse(final BulkFeedbackRequestType bulkFeedbackRequest) {
+        final BulkFeedbackResponseType response = new BulkFeedbackResponseType();
+        final BulkRequestStatusType bulkRequestStatusType = new BulkRequestStatusType();
+        bulkRequestStatusType.setSdtService(AbstractTransformer.SDT_SERVICE);
 
-        final StatusType statusType = new StatusType ();
-        bulkRequestStatusType.setStatus (statusType);
-        bulkRequestStatusType.setSdtBulkReference (bulkFeedbackRequest.getHeader ().getSdtBulkReference ());
+        final StatusType statusType = new StatusType();
+        bulkRequestStatusType.setStatus(statusType);
+        bulkRequestStatusType.setSdtBulkReference(bulkFeedbackRequest.getHeader().getSdtBulkReference());
 
-        response.setBulkRequestStatus (bulkRequestStatusType);
+        response.setBulkRequestStatus(bulkRequestStatusType);
         return response;
     }
 
     /**
      * Validate to ensure integrity of bulk feedback request.
-     * 
+     *
      * @param bulkFeedbackRequest bulk feedback request criteria
      * @throws AbstractBusinessException business exception
      */
-    private void validateDomain (final IBulkFeedbackRequest bulkFeedbackRequest) throws AbstractBusinessException
-    {
-        VisitableTreeWalker.walk (bulkFeedbackRequest, "Validator");
+    private void validateDomain(final IBulkFeedbackRequest bulkFeedbackRequest) throws AbstractBusinessException {
+        VisitableTreeWalker.walk(bulkFeedbackRequest, "Validator");
     }
 
     /**
      * Set bulk feedback service implementation.
-     * 
+     *
      * @param bulkFeedbackService bulk feedback service
      */
-    public void setBulkFeedbackService (final IBulkFeedbackService bulkFeedbackService)
-    {
+    public void setBulkFeedbackService(final IBulkFeedbackService bulkFeedbackService) {
         this.bulkFeedbackService = bulkFeedbackService;
     }
 
     /**
      * Getter for transformer.
-     * 
+     *
      * @return the transformer associated with this class.
      */
     public ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission>
-            getTransformer ()
-    {
+    getTransformer() {
         return transformer;
     }
 
     /**
      * Setter for transformer.
-     * 
+     *
      * @param transformer the transformer to be associated with this class.
      */
-    public
-            void
-            setTransformer (final ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, 
-                            IBulkFeedbackRequest, IBulkSubmission> transformer)
-    {
+    public void
+    setTransformer(final ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
+            IBulkFeedbackRequest, IBulkSubmission> transformer) {
         this.transformer = transformer;
     }
 }

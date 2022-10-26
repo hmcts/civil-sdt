@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -75,21 +75,19 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 
 /**
  * Test class for the individual request consumer.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase
-{
+public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase {
     /**
      * Connection time out constant.
      */
-    private static final long CONNECTION_TIME_OUT = 30000;
+    private final static long CONNECTION_TIME_OUT = 30000;
 
     /**
      * Received time out constant.
      */
-    private static final long RECEIVE_TIME_OUT = 60000;
+    private final static long RECEIVE_TIME_OUT = 60000;
 
     /**
      * Consumer transformer for individual request.
@@ -121,18 +119,17 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase
     /**
      * Method to do any pre-test set-up.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     @Before
-    public void setUp ()
-    {
-        mockTransformer = EasyMock.createMock (IConsumerTransformer.class);
-        mockClient = EasyMock.createMock (ITargetAppInternalEndpointPortType.class);
-        individualRequestConsumer = new IndRequestConsumer ();
-        individualRequestConsumer.setTransformer (mockTransformer);
-        individualRequestConsumer.setRethrowOnFailureToConnect (true);
+    public void setUp() {
+        mockTransformer = EasyMock.createMock(IConsumerTransformer.class);
+        mockClient = EasyMock.createMock(ITargetAppInternalEndpointPortType.class);
+        individualRequestConsumer = new IndRequestConsumer();
+        individualRequestConsumer.setTransformer(mockTransformer);
+        individualRequestConsumer.setRethrowOnFailureToConnect(true);
 
-        individualRequest = this.createIndividualRequest ();
-        individualRequestType = this.createRequestType (individualRequest);
+        individualRequest = this.createIndividualRequest();
+        individualRequestType = this.createRequestType(individualRequest);
 
     }
 
@@ -140,38 +137,35 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase
      * Test method for successful processing of individual request.
      */
     @Test
-    public void processIndividualRequestSuccess ()
-    {
-        final IndividualResponseType individualResponseType = generateResponse ();
+    public void processIndividualRequestSuccess() {
+        final IndividualResponseType individualResponseType = generateResponse();
 
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(individualRequest)).andReturn(individualRequestType);
 
-        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andReturn (individualResponseType);
+        EasyMock.expect(mockClient.submitIndividual(individualRequestType)).andReturn(individualResponseType);
 
-        mockTransformer.transformJaxbToDomain (individualResponseType, individualRequest);
+        mockTransformer.transformJaxbToDomain(individualResponseType, individualRequest);
 
-        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
-        {
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
-            public Object answer () throws Throwable
-            {
-                ((IndividualRequest) EasyMock.getCurrentArguments ()[1])
-                        .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
+            public Object answer() throws Throwable {
+                ((IndividualRequest) EasyMock.getCurrentArguments()[1])
+                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
                 // required to be null for a void method
                 return null;
             }
         });
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+        this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                 RECEIVE_TIME_OUT);
 
-        EasyMock.verify (mockTransformer);
-        EasyMock.verify (mockClient);
+        EasyMock.verify(mockTransformer);
+        EasyMock.verify(mockClient);
 
-        Assert.assertTrue ("Test finished successfully", true);
+        Assert.assertTrue("Test finished successfully", true);
 
     }
 
@@ -179,35 +173,31 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase
      * Test method for processing of individual request outage error.
      */
     @Test
-    public void processIndividualRequestOutage ()
-    {
+    public void processIndividualRequestOutage() {
 
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(individualRequest)).andReturn(individualRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        wsException.initCause (new ConnectException ("Server down error"));
+        final WebServiceException wsException = new WebServiceException();
+        wsException.initCause(new ConnectException("Server down error"));
 
-        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andThrow (wsException);
+        EasyMock.expect(mockClient.submitIndividual(individualRequestType)).andThrow(wsException);
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        try
-        {
-            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+        try {
+            this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assert.fail ("Expecting an OutageException here.");
-        }
-        catch (final OutageException toe)
-        {
-            Assert.assertTrue ("Got the exception as expected", true);
+            Assert.fail("Expecting an OutageException here.");
+        } catch (final OutageException toe) {
+            Assert.assertTrue("Got the exception as expected", true);
         }
 
-        EasyMock.verify (mockTransformer);
-        EasyMock.verify (mockClient);
+        EasyMock.verify(mockTransformer);
+        EasyMock.verify(mockClient);
 
-        Assert.assertTrue ("Test finished successfully", true);
+        Assert.assertTrue("Test finished successfully", true);
 
     }
 
@@ -215,170 +205,156 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase
      * Test method for processing of individual request timeout error.
      */
     @Test
-    public void processIndividualRequestTimeout ()
-    {
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
+    public void processIndividualRequestTimeout() {
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(individualRequest)).andReturn(individualRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        wsException.initCause (new SocketTimeoutException ("Timed out waiting for response"));
+        final WebServiceException wsException = new WebServiceException();
+        wsException.initCause(new SocketTimeoutException("Timed out waiting for response"));
 
-        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andThrow (wsException);
+        EasyMock.expect(mockClient.submitIndividual(individualRequestType)).andThrow(wsException);
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        try
-        {
-            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+        try {
+            this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assert.fail ("Expecting an Timeout here.");
-        }
-        catch (final TimeoutException toe)
-        {
-            Assert.assertTrue ("Got the exception as expected", true);
+            Assert.fail("Expecting an Timeout here.");
+        } catch (final TimeoutException toe) {
+            Assert.assertTrue("Got the exception as expected", true);
         }
 
-        EasyMock.verify (mockTransformer);
-        EasyMock.verify (mockClient);
+        EasyMock.verify(mockTransformer);
+        EasyMock.verify(mockClient);
 
-        Assert.assertTrue ("Test finished successfully", true);
+        Assert.assertTrue("Test finished successfully", true);
 
     }
 
     /**
      * Test method for processing of individual request soap fault error.
-     * 
+     *
      * @throws SOAPException exception
      */
     @Test
-    public void processIndividualRequestSoapFault () throws SOAPException
-    {
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (individualRequest)).andReturn (individualRequestType);
+    public void processIndividualRequestSoapFault() throws SOAPException {
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(individualRequest)).andReturn(individualRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        final SOAPFault fault = EasyMock.createMock (SOAPFault.class);
-        fault.setFaultCode ("REQ_FAULT");
-        fault.setFaultString ("Invalid request");
+        final WebServiceException wsException = new WebServiceException();
+        final SOAPFault fault = EasyMock.createMock(SOAPFault.class);
+        fault.setFaultCode("REQ_FAULT");
+        fault.setFaultString("Invalid request");
 
-        wsException.initCause (new SOAPFaultException (fault));
+        wsException.initCause(new SOAPFaultException(fault));
 
-        EasyMock.expect (mockClient.submitIndividual (individualRequestType)).andThrow (wsException);
+        EasyMock.expect(mockClient.submitIndividual(individualRequestType)).andThrow(wsException);
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        try
-        {
-            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+        try {
+            this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assert.fail ("Expecting an Soap Fault here.");
-        }
-        catch (final SoapFaultException toe)
-        {
-            Assert.assertTrue ("Got the exception as expected", true);
+            Assert.fail("Expecting an Soap Fault here.");
+        } catch (final SoapFaultException toe) {
+            Assert.assertTrue("Got the exception as expected", true);
         }
 
-        EasyMock.verify (mockTransformer);
-        EasyMock.verify (mockClient);
+        EasyMock.verify(mockTransformer);
+        EasyMock.verify(mockClient);
 
-        Assert.assertTrue ("Test finished successfully", true);
+        Assert.assertTrue("Test finished successfully", true);
 
     }
 
     /**
-     * 
      * @param domainObject the individual request domain object.
      * @return the Jaxb individual request type.
      */
-    private IndividualRequestType createRequestType (final IIndividualRequest domainObject)
-    {
-        final IndividualRequestType requestType = new IndividualRequestType ();
-        final HeaderType headerType = new HeaderType ();
-        headerType.setRequestType ("testRequestType");
-        headerType.setSdtRequestId (domainObject.getSdtRequestReference ());
-        headerType.setTargetAppCustomerId ("TestCust");
+    private IndividualRequestType createRequestType(final IIndividualRequest domainObject) {
+        final IndividualRequestType requestType = new IndividualRequestType();
+        final HeaderType headerType = new HeaderType();
+        headerType.setRequestType("testRequestType");
+        headerType.setSdtRequestId(domainObject.getSdtRequestReference());
+        headerType.setTargetAppCustomerId("TestCust");
 
-        requestType.setHeader (headerType);
+        requestType.setHeader(headerType);
 
         return requestType;
     }
 
     /**
-     * 
      * @return individual request domain object
      */
-    private IIndividualRequest createIndividualRequest ()
-    {
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        final ITargetApplication targetApp = new TargetApplication ();
+    private IIndividualRequest createIndividualRequest() {
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        final ITargetApplication targetApp = new TargetApplication();
 
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("MCOL");
-        targetApp.setTargetApplicationName ("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+        targetApp.setId(1L);
+        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationName("TEST_TargetApp");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
 
-        final ServiceRouting serviceRouting = new ServiceRouting ();
-        serviceRouting.setId (1L);
-        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+        final ServiceRouting serviceRouting = new ServiceRouting();
+        serviceRouting.setId(1L);
+        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
 
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setId (1L);
-        serviceType.setName (IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name ());
-        serviceType.setDescription ("RequestTestDesc1");
-        serviceType.setStatus ("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType();
+        serviceType.setId(1L);
+        serviceType.setName(IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name());
+        serviceType.setDescription("RequestTestDesc1");
+        serviceType.setStatus("RequestTestStatus");
 
-        serviceRouting.setServiceType (serviceType);
-        serviceRouting.setTargetApplication (targetApp);
+        serviceRouting.setServiceType(serviceType);
+        serviceRouting.setTargetApplication(targetApp);
 
-        serviceRoutings.add (serviceRouting);
+        serviceRoutings.add(serviceRouting);
 
-        targetApp.setServiceRoutings (serviceRoutings);
+        targetApp.setServiceRoutings(serviceRoutings);
 
-        bulkSubmission.setTargetApplication (targetApp);
+        bulkSubmission.setTargetApplication(targetApp);
 
-        bulkCustomer.setId (1L);
-        bulkCustomer.setSdtCustomerId (10L);
+        bulkCustomer.setId(1L);
+        bulkCustomer.setSdtCustomerId(10L);
 
-        bulkSubmission.setBulkCustomer (bulkCustomer);
-        bulkSubmission.setCustomerReference ("TEST_CUST_REF");
-        bulkSubmission.setId (1L);
-        bulkSubmission.setNumberOfRequest (1);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
+        bulkSubmission.setCustomerReference("TEST_CUST_REF");
+        bulkSubmission.setId(1L);
+        bulkSubmission.setNumberOfRequest(1);
 
-        final IIndividualRequest individualRequest = new IndividualRequest ();
-        individualRequest.setSdtRequestReference ("Test");
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference("Test");
 
-        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest> ();
-        requests.add (individualRequest);
+        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest>();
+        requests.add(individualRequest);
 
-        bulkSubmission.setIndividualRequests (requests);
+        bulkSubmission.setIndividualRequests(requests);
 
-        individualRequest.setBulkSubmission (bulkSubmission);
+        individualRequest.setBulkSubmission(bulkSubmission);
 
         return individualRequest;
 
     }
 
     /**
-     * 
      * @return the individual response type
      */
-    private IndividualResponseType generateResponse ()
-    {
-        final IndividualResponseType responseType = new IndividualResponseType ();
+    private IndividualResponseType generateResponse() {
+        final IndividualResponseType responseType = new IndividualResponseType();
 
         final uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.HeaderType headerType =
-                new uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.HeaderType ();
-        headerType.setSdtRequestId ("Test");
+                new uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.HeaderType();
+        headerType.setSdtRequestId("Test");
 
-        responseType.setHeader (headerType);
+        responseType.setHeader(headerType);
 
-        final CreateStatusType status = new CreateStatusType ();
-        status.setCode (CreateStatusCodeType.ACCEPTED);
+        final CreateStatusType status = new CreateStatusType();
+        status.setCode(CreateStatusCodeType.ACCEPTED);
 
-        responseType.setStatus (status);
+        responseType.setStatus(status);
 
         return responseType;
 
@@ -388,24 +364,22 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase
      * Need to extend the consumer class under test for overriding base class methods
      * of the getClient as it is abstract method.
      */
-    private class IndRequestConsumer extends IndividualRequestConsumer
-    {
+    private class IndRequestConsumer extends IndividualRequestConsumer {
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.
-         * 
+         *
          * @param targetApplicationCode the target application code
-         * @param serviceType the service type associated with the target application code
-         * @param webServiceEndPoint the Web Service End Point URL
-         * @param connectionTimeOut the connection time out value
-         * @param receiveTimeOut the acknowledgement time out value
+         * @param serviceType           the service type associated with the target application code
+         * @param webServiceEndPoint    the Web Service End Point URL
+         * @param connectionTimeOut     the connection time out value
+         * @param receiveTimeOut        the acknowledgement time out value
          * @return the target application end point port bean i.e. the client interface.
          */
         @Override
-        public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
-                                                             final String serviceType, final String webServiceEndPoint,
-                                                             final long connectionTimeOut, final long receiveTimeOut)
-        {
+        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
+                                                            final String serviceType, final String webServiceEndPoint,
+                                                            final long connectionTimeOut, final long receiveTimeOut) {
             return mockClient;
         }
     }

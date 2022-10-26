@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,18 +34,16 @@ import javax.jms.Message;
 
 /**
  * Interface for classes implementing the message de-queue functionality.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IMessageDrivenBean
-{
+public interface IMessageDrivenBean {
 
     /**
      * Reads the message from the message queue. This method is invoked by the
      * JMS implementation used by the implementation class.
-     * 
+     *
      * @param message the message from the JMS queue
      */
-    void readMessage (Message message);
+    void readMessage(Message message);
 }

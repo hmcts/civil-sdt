@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -43,13 +43,11 @@ import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 
 /**
  * This class is the implementation of the ISdtBulkReferenceGenerator interface.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@Transactional (propagation = Propagation.REQUIRED)
-public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
-{
+@Transactional(propagation = Propagation.REQUIRED)
+public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator {
 
     /**
      * DAO to retrieve error messages.
@@ -58,30 +56,28 @@ public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
 
     @Override
     @Transactional
-    public String getSdtBulkReference (final String targetApplication)
-    {
+    public String getSdtBulkReference(final String targetApplication) {
         final int targetAppLength = 4;
 
-        if (targetApplication == null || targetApplication.length () != targetAppLength)
-        {
-            throw new IllegalArgumentException ("The target application length is expected to be 4 characters.");
+        if (targetApplication == null || targetApplication.length() != targetAppLength) {
+            throw new IllegalArgumentException("The target application length is expected to be 4 characters.");
         }
 
         final String refNumberFormat = "{0}-{1}-{2}";
-        final SimpleDateFormat dateFormat = new SimpleDateFormat ();
-        dateFormat.applyLocalizedPattern ("yyyyMMddHHmmss");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat();
+        dateFormat.applyLocalizedPattern("yyyyMMddHHmmss");
 
-        final long bulkId = genericDao.getNextSequenceValue ("SDT_REF_SEQ");
+        final long bulkId = genericDao.getNextSequenceValue("SDT_REF_SEQ");
 
         final int totalArgs = 3;
         final Object[] args = new Object[totalArgs];
-        args[0] = targetApplication.toUpperCase ();
-        args[1] = dateFormat.format (new Date (System.currentTimeMillis ()));
+        args[0] = targetApplication.toUpperCase();
+        args[1] = dateFormat.format(new Date(System.currentTimeMillis()));
         // Pad the bulk id to make it 9 chars
-        args[2] = String.format ("%09d", bulkId);
+        args[2] = String.format("%09d", bulkId);
 
         // Fill in the reference according to the reference format.
-        final String refNumber = MessageFormat.format (refNumberFormat, args[0], args[1], args[2]);
+        final String refNumber = MessageFormat.format(refNumberFormat, args[0], args[1], args[2]);
 
         return refNumber;
 
@@ -89,11 +85,10 @@ public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
 
     /**
      * Setter method for the generic Dao.
-     * 
+     *
      * @param genericDao The generic Dao
      */
-    public void setGenericDao (final IGenericDao genericDao)
-    {
+    public void setGenericDao(final IGenericDao genericDao) {
         this.genericDao = genericDao;
     }
 

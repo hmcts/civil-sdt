@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -36,21 +36,17 @@ import uk.gov.moj.sdt.validators.api.ITargetApplicationValidator;
 
 /**
  * Implementation of {@link ITargetApplicationValidator}.
- * 
+ *
  * @author Saurabh Agarwal
- * 
  */
-public class TargetApplicationValidator extends AbstractSdtValidator implements ITargetApplicationValidator
-{
+public class TargetApplicationValidator extends AbstractSdtValidator implements ITargetApplicationValidator {
     /**
      * No-argument Constructor.
      */
-    public TargetApplicationValidator ()
-    {
+    public TargetApplicationValidator() {
     }
 
     @Override
-    public void visit (final ITargetApplication targetApplication, final ITree tree)
-    {
+    public void visit(final ITargetApplication targetApplication, final ITree tree) {
     }
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -38,16 +38,14 @@ import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 
 /**
  * Base class for business exceptions.
- * 
+ *
  * @author d130680
- * 
  */
-public abstract class AbstractBusinessException extends RuntimeException implements IBusinessException
-{
+public abstract class AbstractBusinessException extends RuntimeException implements IBusinessException {
     /**
      * The Constant serialVersionUID.
      */
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     /**
      * Error code.
@@ -65,115 +63,107 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
 
     /**
      * Constructor for non-tokenised description.
-     * 
-     * @param code error code
+     *
+     * @param code        error code
      * @param description error description
      */
-    public AbstractBusinessException (final String code, final String description)
-    {
-        super ("Failed with code [" + code + "]; message [" + description + "]");
+    public AbstractBusinessException(final String code, final String description) {
+        super("Failed with code [" + code + "]; message [" + description + "]");
         this.errorCode = code;
         this.errorDescription = description;
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getMetrics ().setLastBusinessException (this.errorDescription);
+        SdtMetricsMBean.getMetrics().upBusinessExceptionCount();
+        SdtMetricsMBean.getMetrics().setLastBusinessException(this.errorDescription);
     }
 
     /**
      * Constructor for tokenised description along with token replacements.
-     * 
-     * @param code error code
-     * @param description error description
+     *
+     * @param code         error code
+     * @param description  error description
      * @param replacements list of strings to replace
      */
-    public AbstractBusinessException (final String code, final String description, final List<String> replacements)
-    {
-        super ("Failed with code [" + code + "]; message[" +
-                MessageFormat.format (description, replacements.toArray ()) + "]");
+    public AbstractBusinessException(final String code, final String description, final List<String> replacements) {
+        super("Failed with code [" + code + "]; message[" +
+                MessageFormat.format(description, replacements.toArray()) + "]");
         this.errorCode = code;
-        this.errorDescription = MessageFormat.format (description, replacements.toArray ());
+        this.errorDescription = MessageFormat.format(description, replacements.toArray());
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getMetrics ().setLastBusinessException (this.errorDescription);
+        SdtMetricsMBean.getMetrics().upBusinessExceptionCount();
+        SdtMetricsMBean.getMetrics().setLastBusinessException(this.errorDescription);
     }
 
     /**
      * Base class for business exceptions.
-     * 
+     *
      * @param s the description of the exception.
      */
-    public AbstractBusinessException (final String s)
-    {
-        super (s);
+    public AbstractBusinessException(final String s) {
+        super(s);
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getMetrics ().setLastBusinessException (s);
+        SdtMetricsMBean.getMetrics().upBusinessExceptionCount();
+        SdtMetricsMBean.getMetrics().setLastBusinessException(s);
     }
 
     /**
      * Base class for business exceptions.
-     * 
+     *
      * @param cause the cause of the exception.
      */
-    public AbstractBusinessException (final Throwable cause)
-    {
-        super (cause);
+    public AbstractBusinessException(final Throwable cause) {
+        super(cause);
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getMetrics ().setLastBusinessException (cause.getMessage ());
+        SdtMetricsMBean.getMetrics().upBusinessExceptionCount();
+        SdtMetricsMBean.getMetrics().setLastBusinessException(cause.getMessage());
     }
 
     /**
      * Base class for business exceptions.
-     * 
-     * @param s the message of the exception.
+     *
+     * @param s     the message of the exception.
      * @param cause the cause of the exception.
      */
-    public AbstractBusinessException (final String s, final Throwable cause)
-    {
-        super (s, cause);
+    public AbstractBusinessException(final String s, final Throwable cause) {
+        super(s, cause);
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upBusinessExceptionCount ();
-        SdtMetricsMBean.getMetrics ().setLastBusinessException (s);
+        SdtMetricsMBean.getMetrics().upBusinessExceptionCount();
+        SdtMetricsMBean.getMetrics().setLastBusinessException(s);
     }
 
     /**
      * Get the error code.
-     * 
+     *
      * @return error code
      */
-    public String getErrorCode ()
-    {
+    public String getErrorCode() {
         return errorCode;
     }
 
     /**
      * Get the error description.
-     * 
+     *
      * @return error description
      */
-    public String getErrorDescription ()
-    {
+    public String getErrorDescription() {
         return errorDescription;
     }
 
     /**
      * Render exception as a string.
-     * 
+     *
      * @return error description
      */
-    public String toString ()
-    {
+    public String toString() {
         // Get class name of exception.
-        final String clazz = getClass ().getName ();
+        final String clazz = getClass().getName();
 
         // Get the error code and description (which may have substituted place holders).
-        final String message = "code [" + this.getErrorCode () + "], description [" + this.getErrorDescription () + "]";
+        final String message = "code [" + this.getErrorCode() + "], description [" + this.getErrorDescription() + "]";
 
         return clazz + ": " + message;
     }

@@ -6,15 +6,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
 import uk.gov.moj.sdt.ws._2013.mcol.responsedetailschema.ResponseDetailType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
 
 
 /**
  * <p>Java class for responseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="responseType">
  *   &lt;complexContent>
@@ -39,13 +40,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "responseType", propOrder = {
-    "responseDetail",
-    "status"
+        "responseDetail",
+        "status"
 })
 public class ResponseType {
 
@@ -60,11 +59,9 @@ public class ResponseType {
 
     /**
      * Gets the value of the responseDetail property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ResponseType.ResponseDetail }
-     *     
+     *
+     * @return possible object is
+     * {@link ResponseType.ResponseDetail }
      */
     public ResponseType.ResponseDetail getResponseDetail() {
         return responseDetail;
@@ -72,11 +69,9 @@ public class ResponseType {
 
     /**
      * Sets the value of the responseDetail property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ResponseType.ResponseDetail }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ResponseType.ResponseDetail }
      */
     public void setResponseDetail(ResponseType.ResponseDetail value) {
         this.responseDetail = value;
@@ -84,11 +79,9 @@ public class ResponseType {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link IndividualStatusType }
-     *     
+     *
+     * @return possible object is
+     * {@link IndividualStatusType }
      */
     public IndividualStatusType getStatus() {
         return status;
@@ -96,11 +89,9 @@ public class ResponseType {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link IndividualStatusType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link IndividualStatusType }
      */
     public void setStatus(IndividualStatusType value) {
         this.status = value;
@@ -108,11 +99,9 @@ public class ResponseType {
 
     /**
      * Gets the value of the requestType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getRequestType() {
         return requestType;
@@ -120,11 +109,9 @@ public class ResponseType {
 
     /**
      * Sets the value of the requestType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setRequestType(String value) {
         this.requestType = value;
@@ -132,11 +119,9 @@ public class ResponseType {
 
     /**
      * Gets the value of the requestId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getRequestId() {
         return requestId;
@@ -144,11 +129,9 @@ public class ResponseType {
 
     /**
      * Sets the value of the requestId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setRequestId(String value) {
         this.requestId = value;
@@ -157,9 +140,9 @@ public class ResponseType {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -171,12 +154,10 @@ public class ResponseType {
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "mcolResponseDetail"
+            "mcolResponseDetail"
     })
     public static class ResponseDetail {
 
@@ -184,11 +165,9 @@ public class ResponseType {
 
         /**
          * Gets the value of the mcolResponseDetail property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link ResponseDetailType }
-         *     
+         *
+         * @return possible object is
+         * {@link ResponseDetailType }
          */
         public ResponseDetailType getMcolResponseDetail() {
             return mcolResponseDetail;
@@ -196,11 +175,9 @@ public class ResponseType {
 
         /**
          * Sets the value of the mcolResponseDetail property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link ResponseDetailType }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link ResponseDetailType }
          */
         public void setMcolResponseDetail(ResponseDetailType value) {
             this.mcolResponseDetail = value;

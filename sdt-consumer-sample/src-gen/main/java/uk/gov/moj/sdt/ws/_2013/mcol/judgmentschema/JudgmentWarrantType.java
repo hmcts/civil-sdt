@@ -5,14 +5,15 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
 import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantType;
 
 
 /**
  * <p>Java class for judgmentWarrantType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="judgmentWarrantType">
  *   &lt;complexContent>
@@ -25,13 +26,11 @@ import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "judgmentWarrantType", propOrder = {
-    "mcolJudgment",
-    "mcolWarrant"
+        "mcolJudgment",
+        "mcolWarrant"
 })
 public class JudgmentWarrantType {
 
@@ -42,11 +41,9 @@ public class JudgmentWarrantType {
 
     /**
      * Gets the value of the mcolJudgment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link McolJudgmentType }
-     *     
+     *
+     * @return possible object is
+     * {@link McolJudgmentType }
      */
     public McolJudgmentType getMcolJudgment() {
         return mcolJudgment;
@@ -54,11 +51,9 @@ public class JudgmentWarrantType {
 
     /**
      * Sets the value of the mcolJudgment property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link McolJudgmentType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link McolJudgmentType }
      */
     public void setMcolJudgment(McolJudgmentType value) {
         this.mcolJudgment = value;
@@ -66,11 +61,9 @@ public class JudgmentWarrantType {
 
     /**
      * Gets the value of the mcolWarrant property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link WarrantType }
-     *     
+     *
+     * @return possible object is
+     * {@link WarrantType }
      */
     public WarrantType getMcolWarrant() {
         return mcolWarrant;
@@ -78,11 +71,9 @@ public class JudgmentWarrantType {
 
     /**
      * Sets the value of the mcolWarrant property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link WarrantType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link WarrantType }
      */
     public void setMcolWarrant(WarrantType value) {
         this.mcolWarrant = value;

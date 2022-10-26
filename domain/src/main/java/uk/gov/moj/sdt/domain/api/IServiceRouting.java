@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,53 +33,51 @@ package uk.gov.moj.sdt.domain.api;
 
 /**
  * Interface for classes implementing {@link IServiceRouting} .
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IServiceRouting extends IDomainObject
-{
+public interface IServiceRouting extends IDomainObject {
 
     /**
      * Get the Target Application.
-     * 
+     *
      * @return target application
      */
-    ITargetApplication getTargetApplication ();
+    ITargetApplication getTargetApplication();
 
     /**
      * Set the Target Application.
-     * 
+     *
      * @param targetApplication target application
      */
-    void setTargetApplication (final ITargetApplication targetApplication);
+    void setTargetApplication(final ITargetApplication targetApplication);
 
     /**
      * Get the Service Type.
-     * 
+     *
      * @return service type
      */
-    IServiceType getServiceType ();
+    IServiceType getServiceType();
 
     /**
      * Set the Service Type.
-     * 
+     *
      * @param serviceType service type
      */
-    void setServiceType (final IServiceType serviceType);
+    void setServiceType(final IServiceType serviceType);
 
     /**
      * Get web service end point.
-     * 
+     *
      * @return web service end point
      */
-    String getWebServiceEndpoint ();
+    String getWebServiceEndpoint();
 
     /**
      * Set web service end point.
-     * 
+     *
      * @param webServiceEndpoint web service end point
      */
-    void setWebServiceEndpoint (final String webServiceEndpoint);
+    void setWebServiceEndpoint(final String webServiceEndpoint);
 
 }

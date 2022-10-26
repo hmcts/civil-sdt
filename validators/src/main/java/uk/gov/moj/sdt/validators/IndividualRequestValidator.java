@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -44,12 +44,10 @@ import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 
 /**
  * Implementation of {@link IIndividualRequestValidator}.
- * 
+ *
  * @author Saurabh Agarwal
- * 
  */
-public class IndividualRequestValidator extends AbstractSdtValidator implements IIndividualRequestValidator
-{
+public class IndividualRequestValidator extends AbstractSdtValidator implements IIndividualRequestValidator {
     /**
      * Individual request dao.
      */
@@ -58,45 +56,41 @@ public class IndividualRequestValidator extends AbstractSdtValidator implements 
     /**
      * No-argument Constructor.
      */
-    public IndividualRequestValidator ()
-    {
+    public IndividualRequestValidator() {
     }
 
     @Override
-    public void visit (final IIndividualRequest individualRequest, final ITree tree)
-    {
-        final IBulkCustomer bulkCustomer = individualRequest.getBulkSubmission ().getBulkCustomer ();
+    public void visit(final IIndividualRequest individualRequest, final ITree tree) {
+        final IBulkCustomer bulkCustomer = individualRequest.getBulkSubmission().getBulkCustomer();
 
         // Validate user file reference is unique across data retention period for individual request
-        final String customerRequestReference = individualRequest.getCustomerRequestReference ();
+        final String customerRequestReference = individualRequest.getCustomerRequestReference();
 
         // Get the data retention period
-        final int dataRetention = super.getDataRetentionPeriod ();
+        final int dataRetention = super.getDataRetentionPeriod();
         final IIndividualRequest invalidIndividualRequest =
-                individualRequestDao.getIndividualRequest (bulkCustomer, customerRequestReference, dataRetention);
+                individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetention);
 
-        if (invalidIndividualRequest != null)
-        {
+        if (invalidIndividualRequest != null) {
             // Set the error in the error log and continue rather than throw an exception
-            final List<String> replacements = new ArrayList<String> ();
-            replacements.add (customerRequestReference);
-            final String description = getErrorMessage (replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
+            final List<String> replacements = new ArrayList<String>();
+            replacements.add(customerRequestReference);
+            final String description = getErrorMessage(replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
 
-            final IErrorLog errorLog = new ErrorLog (IErrorMessage.ErrorCode.DUP_CUST_REQID.name (), description);
+            final IErrorLog errorLog = new ErrorLog(IErrorMessage.ErrorCode.DUP_CUST_REQID.name(), description);
 
             // Change the status to rejected
-            individualRequest.markRequestAsRejected (errorLog);
+            individualRequest.markRequestAsRejected(errorLog);
 
         }
     }
 
     /**
      * Set individual request dao.
-     * 
+     *
      * @param individualRequestDao individual request dao
      */
-    public void setIndividualRequestDao (final IIndividualRequestDao individualRequestDao)
-    {
+    public void setIndividualRequestDao(final IIndividualRequestDao individualRequestDao) {
         this.individualRequestDao = individualRequestDao;
     }
 }

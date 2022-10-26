@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -78,16 +78,14 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Test class for TargetApplicationSubmissionService.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase
-{
+public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Logger for debugging.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (TargetApplicationSubmissionServiceTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TargetApplicationSubmissionServiceTest.class);
 
     /**
      * Target Application Submision Service object.
@@ -123,118 +121,113 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * Method to do any pre-test set-up.
      */
     @Before
-    public void setUp ()
-    {
-        targetAppSubmissionService = new TargetApplicationSubmissionService ();
+    public void setUp() {
+        targetAppSubmissionService = new TargetApplicationSubmissionService();
 
         // Instantiate all the mocked objects and set them in the target application submission service
-        mockIndividualRequestDao = EasyMock.createMock (IIndividualRequestDao.class);
-        targetAppSubmissionService.setIndividualRequestDao (mockIndividualRequestDao);
+        mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
+        targetAppSubmissionService.setIndividualRequestDao(mockIndividualRequestDao);
 
-        mockConsumerGateway = EasyMock.createMock (IConsumerGateway.class);
+        mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
 
-        targetAppSubmissionService.setRequestConsumer (mockConsumerGateway);
+        targetAppSubmissionService.setRequestConsumer(mockConsumerGateway);
 
-        mockCacheable = EasyMock.createMock (ICacheable.class);
-        targetAppSubmissionService.setGlobalParametersCache (mockCacheable);
+        mockCacheable = EasyMock.createMock(ICacheable.class);
+        targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
 
-        mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
-        targetAppSubmissionService.setMessageWriter (mockMessageWriter);
+        mockMessageWriter = EasyMock.createMock(IMessageWriter.class);
+        targetAppSubmissionService.setMessageWriter(mockMessageWriter);
 
-        mockErrorMsgCacheable = EasyMock.createMock (ICacheable.class);
-        targetAppSubmissionService.setErrorMessagesCache (mockErrorMsgCacheable);
+        mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
+        targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
 
-        final GenericXmlParser genericParser = new GenericXmlParser ();
-        genericParser.setEnclosingTag ("targetAppDetail");
+        final GenericXmlParser genericParser = new GenericXmlParser();
+        genericParser.setEnclosingTag("targetAppDetail");
 
-        targetAppSubmissionService.setIndividualResponseXmlParser (genericParser);
+        targetAppSubmissionService.setIndividualResponseXmlParser(genericParser);
     }
 
     /**
      * This method checks an all positive scenario for processing request to submit.
-     * 
      */
     @Test
-    public void processRequestToSubmitAllSuccess ()
-    {
+    public void processRequestToSubmitAllSuccess() {
         final String sdtRequestRef = "TEST_1";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        individualRequest.setRequestStatus ("Received");
-        setUpIndividualRequest (individualRequest);
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
 
-        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+        EasyMock.expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
-        individualReqProcessingDelay.setValue ("10");
-        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
                 individualReqProcessingDelay);
 
-        individualRequest.setRequestStatus ("Forwarded");
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        individualRequest.setRequestStatus("Forwarded");
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
-        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
-        connectionTimeOutParam.setValue ("1000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
                 connectionTimeOutParam);
 
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
-        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue ("12000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
                 receiveTimeOutParam);
 
-        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
-        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
-        {
+        this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
-            public Object answer () throws Throwable
-            {
-                ((IndividualRequest) EasyMock.getCurrentArguments ()[0])
-                        .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
+            public Object answer() throws Throwable {
+                ((IndividualRequest) EasyMock.getCurrentArguments()[0])
+                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
                 // required to be null for a void method
                 return null;
             }
         });
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
-        EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
+        EasyMock.expect(
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
+                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
 
-        mockIndividualRequestDao.persist (bulkSubmission);
-        EasyMock.expectLastCall ();
+        mockIndividualRequestDao.persist(bulkSubmission);
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockIndividualRequestDao);
-        EasyMock.replay (mockConsumerGateway);
-        EasyMock.replay (mockCacheable);
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockCacheable);
 
         // Setup dummy target response
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext().setRawInXml("response");
 
-        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
-        EasyMock.verify (mockIndividualRequestDao);
-        EasyMock.verify (mockConsumerGateway);
-        EasyMock.verify (mockCacheable);
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockCacheable);
 
-        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
-                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
-        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
-                .getBulkSubmission ().getCompletedDate ());
-        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
-                .getBulkSubmission ().getUpdatedDate ());
+        Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus());
+        Assert.assertNotNull("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission().getCompletedDate());
+        Assert.assertNotNull("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission().getUpdatedDate());
 
     }
 
@@ -242,83 +235,79 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * This method checks an all positive scenario for processing request to submit.
      * In the end there are still individual requests outstanding so the bulk submission
      * is not marked as completed.
-     * 
      */
     @Test
-    public void processRequestToSubmitSuccess ()
-    {
+    public void processRequestToSubmitSuccess() {
         final String sdtRequestRef = "TEST_1";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        individualRequest.setRequestStatus ("Received");
-        setUpIndividualRequest (individualRequest);
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
 
-        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+        EasyMock.expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
-        individualReqProcessingDelay.setValue ("10");
-        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
                 individualReqProcessingDelay);
 
-        individualRequest.setRequestStatus ("Forwarded");
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        individualRequest.setRequestStatus("Forwarded");
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
-        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
-        connectionTimeOutParam.setValue ("1000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
                 connectionTimeOutParam);
 
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
-        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue ("12000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
                 receiveTimeOutParam);
 
-        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
-        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
-        {
+        this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
-            public Object answer () throws Throwable
-            {
-                ((IndividualRequest) EasyMock.getCurrentArguments ()[0])
-                        .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
+            public Object answer() throws Throwable {
+                ((IndividualRequest) EasyMock.getCurrentArguments()[0])
+                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
                 // required to be null for a void method
                 return null;
             }
         });
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        final List<IIndividualRequest> indRequests = new ArrayList<IIndividualRequest> ();
-        indRequests.add (individualRequest);
+        final List<IIndividualRequest> indRequests = new ArrayList<IIndividualRequest>();
+        indRequests.add(individualRequest);
 
-        EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (
-                Long.valueOf (indRequests.size ()));
+        EasyMock.expect(
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
+                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(
+                Long.valueOf(indRequests.size()));
 
-        EasyMock.replay (mockIndividualRequestDao);
-        EasyMock.replay (mockConsumerGateway);
-        EasyMock.replay (mockCacheable);
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockCacheable);
 
         // Setup dummy target response
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext().setRawInXml("response");
 
-        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
-        EasyMock.verify (mockIndividualRequestDao);
-        EasyMock.verify (mockConsumerGateway);
-        EasyMock.verify (mockCacheable);
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockCacheable);
 
-        Assert.assertTrue ("Expected to pass", true);
+        Assert.assertTrue("Expected to pass", true);
 
     }
 
@@ -326,229 +315,226 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * Test method to test for the time out.
      */
     @Test
-    public void processRequestToSubmitTimeOut ()
-    {
-        LOGGER.debug ("Timeout scenario");
+    public void processRequestToSubmitTimeOut() {
+        LOGGER.debug("Timeout scenario");
 
         final String sdtRequestRef = "TEST_1";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        individualRequest.setRequestStatus ("Received");
-        setUpIndividualRequest (individualRequest);
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
 
-        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+        EasyMock.expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
-        individualReqProcessingDelay.setValue ("10");
-        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
                 individualReqProcessingDelay);
 
-        individualRequest.setRequestStatus ("Forwarded");
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ().times (1);
+        individualRequest.setRequestStatus("Forwarded");
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall().times(1);
 
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
-        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
-        connectionTimeOutParam.setValue ("1000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
                 connectionTimeOutParam);
 
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
-        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue ("12000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
                 receiveTimeOutParam);
 
-        final TimeoutException timeoutEx = new TimeoutException ("Timeout occurred", "Timeout occurred");
-        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
-        EasyMock.expectLastCall ().andThrow (timeoutEx);
+        final TimeoutException timeoutEx = new TimeoutException("Timeout occurred", "Timeout occurred");
+        this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
+        EasyMock.expectLastCall().andThrow(timeoutEx);
 
-        final IErrorMessage errorMsg = new ErrorMessage ();
-        errorMsg.setErrorCode ("REQ_NOT_ACK");
-        errorMsg.setErrorDescription ("Request not acknowledged");
-        errorMsg.setErrorText ("Request Not Acknowledged");
+        final IErrorMessage errorMsg = new ErrorMessage();
+        errorMsg.setErrorCode("REQ_NOT_ACK");
+        errorMsg.setErrorDescription("Request not acknowledged");
+        errorMsg.setErrorText("Request Not Acknowledged");
 
-        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "REQ_NOT_ACK")).andReturn (errorMsg);
+        EasyMock.expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "REQ_NOT_ACK")).andReturn(errorMsg);
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
-        final IErrorLog errorLog = new ErrorLog (errorMsg.getErrorCode (), errorMsg.getErrorText ());
+        final IErrorLog errorLog = new ErrorLog(errorMsg.getErrorCode(), errorMsg.getErrorText());
 
-        individualRequest.setErrorLog (errorLog);
+        individualRequest.setErrorLog(errorLog);
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter ();
-        maxForwardingAttemptsParam.setName ("MAX_FORWARDING_ATTEMPTS");
-        maxForwardingAttemptsParam.setValue ("3");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn (
+        final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter();
+        maxForwardingAttemptsParam.setName("MAX_FORWARDING_ATTEMPTS");
+        maxForwardingAttemptsParam.setValue("3");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn(
                 maxForwardingAttemptsParam);
 
-        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
-                EasyMock.anyBoolean ());
-        EasyMock.expectLastCall ();
+        this.mockMessageWriter.queueMessage(EasyMock.isA(ISdtMessage.class), EasyMock.isA(String.class),
+                EasyMock.anyBoolean());
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockIndividualRequestDao);
-        EasyMock.replay (mockConsumerGateway);
-        EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockMessageWriter);
-        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockCacheable);
+        EasyMock.replay(mockMessageWriter);
+        EasyMock.replay(mockErrorMsgCacheable);
 
-        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
-        EasyMock.verify (mockIndividualRequestDao);
-        EasyMock.verify (mockConsumerGateway);
-        EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockMessageWriter);
-        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockCacheable);
+        EasyMock.verify(mockMessageWriter);
+        EasyMock.verify(mockErrorMsgCacheable);
 
-        Assert.assertTrue ("Expected to pass", true);
+        Assert.assertTrue("Expected to pass", true);
     }
 
     /**
      * Test method to test for web service exception.
      */
     @Test
-    public void processRequestToSubmitForWebServiceException ()
-    {
-        LOGGER.debug ("Web service exception scenario");
+    public void processRequestToSubmitForWebServiceException() {
+        LOGGER.debug("Web service exception scenario");
 
         final String sdtRequestRef = "TEST_1";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        individualRequest.setRequestStatus ("Received");
-        setUpIndividualRequest (individualRequest);
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
 
-        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+        EasyMock.expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
-        individualReqProcessingDelay.setValue ("10");
-        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
                 individualReqProcessingDelay);
 
-        individualRequest.setRequestStatus ("Forwarded");
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ().times (1);
+        individualRequest.setRequestStatus("Forwarded");
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall().times(1);
 
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
-        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
-        connectionTimeOutParam.setValue ("1000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
                 connectionTimeOutParam);
 
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
-        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue ("12000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
                 receiveTimeOutParam);
 
-        final WebServiceException wsException = new WebServiceException ("WS Error");
-        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
-        EasyMock.expectLastCall ().andThrow (wsException);
+        final WebServiceException wsException = new WebServiceException("WS Error");
+        this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
+        EasyMock.expectLastCall().andThrow(wsException);
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
-                EasyMock.eq (true));
-        EasyMock.expectLastCall ();
+        this.mockMessageWriter.queueMessage(EasyMock.isA(ISdtMessage.class), EasyMock.isA(String.class),
+                EasyMock.eq(true));
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockIndividualRequestDao);
-        EasyMock.replay (mockConsumerGateway);
-        EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockMessageWriter);
-        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockCacheable);
+        EasyMock.replay(mockMessageWriter);
+        EasyMock.replay(mockErrorMsgCacheable);
 
-        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
-        EasyMock.verify (mockIndividualRequestDao);
-        EasyMock.verify (mockConsumerGateway);
-        EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockMessageWriter);
-        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockCacheable);
+        EasyMock.verify(mockMessageWriter);
+        EasyMock.verify(mockErrorMsgCacheable);
 
-        Assert.assertTrue ("Expected to pass", true);
+        Assert.assertTrue("Expected to pass", true);
     }
 
     /**
      * Test method to test for the soap fault error.
      */
     @Test
-    public void processRequestToSubmitSoapFault ()
-    {
+    public void processRequestToSubmitSoapFault() {
         final String sdtRequestRef = "TEST_1";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        individualRequest.setRequestStatus ("Received");
-        setUpIndividualRequest (individualRequest);
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
 
-        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+        EasyMock.expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
-        individualReqProcessingDelay.setValue ("10");
-        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
                 individualReqProcessingDelay);
 
-        individualRequest.setRequestStatus ("Forwarded");
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ().times (1);
+        individualRequest.setRequestStatus("Forwarded");
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall().times(1);
 
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
-        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
-        connectionTimeOutParam.setValue ("1000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
                 connectionTimeOutParam);
 
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
-        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue ("12000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
                 receiveTimeOutParam);
 
-        final SoapFaultException soapEx = new SoapFaultException ("Soap Fault", "Soap Fault occurred");
-        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
-        EasyMock.expectLastCall ().andThrow (soapEx);
+        final SoapFaultException soapEx = new SoapFaultException("Soap Fault", "Soap Fault occurred");
+        this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
+        EasyMock.expectLastCall().andThrow(soapEx);
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        this.mockMessageWriter.queueMessage (EasyMock.isA (ISdtMessage.class), EasyMock.isA (String.class),
-                EasyMock.eq (true));
-        EasyMock.expectLastCall ();
+        this.mockMessageWriter.queueMessage(EasyMock.isA(ISdtMessage.class), EasyMock.isA(String.class),
+                EasyMock.eq(true));
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockIndividualRequestDao);
-        EasyMock.replay (mockConsumerGateway);
-        EasyMock.replay (mockMessageWriter);
-        EasyMock.replay (mockCacheable);
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockMessageWriter);
+        EasyMock.replay(mockCacheable);
 
-        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
-        EasyMock.verify (mockIndividualRequestDao);
-        EasyMock.verify (mockConsumerGateway);
-        EasyMock.verify (mockMessageWriter);
-        EasyMock.verify (mockCacheable);
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockMessageWriter);
+        EasyMock.verify(mockCacheable);
 
-        Assert.assertEquals ("Individual Request status not as expected",
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus (),
-                individualRequest.getRequestStatus ());
+        Assert.assertEquals("Individual Request status not as expected",
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                individualRequest.getRequestStatus());
 
-        Assert.assertNull ("Bulk submission completed date should not be populated", individualRequest
-                .getBulkSubmission ().getCompletedDate ());
+        Assert.assertNull("Bulk submission completed date should not be populated", individualRequest
+                .getBulkSubmission().getCompletedDate());
 
     }
 
@@ -556,89 +542,86 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * Test method to test for the rejected error.
      */
     @Test
-    public void processRequestToSubmitRejected ()
-    {
+    public void processRequestToSubmitRejected() {
         final String sdtRequestRef = "TEST_1";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        individualRequest.setRequestStatus ("Received");
-        setUpIndividualRequest (individualRequest);
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
 
-        EasyMock.expect (this.mockIndividualRequestDao.getRequestBySdtReference (sdtRequestRef)).andReturn (
+        EasyMock.expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter ();
-        individualReqProcessingDelay.setValue ("10");
-        individualReqProcessingDelay.setName ("MCOL_INDV_REQ_DELAY");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn (
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
                 individualReqProcessingDelay);
 
-        individualRequest.setRequestStatus ("Forwarded");
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ().times (1);
+        individualRequest.setRequestStatus("Forwarded");
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall().times(1);
 
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter ();
-        connectionTimeOutParam.setName ("TARGET_APP_TIMEOUT");
-        connectionTimeOutParam.setValue ("1000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn (
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
                 connectionTimeOutParam);
 
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter ();
-        receiveTimeOutParam.setName ("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue ("12000");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn (
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
                 receiveTimeOutParam);
 
-        this.mockConsumerGateway.individualRequest (individualRequest, 1000, 12000);
+        this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
 
-        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
-        {
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
-            public Object answer () throws Throwable
-            {
-                ((IndividualRequest) EasyMock.getCurrentArguments ()[0])
-                        .setRequestStatus (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ());
+            public Object answer() throws Throwable {
+                ((IndividualRequest) EasyMock.getCurrentArguments()[0])
+                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
                 // required to be null for a void method
                 return null;
             }
         });
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
-        EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
+        EasyMock.expect(
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
+                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
 
-        mockIndividualRequestDao.persist (bulkSubmission);
-        EasyMock.expectLastCall ();
+        mockIndividualRequestDao.persist(bulkSubmission);
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockIndividualRequestDao);
-        EasyMock.replay (mockConsumerGateway);
-        EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockCacheable);
+        EasyMock.replay(mockErrorMsgCacheable);
 
         // Setup dummy response
-        SdtContext.getContext ().setRawInXml ("response");
+        SdtContext.getContext().setRawInXml("response");
 
-        this.targetAppSubmissionService.processRequestToSubmit (sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
-        EasyMock.verify (mockIndividualRequestDao);
-        EasyMock.verify (mockConsumerGateway);
-        EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockCacheable);
+        EasyMock.verify(mockErrorMsgCacheable);
 
-        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
-                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
-        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
-                .getBulkSubmission ().getCompletedDate ());
-        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
-                .getBulkSubmission ().getUpdatedDate ());
+        Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus());
+        Assert.assertNotNull("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission().getCompletedDate());
+        Assert.assertNotNull("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission().getUpdatedDate());
     }
 
     /**
@@ -646,73 +629,72 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * that is to be rejected.
      */
     @Test
-    public void processDlqRequestRejected ()
-    {
+    public void processDlqRequestRejected() {
         final String requestStatus = "REJECTED";
         final String sdtRequestRef = "TEST_1";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        this.setUpIndividualRequest (individualRequest);
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        this.setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
-        final IGlobalParameter contactNameParameter = new GlobalParameter ();
-        contactNameParameter.setValue ("Tester");
-        contactNameParameter.setName ("CONTACT_DETAILS");
-        EasyMock.expect (this.mockCacheable.getValue (IGlobalParameter.class, "CONTACT_DETAILS")).andReturn (
+        final IGlobalParameter contactNameParameter = new GlobalParameter();
+        contactNameParameter.setValue("Tester");
+        contactNameParameter.setName("CONTACT_DETAILS");
+        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(
                 contactNameParameter);
 
-        final IErrorMessage errorMsg = new ErrorMessage ();
-        errorMsg.setErrorCode ("CUST_XML_ERR");
-        errorMsg.setErrorDescription ("SDT Client Data Error");
-        errorMsg.setErrorText ("Individual Request format could not be processed by "
+        final IErrorMessage errorMsg = new ErrorMessage();
+        errorMsg.setErrorCode("CUST_XML_ERR");
+        errorMsg.setErrorDescription("SDT Client Data Error");
+        errorMsg.setErrorText("Individual Request format could not be processed by "
                 + "the Target Application. Please check the data and resubmit the "
                 + "request, or contact {0} for assistance.");
 
-        EasyMock.expect (this.mockErrorMsgCacheable.getValue (IErrorMessage.class, "CUST_XML_ERR"))
-                .andReturn (errorMsg);
+        EasyMock.expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "CUST_XML_ERR"))
+                .andReturn(errorMsg);
 
         final String contactName = "Test";
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
         final IErrorLog errorLog =
-                new ErrorLog (errorMsg.getErrorCode (), MessageFormat.format (errorMsg.getErrorText (), contactName));
+                new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
 
-        individualRequest.setErrorLog (errorLog);
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ());
+        individualRequest.setErrorLog(errorLog);
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
-        EasyMock.expect (
-                this.mockIndividualRequestDao.queryAsCount (EasyMock.same (IIndividualRequest.class),
-                        EasyMock.isA (Criterion.class), EasyMock.isA (Criterion.class))).andReturn (0L);
+        EasyMock.expect(
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
+                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
 
-        mockIndividualRequestDao.persist (bulkSubmission);
-        EasyMock.expectLastCall ();
+        mockIndividualRequestDao.persist(bulkSubmission);
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockIndividualRequestDao);
-        EasyMock.replay (mockCacheable);
-        EasyMock.replay (mockErrorMsgCacheable);
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(mockCacheable);
+        EasyMock.replay(mockErrorMsgCacheable);
 
-        this.targetAppSubmissionService.processDLQRequest (individualRequest, requestStatus);
+        this.targetAppSubmissionService.processDLQRequest(individualRequest, requestStatus);
 
-        EasyMock.verify (mockIndividualRequestDao);
-        EasyMock.verify (mockCacheable);
-        EasyMock.verify (mockErrorMsgCacheable);
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockCacheable);
+        EasyMock.verify(mockErrorMsgCacheable);
 
-        Assert.assertEquals ("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
-                .getStatus (), individualRequest.getBulkSubmission ().getSubmissionStatus ());
-        Assert.assertNotNull ("Bulk submission completed date should be populated", individualRequest
-                .getBulkSubmission ().getCompletedDate ());
-        Assert.assertNotNull ("Bulk submission updated date should be populated", individualRequest
-                .getBulkSubmission ().getUpdatedDate ());
-        Assert.assertEquals ("Individual Request should not be marked as dead letter", false,
-                individualRequest.isDeadLetter ());
+        Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
+                .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus());
+        Assert.assertNotNull("Bulk submission completed date should be populated", individualRequest
+                .getBulkSubmission().getCompletedDate());
+        Assert.assertNotNull("Bulk submission updated date should be populated", individualRequest
+                .getBulkSubmission().getUpdatedDate());
+        Assert.assertEquals("Individual Request should not be marked as dead letter", false,
+                individualRequest.isDeadLetter());
 
     }
 
@@ -721,84 +703,82 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * that is to be Forwarded.
      */
     @Test
-    public void processDlqRequestForwarded ()
-    {
+    public void processDlqRequestForwarded() {
         final String requestStatus = "FORWARDED";
         final String sdtRequestRef = "TEST_2";
-        final IIndividualRequest individualRequest = new IndividualRequest ();
+        final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference (sdtRequestRef);
-        this.setUpIndividualRequest (individualRequest);
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ());
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        this.setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
 
-        individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
-        this.mockIndividualRequestDao.persist (individualRequest);
-        EasyMock.expectLastCall ();
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockIndividualRequestDao);
+        EasyMock.replay(mockIndividualRequestDao);
 
-        this.targetAppSubmissionService.processDLQRequest (individualRequest, requestStatus);
+        this.targetAppSubmissionService.processDLQRequest(individualRequest, requestStatus);
 
-        EasyMock.verify (mockIndividualRequestDao);
+        EasyMock.verify(mockIndividualRequestDao);
 
-        Assert.assertEquals ("Individual Request should not be marked as dead letter", false,
-                individualRequest.isDeadLetter ());
-        Assert.assertEquals ("Individual Request status is not FORWARDED",
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus (),
-                individualRequest.getRequestStatus ());
+        Assert.assertEquals("Individual Request should not be marked as dead letter", false,
+                individualRequest.isDeadLetter());
+        Assert.assertEquals("Individual Request status is not FORWARDED",
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                individualRequest.getRequestStatus());
 
     }
 
     /**
      * Set up a valid individual request object.
-     * 
+     *
      * @param request the individual request
      */
-    private void setUpIndividualRequest (final IIndividualRequest request)
-    {
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        final ITargetApplication targetApp = new TargetApplication ();
+    private void setUpIndividualRequest(final IIndividualRequest request) {
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        final ITargetApplication targetApp = new TargetApplication();
 
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("MCOL");
-        targetApp.setTargetApplicationName ("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+        targetApp.setId(1L);
+        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationName("TEST_TargetApp");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
 
-        final ServiceRouting serviceRouting = new ServiceRouting ();
-        serviceRouting.setId (1L);
-        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+        final ServiceRouting serviceRouting = new ServiceRouting();
+        serviceRouting.setId(1L);
+        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
 
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setId (1L);
-        serviceType.setName ("RequestTest1");
-        serviceType.setDescription ("RequestTestDesc1");
-        serviceType.setStatus ("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType();
+        serviceType.setId(1L);
+        serviceType.setName("RequestTest1");
+        serviceType.setDescription("RequestTestDesc1");
+        serviceType.setStatus("RequestTestStatus");
 
-        serviceRouting.setServiceType (serviceType);
+        serviceRouting.setServiceType(serviceType);
 
-        serviceRoutings.add (serviceRouting);
+        serviceRoutings.add(serviceRouting);
 
-        targetApp.setServiceRoutings (serviceRoutings);
+        targetApp.setServiceRoutings(serviceRoutings);
 
-        bulkSubmission.setTargetApplication (targetApp);
+        bulkSubmission.setTargetApplication(targetApp);
 
-        bulkCustomer.setId (1L);
-        bulkCustomer.setSdtCustomerId (10L);
+        bulkCustomer.setId(1L);
+        bulkCustomer.setSdtCustomerId(10L);
 
-        bulkSubmission.setBulkCustomer (bulkCustomer);
-        bulkSubmission.setCustomerReference ("TEST_CUST_REF");
-        bulkSubmission.setId (1L);
-        bulkSubmission.setNumberOfRequest (1);
-        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest> ();
-        requests.add (request);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
+        bulkSubmission.setCustomerReference("TEST_CUST_REF");
+        bulkSubmission.setId(1L);
+        bulkSubmission.setNumberOfRequest(1);
+        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest>();
+        requests.add(request);
 
-        bulkSubmission.setIndividualRequests (requests);
+        bulkSubmission.setIndividualRequests(requests);
 
-        request.setBulkSubmission (bulkSubmission);
+        request.setBulkSubmission(bulkSubmission);
     }
 
 }

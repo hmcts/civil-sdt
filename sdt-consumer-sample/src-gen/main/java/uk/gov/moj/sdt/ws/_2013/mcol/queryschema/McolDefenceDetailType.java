@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for mcolDefenceDetailType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="mcolDefenceDetailType">
  *   &lt;complexContent>
@@ -24,13 +24,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "mcolDefenceDetailType", propOrder = {
-    "claimNumber",
-    "defendantResponse"
+        "claimNumber",
+        "defendantResponse"
 })
 public class McolDefenceDetailType {
 
@@ -41,11 +39,9 @@ public class McolDefenceDetailType {
 
     /**
      * Gets the value of the claimNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getClaimNumber() {
         return claimNumber;
@@ -53,11 +49,9 @@ public class McolDefenceDetailType {
 
     /**
      * Sets the value of the claimNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setClaimNumber(String value) {
         this.claimNumber = value;
@@ -65,11 +59,9 @@ public class McolDefenceDetailType {
 
     /**
      * Gets the value of the defendantResponse property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DefendantResponseType }
-     *     
+     *
+     * @return possible object is
+     * {@link DefendantResponseType }
      */
     public DefendantResponseType getDefendantResponse() {
         return defendantResponse;
@@ -77,11 +69,9 @@ public class McolDefenceDetailType {
 
     /**
      * Sets the value of the defendantResponse property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DefendantResponseType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link DefendantResponseType }
      */
     public void setDefendantResponse(DefendantResponseType value) {
         this.defendantResponse = value;

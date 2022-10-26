@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
@@ -45,50 +45,44 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
  * Test class for end to end web service tests..
- * 
+ *
  * @author Sally Vonka
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
         "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
-public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType>
-{
+public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType> {
     /**
      * Method to call remote request bulk feedback endpoint to be tested.
      */
     @Test
-    public void testValidRequestBulkFeedback ()
-    {
-        this.callWebService (BulkFeedbackRequestType.class);
+    public void testValidRequestBulkFeedback() {
+        this.callWebService(BulkFeedbackRequestType.class);
     }
 
     /**
      * Method to call remote request bulk feedback endpoint to be tested.
      */
     @Test
-    public void testInvalidRequestBulkFeedback ()
-    {
-        this.callWebService (BulkFeedbackRequestType.class);
+    public void testInvalidRequestBulkFeedback() {
+        this.callWebService(BulkFeedbackRequestType.class);
     }
 
     @Override
-    protected BulkFeedbackResponseType callTestWebService (final BulkFeedbackRequestType request)
-    {
+    protected BulkFeedbackResponseType callTestWebService(final BulkFeedbackRequestType request) {
         // Get the SOAP proxy client.
-        ISdtEndpointPortType client = getSdtEndpointClient ();
+        ISdtEndpointPortType client = getSdtEndpointClient();
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
-        return client.getBulkFeedback (request);
+        return client.getBulkFeedback(request);
     }
 
     @Override
-    protected JAXBElement<BulkFeedbackResponseType> wrapJaxbObject (final BulkFeedbackResponseType response)
-    {
+    protected JAXBElement<BulkFeedbackResponseType> wrapJaxbObject(final BulkFeedbackResponseType response) {
         // Use the provided factor to create a wrapped instance of the response.
-        ObjectFactory objectFactory = new ObjectFactory ();
-        return objectFactory.createBulkFeedbackResponse (response);
+        ObjectFactory objectFactory = new ObjectFactory();
+        return objectFactory.createBulkFeedbackResponse(response);
     }
 
 }

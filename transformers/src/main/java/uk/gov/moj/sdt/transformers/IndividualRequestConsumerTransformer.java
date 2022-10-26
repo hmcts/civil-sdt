@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -46,68 +46,56 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
 
 /**
  * Maps bulk request JAXB object tree to domain object tree and vice versa for individual requests.
- * 
+ *
  * @author d130680
- * 
  */
 public final class IndividualRequestConsumerTransformer extends AbstractTransformer implements
-        IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest>
-{
+        IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> {
     /**
      * Private constructor.
      */
-    private IndividualRequestConsumerTransformer ()
-    {
+    private IndividualRequestConsumerTransformer() {
     }
 
     @Override
     public void
-            transformJaxbToDomain (final IndividualResponseType jaxbInstance, final IIndividualRequest domainObject)
-    {
-        final CreateStatusType status = jaxbInstance.getStatus ();
-        final CreateStatusCodeType statusCode = status.getCode ();
+    transformJaxbToDomain(final IndividualResponseType jaxbInstance, final IIndividualRequest domainObject) {
+        final CreateStatusType status = jaxbInstance.getStatus();
+        final CreateStatusCodeType statusCode = status.getCode();
 
-        if (CreateStatusCodeType.ERROR.equals (statusCode) || CreateStatusCodeType.REJECTED.equals (statusCode))
-        {
-            final ErrorType errorType = status.getError ();
-            final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
-            domainObject.markRequestAsRejected (errorLog);
-        }
-        else if (CreateStatusCodeType.ACCEPTED.equals (statusCode))
-        {
-            domainObject.markRequestAsAccepted ();
-        }
-        else if (CreateStatusCodeType.INITIALLY_ACCEPTED.equals (statusCode))
-        {
-            domainObject.markRequestAsInitiallyAccepted ();
-        }
-        else if (CreateStatusCodeType.AWAITING_DATA.equals (statusCode))
-        {
-            domainObject.markRequestAsAwaitingData ();
+        if (CreateStatusCodeType.ERROR.equals(statusCode) || CreateStatusCodeType.REJECTED.equals(statusCode)) {
+            final ErrorType errorType = status.getError();
+            final IErrorLog errorLog = new ErrorLog(errorType.getCode(), errorType.getDescription());
+            domainObject.markRequestAsRejected(errorLog);
+        } else if (CreateStatusCodeType.ACCEPTED.equals(statusCode)) {
+            domainObject.markRequestAsAccepted();
+        } else if (CreateStatusCodeType.INITIALLY_ACCEPTED.equals(statusCode)) {
+            domainObject.markRequestAsInitiallyAccepted();
+        } else if (CreateStatusCodeType.AWAITING_DATA.equals(statusCode)) {
+            domainObject.markRequestAsAwaitingData();
         }
 
     }
 
     @Override
-    public IndividualRequestType transformDomainToJaxb (final IIndividualRequest domainObject)
-    {
-        final IndividualRequestType jaxb = new IndividualRequestType ();
-        final HeaderType header = new HeaderType ();
+    public IndividualRequestType transformDomainToJaxb(final IIndividualRequest domainObject) {
+        final IndividualRequestType jaxb = new IndividualRequestType();
+        final HeaderType header = new HeaderType();
 
         // Populate the header of the IndividualRequestType.
-        header.setRequestType (domainObject.getRequestType ());
-        header.setSdtRequestId (domainObject.getSdtRequestReference ());
+        header.setRequestType(domainObject.getRequestType());
+        header.setSdtRequestId(domainObject.getSdtRequestReference());
 
-        final ITargetApplication targetApp = domainObject.getBulkSubmission ().getTargetApplication ();
+        final ITargetApplication targetApp = domainObject.getBulkSubmission().getTargetApplication();
         final IBulkCustomerApplication bulkCustomerApplication =
-                domainObject.getBulkSubmission ().getBulkCustomer ()
-                        .getBulkCustomerApplication (targetApp.getTargetApplicationCode ());
+                domainObject.getBulkSubmission().getBulkCustomer()
+                        .getBulkCustomerApplication(targetApp.getTargetApplicationCode());
 
-        header.setTargetAppCustomerId (bulkCustomerApplication.getCustomerApplicationId ());
-        jaxb.setHeader (header);
+        header.setTargetAppCustomerId(bulkCustomerApplication.getCustomerApplicationId());
+        jaxb.setHeader(header);
 
         // Set empty target app detail so the tags needed for enrichment are written.
-        jaxb.setTargetAppDetail (new IndividualRequestType.TargetAppDetail ());
+        jaxb.setTargetAppDetail(new IndividualRequestType.TargetAppDetail());
 
         return jaxb;
     }

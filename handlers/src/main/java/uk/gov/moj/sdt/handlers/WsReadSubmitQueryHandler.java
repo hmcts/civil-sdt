@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -53,21 +53,18 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 
 /**
  * Implementation for handling submit query flow.
- * 
+ *
  * @author d130680
- * 
  */
-@Transactional (propagation = Propagation.REQUIRED)
-public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsReadSubmitQueryHandler
-{
+@Transactional(propagation = Propagation.REQUIRED)
+public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsReadSubmitQueryHandler {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (WsReadSubmitQueryHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WsReadSubmitQueryHandler.class);
 
     /**
      * Submit Query service to return response.
-     * 
      */
     private ISubmitQueryService submitQueryService;
 
@@ -80,63 +77,55 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
     // CHECKSTYLE:ON
 
     @Override
-    public SubmitQueryResponseType submitQuery (final SubmitQueryRequestType submitQueryRequestType)
-    {
-        if (LOGGER.isInfoEnabled ())
-        {
-            LOGGER.info ("Submit query started for customer[" +
-                    submitQueryRequestType.getHeader ().getSdtCustomerId () + "], query reference[" +
-                    submitQueryRequestType.getHeader ().getQueryReference () + "]");
+    public SubmitQueryResponseType submitQuery(final SubmitQueryRequestType submitQueryRequestType) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Submit query started for customer[" +
+                    submitQueryRequestType.getHeader().getSdtCustomerId() + "], query reference[" +
+                    submitQueryRequestType.getHeader().getQueryReference() + "]");
         }
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upSubmitQueryCount ();
+        SdtMetricsMBean.getMetrics().upSubmitQueryCount();
 
         // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final long startTime = new GregorianCalendar().getTimeInMillis();
 
         // Update number of customers using the system.
-        SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
-                Long.toString (submitQueryRequestType.getHeader ().getSdtCustomerId ()));
+        SdtMetricsMBean.getMetrics().updateBulkCustomerCount(
+                Long.toString(submitQueryRequestType.getHeader().getSdtCustomerId()));
 
         // Initialise response;
-        LOGGER.debug ("Setup initial submit query response");
-        SubmitQueryResponseType submitQueryResponseType = createResponse (submitQueryRequestType);
+        LOGGER.debug("Setup initial submit query response");
+        SubmitQueryResponseType submitQueryResponseType = createResponse(submitQueryRequestType);
 
-        try
-        {
+        try {
             // Transform web service object to domain object(s)
-            LOGGER.debug ("Transform from SubmitQueryRequestType to ISubmitQueryRequest");
+            LOGGER.debug("Transform from SubmitQueryRequestType to ISubmitQueryRequest");
             final ISubmitQueryRequest submitQueryRequest =
-                    getTransformer ().transformJaxbToDomain (submitQueryRequestType);
+                    getTransformer().transformJaxbToDomain(submitQueryRequestType);
 
             // Validate domain.
-            LOGGER.debug ("Validate submit query");
-            validateDomain (submitQueryRequest);
+            LOGGER.debug("Validate submit query");
+            validateDomain(submitQueryRequest);
 
             // Process validated request.
-            LOGGER.debug ("Process submit query");
-            processSubmitQuery (submitQueryRequest);
+            LOGGER.debug("Process submit query");
+            processSubmitQuery(submitQueryRequest);
 
-            LOGGER.debug ("Transform from ISubmitQueryRequest to SubmitQueryResponseType");
-            submitQueryResponseType = getTransformer ().transformDomainToJaxb (submitQueryRequest);
-        }
-        catch (final AbstractBusinessException be)
-        {
-            handleBusinessException (be, submitQueryResponseType);
-        }
-        finally
-        {
-            if (LOGGER.isInfoEnabled ())
-            {
-                LOGGER.info ("Submit query completed for customer[" +
-                        submitQueryRequestType.getHeader ().getSdtCustomerId () + "], query reference[" +
-                        submitQueryRequestType.getHeader ().getQueryReference () + "]");
+            LOGGER.debug("Transform from ISubmitQueryRequest to SubmitQueryResponseType");
+            submitQueryResponseType = getTransformer().transformDomainToJaxb(submitQueryRequest);
+        } catch (final AbstractBusinessException be) {
+            handleBusinessException(be, submitQueryResponseType);
+        } finally {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Submit query completed for customer[" +
+                        submitQueryRequestType.getHeader().getSdtCustomerId() + "], query reference[" +
+                        submitQueryRequestType.getHeader().getQueryReference() + "]");
             }
 
             // Measure total time spent in use case.
-            final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            SdtMetricsMBean.getMetrics ().addSubmitQueryTime (endTime - startTime);
+            final long endTime = new GregorianCalendar().getTimeInMillis();
+            SdtMetricsMBean.getMetrics().addSubmitQueryTime(endTime - startTime);
         }
 
         return submitQueryResponseType;
@@ -145,74 +134,67 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
 
     /**
      * Create and initialise Response.
-     * 
+     *
      * @param submitQueryRequestType request
      * @return SubmitQueryResponse
      */
-    private SubmitQueryResponseType createResponse (final SubmitQueryRequestType submitQueryRequestType)
-    {
-        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
-        submitQueryResponseType.setSdtService (AbstractTransformer.SDT_SERVICE);
-        submitQueryResponseType.setSdtCustomerId (submitQueryRequestType.getHeader ().getSdtCustomerId ());
-        submitQueryResponseType.setStatus (new StatusType ());
-        submitQueryResponseType.setResultCount (BigInteger.valueOf (0));
-        submitQueryResponseType.setResults (new ResultsType ());
+    private SubmitQueryResponseType createResponse(final SubmitQueryRequestType submitQueryRequestType) {
+        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
+        submitQueryResponseType.setSdtService(AbstractTransformer.SDT_SERVICE);
+        submitQueryResponseType.setSdtCustomerId(submitQueryRequestType.getHeader().getSdtCustomerId());
+        submitQueryResponseType.setStatus(new StatusType());
+        submitQueryResponseType.setResultCount(BigInteger.valueOf(0));
+        submitQueryResponseType.setResults(new ResultsType());
 
         return submitQueryResponseType;
     }
 
     /**
      * Validate to ensure integrity of submit query.
-     * 
+     *
      * @param submitQueryRequest submit query criteria
      * @throws AbstractBusinessException business exception
      */
-    private void validateDomain (final ISubmitQueryRequest submitQueryRequest) throws AbstractBusinessException
-    {
-        VisitableTreeWalker.walk (submitQueryRequest, "Validator");
+    private void validateDomain(final ISubmitQueryRequest submitQueryRequest) throws AbstractBusinessException {
+        VisitableTreeWalker.walk(submitQueryRequest, "Validator");
     }
 
     /**
      * Process submit query.
-     * 
+     *
      * @param request submit query request
      */
-    private void processSubmitQuery (final ISubmitQueryRequest request)
-    {
-        submitQueryService.submitQuery (request);
+    private void processSubmitQuery(final ISubmitQueryRequest request) {
+        submitQueryService.submitQuery(request);
     }
 
     /**
      * Set the Submit Query Service.
-     * 
+     *
      * @param submitQueryService submit query service
      */
-    public void setSubmitQueryService (final ISubmitQueryService submitQueryService)
-    {
+    public void setSubmitQueryService(final ISubmitQueryService submitQueryService) {
         this.submitQueryService = submitQueryService;
     }
 
     /**
      * Getter for transformer.
-     * 
+     *
      * @return the transformer associated with this class.
      */
     public ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest>
-            getTransformer ()
-    {
+    getTransformer() {
         return transformer;
     }
 
     /**
      * Setter for transformer.
-     * 
+     *
      * @param transformer the transformer to be associated with this class.
      */
     // CHECKSTYLE:OFF
-    public
-            void
-            setTransformer (final ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> transformer)
-    {
+    public void
+    setTransformer(final ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
         this.transformer = transformer;
     }
     // CHECKSYTLE:ON

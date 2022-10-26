@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -43,13 +43,11 @@ import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 /**
  * Implementation of the IMessagingUtility interface providing methods
  * to do the tasks related to message queueing.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@Transactional (propagation = Propagation.SUPPORTS)
-public class MessagingUtility implements IMessagingUtility
-{
+@Transactional(propagation = Propagation.SUPPORTS)
+public class MessagingUtility implements IMessagingUtility {
 
     /**
      * Message writer for queueing messages to the messaging server.
@@ -63,21 +61,18 @@ public class MessagingUtility implements IMessagingUtility
     private IMessageSynchronizer messageSynchronizer;
 
     @Override
-    public void enqueueRequest (final IIndividualRequest individualRequest)
-    {
-        this.getMessageSynchronizer ().execute (new Runnable ()
-        {
+    public void enqueueRequest(final IIndividualRequest individualRequest) {
+        this.getMessageSynchronizer().execute(new Runnable() {
 
             @Override
-            public void run ()
-            {
+            public void run() {
                 final String targetAppCode =
-                        individualRequest.getBulkSubmission ().getTargetApplication ().getTargetApplicationCode ();
-                final ISdtMessage messageObj = new SdtMessage ();
+                        individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
+                final ISdtMessage messageObj = new SdtMessage();
 
-                messageObj.setSdtRequestReference (individualRequest.getSdtRequestReference ());
+                messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
 
-                getMessageWriter ().queueMessage (messageObj, targetAppCode, false);
+                getMessageWriter().queueMessage(messageObj, targetAppCode, false);
             }
 
         });
@@ -85,38 +80,30 @@ public class MessagingUtility implements IMessagingUtility
     }
 
     /**
-     * 
      * @return the message synchroniser
      */
-    public IMessageSynchronizer getMessageSynchronizer ()
-    {
+    public IMessageSynchronizer getMessageSynchronizer() {
         return messageSynchronizer;
     }
 
     /**
-     * 
      * @param messageSynchronizer the message synchronizer for synchronising the JMS message queue.
      */
-    public void setMessageSynchronizer (final IMessageSynchronizer messageSynchronizer)
-    {
+    public void setMessageSynchronizer(final IMessageSynchronizer messageSynchronizer) {
         this.messageSynchronizer = messageSynchronizer;
     }
 
     /**
-     * 
      * @return the Message Writer
      */
-    public IMessageWriter getMessageWriter ()
-    {
+    public IMessageWriter getMessageWriter() {
         return messageWriter;
     }
 
     /**
-     * 
      * @param messageWriter the Message writer implementation.
      */
-    public void setMessageWriter (final IMessageWriter messageWriter)
-    {
+    public void setMessageWriter(final IMessageWriter messageWriter) {
         this.messageWriter = messageWriter;
     }
 

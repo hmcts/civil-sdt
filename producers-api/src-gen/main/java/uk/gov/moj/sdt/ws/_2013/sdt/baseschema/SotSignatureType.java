@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for sotSignatureType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="sotSignatureType">
  *   &lt;complexContent>
@@ -37,13 +37,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sotSignatureType", propOrder = {
-    "flag",
-    "name"
+        "flag",
+        "name"
 })
 public class SotSignatureType {
 
@@ -53,7 +51,6 @@ public class SotSignatureType {
 
     /**
      * Gets the value of the flag property.
-     * 
      */
     public boolean isFlag() {
         return flag;
@@ -61,7 +58,6 @@ public class SotSignatureType {
 
     /**
      * Sets the value of the flag property.
-     * 
      */
     public void setFlag(boolean value) {
         this.flag = value;
@@ -69,11 +65,9 @@ public class SotSignatureType {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getName() {
         return name;
@@ -81,11 +75,9 @@ public class SotSignatureType {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setName(String value) {
         this.name = value;

@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for breathingSpaceType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="breathingSpaceType">
  *   &lt;complexContent>
@@ -25,14 +25,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "breathingSpaceType", propOrder = {
-    "claimNumber",
-    "defendantId",
-    "breathingSpaceNotificationType"
+        "claimNumber",
+        "defendantId",
+        "breathingSpaceNotificationType"
 })
 public class BreathingSpaceType {
 
@@ -45,11 +43,9 @@ public class BreathingSpaceType {
 
     /**
      * Gets the value of the claimNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getClaimNumber() {
         return claimNumber;
@@ -57,11 +53,9 @@ public class BreathingSpaceType {
 
     /**
      * Sets the value of the claimNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setClaimNumber(String value) {
         this.claimNumber = value;
@@ -69,11 +63,9 @@ public class BreathingSpaceType {
 
     /**
      * Gets the value of the defendantId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDefendantId() {
         return defendantId;
@@ -81,11 +73,9 @@ public class BreathingSpaceType {
 
     /**
      * Sets the value of the defendantId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDefendantId(String value) {
         this.defendantId = value;
@@ -93,11 +83,9 @@ public class BreathingSpaceType {
 
     /**
      * Gets the value of the breathingSpaceNotificationType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BreathingSpaceNotificationType }
-     *     
+     *
+     * @return possible object is
+     * {@link BreathingSpaceNotificationType }
      */
     public BreathingSpaceNotificationType getBreathingSpaceNotificationType() {
         return breathingSpaceNotificationType;
@@ -105,11 +93,9 @@ public class BreathingSpaceType {
 
     /**
      * Sets the value of the breathingSpaceNotificationType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BreathingSpaceNotificationType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link BreathingSpaceNotificationType }
      */
     public void setBreathingSpaceNotificationType(BreathingSpaceNotificationType value) {
         this.breathingSpaceNotificationType = value;

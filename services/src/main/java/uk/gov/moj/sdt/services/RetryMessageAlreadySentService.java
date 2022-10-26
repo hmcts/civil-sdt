@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -46,24 +46,22 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 
 /**
  * Class implementing the interface IRetryMessageSendService.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@Transactional (propagation = Propagation.REQUIRES_NEW)
-public class RetryMessageAlreadySentService implements IRetryMessageSendService
-{
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public class RetryMessageAlreadySentService implements IRetryMessageSendService {
 
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (RetryMessageAlreadySentService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(RetryMessageAlreadySentService.class);
 
     /**
      * The default forwarding attempts is set to 3. This value should never be used
      * but just in case the database global parameter is not set, this will be used.
      */
-    private static final int DEFAULT_MAX_FORWARDING_ATTEMPTS = 3;
+    private final static int DEFAULT_MAX_FORWARDING_ATTEMPTS = 3;
 
     /**
      * Individual Request Dao to perform operations on the individual request object.
@@ -81,88 +79,75 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService
     private ICacheable globalParametersCache;
 
     @Override
-    public void queueMessages ()
-    {
+    public void queueMessages() {
         final String maxForwardingAttemptsStr =
-                this.getSystemParameter (IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name ());
+                this.getSystemParameter(IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name());
         final int maxForwardingAttempts =
-                maxForwardingAttemptsStr != null ? Integer.valueOf (maxForwardingAttemptsStr)
+                maxForwardingAttemptsStr != null ? Integer.valueOf(maxForwardingAttemptsStr)
                         : DEFAULT_MAX_FORWARDING_ATTEMPTS;
 
-        LOGGER.debug ("Looking for pending individual request which have reached [" + maxForwardingAttemptsStr +
+        LOGGER.debug("Looking for pending individual request which have reached [" + maxForwardingAttemptsStr +
                 "] forwarding attempts");
 
         // Get list of pending individual requests.
         final List<IIndividualRequest> individualRequests =
-                this.individualRequestDao.getPendingIndividualRequests (maxForwardingAttempts);
+                this.individualRequestDao.getPendingIndividualRequests(maxForwardingAttempts);
 
         // Loop through the list of the individual requests found.
-        if ( !individualRequests.isEmpty ())
-        {
-            for (IIndividualRequest individualRequest : individualRequests)
-            {
-                this.messagingUtility.enqueueRequest (individualRequest);
+        if (!individualRequests.isEmpty()) {
+            for (IIndividualRequest individualRequest : individualRequests) {
+                this.messagingUtility.enqueueRequest(individualRequest);
 
                 // Re-set the forwarding attempts on the individual request.
-                individualRequest.resetForwardingAttempts ();
+                individualRequest.resetForwardingAttempts();
 
-                LOGGER.debug ("Re-queue pending individual request [" + individualRequest.getSdtRequestReference () +
+                LOGGER.debug("Re-queue pending individual request [" + individualRequest.getSdtRequestReference() +
                         "]");
             }
 
             // Persist the list of individual requests.
-            this.individualRequestDao.persistBulk (individualRequests);
-        }
-        else
-        {
-            LOGGER.debug ("No pending individual requests to process");
+            this.individualRequestDao.persistBulk(individualRequests);
+        } else {
+            LOGGER.debug("No pending individual requests to process");
         }
     }
 
     /**
-     * 
      * @param individualRequestDao the individual request dao object.
      */
-    public void setIndividualRequestDao (final IIndividualRequestDao individualRequestDao)
-    {
+    public void setIndividualRequestDao(final IIndividualRequestDao individualRequestDao) {
         this.individualRequestDao = individualRequestDao;
     }
 
     /**
-     * 
      * @param messagingUtility the messagingUtility instance.
      */
-    public void setMessagingUtility (final IMessagingUtility messagingUtility)
-    {
+    public void setMessagingUtility(final IMessagingUtility messagingUtility) {
         this.messagingUtility = messagingUtility;
     }
 
     /**
-     * 
      * @param globalParametersCache the global parameters cache instance.
      */
-    public void setGlobalParametersCache (final ICacheable globalParametersCache)
-    {
+    public void setGlobalParametersCache(final ICacheable globalParametersCache) {
         this.globalParametersCache = globalParametersCache;
     }
 
     /**
      * Return the named parameter value from global parameters.
-     * 
+     *
      * @param parameterName the name of the parameter.
      * @return value of the parameter name as stored in the database.
      */
-    private String getSystemParameter (final String parameterName)
-    {
+    private String getSystemParameter(final String parameterName) {
         final IGlobalParameter globalParameter =
-                this.globalParametersCache.getValue (IGlobalParameter.class, parameterName);
+                this.globalParametersCache.getValue(IGlobalParameter.class, parameterName);
 
-        if (globalParameter == null)
-        {
+        if (globalParameter == null) {
             return null;
         }
 
-        return globalParameter.getValue ();
+        return globalParameter.getValue();
 
     }
 

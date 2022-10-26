@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,53 +23,51 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.domain.api;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 /**
  * Audit log entity representing information captured while processing requests
  * across the SDT and Government Gateway boundary.
- * 
+ *
  * @author David Turner
  */
-public interface IServiceRequest extends IDomainObject
-{
+public interface IServiceRequest extends IDomainObject {
 
     /**
      * Set the datetime of the service request.
-     * 
-     * @param requestDateTime
-     *            the service request datetime.
+     *
+     * @param requestDateTime the service request datetime.
      */
-    void setRequestDateTime (final LocalDateTime requestDateTime);
+    void setRequestDateTime(final LocalDateTime requestDateTime);
 
     /**
      * Retrieve the response date time.
-     * 
+     *
      * @return the request times
      */
-    LocalDateTime getRequestDateTime ();
+    LocalDateTime getRequestDateTime();
 
     /**
      * Set the datetime of the service response.
-     * 
-     * @param responseDateTime
-     *            the service request datetime.
+     *
+     * @param responseDateTime the service request datetime.
      */
-    void setResponseDateTime (final LocalDateTime responseDateTime);
+    void setResponseDateTime(final LocalDateTime responseDateTime);
 
     /**
      * Retrieve the response date time.
-     * 
+     *
      * @return the response time
      */
-    LocalDateTime getResponseDateTime ();
+    LocalDateTime getResponseDateTime();
 
     /**
      * Set the bulk bulk customer ID.
@@ -84,19 +82,18 @@ public interface IServiceRequest extends IDomainObject
      * <p>
      * Format: NNNNNNNN
      * </p>
-     * 
-     * @param bulkCustomerId
-     *            the unique numeric identifier for that bulk customer. This
-     *            value is fixed for the customer.
+     *
+     * @param bulkCustomerId the unique numeric identifier for that bulk customer. This
+     *                       value is fixed for the customer.
      */
-    void setBulkCustomerId (final String bulkCustomerId);
+    void setBulkCustomerId(final String bulkCustomerId);
 
     /**
      * Retrieve the bulk customer id.
-     * 
+     *
      * @return bulk customer ids
      */
-    String getBulkCustomerId ();
+    String getBulkCustomerId();
 
     /**
      * Three possible request types. Submit Bulk Request Request Bulk Feedback
@@ -104,18 +101,17 @@ public interface IServiceRequest extends IDomainObject
      * <p>
      * Awaiting enlightenment
      * </p>
-     * 
-     * @param requestType
-     *            one of three possible request types.
+     *
+     * @param requestType one of three possible request types.
      */
-    void setRequestType (final String requestType);
+    void setRequestType(final String requestType);
 
     /**
      * Retrieve request type.
-     * 
+     *
      * @return request type.
      */
-    String getRequestType ();
+    String getRequestType();
 
     /**
      * The entire incoming message must be saved and so will be considered the
@@ -124,18 +120,17 @@ public interface IServiceRequest extends IDomainObject
      * The whole message must be stored in case it fails further validation or cannot be read. Storing the actual
      * payload separately will be an unnecessary duplication.
      * </p>
-     * 
-     * @param requestPayload
-     *            the entire message including SOAP headers.
+     *
+     * @param requestPayload the entire message including SOAP headers.
      */
-    void setRequestPayload (final String requestPayload);
+    void setRequestPayload(final String requestPayload);
 
     /**
      * Retrieve the payload.
-     * 
+     *
      * @return the request payload.
      */
-    String getRequestPayload ();
+    String getRequestPayload();
 
     /**
      * The entire outgoing message must be saved and so will be considered the
@@ -144,18 +139,17 @@ public interface IServiceRequest extends IDomainObject
      * The whole message must be stored in case it fails further validation or cannot be read. Storing the actual
      * payload separately will be an unnecessary duplication.
      * </p>
-     * 
-     * @param responsePayload
-     *            the entire message including SOAP headers.
+     *
+     * @param responsePayload the entire message including SOAP headers.
      */
-    void setResponsePayload (final String responsePayload);
+    void setResponsePayload(final String responsePayload);
 
     /**
      * Retrieve the payload.
-     * 
+     *
      * @return the response payload.
      */
-    String getResponsePayload ();
+    String getResponsePayload();
 
     /**
      * The SDT generated Bulk Reference will only ever be available on certain
@@ -163,31 +157,30 @@ public interface IServiceRequest extends IDomainObject
      * <p>
      * optional
      * </p>
-     * 
-     * @param bulkReference
-     *            the SDT generated Bulk Reference
+     *
+     * @param bulkReference the SDT generated Bulk Reference
      */
-    void setBulkReference (final String bulkReference);
+    void setBulkReference(final String bulkReference);
 
     /**
      * Retrieve generated SDT reference.
-     * 
+     *
      * @return SDT bulk reference.
      */
-    String getBulkReference ();
+    String getBulkReference();
 
     /**
      * The host name from the request coming from the gateway.
-     * 
+     *
      * @param hostName the server host name
      */
-    void setServerHostName (final String hostName);
+    void setServerHostName(final String hostName);
 
     /**
      * Retrieve the server host name.
-     * 
+     *
      * @return the server host name
      */
-    String getServerHostName ();
+    String getServerHostName();
 
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -37,34 +37,33 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
  * Interface for all classes implementing {@link IBulkSubmissionDao}.
- * 
+ *
  * @author d130680
  */
-public interface IBulkSubmissionDao extends IGenericDao
-{
+public interface IBulkSubmissionDao extends IGenericDao {
     /**
      * Check the customer reference is unique across data retention period. Return the bulk submission if the check
      * fails or null if it succeeds.
-     * 
-     * @param bulkCustomer bulk customer
+     *
+     * @param bulkCustomer      bulk customer
      * @param customerReference customer reference
-     * @param dataRetention the data retention period to use
-     * @throws DataAccessException Hibernate exception
+     * @param dataRetention     the data retention period to use
      * @return null if the bulk submission is unique or the non unique bulk submission object
+     * @throws DataAccessException Hibernate exception
      */
-    IBulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
-                                       final int dataRetention) throws DataAccessException;
+    IBulkSubmission getBulkSubmission(final IBulkCustomer bulkCustomer, final String customerReference,
+                                      final int dataRetention) throws DataAccessException;
 
     /**
      * Check the customer reference is unique across data retention period. Return the bulk submission if the check
      * fails or null if it succeeds.
-     * 
-     * @param bulkCustomer bulk customer
+     *
+     * @param bulkCustomer     bulk customer
      * @param sdtBulkReference sdt bulk reference
-     * @param dataRetention the data retention period to use
-     * @throws DataAccessException Hibernate exception
+     * @param dataRetention    the data retention period to use
      * @return null if the bulk submission is unique or the non unique bulk submission object
+     * @throws DataAccessException Hibernate exception
      */
-    IBulkSubmission getBulkSubmissionBySdtRef (final IBulkCustomer bulkCustomer, final String sdtBulkReference,
-                                               final int dataRetention) throws DataAccessException;
+    IBulkSubmission getBulkSubmissionBySdtRef(final IBulkCustomer bulkCustomer, final String sdtBulkReference,
+                                              final int dataRetention) throws DataAccessException;
 }

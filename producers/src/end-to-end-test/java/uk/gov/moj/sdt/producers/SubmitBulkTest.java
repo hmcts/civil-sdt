@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
@@ -51,15 +51,13 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
  * Test class for end to end web service tests..
- * 
+ *
  * @author Robin Compston
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
         "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
-public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType>
-{
+public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType> {
     /**
      * Thirty seconds in milliseconds.
      */
@@ -69,18 +67,16 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
      * Method to call remote submit bulk endpoint to be tested.
      */
     @Test
-    public void testValid ()
-    {
-        this.callWebService (BulkRequestType.class);
+    public void testValid() {
+        this.callWebService(BulkRequestType.class);
     }
 
     /**
      * Method to call remote submit bulk endpoint to be tested.
      */
     @Test
-    public void testCountMismatch ()
-    {
-        this.callWebService (BulkRequestType.class);
+    public void testCountMismatch() {
+        this.callWebService(BulkRequestType.class);
     }
 
     /**
@@ -88,8 +84,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
      * reference), and to allow the first and return a duplicate error for the second.
      */
     @Test
-    public void testTwoConcurrentDuplicates ()
-    {
+    public void testTwoConcurrentDuplicates() {
         boolean duplicateDetected = false;
 
         // Used to limit number of attempts.
@@ -97,15 +92,13 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
         // Keep trying to send pairs of messages until they are both in memory at the same time and detected as
         // concurrent.
-        while ( !duplicateDetected && attempts < 10)
-        {
-            duplicateDetected = this.sendConcurrentDuplicates (attempts, 2);
+        while (!duplicateDetected && attempts < 10) {
+            duplicateDetected = this.sendConcurrentDuplicates(attempts, 2);
             attempts++;
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
-            if ( !duplicateDetected)
-            {
-                DBUnitUtility.loadDatabase (this.getClass (), true);
+            if (!duplicateDetected) {
+                DBUnitUtility.loadDatabase(this.getClass(), true);
             }
         }
     }
@@ -115,8 +108,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
      * reference), and to allow the first and return a duplicate error for the second.
      */
     @Test
-    public void testTenConcurrentDuplicates ()
-    {
+    public void testTenConcurrentDuplicates() {
         boolean duplicateDetected = false;
 
         // Used to limit number of attempts.
@@ -124,88 +116,75 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
         // Keep trying to send pairs of messages until they are both in memory at the same time and detected as
         // concurrent.
-        while ( !duplicateDetected && attempts < 10)
-        {
-            duplicateDetected = this.sendConcurrentDuplicates (attempts, 10);
+        while (!duplicateDetected && attempts < 10) {
+            duplicateDetected = this.sendConcurrentDuplicates(attempts, 10);
             attempts++;
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
-            if ( !duplicateDetected)
-            {
-                DBUnitUtility.loadDatabase (this.getClass (), true);
+            if (!duplicateDetected) {
+                DBUnitUtility.loadDatabase(this.getClass(), true);
             }
         }
     }
 
     @Override
-    protected BulkResponseType callTestWebService (final BulkRequestType request)
-    {
+    protected BulkResponseType callTestWebService(final BulkRequestType request) {
         // Get the SOAP proxy client.
-        ISdtEndpointPortType client = getSdtEndpointClient ();
+        ISdtEndpointPortType client = getSdtEndpointClient();
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
-        return client.submitBulk (request);
+        return client.submitBulk(request);
     }
 
     @Override
-    protected JAXBElement<BulkResponseType> wrapJaxbObject (final BulkResponseType response)
-    {
+    protected JAXBElement<BulkResponseType> wrapJaxbObject(final BulkResponseType response) {
         // Use the provided factor to create a wrapped instance of the response.
-        ObjectFactory objectFactory = new ObjectFactory ();
-        return objectFactory.createBulkResponse (response);
+        ObjectFactory objectFactory = new ObjectFactory();
+        return objectFactory.createBulkResponse(response);
     }
 
     /**
      * Method to send two duplicate messages to the application server in close succession in the hope that we will get
      * an in memory concurrent duplicate detected.
-     * 
-     * @param attempts the number of times we have tried to send a pair of messages.
+     *
+     * @param attempts         the number of times we have tried to send a pair of messages.
      * @param concurrencyLevel the number of concurrent threads sending messages.
      * @return true - duplicate detected, false - duplicate not detected.
      */
-    protected boolean sendConcurrentDuplicates (final int attempts, final int concurrencyLevel)
-    {
+    protected boolean sendConcurrentDuplicates(final int attempts, final int concurrencyLevel) {
         // Define outside loops.
         ConcurrentMessage concurrentMessage;
 
         // Create all necessary threads and store in list.
-        List<ConcurrentMessage> concurrentMessages = new ArrayList<ConcurrentMessage> (concurrencyLevel);
-        for (int i = 0; i < concurrencyLevel; i++)
-        {
-            concurrentMessage = new ConcurrentMessage (attempts);
-            concurrentMessages.add (concurrentMessage);
+        List<ConcurrentMessage> concurrentMessages = new ArrayList<ConcurrentMessage>(concurrencyLevel);
+        for (int i = 0; i < concurrencyLevel; i++) {
+            concurrentMessage = new ConcurrentMessage(attempts);
+            concurrentMessages.add(concurrentMessage);
 
             // Start the thread.
-            concurrentMessage.start ();
+            concurrentMessage.start();
         }
 
         // Wait for all threads to complete.
-        for (int i = 0; i < concurrencyLevel; i++)
-        {
-            try
-            {
-                concurrentMessages.get (i).join (THIRTY_SECONDS);
-            }
-            catch (final InterruptedException e)
-            {
-                Assert.fail ("Unexpected interruption of concurrent message thread.");
+        for (int i = 0; i < concurrencyLevel; i++) {
+            try {
+                concurrentMessages.get(i).join(THIRTY_SECONDS);
+            } catch (final InterruptedException e) {
+                Assert.fail("Unexpected interruption of concurrent message thread.");
             }
         }
 
         // Count all duplicates.
         int duplicateCount = 0;
-        for (int i = 0; i < concurrencyLevel; i++)
-        {
-            if (concurrentMessages.get (i).isDuplicate ())
-            {
+        for (int i = 0; i < concurrencyLevel; i++) {
+            if (concurrentMessages.get(i).isDuplicate()) {
                 duplicateCount++;
             }
         }
 
         // All should have been duplicates except for one which worked.
-        if (duplicateCount == concurrencyLevel - 1)
-        {
+        if (duplicateCount == concurrencyLevel - 1) {
             return true;
         }
 
@@ -215,13 +194,13 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
     /**
      * Inner class to send a single SOAP message in a separate thread
-     * 
-     * @author Robin Compston.
      *
+     * @author Robin Compston.
      */
-    private class ConcurrentMessage extends Thread
-    {
-        /** Flag to indicate server saw this message as a duplicate. */
+    private class ConcurrentMessage extends Thread {
+        /**
+         * Flag to indicate server saw this message as a duplicate.
+         */
         private boolean duplicate = false;
 
         /**
@@ -231,40 +210,33 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
         /**
          * Constructor for ConcurrentMessage class.
-         * 
+         *
          * @param attemptOffset suffix to be added to customer reference and request id to make each pair of messages
-         *            unique.
+         *                      unique.
          */
-        public ConcurrentMessage (final int attemptOffset)
-        {
+        public ConcurrentMessage(final int attemptOffset) {
             this.attemptOffset = attemptOffset;
         }
 
         @Override
-        public void run ()
-        {
-            this.testConcurrentDuplicate ();
+        public void run() {
+            this.testConcurrentDuplicate();
         }
 
         /**
          * Method name used to fool infrastructure into thinking this is the outer class method name allowing normal
          * method of identifying associated XML files for test.
-         * 
+         *
          * @return true - duplicate message detected by server, false - no duplicate detected.
          */
-        public void testConcurrentDuplicate ()
-        {
-            try
-            {
-                this.callWebService ();
-            }
-            catch (final ComparisonFailure e)
-            {
-                if (e.getActual ().matches (
+        public void testConcurrentDuplicate() {
+            try {
+                this.callWebService();
+            } catch (final ComparisonFailure e) {
+                if (e.getActual().matches(
                         ".*?Duplicate User File Reference .*? supplied. This was previously used to submit "
-                                + "a Bulk Request on .*? and the SDT Bulk Reference " + "MCOL-.*? was allocated..*?"))
-                {
-                    setDuplicate (true);
+                                + "a Bulk Request on .*? and the SDT Bulk Reference " + "MCOL-.*? was allocated..*?")) {
+                    setDuplicate(true);
                 }
             }
         }
@@ -273,51 +245,45 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
          * Method is needed to add one extra stack frame to allow the Abstract class to correctly find the method name
          * of the test.
          */
-        private void callWebService ()
-        {
+        private void callWebService() {
             // Get the argument to send to the web service.
-            BulkRequestType request = getJaxbFromXml (BulkRequestType.class);
+            BulkRequestType request = getJaxbFromXml(BulkRequestType.class);
 
             // Adjust the requests to allow pairs of potential duplicates to be distinguished from each other.
-            request.getHeader ().setCustomerReference (
-                    request.getHeader ().getCustomerReference () + this.attemptOffset);
-            request.getRequests ().getRequest ().get (0)
-                    .setRequestId (request.getRequests ().getRequest ().get (0).getRequestId () + this.attemptOffset);
+            request.getHeader().setCustomerReference(
+                    request.getHeader().getCustomerReference() + this.attemptOffset);
+            request.getRequests().getRequest().get(0)
+                    .setRequestId(request.getRequests().getRequest().get(0).getRequestId() + this.attemptOffset);
 
             // Call the remote service.
             BulkResponseType response;
-            try
-            {
-                response = callTestWebService (request);
-            }
-            catch (RuntimeException e)
-            {
+            try {
+                response = callTestWebService(request);
+            } catch (RuntimeException e) {
                 throw e;
             }
 
             // Check the response returned by the web service.
-            checkXmlFromJaxb (response);
+            checkXmlFromJaxb(response);
 
             return;
         }
 
         /**
          * Return duplicate flag value.
-         * 
+         *
          * @return true - duplicate message detected by server, false - no duplicate detected.
          */
-        public boolean isDuplicate ()
-        {
+        public boolean isDuplicate() {
             return duplicate;
         }
 
         /**
          * Set the value of the duplicate flag.
-         * 
+         *
          * @param duplicate value of the duplicate flag.
          */
-        private void setDuplicate (final boolean duplicate)
-        {
+        private void setDuplicate(final boolean duplicate) {
             this.duplicate = duplicate;
         }
     }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -50,12 +50,11 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * Integration test for the Global Parameters Cache.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
@@ -66,8 +65,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class GlobalParametersCacheIntTest extends AbstractIntegrationTest
-{
+public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
     /**
      * Test subject.
      */
@@ -77,12 +75,11 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest
      * Setup the test.
      */
     @Before
-    public void setUp ()
-    {
-        DBUnitUtility.loadDatabase (this.getClass (), true);
+    public void setUp() {
+        DBUnitUtility.loadDatabase(this.getClass(), true);
         globalParameterCache =
                 (ICacheable) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache");
+                        .getBean("uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache");
 
     }
 
@@ -90,73 +87,70 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest
      * Test getValue method where parameter is found.
      */
     @Test
-    public void testGetValueSuccess ()
-    {
+    public void testGetValueSuccess() {
         final IGlobalParameter globalParameter =
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name ());
+                globalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name());
 
-        assertNotNull (globalParameter);
-        assertEquals ("Wrong global parameter name retrieved for " +
-                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name (),
-                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name (), globalParameter.getName ());
-        assertEquals ("Wrong global parameter value retrieved for " +
-                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name (), "3", globalParameter.getValue ());
+        assertNotNull(globalParameter);
+        assertEquals("Wrong global parameter name retrieved for " +
+                        IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name(),
+                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name(), globalParameter.getName());
+        assertEquals("Wrong global parameter value retrieved for " +
+                IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name(), "3", globalParameter.getValue());
     }
 
     /**
      * Test getValue method where parameter is not found.
      */
     @Test
-    public void testGetValueNotFound ()
-    {
+    public void testGetValueNotFound() {
         // Negative test
-        final IGlobalParameter globalParameter = globalParameterCache.getValue (IGlobalParameter.class, "NO_PARAMETER");
+        final IGlobalParameter globalParameter = globalParameterCache.getValue(IGlobalParameter.class, "NO_PARAMETER");
 
-        assertNull (globalParameter);
+        assertNull(globalParameter);
     }
 
     /**
      * Test getValue method where parameter is found after uncache.
      */
     @Test
-    public void testUncache ()
-    {
+    public void testUncache() {
         // Try to retrieve the bean
         IGlobalParameter globalParameter =
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+                globalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
 
-        assertNotNull (globalParameter);
-        assertEquals ("Wrong global parameter name retrieved for " +
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (),
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), globalParameter.getName ());
-        assertEquals ("Wrong global parameter value retrieved for " +
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), "90", globalParameter.getValue ());
+        assertNotNull(globalParameter);
+        assertEquals("Wrong global parameter name retrieved for " +
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(),
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(), globalParameter.getName());
+        assertEquals("Wrong global parameter value retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(), "90", globalParameter.getValue());
 
         // Do uncache operation.
         final ISdtManagementMBean sdtManagementMBean =
                 (ISdtManagementMBean) SpringApplicationContext
-                        .getBean ("uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean");
-        sdtManagementMBean.uncache ();
+                        .getBean("uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean");
+        sdtManagementMBean.uncache();
 
         // Change the value in the database.
         final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
-        globalParameter.setValue ("91");
-        genericDao.persist (globalParameter);
+                (IGenericDao) SpringApplicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        globalParameter.setValue("91");
+        genericDao.persist(globalParameter);
 
         // Try to retrieve the bean again with new value.
         globalParameter = null;
         globalParameter =
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
+                globalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
 
-        assertNotNull (globalParameter);
-        assertEquals ("Wrong global parameter name retrieved for " +
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (),
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), globalParameter.getName ());
-        assertEquals ("Wrong global parameter value retrieved for " +
-                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name (), "91", globalParameter.getValue ());
+        assertNotNull(globalParameter);
+        assertEquals("Wrong global parameter name retrieved for " +
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(),
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(), globalParameter.getName());
+        assertEquals("Wrong global parameter value retrieved for " +
+                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(), "91", globalParameter.getValue());
     }
 }

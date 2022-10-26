@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -44,21 +44,19 @@ import uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache;
 
 /**
  * A cache of all the error messages.
- * 
+ *
  * @author d301488/Robin Compston
- * 
  */
-public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMessagesCache
-{
+public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMessagesCache {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (ErrorMessagesCache.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ErrorMessagesCache.class);
 
     /**
      * The map of error messages.
      */
-    private Map<String, IErrorMessage> errorMessages = new HashMap<String, IErrorMessage> ();
+    private Map<String, IErrorMessage> errorMessages = new HashMap<String, IErrorMessage>();
 
     /**
      * DAO to retrieve error messages.
@@ -67,97 +65,83 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
 
     /**
      * Get the map holding cached values.
-     * 
+     *
      * @return the map holding cached values.
      */
-    protected Map<String, IErrorMessage> getErrorMessages ()
-    {
+    protected Map<String, IErrorMessage> getErrorMessages() {
         return errorMessages;
     }
 
     @Override
-    protected <DomainType extends IDomainObject> DomainType getSpecificValue (final Class<DomainType> domainType,
-                                                                              final String errorMessageCode)
-    {
+    protected <DomainType extends IDomainObject> DomainType getSpecificValue(final Class<DomainType> domainType,
+                                                                             final String errorMessageCode) {
         // Assume map is uninitialised if empty.
-        if (this.getErrorMessages ().isEmpty ())
-        {
-            loadCache ();
+        if (this.getErrorMessages().isEmpty()) {
+            loadCache();
         }
 
-        LOGGER.debug ("Retrieving error message with key [" + errorMessageCode + "]");
+        LOGGER.debug("Retrieving error message with key [" + errorMessageCode + "]");
 
         // Get the value of the named parameter.
-        final Object someObject = this.getErrorMessages ().get (errorMessageCode);
+        final Object someObject = this.getErrorMessages().get(errorMessageCode);
 
-        if (someObject == null)
-        {
-            LOGGER.warn ("Error message with error message code [" + errorMessageCode + "] not found.");
+        if (someObject == null) {
+            LOGGER.warn("Error message with error message code [" + errorMessageCode + "] not found.");
 
-            throw new IllegalStateException ("Error message with key [" + errorMessageCode + "] not found.");
+            throw new IllegalStateException("Error message with key [" + errorMessageCode + "] not found.");
         }
 
         DomainType domainObject = null;
 
         // Double check that the expected class matches the retrieved class.
-        if (domainType.isAssignableFrom (someObject.getClass ()))
-        {
+        if (domainType.isAssignableFrom(someObject.getClass())) {
             // Prepare object of correct type to return to caller.
-            domainObject = domainType.cast (someObject);
-        }
-        else
-        {
+            domainObject = domainType.cast(someObject);
+        } else {
             // Unsupported entity type.
-            throw new UnsupportedOperationException ("Expected class [" + domainType.getCanonicalName () +
-                    "] does not match retrieved class [" + someObject.getClass ().getCanonicalName () + "].");
+            throw new UnsupportedOperationException("Expected class [" + domainType.getCanonicalName() +
+                    "] does not match retrieved class [" + someObject.getClass().getCanonicalName() + "].");
         }
 
         return domainObject;
     }
 
     @Override
-    protected void loadCache ()
-    {
+    protected void loadCache() {
         // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
-        synchronized (this.getErrorMessages ())
-        {
+        synchronized (this.getErrorMessages()) {
             // Assume map is uninitialised if empty.
-            if (this.getErrorMessages ().isEmpty ())
-            {
-                LOGGER.info ("Loading error messages into cache.");
+            if (this.getErrorMessages().isEmpty()) {
+                LOGGER.info("Loading error messages into cache.");
 
                 // Retrieve all rows from error messages table.
-                final IErrorMessage[] result = genericDao.query (IErrorMessage.class);
+                final IErrorMessage[] result = genericDao.query(IErrorMessage.class);
 
-                for (IErrorMessage errorMessage : result)
-                {
+                for (IErrorMessage errorMessage : result) {
                     // Add all retrieved messages to a map, keyed by the Error Code.
-                    this.getErrorMessages ().put (errorMessage.getErrorCode (), errorMessage);
+                    this.getErrorMessages().put(errorMessage.getErrorCode(), errorMessage);
                 }
             }
         }
     }
 
     @Override
-    protected void uncache ()
-    {
+    protected void uncache() {
         // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
-        synchronized (this.getErrorMessages ())
-        {
+        synchronized (this.getErrorMessages()) {
             // Clear map but do not destroy it.
-            this.getErrorMessages ().clear ();
+            this.getErrorMessages().clear();
 
-            LOGGER.info ("Uncaching error messages.");
+            LOGGER.info("Uncaching error messages.");
         }
     }
 
     /**
      * Setter for generic DAO.
-     * 
+     *
      * @param genericDao the genericDao to set.
      */
-    public void setGenericDao (final IGenericDao genericDao)
-    {
+    public void setGenericDao(final IGenericDao genericDao) {
         this.genericDao = genericDao;
     }
 }

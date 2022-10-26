@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -43,21 +43,19 @@ import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 
 /**
  * This class reads xml and parses it to extract target application specific xml.
- * 
+ *
  * @author d276205
- * 
  */
-public class GenericXmlParser
-{
+public class GenericXmlParser {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (GenericXmlParser.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(GenericXmlParser.class);
 
     /**
      * Mapping of namespaces to be replaced.
      */
-    private Map<String, String> replacementNamespaces = new HashMap<String, String> ();
+    private Map<String, String> replacementNamespaces = new HashMap<String, String>();
 
     /**
      * Name of enclosing element.
@@ -67,26 +65,25 @@ public class GenericXmlParser
     /**
      * Parses raw xml to extract target application specific fragment. The fragment is decorated with applicable
      * namespace details.
-     * 
+     *
      * @return target app specific fragment.
      */
-    public String parse ()
-    {
+    public String parse() {
 
         String xmlResult = "";
 
-        String rawXml = SdtContext.getContext ().getRawInXml ();
+        String rawXml = SdtContext.getContext().getRawInXml();
 
         // Remove linefeeds as they stop the regular expression working.
-        rawXml = rawXml.replace ('\n', ' ');
-        rawXml = rawXml.replace ('\r', ' ');
+        rawXml = rawXml.replace('\n', ' ');
+        rawXml = rawXml.replace('\r', ' ');
 
         // Get rid of comments to simplify subsequent processing.
-        rawXml = XmlNamespaceUtils.removeComments (rawXml);
+        rawXml = XmlNamespaceUtils.removeComments(rawXml);
 
         // Retrieve all namespaces
         final Map<String, String> allNamespaces =
-                XmlNamespaceUtils.extractAllNamespaces (rawXml, replacementNamespaces);
+                XmlNamespaceUtils.extractAllNamespaces(rawXml, replacementNamespaces);
 
         // Build search pattern for extraction.
         //
@@ -95,33 +92,32 @@ public class GenericXmlParser
         // enclosed XML
         // optional namespace prefix and end tag enclosing XML to be extracted and any attributes
         final Pattern pattern =
-                Pattern.compile ("<[\\S:&&[^!>/]]*?" + getEnclosingTag () + "(.*?)>(.*?)</[\\S:&&[^!>/]]*?" +
-                        getEnclosingTag () + ">");
-        final Matcher matcher = pattern.matcher (rawXml);
+                Pattern.compile("<[\\S:&&[^!>/]]*?" + getEnclosingTag() + "(.*?)>(.*?)</[\\S:&&[^!>/]]*?" +
+                        getEnclosingTag() + ">");
+        final Matcher matcher = pattern.matcher(rawXml);
 
-        if (matcher.find ())
-        {
-            LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+        if (matcher.find()) {
+            LOGGER.debug("Found matching group[" + matcher.group() + "]");
 
             // Capture raw xml for element
-            xmlResult = matcher.group (2).trim ();
+            xmlResult = matcher.group(2).trim();
 
-            LOGGER.debug ("Result XML[" + xmlResult + "]");
+            LOGGER.debug("Result XML[" + xmlResult + "]");
 
             // Find namespaces applicable for fragment.
             final Map<String, String> matchingNamespaces =
-                    XmlNamespaceUtils.findMatchingNamespaces (xmlResult, allNamespaces);
+                    XmlNamespaceUtils.findMatchingNamespaces(xmlResult, allNamespaces);
 
             // In preparation for adding namespace definitions, remove existing namespace definitions (which may be
             // different) from XML fragment.
-            xmlResult = XmlNamespaceUtils.removeEmbeddedNamespaces (xmlResult);
+            xmlResult = XmlNamespaceUtils.removeEmbeddedNamespaces(xmlResult);
 
             // Translate any embedded default namespaces to their target application equivalent.
-            xmlResult = XmlNamespaceUtils.translateDefaultNamespaces (xmlResult, replacementNamespaces);
+            xmlResult = XmlNamespaceUtils.translateDefaultNamespaces(xmlResult, replacementNamespaces);
 
-            xmlResult = XmlNamespaceUtils.addNamespaces (xmlResult, matchingNamespaces);
+            xmlResult = XmlNamespaceUtils.addNamespaces(xmlResult, matchingNamespaces);
 
-            LOGGER.debug ("result XML with namespaces[" + xmlResult + "]");
+            LOGGER.debug("result XML with namespaces[" + xmlResult + "]");
         }
 
         return xmlResult;
@@ -129,32 +125,29 @@ public class GenericXmlParser
 
     /**
      * Setter for enclosingTag.
-     * 
+     *
      * @param enclosingTag enclosing tag.
      */
-    public void setEnclosingTag (final String enclosingTag)
-    {
+    public void setEnclosingTag(final String enclosingTag) {
         this.enclosingTag = enclosingTag;
     }
 
     /**
      * Getter for enclosingTag.
-     * 
+     *
      * @return enclosing tag
      */
-    public String getEnclosingTag ()
-    {
+    public String getEnclosingTag() {
         return enclosingTag;
     }
 
     /**
      * Setter for replacementNamespaces property.<BR>
      * In the map, key contains source namespace to be replaced and value contains target namespace.
-     * 
+     *
      * @param replacementNamespaces namespaces to be replaced.
      */
-    public void setReplacementNamespaces (final Map<String, String> replacementNamespaces)
-    {
+    public void setReplacementNamespaces(final Map<String, String> replacementNamespaces) {
         this.replacementNamespaces = replacementNamespaces;
     }
 }

@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for paymentScheduleType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="paymentScheduleType">
  *   &lt;complexContent>
@@ -24,14 +24,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "paymentScheduleType", propOrder = {
-    "inFullByPayment",
-    "instalment",
-    "immediatePayment"
+        "inFullByPayment",
+        "instalment",
+        "immediatePayment"
 })
 public class PaymentScheduleType {
 
@@ -41,11 +39,9 @@ public class PaymentScheduleType {
 
     /**
      * Gets the value of the inFullByPayment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link FullPaymentType }
-     *     
+     *
+     * @return possible object is
+     * {@link FullPaymentType }
      */
     public FullPaymentType getInFullByPayment() {
         return inFullByPayment;
@@ -53,11 +49,9 @@ public class PaymentScheduleType {
 
     /**
      * Sets the value of the inFullByPayment property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link FullPaymentType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link FullPaymentType }
      */
     public void setInFullByPayment(FullPaymentType value) {
         this.inFullByPayment = value;
@@ -65,11 +59,9 @@ public class PaymentScheduleType {
 
     /**
      * Gets the value of the instalment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link InstalmentPaymentType }
-     *     
+     *
+     * @return possible object is
+     * {@link InstalmentPaymentType }
      */
     public InstalmentPaymentType getInstalment() {
         return instalment;
@@ -77,11 +69,9 @@ public class PaymentScheduleType {
 
     /**
      * Sets the value of the instalment property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link InstalmentPaymentType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link InstalmentPaymentType }
      */
     public void setInstalment(InstalmentPaymentType value) {
         this.instalment = value;
@@ -89,11 +79,9 @@ public class PaymentScheduleType {
 
     /**
      * Gets the value of the immediatePayment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ImmediatePaymentType }
-     *     
+     *
+     * @return possible object is
+     * {@link ImmediatePaymentType }
      */
     public ImmediatePaymentType getImmediatePayment() {
         return immediatePayment;
@@ -101,11 +89,9 @@ public class PaymentScheduleType {
 
     /**
      * Sets the value of the immediatePayment property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ImmediatePaymentType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ImmediatePaymentType }
      */
     public void setImmediatePayment(ImmediatePaymentType value) {
         this.immediatePayment = value;

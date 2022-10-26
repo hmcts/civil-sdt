@@ -13,7 +13,7 @@ import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class SampleSmokeTest {
-    protected static final String CONTENT_TYPE_VALUE = "application/json";
+    protected final static String CONTENT_TYPE_VALUE = "application/json";
 
     @Value("${TEST_URL:http://localhost:8080}")
     private String testUrl;
@@ -27,13 +27,13 @@ class SampleSmokeTest {
     @Test
     void smokeTest() {
         Response response = given()
-            .contentType(ContentType.JSON)
-            .when()
-            .get()
-            .then()
-            .extract().response();
+                .contentType(ContentType.JSON)
+                .when()
+                .get()
+                .then()
+                .extract().response();
 
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertTrue(response.asString().startsWith("Welcome"));
-    } 
+    }
 }

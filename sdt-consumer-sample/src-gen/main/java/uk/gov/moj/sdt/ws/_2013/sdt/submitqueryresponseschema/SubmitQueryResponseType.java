@@ -7,14 +7,15 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
 
 
 /**
  * <p>Java class for submitQueryResponseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="submitQueryResponseType">
  *   &lt;complexContent>
@@ -29,19 +30,16 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.AbstractResponseType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "submitQueryResponseType", propOrder = {
-    "sdtCustomerId",
-    "sdtService",
-    "resultCount",
-    "results"
+        "sdtCustomerId",
+        "sdtService",
+        "resultCount",
+        "results"
 })
 public class SubmitQueryResponseType
-    extends AbstractResponseType
-{
+        extends AbstractResponseType {
 
     protected long sdtCustomerId;
     @XmlElement(required = true)
@@ -54,7 +52,6 @@ public class SubmitQueryResponseType
 
     /**
      * Gets the value of the sdtCustomerId property.
-     * 
      */
     public long getSdtCustomerId() {
         return sdtCustomerId;
@@ -62,7 +59,6 @@ public class SubmitQueryResponseType
 
     /**
      * Sets the value of the sdtCustomerId property.
-     * 
      */
     public void setSdtCustomerId(long value) {
         this.sdtCustomerId = value;
@@ -70,11 +66,9 @@ public class SubmitQueryResponseType
 
     /**
      * Gets the value of the sdtService property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSdtService() {
         return sdtService;
@@ -82,11 +76,9 @@ public class SubmitQueryResponseType
 
     /**
      * Sets the value of the sdtService property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSdtService(String value) {
         this.sdtService = value;
@@ -94,11 +86,9 @@ public class SubmitQueryResponseType
 
     /**
      * Gets the value of the resultCount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @return possible object is
+     * {@link BigInteger }
      */
     public BigInteger getResultCount() {
         return resultCount;
@@ -106,11 +96,9 @@ public class SubmitQueryResponseType
 
     /**
      * Sets the value of the resultCount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link BigInteger }
      */
     public void setResultCount(BigInteger value) {
         this.resultCount = value;
@@ -118,11 +106,9 @@ public class SubmitQueryResponseType
 
     /**
      * Gets the value of the results property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ResultsType }
-     *     
+     *
+     * @return possible object is
+     * {@link ResultsType }
      */
     public ResultsType getResults() {
         return results;
@@ -130,11 +116,9 @@ public class SubmitQueryResponseType
 
     /**
      * Sets the value of the results property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ResultsType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ResultsType }
      */
     public void setResults(ResultsType value) {
         this.results = value;

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -48,12 +48,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 
 /**
  * Unit test for {@link SdtInternalEndpointPortType}.
- * 
+ *
  * @author d276205
- * 
  */
-public class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase
-{
+public class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
     /**
      * Test subject.
@@ -69,12 +67,11 @@ public class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * Set up common for all tests.
      */
     @Before
-    public void setUp ()
-    {
-        portType = new SdtInternalEndpointPortType ();
+    public void setUp() {
+        portType = new SdtInternalEndpointPortType();
 
-        mockUpdateItemHandler = EasyMock.createMock (IWsUpdateItemHandler.class);
-        portType.setUpdateItemHandler (mockUpdateItemHandler);
+        mockUpdateItemHandler = EasyMock.createMock(IWsUpdateItemHandler.class);
+        portType.setUpdateItemHandler(mockUpdateItemHandler);
 
     }
 
@@ -82,70 +79,63 @@ public class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * Test update item method completes successfully.
      */
     @Test
-    public void testUpdateItemSuccess ()
-    {
-        EasyMock.expect (mockUpdateItemHandler.updateItem (EasyMock.anyObject (UpdateRequestType.class))).andReturn (
-                createUpdateResponse ());
-        EasyMock.replay (mockUpdateItemHandler);
+    public void testUpdateItemSuccess() {
+        EasyMock.expect(mockUpdateItemHandler.updateItem(EasyMock.anyObject(UpdateRequestType.class))).andReturn(
+                createUpdateResponse());
+        EasyMock.replay(mockUpdateItemHandler);
 
-        final UpdateResponseType response = portType.updateItem (createUpdateRequest ());
-        EasyMock.verify (mockUpdateItemHandler);
-        assertNotNull ("Response expected", response);
+        final UpdateResponseType response = portType.updateItem(createUpdateRequest());
+        EasyMock.verify(mockUpdateItemHandler);
+        assertNotNull("Response expected", response);
     }
 
     /**
      * Test update item method handles exceptions successfully.
      */
     @Test
-    public void testUpdateItemException ()
-    {
-        EasyMock.expect (mockUpdateItemHandler.updateItem (EasyMock.anyObject (UpdateRequestType.class))).andThrow (
-                new RuntimeException ("test"));
-        EasyMock.replay (mockUpdateItemHandler);
+    public void testUpdateItemException() {
+        EasyMock.expect(mockUpdateItemHandler.updateItem(EasyMock.anyObject(UpdateRequestType.class))).andThrow(
+                new RuntimeException("test"));
+        EasyMock.replay(mockUpdateItemHandler);
 
-        try
-        {
-            portType.updateItem (createUpdateRequest ());
-            fail ("Runtime exception should have been thrown");
-        }
-        catch (final RuntimeException re)
-        {
-            assertEquals ("",
+        try {
+            portType.updateItem(createUpdateRequest());
+            fail("Runtime exception should have been thrown");
+        } catch (final RuntimeException re) {
+            assertEquals("",
                     "A SDT system component error has occurred. Please contact the SDT support team for assistance",
-                    re.getMessage ());
+                    re.getMessage());
         }
 
-        EasyMock.verify (mockUpdateItemHandler);
+        EasyMock.verify(mockUpdateItemHandler);
     }
 
     /**
      * Creates dummy request.
-     * 
+     *
      * @return dummy request.
      */
-    private UpdateRequestType createUpdateRequest ()
-    {
-        final UpdateRequestType request = new UpdateRequestType ();
+    private UpdateRequestType createUpdateRequest() {
+        final UpdateRequestType request = new UpdateRequestType();
 
-        final HeaderType header = new HeaderType ();
-        header.setSdtRequestId ("12345678");
+        final HeaderType header = new HeaderType();
+        header.setSdtRequestId("12345678");
 
-        request.setHeader (header);
+        request.setHeader(header);
         return request;
     }
 
     /**
      * Creates dummy response.
-     * 
+     *
      * @return dummy response.
      */
-    private UpdateResponseType createUpdateResponse ()
-    {
-        final UpdateResponseType response = new UpdateResponseType ();
+    private UpdateResponseType createUpdateResponse() {
+        final UpdateResponseType response = new UpdateResponseType();
 
-        final StatusType statusType = new StatusType ();
-        statusType.setCode (StatusCodeType.OK);
-        response.setStatus (statusType);
+        final StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.OK);
+        response.setStatus(statusType);
         return response;
     }
 

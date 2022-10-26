@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -45,12 +45,10 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Unit tests for {@link BulkCustomer}.
- * 
+ *
  * @author d276205
- * 
  */
-public class BulkCustomerTest extends AbstractSdtUnitTestBase
-{
+public class BulkCustomerTest extends AbstractSdtUnitTestBase {
     /**
      * Test subject.
      */
@@ -60,28 +58,26 @@ public class BulkCustomerTest extends AbstractSdtUnitTestBase
      * Set up test data.
      */
     @Before
-    public void setUp ()
-    {
-        bulkCustomer = new BulkCustomer ();
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
+    public void setUp() {
+        bulkCustomer = new BulkCustomer();
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
 
-        final IBulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication ();
-        final ITargetApplication targetApplication = new TargetApplication ();
-        targetApplication.setTargetApplicationCode ("YES");
-        bulkCustomerApplication.setTargetApplication (targetApplication);
-        bulkCustomerApplications.add (bulkCustomerApplication);
+        final IBulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication();
+        final ITargetApplication targetApplication = new TargetApplication();
+        targetApplication.setTargetApplicationCode("YES");
+        bulkCustomerApplication.setTargetApplication(targetApplication);
+        bulkCustomerApplications.add(bulkCustomerApplication);
 
-        bulkCustomer.setBulkCustomerApplications (bulkCustomerApplications);
+        bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
     }
 
     /**
      * Tests that hasAccess() method works correctly.
      */
     @Test
-    public void testHasAccess ()
-    {
-        Assert.assertTrue ("Customer should have access", bulkCustomer.hasAccess ("YES"));
-        Assert.assertFalse ("Customer should not have access", bulkCustomer.hasAccess ("NO"));
+    public void testHasAccess() {
+        Assert.assertTrue("Customer should have access", bulkCustomer.hasAccess("YES"));
+        Assert.assertFalse("Customer should not have access", bulkCustomer.hasAccess("NO"));
     }
 
 }

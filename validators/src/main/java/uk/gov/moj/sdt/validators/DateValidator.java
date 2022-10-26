@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,88 +23,81 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators;
 
-import org.joda.time.LocalDate;
+
+import java.time.LocalDate;
 
 /**
  * Implementation of DateValidation.
- * 
+ *
  * @author Simon Holmes
- * 
  */
-public final class DateValidator
-{
+public final class DateValidator {
 
     /**
      * No-argument Constructor.
      */
-    private DateValidator ()
-    {
+    private DateValidator() {
     }
 
     /**
      * Tests if a given date is within two dates, inclusively.
-     * 
+     *
      * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the range.
-     * @param endDate the end date of the range.
+     * @param startDate  the start date of the range.
+     * @param endDate    the end date of the range.
      * @return TRUE if within date, FALSE if not.
      */
-    public static boolean isDateWitinRange (final LocalDate dateToTest, final LocalDate startDate,
-                                            final LocalDate endDate)
-    {
+    public static boolean isDateWitinRange(final LocalDate dateToTest, final LocalDate startDate,
+                                           final LocalDate endDate) {
         // If the dateToTest is after the startDate and before the endDate, or on the same date as either, return true.
-        return (dateToTest.isAfter (startDate) && dateToTest.isBefore (endDate)) || dateToTest.isEqual (startDate) ||
-                dateToTest.isEqual (endDate);
+        return (dateToTest.isAfter(startDate) && dateToTest.isBefore(endDate)) || dateToTest.isEqual(startDate) ||
+                dateToTest.isEqual(endDate);
     }
 
     /**
-     * 
      * Tests if a date is BEFORE a given date, inclusively.
-     * 
+     *
      * @param dateToTest the date that is to be tested.
-     * @param endDate the end date of the test.
+     * @param endDate    the end date of the test.
      * @return TRUE if before the given date, FALSE if not.
      */
-    public static boolean isDateBefore (final LocalDate dateToTest, final LocalDate endDate)
-    {
+    public static boolean isDateBefore(final LocalDate dateToTest, final LocalDate endDate) {
         // If the dateToTest is before or on the same date to the start date, return true.
-        return dateToTest.isBefore (endDate) || dateToTest.isEqual (endDate);
+        return dateToTest.isBefore(endDate) || dateToTest.isEqual(endDate);
     }
 
     /**
      * Tests if a date is AFTER a given date, inclusively.
-     * 
+     *
      * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the test.
+     * @param startDate  the start date of the test.
      * @return TRUE if after the given date, FALSE if not.
      */
-    public static boolean isDateAfter (final LocalDate dateToTest, final LocalDate startDate)
-    {
+    public static boolean isDateAfter(final LocalDate dateToTest, final LocalDate startDate) {
         // If the dateToTest is after or on the same date, return true.
-        return dateToTest.isAfter (startDate) || dateToTest.isEqual (startDate);
+        return dateToTest.isAfter(startDate) || dateToTest.isEqual(startDate);
     }
 
     /**
      * Tests if a date is within a given number of days, inclusive of the Xth day.
-     * 
-     * @param dateToTest the date that is to be tested
+     *
+     * @param dateToTest   the date that is to be tested
      * @param numberOfDays the number of days the date should be within.
      * @return TRUE if the date is within the last X days, FALSE if it is not.
      */
-    public static boolean isDateWitinLastXDays (final LocalDate dateToTest, final Integer numberOfDays)
-    {
+    public static boolean isDateWitinLastXDays(final LocalDate dateToTest, final Integer numberOfDays) {
         // Take todays date and remove numberOfDays from it.
-        final LocalDate adjustedDate = new LocalDate ().minusDays (numberOfDays);
+        final LocalDate adjustedDate = LocalDate.now().minusDays(numberOfDays);
 
         // If the adjusted date is before or equal to the dateToTest, it must be within X number of days.
-        return adjustedDate.isBefore (dateToTest) || adjustedDate.isEqual (dateToTest);
+        return adjustedDate.isBefore(dateToTest) || adjustedDate.isEqual(dateToTest);
     }
 
 }

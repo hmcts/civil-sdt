@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,69 +34,62 @@ import java.util.List;
 
 /**
  * The total number of individual requests in a bulk submission should match the request count.
- * 
+ *
  * @author d130680
- * 
  */
-public class RequestCountMismatchException extends AbstractBusinessException
-{
+public class RequestCountMismatchException extends AbstractBusinessException {
     /**
      * The Constant serialVersionUID.
      */
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     /**
      * Total of individual requests should match the request count.
-     * 
-     * @param code error code
+     *
+     * @param code        error code
      * @param description error description
      */
-    public RequestCountMismatchException (final String code, final String description)
-    {
-        super (code, description);
+    public RequestCountMismatchException(final String code, final String description) {
+        super(code, description);
     }
 
     /**
      * Total of individual requests should match the request count.
-     * 
-     * @param code error code
-     * @param description error description
+     *
+     * @param code         error code
+     * @param description  error description
      * @param replacements string replacements with tokens
      */
-    public RequestCountMismatchException (final String code, final String description,
- final List<String> replacements)
-    {
-        super (code, description, replacements);
+    public RequestCountMismatchException(final String code, final String description,
+                                         final List<String> replacements) {
+        super(code, description, replacements);
     }
 
     /**
      * Total of individual requests should match the request count.
-     * 
+     *
      * @param s the s
      */
-    public RequestCountMismatchException (final String s)
-    {
-        super (s);
+    public RequestCountMismatchException(final String s) {
+        super(s);
     }
 
     /**
      * Total of individual requests should match the request count.
-     * 
+     *
      * @param cause the cause
      */
-    public RequestCountMismatchException (final Throwable cause)
-    {
-        super (cause);
+    public RequestCountMismatchException(final Throwable cause) {
+        super(cause);
     }
 
     /**
      * Total of individual requests should match the request count.
-     * 
-     * @param s the s
+     *
+     * @param s     the s
      * @param cause the cause
      */
-    public RequestCountMismatchException (final String s, final Throwable cause)
-    {
-        super (s, cause);
+    public RequestCountMismatchException(final String s, final Throwable cause) {
+        super(s, cause);
     }
 }

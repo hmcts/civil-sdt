@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -47,12 +47,10 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Test class for the ContextCleanupFilter.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class ContextCleanupFilterTest extends AbstractSdtUnitTestBase
-{
+public class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
     /**
      * ContextCleanupFilter instance for testing.
      */
@@ -77,90 +75,84 @@ public class ContextCleanupFilterTest extends AbstractSdtUnitTestBase
      * Method called before the test methods.
      */
     @Before
-    public void setUp ()
-    {
-        mockServletRequest = EasyMock.createMock (ServletRequest.class);
-        mockServletResponse = EasyMock.createMock (ServletResponse.class);
-        mockFilterChain = EasyMock.createMock (FilterChain.class);
+    public void setUp() {
+        mockServletRequest = EasyMock.createMock(ServletRequest.class);
+        mockServletResponse = EasyMock.createMock(ServletResponse.class);
+        mockFilterChain = EasyMock.createMock(FilterChain.class);
     }
 
     /**
      * Test method for the doFilter method of the filter.
-     * 
+     *
      * @throws ServletException the exception thrown by the doFilter
-     * @throws IOException the exception thrown on IO problems
+     * @throws IOException      the exception thrown on IO problems
      */
     @Test
-    public void doFilterTest () throws IOException, ServletException
-    {
+    public void doFilterTest() throws IOException, ServletException {
         // Add code to set something in SdtContext.
-        SdtContext.getContext ().setRawInXml ("TestXml");
+        SdtContext.getContext().setRawInXml("TestXml");
 
-        Assert.assertNotNull (SdtContext.getContext ().getRawInXml ());
+        Assert.assertNotNull(SdtContext.getContext().getRawInXml());
 
-        contextCleanupFilter = new ContextCleanupFilter ();
+        contextCleanupFilter = new ContextCleanupFilter();
 
-        mockFilterChain.doFilter (mockServletRequest, mockServletResponse);
+        mockFilterChain.doFilter(mockServletRequest, mockServletResponse);
 
-        EasyMock.expectLastCall ();
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockServletRequest);
-        EasyMock.replay (mockServletResponse);
-        EasyMock.replay (mockFilterChain);
+        EasyMock.replay(mockServletRequest);
+        EasyMock.replay(mockServletResponse);
+        EasyMock.replay(mockFilterChain);
 
-        contextCleanupFilter.doFilter (mockServletRequest, mockServletResponse, mockFilterChain);
+        contextCleanupFilter.doFilter(mockServletRequest, mockServletResponse, mockFilterChain);
 
-        EasyMock.verify (mockServletRequest);
-        EasyMock.verify (mockServletResponse);
-        EasyMock.verify (mockFilterChain);
+        EasyMock.verify(mockServletRequest);
+        EasyMock.verify(mockServletResponse);
+        EasyMock.verify(mockFilterChain);
 
         // Add code to verify that the entities in SdtContext are removed.
-        Assert.assertNull ("Sdt Context not cleaned up", SdtContext.getContext ().getRawInXml ());
+        Assert.assertNull("Sdt Context not cleaned up", SdtContext.getContext().getRawInXml());
 
-        Assert.assertTrue ("Test completed successfully", true);
+        Assert.assertTrue("Test completed successfully", true);
 
     }
 
     /**
      * Test method for the doFilter method of the filter when the doFilter throws
      * an exception but still clears sdt context.
-     * 
+     *
      * @throws ServletException the exception thrown by the doFilter
-     * @throws IOException the exception thrown on IO problems
+     * @throws IOException      the exception thrown on IO problems
      */
     @Test
-    public void doFilterTestForError () throws IOException, ServletException
-    {
+    public void doFilterTestForError() throws IOException, ServletException {
         // Add code to set something in SdtContext.
-        SdtContext.getContext ().setRawInXml ("TestXml");
+        SdtContext.getContext().setRawInXml("TestXml");
 
-        Assert.assertNotNull (SdtContext.getContext ().getRawInXml ());
+        Assert.assertNotNull(SdtContext.getContext().getRawInXml());
 
-        contextCleanupFilter = new ContextCleanupFilter ();
+        contextCleanupFilter = new ContextCleanupFilter();
 
-        mockFilterChain.doFilter (mockServletRequest, mockServletResponse);
+        mockFilterChain.doFilter(mockServletRequest, mockServletResponse);
 
-        EasyMock.expectLastCall ().andThrow (new ServletException ("Error"));
+        EasyMock.expectLastCall().andThrow(new ServletException("Error"));
 
-        EasyMock.replay (mockServletRequest);
-        EasyMock.replay (mockServletResponse);
-        EasyMock.replay (mockFilterChain);
+        EasyMock.replay(mockServletRequest);
+        EasyMock.replay(mockServletResponse);
+        EasyMock.replay(mockFilterChain);
 
-        try
-        {
-            contextCleanupFilter.doFilter (mockServletRequest, mockServletResponse, mockFilterChain);
-        }
-        catch (final ServletException e)
-        {
-            Assert.assertTrue (true);
+        try {
+            contextCleanupFilter.doFilter(mockServletRequest, mockServletResponse, mockFilterChain);
+        } catch (final ServletException e) {
+            Assert.assertTrue(true);
         }
 
-        EasyMock.verify (mockServletRequest);
-        EasyMock.verify (mockServletResponse);
-        EasyMock.verify (mockFilterChain);
+        EasyMock.verify(mockServletRequest);
+        EasyMock.verify(mockServletResponse);
+        EasyMock.verify(mockFilterChain);
 
         // Add code to verify that the entities in SdtContext are removed.
-        Assert.assertNull ("Sdt Context expected to be cleaned up", SdtContext.getContext ().getRawInXml ());
+        Assert.assertNull("Sdt Context expected to be cleaned up", SdtContext.getContext().getRawInXml());
 
     }
 

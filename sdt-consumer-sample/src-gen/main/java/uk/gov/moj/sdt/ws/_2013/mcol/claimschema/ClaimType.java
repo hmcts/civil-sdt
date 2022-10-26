@@ -9,15 +9,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter3;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
 
 
 /**
  * <p>Java class for claimType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="claimType">
  *   &lt;complexContent>
@@ -40,23 +41,21 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.SotSignatureType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "claimType", propOrder = {
-    "claimantReference",
-    "claimant",
-    "claimantCorrespondence",
-    "defendant1",
-    "defendant2",
-    "sendParticularsSeparately",
-    "reserveRightToClaimInterest",
-    "interest",
-    "claimAmount",
-    "solicitorCost",
-    "particulars",
-    "sotSignature"
+        "claimantReference",
+        "claimant",
+        "claimantCorrespondence",
+        "defendant1",
+        "defendant2",
+        "sendParticularsSeparately",
+        "reserveRightToClaimInterest",
+        "interest",
+        "claimAmount",
+        "solicitorCost",
+        "particulars",
+        "sotSignature"
 })
 public class ClaimType {
 
@@ -70,11 +69,11 @@ public class ClaimType {
     protected boolean reserveRightToClaimInterest;
     protected InterestType interest;
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter3 .class)
+    @XmlJavaTypeAdapter(Adapter3.class)
     @XmlSchemaType(name = "unsignedLong")
     protected Long claimAmount;
     @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter3 .class)
+    @XmlJavaTypeAdapter(Adapter3.class)
     @XmlSchemaType(name = "unsignedLong")
     protected Long solicitorCost;
     @XmlElement(required = true)
@@ -84,11 +83,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the claimantReference property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getClaimantReference() {
         return claimantReference;
@@ -96,11 +93,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the claimantReference property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setClaimantReference(String value) {
         this.claimantReference = value;
@@ -108,11 +103,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the claimant property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ClaimantType }
-     *     
+     *
+     * @return possible object is
+     * {@link ClaimantType }
      */
     public ClaimantType getClaimant() {
         return claimant;
@@ -120,11 +113,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the claimant property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ClaimantType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ClaimantType }
      */
     public void setClaimant(ClaimantType value) {
         this.claimant = value;
@@ -132,11 +123,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the claimantCorrespondence property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CorrespondenceDetailType }
-     *     
+     *
+     * @return possible object is
+     * {@link CorrespondenceDetailType }
      */
     public CorrespondenceDetailType getClaimantCorrespondence() {
         return claimantCorrespondence;
@@ -144,11 +133,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the claimantCorrespondence property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CorrespondenceDetailType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link CorrespondenceDetailType }
      */
     public void setClaimantCorrespondence(CorrespondenceDetailType value) {
         this.claimantCorrespondence = value;
@@ -156,11 +143,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the defendant1 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DefendantType }
-     *     
+     *
+     * @return possible object is
+     * {@link DefendantType }
      */
     public DefendantType getDefendant1() {
         return defendant1;
@@ -168,11 +153,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the defendant1 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DefendantType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link DefendantType }
      */
     public void setDefendant1(DefendantType value) {
         this.defendant1 = value;
@@ -180,11 +163,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the defendant2 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DefendantType }
-     *     
+     *
+     * @return possible object is
+     * {@link DefendantType }
      */
     public DefendantType getDefendant2() {
         return defendant2;
@@ -192,11 +173,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the defendant2 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DefendantType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link DefendantType }
      */
     public void setDefendant2(DefendantType value) {
         this.defendant2 = value;
@@ -204,7 +183,6 @@ public class ClaimType {
 
     /**
      * Gets the value of the sendParticularsSeparately property.
-     * 
      */
     public boolean isSendParticularsSeparately() {
         return sendParticularsSeparately;
@@ -212,7 +190,6 @@ public class ClaimType {
 
     /**
      * Sets the value of the sendParticularsSeparately property.
-     * 
      */
     public void setSendParticularsSeparately(boolean value) {
         this.sendParticularsSeparately = value;
@@ -220,7 +197,6 @@ public class ClaimType {
 
     /**
      * Gets the value of the reserveRightToClaimInterest property.
-     * 
      */
     public boolean isReserveRightToClaimInterest() {
         return reserveRightToClaimInterest;
@@ -228,7 +204,6 @@ public class ClaimType {
 
     /**
      * Sets the value of the reserveRightToClaimInterest property.
-     * 
      */
     public void setReserveRightToClaimInterest(boolean value) {
         this.reserveRightToClaimInterest = value;
@@ -236,11 +211,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the interest property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link InterestType }
-     *     
+     *
+     * @return possible object is
+     * {@link InterestType }
      */
     public InterestType getInterest() {
         return interest;
@@ -248,11 +221,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the interest property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link InterestType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link InterestType }
      */
     public void setInterest(InterestType value) {
         this.interest = value;
@@ -260,11 +231,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the claimAmount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getClaimAmount() {
         return claimAmount;
@@ -272,11 +241,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the claimAmount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setClaimAmount(Long value) {
         this.claimAmount = value;
@@ -284,11 +251,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the solicitorCost property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getSolicitorCost() {
         return solicitorCost;
@@ -296,11 +261,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the solicitorCost property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSolicitorCost(Long value) {
         this.solicitorCost = value;
@@ -308,25 +271,23 @@ public class ClaimType {
 
     /**
      * Gets the value of the particulars property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the particulars property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getParticulars().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link String }
-     * 
-     * 
      */
     public List<String> getParticulars() {
         if (particulars == null) {
@@ -337,11 +298,9 @@ public class ClaimType {
 
     /**
      * Gets the value of the sotSignature property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SotSignatureType }
-     *     
+     *
+     * @return possible object is
+     * {@link SotSignatureType }
      */
     public SotSignatureType getSotSignature() {
         return sotSignature;
@@ -349,11 +308,9 @@ public class ClaimType {
 
     /**
      * Sets the value of the sotSignature property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SotSignatureType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link SotSignatureType }
      */
     public void setSotSignature(SotSignatureType value) {
         this.sotSignature = value;

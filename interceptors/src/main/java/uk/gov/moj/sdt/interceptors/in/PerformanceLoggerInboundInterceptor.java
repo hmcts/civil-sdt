@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -45,54 +45,47 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 /**
  * Class to intercept incoming messages and do performance logging. Should run before any changes are made to the
  * incoming message, i.e. first.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class PerformanceLoggerInboundInterceptor extends AbstractSdtInterceptor
-{
+public class PerformanceLoggerInboundInterceptor extends AbstractSdtInterceptor {
 
     /**
      * Create instance of {@link PerformanceLoggerInboundInterceptor}.
      */
-    public PerformanceLoggerInboundInterceptor ()
-    {
-        super (Phase.RECEIVE);
-        addBefore (XmlInboundInterceptor.class.getName ());
+    public PerformanceLoggerInboundInterceptor() {
+        super(Phase.RECEIVE);
+        addBefore(XmlInboundInterceptor.class.getName());
     }
 
     /**
      * Create instance of {@link PerformanceLoggerInboundInterceptor}.
-     * 
+     *
      * @param phase phase of the CXF interceptor chain in which this interceptor should run.
      */
-    public PerformanceLoggerInboundInterceptor (final String phase)
-    {
-        super (phase);
+    public PerformanceLoggerInboundInterceptor(final String phase) {
+        super(phase);
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handleMessage(final SoapMessage message) throws Fault {
         // Setup logging flags from current value in SdtMetricsMBean for this thread - used by all subsequent processing
         // of this request.
-        SdtContext.getContext ().getLoggingContext ()
-                .setLoggingFlags (SdtMetricsMBean.getMetrics ().getPerformanceLoggingFlags ());
+        SdtContext.getContext().getLoggingContext()
+                .setLoggingFlags(SdtMetricsMBean.getMetrics().getPerformanceLoggingFlags());
 
         // Increment thread local logging id for this invocation, but only if we are at the start of a new thread of
         // work.
-        if (SdtContext.getContext ().getLoggingContext ().getMinorLoggingId () == 0)
-        {
-            SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (LoggingContext.getNextLoggingId ());
+        if (SdtContext.getContext().getLoggingContext().getMinorLoggingId() == 0) {
+            SdtContext.getContext().getLoggingContext().setMajorLoggingId(LoggingContext.getNextLoggingId());
         }
 
         // Write message to 'performance.log' for this logging point.
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_1))
-        {
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_1,
+        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_1)) {
+            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_1,
                     "PerformanceLoggerInboundInterceptor handling message",
-                    "\n\n\t" + PerformanceLogger.format (this.readInputMessage (message)) + "\n");
+                    "\n\n\t" + PerformanceLogger.format(this.readInputMessage(message)) + "\n");
         }
     }
 }

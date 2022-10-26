@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for addressType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="addressType">
  *   &lt;complexContent>
@@ -27,16 +27,14 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "addressType", propOrder = {
-    "line1",
-    "line2",
-    "line3",
-    "line4",
-    "postcode"
+        "line1",
+        "line2",
+        "line3",
+        "line4",
+        "postcode"
 })
 public class AddressType {
 
@@ -51,11 +49,9 @@ public class AddressType {
 
     /**
      * Gets the value of the line1 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getLine1() {
         return line1;
@@ -63,11 +59,9 @@ public class AddressType {
 
     /**
      * Sets the value of the line1 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLine1(String value) {
         this.line1 = value;
@@ -75,11 +69,9 @@ public class AddressType {
 
     /**
      * Gets the value of the line2 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getLine2() {
         return line2;
@@ -87,11 +79,9 @@ public class AddressType {
 
     /**
      * Sets the value of the line2 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLine2(String value) {
         this.line2 = value;
@@ -99,11 +89,9 @@ public class AddressType {
 
     /**
      * Gets the value of the line3 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getLine3() {
         return line3;
@@ -111,11 +99,9 @@ public class AddressType {
 
     /**
      * Sets the value of the line3 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLine3(String value) {
         this.line3 = value;
@@ -123,11 +109,9 @@ public class AddressType {
 
     /**
      * Gets the value of the line4 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getLine4() {
         return line4;
@@ -135,11 +119,9 @@ public class AddressType {
 
     /**
      * Sets the value of the line4 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLine4(String value) {
         this.line4 = value;
@@ -147,11 +129,9 @@ public class AddressType {
 
     /**
      * Gets the value of the postcode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPostcode() {
         return postcode;
@@ -159,11 +139,9 @@ public class AddressType {
 
     /**
      * Sets the value of the postcode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPostcode(String value) {
         this.postcode = value;

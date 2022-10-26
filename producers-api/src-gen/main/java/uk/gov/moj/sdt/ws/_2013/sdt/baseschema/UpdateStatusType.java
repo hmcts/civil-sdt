@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for updateStatusType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="updateStatusType">
  *   &lt;complexContent>
@@ -24,12 +24,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "updateStatusType", propOrder = {
-    "error"
+        "error"
 })
 public class UpdateStatusType {
 
@@ -39,11 +37,9 @@ public class UpdateStatusType {
 
     /**
      * Gets the value of the error property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ErrorType }
-     *     
+     *
+     * @return possible object is
+     * {@link ErrorType }
      */
     public ErrorType getError() {
         return error;
@@ -51,11 +47,9 @@ public class UpdateStatusType {
 
     /**
      * Sets the value of the error property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ErrorType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ErrorType }
      */
     public void setError(ErrorType value) {
         this.error = value;
@@ -63,11 +57,9 @@ public class UpdateStatusType {
 
     /**
      * Gets the value of the code property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link UpdateStatusCodeType }
-     *     
+     *
+     * @return possible object is
+     * {@link UpdateStatusCodeType }
      */
     public UpdateStatusCodeType getCode() {
         return code;
@@ -75,11 +67,9 @@ public class UpdateStatusType {
 
     /**
      * Sets the value of the code property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link UpdateStatusCodeType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link UpdateStatusCodeType }
      */
     public void setCode(UpdateStatusCodeType value) {
         this.code = value;

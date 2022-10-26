@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for bulkFeedbackResponseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="bulkFeedbackResponseType">
  *   &lt;complexContent>
@@ -24,13 +24,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "bulkFeedbackResponseType", propOrder = {
-    "bulkRequestStatus",
-    "responses"
+        "bulkRequestStatus",
+        "responses"
 })
 public class BulkFeedbackResponseType {
 
@@ -40,11 +38,9 @@ public class BulkFeedbackResponseType {
 
     /**
      * Gets the value of the bulkRequestStatus property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BulkRequestStatusType }
-     *     
+     *
+     * @return possible object is
+     * {@link BulkRequestStatusType }
      */
     public BulkRequestStatusType getBulkRequestStatus() {
         return bulkRequestStatus;
@@ -52,11 +48,9 @@ public class BulkFeedbackResponseType {
 
     /**
      * Sets the value of the bulkRequestStatus property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BulkRequestStatusType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link BulkRequestStatusType }
      */
     public void setBulkRequestStatus(BulkRequestStatusType value) {
         this.bulkRequestStatus = value;
@@ -64,11 +58,9 @@ public class BulkFeedbackResponseType {
 
     /**
      * Gets the value of the responses property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ResponsesType }
-     *     
+     *
+     * @return possible object is
+     * {@link ResponsesType }
      */
     public ResponsesType getResponses() {
         return responses;
@@ -76,11 +68,9 @@ public class BulkFeedbackResponseType {
 
     /**
      * Sets the value of the responses property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ResponsesType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ResponsesType }
      */
     public void setResponses(ResponsesType value) {
         this.responses = value;

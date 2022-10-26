@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -43,70 +43,63 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
- * 
+ *
  * @author Manoj kulkarni
- * 
  */
-public abstract class AbstractIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests
-{
+public abstract class AbstractIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractIntegrationTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractIntegrationTest.class);
 
     /**
      * Watcher to detect current test name.
      */
     // CHECKSTYLE:OFF
     @Rule
-    public TestWatcher watcher = new TestWatcher ()
-    {
+    public TestWatcher watcher = new TestWatcher() {
         // CHECKSTYLE:ON
+
         /**
          * Method called whenever JUnit starts a test.
-         * 
+         *
          * @param description Information about the test.
          */
-        protected void starting (final Description description)
-        {
-            LOGGER.info ("Start Test: " + description.getClassName () + "." + description.getMethodName () + ".");
-        };
+        protected void starting(final Description description) {
+            LOGGER.info("Start Test: " + description.getClassName() + "." + description.getMethodName() + ".");
+        }
+
+        ;
     };
 
     /**
      * Retrieve a field in its accessible state.
-     * 
+     *
      * <p>
      * Scenario: field exists without a getter and is protected or private. This allows you to inspect that field's
      * state e.g. <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
-                ServiceRequest.class, "requestDateTime", LocalDateTime.class,
-                serviceRequest)</code>
+     * ServiceRequest.class, "requestDateTime", LocalDateTime.class,
+     * serviceRequest)</code>
      * </p>
-     * 
+     *
      * @param clazzUnderTest This is the class that owns the method
-     * @param methodName this is the method name
-     * @param paramTypes the arguments
+     * @param methodName     this is the method name
+     * @param paramTypes     the arguments
      * @return the method in its accesible form.
      */
-    public Method makeMethodAccesible (final Class<?> clazzUnderTest, final String methodName,
-                                       final Class<?>... paramTypes)
-    {
+    public Method makeMethodAccesible(final Class<?> clazzUnderTest, final String methodName,
+                                      final Class<?>... paramTypes) {
         Method method = null;
-        try
-        {
-            method = clazzUnderTest.getDeclaredMethod (methodName, paramTypes);
-            method.setAccessible (true);
-        }
-        catch (final SecurityException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue ("SecurityException please debug test", false);
-        }
-        catch (final NoSuchMethodException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue ("NoSuchMethodException please debug test", false);
+        try {
+            method = clazzUnderTest.getDeclaredMethod(methodName, paramTypes);
+            method.setAccessible(true);
+        } catch (final SecurityException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue("SecurityException please debug test", false);
+        } catch (final NoSuchMethodException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue("NoSuchMethodException please debug test", false);
         }
         return method;
     }

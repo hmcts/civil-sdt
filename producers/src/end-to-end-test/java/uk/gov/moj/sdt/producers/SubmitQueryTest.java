@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -48,40 +48,33 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 
 /**
  * Test class for end to end web service tests..
- * 
+ *
  * @author Robin Compston
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
         "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
-public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType>
-{
+public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType> {
 
     /**
      * Method to call remote submit query endpoint to be tested.
      */
     @Test
     @Ignore
-    public void testValid ()
-    {
-        this.callWebService (SubmitQueryRequestType.class);
+    public void testValid() {
+        this.callWebService(SubmitQueryRequestType.class);
     }
 
     /**
      * Method to call remote submit query endpoint to be tested.
      */
     @Test
-    public void testErrorResult ()
-    {
-        try
-        {
-            this.callWebService (SubmitQueryRequestType.class);
-        }
-        catch (SOAPFaultException e)
-        {
-            Assert.assertTrue ("Unexpected exception message in SOAPFaultException [" + e.getMessage () + "]", e
-                    .getMessage ().contains ("The content of element 'criterion' is not complete"));
+    public void testErrorResult() {
+        try {
+            this.callWebService(SubmitQueryRequestType.class);
+        } catch (SOAPFaultException e) {
+            Assert.assertTrue("Unexpected exception message in SOAPFaultException [" + e.getMessage() + "]", e
+                    .getMessage().contains("The content of element 'criterion' is not complete"));
         }
     }
 
@@ -89,36 +82,32 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
      * Scenario - Invalid SDT Customer details.
      */
     @Test
-    public void testInvalidCustomer ()
-    {
-        this.callWebService (SubmitQueryRequestType.class);
+    public void testInvalidCustomer() {
+        this.callWebService(SubmitQueryRequestType.class);
     }
 
     /**
      * Scenario - Customer does not have access to target application.
      */
     @Test
-    public void testInvalidTargetApp ()
-    {
-        this.callWebService (SubmitQueryRequestType.class);
+    public void testInvalidTargetApp() {
+        this.callWebService(SubmitQueryRequestType.class);
     }
 
     @Override
-    protected SubmitQueryResponseType callTestWebService (final SubmitQueryRequestType request)
-    {
+    protected SubmitQueryResponseType callTestWebService(final SubmitQueryRequestType request) {
         // Get the SOAP proxy client.
-        ISdtEndpointPortType client = getSdtEndpointClient ();
+        ISdtEndpointPortType client = getSdtEndpointClient();
 
         // Call the specific business method for this text - note that a single test can only use one web service
         // business method.
-        return client.submitQuery (request);
+        return client.submitQuery(request);
     }
 
     @Override
-    protected JAXBElement<SubmitQueryResponseType> wrapJaxbObject (final SubmitQueryResponseType response)
-    {
+    protected JAXBElement<SubmitQueryResponseType> wrapJaxbObject(final SubmitQueryResponseType response) {
         // Use the provided factor to create a wrapped instance of the response.
-        ObjectFactory objectFactory = new ObjectFactory ();
-        return objectFactory.createSubmitQueryResponse (response);
+        ObjectFactory objectFactory = new ObjectFactory();
+        return objectFactory.createSubmitQueryResponse(response);
     }
 }

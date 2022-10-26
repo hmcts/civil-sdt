@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,11 +23,12 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -37,12 +38,10 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Interface for submit query request domain object.
- * 
+ *
  * @author d130680
- * 
  */
-public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQueryRequest
-{
+public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQueryRequest {
 
     /**
      * Bulk customer.
@@ -87,136 +86,115 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
     /**
      * Constructs an instance of {@link SubmitQueryRequest}.
      */
-    public SubmitQueryRequest ()
-    {
-        this.status = ISubmitQueryRequest.Status.OK.getStatus ();
+    public SubmitQueryRequest() {
+        this.status = ISubmitQueryRequest.Status.OK.getStatus();
     }
 
     @Override
-    public IBulkCustomer getBulkCustomer ()
-    {
+    public IBulkCustomer getBulkCustomer() {
         return bulkCustomer;
     }
 
     @Override
-    public void setBulkCustomer (final IBulkCustomer bulkCustomer)
-    {
+    public void setBulkCustomer(final IBulkCustomer bulkCustomer) {
         this.bulkCustomer = bulkCustomer;
     }
 
     @Override
-    public ITargetApplication getTargetApplication ()
-    {
+    public ITargetApplication getTargetApplication() {
         return targetApplication;
     }
 
     @Override
-    public void setTargetApplication (final ITargetApplication targetApplication)
-    {
+    public void setTargetApplication(final ITargetApplication targetApplication) {
         this.targetApplication = targetApplication;
     }
 
     @Override
-    public String getCriteriaType ()
-    {
+    public String getCriteriaType() {
         return this.criteriaType;
     }
 
     @Override
-    public void setCriteriaType (final String criteriaType)
-    {
+    public void setCriteriaType(final String criteriaType) {
         this.criteriaType = criteriaType;
     }
 
     @Override
-    public int getResultCount ()
-    {
+    public int getResultCount() {
         return resultCount;
     }
 
     @Override
-    public void setResultCount (final int resultCount)
-    {
+    public void setResultCount(final int resultCount) {
         this.resultCount = resultCount;
     }
 
     @Override
-    public String getStatus ()
-    {
+    public String getStatus() {
         return status;
     }
 
     @Override
-    public void setStatus (final String status)
-    {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
     @Override
-    public IErrorLog getErrorLog ()
-    {
+    public IErrorLog getErrorLog() {
         return errorLog;
     }
 
     @Override
-    public boolean hasError ()
-    {
+    public boolean hasError() {
         return errorLog != null;
     }
 
     @Override
-    public void reject (final IErrorLog errorLog)
-    {
-        this.errorLog = errorLog;
-        this.status = ISubmitQueryRequest.Status.Error.getStatus ();
+    public void reject(final IErrorLog errorLog) {
+        setErrorLog(errorLog);
     }
 
     @Override
-    public void setErrorLog (final IErrorLog errorLog)
-    {
+    public void setErrorLog(final IErrorLog errorLog) {
         this.errorLog = errorLog;
-        this.status = ISubmitQueryRequest.Status.Error.getStatus ();
+        this.status = ISubmitQueryRequest.Status.ERROR.getStatus();
     }
 
     @Override
-    public String getTargetApplicationResponse ()
-    {
+    public String getTargetApplicationResponse() {
         return targetApplicationResponse;
     }
 
     @Override
-    public void setTargetApplicationResponse (final String targetApplicationResponse)
-    {
+    public void setTargetApplicationResponse(final String targetApplicationResponse) {
         this.targetApplicationResponse = targetApplicationResponse;
     }
 
     @Override
-    public String getQueryReference ()
-    {
+    public String getQueryReference() {
         return this.queryReference;
     }
 
     @Override
-    public void setQueryReference (final String queryReference)
-    {
+    public void setQueryReference(final String queryReference) {
         this.queryReference = queryReference;
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", bulkCustomer=").append (this.getBulkCustomer ());
-        sb.append (", targetApplication=").append (this.getTargetApplication ());
-        sb.append (", criteriaType=").append (this.getCriteriaType ());
-        sb.append (", resultCount=").append (this.getResultCount ());
-        sb.append (", status=").append (this.getStatus ());
-        sb.append (", errorLog=").append (this.getErrorLog ());
-        sb.append (", criteriaType=").append (this.getCriteriaType ());
-        sb.append (", targetApplicationResponse=").append (this.getTargetApplicationResponse ());
-        sb.append (", queryReference=").append (this.getQueryReference ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", bulkCustomer=").append(this.getBulkCustomer());
+        sb.append(", targetApplication=").append(this.getTargetApplication());
+        sb.append(", criteriaType=").append(this.getCriteriaType());
+        sb.append(", resultCount=").append(this.getResultCount());
+        sb.append(", status=").append(this.getStatus());
+        sb.append(", errorLog=").append(this.getErrorLog());
+        sb.append(", criteriaType=").append(this.getCriteriaType());
+        sb.append(", targetApplicationResponse=").append(this.getTargetApplicationResponse());
+        sb.append(", queryReference=").append(this.getQueryReference());
+        sb.append("]");
+        return sb.toString();
     }
 }

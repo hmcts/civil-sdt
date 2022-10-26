@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -39,7 +39,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
-import org.joda.time.LocalDateTime;
+
+import java.time.LocalDateTime;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,16 +74,14 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Test class for BulkSubmissionService.
- * 
+ *
  * @author Sally Vonka
- * 
  */
-public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase
-{
+public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Logger for debugging.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackServiceTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackServiceTest.class);
 
     /**
      * Bulk Feedback Service for testing.
@@ -99,7 +99,6 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase
 
     /**
      * The IBulkFeedbackRequest.
-     * 
      */
 
     private IBulkFeedbackRequest bulkFeedbackRequest;
@@ -128,156 +127,149 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase
      * Setup of the mock dao and injection of other objects.
      */
     @Before
-    public void setUp ()
-    {
-        bulkFeedbackService = new BulkFeedbackService ();
+    public void setUp() {
+        bulkFeedbackService = new BulkFeedbackService();
 
-        mockBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
-        bulkFeedbackService.setBulkSubmissionDao (mockBulkSubmissionDao);
+        mockBulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
+        bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
 
-        mockGlobalParameterCache = EasyMock.createMock (ICacheable.class);
+        mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
 
-        final IGlobalParameter globalParameterData = new GlobalParameter ();
-        globalParameterData.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
-        globalParameterData.setValue ("90");
-        mockGlobalParameterCache = EasyMock.createMock (ICacheable.class);
-        expect (
-                mockGlobalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameterData);
-        replay (mockGlobalParameterCache);
+        final IGlobalParameter globalParameterData = new GlobalParameter();
+        globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
+        globalParameterData.setValue("90");
+        mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
+        expect(
+                mockGlobalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameterData);
+        replay(mockGlobalParameterCache);
 
-        bulkFeedbackService.setGlobalParametersCache (mockGlobalParameterCache);
+        bulkFeedbackService.setGlobalParametersCache(mockGlobalParameterCache);
         dataRetentionPeriod = 90;
 
         // create a bulk customer
-        bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setSdtCustomerId (12345L);
+        bulkCustomer = new BulkCustomer();
+        bulkCustomer.setSdtCustomerId(12345L);
 
-        bulkFeedbackRequest = new BulkFeedbackRequest ();
+        bulkFeedbackRequest = new BulkFeedbackRequest();
 
         // Setup bulk request for test.
-        bulkFeedbackRequest.setId (requestId);
-        bulkFeedbackRequest.setSdtBulkReference (reference);
-        bulkFeedbackRequest.setBulkCustomer (bulkCustomer);
+        bulkFeedbackRequest.setId(requestId);
+        bulkFeedbackRequest.setSdtBulkReference(reference);
+        bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
     }
 
     /**
      * @throws IOException if there is any issue
      */
     @Test
-    public void testGetBulkFeedback () throws IOException
-    {
+    public void testGetBulkFeedback() throws IOException {
         // Activate Mock Generic Dao
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission ();
-        addValidIndividualRequest (bulkSubmission, "ICustReq124", IndividualRequestStatus.RECEIVED.getStatus ());
-        addValidIndividualRequest (bulkSubmission, "ICustReq125", IndividualRequestStatus.REJECTED.getStatus ());
-        addValidIndividualRequest (bulkSubmission, "ICustReq126", IndividualRequestStatus.RECEIVED.getStatus ());
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission();
+        addValidIndividualRequest(bulkSubmission, "ICustReq124", IndividualRequestStatus.RECEIVED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq125", IndividualRequestStatus.REJECTED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq126", IndividualRequestStatus.RECEIVED.getStatus());
 
-        LOGGER.debug ("Size of Individual Requests in Bulk Submission is " +
-                bulkSubmission.getIndividualRequests ().size ());
+        LOGGER.debug("Size of Individual Requests in Bulk Submission is " +
+                bulkSubmission.getIndividualRequests().size());
 
         // Tell the mock dao to return this request
-        expect (mockBulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, reference, dataRetentionPeriod))
-                .andReturn (bulkSubmission);
-        replay (mockBulkSubmissionDao);
-        bulkFeedbackService.getBulkFeedback (bulkFeedbackRequest);
+        expect(mockBulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod))
+                .andReturn(bulkSubmission);
+        replay(mockBulkSubmissionDao);
+        bulkFeedbackService.getBulkFeedback(bulkFeedbackRequest);
 
-        final Map<String, String> targetApplicationRespMap = SdtContext.getContext ().getTargetApplicationRespMap ();
+        final Map<String, String> targetApplicationRespMap = SdtContext.getContext().getTargetApplicationRespMap();
 
-        LOGGER.debug ("Size of Individual Requests in SDT context is " + targetApplicationRespMap.size ());
+        LOGGER.debug("Size of Individual Requests in SDT context is " + targetApplicationRespMap.size());
 
-        Assert.assertTrue (targetApplicationRespMap.size () == 3);
+        Assert.assertTrue(targetApplicationRespMap.size() == 3);
 
-        EasyMock.verify (mockBulkSubmissionDao);
+        EasyMock.verify(mockBulkSubmissionDao);
 
     }
 
     /**
-     * 
      * @return Bulk Submission object for the testing.
      */
-    private IBulkSubmission createBulkSubmission ()
-    {
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        final ITargetApplication targetApp = new TargetApplication ();
+    private IBulkSubmission createBulkSubmission() {
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        final ITargetApplication targetApp = new TargetApplication();
 
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("MCOL");
-        targetApp.setTargetApplicationName ("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+        targetApp.setId(1L);
+        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationName("TEST_TargetApp");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
-        final ServiceRouting serviceRouting = new ServiceRouting ();
-        serviceRouting.setId (1L);
-        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+        final ServiceRouting serviceRouting = new ServiceRouting();
+        serviceRouting.setId(1L);
+        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
 
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setId (1L);
-        serviceType.setName ("RequestTest1");
-        serviceType.setDescription ("RequestTestDesc1");
-        serviceType.setStatus ("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType();
+        serviceType.setId(1L);
+        serviceType.setName("RequestTest1");
+        serviceType.setDescription("RequestTestDesc1");
+        serviceType.setStatus("RequestTestStatus");
 
-        serviceRouting.setServiceType (serviceType);
+        serviceRouting.setServiceType(serviceType);
 
-        serviceRoutings.add (serviceRouting);
+        serviceRoutings.add(serviceRouting);
 
-        targetApp.setServiceRoutings (serviceRoutings);
+        targetApp.setServiceRoutings(serviceRoutings);
 
-        bulkSubmission.setTargetApplication (targetApp);
+        bulkSubmission.setTargetApplication(targetApp);
 
-        bulkCustomer.setId (1L);
-        bulkCustomer.setSdtCustomerId (10L);
+        bulkCustomer.setId(1L);
+        bulkCustomer.setSdtCustomerId(10L);
 
-        bulkSubmission.setBulkCustomer (bulkCustomer);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
 
-        bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        bulkSubmission.setCustomerReference ("TEST_CUST_REF");
-        bulkSubmission.setId (1L);
-        bulkSubmission.setNumberOfRequest (2);
-        bulkSubmission.setPayload ("TEST_XML");
-        bulkSubmission.setSubmissionStatus ("SUBMITTED");
+        bulkSubmission.setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        bulkSubmission.setCustomerReference("TEST_CUST_REF");
+        bulkSubmission.setId(1L);
+        bulkSubmission.setNumberOfRequest(2);
+        bulkSubmission.setPayload("TEST_XML");
+        bulkSubmission.setSubmissionStatus("SUBMITTED");
 
-        final IndividualRequest individualRequest = new IndividualRequest ();
-        individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
-                .currentTimeMillis ())));
+        final IndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setCompletedDate(LocalDateTime.fromDateFields(new java.util.Date(System
+                .currentTimeMillis())));
         individualRequest
-                .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        individualRequest.setCustomerRequestReference ("ICustReq123");
-        individualRequest.setId (1L);
-        individualRequest.setRequestStatus (IndividualRequestStatus.RECEIVED.getStatus ());
+                .setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        individualRequest.setCustomerRequestReference("ICustReq123");
+        individualRequest.setId(1L);
+        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
 
-        bulkSubmission.addIndividualRequest (individualRequest);
+        bulkSubmission.addIndividualRequest(individualRequest);
 
         return bulkSubmission;
     }
 
     /**
-     * 
      * @param customerReference the customer reference number
-     * @param bulkSubmission bulk submission
-     * @param status of individual request
+     * @param bulkSubmission    bulk submission
+     * @param status            of individual request
      */
-    private void addValidIndividualRequest (final IBulkSubmission bulkSubmission, final String customerReference,
-                                            final String status)
-    {
-        final IndividualRequest individualRequest = new IndividualRequest ();
-        individualRequest.setCompletedDate (LocalDateTime.fromDateFields (new java.util.Date (System
-                .currentTimeMillis ())));
+    private void addValidIndividualRequest(final IBulkSubmission bulkSubmission, final String customerReference,
+                                           final String status) {
+        final IndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setCompletedDate(LocalDateTime.fromDateFields(new java.util.Date(System
+                .currentTimeMillis())));
         individualRequest
-                .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        individualRequest.setCustomerRequestReference (customerReference);
-        individualRequest.setId (1L);
-        individualRequest.setRequestStatus (status);
-        if (IndividualRequestStatus.REJECTED.getStatus ().equals (status))
-        {
+                .setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        individualRequest.setCustomerRequestReference(customerReference);
+        individualRequest.setId(1L);
+        individualRequest.setRequestStatus(status);
+        if (IndividualRequestStatus.REJECTED.getStatus().equals(status)) {
             final IErrorLog errorLog =
-                    new ErrorLog (IErrorMessage.ErrorCode.DUP_CUST_REQID.name (),
+                    new ErrorLog(IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
                             "Duplicate Unique Request Identifier submitted {0}");
-            individualRequest.setErrorLog (errorLog);
+            individualRequest.setErrorLog(errorLog);
         }
-        individualRequest.setTargetApplicationResponse ("<response></response>");
+        individualRequest.setTargetApplicationResponse("<response></response>");
 
-        bulkSubmission.addIndividualRequest (individualRequest);
+        bulkSubmission.addIndividualRequest(individualRequest);
     }
 
 }

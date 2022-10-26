@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -38,7 +38,7 @@ import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 
 /**
  * Interceptor class which handles bulk submission message sent by SDT.
- * 
+ * <p>
  * This interceptor is necessary in order to process the raw XML sent from SDT after CXF has produced it from JAXB
  * objects. Non generic XML content (which should be hidden from SDT) must NOT be represented by JAXB classes known to
  * SDT. Instead, this non generic XML is inserted as raw XML into the XML already produced by CXF and at the relevant
@@ -46,36 +46,31 @@ import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
  * Gateway and the specific Case Managements Systems). This non generic XML is be stored in the database as a blob and
  * read via Hibernate and loaded into ThreadLocal memory from which this interceptor takes it in order to populate the
  * outgoing XML.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class XmlOutboundInterceptor extends AbstractSdtInterceptor
-{
+public class XmlOutboundInterceptor extends AbstractSdtInterceptor {
 
     /**
      * Test interceptor to prove concept.
      */
-    public XmlOutboundInterceptor ()
-    {
-        super (Phase.PREPARE_SEND_ENDING);
-        addBefore (ServiceRequestOutboundInterceptor.class.getName ());
+    public XmlOutboundInterceptor() {
+        super(Phase.PREPARE_SEND_ENDING);
+        addBefore(ServiceRequestOutboundInterceptor.class.getName());
     }
 
     @Override
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
+    public void handleMessage(final SoapMessage message) throws Fault {
         // Get the cached output stream payload. 
-        final String payload = this.readOutputMessage (message);
+        final String payload = this.readOutputMessage(message);
 
         // Modify the payload with enrichers.
-        String modifiedPayload = changeOutboundMessage (payload);
-        if (modifiedPayload == null)
-        {
+        String modifiedPayload = changeOutboundMessage(payload);
+        if (modifiedPayload == null) {
             // No enrichers matched - restore original payload.
             modifiedPayload = payload;
         }
 
-        this.replaceOutputMessage (message, modifiedPayload);
+        this.replaceOutputMessage(message, modifiedPayload);
     }
 }

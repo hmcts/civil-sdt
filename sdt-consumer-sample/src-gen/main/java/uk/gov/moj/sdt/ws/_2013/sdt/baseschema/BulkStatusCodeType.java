@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for bulkStatusCodeType.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "bulkStatusCodeType")
 @XmlEnum
@@ -46,7 +45,7 @@ public enum BulkStatusCodeType {
     }
 
     public static BulkStatusCodeType fromValue(String v) {
-        for (BulkStatusCodeType c: BulkStatusCodeType.values()) {
+        for (BulkStatusCodeType c : BulkStatusCodeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

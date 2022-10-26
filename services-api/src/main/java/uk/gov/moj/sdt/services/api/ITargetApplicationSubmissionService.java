@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,12 +35,10 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 /**
  * This interface is for target application prior-submission and post-submission operations on
  * the individual request.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface ITargetApplicationSubmissionService
-{
+public interface ITargetApplicationSubmissionService {
     /**
      * Process the SDT Request reference associated with the Individual Request.
      * This method will read the individual request associated with the SDT request reference,
@@ -48,10 +46,10 @@ public interface ITargetApplicationSubmissionService
      * update the response from the target application and finally mark the request as complete.
      * Additional check is done to see if all the individual requests associated with
      * the bulk submission request are processed to their final state i.e. Accepted or Rejected.
-     * 
+     *
      * @param sdtRequestReference the unique SDT Request Reference associated with individual request
      */
-    void processRequestToSubmit (final String sdtRequestReference);
+    void processRequestToSubmit(final String sdtRequestReference);
 
     /**
      * Performs action on the SDT Individual Request depending on the given request status.
@@ -60,10 +58,10 @@ public interface ITargetApplicationSubmissionService
      * and marks the request as REJECTED. An entry is made in the error log and performs an
      * check on the bulk submission record to check if all the individual requests are either
      * ACCEPTED or REJECTED and if so the bulk submission record is marked as COMPLETED.
-     * 
+     *
      * @param individualRequest the SDT Individual Request object.
-     * @param requestStatus the status to be updated for the request. Can be either FORWARDED or REJECTED.
+     * @param requestStatus     the status to be updated for the request. Can be either FORWARDED or REJECTED.
      */
-    void processDLQRequest (final IIndividualRequest individualRequest, final String requestStatus);
+    void processDLQRequest(final IIndividualRequest individualRequest, final String requestStatus);
 
 }

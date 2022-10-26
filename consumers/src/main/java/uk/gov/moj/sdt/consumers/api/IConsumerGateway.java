@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -37,45 +37,33 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 
 /**
  * Interface for the consumers implementing the consumer gateway.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
 public interface IConsumerGateway {
 
-	/**
-	 * 
-	 * @param individualRequest
-	 *            the Individual Request part of the submission request.
-	 * @param connectionTimeOut
-	 *            the connection timeout parameter value.
-	 * @param receiveTimeOut
-	 *            the receive timeout parameter value.
-	 * @throws OutageException
-	 *             if the target server is un-reachable.
-	 * @throws TimeoutException
-	 *             if the target server response cannot be obtained within the
-	 *             timeout period.
-	 */
-	void individualRequest(IIndividualRequest individualRequest,
-			final long connectionTimeOut, final long receiveTimeOut)
-			throws OutageException, TimeoutException;
+    /**
+     * @param individualRequest the Individual Request part of the submission request.
+     * @param connectionTimeOut the connection timeout parameter value.
+     * @param receiveTimeOut    the receive timeout parameter value.
+     * @throws OutageException  if the target server is un-reachable.
+     * @throws TimeoutException if the target server response cannot be obtained within the
+     *                          timeout period.
+     */
+    void individualRequest(IIndividualRequest individualRequest,
+                           final long connectionTimeOut, final long receiveTimeOut)
+            throws OutageException, TimeoutException;
 
-	/**
-	 * @param submitQueryRequest
-	 *            the submit query request coming from handler.
-	 * @param connectionTimeOut
-	 *            the connection timeout parameter value.
-	 * @param receiveTimeOut
-	 *            the receive timeout parameter value.
-	 * @throws OutageException
-	 *             if the target server is un-reachable.
-	 * @throws TimeoutException
-	 *             if the target server response cannot be obtained within the
-	 *             timeout period.
-	 */
-	void submitQuery(ISubmitQueryRequest submitQueryRequest,
-			final long connectionTimeOut, final long receiveTimeOut)
-			throws OutageException, TimeoutException;
+    /**
+     * @param submitQueryRequest the submit query request coming from handler.
+     * @param connectionTimeOut  the connection timeout parameter value.
+     * @param receiveTimeOut     the receive timeout parameter value.
+     * @throws OutageException  if the target server is un-reachable.
+     * @throws TimeoutException if the target server response cannot be obtained within the
+     *                          timeout period.
+     */
+    void submitQuery(ISubmitQueryRequest submitQueryRequest,
+                     final long connectionTimeOut, final long receiveTimeOut)
+            throws OutageException, TimeoutException;
 
 }

@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import uk.gov.moj.sdt.ws._2013.mcol.breathingspaceschema.BreathingSpaceType;
 import uk.gov.moj.sdt.ws._2013.mcol.claimschema.ClaimType;
 import uk.gov.moj.sdt.ws._2013.mcol.claimstatusupdateschema.ClaimStatusUpdateType;
@@ -15,9 +16,9 @@ import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantType;
 
 /**
  * <p>Java class for requestItemType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="requestItemType">
  *   &lt;complexContent>
@@ -36,17 +37,15 @@ import uk.gov.moj.sdt.ws._2013.mcol.warrantschema.WarrantType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "requestItemType", propOrder = {
-    "mcolClaim",
-    "mcolJudgment",
-    "mcolClaimStatusUpdate",
-    "mcolWarrant",
-    "mcolJudgmentWarrant",
-    "mcolBreathingSpace"
+        "mcolClaim",
+        "mcolJudgment",
+        "mcolClaimStatusUpdate",
+        "mcolWarrant",
+        "mcolJudgmentWarrant",
+        "mcolBreathingSpace"
 })
 public class RequestItemType {
 
@@ -63,11 +62,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the mcolClaim property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ClaimType }
-     *     
+     *
+     * @return possible object is
+     * {@link ClaimType }
      */
     public ClaimType getMcolClaim() {
         return mcolClaim;
@@ -75,11 +72,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the mcolClaim property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ClaimType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ClaimType }
      */
     public void setMcolClaim(ClaimType value) {
         this.mcolClaim = value;
@@ -87,11 +82,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the mcolJudgment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link McolJudgmentType }
-     *     
+     *
+     * @return possible object is
+     * {@link McolJudgmentType }
      */
     public McolJudgmentType getMcolJudgment() {
         return mcolJudgment;
@@ -99,11 +92,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the mcolJudgment property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link McolJudgmentType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link McolJudgmentType }
      */
     public void setMcolJudgment(McolJudgmentType value) {
         this.mcolJudgment = value;
@@ -111,11 +102,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the mcolClaimStatusUpdate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ClaimStatusUpdateType }
-     *     
+     *
+     * @return possible object is
+     * {@link ClaimStatusUpdateType }
      */
     public ClaimStatusUpdateType getMcolClaimStatusUpdate() {
         return mcolClaimStatusUpdate;
@@ -123,11 +112,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the mcolClaimStatusUpdate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ClaimStatusUpdateType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ClaimStatusUpdateType }
      */
     public void setMcolClaimStatusUpdate(ClaimStatusUpdateType value) {
         this.mcolClaimStatusUpdate = value;
@@ -135,11 +122,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the mcolWarrant property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link WarrantType }
-     *     
+     *
+     * @return possible object is
+     * {@link WarrantType }
      */
     public WarrantType getMcolWarrant() {
         return mcolWarrant;
@@ -147,11 +132,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the mcolWarrant property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link WarrantType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link WarrantType }
      */
     public void setMcolWarrant(WarrantType value) {
         this.mcolWarrant = value;
@@ -159,11 +142,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the mcolJudgmentWarrant property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link JudgmentWarrantType }
-     *     
+     *
+     * @return possible object is
+     * {@link JudgmentWarrantType }
      */
     public JudgmentWarrantType getMcolJudgmentWarrant() {
         return mcolJudgmentWarrant;
@@ -171,11 +152,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the mcolJudgmentWarrant property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link JudgmentWarrantType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link JudgmentWarrantType }
      */
     public void setMcolJudgmentWarrant(JudgmentWarrantType value) {
         this.mcolJudgmentWarrant = value;
@@ -183,11 +162,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the mcolBreathingSpace property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BreathingSpaceType }
-     *     
+     *
+     * @return possible object is
+     * {@link BreathingSpaceType }
      */
     public BreathingSpaceType getMcolBreathingSpace() {
         return mcolBreathingSpace;
@@ -195,11 +172,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the mcolBreathingSpace property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BreathingSpaceType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link BreathingSpaceType }
      */
     public void setMcolBreathingSpace(BreathingSpaceType value) {
         this.mcolBreathingSpace = value;
@@ -207,11 +182,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the requestType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getRequestType() {
         return requestType;
@@ -219,11 +192,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the requestType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setRequestType(String value) {
         this.requestType = value;
@@ -231,11 +202,9 @@ public class RequestItemType {
 
     /**
      * Gets the value of the requestId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getRequestId() {
         return requestId;
@@ -243,11 +212,9 @@ public class RequestItemType {
 
     /**
      * Sets the value of the requestId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setRequestId(String value) {
         this.requestId = value;

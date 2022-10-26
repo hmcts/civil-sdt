@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -44,34 +44,30 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
  * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
  * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
- * 
+ *
  * @author Son Loi
  */
-public class TargetApplicationDao extends GenericDao implements ITargetApplicationDao
-{
+public class TargetApplicationDao extends GenericDao implements ITargetApplicationDao {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (TargetApplicationDao.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TargetApplicationDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
      */
-    public TargetApplicationDao ()
-    {
-        super ();
+    public TargetApplicationDao() {
+        super();
     }
 
     @Override
-    public ITargetApplication getTargetApplicationByCode (final String targetAppCode) throws DataAccessException
-    {
-        LOGGER.debug ("Get a target application matching the code " + targetAppCode);
+    public ITargetApplication getTargetApplicationByCode(final String targetAppCode) throws DataAccessException {
+        LOGGER.debug("Get a target application matching the code " + targetAppCode);
         final ITargetApplication[] targetApplication =
-                this.query (ITargetApplication.class, Restrictions.eq ("targetApplicationCode", targetAppCode));
+                this.query(ITargetApplication.class, Restrictions.eq("targetApplicationCode", targetAppCode));
 
         // Should only return one or none at all
-        if (targetApplication == null || targetApplication.length == 0)
-        {
+        if (targetApplication == null || targetApplication.length == 0) {
             return null;
         }
 

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
@@ -56,17 +56,15 @@ import uk.gov.moj.sdt.validators.api.IXmlValidator;
 
 /**
  * {@inheritDoc}.
- * 
+ *
  * @author Simon Holmes
- * 
  */
-public class XmlValidator implements IXmlValidator
-{
+public class XmlValidator implements IXmlValidator {
 
     /**
      * Logging object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (XmlValidator.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(XmlValidator.class);
 
     /**
      * The xml that requires validation.
@@ -81,18 +79,16 @@ public class XmlValidator implements IXmlValidator
     /**
      * No-argument constructor.
      */
-    public XmlValidator ()
-    {
+    public XmlValidator() {
     }
 
     /**
      * Constructor.
-     * 
+     *
      * @param xmlToValidate is the xml that needs validation.
-     * @param xsdPath is the directory path of the xsd path
+     * @param xsdPath       is the directory path of the xsd path
      */
-    public XmlValidator (final String xmlToValidate, final String xsdPath)
-    {
+    public XmlValidator(final String xmlToValidate, final String xsdPath) {
         this.xmlToValidate = xmlToValidate;
         this.xsdFilePath = xsdPath;
     }
@@ -101,97 +97,83 @@ public class XmlValidator implements IXmlValidator
      * {@inheritDoc}
      */
     @Override
-    public XmlValidationDetails validateXml ()
-    {
+    public XmlValidationDetails validateXml() {
         String exceptionMessage = "";
 
-        try
-        {
-            return evaluateXsd ();
-        }
-        catch (final SAXException e)
-        {
-            LOGGER.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
-            exceptionMessage = e.getMessage ();
-        }
-        catch (final ParserConfigurationException e)
-        {
-            LOGGER.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
-            exceptionMessage = e.getMessage ();
-        }
-        catch (final IOException e)
-        {
-            LOGGER.error ("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
-            exceptionMessage = e.getMessage ();
+        try {
+            return evaluateXsd();
+        } catch (final SAXException e) {
+            LOGGER.error("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
+            exceptionMessage = e.getMessage();
+        } catch (final ParserConfigurationException e) {
+            LOGGER.error("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
+            exceptionMessage = e.getMessage();
+        } catch (final IOException e) {
+            LOGGER.error("Exception while validating XML with XSD [" + xsdFilePath + "]", e);
+            exceptionMessage = e.getMessage();
         }
 
-        final List<String> errorMessageList = new ArrayList<String> ();
-        errorMessageList.add (exceptionMessage);
-        return new XmlValidationDetails (Result.FAIL, errorMessageList);
+        final List<String> errorMessageList = new ArrayList<String>();
+        errorMessageList.add(exceptionMessage);
+        return new XmlValidationDetails(Result.FAIL, errorMessageList);
     }
 
     /**
-     * 
      * @return A XmlValidationDetails object containing SUCCESS/FAIL enum and if fail, error messages.
-     * @throws SAXException a sax exception.
+     * @throws SAXException                 a sax exception.
      * @throws ParserConfigurationException a paser config exception.
-     * @throws IOException io exception
+     * @throws IOException                  io exception
      */
-    private XmlValidationDetails evaluateXsd () throws SAXException, ParserConfigurationException, IOException
-    {
+    private XmlValidationDetails evaluateXsd() throws SAXException, ParserConfigurationException, IOException {
         // Create schema factory amd set XSD file as the schema for factory to
         // create.
-        final SchemaFactory schemaFactory = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-        final File xsdFile = Utilities.retrieveFile (xsdFilePath);
+        final File xsdFile = Utilities.retrieveFile(xsdFilePath);
 
-        final Schema schema = schemaFactory.newSchema (xsdFile);
+        final Schema schema = schemaFactory.newSchema(xsdFile);
 
         // Create SAX parser factory; turn on validation and check all name
         // spaces; use given schema for validation.
-        final SAXParserFactory saxFactory = SAXParserFactory.newInstance ();
+        final SAXParserFactory saxFactory = SAXParserFactory.newInstance();
         // saxFactory.setValidating (true);
-        saxFactory.setNamespaceAware (true);
-        saxFactory.setSchema (schema);
+        saxFactory.setNamespaceAware(true);
+        saxFactory.setSchema(schema);
 
         // Create SAX parser to do validation (not DOM as we do not need to
         // create a document).
-        final SAXParser parser = saxFactory.newSAXParser ();
-        return parseXml (parser);
+        final SAXParser parser = saxFactory.newSAXParser();
+        return parseXml(parser);
     }
 
     /**
      * Parse the xml and check for errors.
-     * 
+     *
      * @param parser the xml parser
-     * @throws IOException ioException
-     * @throws SAXException saxException
      * @return A XmlValidationDetails object containing SUCCESS/FAIL enum and if fail, error messages.
+     * @throws IOException  ioException
+     * @throws SAXException saxException
      */
-    private XmlValidationDetails parseXml (final SAXParser parser) throws SAXException, IOException
-    {
+    private XmlValidationDetails parseXml(final SAXParser parser) throws SAXException, IOException {
         // convert incoming XML(String) to an Input Stream to allow the parser to read it.
-        final InputStream xmlStream = IOUtils.toInputStream (xmlToValidate);
+        final InputStream xmlStream = IOUtils.toInputStream(xmlToValidate);
 
         // Create the details object to store the result of the validation.
-        final XmlValidationDetails xmlValidationDetails = new XmlValidationDetails (Result.PASS);
+        final XmlValidationDetails xmlValidationDetails = new XmlValidationDetails(Result.PASS);
 
         // Use the XSD file to validate the proof XML.
-        parser.parse (xmlStream, new DefaultHandler ()
-        {
+        parser.parse(xmlStream, new DefaultHandler() {
             // Anonymous Default Handler to implement required error logic.
-            public void error (final SAXParseException e) throws SAXException
-            {
+            public void error(final SAXParseException e) throws SAXException {
                 // If the first error to occur in the file.
-                if (xmlValidationDetails.getResult () == XmlValidationDetails.Result.PASS)
-                {
+                if (xmlValidationDetails.getResult() == XmlValidationDetails.Result.PASS) {
                     // Change state to FAIL.
-                    xmlValidationDetails.setResult (XmlValidationDetails.Result.FAIL);
+                    xmlValidationDetails.setResult(XmlValidationDetails.Result.FAIL);
                     // Create an empty list of result messages.
-                    xmlValidationDetails.setResultMessages (new ArrayList<String> ());
+                    xmlValidationDetails.setResultMessages(new ArrayList<String>());
                 }
                 // Add the error message to the list.
-                xmlValidationDetails.getResultMessages ().add (e.getMessage ());
+                xmlValidationDetails.getResultMessages().add(e.getMessage());
                 return;
             }
         });
@@ -201,32 +183,28 @@ public class XmlValidator implements IXmlValidator
     /**
      * @return the xmlToValidate
      */
-    public String getXmlToValidate ()
-    {
+    public String getXmlToValidate() {
         return xmlToValidate;
     }
 
     /**
      * @param xmlToValidate the xmlToValidate to set
      */
-    public void setXmlToValidate (final String xmlToValidate)
-    {
+    public void setXmlToValidate(final String xmlToValidate) {
         this.xmlToValidate = xmlToValidate;
     }
 
     /**
      * @return the xsdPath
      */
-    public String getXsdPath ()
-    {
+    public String getXsdPath() {
         return xsdFilePath;
     }
 
     /**
      * @param xsdPath the xsdPath to set
      */
-    public void setXsdPath (final String xsdPath)
-    {
+    public void setXsdPath(final String xsdPath) {
         this.xsdFilePath = xsdPath;
     }
 }

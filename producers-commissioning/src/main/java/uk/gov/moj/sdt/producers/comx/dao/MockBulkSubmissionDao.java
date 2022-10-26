@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.producers.comx.dao;
 
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;

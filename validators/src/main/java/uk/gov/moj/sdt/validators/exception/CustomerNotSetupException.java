@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,68 +34,61 @@ import java.util.List;
 
 /**
  * SDT Customer has not been setup for target application.
- * 
+ *
  * @author d130680
- * 
  */
-public class CustomerNotSetupException extends AbstractBusinessException
-{
+public class CustomerNotSetupException extends AbstractBusinessException {
     /**
      * The Constant serialVersionUID.
      */
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     /**
      * SDT Customer has not been setup for target application.
-     * 
-     * @param code error code
+     *
+     * @param code        error code
      * @param description error description
      */
-    public CustomerNotSetupException (final String code, final String description)
-    {
-        super (code, description);
+    public CustomerNotSetupException(final String code, final String description) {
+        super(code, description);
     }
 
     /**
      * SDT Customer has not been setup for target application.
-     * 
-     * @param code code
-     * @param description description
+     *
+     * @param code         code
+     * @param description  description
      * @param replacements string replacements with tokens
      */
-    public CustomerNotSetupException (final String code, final String description, final List<String> replacements)
-    {
-        super (code, description, replacements);
+    public CustomerNotSetupException(final String code, final String description, final List<String> replacements) {
+        super(code, description, replacements);
     }
 
     /**
      * SDT Customer has not been setup for target application.
-     * 
+     *
      * @param s the s
      */
-    public CustomerNotSetupException (final String s)
-    {
-        super (s);
+    public CustomerNotSetupException(final String s) {
+        super(s);
     }
 
     /**
      * SDT Customer has not been setup for target application.
-     * 
+     *
      * @param cause the cause
      */
-    public CustomerNotSetupException (final Throwable cause)
-    {
-        super (cause);
+    public CustomerNotSetupException(final Throwable cause) {
+        super(cause);
     }
 
     /**
      * SDT Customer has not been setup for target application.
-     * 
-     * @param s the s
+     *
+     * @param s     the s
      * @param cause the cause
      */
-    public CustomerNotSetupException (final String s, final Throwable cause)
-    {
-        super (s, cause);
+    public CustomerNotSetupException(final String s, final Throwable cause) {
+        super(s, cause);
     }
 }

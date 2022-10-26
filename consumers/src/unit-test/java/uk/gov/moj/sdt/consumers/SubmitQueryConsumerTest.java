@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -74,21 +74,19 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 
 /**
  * Test class for the submit query consumer.
- * 
+ *
  * @author Amit Nigam
- * 
  */
-public class SubmitQueryConsumerTest extends AbstractSdtUnitTestBase
-{
+public class SubmitQueryConsumerTest extends AbstractSdtUnitTestBase {
     /**
      * Connection time out constant.
      */
-    private static final long CONNECTION_TIME_OUT = 30000;
+    private final static long CONNECTION_TIME_OUT = 30000;
 
     /**
      * Received time out constant.
      */
-    private static final long RECEIVE_TIME_OUT = 60000;
+    private final static long RECEIVE_TIME_OUT = 60000;
 
     /**
      * Consumer transformer for submit query.
@@ -120,185 +118,174 @@ public class SubmitQueryConsumerTest extends AbstractSdtUnitTestBase
     /**
      * Method to do any pre-test set-up.
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     @Before
-    public void setUp ()
-    {
-        mockTransformer = EasyMock.createMock (IConsumerTransformer.class);
-        mockClient = EasyMock.createMock (ITargetAppInternalEndpointPortType.class);
-        submitQueryConsumer = new SubQueryConsumer ();
-        submitQueryConsumer.setTransformer (mockTransformer);
+    public void setUp() {
+        mockTransformer = EasyMock.createMock(IConsumerTransformer.class);
+        mockClient = EasyMock.createMock(ITargetAppInternalEndpointPortType.class);
+        submitQueryConsumer = new SubQueryConsumer();
+        submitQueryConsumer.setTransformer(mockTransformer);
         // submitQueryConsumer.setRethrowOnFailureToConnect (true);
 
-        submitQueryRequest = this.createSubmitQueryRequest ();
-        submitQueryRequestType = this.createRequestType (submitQueryRequest);
+        submitQueryRequest = this.createSubmitQueryRequest();
+        submitQueryRequestType = this.createRequestType(submitQueryRequest);
     }
 
     /**
      * Test to verify submit query consumer does throw expected exception.
      */
-    @Test (expected = TimeoutException.class)
-    public void testSubmitQueryRequestTimeout ()
-    {
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (submitQueryRequest)).andReturn (submitQueryRequestType);
+    @Test(expected = TimeoutException.class)
+    public void testSubmitQueryRequestTimeout() {
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(submitQueryRequest)).andReturn(submitQueryRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        wsException.initCause (new SocketTimeoutException ("Timed out waiting for response"));
+        final WebServiceException wsException = new WebServiceException();
+        wsException.initCause(new SocketTimeoutException("Timed out waiting for response"));
 
-        EasyMock.expect (mockClient.submitQuery (submitQueryRequestType)).andThrow (wsException);
+        EasyMock.expect(mockClient.submitQuery(submitQueryRequestType)).andThrow(wsException);
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        this.submitQueryConsumer.processSubmitQuery (submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
     }
 
     /**
      * Test to verify submit query consumer does throw expected exception.
-     * 
+     *
      * @throws SOAPException exception
      */
-    @Test (expected = SoapFaultException.class)
-    public void testSubmitQueryRequestSoapFault () throws SOAPException
-    {
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (submitQueryRequest)).andReturn (submitQueryRequestType);
+    @Test(expected = SoapFaultException.class)
+    public void testSubmitQueryRequestSoapFault() throws SOAPException {
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(submitQueryRequest)).andReturn(submitQueryRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        final SOAPFault fault = EasyMock.createMock (SOAPFault.class);
-        fault.setFaultCode ("REQ_FAULT");
-        fault.setFaultString ("Invalid request");
+        final WebServiceException wsException = new WebServiceException();
+        final SOAPFault fault = EasyMock.createMock(SOAPFault.class);
+        fault.setFaultCode("REQ_FAULT");
+        fault.setFaultString("Invalid request");
 
-        wsException.initCause (new SOAPFaultException (fault));
+        wsException.initCause(new SOAPFaultException(fault));
 
-        EasyMock.expect (mockClient.submitQuery (submitQueryRequestType)).andThrow (wsException);
+        EasyMock.expect(mockClient.submitQuery(submitQueryRequestType)).andThrow(wsException);
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        this.submitQueryConsumer.processSubmitQuery (submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
     }
 
     /**
      * Test to verify submit query consumer does throw expected exception.
-     * 
+     *
      * @throws SOAPException exception
      */
-    @Test (expected = OutageException.class)
-    public void testSubmitQueryRequestOutage () throws SOAPException
-    {
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (submitQueryRequest)).andReturn (submitQueryRequestType);
+    @Test(expected = OutageException.class)
+    public void testSubmitQueryRequestOutage() throws SOAPException {
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(submitQueryRequest)).andReturn(submitQueryRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        wsException.initCause (new ConnectException ());
+        final WebServiceException wsException = new WebServiceException();
+        wsException.initCause(new ConnectException());
 
-        EasyMock.expect (mockClient.submitQuery (submitQueryRequestType)).andThrow (wsException);
+        EasyMock.expect(mockClient.submitQuery(submitQueryRequestType)).andThrow(wsException);
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        this.submitQueryConsumer.processSubmitQuery (submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
     }
 
     /**
      * Test method for successful processing of submit query.
      */
     @Test
-    public void testSubmitQuerySuccess ()
-    {
-        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
+    public void testSubmitQuerySuccess() {
+        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
 
-        EasyMock.expect (mockTransformer.transformDomainToJaxb (submitQueryRequest)).andReturn (submitQueryRequestType);
-        EasyMock.expect (mockClient.submitQuery (submitQueryRequestType)).andReturn (submitQueryResponseType);
-        mockTransformer.transformJaxbToDomain (submitQueryResponseType, submitQueryRequest);
+        EasyMock.expect(mockTransformer.transformDomainToJaxb(submitQueryRequest)).andReturn(submitQueryRequestType);
+        EasyMock.expect(mockClient.submitQuery(submitQueryRequestType)).andReturn(submitQueryResponseType);
+        mockTransformer.transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
-        EasyMock.expectLastCall ().andAnswer (new IAnswer<Object> ()
-        {
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
-            public Object answer () throws Throwable
-            {
-                ((SubmitQueryResponseType) EasyMock.getCurrentArguments ()[0]).setResultCount (new BigInteger ("1"));
-                final StatusType statusType = new StatusType ();
-                statusType.setCode (StatusCodeType.OK);
-                ((SubmitQueryResponseType) EasyMock.getCurrentArguments ()[0]).setStatus (statusType);
+            public Object answer() throws Throwable {
+                ((SubmitQueryResponseType) EasyMock.getCurrentArguments()[0]).setResultCount(new BigInteger("1"));
+                final StatusType statusType = new StatusType();
+                statusType.setCode(StatusCodeType.OK);
+                ((SubmitQueryResponseType) EasyMock.getCurrentArguments()[0]).setStatus(statusType);
                 // required to be null for a void method
                 return null;
             }
         });
 
-        EasyMock.replay (mockTransformer);
-        EasyMock.replay (mockClient);
+        EasyMock.replay(mockTransformer);
+        EasyMock.replay(mockClient);
 
-        this.submitQueryConsumer.processSubmitQuery (submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        EasyMock.verify (mockTransformer);
-        EasyMock.verify (mockClient);
+        EasyMock.verify(mockTransformer);
+        EasyMock.verify(mockClient);
 
-        Assert.assertEquals ("Status code is not equal.", submitQueryResponseType.getStatus ().getCode ().value (),
-                submitQueryRequest.getStatus ());
-        Assert.assertEquals ("Result count is not equal.", submitQueryResponseType.getResultCount ().intValue (),
-                submitQueryRequest.getResultCount ());
+        Assert.assertEquals("Status code is not equal.", submitQueryResponseType.getStatus().getCode().value(),
+                submitQueryRequest.getStatus());
+        Assert.assertEquals("Result count is not equal.", submitQueryResponseType.getResultCount().intValue(),
+                submitQueryRequest.getResultCount());
 
     }
 
     /**
-     * 
      * @param domainObject the submit query domain object.
      * @return the Jaxb submit query request type.
      */
-    private SubmitQueryRequestType createRequestType (final ISubmitQueryRequest domainObject)
-    {
-        final SubmitQueryRequestType requestType = new SubmitQueryRequestType ();
-        final HeaderType headerType = new HeaderType ();
-        headerType.setTargetAppCustomerId ("TestCust");
-        headerType.setCriteriaType ("TEST_CRITERIA");
-        requestType.setHeader (headerType);
+    private SubmitQueryRequestType createRequestType(final ISubmitQueryRequest domainObject) {
+        final SubmitQueryRequestType requestType = new SubmitQueryRequestType();
+        final HeaderType headerType = new HeaderType();
+        headerType.setTargetAppCustomerId("TestCust");
+        headerType.setCriteriaType("TEST_CRITERIA");
+        requestType.setHeader(headerType);
 
         return requestType;
     }
 
     /**
-     * 
      * @return submit query request domain object
      */
-    private ISubmitQueryRequest createSubmitQueryRequest ()
-    {
+    private ISubmitQueryRequest createSubmitQueryRequest() {
         // final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setId (1L);
-        bulkCustomer.setSdtCustomerId (10L);
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setId(1L);
+        bulkCustomer.setSdtCustomerId(10L);
 
-        final ITargetApplication targetApp = new TargetApplication ();
+        final ITargetApplication targetApp = new TargetApplication();
 
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("MCOL");
-        targetApp.setTargetApplicationName ("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+        targetApp.setId(1L);
+        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationName("TEST_TargetApp");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
 
-        final ServiceRouting serviceRouting = new ServiceRouting ();
-        serviceRouting.setId (1L);
-        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+        final ServiceRouting serviceRouting = new ServiceRouting();
+        serviceRouting.setId(1L);
+        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
 
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setId (1L);
-        serviceType.setName (IServiceType.ServiceTypeName.SUBMIT_QUERY.name ());
-        serviceType.setDescription ("RequestTestDesc1");
-        serviceType.setStatus ("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType();
+        serviceType.setId(1L);
+        serviceType.setName(IServiceType.ServiceTypeName.SUBMIT_QUERY.name());
+        serviceType.setDescription("RequestTestDesc1");
+        serviceType.setStatus("RequestTestStatus");
 
-        serviceRouting.setServiceType (serviceType);
-        serviceRoutings.add (serviceRouting);
-        targetApp.setServiceRoutings (serviceRoutings);
+        serviceRouting.setServiceType(serviceType);
+        serviceRoutings.add(serviceRouting);
+        targetApp.setServiceRoutings(serviceRoutings);
 
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
-        final BulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication ();
-        bulkCustomerApplication.setBulkCustomer (bulkCustomer);
-        bulkCustomerApplication.setTargetApplication (targetApp);
-        bulkCustomerApplications.add (bulkCustomerApplication);
-        bulkCustomer.setBulkCustomerApplications (bulkCustomerApplications);
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication>();
+        final BulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication();
+        bulkCustomerApplication.setBulkCustomer(bulkCustomer);
+        bulkCustomerApplication.setTargetApplication(targetApp);
+        bulkCustomerApplications.add(bulkCustomerApplication);
+        bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
 
-        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
-        submitQueryRequest.setBulkCustomer (bulkCustomer);
-        submitQueryRequest.setTargetApplication (targetApp);
-        submitQueryRequest.setResultCount (1);
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+        submitQueryRequest.setBulkCustomer(bulkCustomer);
+        submitQueryRequest.setTargetApplication(targetApp);
+        submitQueryRequest.setResultCount(1);
         return submitQueryRequest;
 
     }
@@ -307,24 +294,22 @@ public class SubmitQueryConsumerTest extends AbstractSdtUnitTestBase
      * Need to extend the consumer class under test for overriding base class methods
      * of the getClient as it is abstract method.
      */
-    private class SubQueryConsumer extends SubmitQueryConsumer
-    {
+    private class SubQueryConsumer extends SubmitQueryConsumer {
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.
-         * 
+         *
          * @param targetApplicationCode the target application code
-         * @param serviceType the service type associated with the target application code
-         * @param webServiceEndPoint the Web Service End Point URL
-         * @param connectionTimeOut the connection time out value
-         * @param receiveTimeOut the acknowledgement time out value
+         * @param serviceType           the service type associated with the target application code
+         * @param webServiceEndPoint    the Web Service End Point URL
+         * @param connectionTimeOut     the connection time out value
+         * @param receiveTimeOut        the acknowledgement time out value
          * @return the target application end point port bean i.e. the client interface.
          */
         @Override
-        public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
-                                                             final String serviceType, final String webServiceEndPoint,
-                                                             final long connectionTimeOut, final long receiveTimeOut)
-        {
+        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
+                                                            final String serviceType, final String webServiceEndPoint,
+                                                            final long connectionTimeOut, final long receiveTimeOut) {
             return mockClient;
         }
     }

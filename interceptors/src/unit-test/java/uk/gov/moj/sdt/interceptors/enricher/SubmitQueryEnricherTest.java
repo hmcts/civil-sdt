@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -39,12 +39,10 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Tests for {@link uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher}.
- * 
+ *
  * @author d276205
- * 
  */
-public class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase
-{
+public class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Subject for test.
      */
@@ -54,49 +52,45 @@ public class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase
      * Setup.
      */
     @Before
-    public void setUp ()
-    {
-        enricher = new SubmitQueryEnricher ();
-        enricher.setInsertionTag ("results");
-        enricher.setParentTag ("submitQueryResponse");
+    public void setUp() {
+        enricher = new SubmitQueryEnricher();
+        enricher.setInsertionTag("results");
+        enricher.setParentTag("submitQueryResponse");
     }
 
     /**
      * Test success flow.
      */
     @Test
-    public void testSuccess ()
-    {
-        SdtContext.getContext ().setRawOutXml ("<record></record>");
-        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
+    public void testSuccess() {
+        SdtContext.getContext().setRawOutXml("<record></record>");
+        final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results>" +
                 "<record></record></ns2:results></ns1:submitQueryResponse>";
         Assert.assertEquals(expected, result);
 
     }
-    
+
     /**
      * Test success flow where insertion tag has no preceding namespace.
      */
     @Test
-    public void testSuccessNoNamespace ()
-    {
-        SdtContext.getContext ().setRawOutXml ("<record></record>");
-        final String result = enricher.enrichXml ("<submitQueryResponse><results/></submitQueryResponse>");
+    public void testSuccessNoNamespace() {
+        SdtContext.getContext().setRawOutXml("<record></record>");
+        final String result = enricher.enrichXml("<submitQueryResponse><results/></submitQueryResponse>");
         final String expected = "<submitQueryResponse><results>" +
                 "<record></record></results></submitQueryResponse>";
         Assert.assertEquals(expected, result);
 
     }
-    
+
     /**
      * Test for null value.
      */
     @Test
-    public void testForNullValue ()
-    {
-        SdtContext.getContext ().setRawOutXml (null);
-        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
+    public void testForNullValue() {
+        SdtContext.getContext().setRawOutXml(null);
+        final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>";
         Assert.assertEquals(expected, result);
 
@@ -106,10 +100,9 @@ public class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase
      * Test for empty string value.
      */
     @Test
-    public void testForEmptyValue ()
-    {
-        SdtContext.getContext ().setRawOutXml ("");
-        final String result = enricher.enrichXml ("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
+    public void testForEmptyValue() {
+        SdtContext.getContext().setRawOutXml("");
+        final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>";
         Assert.assertEquals(expected, result);
 

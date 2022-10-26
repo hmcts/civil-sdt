@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2010 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -47,12 +47,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQue
 
 /**
  * Unit tests for SubmitQueryConsumerTransformer.
- * 
+ *
  * @author D274994
- * 
  */
-public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase
-{
+public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Placeholder for submit query consumer transformer.
      */
@@ -61,72 +59,64 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests ()
-    {
+    public void setUpLocalTests() {
         Constructor<SubmitQueryConsumerTransformer> c;
-        try
-        {
+        try {
             // Make the constructor visible so we can get a new instance of it.
-            c = SubmitQueryConsumerTransformer.class.getDeclaredConstructor ();
-            c.setAccessible (true);
-            transformer = c.newInstance ();
-        }
-        catch (final Exception e)
-        {
-            e.printStackTrace ();
+            c = SubmitQueryConsumerTransformer.class.getDeclaredConstructor();
+            c.setAccessible(true);
+            transformer = c.newInstance();
+        } catch (final Exception e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Test the transformation from jaxb (SubmitQueryResponseType) to domain
      * (ISubmitQuery) object with status OK.
-     * 
      */
     @Test
-    public void testTransformJaxbToDomainOK ()
-    {
+    public void testTransformJaxbToDomainOK() {
         // Set up the jaxb object to transform
-        final SubmitQueryResponseType jaxb = new SubmitQueryResponseType ();
-        final StatusType statusType = new StatusType ();
-        statusType.setCode (StatusCodeType.OK);
-        jaxb.setStatus (statusType);
-        jaxb.setResultCount (new BigInteger ("0"));
-        final ISubmitQueryRequest domain = new SubmitQueryRequest ();
+        final SubmitQueryResponseType jaxb = new SubmitQueryResponseType();
+        final StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.OK);
+        jaxb.setStatus(statusType);
+        jaxb.setResultCount(new BigInteger("0"));
+        final ISubmitQueryRequest domain = new SubmitQueryRequest();
 
-        transformer.transformJaxbToDomain (jaxb, domain);
-        Assert.assertEquals ("Request Status is incorrect", jaxb.getStatus ().getCode ().value (), domain.getStatus ());
-        Assert.assertEquals ("Incorrect result count", jaxb.getResultCount ().intValue (), domain.getResultCount ());
+        transformer.transformJaxbToDomain(jaxb, domain);
+        Assert.assertEquals("Request Status is incorrect", jaxb.getStatus().getCode().value(), domain.getStatus());
+        Assert.assertEquals("Incorrect result count", jaxb.getResultCount().intValue(), domain.getResultCount());
     }
 
     /**
      * Test the transformation from jaxb (SubmitQueryResponseType) to domain
      * (ISubmitQuery) object with status Error.
-     * 
      */
     @Test
-    public void testTransformJaxbToDomainError ()
-    {
+    public void testTransformJaxbToDomainError() {
         // Set up the jaxb object to transform
-        final SubmitQueryResponseType jaxb = new SubmitQueryResponseType ();
-        final StatusType statusType = new StatusType ();
-        statusType.setCode (StatusCodeType.ERROR);
-        jaxb.setStatus (statusType);
-        jaxb.setResultCount (BigInteger.valueOf (10));
+        final SubmitQueryResponseType jaxb = new SubmitQueryResponseType();
+        final StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.ERROR);
+        jaxb.setStatus(statusType);
+        jaxb.setResultCount(BigInteger.valueOf(10));
 
-        final ErrorType errorType = new ErrorType ();
-        errorType.setCode ("ERROR");
-        errorType.setDescription ("MCOL has found an error in processing the request");
-        statusType.setError (errorType);
+        final ErrorType errorType = new ErrorType();
+        errorType.setCode("ERROR");
+        errorType.setDescription("MCOL has found an error in processing the request");
+        statusType.setError(errorType);
 
-        final ISubmitQueryRequest domain = new SubmitQueryRequest ();
+        final ISubmitQueryRequest domain = new SubmitQueryRequest();
 
-        transformer.transformJaxbToDomain (jaxb, domain);
+        transformer.transformJaxbToDomain(jaxb, domain);
 
-        final IErrorLog errorLog = domain.getErrorLog ();
+        final IErrorLog errorLog = domain.getErrorLog();
 
-        Assert.assertEquals ("Request Status is incorrect", jaxb.getStatus ().getCode ().value (), domain.getStatus ());
-        Assert.assertEquals ("Error description is incorrect", "MCOL has found an error in processing the request",
-                errorLog.getErrorText ());
-        Assert.assertEquals ("Incorrect result count", jaxb.getResultCount ().intValue (), domain.getResultCount ());
+        Assert.assertEquals("Request Status is incorrect", jaxb.getStatus().getCode().value(), domain.getStatus());
+        Assert.assertEquals("Error description is incorrect", "MCOL has found an error in processing the request",
+                errorLog.getErrorText());
+        Assert.assertEquals("Incorrect result count", jaxb.getResultCount().intValue(), domain.getResultCount());
     }
 }

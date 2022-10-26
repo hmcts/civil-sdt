@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.domain;
 
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
-
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -42,12 +41,10 @@ import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 
 /**
  * Abstract class for all domain objects.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public abstract class AbstractDomainObject implements IDomainObject, IVisitable
-{
+public abstract class AbstractDomainObject implements IDomainObject, IVisitable {
 
     /**
      * Primary key.
@@ -62,86 +59,63 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable
     /**
      * Constructor for {@link AbstractDomainObject}.
      */
-    public AbstractDomainObject ()
-    {
-        super ();
+    protected AbstractDomainObject() {
+        super();
 
         // Beware of timing problems when Spring has not finished initialising
         // and has not created the metics bean.
-        if (SdtMetricsMBean.getMetrics () != null)
-        {
-            SdtMetricsMBean.getMetrics ().upDomainObjectsCount ();
+        if (SdtMetricsMBean.getMetrics() != null) {
+            SdtMetricsMBean.getMetrics().upDomainObjectsCount();
         }
     }
 
-    /**
-     * When garbage collected, decrement count of domain objects in statistics.
-     */
-    // CHECKSTYLE:OFF
-    public void finalize ()
-    // CHECKSTYLE:ON
-    {
-        SdtMetricsMBean.getMetrics ().downDomainObjectsCount ();
-    }
-
     @Override
-    public Long getId ()
-    {
+    public Long getId() {
         return id;
     }
 
     @Override
-    public void setId (final Long id)
-    {
+    public void setId(final Long id) {
         this.id = id;
     }
 
     @Override
-    public int getVersion ()
-    {
+    public int getVersion() {
         return version;
     }
 
     @Override
-    public void accept (final IVisitor visitor, final ITree tree)
-    {
+    public void accept(final IVisitor visitor, final ITree tree) {
         // Call any visitor, passing a reference to this class so that it can
         // act on this class.
-        visitor.visit (this, tree);
+        visitor.visit(this, tree);
     }
 
     /**
      * Get the Object class name and hash id. This is used to wrap domain objects in order to prevent recursive toString
      * () calls and should be applied in the toString () method of all domain objects which are associated with other
      * domain objects.
-     * 
+     *
      * @param object whose details are to be returned.
      * @return details of object concerned.
      */
-    protected String getHashId (final Object object)
-    {
-        if (PersistentCollection.class.isInstance (object))
-        {
+    protected String getHashId(final Object object) {
+        if (object instanceof PersistentCollection) {
             return "PersistentCollection";
-        }
-        else if (HibernateProxy.class.isInstance (object))
-        {
+        } else if (object instanceof HibernateProxy) {
             return "HibernateProxy";
-        }
-        else
-        {
-            return object == null ? null : object.getClass ().getSimpleName () + "@" +
-                    Integer.toHexString (object.hashCode ());
+        } else {
+            return object == null ? null : object.getClass().getSimpleName() + "@"
+                    + Integer.toHexString(object.hashCode());
         }
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer ("AbstractEntity[");
-        sb.append ("id=" + this.getId ());
-        sb.append (", version=").append (this.getVersion ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("AbstractEntity[");
+        sb.append("id=" + this.getId());
+        sb.append(", version=").append(this.getVersion());
+        sb.append("]");
+        return sb.toString();
     }
 }

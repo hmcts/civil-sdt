@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,26 +23,26 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils.logging;
 
 import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
 
 /**
  * Object stored in thread local holding performance logging information.
- * 
+ *
  * @author Robin Compston
  */
-public class LoggingContext implements ILoggingContext
-{
+public class LoggingContext implements ILoggingContext {
     /**
      * {@link com.logica.ibra.ext.model.api.IIbraontext#SERIAL_VERSION_UID}.
      */
-    private static final long serialVersionUID = ILoggingContext.SERIAL_VERSION_UID;
+    private final static long serialVersionUID = ILoggingContext.SERIAL_VERSION_UID;
 
     /**
      * Global logging id used by all threads.
@@ -67,66 +67,54 @@ public class LoggingContext implements ILoggingContext
     /**
      * Constructs a new {@link LoggingContext} instance.
      */
-    public LoggingContext ()
-    {
+    public LoggingContext() {
     }
 
     @Override
-    public int getLoggingFlags ()
-    {
+    public int getLoggingFlags() {
         return this.loggingFlags;
     }
 
     @Override
-    public void setLoggingFlags (final int loggingFlags)
-    {
+    public void setLoggingFlags(final int loggingFlags) {
         this.loggingFlags = loggingFlags;
     }
 
     @Override
-    public long getMajorLoggingId ()
-    {
+    public long getMajorLoggingId() {
         return this.majorLoggingId;
     }
 
     @Override
-    public void setMajorLoggingId (final long majorLoggingId)
-    {
+    public void setMajorLoggingId(final long majorLoggingId) {
         this.majorLoggingId = majorLoggingId;
     }
 
     @Override
-    public long getMinorLoggingId ()
-    {
+    public long getMinorLoggingId() {
         return this.minorLoggingId;
     }
 
     @Override
-    public void setMinorLoggingId (final long minorLoggingId)
-    {
+    public void setMinorLoggingId(final long minorLoggingId) {
         this.minorLoggingId = minorLoggingId;
     }
 
     @Override
-    public String getLoggingId ()
-    {
-        if (this.getMinorLoggingId () > 0)
-        {
-            return this.getMajorLoggingId () + "." + this.getMinorLoggingId ();
-        }
-        else
-        {
-            return "" + this.getMajorLoggingId ();
+    public String getLoggingId() {
+        if (this.getMinorLoggingId() > 0) {
+            return this.getMajorLoggingId() + "." + this.getMinorLoggingId();
+        } else {
+            return "" + this.getMajorLoggingId();
         }
     }
 
     /**
      * Get the next logging id to be assigned to some new thread.
-     * 
+     *
      * @return the next logging id.
      */
-    public static synchronized long getNextLoggingId ()
-    {
+    public static synchronized long getNextLoggingId() {
         return ++LoggingContext.nextLoggingId;
     }
 }

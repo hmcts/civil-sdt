@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for headerType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="headerType">
  *   &lt;complexContent>
@@ -24,13 +24,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "headerType", propOrder = {
-    "targetAppCustomerId",
-    "criteriaType"
+        "targetAppCustomerId",
+        "criteriaType"
 })
 public class HeaderType {
 
@@ -41,11 +39,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the targetAppCustomerId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTargetAppCustomerId() {
         return targetAppCustomerId;
@@ -53,11 +49,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the targetAppCustomerId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTargetAppCustomerId(String value) {
         this.targetAppCustomerId = value;
@@ -65,11 +59,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the criteriaType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getCriteriaType() {
         return criteriaType;
@@ -77,11 +69,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the criteriaType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setCriteriaType(String value) {
         this.criteriaType = value;

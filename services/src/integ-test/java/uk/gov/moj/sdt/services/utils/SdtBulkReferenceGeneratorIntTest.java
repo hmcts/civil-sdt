@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -48,12 +48,11 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 
 /**
  * Test class for SdtBulkReferenceGenerator.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
@@ -65,61 +64,50 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
 @Transactional
-public class SdtBulkReferenceGeneratorIntTest extends AbstractIntegrationTest
-{
+public class SdtBulkReferenceGeneratorIntTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SdtBulkReferenceGeneratorIntTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SdtBulkReferenceGeneratorIntTest.class);
 
     /**
      * Test method for the SDT bulk reference generation.
      */
     @Test
     @Transactional
-    public void testGetSdtBulkReference ()
-    {
+    public void testGetSdtBulkReference() {
         final ISdtBulkReferenceGenerator referenceGenerator =
                 (ISdtBulkReferenceGenerator) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator");
+                        .getBean("uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator");
 
         // Negative Test 1 - Supply blank application name
-        try
-        {
-            referenceGenerator.getSdtBulkReference (null);
-        }
-        catch (final IllegalArgumentException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue (true);
+        try {
+            referenceGenerator.getSdtBulkReference(null);
+        } catch (final IllegalArgumentException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue(true);
         }
 
         // Negative Test 2 - Supply application name less than expected value of 4
-        try
-        {
-            referenceGenerator.getSdtBulkReference ("NCO");
-        }
-        catch (final IllegalArgumentException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue (true);
+        try {
+            referenceGenerator.getSdtBulkReference("NCO");
+        } catch (final IllegalArgumentException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue(true);
         }
 
         // Negative Test 3 - Supply application name more than expected value of 4
-        try
-        {
-            referenceGenerator.getSdtBulkReference ("MCOLS");
-        }
-        catch (final IllegalArgumentException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue (true);
+        try {
+            referenceGenerator.getSdtBulkReference("MCOLS");
+        } catch (final IllegalArgumentException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue(true);
         }
 
-        final String bulkReferenceNumber = referenceGenerator.getSdtBulkReference ("MCOL");
-        LOGGER.debug ("Generated reference number is " + bulkReferenceNumber);
-        assertNotNull (bulkReferenceNumber);
-        assertEquals (29, bulkReferenceNumber.length ());
+        final String bulkReferenceNumber = referenceGenerator.getSdtBulkReference("MCOL");
+        LOGGER.debug("Generated reference number is " + bulkReferenceNumber);
+        assertNotNull(bulkReferenceNumber);
+        assertEquals(29, bulkReferenceNumber.length());
     }
 
 }

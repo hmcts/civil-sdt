@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for correspondenceDetailType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="correspondenceDetailType">
  *   &lt;complexContent>
@@ -43,13 +43,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "correspondenceDetailType", propOrder = {
-    "name",
-    "address"
+        "name",
+        "address"
 })
 public class CorrespondenceDetailType {
 
@@ -60,11 +58,9 @@ public class CorrespondenceDetailType {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getName() {
         return name;
@@ -72,11 +68,9 @@ public class CorrespondenceDetailType {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -84,11 +78,9 @@ public class CorrespondenceDetailType {
 
     /**
      * Gets the value of the address property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CorrespondenceDetailType.Address }
-     *     
+     *
+     * @return possible object is
+     * {@link CorrespondenceDetailType.Address }
      */
     public CorrespondenceDetailType.Address getAddress() {
         return address;
@@ -96,11 +88,9 @@ public class CorrespondenceDetailType {
 
     /**
      * Sets the value of the address property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CorrespondenceDetailType.Address }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link CorrespondenceDetailType.Address }
      */
     public void setAddress(CorrespondenceDetailType.Address value) {
         this.address = value;
@@ -109,9 +99,9 @@ public class CorrespondenceDetailType {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -125,14 +115,12 @@ public class CorrespondenceDetailType {
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "line1",
-        "line2",
-        "postcode"
+            "line1",
+            "line2",
+            "postcode"
     })
     public static class Address {
 
@@ -144,11 +132,9 @@ public class CorrespondenceDetailType {
 
         /**
          * Gets the value of the line1 property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getLine1() {
             return line1;
@@ -156,11 +142,9 @@ public class CorrespondenceDetailType {
 
         /**
          * Sets the value of the line1 property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setLine1(String value) {
             this.line1 = value;
@@ -168,11 +152,9 @@ public class CorrespondenceDetailType {
 
         /**
          * Gets the value of the line2 property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getLine2() {
             return line2;
@@ -180,11 +162,9 @@ public class CorrespondenceDetailType {
 
         /**
          * Sets the value of the line2 property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setLine2(String value) {
             this.line2 = value;
@@ -192,11 +172,9 @@ public class CorrespondenceDetailType {
 
         /**
          * Gets the value of the postcode property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getPostcode() {
             return postcode;
@@ -204,11 +182,9 @@ public class CorrespondenceDetailType {
 
         /**
          * Sets the value of the postcode property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setPostcode(String value) {
             this.postcode = value;

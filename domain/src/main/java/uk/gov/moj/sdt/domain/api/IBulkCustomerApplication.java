@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -31,56 +31,53 @@
 
 package uk.gov.moj.sdt.domain.api;
 
-
 /**
  * Interface for all classes implementing {@link IBulkCustomerApplication}.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IBulkCustomerApplication extends IDomainObject
-{
+public interface IBulkCustomerApplication extends IDomainObject {
 
     /**
      * Get the Bulk Customer.
-     * 
+     *
      * @return bulk customer
      */
-    IBulkCustomer getBulkCustomer ();
+    IBulkCustomer getBulkCustomer();
 
     /**
      * Set the Bulk Customer.
-     * 
+     *
      * @param bulkCustomer bulk customer
      */
-    void setBulkCustomer (final IBulkCustomer bulkCustomer);
+    void setBulkCustomer(final IBulkCustomer bulkCustomer);
 
     /**
      * Get the Target Application.
-     * 
+     *
      * @return target application
      */
-    ITargetApplication getTargetApplication ();
+    ITargetApplication getTargetApplication();
 
     /**
      * Set the Target Application.
-     * 
+     *
      * @param targetApplication target application
      */
-    void setTargetApplication (final ITargetApplication targetApplication);
+    void setTargetApplication(final ITargetApplication targetApplication);
 
     /**
      * Get customer application id.
-     * 
+     *
      * @return customer application id
      */
-    String getCustomerApplicationId ();
+    String getCustomerApplicationId();
 
     /**
      * Set customer application id.
-     * 
+     *
      * @param customerApplicationId customer application id
      */
-    void setCustomerApplicationId (final String customerApplicationId);
+    void setCustomerApplicationId(final String customerApplicationId);
 
 }

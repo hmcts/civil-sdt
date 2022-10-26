@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -65,12 +65,11 @@ import uk.gov.moj.sdt.utils.Utilities;
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
- * 
+ *
  * @author Manoj kulkarni
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
@@ -81,13 +80,12 @@ import uk.gov.moj.sdt.utils.Utilities;
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class SubmitQueryServiceIntTest extends AbstractIntegrationTest
-{
+public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
 
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryServiceIntTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryServiceIntTest.class);
 
     /**
      * Test subject.
@@ -98,98 +96,87 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest
      * Setup the test.
      */
     @Before
-    public void setUp ()
-    {
-        DBUnitUtility.loadDatabase (this.getClass (), true);
+    public void setUp() {
+        DBUnitUtility.loadDatabase(this.getClass(), true);
 
         submitQueryService =
                 (SubmitQueryService) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.api.ISubmitQueryService");
+                        .getBean("uk.gov.moj.sdt.services.api.ISubmitQueryService");
     }
 
     /**
      * This method tests for persistence of a single submission.
-     * 
-     * @throws IOException
-     *             if there is any error reading from the test file.
+     *
+     * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback (false)
-    public void updateRequestSoapError () throws IOException
-    {
-        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testSampleErrorRequest.xml");
-        SdtContext.getContext ().setRawInXml (rawXml);
+    @Rollback(false)
+    public void updateRequestSoapError() throws IOException {
+        final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testSampleErrorRequest.xml");
+        SdtContext.getContext().setRawInXml(rawXml);
 
-        final ISubmitQueryRequest submitQuery = this.createSubmitQuery ();
+        final ISubmitQueryRequest submitQuery = this.createSubmitQuery();
 
         // Set the service request id so it can be retrieved in the
         // saveBulkSubmission code
         // SdtContext.getContext ().setServiceRequestId (new Long (10800));
 
         final Method accessibleSubmitQueryService =
-                this.makeMethodAccesible (SubmitQueryService.class, "updateRequestSoapError", ISubmitQueryRequest.class);
+                this.makeMethodAccesible(SubmitQueryService.class, "updateRequestSoapError", ISubmitQueryRequest.class);
 
         // Call the bulk submission service
-        try
-        {
-            accessibleSubmitQueryService.invoke (submitQueryService, submitQuery);
-        }
-        catch (final IllegalAccessException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue ("IllegalAccessException please debug test", false);
-        }
-        catch (final IllegalArgumentException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue ("IllegalArgumentException please debug test", false);
-        }
-        catch (final InvocationTargetException e)
-        {
-            LOGGER.debug (e.getMessage ());
-            assertTrue ("InvocationTargetException please debug test", false);
+        try {
+            accessibleSubmitQueryService.invoke(submitQueryService, submitQuery);
+        } catch (final IllegalAccessException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue("IllegalAccessException please debug test", false);
+        } catch (final IllegalArgumentException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue("IllegalArgumentException please debug test", false);
+        } catch (final InvocationTargetException e) {
+            LOGGER.debug(e.getMessage());
+            assertTrue("InvocationTargetException please debug test", false);
         }
         // submitQueryService.updateRequestSoapError(submitQuery);
 
-        Assert.assertEquals (submitQuery.getErrorLog ().getErrorText (),
+        Assert.assertEquals(submitQuery.getErrorLog().getErrorText(),
                 "A system error has occurred. Please contact tbc for assistance.");
     }
 
     /**
      * @return SubmitQueryRequest object for the testing.
      */
-    private ISubmitQueryRequest createSubmitQuery ()
-    {
-        final ISubmitQueryRequest submitQuery = new SubmitQueryRequest ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        final ITargetApplication targetApp = new TargetApplication ();
+    private ISubmitQueryRequest createSubmitQuery() {
+        final ISubmitQueryRequest submitQuery = new SubmitQueryRequest();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        final ITargetApplication targetApp = new TargetApplication();
 
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("MCOL");
-        targetApp.setTargetApplicationName ("MCOL");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+        targetApp.setId(1L);
+        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationName("MCOL");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
 
-        final IServiceRouting serviceRouting = new ServiceRouting ();
-        serviceRouting.setId (1L);
-        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+        final IServiceRouting serviceRouting = new ServiceRouting();
+        serviceRouting.setId(1L);
+        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
 
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setId (1L);
-        serviceType.setName ("RequestTest1");
-        serviceType.setDescription ("RequestTestDesc1");
-        serviceType.setStatus ("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType();
+        serviceType.setId(1L);
+        serviceType.setName("RequestTest1");
+        serviceType.setDescription("RequestTestDesc1");
+        serviceType.setStatus("RequestTestStatus");
 
-        serviceRouting.setServiceType (serviceType);
+        serviceRouting.setServiceType(serviceType);
 
-        serviceRoutings.add (serviceRouting);
+        serviceRoutings.add(serviceRouting);
 
-        targetApp.setServiceRoutings (serviceRoutings);
+        targetApp.setServiceRoutings(serviceRoutings);
 
-        submitQuery.setTargetApplication (targetApp);
+        submitQuery.setTargetApplication(targetApp);
 
-        bulkCustomer.setSdtCustomerId (2L);
+        bulkCustomer.setSdtCustomerId(2L);
 
-        submitQuery.setBulkCustomer (bulkCustomer);
+        submitQuery.setBulkCustomer(bulkCustomer);
 
         return submitQuery;
     }

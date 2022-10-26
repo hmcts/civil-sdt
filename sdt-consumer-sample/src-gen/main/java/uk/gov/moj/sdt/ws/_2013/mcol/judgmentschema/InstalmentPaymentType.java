@@ -7,14 +7,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter3;
 
 
 /**
  * <p>Java class for instalmentPaymentType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="instalmentPaymentType">
  *   &lt;complexContent>
@@ -27,18 +28,16 @@ import org.w3._2001.xmlschema.Adapter3;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "instalmentPaymentType", propOrder = {
-    "amount",
-    "frequency"
+        "amount",
+        "frequency"
 })
 public class InstalmentPaymentType {
 
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter3 .class)
+    @XmlJavaTypeAdapter(Adapter3.class)
     @XmlSchemaType(name = "unsignedLong")
     protected Long amount;
     @XmlElement(required = true)
@@ -46,11 +45,9 @@ public class InstalmentPaymentType {
 
     /**
      * Gets the value of the amount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getAmount() {
         return amount;
@@ -58,11 +55,9 @@ public class InstalmentPaymentType {
 
     /**
      * Sets the value of the amount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setAmount(Long value) {
         this.amount = value;
@@ -70,11 +65,9 @@ public class InstalmentPaymentType {
 
     /**
      * Gets the value of the frequency property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link InstalmentFrequencyType }
-     *     
+     *
+     * @return possible object is
+     * {@link InstalmentFrequencyType }
      */
     public InstalmentFrequencyType getFrequency() {
         return frequency;
@@ -82,11 +75,9 @@ public class InstalmentPaymentType {
 
     /**
      * Sets the value of the frequency property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link InstalmentFrequencyType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link InstalmentFrequencyType }
      */
     public void setFrequency(InstalmentFrequencyType value) {
         this.frequency = value;

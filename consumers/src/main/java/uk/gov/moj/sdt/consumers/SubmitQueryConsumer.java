@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2010 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -53,14 +53,12 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 
 /**
  * @author D274994
- * 
  */
-public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQueryConsumer
-{
+public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQueryConsumer {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryConsumer.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryConsumer.class);
 
     /**
      * transformer for submit query request.
@@ -71,137 +69,118 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
     // CHECKSTYLE:ON
 
     /* (non-Javadoc)
-     * 
+     *
      * @see
      * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
      * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest) */
     @Override
-    public void processSubmitQuery (final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
-                                    final long receiveTimeOut) throws OutageException, TimeoutException
-    {
+    public void processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
+                                   final long receiveTimeOut) throws OutageException, TimeoutException {
         // Transform domain object to web service object
         final SubmitQueryRequestType submitQueryRequestType =
-                this.transformer.transformDomainToJaxb (submitQueryRequest);
+                this.transformer.transformDomainToJaxb(submitQueryRequest);
 
         // Process and call the end point web service
         final SubmitQueryResponseType responseType =
-                this.invokeTargetAppService (submitQueryRequestType, submitQueryRequest, connectionTimeOut,
+                this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
                         receiveTimeOut);
 
-        this.transformer.transformJaxbToDomain (responseType, submitQueryRequest);
+        this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
     }
 
     /**
-     * @param submitQueryRequestType
-     *            request the individual request JAXB model
-     * @param submitQueryRequest
-     *            the individual request domain object
-     * @param connectionTimeOut
-     *            the connection time out from the global parameter value
-     * @param receiveTimeOut
-     *            the receive time out from the global parameter value.
+     * @param submitQueryRequestType request the individual request JAXB model
+     * @param submitQueryRequest     the individual request domain object
+     * @param connectionTimeOut      the connection time out from the global parameter value
+     * @param receiveTimeOut         the receive time out from the global parameter value.
      * @return the SubmitQueryResponseType object after calling the web service
-     *         of target app.
-     * @throws OutageException
-     *             if there is a service outage
-     * @throws TimeoutException
-     *             if the read timed out within the time specified
+     * of target app.
+     * @throws OutageException  if there is a service outage
+     * @throws TimeoutException if the read timed out within the time specified
      */
-    private SubmitQueryResponseType invokeTargetAppService (final SubmitQueryRequestType submitQueryRequestType,
-                                                            final ISubmitQueryRequest submitQueryRequest,
-                                                            final long connectionTimeOut, final long receiveTimeOut)
-        throws OutageException, TimeoutException
-    {
+    private SubmitQueryResponseType invokeTargetAppService(final SubmitQueryRequestType submitQueryRequestType,
+                                                           final ISubmitQueryRequest submitQueryRequest,
+                                                           final long connectionTimeOut, final long receiveTimeOut)
+            throws OutageException, TimeoutException {
         final IServiceRouting serviceRouting =
-                submitQueryRequest.getTargetApplication ()
-                        .getServiceRouting (IServiceType.ServiceTypeName.SUBMIT_QUERY);
+                submitQueryRequest.getTargetApplication()
+                        .getServiceRouting(IServiceType.ServiceTypeName.SUBMIT_QUERY);
 
-        final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint ();
-        final String targetAppCode = submitQueryRequest.getTargetApplication ().getTargetApplicationCode ();
+        final String webServiceEndPoint = serviceRouting.getWebServiceEndpoint();
+        final String targetAppCode = submitQueryRequest.getTargetApplication().getTargetApplicationCode();
 
         // Get the client interface
         final ITargetAppInternalEndpointPortType client =
-                getClient (targetAppCode, IServiceType.ServiceTypeName.SUBMIT_QUERY.name (), webServiceEndPoint,
+                getClient(targetAppCode, IServiceType.ServiceTypeName.SUBMIT_QUERY.name(), webServiceEndPoint,
                         connectionTimeOut, receiveTimeOut);
 
         long startTime = 0;
 
-        try
-        {
-            SdtMetricsMBean.getMetrics ().upTargetAppCallCount ();
+        try {
+            SdtMetricsMBean.getMetrics().upTargetAppCallCount();
 
-            LOGGER.debug ("Submitting query to target application[" + targetAppCode + "], for customer[" +
-                    submitQueryRequestType.getHeader ().getTargetAppCustomerId () + "]");
+            LOGGER.debug("Submitting query to target application[" + targetAppCode + "], for customer[" +
+                    submitQueryRequestType.getHeader().getTargetAppCustomerId() + "]");
 
-            if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_7))
-            {
-                final StringBuffer detail = new StringBuffer ();
-                detail.append ("\n\n\ttarget application customer id=" +
-                        submitQueryRequestType.getHeader ().getTargetAppCustomerId () + "\n\n\ttarget application=" +
-                        serviceRouting.getTargetApplication ().getTargetApplicationName () + "\n\tendpoint=" +
-                        serviceRouting.getWebServiceEndpoint () + "\n");
+            if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_7)) {
+                final StringBuffer detail = new StringBuffer();
+                detail.append("\n\n\ttarget application customer id=" +
+                        submitQueryRequestType.getHeader().getTargetAppCustomerId() + "\n\n\ttarget application=" +
+                        serviceRouting.getTargetApplication().getTargetApplicationName() + "\n\tendpoint=" +
+                        serviceRouting.getWebServiceEndpoint() + "\n");
 
                 // Write message to 'performance.log' for this logging point.
-                PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_7,
-                        "Send query to target application", detail.toString ());
+                PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_7,
+                        "Send query to target application", detail.toString());
             }
 
             // Measure response time.
-            startTime = new GregorianCalendar ().getTimeInMillis ();
+            startTime = new GregorianCalendar().getTimeInMillis();
 
             // Call the specific business method for this text - note that a single test can only use one web service
             // business method.
-            final SubmitQueryResponseType submitQueryResponseType = client.submitQuery (submitQueryRequestType);
+            final SubmitQueryResponseType submitQueryResponseType = client.submitQuery(submitQueryRequestType);
 
-            if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_8))
-            {
-                final StringBuffer detail = new StringBuffer ();
-                detail.append ("\n\n\ttarget application customer id=" +
-                        submitQueryResponseType.getTargetAppCustomerId () + "\n\n\tresult count=" +
-                        submitQueryResponseType.getResultCount () + "\n\tstatus code=" +
-                        submitQueryResponseType.getStatus ().getCode ().name ());
-                if (submitQueryResponseType.getStatus ().getError () != null)
-                {
-                    detail.append ("\n\terror code=" + submitQueryResponseType.getStatus ().getError ().getCode () +
+            if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_8)) {
+                final StringBuffer detail = new StringBuffer();
+                detail.append("\n\n\ttarget application customer id=" +
+                        submitQueryResponseType.getTargetAppCustomerId() + "\n\n\tresult count=" +
+                        submitQueryResponseType.getResultCount() + "\n\tstatus code=" +
+                        submitQueryResponseType.getStatus().getCode().name());
+                if (submitQueryResponseType.getStatus().getError() != null) {
+                    detail.append("\n\terror code=" + submitQueryResponseType.getStatus().getError().getCode() +
                             "\n\terror description=" +
-                            submitQueryResponseType.getStatus ().getError ().getDescription ());
+                            submitQueryResponseType.getStatus().getError().getDescription());
                 }
-                detail.append ("\n");
+                detail.append("\n");
 
                 // Write message to 'performance.log' for this logging point.
-                PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_8,
-                        "receive query results from target application", detail.toString ());
+                PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_8,
+                        "receive query results from target application", detail.toString());
             }
 
             return submitQueryResponseType;
-        }
-        catch (final WebServiceException f)
-        {
-            LOGGER.error ("Target application [" +
-                    submitQueryRequest.getTargetApplication ().getTargetApplicationCode () +
-                    "] error sending submit query request [" + submitQueryRequest.getCriteriaType () + "]");
+        } catch (final WebServiceException f) {
+            LOGGER.error("Target application [" +
+                    submitQueryRequest.getTargetApplication().getTargetApplicationCode() +
+                    "] error sending submit query request [" + submitQueryRequest.getCriteriaType() + "]");
 
-            super.handleClientErrors (true, f, submitQueryRequest.getCriteriaType ());
-        }
-        finally
-        {
+            super.handleClientErrors(true, f, submitQueryRequest.getCriteriaType());
+        } finally {
             // Measure total time spent in target application.
-            final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            SdtMetricsMBean.getMetrics ().addTargetAppResponseTime (endTime - startTime);
+            final long endTime = new GregorianCalendar().getTimeInMillis();
+            SdtMetricsMBean.getMetrics().addTargetAppResponseTime(endTime - startTime);
         }
 
         return null;
     }
 
     /**
-     * 
      * @return the transformer for SubmitQueryConsumer
      */
     // CHECKSTYLE:OFF
-    public
-            IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
-            getTransformer ()
-    {
+    public IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
+    getTransformer() {
         return this.transformer;
     }
 
@@ -209,14 +188,12 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
 
     /**
      * Mutator method for transformer.
-     * 
+     *
      * @param transformer
      */
     // CHECKSTYLE:OFF
-    public
-            void
-            setTransformer (IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer)
-    {
+    public void
+    setTransformer(IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
         this.transformer = transformer;
     }
 

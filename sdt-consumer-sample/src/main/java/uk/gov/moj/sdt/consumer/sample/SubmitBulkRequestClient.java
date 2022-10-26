@@ -17,85 +17,77 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
  * Sample to call Submit Bulk web service.
- * 
+ *
  * @author Saurabh
- * 
  */
-public class SubmitBulkRequestClient extends AbstractWebServiceClient
-{
+public class SubmitBulkRequestClient extends AbstractWebServiceClient {
     /**
      * Logger instance.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitBulkRequestClient.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitBulkRequestClient.class);
 
     /**
      * Calls Submit Bulk web service on SDT endpoint.
-     * 
+     *
      * @param request bulk request
      * @return response received from SDT.
      */
-    private BulkResponseType submitBulk (final BulkRequestType request)
-    {
+    private BulkResponseType submitBulk(final BulkRequestType request) {
         // Get the SOAP proxy client.
-        ISdtEndpointPortType client = getSdtEndpointClient ();
+        ISdtEndpointPortType client = getSdtEndpointClient();
 
-        return client.submitBulk (request);
+        return client.submitBulk(request);
     }
 
     /**
      * Creates bulk request.
-     * 
+     *
      * @return bulk request.
      */
-    private BulkRequestType createRequest ()
-    {
-        BulkRequestType request = new BulkRequestType ();
+    private BulkRequestType createRequest() {
+        BulkRequestType request = new BulkRequestType();
 
-        HeaderType headerType = new HeaderType ();
-        headerType.setCustomerReference ("1");
-        headerType.setRequestCount (1);
-        headerType.setSdtCustomerId (12345678);
-        headerType.setTargetApplicationId ("MCOL");
+        HeaderType headerType = new HeaderType();
+        headerType.setCustomerReference("1");
+        headerType.setRequestCount(1);
+        headerType.setSdtCustomerId(12345678);
+        headerType.setTargetApplicationId("MCOL");
 
-        request.setHeader (headerType);
-        RequestsType requestsType = new RequestsType ();
+        request.setHeader(headerType);
+        RequestsType requestsType = new RequestsType();
 
-        RequestItemType requestItemType = new RequestItemType ();
-        requestItemType.setRequestId ("1-1");
-        requestItemType.setRequestType ("mcolClaim");
-        ClaimType claimType = new ClaimType ();
-        SotSignatureType sotSignatureType = new SotSignatureType ();
-        sotSignatureType.setFlag (true);
-        sotSignatureType.setName ("test");
-        claimType.setSotSignature (sotSignatureType);
-        requestItemType.setMcolClaim (claimType);
+        RequestItemType requestItemType = new RequestItemType();
+        requestItemType.setRequestId("1-1");
+        requestItemType.setRequestType("mcolClaim");
+        ClaimType claimType = new ClaimType();
+        SotSignatureType sotSignatureType = new SotSignatureType();
+        sotSignatureType.setFlag(true);
+        sotSignatureType.setName("test");
+        claimType.setSotSignature(sotSignatureType);
+        requestItemType.setMcolClaim(claimType);
 
-        requestsType.getRequest ().add (requestItemType);
+        requestsType.getRequest().add(requestItemType);
 
-        request.setRequests (requestsType);
+        request.setRequests(requestsType);
 
         return request;
     }
 
     /**
-     * 
      * @param args
      */
-    public static void main (String[] args)
-    {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext (APP_CONTEXT_LOCATION);
+    public static void main(String[] args) {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(APP_CONTEXT_LOCATION);
 
-        SubmitBulkRequestClient client = applicationContext.getBean (SubmitBulkRequestClient.class);
-        BulkResponseType response = client.submitBulk (client.createRequest ());
-        if (StatusCodeType.OK.equals (response.getStatus ().getCode ()))
-        {
-            LOGGER.info ("Successful call...Bulk reference = " + response.getSdtBulkReference ());
+        SubmitBulkRequestClient client = applicationContext.getBean(SubmitBulkRequestClient.class);
+        BulkResponseType response = client.submitBulk(client.createRequest());
+        if (StatusCodeType.OK.equals(response.getStatus().getCode())) {
+            LOGGER.info("Successful call...Bulk reference = " + response.getSdtBulkReference());
         }
 
-        if (StatusCodeType.ERROR.equals (response.getStatus ().getCode ()))
-        {
-            LOGGER.info ("Error response: code[" + response.getStatus ().getError ().getCode () + "] message[" +
-                    response.getStatus ().getError ().getDescription () + "]");
+        if (StatusCodeType.ERROR.equals(response.getStatus().getCode())) {
+            LOGGER.info("Error response: code[" + response.getStatus().getError().getCode() + "] message[" +
+                    response.getStatus().getError().getDescription() + "]");
         }
 
     }

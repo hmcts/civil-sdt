@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for criteriaType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="criteriaType">
  *   &lt;complexContent>
@@ -23,12 +23,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "criteriaType", propOrder = {
-    "criterion"
+        "criterion"
 })
 public class CriteriaType {
 
@@ -37,11 +35,9 @@ public class CriteriaType {
 
     /**
      * Gets the value of the criterion property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CriterionType }
-     *     
+     *
+     * @return possible object is
+     * {@link CriterionType }
      */
     public CriterionType getCriterion() {
         return criterion;
@@ -49,11 +45,9 @@ public class CriteriaType {
 
     /**
      * Sets the value of the criterion property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CriterionType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link CriterionType }
      */
     public void setCriterion(CriterionType value) {
         this.criterion = value;

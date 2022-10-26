@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -32,57 +32,54 @@ package uk.gov.moj.sdt.services.messaging.api;
 
 /**
  * Interface for all classes capable of being written to a JMS queue.
- * 
+ *
  * @author Robin Compston
  */
-public interface ISdtMessage
-{
+public interface ISdtMessage {
     /**
-     * 
      * @return the SDT request reference of the individual request.
      */
-    String getSdtRequestReference ();
+    String getSdtRequestReference();
 
     /**
      * Sets the sdtRequestReference of the individual request
      * that is to be queued on the message queue for further processing.
-     * 
+     *
      * @param sdtRequestReference the SDT request reference
      */
-    void setSdtRequestReference (final String sdtRequestReference);
+    void setSdtRequestReference(final String sdtRequestReference);
 
     /**
-     * 
      * @return LocalDateTime - the date and time that the message is put on the queue.
      */
-    long getMessageSentTimestamp ();
+    long getMessageSentTimestamp();
 
     /**
      * Sets the timestamp that the message is put on the queue.
-     * 
+     *
      * @param messageSentTimestamp - the date and time that the message is put on the queue.
      */
-    void setMessageSentTimestamp (final long messageSentTimestamp);
+    void setMessageSentTimestamp(final long messageSentTimestamp);
 
     /**
      * Get the enqueuing performance logging id.
-     * 
+     *
      * @return the enqueuing performance logging id.
      */
-    long getEnqueueLoggingId ();
+    long getEnqueueLoggingId();
 
     /**
      * Set new value of enqueue performance logging id.
-     * 
+     *
      * @param enqueueLoggingId new value of enqueuing logging id.
      */
-    void setEnqueueLoggingId (final long enqueueLoggingId);
+    void setEnqueueLoggingId(final long enqueueLoggingId);
 
     /**
      * Represent class as String.
-     * 
+     *
      * @return class represented as String.
      */
-    String toString ();
+    String toString();
 
 }

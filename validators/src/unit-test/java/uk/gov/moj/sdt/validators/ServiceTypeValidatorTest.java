@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -37,15 +37,11 @@ import uk.gov.moj.sdt.domain.ServiceType;
 
 /**
  * Tests for {@link ServiceTypeValidatorTest}.
- * 
- * 
- * 
+ *
  * @author d120520
- * 
  */
 
-public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest
-{
+public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Test subject.
      */
@@ -54,19 +50,17 @@ public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest
     /**
      * Setup of the Validator and Domain class instance.
      */
-    public void setUpLocalTests ()
-    {
+    public void setUpLocalTests() {
         // subject of test
-        validator = new ServiceTypeValidator ();
+        validator = new ServiceTypeValidator();
     }
 
     /**
      * The purpose of this test is to test successful scenario.
      */
     @Test
-    public void testSuccess ()
-    {
-        validator.visit (new ServiceType (), null);
+    public void testSuccess() {
+        validator.visit(new ServiceType(), null);
 
         // Nothing to verify as validator implementation is empty.
     }

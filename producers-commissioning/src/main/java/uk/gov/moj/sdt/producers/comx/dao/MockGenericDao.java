@@ -36,7 +36,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -61,7 +61,7 @@ public class MockGenericDao implements IGenericDao
     /**
      * Logger for this class.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (MockGenericDao.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger (MockGenericDao.class);
 
     /**
      * Incrementing unique value for service request id, simulating value returned by Hibernate.
@@ -71,7 +71,7 @@ public class MockGenericDao implements IGenericDao
     /**
      * Pre-defined values for valid customer references.
      */
-    private static final List<String> DUPLICATE_REFERENCE;
+    private final static List<String> DUPLICATE_REFERENCE;
 
     static
     {

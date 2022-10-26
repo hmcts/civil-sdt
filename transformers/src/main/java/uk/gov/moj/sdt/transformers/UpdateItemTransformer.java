@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2010 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -35,7 +35,6 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
-import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -47,49 +46,40 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 
 /**
  * Maps UpdateItem JAXB object tree to domain object and vice-versa.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
 public class UpdateItemTransformer extends AbstractTransformer implements
-        ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest>
-{
+        ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest> {
     @Override
-    public IIndividualRequest transformJaxbToDomain (final UpdateRequestType updateRequest)
-    {
-        final IIndividualRequest individualRequest = new IndividualRequest ();
-        final UpdateStatusType status = updateRequest.getStatus ();
-        final UpdateStatusCodeType statusCode = status.getCode ();
+    public IIndividualRequest transformJaxbToDomain(final UpdateRequestType updateRequest) {
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        final UpdateStatusType status = updateRequest.getStatus();
+        final UpdateStatusCodeType statusCode = status.getCode();
 
-        final HeaderType headerType = updateRequest.getHeader ();
-        individualRequest.setSdtRequestReference (headerType.getSdtRequestId ());
+        final HeaderType headerType = updateRequest.getHeader();
+        individualRequest.setSdtRequestReference(headerType.getSdtRequestId());
 
-        if (UpdateStatusCodeType.REJECTED.equals (statusCode))
-        {
-            final ErrorType errorType = status.getError ();
-            final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
-            individualRequest.markRequestAsRejected (errorLog);
-        }
-        else if (UpdateStatusCodeType.ACCEPTED.equals (statusCode))
-        {
-            individualRequest.markRequestAsAccepted ();
-        }
-        else if (UpdateStatusCodeType.RESUBMIT_MESSAGE.equals (statusCode))
-        {
-            individualRequest.setRequestStatus (IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus ());
+        if (UpdateStatusCodeType.REJECTED.equals(statusCode)) {
+            final ErrorType errorType = status.getError();
+            final IErrorLog errorLog = new ErrorLog(errorType.getCode(), errorType.getDescription());
+            individualRequest.markRequestAsRejected(errorLog);
+        } else if (UpdateStatusCodeType.ACCEPTED.equals(statusCode)) {
+            individualRequest.markRequestAsAccepted();
+        } else if (UpdateStatusCodeType.RESUBMIT_MESSAGE.equals(statusCode)) {
+            individualRequest.setRequestStatus(IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus());
         }
 
         return individualRequest;
     }
 
     @Override
-    public UpdateResponseType transformDomainToJaxb (final IIndividualRequest individualRequest)
-    {
-        final UpdateResponseType updateResponseType = new UpdateResponseType ();
-        final StatusType status = new StatusType ();
-        status.setCode (StatusCodeType.OK);
+    public UpdateResponseType transformDomainToJaxb(final IIndividualRequest individualRequest) {
+        final UpdateResponseType updateResponseType = new UpdateResponseType();
+        final StatusType status = new StatusType();
+        status.setCode(StatusCodeType.OK);
 
-        updateResponseType.setStatus (status);
+        updateResponseType.setStatus(status);
         return updateResponseType;
     }
 

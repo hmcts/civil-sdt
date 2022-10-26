@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,17 +35,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
 
 /**
  * Interface for handling update item flow.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IWsUpdateItemHandler
-{
+public interface IWsUpdateItemHandler {
     /**
      * Process the item response from the Target Application.
-     * 
+     *
      * @param requestType the update request type.
      * @return the response to the update request.
      */
-    UpdateResponseType updateItem (final UpdateRequestType requestType);
+    UpdateResponseType updateItem(final UpdateRequestType requestType);
 }

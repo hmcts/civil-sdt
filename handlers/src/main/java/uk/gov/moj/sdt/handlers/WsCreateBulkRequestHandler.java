@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -56,17 +56,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
  * Handles bulk submission request flow.
- * 
+ *
  * @author d276205
- * 
  */
-@Transactional (propagation = Propagation.REQUIRED)
-public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWsCreateBulkRequestHandler
-{
+@Transactional(propagation = Propagation.REQUIRED)
+public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWsCreateBulkRequestHandler {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (WsCreateBulkRequestHandler.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WsCreateBulkRequestHandler.class);
 
     /**
      * Bulk Submission service.
@@ -91,87 +89,76 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
     private Map<String, IInFlightMessage> concurrencyMap;
 
     @Override
-    public BulkResponseType submitBulk (final BulkRequestType bulkRequestType)
-    {
-        if (LOGGER.isInfoEnabled ())
-        {
-            LOGGER.info ("Submit bulk started for customer[" + bulkRequestType.getHeader ().getSdtCustomerId () +
-                    "], customer reference[" + bulkRequestType.getHeader ().getCustomerReference () + "]");
+    public BulkResponseType submitBulk(final BulkRequestType bulkRequestType) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Submit bulk started for customer[" + bulkRequestType.getHeader().getSdtCustomerId() +
+                    "], customer reference[" + bulkRequestType.getHeader().getCustomerReference() + "]");
         }
 
         // Update mbean stats.
-        SdtMetricsMBean.getMetrics ().upBulkSubmitCount ();
+        SdtMetricsMBean.getMetrics().upBulkSubmitCount();
 
         // Measure response time.
-        final long startTime = new GregorianCalendar ().getTimeInMillis ();
+        final long startTime = new GregorianCalendar().getTimeInMillis();
 
         // Update number of customers using the system.
-        SdtMetricsMBean.getMetrics ().updateBulkCustomerCount (
-                Long.toString (bulkRequestType.getHeader ().getSdtCustomerId ()));
+        SdtMetricsMBean.getMetrics().updateBulkCustomerCount(
+                Long.toString(bulkRequestType.getHeader().getSdtCustomerId()));
 
         // Initialise response;
-        LOGGER.debug ("Setup initial bulk submission response");
-        BulkResponseType bulkResponseType = intialiseResponse (bulkRequestType);
+        LOGGER.debug("Setup initial bulk submission response");
+        BulkResponseType bulkResponseType = intialiseResponse(bulkRequestType);
 
-        try
-        {
+        try {
             // Transform web service object to domain object(s)
-            LOGGER.debug ("Transform from BulkRequestType to IBulkSubmission");
-            final IBulkSubmission bulkSubmission = getTransformer ().transformJaxbToDomain (bulkRequestType);
+            LOGGER.debug("Transform from BulkRequestType to IBulkSubmission");
+            final IBulkSubmission bulkSubmission = getTransformer().transformJaxbToDomain(bulkRequestType);
 
             // Validate domain
-            LOGGER.debug ("Validate bulk submission");
-            validateDomain (bulkSubmission);
+            LOGGER.debug("Validate bulk submission");
+            validateDomain(bulkSubmission);
 
             // Process validated request
-            LOGGER.debug ("Process bulk submission");
-            processBulkSubmission (bulkSubmission);
+            LOGGER.debug("Process bulk submission");
+            processBulkSubmission(bulkSubmission);
 
             // Get the jaxb response object from the bulk submission domain object
-            LOGGER.debug ("Transform from IBulkSubmission to BulkResponseType");
-            bulkResponseType = getTransformer ().transformDomainToJaxb (bulkSubmission);
-        }
-        catch (final AbstractBusinessException be)
-        {
-            handleBusinessException (be, bulkResponseType);
+            LOGGER.debug("Transform from IBulkSubmission to BulkResponseType");
+            bulkResponseType = getTransformer().transformDomainToJaxb(bulkSubmission);
+        } catch (final AbstractBusinessException be) {
+            handleBusinessException(be, bulkResponseType);
 
-        }
-        finally
-        {
-            if (LOGGER.isInfoEnabled ())
-            {
-                LOGGER.info ("Submit bulk completed for customer[" + bulkRequestType.getHeader ().getSdtCustomerId () +
-                        "], customer reference[" + bulkRequestType.getHeader ().getCustomerReference () + "]");
+        } finally {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Submit bulk completed for customer[" + bulkRequestType.getHeader().getSdtCustomerId() +
+                        "], customer reference[" + bulkRequestType.getHeader().getCustomerReference() + "]");
             }
 
             // Measure total time spent in use case.
-            final long endTime = new GregorianCalendar ().getTimeInMillis ();
-            SdtMetricsMBean.getMetrics ().addBulkSubmitTime (endTime - startTime);
+            final long endTime = new GregorianCalendar().getTimeInMillis();
+            SdtMetricsMBean.getMetrics().addBulkSubmitTime(endTime - startTime);
 
             final String key =
-                    bulkRequestType.getHeader ().getSdtCustomerId () +
-                            bulkRequestType.getHeader ().getCustomerReference ();
+                    bulkRequestType.getHeader().getSdtCustomerId() +
+                            bulkRequestType.getHeader().getCustomerReference();
 
             // Clean up concurrency map for this thread.
-            final IInFlightMessage inFlightMessage = concurrencyMap.get (key);
+            final IInFlightMessage inFlightMessage = concurrencyMap.get(key);
 
             // Did processing proceed far enough to create an in flight message?
-            if (inFlightMessage != null)
-            {
+            if (inFlightMessage != null) {
                 // Yes. Has it registered in the thread list?
-                final Map<Thread, Thread> competingThreads = inFlightMessage.getCompetingThreads ();
-                if (competingThreads != null)
-                {
+                final Map<Thread, Thread> competingThreads = inFlightMessage.getCompetingThreads();
+                if (competingThreads != null) {
                     // Remove this thread from list.
-                    inFlightMessage.getCompetingThreads ().remove (Thread.currentThread ());
+                    inFlightMessage.getCompetingThreads().remove(Thread.currentThread());
                 }
 
                 // Clean up concurrency map for this customer/customer reference if no threads still using it. The
                 // information is needed while there are still threads that are using it and have not yet reported a
                 // duplicate concurrent error back to the client, even though the winning thread is now finished.
-                if (inFlightMessage.getCompetingThreads () == null || inFlightMessage.getCompetingThreads ().isEmpty ())
-                {
-                    concurrencyMap.remove (key);
+                if (inFlightMessage.getCompetingThreads() == null || inFlightMessage.getCompetingThreads().isEmpty()) {
+                    concurrencyMap.remove(key);
                 }
             }
         }
@@ -181,74 +168,65 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
 
     /**
      * Process bulk submission instance.
-     * 
-     * @param bulkSubmission
-     *            bulk submission instance.
+     *
+     * @param bulkSubmission bulk submission instance.
      */
-    private void processBulkSubmission (final IBulkSubmission bulkSubmission)
-    {
-        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+    private void processBulkSubmission(final IBulkSubmission bulkSubmission) {
+        bulkSubmissionService.saveBulkSubmission(bulkSubmission);
     }
 
     /**
      * Initialise response.
-     * 
-     * @param bulkRequest
-     *            request instance.
+     *
+     * @param bulkRequest request instance.
      * @return created BulkResponse instance.
      */
-    private BulkResponseType intialiseResponse (final BulkRequestType bulkRequest)
-    {
-        final BulkResponseType response = new BulkResponseType ();
-        response.setSdtService (AbstractTransformer.SDT_SERVICE);
-        response.setCustomerReference (bulkRequest.getHeader ().getCustomerReference ());
-        response.setRequestCount (bulkRequest.getHeader ().getRequestCount ());
-        response.setSubmittedDate (Calendar.getInstance ());
+    private BulkResponseType intialiseResponse(final BulkRequestType bulkRequest) {
+        final BulkResponseType response = new BulkResponseType();
+        response.setSdtService(AbstractTransformer.SDT_SERVICE);
+        response.setCustomerReference(bulkRequest.getHeader().getCustomerReference());
+        response.setRequestCount(bulkRequest.getHeader().getRequestCount());
+        response.setSubmittedDate(Calendar.getInstance());
 
-        final StatusType status = new StatusType ();
-        response.setStatus (status);
-        status.setCode (StatusCodeType.OK);
+        final StatusType status = new StatusType();
+        response.setStatus(status);
+        status.setCode(StatusCodeType.OK);
 
         return response;
     }
 
     /**
      * Validate domain object - {@link IBulkSubmission}.
-     * 
-     * @param bulkSubmission
-     *            domain instance to validate.
-     * @throws AbstractBusinessException
-     *             in case of any business rule validation failure.
+     *
+     * @param bulkSubmission domain instance to validate.
+     * @throws AbstractBusinessException in case of any business rule validation failure.
      */
-    private void validateDomain (final IBulkSubmission bulkSubmission) throws AbstractBusinessException
-    {
-        VisitableTreeWalker.walk (bulkSubmission, "Validator");
+    private void validateDomain(final IBulkSubmission bulkSubmission) throws AbstractBusinessException {
+        VisitableTreeWalker.walk(bulkSubmission, "Validator");
 
         // This validation needs to be done after the first lot of validation
         // because we need to check all individual requests
-        bulkSubmissionValidator.checkIndividualRequests (bulkSubmission);
+        bulkSubmissionValidator.checkIndividualRequests(bulkSubmission);
 
     }
 
     /**
      * Getter for transformer.
-     * 
+     *
      * @return the transformer associated with this class.
      */
-    public ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> getTransformer ()
-    {
+    public ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> getTransformer() {
         return transformer;
     }
 
     /**
      * Setter for transformer.
-     * 
+     *
      * @param transformer the transformer to be associated with this class.
      */
     // CHECKSTYLE:OFF
-    public
-            void
-            setTransformer (final ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer)
+    public void
+    setTransformer(final ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer)
     // CHECKSTYLE:ON
     {
         this.transformer = transformer;
@@ -256,31 +234,28 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
 
     /**
      * Setter for bulk submission service.
-     * 
+     *
      * @param bulkSubmissionService bulk submission service
      */
-    public void setBulkSubmissionService (final IBulkSubmissionService bulkSubmissionService)
-    {
+    public void setBulkSubmissionService(final IBulkSubmissionService bulkSubmissionService) {
         this.bulkSubmissionService = bulkSubmissionService;
     }
 
     /**
      * Setter for bulk submission validator.
-     * 
+     *
      * @param bulkSubmissionValidator bulk submission validator
      */
-    public void setBulkSubmissionValidator (final IBulkSubmissionValidator bulkSubmissionValidator)
-    {
+    public void setBulkSubmissionValidator(final IBulkSubmissionValidator bulkSubmissionValidator) {
         this.bulkSubmissionValidator = bulkSubmissionValidator;
     }
 
     /**
      * Set concurrency map.
-     * 
+     *
      * @param concurrencyMap map holding in flight bulk requests.
      */
-    public void setConcurrencyMap (final Map<String, IInFlightMessage> concurrencyMap)
-    {
+    public void setConcurrencyMap(final Map<String, IInFlightMessage> concurrencyMap) {
         this.concurrencyMap = concurrencyMap;
     }
 

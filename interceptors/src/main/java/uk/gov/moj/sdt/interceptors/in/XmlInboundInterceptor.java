@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -39,7 +39,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Interceptor class which handles bulk submission message received by SDT.
- * 
+ * <p>
  * This interceptor is necessary in order to process the raw XML sent to SDT before CXF has turned it into JAXB objects,
  * after which any non generic portions of the XML (those portions which are case management system specific) will no
  * longer be visible. This is because the XSD defined for SDT treats the case management specific portions of the XML as
@@ -47,31 +47,27 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * should be hidden from SDT. SDT stores the entire XML in ThreadLocal storage so that it can be retrieved later and
  * various portions of it used to populate the domain objects with the raw XML before storing them in the database via
  * Hibernate.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class XmlInboundInterceptor extends AbstractSdtInterceptor
-{
+public class XmlInboundInterceptor extends AbstractSdtInterceptor {
     /**
      * Test interceptor to prove concept.
      */
-    public XmlInboundInterceptor ()
-    {
-        super (Phase.RECEIVE);
+    public XmlInboundInterceptor() {
+        super(Phase.RECEIVE);
     }
 
     @Override
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
+    public void handleMessage(final SoapMessage message) throws Fault {
         // Read contents of message, i.e. XML received from client.
-        String rawXml = this.readInputMessage (message);
+        String rawXml = this.readInputMessage(message);
 
         // Remove linefeeds as they stop the regular expression working.
-        rawXml = rawXml.replace ('\n', ' ');
-        rawXml = rawXml.replace ('\r', ' ');
+        rawXml = rawXml.replace('\n', ' ');
+        rawXml = rawXml.replace('\r', ' ');
 
         // Place entire XML in ThreadLocal from where other processing can extract it.
-        SdtContext.getContext ().setRawInXml (rawXml);
+        SdtContext.getContext().setRawInXml(rawXml);
     }
 }

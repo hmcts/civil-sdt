@@ -5,14 +5,15 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import uk.gov.moj.sdt.ws._2013.mcol.queryschema.McolDefenceCriteriaType;
 
 
 /**
  * <p>Java class for criterionType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="criterionType">
  *   &lt;complexContent>
@@ -25,12 +26,10 @@ import uk.gov.moj.sdt.ws._2013.mcol.queryschema.McolDefenceCriteriaType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "criterionType", propOrder = {
-    "mcolDefenceCriteria"
+        "mcolDefenceCriteria"
 })
 public class CriterionType {
 
@@ -40,11 +39,9 @@ public class CriterionType {
 
     /**
      * Gets the value of the mcolDefenceCriteria property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link McolDefenceCriteriaType }
-     *     
+     *
+     * @return possible object is
+     * {@link McolDefenceCriteriaType }
      */
     public McolDefenceCriteriaType getMcolDefenceCriteria() {
         return mcolDefenceCriteria;
@@ -52,11 +49,9 @@ public class CriterionType {
 
     /**
      * Sets the value of the mcolDefenceCriteria property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link McolDefenceCriteriaType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link McolDefenceCriteriaType }
      */
     public void setMcolDefenceCriteria(McolDefenceCriteriaType value) {
         this.mcolDefenceCriteria = value;
@@ -64,11 +59,9 @@ public class CriterionType {
 
     /**
      * Gets the value of the criteriaType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getCriteriaType() {
         return criteriaType;
@@ -76,11 +69,9 @@ public class CriterionType {
 
     /**
      * Sets the value of the criteriaType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setCriteriaType(String value) {
         this.criteriaType = value;

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -36,31 +36,25 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 
 /**
  * Interface for the SubmitQueryConsumer.
- * 
+ *
  * @author D274994
- * 
  */
 public interface ISubmitQueryConsumer {
 
-	/**
-	 * process submit query request.
-	 * 
-	 * @param submitQueryRequest
-	 *            submit query domain object request.
-	 * @param connectionTimeOut
-	 *            the connection time out parameter value for the target
-	 *            application.
-	 * @param receiveTimeOut
-	 *            the receive time out parameter value for the target
-	 *            application.
-	 * @throws OutageException
-	 *             if the target server is un-reachable.
-	 * @throws TimeoutException
-	 *             if the target server response cannot be obtained within the
-	 *             timeout period.
-	 */
-	void processSubmitQuery(final ISubmitQueryRequest submitQueryRequest,
-			final long connectionTimeOut, final long receiveTimeOut)
-			throws OutageException, TimeoutException;
+    /**
+     * process submit query request.
+     *
+     * @param submitQueryRequest submit query domain object request.
+     * @param connectionTimeOut  the connection time out parameter value for the target
+     *                           application.
+     * @param receiveTimeOut     the receive time out parameter value for the target
+     *                           application.
+     * @throws OutageException  if the target server is un-reachable.
+     * @throws TimeoutException if the target server response cannot be obtained within the
+     *                          timeout period.
+     */
+    void processSubmitQuery(final ISubmitQueryRequest submitQueryRequest,
+                            final long connectionTimeOut, final long receiveTimeOut)
+            throws OutageException, TimeoutException;
 
 }

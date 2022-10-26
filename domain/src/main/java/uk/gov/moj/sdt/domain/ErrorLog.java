@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -31,19 +31,17 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.joda.time.LocalDateTime;
-
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
+import java.time.LocalDateTime;
+
 /**
  * Error log.
- * 
+ *
  * @author d130680
- * 
  */
-public class ErrorLog extends AbstractDomainObject implements IErrorLog
-{
+public class ErrorLog extends AbstractDomainObject implements IErrorLog {
     /**
      * Individual request, null for error raised on bulk file.
      */
@@ -72,94 +70,81 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog
     /**
      * Creates an instance of ErrorLog.
      */
-    public ErrorLog ()
-    {
+    public ErrorLog() {
     }
 
     /**
      * Creates an instance of ErrorLog.
-     * 
+     *
      * @param errorCode error code
      * @param errorText error text
      */
-    public ErrorLog (final String errorCode, final String errorText)
-    {
+    public ErrorLog(final String errorCode, final String errorText) {
         this.errorCode = errorCode;
         this.errorText = errorText;
-        this.createdDate = LocalDateTime.now ();
+        this.createdDate = LocalDateTime.now();
     }
 
     @Override
-    public IIndividualRequest getIndividualRequest ()
-    {
+    public IIndividualRequest getIndividualRequest() {
         return individualRequest;
     }
 
     @Override
-    public void setIndividualRequest (final IIndividualRequest individualRequest)
-    {
+    public void setIndividualRequest(final IIndividualRequest individualRequest) {
         this.individualRequest = individualRequest;
     }
 
     @Override
-    public LocalDateTime getCreatedDate ()
-    {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
     @Override
-    public void setCreatedDate (final LocalDateTime createdDate)
-    {
+    public void setCreatedDate(final LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
     @Override
-    public LocalDateTime getUpdatedDate ()
-    {
+    public LocalDateTime getUpdatedDate() {
         return updatedDate;
     }
 
     @Override
-    public void setUpdatedDate (final LocalDateTime updatedDate)
-    {
+    public void setUpdatedDate(final LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 
     @Override
-    public String getErrorText ()
-    {
+    public String getErrorText() {
         return errorText;
     }
 
     @Override
-    public void setErrorText (final String errorText)
-    {
+    public void setErrorText(final String errorText) {
         this.errorText = errorText;
     }
 
     @Override
-    public String getErrorCode ()
-    {
+    public String getErrorCode() {
         return errorCode;
     }
 
     @Override
-    public void setErrorCode (final String errorCode)
-    {
+    public void setErrorCode(final String errorCode) {
         this.errorCode = errorCode;
     }
 
     @Override
-    public String toString ()
-    {
-        final StringBuffer sb = new StringBuffer (getHashId (this) + "[");
-        sb.append (super.toString ());
-        sb.append (", individualRequest=").append (getHashId (this.getIndividualRequest ()));
-        sb.append (", createdDate=").append (this.getCreatedDate ());
-        sb.append (", updatedDate=").append (this.getUpdatedDate ());
-        sb.append (", errorCode=").append (this.getErrorCode ());
-        sb.append (", errorText=").append (this.getErrorText ());
-        sb.append ("]");
-        return sb.toString ();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getHashId(this) + "[");
+        sb.append(super.toString());
+        sb.append(", individualRequest=").append(getHashId(this.getIndividualRequest()));
+        sb.append(", createdDate=").append(this.getCreatedDate());
+        sb.append(", updatedDate=").append(this.getUpdatedDate());
+        sb.append(", errorCode=").append(this.getErrorCode());
+        sb.append(", errorText=").append(this.getErrorText());
+        sb.append("]");
+        return sb.toString();
     }
 }

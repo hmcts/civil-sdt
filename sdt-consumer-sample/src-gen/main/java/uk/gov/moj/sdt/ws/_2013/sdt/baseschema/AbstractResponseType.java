@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
+
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
@@ -13,9 +14,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 
 /**
  * <p>Java class for abstractResponseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="abstractResponseType">
  *   &lt;complexContent>
@@ -27,17 +28,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "abstractResponseType", propOrder = {
-    "status"
+        "status"
 })
 @XmlSeeAlso({
-    SubmitQueryResponseType.class,
-    BulkResponseType.class,
-    BulkRequestStatusType.class
+        SubmitQueryResponseType.class,
+        BulkResponseType.class,
+        BulkRequestStatusType.class
 })
 public abstract class AbstractResponseType {
 
@@ -46,11 +45,9 @@ public abstract class AbstractResponseType {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StatusType }
-     *     
+     *
+     * @return possible object is
+     * {@link StatusType }
      */
     public StatusType getStatus() {
         return status;
@@ -58,11 +55,9 @@ public abstract class AbstractResponseType {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link StatusType }
      */
     public void setStatus(StatusType value) {
         this.status = value;

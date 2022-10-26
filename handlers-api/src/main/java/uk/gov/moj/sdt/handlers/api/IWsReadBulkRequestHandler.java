@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: IWsCreateBulkRequestHandler.java 16467 2013-06-07 17:09:50Z agarwals $
  * $LastChangedRevision: 16467 $
  * $LastChangedDate: 2013-06-07 18:09:50 +0100 (Fri, 07 Jun 2013) $
@@ -35,18 +35,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackRespon
 
 /**
  * Interface for handling bulk feedback request submission flow.
- * 
+ *
  * @author d301488
  */
-public interface IWsReadBulkRequestHandler
-{
+public interface IWsReadBulkRequestHandler {
 
     /**
      * Processes bulk feedback request submission.
-     * 
+     *
      * @param bulkFeedbackRequest bulk feedback request
      * @return BulkFeedbackResponseType response
      */
-    BulkFeedbackResponseType getBulkFeedback (final BulkFeedbackRequestType bulkFeedbackRequest);
+    BulkFeedbackResponseType getBulkFeedback(final BulkFeedbackRequestType bulkFeedbackRequest);
 
 }

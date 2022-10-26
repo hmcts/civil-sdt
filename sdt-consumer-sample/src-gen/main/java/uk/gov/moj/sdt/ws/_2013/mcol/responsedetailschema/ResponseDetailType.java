@@ -8,15 +8,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter2;
 import org.w3._2001.xmlschema.Adapter3;
 
 
 /**
  * <p>Java class for responseDetailType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="responseDetailType">
  *   &lt;complexContent>
@@ -43,52 +44,48 @@ import org.w3._2001.xmlschema.Adapter3;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "responseDetailType", propOrder = {
-    "claimNumber",
-    "issueDate",
-    "serviceDate",
-    "firstPaymentDate",
-    "warrantNumber",
-    "enforcingCourtCode",
-    "enforcingCourtName",
-    "fee",
-    "judgmentWarrantStatus"
+        "claimNumber",
+        "issueDate",
+        "serviceDate",
+        "firstPaymentDate",
+        "warrantNumber",
+        "enforcingCourtCode",
+        "enforcingCourtName",
+        "fee",
+        "judgmentWarrantStatus"
 })
 public class ResponseDetailType {
 
     protected String claimNumber;
     @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "date")
     protected Calendar issueDate;
     @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "date")
     protected Calendar serviceDate;
     @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "date")
     protected Calendar firstPaymentDate;
     protected String warrantNumber;
     protected String enforcingCourtCode;
     protected String enforcingCourtName;
     @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter3 .class)
+    @XmlJavaTypeAdapter(Adapter3.class)
     @XmlSchemaType(name = "unsignedLong")
     protected Long fee;
     protected String judgmentWarrantStatus;
 
     /**
      * Gets the value of the claimNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getClaimNumber() {
         return claimNumber;
@@ -96,11 +93,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the claimNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setClaimNumber(String value) {
         this.claimNumber = value;
@@ -108,11 +103,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the issueDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getIssueDate() {
         return issueDate;
@@ -120,11 +113,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the issueDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setIssueDate(Calendar value) {
         this.issueDate = value;
@@ -132,11 +123,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the serviceDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getServiceDate() {
         return serviceDate;
@@ -144,11 +133,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the serviceDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setServiceDate(Calendar value) {
         this.serviceDate = value;
@@ -156,11 +143,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the firstPaymentDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getFirstPaymentDate() {
         return firstPaymentDate;
@@ -168,11 +153,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the firstPaymentDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setFirstPaymentDate(Calendar value) {
         this.firstPaymentDate = value;
@@ -180,11 +163,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the warrantNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getWarrantNumber() {
         return warrantNumber;
@@ -192,11 +173,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the warrantNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setWarrantNumber(String value) {
         this.warrantNumber = value;
@@ -204,11 +183,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the enforcingCourtCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getEnforcingCourtCode() {
         return enforcingCourtCode;
@@ -216,11 +193,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the enforcingCourtCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEnforcingCourtCode(String value) {
         this.enforcingCourtCode = value;
@@ -228,11 +203,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the enforcingCourtName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getEnforcingCourtName() {
         return enforcingCourtName;
@@ -240,11 +213,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the enforcingCourtName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEnforcingCourtName(String value) {
         this.enforcingCourtName = value;
@@ -252,11 +223,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the fee property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getFee() {
         return fee;
@@ -264,11 +233,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the fee property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setFee(Long value) {
         this.fee = value;
@@ -276,11 +243,9 @@ public class ResponseDetailType {
 
     /**
      * Gets the value of the judgmentWarrantStatus property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getJudgmentWarrantStatus() {
         return judgmentWarrantStatus;
@@ -288,11 +253,9 @@ public class ResponseDetailType {
 
     /**
      * Sets the value of the judgmentWarrantStatus property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setJudgmentWarrantStatus(String value) {
         this.judgmentWarrantStatus = value;

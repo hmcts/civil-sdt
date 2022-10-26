@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -45,44 +45,40 @@ import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 
 /**
  * Test {@link ErrorMessageDao} query methods.
- * 
+ *
  * @author Robin Compston
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class ErrorMessageDaoTest extends AbstractIntegrationTest
-{
+public class ErrorMessageDaoTest extends AbstractIntegrationTest {
 
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (ErrorMessageDaoTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ErrorMessageDaoTest.class);
 
     /**
      * Default constructor for {@link BulkCustomerDaoTest}.
      */
-    public ErrorMessageDaoTest ()
-    {
-        super ();
-        DBUnitUtility.loadDatabase (getClass (), false);
+    public ErrorMessageDaoTest() {
+        super();
+        DBUnitUtility.loadDatabase(getClass(), false);
     }
 
     /**
      * Tests {@link uk.gov.moj.sdt.dao.IGenericDao} query.
      */
     @Test
-    public void testGetAllErrorMessages ()
-    {
+    public void testGetAllErrorMessages() {
         final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IGenericDao");
+                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
 
-        final IErrorMessage[] errorMessages = genericDao.query (IErrorMessage.class);
+        final IErrorMessage[] errorMessages = genericDao.query(IErrorMessage.class);
 
-        LOGGER.debug ("Retrieved " + errorMessages.length + " error message(s).");
+        LOGGER.debug("Retrieved " + errorMessages.length + " error message(s).");
 
-        Assert.assertEquals (2, errorMessages.length);
+        Assert.assertEquals(2, errorMessages.length);
 
         return;
     }

@@ -6,14 +6,15 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import org.w3c.dom.Element;
 
 
 /**
  * <p>Java class for criterionType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="criterionType">
  *   &lt;complexContent>
@@ -26,12 +27,10 @@ import org.w3c.dom.Element;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "criterionType", propOrder = {
-    "any"
+        "any"
 })
 public class CriterionType {
 
@@ -42,12 +41,10 @@ public class CriterionType {
 
     /**
      * Gets the value of the any property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     {@link Element }
-     *     
+     *
+     * @return possible object is
+     * {@link Object }
+     * {@link Element }
      */
     public Object getAny() {
         return any;
@@ -55,12 +52,10 @@ public class CriterionType {
 
     /**
      * Sets the value of the any property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     {@link Element }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link Object }
+     *              {@link Element }
      */
     public void setAny(Object value) {
         this.any = value;
@@ -68,11 +63,9 @@ public class CriterionType {
 
     /**
      * Gets the value of the criteriaType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getCriteriaType() {
         return criteriaType;
@@ -80,11 +73,9 @@ public class CriterionType {
 
     /**
      * Sets the value of the criteriaType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setCriteriaType(String value) {
         this.criteriaType = value;

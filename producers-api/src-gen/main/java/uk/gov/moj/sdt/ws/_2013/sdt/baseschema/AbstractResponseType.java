@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for abstractResponseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="abstractResponseType">
  *   &lt;complexContent>
@@ -23,12 +23,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "abstractResponseType", propOrder = {
-    "status"
+        "status"
 })
 public abstract class AbstractResponseType {
 
@@ -37,11 +35,9 @@ public abstract class AbstractResponseType {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StatusType }
-     *     
+     *
+     * @return possible object is
+     * {@link StatusType }
      */
     public StatusType getStatus() {
         return status;
@@ -49,11 +45,9 @@ public abstract class AbstractResponseType {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link StatusType }
      */
     public void setStatus(StatusType value) {
         this.status = value;

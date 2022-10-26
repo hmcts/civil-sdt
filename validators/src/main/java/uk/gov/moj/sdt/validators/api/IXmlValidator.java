@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
@@ -34,18 +34,16 @@ import uk.gov.moj.sdt.validators.XmlValidationDetails;
 
 /**
  * Interface to XML validation functionality.
- * 
+ *
  * @author d301488
- * 
  */
-public interface IXmlValidator
-{
+public interface IXmlValidator {
 
     /**
      * Method to validate the xml.
-     * 
+     *
      * @return A XmlValidationDetails object containing SUCCESS/FAIL enum and if fail, error messages.
      */
-    XmlValidationDetails validateXml ();
+    XmlValidationDetails validateXml();
 
 }

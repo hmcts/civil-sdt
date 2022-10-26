@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,7 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,16 +62,14 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
  * to do the tasks related to bulk submission.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class BulkSubmissionService implements IBulkSubmissionService
-{
+public class BulkSubmissionService implements IBulkSubmissionService {
     /**
      * Logger for debugging.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionService.class);
 
     /**
      * Generic Dao property for doing the task of persisting the domain objects.
@@ -115,208 +114,186 @@ public class BulkSubmissionService implements IBulkSubmissionService
     private ICacheable errorMessagesCache;
 
     @Override
-    public void saveBulkSubmission (final IBulkSubmission bulkSubmission)
-    {
-        enrich (bulkSubmission);
+    public void saveBulkSubmission(final IBulkSubmission bulkSubmission) {
+        enrich(bulkSubmission);
 
-        this.checkConcurrent (bulkSubmission);
+        this.checkConcurrent(bulkSubmission);
 
-        enrich (bulkSubmission.getIndividualRequests ());
+        enrich(bulkSubmission.getIndividualRequests());
 
         // Now persist the bulk submissions.
-        getGenericDao ().persist (bulkSubmission);
+        getGenericDao().persist(bulkSubmission);
 
-        enqueueValidRequests (bulkSubmission.getIndividualRequests ());
+        enqueueValidRequests(bulkSubmission.getIndividualRequests());
 
     }
 
     /**
      * Queues the valid individual requests on the messaging server.
-     * 
+     *
      * @param individualRequests the individual requests for a bulk submission.
      */
-    private void enqueueValidRequests (final List<IIndividualRequest> individualRequests)
-    {
-        LOGGER.debug ("Enqueue " + individualRequests.size () + " requests");
+    private void enqueueValidRequests(final List<IIndividualRequest> individualRequests) {
+        LOGGER.debug("Enqueue {} requests", individualRequests.size());
 
-        for (final IIndividualRequest iRequest : individualRequests)
-        {
-            if (iRequest.isEnqueueable ())
-            {
-                this.getMessagingUtility ().enqueueRequest (iRequest);
+        for (final IIndividualRequest iRequest : individualRequests) {
+            if (iRequest.isEnqueueable()) {
+                this.getMessagingUtility().enqueueRequest(iRequest);
             }
         }
     }
 
     /**
      * Prepare individual requests for persistence.
-     * 
+     *
      * @param individualRequests collection of individual requests
      */
-    private void enrich (final List<IIndividualRequest> individualRequests)
-    {
-        for (IIndividualRequest iRequest : individualRequests)
-        {
-            iRequest.populateReferences ();
+    private void enrich(final List<IIndividualRequest> individualRequests) {
+        for (IIndividualRequest iRequest : individualRequests) {
+            iRequest.populateReferences();
         }
 
         // Populate the individual requests with the raw xml specific for that request.
-        individualRequestsXmlParser.populateRawRequest (individualRequests);
+        individualRequestsXmlParser.populateRawRequest(individualRequests);
     }
 
     /**
      * Enrich bulk submission instance to prepare for persistence.
-     * 
+     *
      * @param bulkSubmission bulk submission
      */
-    private void enrich (final IBulkSubmission bulkSubmission)
-    {
-        LOGGER.debug ("Enrich bulk submission instance to prepare for persistence");
+    private void enrich(final IBulkSubmission bulkSubmission) {
+        LOGGER.debug("Enrich bulk submission instance to prepare for persistence");
 
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
-        bulkSubmission.setPayload (SdtContext.getContext ().getRawInXml ());
+        bulkSubmission.setPayload(SdtContext.getContext().getRawInXml());
 
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =
-                this.getBulkCustomerDao ().getBulkCustomerBySdtId (
-                        bulkSubmission.getBulkCustomer ().getSdtCustomerId ());
+                this.getBulkCustomerDao().getBulkCustomerBySdtId(
+                        bulkSubmission.getBulkCustomer().getSdtCustomerId());
 
-        bulkSubmission.setBulkCustomer (bulkCustomer);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
 
         // Set the SDT Bulk Reference
-        bulkSubmission.setSdtBulkReference (sdtBulkReferenceGenerator.getSdtBulkReference (bulkSubmission
-                .getTargetApplication ().getTargetApplicationCode ()));
+        bulkSubmission.setSdtBulkReference(sdtBulkReferenceGenerator.getSdtBulkReference(bulkSubmission
+                .getTargetApplication().getTargetApplicationCode()));
 
         // Store this in the context for the sake of the outbound interceptor.
-        SdtContext.getContext ().setSubmitBulkReference (bulkSubmission.getSdtBulkReference ());
+        SdtContext.getContext().setSubmitBulkReference(bulkSubmission.getSdtBulkReference());
 
         // Update last seen bulk reference.
-        SdtMetricsMBean.getMetrics ().setLastBulkSubmitRef (bulkSubmission.getSdtBulkReference ());
+        SdtMetricsMBean.getMetrics().setLastBulkSubmitRef(bulkSubmission.getSdtBulkReference());
 
         // Get the Target Application from the target application dao
         final ITargetApplication targetApplication =
-                this.getTargetApplicationDao ().getTargetApplicationByCode (
-                        bulkSubmission.getTargetApplication ().getTargetApplicationCode ());
-        if (targetApplication != null)
-        {
-            LOGGER.debug ("Target Application found " + targetApplication.getId ());
+                this.getTargetApplicationDao().getTargetApplicationByCode(
+                        bulkSubmission.getTargetApplication().getTargetApplicationCode());
+        if (targetApplication != null) {
+            LOGGER.debug("Target Application found {}", targetApplication.getId());
         }
 
-        bulkSubmission.setTargetApplication (targetApplication);
+        bulkSubmission.setTargetApplication(targetApplication);
 
         // Mark the request as Validated.
-        bulkSubmission.markAsValidated ();
+        bulkSubmission.markAsValidated();
 
         // Associate with the service request created by the ServiceRequestInboundInterceptor
         final IServiceRequest serviceRequest =
-                genericDao.fetch (IServiceRequest.class, SdtContext.getContext ().getServiceRequestId ());
-        bulkSubmission.setServiceRequest (serviceRequest);
+                genericDao.fetch(IServiceRequest.class, SdtContext.getContext().getServiceRequestId());
+        bulkSubmission.setServiceRequest(serviceRequest);
     }
 
     /**
-     * 
      * @return the Generic Dao
      */
-    public IGenericDao getGenericDao ()
-    {
+    public IGenericDao getGenericDao() {
         return genericDao;
     }
 
     /**
-     * 
      * @param genericDao the GenericDao implementation
      */
-    public void setGenericDao (final IGenericDao genericDao)
-    {
+    public void setGenericDao(final IGenericDao genericDao) {
         this.genericDao = genericDao;
     }
 
     /**
      * Get the bulk customer DAO bean.
-     * 
+     *
      * @return the Bulk Customer DAO.
      */
-    public IBulkCustomerDao getBulkCustomerDao ()
-    {
+    public IBulkCustomerDao getBulkCustomerDao() {
         return bulkCustomerDao;
     }
 
     /**
      * Sets the Bulk Customer DAO object.
-     * 
+     *
      * @param bulkCustomerDao the Bulk Customer Dao.
      */
-    public void setBulkCustomerDao (final IBulkCustomerDao bulkCustomerDao)
-    {
+    public void setBulkCustomerDao(final IBulkCustomerDao bulkCustomerDao) {
         this.bulkCustomerDao = bulkCustomerDao;
     }
 
     /**
      * Get the Target Application Dao bean.
-     * 
+     *
      * @return the target application Dao.
      */
-    public ITargetApplicationDao getTargetApplicationDao ()
-    {
+    public ITargetApplicationDao getTargetApplicationDao() {
         return targetApplicationDao;
     }
 
     /**
      * Sets the Target Application DAO.
-     * 
+     *
      * @param targetApplicationDao the target application DAO
      */
-    public void setTargetApplicationDao (final ITargetApplicationDao targetApplicationDao)
-    {
+    public void setTargetApplicationDao(final ITargetApplicationDao targetApplicationDao) {
         this.targetApplicationDao = targetApplicationDao;
     }
 
     /**
      * Get the individualRequestsXmlParser.
-     * 
+     *
      * @return the individualRequestsXmlParser.
      */
-    public IndividualRequestsXmlParser getIndividualRequestsXmlParser ()
-    {
+    public IndividualRequestsXmlParser getIndividualRequestsXmlParser() {
         return individualRequestsXmlParser;
     }
 
     /**
      * Set the individualRequestsXmlParser.
-     * 
+     *
      * @param individualRequestsXmlParser the individualRequestsXmlParser.
      */
-    public void setIndividualRequestsXmlparser (final IndividualRequestsXmlParser individualRequestsXmlParser)
-    {
+    public void setIndividualRequestsXmlparser(final IndividualRequestsXmlParser individualRequestsXmlParser) {
         this.individualRequestsXmlParser = individualRequestsXmlParser;
     }
 
     /**
      * Set the sdtBulkReferenceGenerator.
-     * 
+     *
      * @param sdtBulkReferenceGenerator SDT Bulk Reference Generator
      */
-    public void setSdtBulkReferenceGenerator (final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator)
-    {
+    public void setSdtBulkReferenceGenerator(final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator) {
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
     }
 
     /**
      * Get the messaging utility class reference.
-     * 
+     *
      * @return the messaging utility
      */
-    public IMessagingUtility getMessagingUtility ()
-    {
+    public IMessagingUtility getMessagingUtility() {
         return messagingUtility;
     }
 
     /**
-     * 
      * @param messagingUtility the messaging utility class.
      */
-    public void setMessagingUtility (final IMessagingUtility messagingUtility)
-    {
+    public void setMessagingUtility(final IMessagingUtility messagingUtility) {
         this.messagingUtility = messagingUtility;
     }
 
@@ -326,62 +303,55 @@ public class BulkSubmissionService implements IBulkSubmissionService
      * the SDT_BULK_REFERENCE assigned to the successful submission, but it is not until just before this point that
      * this is assigned. Therefore the entry in the concurrency map is set just before the point in the validator where
      * the database is checked for a duplicate. If no duplicate is found in the database.
-     * 
+     *
      * @param bulkSubmission the bulk submission being processed.
      * @throws uk.gov.moj.sdt.validators.exception.AbstractBusinessException super class of the exception to be thrown.
      */
-    private void checkConcurrent (final IBulkSubmission bulkSubmission)
-    {
-        synchronized (concurrencyMap)
-        {
+    private void checkConcurrent(final IBulkSubmission bulkSubmission) {
+        synchronized (concurrencyMap) {
             final String key =
-                    bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+                    bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
 
-            final IInFlightMessage inFlightMessage = concurrencyMap.get (key);
-            final String winningSdtBulkReference = inFlightMessage.getSdtBulkReference ();
-            if (winningSdtBulkReference == null)
-            {
+            final IInFlightMessage inFlightMessage = concurrencyMap.get(key);
+            final String winningSdtBulkReference = inFlightMessage.getSdtBulkReference();
+            if (winningSdtBulkReference == null) {
                 // No thread has won yet - we are the winner. Store SDT bulk reference for other threads to report it
                 // and to indicate to other threads that there has been a winner.
-                inFlightMessage.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
-            }
-            else
-            {
+                inFlightMessage.setSdtBulkReference(bulkSubmission.getSdtBulkReference());
+            } else {
                 // Another thread has beaten us - report the SDT bulk reference of the winning thread to the client.
-                final List<String> replacements = new ArrayList<String> ();
-                replacements.add (String.valueOf (bulkSubmission.getCustomerReference ()));
-                replacements.add (Utilities.formatDateTimeForMessage (new LocalDateTime (System.currentTimeMillis ())));
-                replacements.add (winningSdtBulkReference);
-                final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString ();
-                final IErrorMessage errorMessage = errorMessagesCache.getValue (IErrorMessage.class, errorCodeStr);
+                final List<String> replacements = new ArrayList<>();
+                replacements.add(String.valueOf(bulkSubmission.getCustomerReference()));
+                replacements.add(Utilities.formatDateTimeForMessage(new LocalDateTime(System.currentTimeMillis())));
+                replacements.add(winningSdtBulkReference);
+                final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString();
+                final IErrorMessage errorMessage = errorMessagesCache.getValue(IErrorMessage.class, errorCodeStr);
 
-                LOGGER.error ("Concurrent message detected for customer [" +
-                        bulkSubmission.getBulkCustomer ().getSdtCustomerId () + "], customer reference [" +
-                        bulkSubmission.getCustomerReference () + "], with SDT bulk reference [" +
-                        bulkSubmission.getSdtBulkReference () + "]. Returning original SDT bulk reference [" +
+                LOGGER.error("Concurrent message detected for customer [" +
+                        bulkSubmission.getBulkCustomer().getSdtCustomerId() + "], customer reference [" +
+                        bulkSubmission.getCustomerReference() + "], with SDT bulk reference [" +
+                        bulkSubmission.getSdtBulkReference() + "]. Returning original SDT bulk reference [" +
                         winningSdtBulkReference + "].");
-                throw new CustomerReferenceNotUniqueException (errorCodeStr, errorMessage.getErrorText (), replacements);
+                throw new CustomerReferenceNotUniqueException(errorCodeStr, errorMessage.getErrorText(), replacements);
             }
         }
     }
 
     /**
      * Set concurrency map.
-     * 
+     *
      * @param concurrencyMap map holding in flight bulk requests.
      */
-    public void setConcurrencyMap (final Map<String, IInFlightMessage> concurrencyMap)
-    {
+    public void setConcurrencyMap(final Map<String, IInFlightMessage> concurrencyMap) {
         this.concurrencyMap = concurrencyMap;
     }
 
     /**
      * Set the error message cache.
-     * 
+     *
      * @param errorMessagesCache cache of error messages.
      */
-    public void setErrorMessagesCache (final ICacheable errorMessagesCache)
-    {
+    public void setErrorMessagesCache(final ICacheable errorMessagesCache) {
         this.errorMessagesCache = errorMessagesCache;
     }
 }

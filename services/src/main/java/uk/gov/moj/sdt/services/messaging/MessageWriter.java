@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -48,21 +48,19 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Message writer that handles writing messages to a message queue.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class MessageWriter implements IMessageWriter
-{
+public class MessageWriter implements IMessageWriter {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (MessageWriter.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(MessageWriter.class);
 
     /**
      * Default suffix for DLQ name.
      */
-    private static final String DLQ_SUFFIX = ".DLQ";
+    private final static String DLQ_SUFFIX = ".DLQ";
 
     /**
      * The last id used for a queued message.
@@ -78,57 +76,51 @@ public class MessageWriter implements IMessageWriter
      * This variable holds the queue name mapping with the key
      * as the Target application and the value as the queue name.
      */
-    private Map<String, String> queueNameMap = new HashMap<String, String> ();
+    private Map<String, String> queueNameMap = new HashMap<String, String>();
 
     /**
      * Creates a message sender with the JmsTemplate.
-     * 
+     *
      * @param jmsTemplate The JMS template
      */
-    public MessageWriter (final JmsTemplate jmsTemplate)
-    {
+    public MessageWriter(final JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
 
     @Override
-    public void queueMessage (final ISdtMessage sdtMessage, final String targetAppCode, final boolean deadLetter)
-    {
+    public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode, final boolean deadLetter) {
 
         // Check the target application code is valid and return queue name.
-        final String queueName = getQueueName (targetAppCode, deadLetter);
+        final String queueName = getQueueName(targetAppCode, deadLetter);
 
-        LOGGER.debug ("Sending message with SDT request reference [" + sdtMessage.getSdtRequestReference () +
+        LOGGER.debug("Sending message with SDT request reference [" + sdtMessage.getSdtRequestReference() +
                 "] to queue [" + queueName + "]");
 
         // Set meta data in message.
-        sdtMessage.setMessageSentTimestamp (new GregorianCalendar ().getTimeInMillis ());
-        sdtMessage.setEnqueueLoggingId (SdtContext.getContext ().getLoggingContext ().getMajorLoggingId ());
+        sdtMessage.setMessageSentTimestamp(new GregorianCalendar().getTimeInMillis());
+        sdtMessage.setEnqueueLoggingId(SdtContext.getContext().getLoggingContext().getMajorLoggingId());
 
-        SdtMetricsMBean.getMetrics ().upRequestQueueCount ();
-        SdtMetricsMBean.getMetrics ().upRequestQueueLength ();
+        SdtMetricsMBean.getMetrics().upRequestQueueCount();
+        SdtMetricsMBean.getMetrics().upRequestQueueLength();
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_5))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference () + "\n");
+        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_5)) {
+            final StringBuffer detail = new StringBuffer();
+            detail.append("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference() + "\n");
 
             // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_5, "Enqueue message",
-                    detail.toString ());
+            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_5, "Enqueue message",
+                    detail.toString());
         }
 
-        try
-        {
+        try {
 
-            this.jmsTemplate.convertAndSend (queueName, sdtMessage);
-        }
-        catch (final UncategorizedJmsException e)
-        {
+            this.jmsTemplate.convertAndSend(queueName, sdtMessage);
+        } catch (final UncategorizedJmsException e) {
             // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
             // periodically check the database and requeue any messages that are stuck on a state indicating that they
             // have not been sent to the case management system.
-            LOGGER.error ("Failed to connect to the ActiveMQ queue [" + queueName +
-                    "] while queueing message request reference [" + sdtMessage.getSdtRequestReference () + "]", e);
+            LOGGER.error("Failed to connect to the ActiveMQ queue [" + queueName +
+                    "] while queueing message request reference [" + sdtMessage.getSdtRequestReference() + "]", e);
 
         }
 
@@ -137,31 +129,26 @@ public class MessageWriter implements IMessageWriter
 
     /**
      * Get the last queue id of a queued message.
-     * 
+     *
      * @return the last queue id of a queued message.
      */
-    public static synchronized long getLastQueueId ()
-    {
+    public static synchronized long getLastQueueId() {
         MessageWriter.lastQueueId++;
         return MessageWriter.lastQueueId;
     }
 
     /**
-     * 
      * @return map containing the target application to queue name mapping.
      */
-    public Map<String, String> getQueueNameMap ()
-    {
+    public Map<String, String> getQueueNameMap() {
         return queueNameMap;
     }
 
     /**
-     * 
      * @param queueNameMap map containing the target application to queue name mapping
-     *            with the key as the the target application code and value as the queue name
+     *                     with the key as the the target application code and value as the queue name
      */
-    public void setQueueNameMap (final Map<String, String> queueNameMap)
-    {
+    public void setQueueNameMap(final Map<String, String> queueNameMap) {
         this.queueNameMap = queueNameMap;
     }
 
@@ -169,35 +156,27 @@ public class MessageWriter implements IMessageWriter
      * Checks that the target application code is supplied and that it is
      * mapped to one of the queues in the queue map. Returns the queue name
      * that is mapped to the target application code.
-     * 
+     *
      * @param targetApplicationCode the target application code.
-     * @param deadLetter flags whether dead letter queue name should be returned.
+     * @param deadLetter            flags whether dead letter queue name should be returned.
      * @return the queue name matching to the target application code.
      */
-    private String getQueueName (final String targetApplicationCode, final boolean deadLetter)
-    {
+    private String getQueueName(final String targetApplicationCode, final boolean deadLetter) {
         String queueName;
 
         // The target application code should be supplied.
-        if (targetApplicationCode == null || targetApplicationCode.trim ().length () == 0)
-        {
-            throw new IllegalArgumentException ("Target application code must be supplied.");
-        }
-        else
-        {
+        if (targetApplicationCode == null || targetApplicationCode.trim().length() == 0) {
+            throw new IllegalArgumentException("Target application code must be supplied.");
+        } else {
             // Check that the target application code is mapped to a queue name
-            if ( !this.getQueueNameMap ().containsKey (targetApplicationCode))
-            {
-                LOGGER.error ("Attempting to write to unknown queue for target application [" + targetApplicationCode +
+            if (!this.getQueueNameMap().containsKey(targetApplicationCode)) {
+                LOGGER.error("Attempting to write to unknown queue for target application [" + targetApplicationCode +
                         "]");
-                throw new IllegalArgumentException ("Target application code [" + targetApplicationCode +
+                throw new IllegalArgumentException("Target application code [" + targetApplicationCode +
                         "] does not have a JMS queue mapped.");
-            }
-            else
-            {
-                queueName = this.getQueueNameMap ().get (targetApplicationCode);
-                if (deadLetter)
-                {
+            } else {
+                queueName = this.getQueueNameMap().get(targetApplicationCode);
+                if (deadLetter) {
                     // Append DLQ suffix for dead letter.
                     queueName += DLQ_SUFFIX;
 

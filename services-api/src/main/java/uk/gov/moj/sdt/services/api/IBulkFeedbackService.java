@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,19 +36,17 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
  * Interface for Get Bulk Feedback services.
- * 
+ *
  * @author d130680
- * 
  */
-public interface IBulkFeedbackService
-{
+public interface IBulkFeedbackService {
 
     /**
      * Deals with bulk feedback requests and passes them onto MCOL.
-     * 
+     *
      * @param bulkFeedbackRequest bulk feedback request
      * @return bulk submission with 0 or more individual requests
      */
-    IBulkSubmission getBulkFeedback (IBulkFeedbackRequest bulkFeedbackRequest);
+    IBulkSubmission getBulkFeedback(IBulkFeedbackRequest bulkFeedbackRequest);
 
 }

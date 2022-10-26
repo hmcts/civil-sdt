@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -45,48 +45,39 @@ import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 
 /**
  * Test {@link BulkCustomerDao} query methods.
- * 
+ *
  * @author Robin Compston
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class BulkCustomerDaoTest extends AbstractIntegrationTest
-{
+public class BulkCustomerDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkCustomerDaoTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDaoTest.class);
 
     /**
      * Default constructor for {@link BulkCustomerDaoTest}.
      */
-    public BulkCustomerDaoTest ()
-    {
-        super ();
-        DBUnitUtility.loadDatabase (this.getClass (), true);
+    public BulkCustomerDaoTest() {
+        super();
+        DBUnitUtility.loadDatabase(this.getClass(), true);
     }
 
     /**
      * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
      */
     @Test
-    public void testGetBulkCustomerBySdtId ()
-    {
+    public void testGetBulkCustomerBySdtId() {
         final IBulkCustomerDao bulkCustomersDao =
-                (IBulkCustomerDao) this.applicationContext.getBean ("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
+                (IBulkCustomerDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
 
-        final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId (2);
-        if (bulkCustomer != null)
-        {
-            LOGGER.debug ("Retrieved bulk customer id [" + bulkCustomer.getId () + "]");
+        final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId(2);
+        if (bulkCustomer != null) {
+            LOGGER.debug("Retrieved bulk customer id [" + bulkCustomer.getId() + "]");
+        } else {
+            Assert.fail("Could not find bulk customer [" + 2 + "]");
         }
-        else
-        {
-            Assert.fail ("Could not find bulk customer [" + 2 + "]");
-        }
-
-        return;
     }
 }

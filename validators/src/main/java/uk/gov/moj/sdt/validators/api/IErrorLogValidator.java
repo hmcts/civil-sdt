@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: IServiceTypeValidator.java 17075 2013-09-18 14:58:39Z kulkarnim $
  * $LastChangedRevision: 17075 $
  * $LastChangedDate: 2013-09-18 15:58:39 +0100 (Wed, 18 Sep 2013) $
@@ -33,9 +33,8 @@ package uk.gov.moj.sdt.validators.api;
 /**
  * An empty interface for ErrorLog, no validation is required for this domain object. But an empty class is necessary so
  * the visitor classes do not throw an error.
- * 
+ *
  * @author Son Loi
  */
-public interface IErrorLogValidator
-{
+public interface IErrorLogValidator {
 }

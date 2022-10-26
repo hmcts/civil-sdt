@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,19 +35,17 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
 
 /**
  * Public interface for all classes implementing {@link ICacheable}.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public interface ICacheable
-{
+public interface ICacheable {
     /**
      * Gets the value associated with the parameter from the cache.
-     * 
-     * @param <DomainType> of entity to retrieved.
-     * @param domainType of entity to load.
-     * @param key the keyword identifying the cached parameter.
+     *
+     * @param <DomainType> of entity to be retrieved.
+     * @param domainType   of entity to load.
+     * @param key          the keyword identifying the cached parameter.
      * @return DomainType instance retrieved.
      */
-    <DomainType extends IDomainObject> DomainType getValue (final Class<DomainType> domainType, final String key);
+    <DomainType extends IDomainObject> DomainType getValue(final Class<DomainType> domainType, final String key);
 }

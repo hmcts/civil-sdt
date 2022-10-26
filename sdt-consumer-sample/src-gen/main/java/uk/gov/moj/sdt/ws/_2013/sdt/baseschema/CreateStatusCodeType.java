@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for createStatusCodeType.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "createStatusCodeType")
 @XmlEnum
@@ -49,7 +48,7 @@ public enum CreateStatusCodeType {
     }
 
     public static CreateStatusCodeType fromValue(String v) {
-        for (CreateStatusCodeType c: CreateStatusCodeType.values()) {
+        for (CreateStatusCodeType c : CreateStatusCodeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

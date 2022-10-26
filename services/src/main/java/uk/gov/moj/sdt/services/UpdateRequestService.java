@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -39,17 +39,15 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 
 /**
  * Service class implementing the IUpdateRequestService.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class UpdateRequestService extends AbstractSdtService implements IUpdateRequestService
-{
+public class UpdateRequestService extends AbstractSdtService implements IUpdateRequestService {
 
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (UpdateRequestService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(UpdateRequestService.class);
 
     /**
      * Messaging utility for queueing messages in the messaging server.
@@ -57,65 +55,54 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
     private IMessagingUtility messagingUtility;
 
     @Override
-    public void updateIndividualRequest (final IIndividualRequest individualRequestParam)
-    {
+    public void updateIndividualRequest(final IIndividualRequest individualRequestParam) {
         // Look for the individual request matching this unique request reference.
         final IIndividualRequest individualRequest =
-                this.getIndRequestBySdtReference (individualRequestParam.getSdtRequestReference ());
+                this.getIndRequestBySdtReference(individualRequestParam.getSdtRequestReference());
 
         // Proceed ahead if the Individual Request is found.
-        if (individualRequest != null)
-        {
+        if (individualRequest != null) {
 
             // Resubmit message to target application by enqueuing it.
-            if (IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus ().equals (
-                    individualRequestParam.getRequestStatus ()))
-            {
-                individualRequest.resetForwardingAttempts ();
-                getMessagingUtility ().enqueueRequest (individualRequest);
+            if (IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus().equals(
+                    individualRequestParam.getRequestStatus())) {
+                individualRequest.resetForwardingAttempts();
+                getMessagingUtility().enqueueRequest(individualRequest);
             }
 
             // Refresh the individual request from the database with the status and the error code
             // from the target application.
-            if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ().equals (
-                    individualRequestParam.getRequestStatus ()))
-            {
-                individualRequest.markRequestAsRejected (individualRequestParam.getErrorLog ());
-            }
-            else if (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ().equals (
-                    individualRequestParam.getRequestStatus ()))
-            {
-                individualRequest.markRequestAsAccepted ();
+            if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus().equals(
+                    individualRequestParam.getRequestStatus())) {
+                individualRequest.markRequestAsRejected(individualRequestParam.getErrorLog());
+            } else if (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus().equals(
+                    individualRequestParam.getRequestStatus())) {
+                individualRequest.markRequestAsAccepted();
             }
 
             // Mark the individual request as completed
-            this.updateCompletedRequest (individualRequest);
+            this.updateCompletedRequest(individualRequest);
 
-        }
-        else
-        {
-            LOGGER.warn ("Individual Request with Sdt Request Reference [" +
-                    individualRequestParam.getSdtRequestReference () + "] not found.");
+        } else {
+            LOGGER.warn("Individual Request with Sdt Request Reference [" +
+                    individualRequestParam.getSdtRequestReference() + "] not found.");
         }
 
     }
 
     /**
      * Get the messaging utility class reference.
-     * 
+     *
      * @return the messaging utility
      */
-    public IMessagingUtility getMessagingUtility ()
-    {
+    public IMessagingUtility getMessagingUtility() {
         return messagingUtility;
     }
 
     /**
-     * 
      * @param messagingUtility the messaging utility class.
      */
-    public void setMessagingUtility (final IMessagingUtility messagingUtility)
-    {
+    public void setMessagingUtility(final IMessagingUtility messagingUtility) {
         this.messagingUtility = messagingUtility;
     }
 }

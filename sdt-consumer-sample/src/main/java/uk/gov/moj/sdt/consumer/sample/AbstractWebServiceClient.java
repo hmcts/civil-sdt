@@ -9,16 +9,14 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
  * Base class for commonality across web service clients.
- * 
+ *
  * @author Saurabh
- * 
  */
-public abstract class AbstractWebServiceClient
-{
+public abstract class AbstractWebServiceClient {
     /**
      * Constant to define location of Spring context file.
      */
-    public static final String APP_CONTEXT_LOCATION = "classpath*:/uk/gov/moj/sdt/consumer/sample/spring.context.xml";
+    public final static String APP_CONTEXT_LOCATION = "classpath*:/uk/gov/moj/sdt/consumer/sample/spring.context.xml";
 
     /**
      * SDT Endpoint to be called.
@@ -27,44 +25,41 @@ public abstract class AbstractWebServiceClient
 
     /**
      * Setter for SDT endpoint.
-     * 
+     *
      * @param sdtEndpoint SDT endpoint.
      */
-    public void setSdtEndpoint (ISdtEndpointPortType sdtEndpoint)
-    {
+    public void setSdtEndpoint(ISdtEndpointPortType sdtEndpoint) {
         this.sdtEndpoint = sdtEndpoint;
     }
 
     /**
      * Return a client to call SDT's external endpoint. The client is customised with timeout values.
-     * 
+     *
      * @return client for SDT's external endpoint.
      */
-    protected ISdtEndpointPortType getSdtEndpointClient ()
-    {
-        return getSdtEndpointClient (5000, 100000);
+    protected ISdtEndpointPortType getSdtEndpointClient() {
+        return getSdtEndpointClient(5000, 100000);
     }
 
     /**
      * Return a client to call SDT's external endpoint. The client is customised with timeout values.
-     * 
-     * @param connTimeout connection timeout.
+     *
+     * @param connTimeout     connection timeout.
      * @param responseTimeout response timeout.
      * @return client for SDT's external endpoint.
      */
-    protected ISdtEndpointPortType getSdtEndpointClient (final long connTimeout, final long responseTimeout)
-    {
+    protected ISdtEndpointPortType getSdtEndpointClient(final long connTimeout, final long responseTimeout) {
 
-        Client clientProxy = ClientProxy.getClient (sdtEndpoint);
+        Client clientProxy = ClientProxy.getClient(sdtEndpoint);
 
-        HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit ();
-        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy ();
+        HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit();
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
         // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
         // it times out
-        httpClientPolicy.setConnectionTimeout (connTimeout);
+        httpClientPolicy.setConnectionTimeout(connTimeout);
         // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
-        httpClientPolicy.setReceiveTimeout (responseTimeout);
-        httpConduit.setClient (httpClientPolicy);
+        httpClientPolicy.setReceiveTimeout(responseTimeout);
+        httpConduit.setClient(httpClientPolicy);
 
         return sdtEndpoint;
 

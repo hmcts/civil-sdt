@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -47,12 +47,10 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Implementation class for bulk feedback service.
- * 
+ *
  * @author d130680
- * 
  */
-public class BulkFeedbackService implements IBulkFeedbackService
-{
+public class BulkFeedbackService implements IBulkFeedbackService {
 
     /**
      * Bulk Submission DAO property for looking up the bulk submission object.
@@ -64,67 +62,58 @@ public class BulkFeedbackService implements IBulkFeedbackService
     private ICacheable globalParametersCache;
 
     @Override
-    public IBulkSubmission getBulkFeedback (final IBulkFeedbackRequest bulkFeedbackRequest)
-    {
-        final IBulkCustomer bulkCustomer = bulkFeedbackRequest.getBulkCustomer ();
-        final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
+    public IBulkSubmission getBulkFeedback(final IBulkFeedbackRequest bulkFeedbackRequest) {
+        final IBulkCustomer bulkCustomer = bulkFeedbackRequest.getBulkCustomer();
+        final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference();
         final IBulkSubmission bulkSubmission;
 
         // Call DAO to fetch domain details
         bulkSubmission =
-                bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, sdtBulkReference, getDataRetentionPeriod ());
+                bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference, getDataRetentionPeriod());
 
         // Map individual request domain object(s) to the response(s)
-        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
 
-        for (IIndividualRequest individualRequest : individualRequests)
-        {
-            if (null != individualRequest.getTargetApplicationResponse ())
-            {
+        for (IIndividualRequest individualRequest : individualRequests) {
+            if (null != individualRequest.getTargetApplicationResponse()) {
                 // As Individual Request is valid, place in Target Application Response Map
-                targetApplicationRespMap.put (individualRequest.getCustomerRequestReference (),
-                        individualRequest.getTargetApplicationResponse ());
+                targetApplicationRespMap.put(individualRequest.getCustomerRequestReference(),
+                        individualRequest.getTargetApplicationResponse());
             }
         }
 
         // Set the target response map in threadlocal for the outbound interceptor to pick up
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         return bulkSubmission;
     }
 
     /**
      * Get the data retention period from the global parameters cache.
-     * 
+     *
      * @return data retention period
      */
-    private int getDataRetentionPeriod ()
-    {
+    private int getDataRetentionPeriod() {
         final IGlobalParameter globalParameter =
-                globalParametersCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
-        final int dataRetention = Integer.parseInt (globalParameter.getValue ());
-
-        return dataRetention;
-
+                globalParametersCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
+        return Integer.parseInt(globalParameter.getValue());
     }
 
     /**
      * @param bulkSubmissionDao IBulkSubmissionDao
      */
-    public void setBulkSubmissionDao (final IBulkSubmissionDao bulkSubmissionDao)
-    {
+    public void setBulkSubmissionDao(final IBulkSubmissionDao bulkSubmissionDao) {
         this.bulkSubmissionDao = bulkSubmissionDao;
     }
 
     /**
      * Set the global parameter cache.
-     * 
+     *
      * @param globalParametersCache global parameter cache
      */
-    public void setGlobalParametersCache (final ICacheable globalParametersCache)
-    {
+    public void setGlobalParametersCache(final ICacheable globalParametersCache) {
         this.globalParametersCache = globalParametersCache;
     }
 }

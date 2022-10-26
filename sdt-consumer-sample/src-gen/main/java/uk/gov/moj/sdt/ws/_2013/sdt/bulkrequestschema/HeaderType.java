@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for headerType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="headerType">
  *   &lt;complexContent>
@@ -26,15 +26,13 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "headerType", propOrder = {
-    "sdtCustomerId",
-    "targetApplicationId",
-    "requestCount",
-    "customerReference"
+        "sdtCustomerId",
+        "targetApplicationId",
+        "requestCount",
+        "customerReference"
 })
 public class HeaderType {
 
@@ -47,7 +45,6 @@ public class HeaderType {
 
     /**
      * Gets the value of the sdtCustomerId property.
-     * 
      */
     public long getSdtCustomerId() {
         return sdtCustomerId;
@@ -55,7 +52,6 @@ public class HeaderType {
 
     /**
      * Sets the value of the sdtCustomerId property.
-     * 
      */
     public void setSdtCustomerId(long value) {
         this.sdtCustomerId = value;
@@ -63,11 +59,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the targetApplicationId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTargetApplicationId() {
         return targetApplicationId;
@@ -75,11 +69,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the targetApplicationId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTargetApplicationId(String value) {
         this.targetApplicationId = value;
@@ -87,7 +79,6 @@ public class HeaderType {
 
     /**
      * Gets the value of the requestCount property.
-     * 
      */
     public long getRequestCount() {
         return requestCount;
@@ -95,7 +86,6 @@ public class HeaderType {
 
     /**
      * Sets the value of the requestCount property.
-     * 
      */
     public void setRequestCount(long value) {
         this.requestCount = value;
@@ -103,11 +93,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the customerReference property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getCustomerReference() {
         return customerReference;
@@ -115,11 +103,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the customerReference property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setCustomerReference(String value) {
         this.customerReference = value;

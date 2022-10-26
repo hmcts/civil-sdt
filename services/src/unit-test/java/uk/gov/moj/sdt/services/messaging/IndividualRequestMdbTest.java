@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -47,12 +47,10 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Test class for Message reader implementation.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase
-{
+public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
     /**
      * Mock service for the message processing.
      */
@@ -67,111 +65,104 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase
      * Pre-testing initialization.
      */
     @Before
-    public void setUp ()
-    {
-        mockTargetSubmissionService = EasyMock.createMock (TargetApplicationSubmissionService.class);
+    public void setUp() {
+        mockTargetSubmissionService = EasyMock.createMock(TargetApplicationSubmissionService.class);
     }
 
     /**
      * Method to test successful scenario for readMessage.
-     * 
+     *
      * @throws JMSException during the test setup
      */
     @Test
-    public void readMessageSuccess () throws JMSException
-    {
-        individualRequestMdb = new IndividualRequestMdb ();
-        individualRequestMdb.setTargetAppSubmissionService (mockTargetSubmissionService);
+    public void readMessageSuccess() throws JMSException {
+        individualRequestMdb = new IndividualRequestMdb();
+        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
 
         // Create the actual message to send.
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("ReadTest1");
+        final ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("ReadTest1");
 
         // Wrap the message in the ObjectMessage
-        final ObjectMessage objMessage = EasyMock.createMock (ObjectMessage.class);
-        objMessage.setObject ((Serializable) sdtMessage);
-        EasyMock.expectLastCall ().anyTimes ();
+        final ObjectMessage objMessage = EasyMock.createMock(ObjectMessage.class);
+        objMessage.setObject((Serializable) sdtMessage);
+        EasyMock.expectLastCall().anyTimes();
 
-        EasyMock.expect (objMessage.getObject ()).andReturn ((Serializable) sdtMessage);
-        EasyMock.replay (objMessage);
+        EasyMock.expect(objMessage.getObject()).andReturn((Serializable) sdtMessage);
+        EasyMock.replay(objMessage);
 
-        mockTargetSubmissionService.processRequestToSubmit (sdtMessage.getSdtRequestReference ());
+        mockTargetSubmissionService.processRequestToSubmit(sdtMessage.getSdtRequestReference());
 
-        EasyMock.expectLastCall ();
+        EasyMock.expectLastCall();
 
-        EasyMock.replay (mockTargetSubmissionService);
+        EasyMock.replay(mockTargetSubmissionService);
 
-        individualRequestMdb.readMessage (objMessage);
+        individualRequestMdb.readMessage(objMessage);
 
-        EasyMock.verify (mockTargetSubmissionService);
-        EasyMock.verify (objMessage);
+        EasyMock.verify(mockTargetSubmissionService);
+        EasyMock.verify(objMessage);
 
-        Assert.assertTrue ("Test successfully completed", true);
+        Assert.assertTrue("Test successfully completed", true);
 
     }
 
     /**
      * Test method to test the scenario where the service throws a Data Access Exception.
-     * 
+     *
      * @throws JMSException if any during the test setup
      */
     @Test
-    public void readMessageDataAccessException () throws JMSException
-    {
-        individualRequestMdb = new IndividualRequestMdb ();
-        individualRequestMdb.setTargetAppSubmissionService (mockTargetSubmissionService);
+    public void readMessageDataAccessException() throws JMSException {
+        individualRequestMdb = new IndividualRequestMdb();
+        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
 
         // Create the actual message to send.
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("ReadTest1");
+        final ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("ReadTest1");
 
         // Wrap the message in the ObjectMessage
-        final ObjectMessage objMessage = EasyMock.createMock (ObjectMessage.class);
-        objMessage.setObject ((Serializable) sdtMessage);
-        EasyMock.expectLastCall ().anyTimes ();
+        final ObjectMessage objMessage = EasyMock.createMock(ObjectMessage.class);
+        objMessage.setObject((Serializable) sdtMessage);
+        EasyMock.expectLastCall().anyTimes();
 
-        EasyMock.expect (objMessage.getObject ()).andReturn ((Serializable) sdtMessage);
-        EasyMock.replay (objMessage);
+        EasyMock.expect(objMessage.getObject()).andReturn((Serializable) sdtMessage);
+        EasyMock.replay(objMessage);
 
-        mockTargetSubmissionService.processRequestToSubmit (sdtMessage.getSdtRequestReference ());
+        mockTargetSubmissionService.processRequestToSubmit(sdtMessage.getSdtRequestReference());
 
-        EasyMock.expectLastCall ().andThrow (new RuntimeException ("Data error occurred"));
+        EasyMock.expectLastCall().andThrow(new RuntimeException("Data error occurred"));
 
-        EasyMock.replay (mockTargetSubmissionService);
+        EasyMock.replay(mockTargetSubmissionService);
 
-        try
-        {
-            individualRequestMdb.readMessage (objMessage);
-            Assert.fail ("RuntimeException was expected to be thrown");
-        }
-        catch (final RuntimeException re)
-        {
-            Assert.assertTrue ("Expected to throw the exception", true);
+        try {
+            individualRequestMdb.readMessage(objMessage);
+            Assert.fail("RuntimeException was expected to be thrown");
+        } catch (final RuntimeException re) {
+            Assert.assertTrue("Expected to throw the exception", true);
         }
 
-        EasyMock.verify (mockTargetSubmissionService);
-        EasyMock.verify (objMessage);
+        EasyMock.verify(mockTargetSubmissionService);
+        EasyMock.verify(objMessage);
 
-        Assert.assertTrue ("Test successfully completed", true);
+        Assert.assertTrue("Test successfully completed", true);
     }
 
     /**
      * Test method to test the scenario where the message is some other object other than
      * the ObjectMessage.
-     * 
+     *
      * @throws JMSException if any during the test setup
      */
     @Test
-    public void readMessageInvalidObject () throws JMSException
-    {
-        individualRequestMdb = new IndividualRequestMdb ();
-        individualRequestMdb.setTargetAppSubmissionService (mockTargetSubmissionService);
+    public void readMessageInvalidObject() throws JMSException {
+        individualRequestMdb = new IndividualRequestMdb();
+        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
 
-        final Message message = EasyMock.createMock (Message.class);
+        final Message message = EasyMock.createMock(Message.class);
 
-        individualRequestMdb.readMessage (message);
+        individualRequestMdb.readMessage(message);
 
-        Assert.assertTrue ("Test successfully completed", true);
+        Assert.assertTrue("Test successfully completed", true);
     }
 
 }

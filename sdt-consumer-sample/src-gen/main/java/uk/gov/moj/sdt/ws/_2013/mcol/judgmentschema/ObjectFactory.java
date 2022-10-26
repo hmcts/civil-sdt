@@ -8,18 +8,17 @@ import javax.xml.namespace.QName;
 
 
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the uk.gov.moj.sdt.ws._2013.mcol.judgmentschema package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
+ * This object contains factory methods for each
+ * Java content interface and Java element interface
+ * generated in the uk.gov.moj.sdt.ws._2013.mcol.judgmentschema package.
+ * <p>An ObjectFactory allows you to programatically
+ * construct new instances of the Java representation
+ * for XML content. The Java representation of XML
+ * content can consist of schema derived interfaces
+ * and classes representing the binding of schema
+ * type definitions, element declarations and model
+ * groups.  Factory methods for each of these are
  * provided in this class.
- * 
  */
 @XmlRegistry
 public class ObjectFactory {
@@ -29,14 +28,12 @@ public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: uk.gov.moj.sdt.ws._2013.mcol.judgmentschema
-     * 
      */
     public ObjectFactory() {
     }
 
     /**
      * Create an instance of {@link JudgmentWarrantType }
-     * 
      */
     public JudgmentWarrantType createJudgmentWarrantType() {
         return new JudgmentWarrantType();
@@ -44,7 +41,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link McolJudgmentType }
-     * 
      */
     public McolJudgmentType createMcolJudgmentType() {
         return new McolJudgmentType();
@@ -52,7 +48,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link FullPaymentType }
-     * 
      */
     public FullPaymentType createFullPaymentType() {
         return new FullPaymentType();
@@ -60,7 +55,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link ImmediatePaymentType }
-     * 
      */
     public ImmediatePaymentType createImmediatePaymentType() {
         return new ImmediatePaymentType();
@@ -68,7 +62,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link PaymentScheduleType }
-     * 
      */
     public PaymentScheduleType createPaymentScheduleType() {
         return new PaymentScheduleType();
@@ -76,7 +69,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link PayeeType }
-     * 
      */
     public PayeeType createPayeeType() {
         return new PayeeType();
@@ -84,7 +76,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link InstalmentPaymentType }
-     * 
      */
     public InstalmentPaymentType createInstalmentPaymentType() {
         return new InstalmentPaymentType();
@@ -92,7 +83,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link PayeeAddressType }
-     * 
      */
     public PayeeAddressType createPayeeAddressType() {
         return new PayeeAddressType();
@@ -100,7 +90,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link JudgmentWarrantType }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema", name = "mcolJudgmentWarrant")
     public JAXBElement<JudgmentWarrantType> createMcolJudgmentWarrant(JudgmentWarrantType value) {
@@ -109,7 +98,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link McolJudgmentType }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema", name = "mcolJudgment")
     public JAXBElement<McolJudgmentType> createMcolJudgment(McolJudgmentType value) {

@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for updateStatusCodeType.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
@@ -20,7 +20,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "updateStatusCodeType")
 @XmlEnum
@@ -43,7 +42,7 @@ public enum UpdateStatusCodeType {
     }
 
     public static UpdateStatusCodeType fromValue(String v) {
-        for (UpdateStatusCodeType c: UpdateStatusCodeType.values()) {
+        for (UpdateStatusCodeType c : UpdateStatusCodeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -44,151 +44,131 @@ import org.springframework.util.ReflectionUtils;
 
 /**
  * Class represents base class for all unit test cases.
- * 
+ *
  * @author Robin Compston
  */
-public abstract class AbstractSdtUnitTestBase
-{
+public abstract class AbstractSdtUnitTestBase {
     /**
      * Static logging object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtUnitTestBase.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtUnitTestBase.class);
 
     /**
      * Name of log4j configuration file (in classpath).
      */
-    // private static final String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
+    // private final static String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
 
     /**
      * Watcher to detect current test name.
      */
     // CHECKSTYLE:OFF
     @Rule
-    public TestWatcher watcher = new TestWatcher ()
-    {
+    public TestWatcher watcher = new TestWatcher() {
         // CHECKSTYLE:ON
+
         /**
          * Method called whenever JUnit starts a test.
-         * 
+         *
          * @param description Information about the test.
          */
-        protected void starting (final Description description)
-        {
-            LOGGER.info ("Start Test: " + description.getClassName () + "." + description.getMethodName () + ".");
-        };
+        protected void starting(final Description description) {
+            LOGGER.info("Start Test: " + description.getClassName() + "." + description.getMethodName() + ".");
+        }
     };
 
     /**
      * Do one time initialization for this test class.
      */
-    private void init ()
-    {
+    private void init() {
         // Initialize log4j for test purposes.
         // DOMConfigurator.configure (LOG4J_XML_FILE);
     }
 
     /**
      * Standard JUnit setUp method. Gets run before each test method.
-     * 
-     * @throws Exception
-     *             May throw runtime exception.
+     *
+     * @throws Exception May throw runtime exception.
      */
     @Before
-    public void setUp () throws Exception
-    {
+    public void setUp() throws Exception {
         // Local set up if we are running outside of the appserver.
-        this.setUpLocalTests ();
+        this.setUpLocalTests();
     }
 
     /**
      * Method to be overridden in derived class to do test specific setup.
-     * 
-     * @throws Exception
-     *             general problem.
+     *
+     * @throws Exception general problem.
      */
-    protected void setUpLocalTests () throws Exception
-    {
+    protected void setUpLocalTests() throws Exception {
     }
 
     /**
      * Convert windows String to UNIX by removing all Hex 0d.
-     * 
-     * @param in
-     *            String from Windows platform.
+     *
+     * @param in String from Windows platform.
      * @return String for UNIX platrofm.
      */
-    protected String dos2Unix (final String in)
-    {
+    protected String dos2Unix(final String in) {
         // Array to hold input.
-        final char[] win = in.toCharArray ();
-        final int len = in.length ();
+        final char[] win = in.toCharArray();
+        final int len = in.length();
 
         // Array to hold output.
         final char[] unix = new char[len];
 
         int pos2 = 0;
-        for (int pos1 = 0; pos1 < len; pos1++)
-        {
+        for (int pos1 = 0; pos1 < len; pos1++) {
             // Copy all but CARRIAGE RETURN.
-            if (win[pos1] != '\r')
-            {
+            if (win[pos1] != '\r') {
                 unix[pos2++] = win[pos1];
             }
         }
 
-        return new String (unix);
+        return new String(unix);
     }
 
     /**
      * Retrieve a field in its accessible state.
-     * 
+     *
      * <p>
      * Scenario: field exists without a getter and is protected or private. This allows you to inspect that field's
      * state e.g. <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
-				ServiceRequest.class, "requestDateTime", LocalDateTime.class,
-				serviceRequest)</code>
+     * ServiceRequest.class, "requestDateTime", LocalDateTime.class,
+     * serviceRequest)</code>
      * </p>
-     * 
-     * @param clazzUnderTest
-     *            This is the class that owns the field
-     * @param fieldName
-     *            this is the field name
-     * @param clazzOfField
-     *            this is the field type
-     * @param target
-     *            this is the object which has the variable
+     *
+     * @param clazzUnderTest This is the class that owns the field
+     * @param fieldName      this is the field name
+     * @param clazzOfField   this is the field type
+     * @param target         this is the object which has the variable
      * @return the field from the target object as an object.
      */
-    public Object getAccesibleField (final Class<?> clazzUnderTest, final String fieldName,
-                                     final Class<?> clazzOfField, final Object target)
-    {
-        Field field = ReflectionUtils.findField (clazzUnderTest, fieldName);
-        if (null == field)
-        {
-            field = ReflectionUtils.findField (clazzUnderTest, fieldName, clazzOfField);
+    public Object getAccesibleField(final Class<?> clazzUnderTest, final String fieldName,
+                                    final Class<?> clazzOfField, final Object target) {
+        Field field = ReflectionUtils.findField(clazzUnderTest, fieldName);
+        if (null == field) {
+            field = ReflectionUtils.findField(clazzUnderTest, fieldName, clazzOfField);
         }
-        ReflectionUtils.makeAccessible (field);
-        return ReflectionUtils.getField (field, target);
+        ReflectionUtils.makeAccessible(field);
+        return ReflectionUtils.getField(field, target);
     }
 
     /**
      * Retrieve a field in its accessible state.
-     * 
+     *
      * <p>
      * Scenario: field exists without a getter and is protected or private. This allows you to inspect that field's
      * state e.g. <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
-				ServiceRequest.class, "requestDateTime", LocalDateTime.class,
-				serviceRequest)</code>
+     * ServiceRequest.class, "requestDateTime", LocalDateTime.class,
+     * serviceRequest)</code>
      * </p>
-     * 
-     * @param clazzUnderTest
-     *            This is the class that owns the method
-     * @param methodName
-     *            this is the method name
+     *
+     * @param clazzUnderTest This is the class that owns the method
+     * @param methodName     this is the method name
      */
-    public void makeMethodAccesible (final Class<?> clazzUnderTest, final String methodName)
-    {
-        final Method method = ReflectionUtils.findMethod (clazzUnderTest, methodName);
-        ReflectionUtils.makeAccessible (method);
+    public void makeMethodAccesible(final Class<?> clazzUnderTest, final String methodName) {
+        final Method method = ReflectionUtils.findMethod(clazzUnderTest, methodName);
+        ReflectionUtils.makeAccessible(method);
     }
 }

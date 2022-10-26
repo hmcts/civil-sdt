@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: AbstractWsHandler.java 16915 2013-08-23 16:12:22Z agarwals $
  * $LastChangedRevision: 16915 $
  * $LastChangedDate: 2013-08-23 17:12:22 +0100 (Fri, 23 Aug 2013) $
@@ -33,14 +33,13 @@ package uk.gov.moj.sdt.transformers;
 
 /**
  * Base class for web service handlers that provides common methods for workflow.
- * 
+ *
  * @author d276205
  */
-public abstract class AbstractTransformer
-{
+public abstract class AbstractTransformer {
     /**
      * Constant for SDT service.
      */
-    public static final String SDT_SERVICE = "SDT";
+    public final static String SDT_SERVICE = "SDT";
 
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -43,53 +43,48 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Base class for unit testing validators.
- * 
+ *
  * @author d276205
- * 
  */
-public abstract class AbstractValidatorUnitTest extends AbstractSdtUnitTestBase
-{
+public abstract class AbstractValidatorUnitTest extends AbstractSdtUnitTestBase {
     /**
      * create a bulk customer.
-     * 
+     *
      * @param applications the set of IBulkCustomerApplication objects
      * @return a bulk customer
      */
-    protected IBulkCustomer createCustomer (final Set<IBulkCustomerApplication> applications)
-    {
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setSdtCustomerId (12345L);
-        bulkCustomer.setBulkCustomerApplications (applications);
+    protected IBulkCustomer createCustomer(final Set<IBulkCustomerApplication> applications) {
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setSdtCustomerId(12345L);
+        bulkCustomer.setBulkCustomerApplications(applications);
         return bulkCustomer;
     }
 
     /**
      * create an application with a given name.
-     * 
+     *
      * @param targetApplicationCode the code for the application, MCOL etc
      * @return ITargetApplication
      */
-    protected ITargetApplication createTargetApp (final String targetApplicationCode)
-    {
-        final ITargetApplication application = new TargetApplication ();
-        application.setTargetApplicationCode (targetApplicationCode);
+    protected ITargetApplication createTargetApp(final String targetApplicationCode) {
+        final ITargetApplication application = new TargetApplication();
+        application.setTargetApplicationCode(targetApplicationCode);
         return application;
     }
 
     /**
      * the list of applications for a customer.
-     * 
+     *
      * @param applicationName the application name
      * @return the set of bulk customer applications for this customer
      */
-    protected Set<IBulkCustomerApplication> createBulkCustomerApplications (final String applicationName)
-    {
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
+    protected Set<IBulkCustomerApplication> createBulkCustomerApplications(final String applicationName) {
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
 
-        final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication ();
-        bulkCustomerApp.setCustomerApplicationId ("appId");
-        bulkCustomerApp.setTargetApplication (createTargetApp (applicationName));
-        bulkCustomerApplications.add (bulkCustomerApp);
+        final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication();
+        bulkCustomerApp.setCustomerApplicationId("appId");
+        bulkCustomerApp.setTargetApplication(createTargetApp(applicationName));
+        bulkCustomerApplications.add(bulkCustomerApp);
         return bulkCustomerApplications;
     }
 

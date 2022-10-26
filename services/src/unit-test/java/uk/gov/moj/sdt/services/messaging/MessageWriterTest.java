@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -49,16 +49,14 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Test class for testing the MessageWriter implementation.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class MessageWriterTest extends AbstractSdtUnitTestBase
-{
+public class MessageWriterTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (MessageWriterTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(MessageWriterTest.class);
 
     /**
      * JMS Template for mocking.
@@ -74,39 +72,33 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase
      * Set up the variables.
      */
     @Before
-    public void setUp ()
-    {
+    public void setUp() {
         // Nicemock returns default values
-        jmsTemplate = EasyMock.createMock (JmsTemplate.class);
-        messageWriter = new MessageWriter (jmsTemplate);
+        jmsTemplate = EasyMock.createMock(JmsTemplate.class);
+        messageWriter = new MessageWriter(jmsTemplate);
     }
 
     /**
      * Test method to test the sending of message.
-     * 
      */
     @Test
-    public void testQueueMessageWithEmptyTargetApp ()
-    {
+    public void testQueueMessageWithEmptyTargetApp() {
         // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("Test");
+        final ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("Test");
 
-        jmsTemplate.convertAndSend ("UnitTestQueue", sdtMessage);
-        EasyMock.expectLastCall ();
+        jmsTemplate.convertAndSend("UnitTestQueue", sdtMessage);
+        EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay (jmsTemplate);
+        replay(jmsTemplate);
 
         // Send the message.
-        try
-        {
-            messageWriter.queueMessage (sdtMessage, null, false);
-            Assert.fail ("Should have thrown an Illegal Argument Exception as the target app code is null.");
-        }
-        catch (final IllegalArgumentException e)
-        {
-            Assert.assertTrue ("Illegal Argument specified for the target application", true);
+        try {
+            messageWriter.queueMessage(sdtMessage, null, false);
+            Assert.fail("Should have thrown an Illegal Argument Exception as the target app code is null.");
+        } catch (final IllegalArgumentException e) {
+            Assert.assertTrue("Illegal Argument specified for the target application", true);
         }
     }
 
@@ -115,27 +107,23 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase
      * to queue name map is not valid
      */
     @Test
-    public void testQueueMessageWithInvalidTarget ()
-    {
+    public void testQueueMessageWithInvalidTarget() {
         // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("Test");
+        final ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("Test");
 
-        jmsTemplate.convertAndSend ("UnitTestQueue", sdtMessage);
-        EasyMock.expectLastCall ();
+        jmsTemplate.convertAndSend("UnitTestQueue", sdtMessage);
+        EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay (jmsTemplate);
+        replay(jmsTemplate);
 
         // Send the message.
-        try
-        {
-            messageWriter.queueMessage (sdtMessage, "UnitTest", false);
-            Assert.fail ("Should have thrown an Illegal Argument exception here as the target app code is invalid");
-        }
-        catch (final IllegalArgumentException e)
-        {
-            Assert.assertTrue ("Target application code does not have a mapped queue name", true);
+        try {
+            messageWriter.queueMessage(sdtMessage, "UnitTest", false);
+            Assert.fail("Should have thrown an Illegal Argument exception here as the target app code is invalid");
+        } catch (final IllegalArgumentException e) {
+            Assert.assertTrue("Target application code does not have a mapped queue name", true);
         }
     }
 
@@ -143,71 +131,63 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase
      * Test for a valid queue message on the MessageWriter.
      */
     @Test
-    public void testQueueMessage ()
-    {
+    public void testQueueMessage() {
         // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("Test");
+        final ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("Test");
 
-        jmsTemplate.convertAndSend ("UnitTestQueue", sdtMessage);
-        EasyMock.expectLastCall ();
+        jmsTemplate.convertAndSend("UnitTestQueue", sdtMessage);
+        EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay (jmsTemplate);
+        replay(jmsTemplate);
 
         // Send the message.
-        try
-        {
-            final Map<String, String> queueNameMap = new HashMap<String, String> ();
-            queueNameMap.put ("UNITTEST", "UnitTestQueue");
+        try {
+            final Map<String, String> queueNameMap = new HashMap<String, String>();
+            queueNameMap.put("UNITTEST", "UnitTestQueue");
 
-            messageWriter.setQueueNameMap (queueNameMap);
+            messageWriter.setQueueNameMap(queueNameMap);
 
-            messageWriter.queueMessage (sdtMessage, "UNITTEST", false);
-            Assert.assertTrue ("Success", true);
-        }
-        catch (final IllegalArgumentException e)
-        {
-            LOGGER.error ("Error", e);
-            Assert.fail ("Not Expected to fail");
+            messageWriter.queueMessage(sdtMessage, "UNITTEST", false);
+            Assert.assertTrue("Success", true);
+        } catch (final IllegalArgumentException e) {
+            LOGGER.error("Error", e);
+            Assert.fail("Not Expected to fail");
         }
 
-        EasyMock.verify (jmsTemplate);
+        EasyMock.verify(jmsTemplate);
     }
 
     /**
      * Test for a valid queue message on the MessageWriter for dead letter.
      */
     @Test
-    public void testQueueMessageForDeadLetter ()
-    {
+    public void testQueueMessageForDeadLetter() {
         // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("Test");
+        final ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("Test");
 
-        jmsTemplate.convertAndSend ("UnitTestQueue.DLQ", sdtMessage);
-        EasyMock.expectLastCall ();
+        jmsTemplate.convertAndSend("UnitTestQueue.DLQ", sdtMessage);
+        EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay (jmsTemplate);
+        replay(jmsTemplate);
 
         // Send the message.
-        try
-        {
-            final Map<String, String> queueNameMap = new HashMap<String, String> ();
-            queueNameMap.put ("UNITTEST", "UnitTestQueue");
+        try {
+            final Map<String, String> queueNameMap = new HashMap<String, String>();
+            queueNameMap.put("UNITTEST", "UnitTestQueue");
 
-            messageWriter.setQueueNameMap (queueNameMap);
+            messageWriter.setQueueNameMap(queueNameMap);
 
-            messageWriter.queueMessage (sdtMessage, "UNITTEST", true);
-            Assert.assertTrue ("Success", true);
-        }
-        catch (final IllegalArgumentException e)
-        {
-            LOGGER.error ("Error", e);
-            Assert.fail ("Not Expected to fail");
+            messageWriter.queueMessage(sdtMessage, "UNITTEST", true);
+            Assert.assertTrue("Success", true);
+        } catch (final IllegalArgumentException e) {
+            LOGGER.error("Error", e);
+            Assert.fail("Not Expected to fail");
         }
 
-        EasyMock.verify (jmsTemplate);
+        EasyMock.verify(jmsTemplate);
     }
 }

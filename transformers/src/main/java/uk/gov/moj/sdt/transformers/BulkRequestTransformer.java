@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,7 +33,7 @@ package uk.gov.moj.sdt.transformers;
 
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -54,125 +54,116 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
  * Maps bulk request JAXB object tree to domain object tree and vice versa.
- * 
+ *
  * @author d130680
- * 
  */
 public final class BulkRequestTransformer extends AbstractTransformer implements
-        ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission>
-{
+        ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> {
     /**
      * Private constructor.
      */
-    private BulkRequestTransformer ()
-    {
+    private BulkRequestTransformer() {
     }
 
     /**
      * Maps the header to a Bulk Customer object.
-     * 
+     *
      * @param headerType header type
      * @return bulk customer
      */
-    private BulkCustomer mapToBulkCustomer (final HeaderType headerType)
-    {
-        final BulkCustomer bulkCustomer = new BulkCustomer ();
+    private BulkCustomer mapToBulkCustomer(final HeaderType headerType) {
+        final BulkCustomer bulkCustomer = new BulkCustomer();
 
-        bulkCustomer.setSdtCustomerId (headerType.getSdtCustomerId ());
+        bulkCustomer.setSdtCustomerId(headerType.getSdtCustomerId());
         return bulkCustomer;
 
     }
 
     /**
      * Maps the bulk request to a list of Individual Request object.
-     * 
+     *
      * @param bulkRequestType bulk request
-     * @param bulkSubmission bulk submission
+     * @param bulkSubmission  bulk submission
      */
-    private void mapToIndividualRequests (final BulkRequestType bulkRequestType, final IBulkSubmission bulkSubmission)
-    {
+    private void mapToIndividualRequests(final BulkRequestType bulkRequestType, final IBulkSubmission bulkSubmission) {
         IndividualRequest individualRequest = null;
-        final List<RequestItemType> requests = bulkRequestType.getRequests ().getRequest ();
+        final List<RequestItemType> requests = bulkRequestType.getRequests().getRequest();
 
         // Set the individual requests
         int lineNumber = 1;
-        for (RequestItemType request : requests)
-        {
-            individualRequest = new IndividualRequest ();
+        for (RequestItemType request : requests) {
+            individualRequest = new IndividualRequest();
 
-            individualRequest.setCustomerRequestReference (request.getRequestId ());
+            individualRequest.setCustomerRequestReference(request.getRequestId());
 
-            individualRequest.setLineNumber (lineNumber++);
+            individualRequest.setLineNumber(lineNumber++);
 
-            individualRequest.setRequestStatus (IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus ());
+            individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
 
-            individualRequest.setRequestType (request.getRequestType ());
+            individualRequest.setRequestType(request.getRequestType());
 
-            individualRequest.setCreatedDate (new LocalDateTime ());
+            individualRequest.setCreatedDate(new LocalDateTime());
 
-            bulkSubmission.addIndividualRequest (individualRequest);
+            bulkSubmission.addIndividualRequest(individualRequest);
         }
     }
 
     @Override
-    public IBulkSubmission transformJaxbToDomain (final BulkRequestType bulkRequest)
-    {
-        final HeaderType headerType = bulkRequest.getHeader ();
+    public IBulkSubmission transformJaxbToDomain(final BulkRequestType bulkRequest) {
+        final HeaderType headerType = bulkRequest.getHeader();
 
         // Create target domain object.
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final ITargetApplication targetApplication = new TargetApplication ();
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final ITargetApplication targetApplication = new TargetApplication();
 
         // Set bulk submission fields from JAXB object.
-        bulkSubmission.setCustomerReference (headerType.getCustomerReference ());
-        bulkSubmission.setNumberOfRequest (headerType.getRequestCount ());
+        bulkSubmission.setCustomerReference(headerType.getCustomerReference());
+        bulkSubmission.setNumberOfRequest(headerType.getRequestCount());
 
-        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ().toUpperCase ());
+        targetApplication.setTargetApplicationCode(headerType.getTargetApplicationId().toUpperCase());
 
-        bulkSubmission.setTargetApplication (targetApplication);
-        bulkSubmission.setSubmissionStatus (IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus ());
-        bulkSubmission.setCreatedDate (new LocalDateTime ());
+        bulkSubmission.setTargetApplication(targetApplication);
+        bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus());
+        bulkSubmission.setCreatedDate(new LocalDateTime());
 
         // Set bulk customer
-        final BulkCustomer bulkCustomer = mapToBulkCustomer (headerType);
-        bulkSubmission.setBulkCustomer (bulkCustomer);
+        final BulkCustomer bulkCustomer = mapToBulkCustomer(headerType);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
 
         // Set individual requests
-        mapToIndividualRequests (bulkRequest, bulkSubmission);
+        mapToIndividualRequests(bulkRequest, bulkSubmission);
 
         return bulkSubmission;
     }
 
     @Override
-    public BulkResponseType transformDomainToJaxb (final IBulkSubmission bulkSubmission)
-    {
-        final BulkResponseType jaxb = new BulkResponseType ();
+    public BulkResponseType transformDomainToJaxb(final IBulkSubmission bulkSubmission) {
+        final BulkResponseType jaxb = new BulkResponseType();
         // Populate the generated SDT Bulk Reference in response
-        jaxb.setSdtBulkReference (bulkSubmission.getSdtBulkReference ());
-        jaxb.setCustomerReference (bulkSubmission.getCustomerReference ());
-        jaxb.setSdtService (AbstractTransformer.SDT_SERVICE);
-        jaxb.setRequestCount (bulkSubmission.getNumberOfRequest ());
+        jaxb.setSdtBulkReference(bulkSubmission.getSdtBulkReference());
+        jaxb.setCustomerReference(bulkSubmission.getCustomerReference());
+        jaxb.setSdtService(AbstractTransformer.SDT_SERVICE);
+        jaxb.setRequestCount(bulkSubmission.getNumberOfRequest());
 
         // Populate submission date in response
-        jaxb.setSubmittedDate (Utilities.convertLocalDateTimeToCalendar (bulkSubmission.getCreatedDate ()));
+        jaxb.setSubmittedDate(Utilities.convertLocalDateTimeToCalendar(bulkSubmission.getCreatedDate()));
 
         // Initialise the status to OK
-        final StatusType statusType = new StatusType ();
-        statusType.setCode (StatusCodeType.OK);
+        final StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.OK);
 
         // Set errors if any
-        if (bulkSubmission.hasError ())
-        {
-            final ErrorType errorType = new ErrorType ();
-            errorType.setCode (bulkSubmission.getErrorCode ());
-            errorType.setDescription (bulkSubmission.getErrorText ());
+        if (bulkSubmission.hasError()) {
+            final ErrorType errorType = new ErrorType();
+            errorType.setCode(bulkSubmission.getErrorCode());
+            errorType.setDescription(bulkSubmission.getErrorText());
 
-            statusType.setError (errorType);
-            statusType.setCode (StatusCodeType.ERROR);
+            statusType.setError(errorType);
+            statusType.setCode(StatusCodeType.ERROR);
 
         }
 
-        jaxb.setStatus (statusType);
+        jaxb.setStatus(statusType);
         return jaxb;
     }
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: SubmitQueryEnricherTest.java 17032 2013-09-12 15:25:50Z agarwals $
  * $LastChangedRevision: 17032 $
  * $LastChangedDate: 2013-09-12 16:25:50 +0100 (Thu, 12 Sep 2013) $
@@ -46,16 +46,14 @@ import uk.gov.moj.sdt.utils.Utilities;
 
 /**
  * Tests for {@link uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher}.
- * 
+ *
  * @author Robin Compston.
- * 
  */
-public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase
-{
+public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackEnricherTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackEnricherTest.class);
 
     /**
      * Subject for test.
@@ -66,181 +64,171 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase
      * Setup for this test.
      */
     @Before
-    public void setUp ()
-    {
+    public void setUp() {
         // Create enricher to be tested.
-        enricher = new BulkFeedbackEnricher ();
-        enricher.setInsertionTag ("responses");
-        enricher.setParentTag ("bulkFeedbackResponse");
+        enricher = new BulkFeedbackEnricher();
+        enricher.setInsertionTag("responses");
+        enricher.setParentTag("bulkFeedbackResponse");
     }
 
     /**
      * Test enrichment of single response with no error.
      */
-    @Test  
-    public void testSingleResponse ()
-    {
+    @Test
+    public void testSingleResponse() {
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B1",
+                .put("USER_REQUEST_ID_B1",
                         "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
 
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
         final String inXml =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
 
         // Call the enricher.
-        final String result = enricher.enrichXml (inXml);
+        final String result = enricher.enrichXml(inXml);
 
         // Check the enriched XML.
         final String expected =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals ("XML enriched by BulkFeedbackEnricher is not as expected:", expected, result);
+        Assert.assertEquals("XML enriched by BulkFeedbackEnricher is not as expected:", expected, result);
     }
 
     /**
      * Test enrichment of single response (with no namespaces in front of tags) with no error.
      */
-    @Test  
-    public void testSingleResponseNoNamespace ()
-    {
+    @Test
+    public void testSingleResponseNoNamespace() {
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B1",
+                .put("USER_REQUEST_ID_B1",
                         "<mcolResponseDetail><claimNumber>12345678</claimNumber><issueDate>2012-11-11</issueDate><serviceDate>2012-11-11</serviceDate><warrantNumber>12345678</warrantNumber><enforcingCourtCode>123</enforcingCourtCode><enforcingCourtName>enforcing_court_name</enforcingCourtName><fee>9999</fee></mcolResponseDetail>");
 
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
         final String inXml =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><bulkRequestStatus><customerReference>USER_FILE_REFERENCE_B1</customerReference><sdtBulkReference>MCOL_20130722_B00000001</sdtBulkReference><submittedDate>2013-07-22T13:00:00+01:00</submittedDate><sdtService>SDT Commissioning</sdtService><requestCount>16</requestCount><bulkStatus code=\"Validated\"/></bulkRequestStatus><responses><response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><responseDetail/><status code=\"Initially Accepted\"/></response></responses></bulkFeedbackResponse></soap:Body></soap:Envelope>";
 
         // Call the enricher.
-        final String result = enricher.enrichXml (inXml);
+        final String result = enricher.enrichXml(inXml);
 
         // Check the enriched XML.
         final String expected =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><bulkRequestStatus><customerReference>USER_FILE_REFERENCE_B1</customerReference><sdtBulkReference>MCOL_20130722_B00000001</sdtBulkReference><submittedDate>2013-07-22T13:00:00+01:00</submittedDate><sdtService>SDT Commissioning</sdtService><requestCount>16</requestCount><bulkStatus code=\"Validated\"/></bulkRequestStatus><responses><response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><responseDetail><mcolResponseDetail><claimNumber>12345678</claimNumber><issueDate>2012-11-11</issueDate><serviceDate>2012-11-11</serviceDate><warrantNumber>12345678</warrantNumber><enforcingCourtCode>123</enforcingCourtCode><enforcingCourtName>enforcing_court_name</enforcingCourtName><fee>9999</fee></mcolResponseDetail></responseDetail><status code=\"Initially Accepted\"/></response></responses></bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals ("XML enriched by BulkFeedbackEnricher is not as expected:", expected, result);
+        Assert.assertEquals("XML enriched by BulkFeedbackEnricher is not as expected:", expected, result);
     }
 
     /**
      * Test enrichment of single response with the position of the requestId and requestType attributes reversed.
      */
     @Test
-    public void testSingleResponseReversedAttributes ()
-    {
+    public void testSingleResponseReversedAttributes() {
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B1",
+                .put("USER_REQUEST_ID_B1",
                         "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
 
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
         final String inXml =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
 
         // Call the enricher.
-        final String result = enricher.enrichXml (inXml);
+        final String result = enricher.enrichXml(inXml);
 
         // Check the enriched XML.
         final String expected =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals (expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     /**
      * Test enrichment of multiple responses.
      */
     @Test
-    public void testMultipleResponse ()
-    {
+    public void testMultipleResponse() {
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B1",
+                .put("USER_REQUEST_ID_B1",
                         "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B2",
+                .put("USER_REQUEST_ID_B2",
                         "<fake:mcolResponseDetail><phoney:claimNumber>987654321</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
 
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
         final String inXml =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Rejected\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
 
         // Call the enricher.
-        final String result = enricher.enrichXml (inXml);
+        final String result = enricher.enrichXml(inXml);
 
         // Check the enriched XML.
         final String expected =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>987654321</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Rejected\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals (expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     /**
      * Test enrichment of XML which lacks one of the request ids in the targetApplicationRespMap.
      */
     @Test
-    public void testMissingRequestId ()
-    {
+    public void testMissingRequestId() {
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B3",
+                .put("USER_REQUEST_ID_B3",
                         "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
 
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
         final String inXml =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        try
-        {
+        try {
             // Call the enricher.
-            enricher.enrichXml (inXml);
+            enricher.enrichXml(inXml);
 
-            Assert.fail ("Failed to throw expected UnsupportedOperationException for missing request id");
-        }
-        catch (final UnsupportedOperationException e)
-        {
-            if ( !e.getMessage ().equals (
+            Assert.fail("Failed to throw expected UnsupportedOperationException for missing request id");
+        } catch (final UnsupportedOperationException e) {
+            if (!e.getMessage().equals(
                     "Failure to find matching request in outgoing bulk feedback XML for request "
-                            + "id[USER_REQUEST_ID_B3]."))
-            {
-                Assert.fail ("Failed to throw expected UnsupportedOperationException for missing request id.");
+                            + "id[USER_REQUEST_ID_B3].")) {
+                Assert.fail("Failed to throw expected UnsupportedOperationException for missing request id.");
             }
         }
     }
@@ -249,37 +237,32 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase
      * Test failure to enrich one of the requests in the outgoing XML.
      */
     @Test
-    public void testUnenrichedResponse ()
-    {
+    public void testUnenrichedResponse() {
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B1",
+                .put("USER_REQUEST_ID_B1",
                         "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
 
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
         final String inXml =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
 
-        try
-        {
+        try {
             // Call the enricher.
-            enricher.enrichXml (inXml);
+            enricher.enrichXml(inXml);
 
-            Assert.fail ("Failed to throw expected UnsupportedOperationException for incomplete enrichment.");
-        }
-        catch (final UnsupportedOperationException e)
-        {
-            if ( !e.getMessage ()
-                    .equals (
-                            "Detected unenriched response tag[<ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"] within bulk feedback response XML."))
-            {
-                Assert.fail ("Failed to throw expected UnsupportedOperationException for missing parent tag.");
+            Assert.fail("Failed to throw expected UnsupportedOperationException for incomplete enrichment.");
+        } catch (final UnsupportedOperationException e) {
+            if (!e.getMessage()
+                    .equals(
+                            "Detected unenriched response tag[<ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"] within bulk feedback response XML.")) {
+                Assert.fail("Failed to throw expected UnsupportedOperationException for missing parent tag.");
             }
         }
     }
@@ -288,72 +271,68 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase
      * Test failure to enrich one of the requests in the outgoing XML.
      */
     @Test
-    public void testUnenrichedRejectedResponse ()
-    {
+    public void testUnenrichedRejectedResponse() {
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
         targetApplicationRespMap
-                .put ("USER_REQUEST_ID_B1",
+                .put("USER_REQUEST_ID_B1",
                         "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
 
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
         final String inXml =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Rejected\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
 
-        try
-        {
+        try {
             // Call the enricher.
-            final String result = enricher.enrichXml (inXml);
+            final String result = enricher.enrichXml(inXml);
 
             // Check the enriched XML.
             final String expected =
                     "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Rejected\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
             // CHECKSTYLE:ON
 
-            Assert.assertEquals (expected, result);
-        }
-        catch (final UnsupportedOperationException e)
-        {
-            Assert.fail ("Unexpected exception thrown [" + e.getMessage () + "].");
+            Assert.assertEquals(expected, result);
+        } catch (final UnsupportedOperationException e) {
+            Assert.fail("Unexpected exception thrown [" + e.getMessage() + "].");
         }
     }
 
     /**
      * Test performance of enrichment step for very large response.
+     *
      * @throws IOException if test data file not found.
      */
-    @Test (timeout = 5000)
-    public void testLargeFeedbackResponse () throws IOException
-    {
+    @Test(timeout = 5000)
+    public void testLargeFeedbackResponse() throws IOException {
 
         // Create map to hold fake responses from MCOL.
-        final Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
-        
-        for (int i = 1; i <= 2000 ; i++) {
-            
+        final Map<String, String> targetApplicationRespMap = new HashMap<>();
+
+        for (int i = 1; i <= 2000; i++) {
+
             // CHECKSTYLE:OFF Line length is acceptable
             targetApplicationRespMap
-                    .put ("Req0-" + i,
+                    .put("Req0-" + i,
                             "<fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail>");
         }
         // Put the map in the thread local context as if it had been populated by the bulk feedback service with values
         // from the SDT database.
-        SdtContext.getContext ().setTargetApplicationRespMap (targetApplicationRespMap);
+        SdtContext.getContext().setTargetApplicationRespMap(targetApplicationRespMap);
 
         // Setup the XML to be enriched.
-        final String inXml = Utilities.getRawXml ("src/unit-test/resources/", "testLargeFeedbackResponse.xml");
+        final String inXml = Utilities.getRawXml("src/unit-test/resources/", "testLargeFeedbackResponse.xml");
 
-        LOGGER.info ("Start enrichment of " + targetApplicationRespMap.size () + " responses.");
+        LOGGER.info("Start enrichment of " + targetApplicationRespMap.size() + " responses.");
 
         // Call the enricher.
-        enricher.enrichXml (inXml);
-        
-        LOGGER.info ("End enrichment of " + targetApplicationRespMap.size () + " responses.");
+        enricher.enrichXml(inXml);
+
+        LOGGER.info("End enrichment of " + targetApplicationRespMap.size() + " responses.");
     }
 
 }

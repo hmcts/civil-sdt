@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -47,71 +47,65 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
  * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
  * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
  * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
- * 
+ *
  * @author Robin Compston
  */
-public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao
-{
+public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionDao.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
      */
-    public BulkSubmissionDao ()
-    {
-        super ();
+    public BulkSubmissionDao() {
+        super();
     }
 
     @Override
-    public IBulkSubmission getBulkSubmission (final IBulkCustomer bulkCustomer, final String customerReference,
-                                              final int dataRetention) throws DataAccessException
-    {
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
+    public IBulkSubmission getBulkSubmission(final IBulkCustomer bulkCustomer, final String customerReference,
+                                             final int dataRetention) throws DataAccessException {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
                     "customer reference[" + customerReference + "] and the data retention period[" + dataRetention +
                     "]");
         }
 
         // Create the criteria
-        final Session session = getSessionFactory ().getCurrentSession ();
-        final Criteria criteria = session.createCriteria (IBulkSubmission.class).createAlias ("bulkCustomer", "bc");
-        criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
-        criteria.add (Restrictions.eq ("customerReference", customerReference).ignoreCase ());
+        final Session session = getSessionFactory().getCurrentSession();
+        final Criteria criteria = session.createCriteria(IBulkSubmission.class).createAlias("bulkCustomer", "bc");
+        criteria.add(Restrictions.eq("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId()));
+        criteria.add(Restrictions.eq("customerReference", customerReference).ignoreCase());
 
         // Only bring back bulk submission within the data retention period
-        criteria.add (createDateRestriction ("createdDate", dataRetention));
+        criteria.add(createDateRestriction("createdDate", dataRetention));
 
-        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult ();
+        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult();
 
         return bulkSubmission;
 
     }
 
     @Override
-    public IBulkSubmission getBulkSubmissionBySdtRef (final IBulkCustomer bulkCustomer, final String sdtBulkReference,
-                                                      final int dataRetention) throws DataAccessException
-    {
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
+    public IBulkSubmission getBulkSubmissionBySdtRef(final IBulkCustomer bulkCustomer, final String sdtBulkReference,
+                                                     final int dataRetention) throws DataAccessException {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
                     "SDT bulk reference[" + sdtBulkReference + "] and the data retention period [" + dataRetention +
                     "]");
         }
 
         // Create the criteria
-        final Session session = getSessionFactory ().getCurrentSession ();
-        final Criteria criteria = session.createCriteria (IBulkSubmission.class).createAlias ("bulkCustomer", "bc");
-        criteria.add (Restrictions.eq ("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId ()));
-        criteria.add (Restrictions.eq ("sdtBulkReference", sdtBulkReference).ignoreCase ());
+        final Session session = getSessionFactory().getCurrentSession();
+        final Criteria criteria = session.createCriteria(IBulkSubmission.class).createAlias("bulkCustomer", "bc");
+        criteria.add(Restrictions.eq("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId()));
+        criteria.add(Restrictions.eq("sdtBulkReference", sdtBulkReference).ignoreCase());
 
         // Only bring back bulk submission within the data retention period
-        criteria.add (createDateRestriction ("createdDate", dataRetention));
+        criteria.add(createDateRestriction("createdDate", dataRetention));
 
-        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult ();
+        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult();
 
         return bulkSubmission;
 

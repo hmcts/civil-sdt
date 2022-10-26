@@ -6,15 +6,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
 import org.w3c.dom.Element;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 
 
 /**
  * <p>Java class for individualResponseType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="individualResponseType">
  *   &lt;complexContent>
@@ -38,14 +39,12 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "individualResponseType", propOrder = {
-    "header",
-    "targetAppDetail",
-    "status"
+        "header",
+        "targetAppDetail",
+        "status"
 })
 public class IndividualResponseType {
 
@@ -57,11 +56,9 @@ public class IndividualResponseType {
 
     /**
      * Gets the value of the header property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @return possible object is
+     * {@link HeaderType }
      */
     public HeaderType getHeader() {
         return header;
@@ -69,11 +66,9 @@ public class IndividualResponseType {
 
     /**
      * Sets the value of the header property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link HeaderType }
      */
     public void setHeader(HeaderType value) {
         this.header = value;
@@ -81,11 +76,9 @@ public class IndividualResponseType {
 
     /**
      * Gets the value of the targetAppDetail property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link IndividualResponseType.TargetAppDetail }
-     *     
+     *
+     * @return possible object is
+     * {@link IndividualResponseType.TargetAppDetail }
      */
     public IndividualResponseType.TargetAppDetail getTargetAppDetail() {
         return targetAppDetail;
@@ -93,11 +86,9 @@ public class IndividualResponseType {
 
     /**
      * Sets the value of the targetAppDetail property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link IndividualResponseType.TargetAppDetail }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link IndividualResponseType.TargetAppDetail }
      */
     public void setTargetAppDetail(IndividualResponseType.TargetAppDetail value) {
         this.targetAppDetail = value;
@@ -105,11 +96,9 @@ public class IndividualResponseType {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CreateStatusType }
-     *     
+     *
+     * @return possible object is
+     * {@link CreateStatusType }
      */
     public CreateStatusType getStatus() {
         return status;
@@ -117,11 +106,9 @@ public class IndividualResponseType {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CreateStatusType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link CreateStatusType }
      */
     public void setStatus(CreateStatusType value) {
         this.status = value;
@@ -130,9 +117,9 @@ public class IndividualResponseType {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -144,12 +131,10 @@ public class IndividualResponseType {
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "any"
+            "any"
     })
     public static class TargetAppDetail {
 
@@ -158,12 +143,10 @@ public class IndividualResponseType {
 
         /**
          * Gets the value of the any property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Object }
-         *     {@link Element }
-         *     
+         *
+         * @return possible object is
+         * {@link Object }
+         * {@link Element }
          */
         public Object getAny() {
             return any;
@@ -171,12 +154,10 @@ public class IndividualResponseType {
 
         /**
          * Sets the value of the any property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Object }
-         *     {@link Element }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link Object }
+         *              {@link Element }
          */
         public void setAny(Object value) {
             this.any = value;

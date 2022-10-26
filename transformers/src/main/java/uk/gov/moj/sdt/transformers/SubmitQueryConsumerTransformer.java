@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2010 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -47,75 +47,66 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQue
 /**
  * Maps submit query request JAXB object tree to domain object tree and vice
  * versa.
- * 
+ *
  * @author D274994
- * 
  */
 // CHECKSTYLE:OFF
 public final class SubmitQueryConsumerTransformer extends AbstractTransformer implements
-        IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
-{
+        IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> {
     // CHECKSTYLE:ON
 
     /**
      * Private constructor.
      */
-    private SubmitQueryConsumerTransformer ()
-    {
+    private SubmitQueryConsumerTransformer() {
     }
 
     /* (non-Javadoc)
-     * 
+     *
      * @see
      * uk.gov.moj.sdt.transformers.api.IConsumerTransformer#transformJaxbToDomain
      * (java.lang.Object, uk.gov.moj.sdt.domain.api.IDomainObject) */
     @Override
-    public void transformJaxbToDomain (final SubmitQueryResponseType jaxbInstance,
-                                       final ISubmitQueryRequest domainObject)
-    {
-        final StatusType status = jaxbInstance.getStatus ();
-        final StatusCodeType statusCode = status.getCode ();
-        domainObject.setResultCount (jaxbInstance.getResultCount ().intValue ());
+    public void transformJaxbToDomain(final SubmitQueryResponseType jaxbInstance,
+                                      final ISubmitQueryRequest domainObject) {
+        final StatusType status = jaxbInstance.getStatus();
+        final StatusCodeType statusCode = status.getCode();
+        domainObject.setResultCount(jaxbInstance.getResultCount().intValue());
 
-        if (StatusCodeType.OK.equals (statusCode))
-        {
-            domainObject.setStatus (StatusCodeType.OK.value ());
-        }
-        else if (StatusCodeType.ERROR.equals (statusCode))
-        {
-            final ErrorType errorType = status.getError ();
-            if (null != errorType)
-            {
-                final IErrorLog errorLog = new ErrorLog (errorType.getCode (), errorType.getDescription ());
-                domainObject.setStatus (StatusCodeType.ERROR.value ());
-                domainObject.reject (errorLog);
+        if (StatusCodeType.OK.equals(statusCode)) {
+            domainObject.setStatus(StatusCodeType.OK.value());
+        } else if (StatusCodeType.ERROR.equals(statusCode)) {
+            final ErrorType errorType = status.getError();
+            if (null != errorType) {
+                final IErrorLog errorLog = new ErrorLog(errorType.getCode(), errorType.getDescription());
+                domainObject.setStatus(StatusCodeType.ERROR.value());
+                domainObject.reject(errorLog);
             }
         }
     }
 
     /* (non-Javadoc)
-     * 
+     *
      * @see
      * uk.gov.moj.sdt.transformers.api.IConsumerTransformer#transformDomainToJaxb
      * (uk.gov.moj.sdt.domain.api.IDomainObject) */
     @Override
-    public SubmitQueryRequestType transformDomainToJaxb (final ISubmitQueryRequest domainObject)
-    {
-        final SubmitQueryRequestType jaxb = new SubmitQueryRequestType ();
-        final HeaderType header = new HeaderType ();
+    public SubmitQueryRequestType transformDomainToJaxb(final ISubmitQueryRequest domainObject) {
+        final SubmitQueryRequestType jaxb = new SubmitQueryRequestType();
+        final HeaderType header = new HeaderType();
 
         // Populate the header of the SubmitQueryRequestType.
-        header.setCriteriaType (domainObject.getCriteriaType ());
+        header.setCriteriaType(domainObject.getCriteriaType());
 
-        final ITargetApplication targetApp = domainObject.getTargetApplication ();
+        final ITargetApplication targetApp = domainObject.getTargetApplication();
         final IBulkCustomerApplication bulkCustomerApplication =
-                domainObject.getBulkCustomer ().getBulkCustomerApplication (targetApp.getTargetApplicationCode ());
+                domainObject.getBulkCustomer().getBulkCustomerApplication(targetApp.getTargetApplicationCode());
 
-        header.setTargetAppCustomerId (bulkCustomerApplication.getCustomerApplicationId ());
-        jaxb.setHeader (header);
+        header.setTargetAppCustomerId(bulkCustomerApplication.getCustomerApplicationId());
+        jaxb.setHeader(header);
 
         // Set empty target app detail so the tags needed for enrichment are written.
-        jaxb.setTargetAppDetail (new SubmitQueryRequestType.TargetAppDetail ());
+        jaxb.setTargetAppDetail(new SubmitQueryRequestType.TargetAppDetail());
 
         return jaxb;
     }

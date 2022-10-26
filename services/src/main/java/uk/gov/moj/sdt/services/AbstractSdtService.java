@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,14 +23,14 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,16 +42,14 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 
 /**
  * Abstract Sdt Service class for any common functionality between the various services.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public abstract class AbstractSdtService
-{
+public abstract class AbstractSdtService {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtService.class);
 
     /**
      * Individual Request Dao to perform operations on the individual request object.
@@ -66,114 +64,97 @@ public abstract class AbstractSdtService
     /**
      * Update the request object. This method is to be called to update the request object on
      * completion i.e. successful response is received from the target application.
-     * 
+     *
      * @param individualRequest the individual request to be marked as completed
      */
-    protected void updateCompletedRequest (final IIndividualRequest individualRequest)
-    {
+    protected void updateCompletedRequest(final IIndividualRequest individualRequest) {
         // Call the method with the populate target application response flag as true.
-        updateCompletedRequest (individualRequest, true);
+        updateCompletedRequest(individualRequest, true);
     }
 
     /**
      * Update the request object. This method is to be called to update the request object on
      * completion i.e. successful response is received from the target application.
-     * 
-     * @param individualRequest the individual request to be marked as completed
+     *
+     * @param individualRequest         the individual request to be marked as completed
      * @param populateTargetAppResponse If this is true then extract the targetAppResponse from
-     *            the raw input xml.
+     *                                  the raw input xml.
      */
-    protected void updateCompletedRequest (final IIndividualRequest individualRequest,
-                                           final boolean populateTargetAppResponse)
-    {
-        if (populateTargetAppResponse)
-        {
-            final String targetAppResponse = individualResponseXmlParser.parse ();
-            if (StringUtils.isNotBlank (targetAppResponse))
-            {
-                individualRequest.setTargetApplicationResponse (targetAppResponse);
+    protected void updateCompletedRequest(final IIndividualRequest individualRequest,
+                                          final boolean populateTargetAppResponse) {
+        if (populateTargetAppResponse) {
+            final String targetAppResponse = individualResponseXmlParser.parse();
+            if (StringUtils.isNotBlank(targetAppResponse)) {
+                individualRequest.setTargetApplicationResponse(targetAppResponse);
             }
         }
 
         // now persist the request.
-        this.getIndividualRequestDao ().persist (individualRequest);
+        this.getIndividualRequestDao().persist(individualRequest);
 
         // Check if all the individual request for the bulk submission are either ACCEPTED or REJECTED
         // If all the requests are Accepted or Rejected, mark the bulk submission as Complete.
 
-        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission ();
+        final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
         final String[] completeRequestStatus =
-                new String[] {IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus (),
-                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus ()};
+                new String[]{IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus(),
+                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus()};
 
         final long requestsCount =
-                this.getIndividualRequestDao ().queryAsCount (IIndividualRequest.class,
-                        Restrictions.eq ("sdtBulkReference", bulkSubmission.getSdtBulkReference ()),
-                        Restrictions.not (Restrictions.in ("requestStatus", completeRequestStatus)));
+                this.getIndividualRequestDao().queryAsCount(IIndividualRequest.class,
+                        Restrictions.eq("sdtBulkReference", bulkSubmission.getSdtBulkReference()),
+                        Restrictions.not(Restrictions.in("requestStatus", completeRequestStatus)));
 
-        if (requestsCount == 0)
-        {
+        if (requestsCount == 0) {
 
-            LOGGER.debug ("All individual requests for bulk submission [" + bulkSubmission.getSdtBulkReference () +
-                    "] have been processed now. Marking the bulk submission as Completed");
+            LOGGER.debug("All individual requests for bulk submission [{}] have been processed now. Marking the bulk " +
+                            "submission as Completed", bulkSubmission.getSdtBulkReference());
 
-            bulkSubmission.markAsCompleted ();
+            bulkSubmission.markAsCompleted();
 
-            this.getIndividualRequestDao ().persist (bulkSubmission);
+            this.getIndividualRequestDao().persist(bulkSubmission);
         }
     }
 
     /**
      * Fetch the individual request domain object from the database using the unique
      * Sdt request reference.
-     * 
+     *
      * @param sdtRequestReference the unique Sdt Request Reference
      * @return the individual request associated with the unique Sdt Request Reference
      */
-    protected IIndividualRequest getIndRequestBySdtReference (final String sdtRequestReference)
-    {
+    protected IIndividualRequest getIndRequestBySdtReference(final String sdtRequestReference) {
         // Look for the individual request matching this unique request reference.
-        final IIndividualRequest individualRequest =
-                this.getIndividualRequestDao ().getRequestBySdtReference (sdtRequestReference);
-
-        return individualRequest;
+        return this.getIndividualRequestDao().getRequestBySdtReference(sdtRequestReference);
 
     }
 
     /**
-     * 
      * @return the generic xml parser instance for the individual response
      */
-    public GenericXmlParser getIndividualResponseXmlParser ()
-    {
+    public GenericXmlParser getIndividualResponseXmlParser() {
         return individualResponseXmlParser;
     }
 
     /**
-     * 
      * @param individualResponseXmlParser the generic xml parser instance for the individual response
      */
-    public void setIndividualResponseXmlParser (final GenericXmlParser individualResponseXmlParser)
-    {
+    public void setIndividualResponseXmlParser(final GenericXmlParser individualResponseXmlParser) {
         this.individualResponseXmlParser = individualResponseXmlParser;
     }
 
     /**
-     * 
      * @return the individual request Dao instance
      */
-    public IIndividualRequestDao getIndividualRequestDao ()
-    {
+    public IIndividualRequestDao getIndividualRequestDao() {
         return individualRequestDao;
     }
 
     /**
-     * 
      * @param individualRequestDao the individual request dao instance.
      */
-    public void setIndividualRequestDao (final IIndividualRequestDao individualRequestDao)
-    {
+    public void setIndividualRequestDao(final IIndividualRequestDao individualRequestDao) {
         this.individualRequestDao = individualRequestDao;
     }
 }

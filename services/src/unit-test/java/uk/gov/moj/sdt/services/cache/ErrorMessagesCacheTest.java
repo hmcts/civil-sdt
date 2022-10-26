@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -46,12 +46,10 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * Test class for error messages cache.
- * 
+ *
  * @author d130680
- * 
  */
-public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase
-{
+public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
 
     /**
      * Error messages cache.
@@ -75,28 +73,26 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase
 
     /**
      * Setup mock objects and inject DAO dependencies into our class.
-     * 
      */
     @Before
-    public void setUp ()
-    {
-        cache = new ErrorMessagesCache ();
-        mockGenericDao = EasyMock.createMock (IGenericDao.class);
-        cache.setGenericDao (mockGenericDao);
-        managementMBean = new SdtManagementMBean ();
-        cache.setManagementMBean (managementMBean);
+    public void setUp() {
+        cache = new ErrorMessagesCache();
+        mockGenericDao = EasyMock.createMock(IGenericDao.class);
+        cache.setGenericDao(mockGenericDao);
+        managementMBean = new SdtManagementMBean();
+        cache.setManagementMBean(managementMBean);
 
         // Setup some results
         result = new ErrorMessage[3];
-        result[0] = new ErrorMessage ();
-        result[0].setErrorCode ("1");
-        result[0].setErrorDescription ("errorDescription 1");
-        result[1] = new ErrorMessage ();
-        result[1].setErrorCode ("2");
-        result[1].setErrorDescription ("errorDescription 2");
-        result[2] = new ErrorMessage ();
-        result[2].setErrorCode ("3");
-        result[2].setErrorDescription ("errorDescription 3");
+        result[0] = new ErrorMessage();
+        result[0].setErrorCode("1");
+        result[0].setErrorDescription("errorDescription 1");
+        result[1] = new ErrorMessage();
+        result[1].setErrorCode("2");
+        result[1].setErrorDescription("errorDescription 2");
+        result[2] = new ErrorMessage();
+        result[2].setErrorCode("3");
+        result[2].setErrorDescription("errorDescription 3");
 
     }
 
@@ -104,27 +100,26 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase
      * Test the getValue method.
      */
     @Test
-    public void testGetErrorMessage ()
-    {
+    public void testGetErrorMessage() {
 
         // Activate the mock generic dao
-        EasyMock.expect (mockGenericDao.query (IErrorMessage.class)).andReturn (result);
-        EasyMock.replay (mockGenericDao);
+        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.replay(mockGenericDao);
 
         // Get some values
-        IErrorMessage errorMessage = cache.getValue (IErrorMessage.class, "1");
-        Assert.assertEquals (errorMessage.getErrorCode (), "1");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 1");
+        IErrorMessage errorMessage = cache.getValue(IErrorMessage.class, "1");
+        Assert.assertEquals(errorMessage.getErrorCode(), "1");
+        Assert.assertEquals(errorMessage.getErrorDescription(), "errorDescription 1");
 
-        errorMessage = cache.getValue (IErrorMessage.class, "3");
-        Assert.assertEquals (errorMessage.getErrorCode (), "3");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 3");
+        errorMessage = cache.getValue(IErrorMessage.class, "3");
+        Assert.assertEquals(errorMessage.getErrorCode(), "3");
+        Assert.assertEquals(errorMessage.getErrorDescription(), "errorDescription 3");
 
-        errorMessage = cache.getValue (IErrorMessage.class, "2");
-        Assert.assertEquals (errorMessage.getErrorCode (), "2");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 2");
+        errorMessage = cache.getValue(IErrorMessage.class, "2");
+        Assert.assertEquals(errorMessage.getErrorCode(), "2");
+        Assert.assertEquals(errorMessage.getErrorDescription(), "errorDescription 2");
 
-        EasyMock.verify (mockGenericDao);
+        EasyMock.verify(mockGenericDao);
 
     }
 
@@ -132,26 +127,22 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase
      * Test key not found.
      */
     @Test
-    public void testKeyNotFound ()
-    {
+    public void testKeyNotFound() {
 
         // Activate the mock generic dao
-        EasyMock.expect (mockGenericDao.query (IErrorMessage.class)).andReturn (result);
-        EasyMock.replay (mockGenericDao);
+        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.replay(mockGenericDao);
 
         IErrorMessage errorMessage = null;
-        try
-        {
+        try {
             // Get some values
-            errorMessage = cache.getValue (IErrorMessage.class, "dont_exist");
-            fail ("IllegalException should have been thrown");
-        }
-        catch (final IllegalStateException e)
-        {
-            Assert.assertNull (errorMessage);
+            errorMessage = cache.getValue(IErrorMessage.class, "dont_exist");
+            fail("IllegalException should have been thrown");
+        } catch (final IllegalStateException e) {
+            Assert.assertNull(errorMessage);
         }
 
-        EasyMock.verify (mockGenericDao);
+        EasyMock.verify(mockGenericDao);
 
     }
 
@@ -159,23 +150,22 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase
      * Test uncache works.
      */
     @Test
-    public void testUncache ()
-    {
+    public void testUncache() {
 
         // Activate the mock generic dao
-        EasyMock.expect (mockGenericDao.query (IErrorMessage.class)).andReturn (result);
-        EasyMock.replay (mockGenericDao);
+        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.replay(mockGenericDao);
 
         // Get some values to prove the cache is not empty
-        final IErrorMessage errorMessage = cache.getValue (IErrorMessage.class, "1");
-        Assert.assertEquals (errorMessage.getErrorCode (), "1");
-        Assert.assertEquals (errorMessage.getErrorDescription (), "errorDescription 1");
+        final IErrorMessage errorMessage = cache.getValue(IErrorMessage.class, "1");
+        Assert.assertEquals(errorMessage.getErrorCode(), "1");
+        Assert.assertEquals(errorMessage.getErrorDescription(), "errorDescription 1");
 
-        cache.uncache ();
+        cache.uncache();
 
-        Assert.assertEquals (cache.getErrorMessages ().size (), 0);
+        Assert.assertEquals(cache.getErrorMessages().size(), 0);
 
-        EasyMock.verify (mockGenericDao);
+        EasyMock.verify(mockGenericDao);
 
     }
 }

@@ -8,14 +8,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter2;
 
 
 /**
  * <p>Java class for fullPaymentType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="fullPaymentType">
  *   &lt;complexContent>
@@ -27,27 +28,23 @@ import org.w3._2001.xmlschema.Adapter2;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "fullPaymentType", propOrder = {
-    "fullByDate"
+        "fullByDate"
 })
 public class FullPaymentType {
 
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "date")
     protected Calendar fullByDate;
 
     /**
      * Gets the value of the fullByDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getFullByDate() {
         return fullByDate;
@@ -55,11 +52,9 @@ public class FullPaymentType {
 
     /**
      * Sets the value of the fullByDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setFullByDate(Calendar value) {
         this.fullByDate = value;

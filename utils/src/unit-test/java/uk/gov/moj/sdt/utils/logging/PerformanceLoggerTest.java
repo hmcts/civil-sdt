@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -45,15 +45,14 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Class to test performance logging.
- * 
+ *
  * @author Robin Compston.
  */
-public class PerformanceLoggerTest extends AbstractSdtUnitTestBase
-{
+public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
     /**
      * Pathname of performance log file.
      */
-    private static final String PERFORMANCE_LOG_PATH = "../logs/sdt.performance.log";
+    private final static String PERFORMANCE_LOG_PATH = "../logs/sdt.performance.log";
 
     /**
      * File for performance log.
@@ -61,22 +60,17 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase
     private File performanceLogFile;
 
     @Override
-    protected void setUpLocalTests () throws Exception
-    {
+    protected void setUpLocalTests() throws Exception {
         // Clear performance log.
-        performanceLogFile = new File (PERFORMANCE_LOG_PATH);
-        if (performanceLogFile.exists ())
-        {
+        performanceLogFile = new File(PERFORMANCE_LOG_PATH);
+        if (performanceLogFile.exists()) {
             FileChannel outChan;
-            try
-            {
-                outChan = new FileOutputStream (performanceLogFile, true).getChannel ();
-                outChan.truncate (0);
-                outChan.close ();
-            }
-            catch (final Exception e)
-            {
-                Assert.fail (e.getStackTrace ().toString ());
+            try {
+                outChan = new FileOutputStream(performanceLogFile, true).getChannel();
+                outChan.truncate(0);
+                outChan.close();
+            } catch (final Exception e) {
+                Assert.fail(e.getStackTrace().toString());
             }
         }
 
@@ -86,44 +80,39 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase
      * Test writing of a performance message to performance log.
      */
     @Test
-    public void testPerformanceMessage ()
-    {
+    public void testPerformanceMessage() {
         // Setup SDT context for logging.
-        SdtContext.getContext ().getLoggingContext ().setLoggingFlags (Integer.MAX_VALUE);
-        SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (987);
+        SdtContext.getContext().getLoggingContext().setLoggingFlags(Integer.MAX_VALUE);
+        SdtContext.getContext().getLoggingContext().setMajorLoggingId(987);
 
         // Write message to 'performance.log'.
-        PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_1, "Hullo", " - Detail");
+        PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_1, "Hullo", " - Detail");
 
         // Validate the test.
-        this.checkLogContents ("active flags=1111111111111111, logging point=0000000000000001, "
+        this.checkLogContents("active flags=1111111111111111, logging point=0000000000000001, "
                 + "reference=987: Hullo - Detail");
     }
 
     /**
      * Check that the log has the right contents.
-     * 
+     *
      * @param contents contents to search for in the log file.
      */
-    private void checkLogContents (final String contents)
-    {
+    private void checkLogContents(final String contents) {
         // Check correct message is in log.
-        try
-        {
-            final String text = new Scanner (new File (PERFORMANCE_LOG_PATH)).useDelimiter ("\\A").next ();
+        try {
+            final String text = new Scanner(new File(PERFORMANCE_LOG_PATH)).useDelimiter("\\A").next();
 
             // Build a search pattern with this request id. Allow for any order of requestId and requestType
             // attributes.
-            final Pattern pattern = Pattern.compile (".*" + contents + ".*");
+            final Pattern pattern = Pattern.compile(".*" + contents + ".*");
 
             // Match it against the result of all previous match replacements.
-            final Matcher matcher = pattern.matcher (text);
+            final Matcher matcher = pattern.matcher(text);
 
-            Assert.assertTrue ("Failed to find message [" + contents + "] in performance log", matcher.find ());
-        }
-        catch (final Exception e)
-        {
-            Assert.fail ("Failed to find contents [" + contents + "] in performance log.");
+            Assert.assertTrue("Failed to find message [" + contents + "] in performance log", matcher.find());
+        } catch (final Exception e) {
+            Assert.fail("Failed to find contents [" + contents + "] in performance log.");
         }
     }
 }

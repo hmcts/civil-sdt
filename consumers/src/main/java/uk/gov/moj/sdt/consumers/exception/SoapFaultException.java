@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,17 +33,15 @@ package uk.gov.moj.sdt.consumers.exception;
 /**
  * SoapFaultException thrown by the Consumer when the target application
  * returns an Soap Fault after invocation of the target web service.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class SoapFaultException extends RuntimeException
-{
+public class SoapFaultException extends RuntimeException {
 
     /**
-     * 
+     *
      */
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     /**
      * Error code.
@@ -61,34 +59,31 @@ public class SoapFaultException extends RuntimeException
 
     /**
      * Constructor for non tokenised description.
-     * 
-     * @param code code for the error message
+     *
+     * @param code        code for the error message
      * @param description for the error message
      */
-    public SoapFaultException (final String code, final String description)
-    {
-        super ("The following exception occured [" + code + "] message[" + description + "]");
+    public SoapFaultException(final String code, final String description) {
+        super("The following exception occured [" + code + "] message[" + description + "]");
         this.errorCode = code;
         this.errorDescription = description;
     }
 
     /**
      * Get the error code.
-     * 
+     *
      * @return error code
      */
-    public String getErrorCode ()
-    {
+    public String getErrorCode() {
         return errorCode;
     }
 
     /**
      * Get the error description.
-     * 
+     *
      * @return error description
      */
-    public String getErrorDescription ()
-    {
+    public String getErrorDescription() {
         return errorDescription;
     }
 

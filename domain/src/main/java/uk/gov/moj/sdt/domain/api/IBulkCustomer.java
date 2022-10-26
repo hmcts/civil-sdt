@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,54 +35,52 @@ import java.util.Set;
 
 /**
  * Interface for all classes implementing {@link IBulkCustomer}.
- * 
+ *
  * @author Robin Compston.
- * 
  */
-public interface IBulkCustomer extends IDomainObject
-{
+public interface IBulkCustomer extends IDomainObject {
 
     /**
      * Get SDT customer id.
-     * 
+     *
      * @return SDT customer id
      */
-    long getSdtCustomerId ();
+    long getSdtCustomerId();
 
     /**
      * Set SDT customer id.
-     * 
+     *
      * @param sdtCustomerId SDT customer id
      */
-    void setSdtCustomerId (final long sdtCustomerId);
+    void setSdtCustomerId(final long sdtCustomerId);
 
     /**
      * Checks whether customer has access to target application.
-     * 
+     *
      * @param targetApplicationCode target application code
      * @return true or false
      */
-    boolean hasAccess (String targetApplicationCode);
+    boolean hasAccess(String targetApplicationCode);
 
     /**
      * Set the bulk customer applications.
-     * 
+     *
      * @param bulkCustomerApplications the target applications that this customer can use.
      */
-    void setBulkCustomerApplications (final Set<IBulkCustomerApplication> bulkCustomerApplications);
+    void setBulkCustomerApplications(final Set<IBulkCustomerApplication> bulkCustomerApplications);
 
     /**
      * Get the bulk customer applications.
-     * 
+     *
      * @return return bulk customer applications that this customer can work with.
      */
-    Set<IBulkCustomerApplication> getBulkCustomerApplications ();
+    Set<IBulkCustomerApplication> getBulkCustomerApplications();
 
     /**
      * Get the bulk customer applications for given target application code.
-     * 
+     *
      * @param targetApplicationCode target application code
      * @return return bulk customer application that this customer can work with.
      */
-    IBulkCustomerApplication getBulkCustomerApplication (String targetApplicationCode);
+    IBulkCustomerApplication getBulkCustomerApplication(String targetApplicationCode);
 }

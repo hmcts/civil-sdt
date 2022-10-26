@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,24 +33,22 @@ package uk.gov.moj.sdt.validators.exception.api;
 
 /**
  * Interface for business exceptions.
- * 
+ *
  * @author d130680
- * 
  */
-public interface IBusinessException
-{
+public interface IBusinessException {
 
     /**
      * Get the error code.
-     * 
+     *
      * @return error code
      */
-    String getErrorCode ();
+    String getErrorCode();
 
     /**
      * Get the error description.
-     * 
+     *
      * @return error description
      */
-    String getErrorDescription ();
+    String getErrorDescription();
 }

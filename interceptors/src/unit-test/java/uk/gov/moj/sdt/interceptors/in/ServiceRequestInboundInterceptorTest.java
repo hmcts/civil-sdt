@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -50,30 +50,26 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Test class.
- * 
+ *
  * @author d195274
- * 
  */
-public class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase
-{
+public class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (ServiceRequestInboundInterceptorTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptorTest.class);
 
     /**
      * Build a mocked dao.
-     * 
-     * @param serviceRequest
-     *            possible superfluous object.
+     *
+     * @param serviceRequest possible superfluous object.
      * @return the mocked dao.
      */
-    private GenericDao getMockedGenericDao (final ServiceRequest serviceRequest)
-    {
-        final GenericDao mockServiceRequestDao = EasyMock.createNiceMock (GenericDao.class);
-        mockServiceRequestDao.persist (serviceRequest);
-        EasyMock.expectLastCall ();
-        EasyMock.replay (mockServiceRequestDao);
+    private GenericDao getMockedGenericDao(final ServiceRequest serviceRequest) {
+        final GenericDao mockServiceRequestDao = EasyMock.createNiceMock(GenericDao.class);
+        mockServiceRequestDao.persist(serviceRequest);
+        EasyMock.expectLastCall();
+        EasyMock.replay(mockServiceRequestDao);
         return mockServiceRequestDao;
     }
 
@@ -81,24 +77,22 @@ public class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBas
      * Test that the process correctly works via mocked out extensions.
      */
     @Test
-    public void testHandleMessage ()
-    {
-        try
-        {
+    public void testHandleMessage() {
+        try {
             // Create the service request inbound interceptor.
-            final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor ();
+            final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor();
 
             // Inject dummy service request into interceptor.
-            sRII.setServiceRequestDao (getMockedGenericDao (new ServiceRequest ()));
+            sRII.setServiceRequestDao(getMockedGenericDao(new ServiceRequest()));
 
             // Setup the raw XML as if the XmlInboundInterceptor had run.
             final String xml =
-                    this.convertStreamToString (ServiceRequestInboundInterceptorTest.class
-                            .getResourceAsStream ("inRequest.xml"));
-            SdtContext.getContext ().setRawInXml (xml);
+                    this.convertStreamToString(ServiceRequestInboundInterceptorTest.class
+                            .getResourceAsStream("inRequest.xml"));
+            SdtContext.getContext().setRawInXml(xml);
 
             // Call the code to be tested.
-            sRII.handleMessage (new SoapMessage (new MessageImpl ()));
+            sRII.handleMessage(new SoapMessage(new MessageImpl()));
             // final IServiceRequest serviceRequest = sRII..getServiceRequest();
             // final Long iDField = (Long) getAccesibleField(ServiceRequest.class, "id",
             // Long.class, serviceRequest);
@@ -140,52 +134,40 @@ public class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBas
             // null == responsePayloadField);
             //
 
-        }
-        catch (final SecurityException e)
-        {
+        } catch (final SecurityException e) {
             LOGGER.error("testHandleMessage()", e);
         }
     }
 
     /**
      * Utility method to get contents from input stream.
-     * 
+     *
      * @param is input stream from which to extract contents.
      * @return contents of input stream.
      */
-    private String convertStreamToString (final InputStream is)
-    {
+    private String convertStreamToString(final InputStream is) {
         /* To convert the InputStream to String we use the BufferedReader.readLine()
          * method. We iterate until the BufferedReader return null which means
          * there's no more data to read. Each line will appended to a StringBuilder
          * and returned as String. */
-        final StringBuilder sb = new StringBuilder ();
+        final StringBuilder sb = new StringBuilder();
         String line;
 
-        try
-        {
-            final BufferedReader reader = new BufferedReader (new InputStreamReader (is, "UTF-8"));
-            while ((line = reader.readLine ()) != null)
-            {
-                sb.append (line).append ("\n");
+        try {
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
             }
-        }
-        catch (final IOException e)
-        {
-            Assert.fail (e.getLocalizedMessage ());
-        }
-        finally
-        {
-            try
-            {
-                is.close ();
-            }
-            catch (final IOException e)
-            {
+        } catch (final IOException e) {
+            Assert.fail(e.getLocalizedMessage());
+        } finally {
+            try {
+                is.close();
+            } catch (final IOException e) {
                 // Do nothing.
             }
         }
 
-        return sb.toString ();
+        return sb.toString();
     }
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -51,17 +51,15 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  * Implementation of the IMessageReader interface.
  * This class is implemented using the Spring JMS 1.1 support and is invoked by the
  * MessageListenerAdapter class that is registered with the DefaultMessageListener.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@Transactional (propagation = Propagation.REQUIRES_NEW)
-public class IndividualRequestMdb implements IMessageDrivenBean
-{
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public class IndividualRequestMdb implements IMessageDrivenBean {
     /**
      * Logger for logging messages.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (IndividualRequestMdb.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(IndividualRequestMdb.class);
 
     /**
      * Target Application Submission Service.
@@ -69,94 +67,80 @@ public class IndividualRequestMdb implements IMessageDrivenBean
     private ITargetApplicationSubmissionService targetAppSubmissionService;
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRED)
-    public void readMessage (final Message message)
-    {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void readMessage(final Message message) {
         // All expected messages are object messages written by the message writer.
-        if (message instanceof ObjectMessage)
-        {
+        if (message instanceof ObjectMessage) {
             final ObjectMessage objectMessage = (ObjectMessage) message;
             String sdtReference = null;
 
             ISdtMessage sdtMessage = null;
 
-            try
-            {
-                sdtMessage = (ISdtMessage) objectMessage.getObject ();
-                sdtReference = sdtMessage.getSdtRequestReference ();
+            try {
+                sdtMessage = (ISdtMessage) objectMessage.getObject();
+                sdtReference = sdtMessage.getSdtRequestReference();
 
                 // Update statistics.
-                SdtMetricsMBean.getMetrics ().addRequestQueueTime (sdtMessage.getMessageSentTimestamp ());
-                SdtMetricsMBean.getMetrics ().decrementRequestQueueLength ();
+                SdtMetricsMBean.getMetrics().addRequestQueueTime(sdtMessage.getMessageSentTimestamp());
+                SdtMetricsMBean.getMetrics().decrementRequestQueueLength();
 
-            }
-            catch (final JMSException e)
-            {
-                LOGGER.error (e.getMessage ());
-                throw new RuntimeException (e);
+            } catch (final JMSException e) {
+                LOGGER.error(e.getMessage());
+                throw new RuntimeException(e);
             }
 
-            LOGGER.debug ("Received message, SDT reference [" + sdtReference + "]");
+            LOGGER.debug("Received message, SDT reference [" + sdtReference + "]");
 
             // Setup logging flags from current value in SdtMetric MBean.
-            SdtContext.getContext ().getLoggingContext ()
-                    .setLoggingFlags (SdtMetricsMBean.getMetrics ().getPerformanceLoggingFlags ());
+            SdtContext.getContext().getLoggingContext()
+                    .setLoggingFlags(SdtMetricsMBean.getMetrics().getPerformanceLoggingFlags());
 
             // Assemble logging id - for dequeued messages we take the logging id of the original submit bulk thread as
             // the major portion to tie things together.
-            SdtContext.getContext ().getLoggingContext ().setMajorLoggingId (sdtMessage.getEnqueueLoggingId ());
-            SdtContext.getContext ().getLoggingContext ().setMinorLoggingId (LoggingContext.getNextLoggingId ());
+            SdtContext.getContext().getLoggingContext().setMajorLoggingId(sdtMessage.getEnqueueLoggingId());
+            SdtContext.getContext().getLoggingContext().setMinorLoggingId(LoggingContext.getNextLoggingId());
 
-            if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_6))
-            {
-                final StringBuffer detail = new StringBuffer ();
-                detail.append ("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference () + "\n");
+            if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_6)) {
+                final StringBuffer detail = new StringBuffer();
+                detail.append("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference() + "\n");
 
                 // Write message to 'performance.log' for this logging point.
-                PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_6, "Dequeue message",
-                        detail.toString ());
+                PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_6, "Dequeue message",
+                        detail.toString());
             }
 
-            try
-            {
-                this.getTargetAppSubmissionService ().processRequestToSubmit (sdtReference);
+            try {
+                this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference);
             }
             // CHECKSTYLE:OFF
-            catch (final RuntimeException e)
-            {
-                LOGGER.error ("Fatal exception encountered in " +
-                        this.getTargetAppSubmissionService ().getClass ().getSimpleName ());
+            catch (final RuntimeException e) {
+                LOGGER.error("Fatal exception encountered in " +
+                        this.getTargetAppSubmissionService().getClass().getSimpleName());
 
                 // We are about to abort the transaction; treat this message as never read and therefore reverse
                 // decrement
                 // of queue count done earlier.
-                SdtMetricsMBean.getMetrics ().upRequestQueueLength ();
+                SdtMetricsMBean.getMetrics().upRequestQueueLength();
 
                 // Rethrow it.
                 throw e;
             }
-        }
-        else
-        {
-            LOGGER.error ("Invalid message type [" + message.getClass ().getCanonicalName () + "] read by MDB.");
+        } else {
+            LOGGER.error("Invalid message type [" + message.getClass().getCanonicalName() + "] read by MDB.");
         }
     }
 
     /**
-     * 
      * @return the target application submission service.
      */
-    private ITargetApplicationSubmissionService getTargetAppSubmissionService ()
-    {
+    private ITargetApplicationSubmissionService getTargetAppSubmissionService() {
         return targetAppSubmissionService;
     }
 
     /**
-     * 
      * @param targetAppSubmissionService the target submission service
      */
-    public void setTargetAppSubmissionService (final ITargetApplicationSubmissionService targetAppSubmissionService)
-    {
+    public void setTargetAppSubmissionService(final ITargetApplicationSubmissionService targetAppSubmissionService) {
         this.targetAppSubmissionService = targetAppSubmissionService;
     }
 }

@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for submitQueryRequestType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="submitQueryRequestType">
  *   &lt;complexContent>
@@ -24,13 +24,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "submitQueryRequestType", propOrder = {
-    "header",
-    "criteria"
+        "header",
+        "criteria"
 })
 public class SubmitQueryRequestType {
 
@@ -41,11 +39,9 @@ public class SubmitQueryRequestType {
 
     /**
      * Gets the value of the header property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @return possible object is
+     * {@link HeaderType }
      */
     public HeaderType getHeader() {
         return header;
@@ -53,11 +49,9 @@ public class SubmitQueryRequestType {
 
     /**
      * Sets the value of the header property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link HeaderType }
      */
     public void setHeader(HeaderType value) {
         this.header = value;
@@ -65,11 +59,9 @@ public class SubmitQueryRequestType {
 
     /**
      * Gets the value of the criteria property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CriteriaType }
-     *     
+     *
+     * @return possible object is
+     * {@link CriteriaType }
      */
     public CriteriaType getCriteria() {
         return criteria;
@@ -77,11 +69,9 @@ public class SubmitQueryRequestType {
 
     /**
      * Sets the value of the criteria property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CriteriaType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link CriteriaType }
      */
     public void setCriteria(CriteriaType value) {
         this.criteria = value;

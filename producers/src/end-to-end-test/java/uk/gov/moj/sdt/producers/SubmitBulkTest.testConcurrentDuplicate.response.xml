@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:bulkResponse xmlns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:ns2="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema">
+<ns2:bulkResponse xmlns="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+                  xmlns:ns2="http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema">
     <status code="Ok"/>
     <ns2:customerReference>abc1223456</ns2:customerReference>
     <ns2:sdtBulkReference></ns2:sdtBulkReference>

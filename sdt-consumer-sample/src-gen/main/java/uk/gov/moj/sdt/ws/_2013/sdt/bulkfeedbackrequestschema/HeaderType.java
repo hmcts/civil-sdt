@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for headerType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="headerType">
  *   &lt;complexContent>
@@ -24,13 +24,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "headerType", propOrder = {
-    "sdtCustomerId",
-    "sdtBulkReference"
+        "sdtCustomerId",
+        "sdtBulkReference"
 })
 public class HeaderType {
 
@@ -40,7 +38,6 @@ public class HeaderType {
 
     /**
      * Gets the value of the sdtCustomerId property.
-     * 
      */
     public long getSdtCustomerId() {
         return sdtCustomerId;
@@ -48,7 +45,6 @@ public class HeaderType {
 
     /**
      * Sets the value of the sdtCustomerId property.
-     * 
      */
     public void setSdtCustomerId(long value) {
         this.sdtCustomerId = value;
@@ -56,11 +52,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the sdtBulkReference property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSdtBulkReference() {
         return sdtBulkReference;
@@ -68,11 +62,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the sdtBulkReference property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSdtBulkReference(String value) {
         this.sdtBulkReference = value;

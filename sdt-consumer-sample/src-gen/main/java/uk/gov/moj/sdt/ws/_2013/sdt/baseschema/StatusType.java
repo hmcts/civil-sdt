@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for statusType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="statusType">
  *   &lt;complexContent>
@@ -24,12 +24,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "statusType", propOrder = {
-    "error"
+        "error"
 })
 public class StatusType {
 
@@ -39,11 +37,9 @@ public class StatusType {
 
     /**
      * Gets the value of the error property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ErrorType }
-     *     
+     *
+     * @return possible object is
+     * {@link ErrorType }
      */
     public ErrorType getError() {
         return error;
@@ -51,11 +47,9 @@ public class StatusType {
 
     /**
      * Sets the value of the error property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ErrorType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ErrorType }
      */
     public void setError(ErrorType value) {
         this.error = value;
@@ -63,11 +57,9 @@ public class StatusType {
 
     /**
      * Gets the value of the code property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link StatusCodeType }
-     *     
+     *
+     * @return possible object is
+     * {@link StatusCodeType }
      */
     public StatusCodeType getCode() {
         return code;
@@ -75,11 +67,9 @@ public class StatusType {
 
     /**
      * Sets the value of the code property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusCodeType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link StatusCodeType }
      */
     public void setCode(StatusCodeType value) {
         this.code = value;

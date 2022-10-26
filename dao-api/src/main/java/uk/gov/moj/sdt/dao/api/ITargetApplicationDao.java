@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,17 +36,16 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Interface for all classes implementing {@link ITargetApplicationDao}.
- * 
+ *
  * @author d130680
  */
-public interface ITargetApplicationDao extends IGenericDao
-{
+public interface ITargetApplicationDao extends IGenericDao {
     /**
      * Get the target application matching the target application code supplied.
-     * 
+     *
      * @param targetAppCode the target application code
      * @return the target application
      * @throws DataAccessException Hibernate exception
      */
-    ITargetApplication getTargetApplicationByCode (final String targetAppCode) throws DataAccessException;
+    ITargetApplication getTargetApplicationByCode(final String targetAppCode) throws DataAccessException;
 }

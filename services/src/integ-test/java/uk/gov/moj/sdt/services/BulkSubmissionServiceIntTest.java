@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -37,7 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,12 +72,12 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
- * 
+ *
  * @author Manoj kulkarni
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
+@Slf4J
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
@@ -87,12 +88,7 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
-{
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkSubmissionServiceIntTest.class);
+public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
     /**
      * Test subject.
@@ -111,116 +107,111 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
      * Setup the test.
      */
     @Before
-    @SuppressWarnings ("unchecked")
-    public void setUp ()
-    {
-        DBUnitUtility.loadDatabase (this.getClass (), true);
+    @SuppressWarnings("unchecked")
+    public void setUp() {
+        DBUnitUtility.loadDatabase(this.getClass(), true);
 
         bulkSubmissionService =
                 (IBulkSubmissionService) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
+                        .getBean("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
 
         // Get the concurrency map so we can clear it after test.
         concurrencyMap =
                 (Map<String, IInFlightMessage>) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.validators.concurrencyMap");
+                        .getBean("uk.gov.moj.sdt.validators.concurrencyMap");
 
     }
 
     /**
      * This method tests for persistence of a single submission.
-     * 
+     *
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback (false)
-    public void testSaveSingleSubmission () throws IOException
-    {
-        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testSampleRequest.xml");
-        SdtContext.getContext ().setRawInXml (rawXml);
+    @Rollback(false)
+    public void testSaveSingleSubmission() throws IOException {
+        final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testSampleRequest.xml");
+        SdtContext.getContext().setRawInXml(rawXml);
 
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission (1);
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission(1);
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
-        SdtContext.getContext ().setServiceRequestId (new Long (10800));
+        SdtContext.getContext().setServiceRequestId(10800L);
 
         // Setup concurrency map as if validator had done it.
-        IInFlightMessage inFlightMessage = new InFlightMessage ();
-        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
-        String key = bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
-        concurrencyMap.put (key, inFlightMessage);
+        IInFlightMessage inFlightMessage = new InFlightMessage();
+        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        String key = bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
+        concurrencyMap.put(key, inFlightMessage);
 
         // Call the bulk submission service
-        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+        bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
-        clearConcurrencyMap (bulkSubmission);
+        clearConcurrencyMap(bulkSubmission);
 
-        Assert.assertNotNull (bulkSubmission.getPayload ());
+        Assert.assertNotNull(bulkSubmission.getPayload());
 
-        Assert.assertEquals (1L, bulkSubmission.getNumberOfRequest ());
+        Assert.assertEquals(1L, bulkSubmission.getNumberOfRequest());
 
-        Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+        Assert.assertNotNull(bulkSubmission.getSdtBulkReference());
 
-        Assert.assertNotNull (bulkSubmission.getServiceRequest ());
+        Assert.assertNotNull(bulkSubmission.getServiceRequest());
 
-        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        Assert.assertNotNull (individualRequests);
-        Assert.assertEquals (1, individualRequests.size ());
-        for (IIndividualRequest request : individualRequests)
-        {
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
+        Assert.assertNotNull(individualRequests);
+        Assert.assertEquals(1, individualRequests.size());
+        for (IIndividualRequest request : individualRequests) {
 
-            Assert.assertNotNull (request.getSdtBulkReference ());
-            Assert.assertNotNull (request.getSdtRequestReference ());
-            Assert.assertNotNull (request.getRequestPayload ());
+            Assert.assertNotNull(request.getSdtBulkReference());
+            Assert.assertNotNull(request.getSdtRequestReference());
+            Assert.assertNotNull(request.getRequestPayload());
         }
     }
 
     /**
      * This method tests for persistence of a submission containing multiple individual requests.
-     * 
+     *
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback (false)
-    public void testSaveMultipleSubmissions () throws IOException
-    {
-        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testLargeSampleRequest.xml");
-        SdtContext.getContext ().setRawInXml (rawXml);
+    @Rollback(false)
+    public void testSaveMultipleSubmissions() throws IOException {
+        final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testLargeSampleRequest.xml");
+        SdtContext.getContext().setRawInXml(rawXml);
 
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission (62);
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission(62);
 
-        bulkSubmission.setNumberOfRequest (62L);
+        bulkSubmission.setNumberOfRequest(62L);
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
-        SdtContext.getContext ().setServiceRequestId (new Long (10800));
+        SdtContext.getContext().setServiceRequestId(10800L));
 
         // Setup concurrency map as if validator had done it.
-        IInFlightMessage inFlightMessage = new InFlightMessage ();
-        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
-        String key = bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
-        concurrencyMap.put (key, inFlightMessage);
+        IInFlightMessage inFlightMessage = new InFlightMessage();
+        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        String key = bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
+        concurrencyMap.put(key, inFlightMessage);
 
         // Call the bulk submission service
-        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+        bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
-        clearConcurrencyMap (bulkSubmission);
+        clearConcurrencyMap(bulkSubmission);
 
-        Assert.assertNotNull (bulkSubmission.getPayload ());
+        Assert.assertNotNull(bulkSubmission.getPayload());
 
-        Assert.assertEquals (62L, bulkSubmission.getNumberOfRequest ());
+        Assert.assertEquals(62L, bulkSubmission.getNumberOfRequest());
 
-        Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+        Assert.assertNotNull(bulkSubmission.getSdtBulkReference());
 
-        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        Assert.assertNotNull (individualRequests);
-        Assert.assertEquals (62, individualRequests.size ());
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
+        Assert.assertNotNull(individualRequests);
+        Assert.assertEquals(62, individualRequests.size());
 
-        for (IIndividualRequest request : individualRequests)
-        {
+        for (IIndividualRequest request : individualRequests) {
 
-            Assert.assertNotNull (request.getSdtBulkReference ());
-            Assert.assertNotNull (request.getSdtRequestReference ());
-            Assert.assertNotNull (request.getRequestPayload ());
+            Assert.assertNotNull(request.getSdtBulkReference());
+            Assert.assertNotNull(request.getSdtRequestReference());
+            Assert.assertNotNull(request.getRequestPayload());
         }
     }
 
@@ -230,130 +221,117 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
      * customer reference. This error is simulated in the integration test by not clearing the concurrency map after the
      * first submission. This would normally be done by the handler. By leaving the map populated with the reference
      * from the first submission the service layer acts as if there are two duplicate submission in memory concurrently.
-     * 
+     *
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback (false)
-    public void testConcurrentDuplicateSubmissions () throws IOException
-    {
-        final String rawXml = Utilities.getRawXml ("src/integ-test/resources/", "testLargeSampleRequest.xml");
-        SdtContext.getContext ().setRawInXml (rawXml);
+    @Rollback(false)
+    public void testConcurrentDuplicateSubmissions() throws IOException {
+        final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testLargeSampleRequest.xml");
+        SdtContext.getContext().setRawInXml(rawXml);
 
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission (62);
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission(62);
 
-        bulkSubmission.setNumberOfRequest (62L);
+        bulkSubmission.setNumberOfRequest(62L);
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
-        SdtContext.getContext ().setServiceRequestId (new Long (10800));
+        SdtContext.getContext().setServiceRequestId(10800L);
 
         // Setup concurrency map as if validator had done it.
-        IInFlightMessage inFlightMessage = new InFlightMessage ();
-        inFlightMessage.setCompetingThreads (new HashMap<Thread, Thread> ());
-        String key = bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
-        concurrencyMap.put (key, inFlightMessage);
+        IInFlightMessage inFlightMessage = new InFlightMessage();
+        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        String key = bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
+        concurrencyMap.put(key, inFlightMessage);
 
         // Call the bulk submission service
-        bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+        bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
         // DO NOT CLEAR concurrencyMap.
 
-        Assert.assertNotNull (bulkSubmission.getPayload ());
+        Assert.assertNotNull(bulkSubmission.getPayload());
 
-        Assert.assertEquals (62L, bulkSubmission.getNumberOfRequest ());
+        Assert.assertEquals(62L, bulkSubmission.getNumberOfRequest());
 
-        Assert.assertNotNull (bulkSubmission.getSdtBulkReference ());
+        Assert.assertNotNull(bulkSubmission.getSdtBulkReference());
 
-        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests ();
-        Assert.assertNotNull (individualRequests);
-        Assert.assertEquals (62, individualRequests.size ());
+        final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
+        Assert.assertNotNull(individualRequests);
+        Assert.assertEquals(62, individualRequests.size());
 
-        for (IIndividualRequest request : individualRequests)
-        {
+        for (IIndividualRequest request : individualRequests) {
 
-            Assert.assertNotNull (request.getSdtBulkReference ());
-            Assert.assertNotNull (request.getSdtRequestReference ());
-            Assert.assertNotNull (request.getRequestPayload ());
+            Assert.assertNotNull(request.getSdtBulkReference());
+            Assert.assertNotNull(request.getSdtRequestReference());
+            Assert.assertNotNull(request.getRequestPayload());
         }
 
-        try
-        {
+        try {
             // Call the bulk submission service for second time without clearing the concurrencyMap from the first call.
-            bulkSubmissionService.saveBulkSubmission (bulkSubmission);
+            bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
-            Assert.fail ("Should have thrown exception");
-        }
-        catch (final Throwable e)
-        {
-            if ( !(e instanceof CustomerReferenceNotUniqueException) ||
-                    !e.getMessage ().matches (
+            Assert.fail("Should have thrown exception");
+        } catch (final Throwable e) {
+            if (!(e instanceof CustomerReferenceNotUniqueException) ||
+                    !e.getMessage().matches(
                             "Failed with code \\[DUP_CUST_FILEID\\]; "
                                     + "message\\[Duplicate User File Reference 10711 supplied. This was "
                                     + "previously used to submit a Bulk Request on .*? and "
-                                    + "the SDT Bulk Reference \\S*? was allocated.\\]"))
-            {
-                Assert.fail ("Unexpected exception returned\n" + e.getStackTrace ());
+                                    + "the SDT Bulk Reference \\S*? was allocated.\\]")) {
+                Assert.fail("Unexpected exception returned\n" + e.getStackTrace());
             }
         }
 
-        clearConcurrencyMap (bulkSubmission);
+        clearConcurrencyMap(bulkSubmission);
     }
 
     /**
-     * 
      * @param numberOfRequests -the number of individual requests.
      * @return Bulk Submission object for the testing.
-     * 
      */
-    private IBulkSubmission createBulkSubmission (final int numberOfRequests)
-    {
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
-        final ITargetApplication targetApp = new TargetApplication ();
+    private IBulkSubmission createBulkSubmission(final int numberOfRequests) {
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        final ITargetApplication targetApp = new TargetApplication();
 
-        targetApp.setId (1L);
-        targetApp.setTargetApplicationCode ("MCOL");
-        targetApp.setTargetApplicationName ("MCOL");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting> ();
+        targetApp.setId(1L);
+        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationName("MCOL");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
-        final IServiceRouting serviceRouting = new ServiceRouting ();
-        serviceRouting.setId (1L);
-        serviceRouting.setWebServiceEndpoint ("MCOL_END_POINT");
+        final IServiceRouting serviceRouting = new ServiceRouting();
+        serviceRouting.setId(1L);
+        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
 
-        final IServiceType serviceType = new ServiceType ();
-        serviceType.setId (1L);
-        serviceType.setName ("RequestTest1");
-        serviceType.setDescription ("RequestTestDesc1");
-        serviceType.setStatus ("RequestTestStatus");
+        final IServiceType serviceType = new ServiceType();
+        serviceType.setId(1L);
+        serviceType.setName("RequestTest1");
+        serviceType.setDescription("RequestTestDesc1");
+        serviceType.setStatus("RequestTestStatus");
 
-        serviceRouting.setServiceType (serviceType);
+        serviceRouting.setServiceType(serviceType);
 
-        serviceRoutings.add (serviceRouting);
+        serviceRoutings.add(serviceRouting);
 
-        targetApp.setServiceRoutings (serviceRoutings);
+        targetApp.setServiceRoutings(serviceRoutings);
 
-        bulkSubmission.setTargetApplication (targetApp);
+        bulkSubmission.setTargetApplication(targetApp);
 
-        bulkCustomer.setSdtCustomerId (2L);
+        bulkCustomer.setSdtCustomerId(2L);
 
-        bulkSubmission.setBulkCustomer (bulkCustomer);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
 
-        bulkSubmission.setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        bulkSubmission.setCustomerReference ("10711");
-        bulkSubmission.setNumberOfRequest (1);
+        bulkSubmission.setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        bulkSubmission.setCustomerReference("10711");
+        bulkSubmission.setNumberOfRequest(1);
 
-        bulkSubmission.setSubmissionStatus ("SUBMITTED");
+        bulkSubmission.setSubmissionStatus("SUBMITTED");
 
-        if (numberOfRequests == 1)
-        {
-            createIndividualRequest (bulkSubmission, "ICustReq123", "Received", 1);
-        }
-        else
-        {
+        if (numberOfRequests == 1) {
+            createIndividualRequest(bulkSubmission, "ICustReq123", "Received", 1);
+        } else {
             int k = 123;
-            for (int i = 0; i < 62; i++)
-            {
-                createIndividualRequest (bulkSubmission, "ICustReq" + k, "Received", i + 1);
+            for (int i = 0; i < 62; i++) {
+                createIndividualRequest(bulkSubmission, "ICustReq" + k, "Received", i + 1);
                 k++;
             }
         }
@@ -363,39 +341,37 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest
 
     /**
      * Helper method to setup a single request.
-     * 
-     * @param bulkSubmission bulk submission record.
+     *
+     * @param bulkSubmission    bulk submission record.
      * @param customerReference customer reference.
-     * @param status status.
-     * @param lineNumber record counter.
+     * @param status            status.
+     * @param lineNumber        record counter.
      * @return IndividualRequest
      */
-    private IndividualRequest createIndividualRequest (final IBulkSubmission bulkSubmission,
-                                                       final String customerReference, final String status,
-                                                       final int lineNumber)
-    {
-        final IndividualRequest individualRequest = new IndividualRequest ();
+    private IndividualRequest createIndividualRequest(final IBulkSubmission bulkSubmission,
+                                                      final String customerReference, final String status,
+                                                      final int lineNumber) {
+        final IndividualRequest individualRequest = new IndividualRequest();
         individualRequest
-                .setCreatedDate (LocalDateTime.fromDateFields (new java.util.Date (System.currentTimeMillis ())));
-        individualRequest.setCustomerRequestReference (customerReference);
-        individualRequest.setRequestStatus (status);
-        individualRequest.setLineNumber (lineNumber);
-        bulkSubmission.addIndividualRequest (individualRequest);
+                .setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        individualRequest.setCustomerRequestReference(customerReference);
+        individualRequest.setRequestStatus(status);
+        individualRequest.setLineNumber(lineNumber);
+        bulkSubmission.addIndividualRequest(individualRequest);
 
         return individualRequest;
     }
 
     /**
      * Clear out the concurrency map after the last test, else subsequent tests will fail.
-     * 
+     *
      * @param bulkSubmission bulk submission record.
      */
-    private void clearConcurrencyMap (final IBulkSubmission bulkSubmission)
-    {
+    private void clearConcurrencyMap(final IBulkSubmission bulkSubmission) {
         final String key =
-                bulkSubmission.getBulkCustomer ().getSdtCustomerId () + bulkSubmission.getCustomerReference ();
+                bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
 
         // Set concurrency map for this user and customer reference.
-        concurrencyMap.remove (key);
+        concurrencyMap.remove(key);
     }
 }

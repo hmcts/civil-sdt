@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: IWsCreateBulkRequestHandler.java 16535 2013-06-17 15:37:13Z agarwals $
  * $LastChangedRevision: 16535 $
  * $LastChangedDate: 2013-06-17 16:37:13 +0100 (Mon, 17 Jun 2013) $
@@ -36,18 +36,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
 /**
  * Interface for handling bulk request submission flow.
- * 
+ *
  * @author d276205
  */
-public interface IWsCreateBulkRequestHandler
-{
+public interface IWsCreateBulkRequestHandler {
 
     /**
      * Processes bulk request submission and returns generated response.
-     * 
+     *
      * @param bulkRequest bulk request
      * @return BulkResponseType response
      */
-    BulkResponseType submitBulk (final BulkRequestType bulkRequest);
+    BulkResponseType submitBulk(final BulkRequestType bulkRequest);
 
 }

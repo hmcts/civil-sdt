@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,65 +33,59 @@ package uk.gov.moj.sdt.domain.api;
 
 /**
  * Interface for all classes implementing {@link IErrorMessage}.
- * 
+ *
  * @author Manoj Kulkarni
  */
-public interface IErrorMessage extends IDomainObject
-{
+public interface IErrorMessage extends IDomainObject {
 
     /**
      * Get error code.
-     * 
+     *
      * @return error code
      */
-    String getErrorCode ();
+    String getErrorCode();
 
     /**
      * Set error code.
-     * 
-     * @param errorCode
-     *            error code
+     *
+     * @param errorCode error code
      */
-    void setErrorCode (final String errorCode);
+    void setErrorCode(final String errorCode);
 
     /**
      * Get error Text.
-     * 
+     *
      * @return error text
      */
-    String getErrorText ();
+    String getErrorText();
 
     /**
      * Set error Text.
-     * 
-     * @param errorText
-     *            error text
+     *
+     * @param errorText error text
      */
-    void setErrorText (final String errorText);
+    void setErrorText(final String errorText);
 
     /**
      * Get error description.
-     * 
+     *
      * @return error description
      */
-    String getErrorDescription ();
+    String getErrorDescription();
 
     /**
      * Set error description.
-     * 
-     * @param errorDescription
-     *            error description
+     *
+     * @param errorDescription error description
      */
-    void setErrorDescription (final String errorDescription);
+    void setErrorDescription(final String errorDescription);
 
     /**
      * Error code enums.
-     * 
+     *
      * @author Son Loi
-     * 
      */
-    public enum ErrorCode
-    {
+    public enum ErrorCode {
         /**
          * Internal error.
          */

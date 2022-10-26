@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,17 +34,15 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 
 /**
  * Interface for Submit Query services.
- * 
+ *
  * @author d130680
- * 
  */
-public interface ISubmitQueryService
-{
+public interface ISubmitQueryService {
 
     /**
      * Deals with a query from SDT that will be passed on to target application.
-     * 
+     *
      * @param request request going to target application.
      */
-    void submitQuery (final ISubmitQueryRequest request);
+    void submitQuery(final ISubmitQueryRequest request);
 }

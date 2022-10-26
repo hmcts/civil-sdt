@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for statusCodeType.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
@@ -19,7 +19,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "statusCodeType")
 @XmlEnum
@@ -40,7 +39,7 @@ public enum StatusCodeType {
     }
 
     public static StatusCodeType fromValue(String v) {
-        for (StatusCodeType c: StatusCodeType.values()) {
+        for (StatusCodeType c : StatusCodeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

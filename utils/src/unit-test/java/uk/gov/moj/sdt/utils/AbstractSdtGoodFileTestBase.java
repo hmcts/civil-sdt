@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -45,21 +45,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class is a base class to verify the result of a testcase by comparing the output files.
- * 
+ *
  * @author Robin Compston
  */
-public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBase
-{
+public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBase {
 
     /**
      * File separator for pathnames.
      */
-    protected static final String FILE_SEPARATOR = "/";
+    protected final static String FILE_SEPARATOR = "/";
 
     /**
      * Static logging object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (AbstractSdtGoodFileTestBase.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractSdtGoodFileTestBase.class);
 
     /**
      * Flag to say whether comparison with good file is required.
@@ -86,21 +85,22 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
     // super (testName);
     // }
     //
+
     /**
      * Compares the contents two named text files and returns true if they are exatcly the same. Note - Any data not
      * required to be compared, e.g. run dates and timing information etc. should be placed outside of the "test
      * section" ie. either before the message "TESTS STARTED" or after the message "TESTS COMPLETED" otherwise the files
      * will not match.
-     * 
-     * @param outFilePath Name of output file.
-     * @param goodFilePath Name of good file.
+     *
+     * @param outFilePath   Name of output file.
+     * @param goodFilePath  Name of good file.
      * @param useDelimiters Whether to only do comparison within scope of start and complete markers.
      * @return true - files match, false - files do not match.
      * @noinspection ResultOfMethodCallIgnored
      */
     // CHECKSTYLE:OFF Complexity is acceptable
-    protected boolean compareTestOutputFiles (final String outFilePath, final String goodFilePath,
-                                              final boolean useDelimiters)
+    protected boolean compareTestOutputFiles(final String outFilePath, final String goodFilePath,
+                                             final boolean useDelimiters)
     // CHECKSTYLE:ON
     {
         boolean filesMatch = false;
@@ -108,72 +108,61 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
         BufferedReader outFileBuf;
         BufferedReader goodFileBuf;
 
-        if (outFilePath != null && goodFilePath != null)
-        {
-            try
-            {
-                final File outFile = new File (outFilePath);
-                final File goodFile = new File (goodFilePath);
+        if (outFilePath != null && goodFilePath != null) {
+            try {
+                final File outFile = new File(outFilePath);
+                final File goodFile = new File(goodFilePath);
 
                 // Check we have an output file.
-                if ( !outFile.exists ())
-                {
+                if (!outFile.exists()) {
                     AbstractSdtGoodFileTestBase.LOGGER
-                            .error ("** ERROR - Unable to find the output file for this test (" +
-                                    outFile.getAbsolutePath () + ")");
-                    throw new IOException ("** ERROR - Unable to find the output file from the script (" +
-                            outFile.getAbsolutePath () + ")");
+                            .error("** ERROR - Unable to find the output file for this test (" +
+                                    outFile.getAbsolutePath() + ")");
+                    throw new IOException("** ERROR - Unable to find the output file from the script (" +
+                            outFile.getAbsolutePath() + ")");
                 }
 
                 // Check we have a good file.
-                if ( !goodFile.exists ())
-                {
+                if (!goodFile.exists()) {
                     AbstractSdtGoodFileTestBase.LOGGER
-                            .error ("** ERROR - Unable to find the good file for this test (" +
-                                    goodFile.getAbsolutePath () + ")");
-                    throw new IOException ("** ERROR - Unable to find the good file for the script (" +
-                            goodFile.getAbsolutePath () + ")");
+                            .error("** ERROR - Unable to find the good file for this test (" +
+                                    goodFile.getAbsolutePath() + ")");
+                    throw new IOException("** ERROR - Unable to find the good file for the script (" +
+                            goodFile.getAbsolutePath() + ")");
                 }
 
-                outFileBuf = new BufferedReader (new FileReader (outFile));
-                goodFileBuf = new BufferedReader (new FileReader (goodFile));
+                outFileBuf = new BufferedReader(new FileReader(outFile));
+                goodFileBuf = new BufferedReader(new FileReader(goodFile));
                 String outStr = null;
                 String goodStr = null;
-                final List<String> outList = new ArrayList<String> (500);
-                final List<String> goodList = new ArrayList<String> (500);
+                final List<String> outList = new ArrayList<>(500);
+                final List<String> goodList = new ArrayList<>(500);
 
                 boolean outTestStarted = false;
                 boolean goodTestStarted = false;
 
                 // Are we expecting delimiters in the comparison files?
-                if (useDelimiters)
-                {
+                if (useDelimiters) {
                     // Read to the start of the test section in both files
                     // Anything before this is not considered for comparison
-                    outStr = outFileBuf.readLine ();
-                    while (outStr != null && outStr.indexOf (this.getTestStartString ()) < 0)
-                    {
-                        outStr = outFileBuf.readLine ();
+                    outStr = outFileBuf.readLine();
+                    while (outStr != null && outStr.indexOf(this.getTestStartString()) < 0) {
+                        outStr = outFileBuf.readLine();
                     }
 
-                    if (outStr != null && outStr.indexOf (this.getTestStartString ()) >= 0)
-                    {
+                    if (outStr != null && outStr.indexOf(this.getTestStartString()) >= 0) {
                         outTestStarted = true;
                     }
 
-                    goodStr = goodFileBuf.readLine ();
-                    while (goodStr != null && goodStr.indexOf (this.getTestStartString ()) < 0)
-                    {
-                        goodStr = goodFileBuf.readLine ();
+                    goodStr = goodFileBuf.readLine();
+                    while (goodStr != null && goodStr.indexOf(this.getTestStartString()) < 0) {
+                        goodStr = goodFileBuf.readLine();
                     }
 
-                    if (goodStr != null && goodStr.indexOf (this.getTestStartString ()) >= 0)
-                    {
+                    if (goodStr != null && goodStr.indexOf(this.getTestStartString()) >= 0) {
                         goodTestStarted = true;
                     }
-                }
-                else
-                {
+                } else {
                     outTestStarted = true;
                     goodTestStarted = true;
                 }
@@ -181,66 +170,50 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                 boolean completed1 = false;
 
                 // If out file found a 'test started' message ...
-                if (outTestStarted)
-                {
+                if (outTestStarted) {
                     // Read thru out files until EOF or 'test completed' message.
                     // outStr = outFileBuf.readLine();
-                    if (useDelimiters)
-                    {
-                        outStr = outStr.substring (outStr.indexOf (this.getTestStartString ()));
+                    if (useDelimiters) {
+                        outStr = outStr.substring(outStr.indexOf(this.getTestStartString()));
+                    } else {
+                        outStr = outFileBuf.readLine();
                     }
-                    else
-                    {
-                        outStr = outFileBuf.readLine ();
-                    }
-                    while ( !completed1 && outStr != null)
-                    {
-                        if (this.includeLine (outStr))
-                        {
-                            outList.add (this.dos2Unix (outStr));
+                    while (!completed1 && outStr != null) {
+                        if (this.includeLine(outStr)) {
+                            outList.add(this.dos2Unix(outStr));
                         }
                         // Look for 'test completed' message inside out file.
-                        if (useDelimiters && outStr.indexOf (this.getTestCompletedString ()) >= 0)
-                        {
+                        if (useDelimiters && outStr.indexOf(this.getTestCompletedString()) >= 0) {
                             completed1 = true;
                         }
-                        outStr = outFileBuf.readLine ();
+                        outStr = outFileBuf.readLine();
                     }
                 }
 
                 boolean completed2 = false;
 
                 // If good file found a 'test started' message ...
-                if (goodTestStarted)
-                {
+                if (goodTestStarted) {
                     // Read thru good files until EOF or 'test completed' message.
                     // goodStr = goodFileBuf.readLine();
-                    if (useDelimiters)
-                    {
-                        goodStr = goodStr.substring (goodStr.indexOf (this.getTestStartString ()));
+                    if (useDelimiters) {
+                        goodStr = goodStr.substring(goodStr.indexOf(this.getTestStartString()));
+                    } else {
+                        goodStr = goodFileBuf.readLine();
                     }
-                    else
-                    {
-                        goodStr = goodFileBuf.readLine ();
-                    }
-                    while ( !completed2 && goodStr != null)
-                    {
-                        if (this.includeLine (goodStr))
-                        {
-                            goodList.add (this.dos2Unix (goodStr));
-                        }
-                        else
-                        {
+                    while (!completed2 && goodStr != null) {
+                        if (this.includeLine(goodStr)) {
+                            goodList.add(this.dos2Unix(goodStr));
+                        } else {
                             // remove the associated line from the outFile List
-                            outList.remove (goodList.size ());
+                            outList.remove(goodList.size());
                         }
 
                         // Look for 'test completed' message inside good file.
-                        if (useDelimiters && goodStr.indexOf (this.getTestCompletedString ()) >= 0)
-                        {
+                        if (useDelimiters && goodStr.indexOf(this.getTestCompletedString()) >= 0) {
                             completed2 = true;
                         }
-                        goodStr = goodFileBuf.readLine ();
+                        goodStr = goodFileBuf.readLine();
                     }
                 }
 
@@ -249,28 +222,26 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
 
                 // Sort both list to cater for ordering differences in the data
                 // returned from the db.
-                final Iterator<String> outIter = outList.iterator ();
-                final Iterator<String> goodIter = goodList.iterator ();
+                final Iterator<String> outIter = outList.iterator();
+                final Iterator<String> goodIter = goodList.iterator();
 
                 this.badLine = "";
                 int line = 0;
 
                 // Check both lists match, stop processing if a difference is
                 // encountered.
-                while (outIter.hasNext () && goodIter.hasNext () && !foundDifference)
-                {
+                while (outIter.hasNext() && goodIter.hasNext() && !foundDifference) {
                     line++;
-                    outStr = (String) outIter.next ();
-                    outStr = outStr.replaceAll (" />", "/>").trim ();
-                    goodStr = (String) goodIter.next ();
-                    goodStr = goodStr.replaceAll (" />", "/>").trim ();
+                    outStr = outIter.next();
+                    outStr = outStr.replaceAll(" />", "/>").trim();
+                    goodStr = goodIter.next();
+                    goodStr = goodStr.replaceAll(" />", "/>").trim();
 
                     // Compare each sorted record.
-                    if (outStr.compareTo (goodStr) != 0)
-                    {
+                    if (outStr.compareTo(goodStr) != 0) {
                         foundDifference = true;
                         AbstractSdtGoodFileTestBase.LOGGER
-                                .error ("Differences detected between latest out file and 'good' file");
+                                .error("Differences detected between latest out file and 'good' file");
 
                         // Output the line with the difference and the expected line to the console for review
                         this.badLine =
@@ -279,41 +250,34 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                     }
                 }
 
-                outFileBuf.close ();
-                goodFileBuf.close ();
+                outFileBuf.close();
+                goodFileBuf.close();
 
                 // Match if all lines within test zone compare.
-                if ( !foundDifference && testsCompleted)
-                {
+                if (!foundDifference && testsCompleted) {
                     filesMatch = true;
 
                     // Remove the out file if files match.
-                    outFile.delete ();
+                    outFile.delete();
                 }
-            }
-            catch (final IOException e)
-            {
-                AbstractSdtGoodFileTestBase.LOGGER.error ("Exception thrown : ", e);
+            } catch (final IOException e) {
+                AbstractSdtGoodFileTestBase.LOGGER.error("Exception thrown : ", e);
                 filesMatch = false;
             }
         }
 
-        if ( !filesMatch)
-        {
-            if (useDelimiters)
-            {
-                AbstractSdtGoodFileTestBase.LOGGER.info ("** Check the block of text between the (" +
-                        this.getTestStartString () + ") and (" + this.getTestCompletedString () + ") messages.");
-                AbstractSdtGoodFileTestBase.LOGGER.info ("** All other text before and after this block is "
+        if (!filesMatch) {
+            if (useDelimiters) {
+                AbstractSdtGoodFileTestBase.LOGGER.info("** Check the block of text between the (" +
+                        this.getTestStartString() + ") and (" + this.getTestCompletedString() + ") messages.");
+                AbstractSdtGoodFileTestBase.LOGGER.info("** All other text before and after this block is "
                         + "ignored for comparison purposes.");
             }
 
-            Assert.fail ("Comparison failure between out file [" + outFilePath + "] and good file [" + goodFilePath +
+            Assert.fail("Comparison failure between out file [" + outFilePath + "] and good file [" + goodFilePath +
                     "].\nFirst mismatch: \n" + this.badLine);
-        }
-        else
-        {
-            AbstractSdtGoodFileTestBase.LOGGER.info ("Output file matches the reference comparison file - " +
+        } else {
+            AbstractSdtGoodFileTestBase.LOGGER.info("Output file matches the reference comparison file - " +
                     goodFilePath);
         }
 
@@ -322,23 +286,23 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
 
     /**
      * Do test type specific checks to see if this line is a valid line in include in comparison with good file.
-     * 
+     *
      * @param line the line to be checked for inclusion.
      * @return true - include line, false - do not include line.
      */
-    protected abstract boolean includeLine (String line);
+    protected abstract boolean includeLine(String line);
 
     /**
      * Get the start message from the output file.
-     * 
+     *
      * @return Return the start string.
      */
-    public abstract String getTestStartString ();
+    public abstract String getTestStartString();
 
     /**
      * Get the completed message from the output file.
-     * 
+     *
      * @return Return the completed string.
      */
-    public abstract String getTestCompletedString ();
+    public abstract String getTestCompletedString();
 }

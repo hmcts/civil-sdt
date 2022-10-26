@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: SubmitQueryEnricherTest.java 17032 2013-09-12 15:25:50Z agarwals $
  * $LastChangedRevision: 17032 $
  * $LastChangedDate: 2013-09-12 16:25:50 +0100 (Thu, 12 Sep 2013) $
@@ -56,17 +56,15 @@ import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
 /**
  * Tests for {@link BulkCustomerValidatorTest}.
- * 
+ *
  * @author d120520
- * 
  */
 
-public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
-{
+public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkFeedbackRequestValidatorTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackRequestValidatorTest.class);
 
     /**
      * Subject for test.
@@ -75,19 +73,16 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
 
     /**
      * The IBulkFeedbackRequest.
-     * 
      */
     private IBulkFeedbackRequest bulkFeedbackRequest;
 
     /**
      * The Dao.
-     * 
      */
     private IBulkSubmission bulkSubmission;
 
     /**
      * The Dao.
-     * 
      */
     private IBulkSubmissionDao mockIBulkSubmissionDao;
 
@@ -129,49 +124,48 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
     /**
      * Setup of the Validator and Domain class instance.
      */
-    public void setUpLocalTests ()
-    {
+    public void setUpLocalTests() {
 
-        validator = new BulkFeedbackRequestValidator ();
+        validator = new BulkFeedbackRequestValidator();
 
         // Create mocks needed for this test.
-        mockIBulkSubmissionDao = EasyMock.createMock (IBulkSubmissionDao.class);
+        mockIBulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
 
         // create a bulk customer
-        bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setSdtCustomerId (12345L);
+        bulkCustomer = new BulkCustomer();
+        bulkCustomer.setSdtCustomerId(12345L);
 
-        bulkSubmission = new BulkSubmission ();
-        bulkSubmission.setBulkCustomer (bulkCustomer);
-        bulkSubmission.setSdtBulkReference (reference);
+        bulkSubmission = new BulkSubmission();
+        bulkSubmission.setBulkCustomer(bulkCustomer);
+        bulkSubmission.setSdtBulkReference(reference);
 
-        bulkFeedbackRequest = new BulkFeedbackRequest ();
+        bulkFeedbackRequest = new BulkFeedbackRequest();
 
         // Setup bulk request for test.
-        bulkFeedbackRequest.setId (requestId);
-        bulkFeedbackRequest.setSdtBulkReference (reference);
-        bulkFeedbackRequest.setBulkCustomer (bulkCustomer);
+        bulkFeedbackRequest.setId(requestId);
+        bulkFeedbackRequest.setSdtBulkReference(reference);
+        bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
 
         // Set up Error messages cache
-        errorMessage = new ErrorMessage ();
-        errorMessage.setErrorCode (IErrorMessage.ErrorCode.BULK_REF_INVALID.name ());
-        errorMessage.setErrorText ("There is no Bulk Request submission associated with your account for "
+        errorMessage = new ErrorMessage();
+        errorMessage.setErrorCode(IErrorMessage.ErrorCode.BULK_REF_INVALID.name());
+        errorMessage.setErrorText("There is no Bulk Request submission associated with your account for "
                 + "the supplied SDT Bulk Reference {0}.");
-        errorMessagesCache = EasyMock.createMock (ICacheable.class);
-        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.BULK_REF_INVALID.name ()))
-                .andReturn (errorMessage);
-        replay (errorMessagesCache);
-        validator.setErrorMessagesCache (errorMessagesCache);
+        errorMessagesCache = EasyMock.createMock(ICacheable.class);
+        expect(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.BULK_REF_INVALID.name()))
+                .andReturn(errorMessage);
+        replay(errorMessagesCache);
+        validator.setErrorMessagesCache(errorMessagesCache);
 
-        final IGlobalParameter globalParameterData = new GlobalParameter ();
-        globalParameterData.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
-        globalParameterData.setValue ("90");
-        globalParameterCache = EasyMock.createMock (ICacheable.class);
-        expect (
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameterData);
-        replay (globalParameterCache);
-        validator.setGlobalParameterCache (globalParameterCache);
+        final IGlobalParameter globalParameterData = new GlobalParameter();
+        globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
+        globalParameterData.setValue("90");
+        globalParameterCache = EasyMock.createMock(ICacheable.class);
+        expect(
+                globalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameterData);
+        replay(globalParameterCache);
+        validator.setGlobalParameterCache(globalParameterCache);
 
         dataRetentionPeriod = 90;
     }
@@ -180,19 +174,18 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
      * Test success flow.
      */
     @Test
-    public void testBulkReferenceFound ()
-    {
+    public void testBulkReferenceFound() {
         // Tell the mock dao to return this request
-        expect (mockIBulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, reference, dataRetentionPeriod))
-                .andReturn (bulkSubmission);
-        replay (mockIBulkSubmissionDao);
+        expect(mockIBulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod))
+                .andReturn(bulkSubmission);
+        replay(mockIBulkSubmissionDao);
 
         // Inject the mock dao into the validator.
-        validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
+        validator.setBulkSubmissionDao(mockIBulkSubmissionDao);
 
         // Validate the bulk customer.
-        bulkFeedbackRequest.accept (validator, null);
-        EasyMock.verify (mockIBulkSubmissionDao);
+        bulkFeedbackRequest.accept(validator, null);
+        EasyMock.verify(mockIBulkSubmissionDao);
 
     }
 
@@ -200,30 +193,26 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest
      * Test success flow.
      */
     @Test
-    public void testBulkReferenceNotFound ()
-    {
+    public void testBulkReferenceNotFound() {
 
         // Tell the mock dao to return this request
-        expect (mockIBulkSubmissionDao.getBulkSubmissionBySdtRef (bulkCustomer, reference, dataRetentionPeriod))
-                .andReturn (null);
-        replay (mockIBulkSubmissionDao);
+        expect(mockIBulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod))
+                .andReturn(null);
+        replay(mockIBulkSubmissionDao);
 
         // Inject the mock dao into the validator.
-        validator.setBulkSubmissionDao (mockIBulkSubmissionDao);
+        validator.setBulkSubmissionDao(mockIBulkSubmissionDao);
 
-        try
-        {
+        try {
             // Validate the request
-            bulkFeedbackRequest.accept (validator, null);
-            EasyMock.verify (mockIBulkSubmissionDao);
-            Assert.fail ("Failed to throw expected InvalidBulkReferenceException");
+            bulkFeedbackRequest.accept(validator, null);
+            EasyMock.verify(mockIBulkSubmissionDao);
+            Assert.fail("Failed to throw expected InvalidBulkReferenceException");
 
-        }
-        catch (final InvalidBulkReferenceException e)
-        {
-            LOGGER.debug (e.getMessage ());
+        } catch (final InvalidBulkReferenceException e) {
+            LOGGER.debug(e.getMessage());
 
-            Assert.assertTrue (true);
+            Assert.assertTrue(true);
         }
 
     }

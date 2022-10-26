@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -31,133 +31,115 @@
 
 package uk.gov.moj.sdt.domain.type;
 
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.usertype.UserType;
+
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.usertype.UserType;
-
 /**
  * Mapping type for mapping sql BLOB type to user defined type for Hibernate.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class BlobType implements UserType
-{
+public class BlobType implements UserType {
 
     @Override
-    public int[] sqlTypes ()
-    {
-        return new int[] {Types.BLOB};
+    public int[] sqlTypes() {
+        return new int[]{Types.BLOB};
     }
 
     /**
      * Returns the class that this Blob is converted to.
-     * 
+     *
      * @return class
      */
     @Override
-    @SuppressWarnings ("rawtypes")
-    public Class returnedClass ()
-    {
+    @SuppressWarnings("rawtypes")
+    public Class returnedClass() {
         return String.class;
     }
 
     @Override
-    public boolean equals (final Object x, final Object y) throws HibernateException
-    {
-        if (x == null && y == null)
-        {
+    public boolean equals(final Object x, final Object y) throws HibernateException {
+        if (x == null && y == null) {
             return true;
         }
 
-        if (x == null || y == null)
-        {
+        if (x == null || y == null) {
             return false;
         }
 
-        if ( !(x instanceof String) || !(y instanceof String))
-        {
+        if (!(x instanceof String) || !(y instanceof String)) {
             return false;
         }
 
-        return ((String) x).equals (y);
+        return ((String) x).equals(y);
     }
 
     @Override
-    public int hashCode (final Object x) throws HibernateException
-    {
-        return x.hashCode ();
+    public int hashCode(final Object x) throws HibernateException {
+        return x.hashCode();
     }
 
     @Override
-    public Object nullSafeGet (final ResultSet rs, final String[] names, final SessionImplementor session,
-                               final Object owner) throws HibernateException, SQLException
-    {
+    public Object nullSafeGet(final ResultSet rs, final String[] names,
+                              final SharedSessionContractImplementor sharedSessionContractImplementor, Object o)
+            throws HibernateException, SQLException {
         // First we get the byte array
-        final byte[] byteStream = rs.getBytes (names[0]);
-        if (byteStream == null)
-        {
+        final byte[] byteStream = rs.getBytes(names[0]);
+        if (byteStream == null) {
             return null;
         }
-        return new String (byteStream);
+        return new String(byteStream);
     }
 
     @Override
-    public void nullSafeSet (final PreparedStatement st, final Object value, final int index,
-                             final SessionImplementor session) throws HibernateException, SQLException
-    {
-        final Object val = value == null ? new String () : value;
+    public void nullSafeSet(final PreparedStatement st, final Object value, final int index,
+                            final SharedSessionContractImplementor sharedSessionContractImplementor)
+            throws HibernateException, SQLException {
+        final Object val = value == null ? "" : value;
         final String inValue = (String) val;
-        st.setBytes (index, inValue.getBytes ());
+        st.setBytes(index, inValue.getBytes());
     }
 
     @Override
-    public Object deepCopy (final Object value) throws HibernateException
-    {
-        if (value == null)
-        {
+    public Object deepCopy(final Object value) throws HibernateException {
+        if (value == null) {
             return null;
         }
         final String in = (String) value;
-        final int len = in.length ();
+        final int len = in.length();
         final char[] buf = new char[len];
 
-        for (int i = 0; i < len; i++)
-        {
-            buf[i] = in.charAt (i);
+        for (int i = 0; i < len; i++) {
+            buf[i] = in.charAt(i);
         }
-        return new String (buf);
-
+        return new String(buf);
     }
 
     @Override
-    public boolean isMutable ()
-    {
+    public boolean isMutable() {
         return false;
     }
 
     @Override
-    public Serializable disassemble (final Object value) throws HibernateException
-    {
+    public Serializable disassemble(final Object value) throws HibernateException {
         return (String) value;
     }
 
     @Override
-    public Object assemble (final Serializable cached, final Object owner) throws HibernateException
-    {
-        return this.deepCopy (cached);
+    public Object assemble(final Serializable cached, final Object owner) throws HibernateException {
+        return this.deepCopy(cached);
     }
 
     @Override
-    public Object replace (final Object original, final Object target, final Object owner) throws HibernateException
-    {
-        return this.deepCopy (original);
+    public Object replace(final Object original, final Object target, final Object owner) throws HibernateException {
+        return this.deepCopy(original);
     }
 
 }

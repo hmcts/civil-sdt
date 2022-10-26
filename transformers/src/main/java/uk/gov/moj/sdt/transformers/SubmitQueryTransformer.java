@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -49,70 +49,64 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 
 /**
  * Maps bulk request JAXB object tree to domain object tree and vice versa.
- * 
+ *
  * @author d130680
- * 
  */
 public final class SubmitQueryTransformer extends AbstractTransformer implements
-        ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest>
-{
+        ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> {
     /**
      * Private constructor.
      */
-    private SubmitQueryTransformer ()
-    {
+    private SubmitQueryTransformer() {
     }
 
     @Override
-    public ISubmitQueryRequest transformJaxbToDomain (final SubmitQueryRequestType submitQueryRequestType)
-    {
-        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest ();
-        final HeaderType headerType = submitQueryRequestType.getHeader ();
+    public ISubmitQueryRequest transformJaxbToDomain(final SubmitQueryRequestType submitQueryRequestType) {
+        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+        final HeaderType headerType = submitQueryRequestType.getHeader();
 
         // Map customer
-        submitQueryRequest.setBulkCustomer (mapToBulkCustomer (headerType));
+        submitQueryRequest.setBulkCustomer(mapToBulkCustomer(headerType));
 
         // Map the target application
-        final TargetApplication targetApplication = new TargetApplication ();
-        targetApplication.setTargetApplicationCode (headerType.getTargetApplicationId ());
-        submitQueryRequest.setTargetApplication (targetApplication);
+        final TargetApplication targetApplication = new TargetApplication();
+        targetApplication.setTargetApplicationCode(headerType.getTargetApplicationId());
+        submitQueryRequest.setTargetApplication(targetApplication);
 
         // Get the criteria type
-        submitQueryRequest.setCriteriaType (this.getCriterion (submitQueryRequestType.getCriteria ()));
+        submitQueryRequest.setCriteriaType(this.getCriterion(submitQueryRequestType.getCriteria()));
 
         // Get the query reference type
-        submitQueryRequest.setQueryReference (headerType.getQueryReference ());
+        submitQueryRequest.setQueryReference(headerType.getQueryReference());
 
         return submitQueryRequest;
     }
 
     @Override
-    public SubmitQueryResponseType transformDomainToJaxb (final ISubmitQueryRequest submitQueryRequest)
-    {
-        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType ();
+    public SubmitQueryResponseType transformDomainToJaxb(final ISubmitQueryRequest submitQueryRequest) {
+        final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
 
         // Maps some values.
-        submitQueryResponseType.setSdtCustomerId (submitQueryRequest.getBulkCustomer ().getSdtCustomerId ());
-        submitQueryResponseType.setResultCount (BigInteger.valueOf (submitQueryRequest.getResultCount ()));
+        submitQueryResponseType.setSdtCustomerId(submitQueryRequest.getBulkCustomer().getSdtCustomerId());
+        submitQueryResponseType.setResultCount(BigInteger.valueOf(submitQueryRequest.getResultCount()));
 
         // Set dummy results so the tags we need are written.
-        final ResultsType resultsType = new ResultsType ();
-        submitQueryResponseType.setResults (resultsType);
+        final ResultsType resultsType = new ResultsType();
+        submitQueryResponseType.setResults(resultsType);
 
-        submitQueryResponseType.setSdtService (AbstractTransformer.SDT_SERVICE);
+        submitQueryResponseType.setSdtService(AbstractTransformer.SDT_SERVICE);
 
         // Set the status
-        final StatusType status = new StatusType ();
-        submitQueryResponseType.setStatus (status);
-        status.setCode (StatusCodeType.OK);
+        final StatusType status = new StatusType();
+        submitQueryResponseType.setStatus(status);
+        status.setCode(StatusCodeType.OK);
 
-        if (submitQueryRequest.hasError ())
-        {
-            status.setCode (StatusCodeType.ERROR);
-            final ErrorType errorType = new ErrorType ();
-            errorType.setCode (submitQueryRequest.getErrorLog ().getErrorCode ());
-            errorType.setDescription (submitQueryRequest.getErrorLog ().getErrorText ());
-            status.setError (errorType);
+        if (submitQueryRequest.hasError()) {
+            status.setCode(StatusCodeType.ERROR);
+            final ErrorType errorType = new ErrorType();
+            errorType.setCode(submitQueryRequest.getErrorLog().getErrorCode());
+            errorType.setDescription(submitQueryRequest.getErrorLog().getErrorText());
+            status.setError(errorType);
         }
 
         return submitQueryResponseType;
@@ -120,31 +114,28 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
 
     /**
      * Maps the header to a Bulk Customer object.
-     * 
+     *
      * @param headerType header type
      * @return bulk customer
      */
-    private BulkCustomer mapToBulkCustomer (final HeaderType headerType)
-    {
-        final BulkCustomer bulkCustomer = new BulkCustomer ();
+    private BulkCustomer mapToBulkCustomer(final HeaderType headerType) {
+        final BulkCustomer bulkCustomer = new BulkCustomer();
 
-        bulkCustomer.setSdtCustomerId (headerType.getSdtCustomerId ());
+        bulkCustomer.setSdtCustomerId(headerType.getSdtCustomerId());
         return bulkCustomer;
 
     }
 
     /**
      * This method will return the string criterion for the given criteria type.
-     * 
+     *
      * @param criteria the criteria type object contained in the SubmitQuery reqeuest type
      * @return the string criterion associated with the criteria type.
      */
-    private String getCriterion (final CriteriaType criteria)
-    {
-        if (criteria != null)
-        {
-            final CriterionType criterion = criteria.getCriterion ();
-            return criterion.getCriteriaType ();
+    private String getCriterion(final CriteriaType criteria) {
+        if (criteria != null) {
+            final CriterionType criterion = criteria.getCriterion();
+            return criterion.getCriteriaType();
         }
 
         return null;

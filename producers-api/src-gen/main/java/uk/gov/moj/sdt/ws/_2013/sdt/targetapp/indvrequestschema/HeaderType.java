@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for headerType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="headerType">
  *   &lt;complexContent>
@@ -25,14 +25,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "headerType", propOrder = {
-    "sdtRequestId",
-    "targetAppCustomerId",
-    "requestType"
+        "sdtRequestId",
+        "targetAppCustomerId",
+        "requestType"
 })
 public class HeaderType {
 
@@ -45,11 +43,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the sdtRequestId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSdtRequestId() {
         return sdtRequestId;
@@ -57,11 +53,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the sdtRequestId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSdtRequestId(String value) {
         this.sdtRequestId = value;
@@ -69,11 +63,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the targetAppCustomerId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTargetAppCustomerId() {
         return targetAppCustomerId;
@@ -81,11 +73,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the targetAppCustomerId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTargetAppCustomerId(String value) {
         this.targetAppCustomerId = value;
@@ -93,11 +83,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the requestType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getRequestType() {
         return requestType;
@@ -105,11 +93,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the requestType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setRequestType(String value) {
         this.requestType = value;

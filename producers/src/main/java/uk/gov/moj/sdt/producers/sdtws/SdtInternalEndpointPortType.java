@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: SdtInternalEndpointPortType.java manojk $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -43,19 +43,17 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
 
 /**
  * Implementation of {@link ISdtInternalEndpointPortType}.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
 // CHECKSTYLE:OFF
-@WebService (serviceName = "SdtInternalEndpoint", portName = "SdtInternalEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint", wsdlLocation = "wsdl/SdtInternalEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType")
+@WebService(serviceName = "SdtInternalEndpoint", portName = "SdtInternalEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint", wsdlLocation = "wsdl/SdtInternalEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType")
 // CHECKSTYLE:ON
-public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
-{
+public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SdtInternalEndpointPortType.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SdtInternalEndpointPortType.class);
 
     /**
      * Update item handler for handling individual request update.
@@ -63,58 +61,51 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
     private IWsUpdateItemHandler updateItemHandler;
 
     @Override
-    public UpdateResponseType updateItem (final UpdateRequestType updateRequest)
-    {
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Endpoint called for update item for request reference [" +
-                    updateRequest.getHeader ().getSdtRequestId () + "]");
+    public UpdateResponseType updateItem(final UpdateRequestType updateRequest) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Endpoint called for update item for request reference [" +
+                    updateRequest.getHeader().getSdtRequestId() + "]");
         }
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tsdt sdt request id=" + updateRequest.getHeader ().getSdtRequestId () +
-                    "\n\tstatus code=" + updateRequest.getStatus ().getCode () + "\n");
+        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_2)) {
+            final StringBuffer detail = new StringBuffer();
+            detail.append("\n\n\tsdt sdt request id=" + updateRequest.getHeader().getSdtRequestId() +
+                    "\n\tstatus code=" + updateRequest.getStatus().getCode() + "\n");
 
-            if (updateRequest.getStatus ().getError () != null)
-            {
-                detail.append ("\n\terror code=" + updateRequest.getStatus ().getError ().getCode () +
-                        "\n\terror description=" + updateRequest.getStatus ().getError ().getDescription () + "\n");
+            if (updateRequest.getStatus().getError() != null) {
+                detail.append("\n\terror code=" + updateRequest.getStatus().getError().getCode() +
+                        "\n\terror description=" + updateRequest.getStatus().getError().getDescription() + "\n");
             }
 
             // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2, "Status update received",
-                    detail.toString ());
+            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_2, "Status update received",
+                    detail.toString());
         }
 
         UpdateResponseType response = null;
 
-        try
-        {
-            response = updateItemHandler.updateItem (updateRequest);
+        try {
+            response = updateItemHandler.updateItem(updateRequest);
         }
         // CHECKSTYLE:OFF
         catch (Throwable throwable)
         // CHECKSTYLE:ON
         {
-            handleThrowable (throwable);
+            handleThrowable(throwable);
         }
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_9))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tstatus code=" + response.getStatus ().getCode () + "\n");
+        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
+            final StringBuffer detail = new StringBuffer();
+            detail.append("\n\n\tstatus code=" + response.getStatus().getCode() + "\n");
 
-            if (response.getStatus ().getError () != null)
-            {
-                detail.append ("\n\terror code=" + response.getStatus ().getError ().getCode () +
-                        "\n\terror description=" + response.getStatus ().getError ().getDescription () + "\n");
+            if (response.getStatus().getError() != null) {
+                detail.append("\n\terror code=" + response.getStatus().getError().getCode() +
+                        "\n\terror description=" + response.getStatus().getError().getDescription() + "\n");
             }
 
             // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_9,
-                    "Status update response returned", detail.toString ());
+            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_9,
+                    "Status update response returned", detail.toString());
         }
 
         return response;
@@ -122,24 +113,22 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
 
     /**
      * Handles throwable and re-throws runtime exception.
-     * 
+     *
      * @param throwable exception to be handled
      */
-    private void handleThrowable (final Throwable throwable)
-    {
-        LOGGER.error ("Unexpected error - ", throwable);
+    private void handleThrowable(final Throwable throwable) {
+        LOGGER.error("Unexpected error - ", throwable);
 
-        throw new RuntimeException (
+        throw new RuntimeException(
                 "A SDT system component error has occurred. Please contact the SDT support team for assistance");
     }
 
     /**
      * Sets the handler for handling update individual request.
-     * 
+     *
      * @param updateItemHandler the update item handler.
      */
-    public void setUpdateItemHandler (final IWsUpdateItemHandler updateItemHandler)
-    {
+    public void setUpdateItemHandler(final IWsUpdateItemHandler updateItemHandler) {
         this.updateItemHandler = updateItemHandler;
     }
 

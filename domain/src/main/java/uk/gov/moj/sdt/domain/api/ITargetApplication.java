@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,62 +35,60 @@ import java.util.Set;
 
 /**
  * Interface for classes implementing {@link ITargetApplication} .
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface ITargetApplication extends IDomainObject
-{
+public interface ITargetApplication extends IDomainObject {
 
     /**
      * Get target application code.
-     * 
+     *
      * @return target application code
      */
-    String getTargetApplicationCode ();
+    String getTargetApplicationCode();
 
     /**
      * Set target application code.
-     * 
+     *
      * @param targetApplicationCode target application code
      */
-    void setTargetApplicationCode (final String targetApplicationCode);
+    void setTargetApplicationCode(final String targetApplicationCode);
 
     /**
      * Get target application name.
-     * 
+     *
      * @return target application name
      */
-    String getTargetApplicationName ();
+    String getTargetApplicationName();
 
     /**
      * Set target application name.
-     * 
+     *
      * @param targetApplicationName target application name
      */
-    void setTargetApplicationName (final String targetApplicationName);
+    void setTargetApplicationName(final String targetApplicationName);
 
     /**
      * Retrieve a set of all customers who can work against this application.
-     * 
+     *
      * @return a set of bulk customers who can use this application.
      */
-    Set<IServiceRouting> getServiceRoutings ();
+    Set<IServiceRouting> getServiceRoutings();
 
     /**
      * Set the list of service types which work with this application.
-     * 
+     *
      * @param serviceRoutings the list of all serviceRoutings who can work with this application.
      */
-    void setServiceRoutings (Set<IServiceRouting> serviceRoutings);
+    void setServiceRoutings(Set<IServiceRouting> serviceRoutings);
 
     /**
      * Get the service routing specific to the service type name for this target
      * application.
-     * 
+     *
      * @param serviceTypeName the enum constant referring to the service type name.
      * @return the IServiceRouting associated with the service type name.
      */
-    IServiceRouting getServiceRouting (IServiceType.ServiceTypeName serviceTypeName);
+    IServiceRouting getServiceRouting(IServiceType.ServiceTypeName serviceTypeName);
 
 }

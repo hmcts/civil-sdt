@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -45,53 +45,47 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 /**
  * Interceptor class which handles bulk submission message received by SDT.
- * 
+ * <p>
  * This interceptor is used to catch any faults detected in CXF and to record the count of these in the metrics.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor
-{
+public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SdtUnmarshallInterceptor.class);
-    
+    private final static Logger LOGGER = LoggerFactory.getLogger(SdtUnmarshallInterceptor.class);
+
     /**
      * Test interceptor to prove concept.
      */
-    public SdtUnmarshallInterceptor ()
-    {
-        super (Phase.UNMARSHAL);
-        this.addBefore (DocLiteralInInterceptor.class.getName ());
+    public SdtUnmarshallInterceptor() {
+        super(Phase.UNMARSHAL);
+        this.addBefore(DocLiteralInInterceptor.class.getName());
     }
 
     @Override
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
+    public void handleMessage(final SoapMessage message) throws Fault {
         // Call the following interceptors in the chain.
-        final PhaseInterceptorChain interceptorChain = (PhaseInterceptorChain) message.getInterceptorChain ();
-        interceptorChain.doIntercept (message);
+        final PhaseInterceptorChain interceptorChain = (PhaseInterceptorChain) message.getInterceptorChain();
+        interceptorChain.doIntercept(message);
 
-        try
-        {
+        try {
             // Tweak the private field so we can read it.
-            final Field privateStringField = PhaseInterceptorChain.class.getDeclaredField ("faultOccurred");
-            privateStringField.setAccessible (true);
+            final Field privateStringField = PhaseInterceptorChain.class.getDeclaredField("faultOccurred");
+            privateStringField.setAccessible(true);
 
             // Was there a fault?
-            final boolean faultOccurred = (Boolean) privateStringField.get (interceptorChain);
-            if (faultOccurred)
-            {
-                SdtMetricsMBean.getMetrics ().upXmlValidationFailureCount ();
+            final boolean faultOccurred = (Boolean) privateStringField.get(interceptorChain);
+            if (faultOccurred) {
+                SdtMetricsMBean.getMetrics().upXmlValidationFailureCount();
             }
         }
         // CHECKSTYLE:OFF
         catch (final Exception e)
         // CHECKSTYLE:ON
         {
-            LOGGER.error("Error in unmarshalling interceptor" , e);
+            LOGGER.error("Error in unmarshalling interceptor", e);
         }
     }
 }

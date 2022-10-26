@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
@@ -42,12 +42,10 @@ import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
 
 /**
  * Bulk Feedback Request domain validator.
- * 
+ *
  * @author d130680
- * 
  */
-public class BulkFeedbackRequestValidator extends AbstractSdtValidator implements IBulkFeedbackRequestValidator
-{
+public class BulkFeedbackRequestValidator extends AbstractSdtValidator implements IBulkFeedbackRequestValidator {
     /**
      * Bulk submission dao.
      */
@@ -56,34 +54,30 @@ public class BulkFeedbackRequestValidator extends AbstractSdtValidator implement
     /**
      * No-argument Constructor.
      */
-    public BulkFeedbackRequestValidator ()
-    {
+    public BulkFeedbackRequestValidator() {
     }
 
     @Override
-    public void visit (final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree)
-    {
-        final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
+    public void visit(final IBulkFeedbackRequest bulkFeedbackRequest, final ITree tree) {
+        final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference();
 
         // Validate the bulk reference, throw an exception if it doesn't exist
         final IBulkSubmission bulkSubmission =
-                bulkSubmissionDao.getBulkSubmissionBySdtRef (bulkFeedbackRequest.getBulkCustomer (), sdtBulkReference,
-                        super.getDataRetentionPeriod ());
-        if (bulkSubmission == null)
-        {
-            final List<String> replacements = new ArrayList<String> ();
-            replacements.add (String.valueOf (sdtBulkReference));
-            createValidationException (replacements, IErrorMessage.ErrorCode.BULK_REF_INVALID);
+                bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkFeedbackRequest.getBulkCustomer(), sdtBulkReference,
+                        super.getDataRetentionPeriod());
+        if (bulkSubmission == null) {
+            final List<String> replacements = new ArrayList<>();
+            replacements.add(String.valueOf(sdtBulkReference));
+            createValidationException(replacements, IErrorMessage.ErrorCode.BULK_REF_INVALID);
         }
     }
 
     /**
      * Set bulk submission dao.
-     * 
+     *
      * @param bulkSubmissionDao bulk submission dao
      */
-    public void setBulkSubmissionDao (final IBulkSubmissionDao bulkSubmissionDao)
-    {
+    public void setBulkSubmissionDao(final IBulkSubmissionDao bulkSubmissionDao) {
         this.bulkSubmissionDao = bulkSubmissionDao;
     }
 }

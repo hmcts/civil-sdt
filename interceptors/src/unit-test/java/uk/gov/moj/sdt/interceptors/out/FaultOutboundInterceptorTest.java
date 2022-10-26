@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -51,66 +51,66 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Test that faults are correctly intercepted.
- * @author d195274
  *
+ * @author d195274
  */
-public class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase
-{
+public class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     /**
      * Error message returned when a fault occurs.
      */
     private final String errorMessage = "A SDT system component error " +
             "has occurred. Please contact the SDT support team for assistance";
+
     /**
      * Builds a dummy soap message.
-     * 
-     *            the path to the xml file containing the soap message.
+     * <p>
+     * the path to the xml file containing the soap message.
+     *
      * @return a soap message
      */
     private SoapMessage getDummySoapMessageWithFault() {
         final SoapMessage soapMessage = new SoapMessage(new MessageImpl());
         soapMessage.setExchange(new ExchangeImpl());
-        final Fault fault = new Fault(new RuntimeException (errorMessage
-                ));
-        soapMessage.setContent (Exception.class, fault);
+        final Fault fault = new Fault(new RuntimeException(errorMessage
+        ));
+        soapMessage.setContent(Exception.class, fault);
         return soapMessage;
     }
-    
+
     /**
      * Build a mocked dao.
-     * 
-     * @param serviceRequest
-     *            possible superfluous object.
+     *
+     * @param serviceRequest possible superfluous object.
      * @return the mocked dao.
      */
     private GenericDao getMockedGenericDao(final ServiceRequest serviceRequest) {
         final GenericDao mockServiceRequestDao = EasyMock
                 .createNiceMock(GenericDao.class);
-        EasyMock.expect (mockServiceRequestDao.fetch (ServiceRequest.class, 1L)).andReturn (serviceRequest);        
+        EasyMock.expect(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).andReturn(serviceRequest);
         mockServiceRequestDao.persist(serviceRequest);
         EasyMock.expectLastCall();
         EasyMock.replay(mockServiceRequestDao);
         return mockServiceRequestDao;
     }
+
     /**
-     * Test method for 
+     * Test method for
      * {@link uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor
      * #handleMessage(org.apache.cxf.binding.soap.SoapMessage)}.
      */
     @Test
-    public void testHandleMessage ()
-    {
-        SdtContext.getContext ().setServiceRequestId (1L);
+    public void testHandleMessage() {
+        SdtContext.getContext().setServiceRequestId(1L);
         final SoapMessage soapMessage = getDummySoapMessageWithFault();
         final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor();
         final ServiceRequest serviceRequest = new ServiceRequest();
         faultOutboundInterceptor.setServiceRequestDao(getMockedGenericDao(serviceRequest));
-        assertNull (serviceRequest.getResponseDateTime ());
-        assertNull(serviceRequest.getResponsePayload ());
-        faultOutboundInterceptor.handleMessage (soapMessage);
-        assertNotNull (serviceRequest.getResponseDateTime ());
-        assertTrue(serviceRequest.getResponsePayload ().contains (errorMessage));
-        
+        assertNull(serviceRequest.getResponseDateTime());
+        assertNull(serviceRequest.getResponsePayload());
+        faultOutboundInterceptor.handleMessage(soapMessage);
+        assertNotNull(serviceRequest.getResponseDateTime());
+        assertTrue(serviceRequest.getResponsePayload().contains(errorMessage));
+
     }
 
 }

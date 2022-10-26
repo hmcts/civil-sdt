@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,39 +23,37 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators.api;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 /**
  * Interface to provide the methods to perform reference and ID validation.
- * 
+ *
  * @author d301488
- * 
  */
-public interface IIdentifierValidator
-{
+public interface IIdentifierValidator {
 
     /**
      * Checks that the User Reference doesn't already exist and is valid.
-     * 
-     * @param reference the incoming reference number to check.
+     *
+     * @param reference         the incoming reference number to check.
      * @param dateTimeSubmitted Check reference is within the retention period.
      * @return TRUE is not a duplicate, FALSE if a duplicate.
      */
-    boolean isUserReferenceUnique (String reference, LocalDate dateTimeSubmitted);
+    boolean isUserReferenceUnique(String reference, LocalDate dateTimeSubmitted);
 
     /**
      * Checks that the SDT Customer Id is valid.
-     * 
+     *
      * @param sdtCustomerId the SDT customer Id
      * @return TRUE if it is a valid Id, FALSE if not.
      */
-    boolean isSdtCustomerIdValid (String sdtCustomerId);
+    boolean isSdtCustomerIdValid(String sdtCustomerId);
 
 }

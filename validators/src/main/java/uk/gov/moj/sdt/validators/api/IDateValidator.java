@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,59 +23,56 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators.api;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 /**
- * An interface to provide validation methods for {@link org.joda.time.LocalDate}.
- * 
+ * An interface to provide validation methods for {@link java.time.LocalDate}.
+ *
  * @author Simon Holmes
- * 
  */
-public interface IDateValidator
-{
+public interface IDateValidator {
 
     /**
      * Tests if a given date is within two dates, inclusively.
-     * 
+     *
      * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the range.
-     * @param endDate the end date of the range.
+     * @param startDate  the start date of the range.
+     * @param endDate    the end date of the range.
      * @return TRUE if within date, FALSE if not.
      */
-    boolean isDateWitinRange (LocalDate dateToTest, final LocalDate startDate, final LocalDate endDate);
+    boolean isDateWitinRange(LocalDate dateToTest, final LocalDate startDate, final LocalDate endDate);
 
     /**
-     * 
      * Tests if a date is BEFORE a given date, inclusively.
-     * 
+     *
      * @param dateToTest the date that is to be tested.
-     * @param endDate the end date of the test.
+     * @param endDate    the end date of the test.
      * @return TRUE if before the given date, FALSE if not.
      */
-    boolean isDateBefore (final LocalDate dateToTest, final LocalDate endDate);
+    boolean isDateBefore(final LocalDate dateToTest, final LocalDate endDate);
 
     /**
      * Tests if a date is AFTER a given date, inclusively.
-     * 
+     *
      * @param dateToTest the date that is to be tested.
-     * @param startDate the start date of the test.
+     * @param startDate  the start date of the test.
      * @return TRUE if after the given date, FALSE if not.
      */
-    boolean isDateAfter (final LocalDate dateToTest, final LocalDate startDate);
+    boolean isDateAfter(final LocalDate dateToTest, final LocalDate startDate);
 
     /**
      * Tests if a date is within a given number of days, inclusive of the Xth day.
-     * 
-     * @param dateToTest the date that is to be tested
+     *
+     * @param dateToTest   the date that is to be tested
      * @param numberOfDays the number of days the date should be within.
      * @return TRUE if the date is within the last X days, FALSE if it is not.
      */
-    boolean isDateWitinLastXDays (final LocalDate dateToTest, final Integer numberOfDays);
+    boolean isDateWitinLastXDays(final LocalDate dateToTest, final Integer numberOfDays);
 }

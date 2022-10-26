@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,12 +23,16 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
+
 package uk.gov.moj.sdt.utils;
+
+import uk.gov.moj.sdt.utils.logging.LoggingContext;
+import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -36,22 +40,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import uk.gov.moj.sdt.utils.logging.LoggingContext;
-import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
-
 /**
  * Class holding all thread specific context that needs to be passed around in
  * SDT.
- * 
+ *
  * @author Robin Compston.
  */
-public final class SdtContext
-{
+public final class SdtContext {
 
     /**
      * Thread local holder available throughout thread.
      */
-    private static final ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<SdtContext> ();
+    private final static ThreadLocal<SdtContext> THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * The state of current performance logging options.
@@ -106,32 +106,27 @@ public final class SdtContext
      * receiving a bulk feedback request, reading it out of the database,
      * storing it in this map and then inserting it into the outbound XML.
      */
-    private Map<String, String> targetApplicationRespMap = new HashMap<String, String> ();
+    private Map<String, String> targetApplicationRespMap = new HashMap<>();
 
     /**
      * Constructor for {@link com.sun.jmx.snmp.ThreadContext}.
      */
-    private SdtContext ()
-    {
+    private SdtContext() {
     }
 
     /**
      * Adds an task for synchronisation to the synchronisation list.
-     * 
-     * @param command
-     *            the runnable task for synchronisation.
-     * @return boolean - returns true if the synchronisation list is not already
-     *         initialized.
+     *
+     * @param command the runnable task for synchronisation.
+     * @return boolean - returns true if the synchronisation list is not already initialized.
      */
-    public boolean addSynchronisationTask (final Runnable command)
-    {
+    public boolean addSynchronisationTask(final Runnable command) {
         boolean returnValue = false;
-        if (this.synchronisationTasks == null)
-        {
-            this.synchronisationTasks = new ArrayList<Runnable> ();
+        if (this.synchronisationTasks == null) {
+            this.synchronisationTasks = new ArrayList<>();
             returnValue = true;
         }
-        this.synchronisationTasks.add (command);
+        this.synchronisationTasks.add(command);
 
         return returnValue;
     }
@@ -139,11 +134,9 @@ public final class SdtContext
     /**
      * Clears the synchronisation task list after the thread no longer needs it.
      */
-    public void clearSynchronisationTasks ()
-    {
-        if (this.synchronisationTasks != null)
-        {
-            this.synchronisationTasks.clear ();
+    public void clearSynchronisationTasks() {
+        if (this.synchronisationTasks != null) {
+            this.synchronisationTasks.clear();
             this.synchronisationTasks = null;
         }
 
@@ -151,186 +144,165 @@ public final class SdtContext
 
     /**
      * Get the {@link LoggingContext} object.
-     * 
+     *
      * @return logging context.
      */
-    public ILoggingContext getLoggingContext ()
-    {
+    public ILoggingContext getLoggingContext() {
         return loggingContext;
     }
 
     /**
      * Get the original output stream.
-     * 
+     *
      * @return the original output stream.
      */
-    public OutputStream getOriginalOutputStream ()
-    {
+    public OutputStream getOriginalOutputStream() {
         return originalOutputStream;
     }
 
     /**
      * Retrieve the XML that makes up the inbound message.
-     * 
+     *
      * @return xmlMessage the inbound message intercepted by CXF.
      */
-    public String getRawInXml ()
-    {
+    public String getRawInXml() {
         return rawInXml;
     }
 
     /**
      * Retrieve the XML that makes up the outbound message.
-     * 
+     *
      * @return xmlMessage the outbound message intercepted by CXF.
      */
-    public String getRawOutXml ()
-    {
+    public String getRawOutXml() {
         return rawOutXml;
     }
 
     /**
      * Get the service request id allocated by hibernate when storing the incoming message.
-     * 
+     *
      * @return the serviceRequestId
      */
-    public Long getServiceRequestId ()
-    {
+    public Long getServiceRequestId() {
         return serviceRequestId;
     }
 
     /**
      * Get the submitBulkReference.
-     * 
+     *
      * @return the submitBulkReference.
      */
-    public String getSubmitBulkReference ()
-    {
+    public String getSubmitBulkReference() {
         return submitBulkReference;
     }
 
     /**
-     * 
+     * get synchronisation tasks.
+     *
      * @return the list of the synchronisation tasks.
      */
-    public List<Runnable> getSynchronisationTasks ()
-    {
+    public List<Runnable> getSynchronisationTasks() {
         return this.synchronisationTasks;
     }
 
     /**
-     * Get map containing raw XML returned by the case management system for
-     * each request.
-     * 
-     * @return map containing raw XML returned by the case management system for
-     *         each request.
+     * Get map containing raw XML returned by the case management system for each request.
+     *
+     * @return map containing raw XML returned by the case management system for each request.
      */
-    public Map<String, String> getTargetApplicationRespMap ()
-    {
+    public Map<String, String> getTargetApplicationRespMap() {
         return targetApplicationRespMap;
     }
 
     /**
      * Clean up thread local.
      */
-    public void remove ()
-    {
-        THREAD_LOCAL.remove ();
+    public void remove() {
+        THREAD_LOCAL.remove();
     }
 
     /**
      * Set the {@link ILoggingContext} object.
-     * 
+     *
      * @param loggingContext the logging context.
      */
-    public void setLoggingContext (final ILoggingContext loggingContext)
-    {
+    public void setLoggingContext(final ILoggingContext loggingContext) {
         this.loggingContext = loggingContext;
     }
 
     /**
      * Save the output stream for later retrieval.
-     * 
+     *
      * @param originalOutputStream the original stream created by CXF.
      */
-    public void setOriginalOutputStream (final OutputStream originalOutputStream)
-    {
+    public void setOriginalOutputStream(final OutputStream originalOutputStream) {
         this.originalOutputStream = originalOutputStream;
     }
 
     /**
      * Set the XML that makes up the inbound message.
-     * 
+     *
      * @param rawInXml the inbound message intercepted by CXF.
      */
-    public void setRawInXml (final String rawInXml)
-    {
+    public void setRawInXml(final String rawInXml) {
         this.rawInXml = rawInXml;
     }
 
     /**
      * Set the XML that makes up the outbound message.
-     * 
+     *
      * @param rawOutXml the outbound message intercepted by CXF.
      */
-    public void setRawOutXml (final String rawOutXml)
-    {
+    public void setRawOutXml(final String rawOutXml) {
         this.rawOutXml = rawOutXml;
     }
 
     /**
      * Set.
-     * 
-     * @param serviceRequestId
-     *            the serviceRequestId to set
+     *
+     * @param serviceRequestId the serviceRequestId to set
      */
-    public void setServiceRequestId (final Long serviceRequestId)
-    {
+    public void setServiceRequestId(final Long serviceRequestId) {
         this.serviceRequestId = serviceRequestId;
     }
 
     /**
      * Set new value of submitBulkReference.
-     * 
+     *
      * @param submitBulkReference new value of submitBulkReference.
      */
-    public void setSubmitBulkReference (final String submitBulkReference)
-    {
+    public void setSubmitBulkReference(final String submitBulkReference) {
         this.submitBulkReference = submitBulkReference;
     }
 
     /**
      * Set map containing raw XML returned by the case management system for
      * each request (taken from the SDT database).
-     * 
-     * @param targetApplicationRespMap
-     *            value of map containing raw XML returned by the case
-     *            management system for each request
+     *
+     * @param targetApplicationRespMap value of map containing raw XML returned by the case
+     *                                 management system for each request
      */
-    public void setTargetApplicationRespMap (final Map<String, String> targetApplicationRespMap)
-    {
+    public void setTargetApplicationRespMap(final Map<String, String> targetApplicationRespMap) {
         this.targetApplicationRespMap = targetApplicationRespMap;
     }
 
     /**
      * Get the SdtContext for this thread.
-     * 
+     *
      * @return the SdtContext for this thread.
      */
-    public static SdtContext getContext ()
-    {
+    public static SdtContext getContext() {
         // Look to see if context already setup for this thread.
-        SdtContext sdtContext = THREAD_LOCAL.get ();
+        SdtContext sdtContext = THREAD_LOCAL.get();
 
         // If not create it and store it in thread local storage.
-        if (sdtContext == null)
-        {
-            sdtContext = new SdtContext ();
+        if (sdtContext == null) {
+            sdtContext = new SdtContext();
 
-            final ILoggingContext loggingContext = new LoggingContext ();
-            sdtContext.setLoggingContext (loggingContext);
+            final ILoggingContext loggingContext = new LoggingContext();
+            sdtContext.setLoggingContext(loggingContext);
 
-            THREAD_LOCAL.set (sdtContext);
+            THREAD_LOCAL.set(sdtContext);
         }
 
         return sdtContext;

@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for headerType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="headerType">
  *   &lt;complexContent>
@@ -23,12 +23,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "headerType", propOrder = {
-    "sdtRequestId"
+        "sdtRequestId"
 })
 public class HeaderType {
 
@@ -37,11 +35,9 @@ public class HeaderType {
 
     /**
      * Gets the value of the sdtRequestId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSdtRequestId() {
         return sdtRequestId;
@@ -49,11 +45,9 @@ public class HeaderType {
 
     /**
      * Sets the value of the sdtRequestId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSdtRequestId(String value) {
         this.sdtRequestId = value;

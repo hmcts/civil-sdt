@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -39,24 +39,21 @@ import org.junit.Test;
 
 /**
  * Unit test for {@link TokenReplacer} class.
- * 
+ *
  * @author d130680
- * 
  */
-public class UtilitiesTest extends AbstractSdtUnitTestBase
-{
+public class UtilitiesTest extends AbstractSdtUnitTestBase {
     /**
      * Test the tokenisation works.
      */
     @Test
-    public void testSingleTokenisation ()
-    {
-        final List<String> l = new ArrayList<String> ();
-        l.add ("John Doe");
+    public void testSingleTokenisation() {
+        final List<String> l = new ArrayList<String>();
+        l.add("John Doe");
 
-        final String s = Utilities.replaceTokens ("User {0} was not found", l);
+        final String s = Utilities.replaceTokens("User {0} was not found", l);
 
-        Assert.assertEquals ("User John Doe was not found", s);
+        Assert.assertEquals("User John Doe was not found", s);
 
     }
 
@@ -64,15 +61,14 @@ public class UtilitiesTest extends AbstractSdtUnitTestBase
      * Test the tokenisation works with multiple tokens and out of sequence tokens.
      */
     @Test
-    public void testMultipleTokenisation ()
-    {
-        final List<String> l = new ArrayList<String> ();
-        l.add ("fox");
-        l.add ("dog");
-        l.add ("over");
-        final String s = Utilities.replaceTokens ("The quick brown {0} jumped {2} the lazy brown {1}", l);
+    public void testMultipleTokenisation() {
+        final List<String> l = new ArrayList<String>();
+        l.add("fox");
+        l.add("dog");
+        l.add("over");
+        final String s = Utilities.replaceTokens("The quick brown {0} jumped {2} the lazy brown {1}", l);
 
-        Assert.assertEquals ("The quick brown fox jumped over the lazy brown dog", s);
+        Assert.assertEquals("The quick brown fox jumped over the lazy brown dog", s);
 
     }
 

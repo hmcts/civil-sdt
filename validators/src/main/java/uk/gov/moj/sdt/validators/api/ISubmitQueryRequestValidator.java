@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: IBulkSubmissionValidator.java 16611 2013-07-02 09:44:42Z agarwals $
  * $LastChangedRevision: 16611 $
  * $LastChangedDate: 2013-07-02 10:44:42 +0100 (Tue, 02 Jul 2013) $
@@ -32,10 +32,8 @@ package uk.gov.moj.sdt.validators.api;
 
 /**
  * An interface to provide validation methods for SubmitQueryRequest.
- * 
+ *
  * @author d130680
- * 
  */
-public interface ISubmitQueryRequestValidator
-{
+public interface ISubmitQueryRequestValidator {
 }

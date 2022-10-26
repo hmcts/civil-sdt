@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -50,34 +50,30 @@ import uk.gov.moj.sdt.utils.SdtContext;
  * content. This interceptor must be run after the original endpoint has been created and before the first write to the
  * output stream has been performed by StaxOutInterceptor. The cache output stream is setup in anticipation of the
  * processing done by XmlOutboudInterceptor and ServiceRequestInterceptor.
- * 
+ *
  * @author Robin Compston
- * 
  */
-public class CacheSetupOutboundInterceptor extends AbstractSdtInterceptor
-{
+public class CacheSetupOutboundInterceptor extends AbstractSdtInterceptor {
 
     /**
      * Constructor to position this interceptor before anything has been written to the output stream.
      */
-    public CacheSetupOutboundInterceptor ()
-    {
-        super (Phase.PRE_STREAM);
-        addAfter (AttachmentOutInterceptor.class.getName ());
-        addBefore (StaxOutInterceptor.class.getName ());
+    public CacheSetupOutboundInterceptor() {
+        super(Phase.PRE_STREAM);
+        addAfter(AttachmentOutInterceptor.class.getName());
+        addBefore(StaxOutInterceptor.class.getName());
     }
 
     @Override
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
+    public void handleMessage(final SoapMessage message) throws Fault {
         // Save the original output stream for when we want to write down the wire.
-        SdtContext.getContext ().setOriginalOutputStream (message.getContent (OutputStream.class));
+        SdtContext.getContext().setOriginalOutputStream(message.getContent(OutputStream.class));
 
         // Create a caching stream to use as the output stream for the message. This will gather up the entire
         // content as the chain is run. Do not use CacheAndWriteOutputStream (created by LoggingOutInterceptor - this
         // therefore cannot be turned on) since it caches the message but also writes it down the wire before it has
         // been enriched.
-        final CachedOutputStream cacheOutputStream = new CachedOutputStream ();
-        message.setContent (OutputStream.class, cacheOutputStream);
+        final CachedOutputStream cacheOutputStream = new CachedOutputStream();
+        message.setContent(OutputStream.class, cacheOutputStream);
     }
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,7 +34,7 @@ package uk.gov.moj.sdt.interceptors.enricher;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,79 +42,69 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
  * Submit query xml enricher, used to enrich outbound messages related to submit query.
- * 
+ *
  * @author d130680
- * 
  */
-public class SubmitQueryEnricher extends AbstractSdtEnricher
-{
+public class SubmitQueryEnricher extends AbstractSdtEnricher {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (SubmitQueryEnricher.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SubmitQueryEnricher.class);
 
     @Override
-    public String enrichXml (final String message)
-    {
-        if (LOGGER.isDebugEnabled ())
-        {
-            LOGGER.debug ("Message before enrichment [" + message + "]");
+    public String enrichXml(final String message) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Message before enrichment [" + message + "]");
         }
 
         // Assume no change to input.
         String newXml = message;
 
         // Check to ensure the parent tag can be found in the message.
-        if (super.findParentTag (message))
-        {
+        if (super.findParentTag(message)) {
             // Remove linefeeds as they stop the regular expression working.
-            newXml = newXml.replace ('\n', ' ');
-            newXml = newXml.replace ('\r', ' ');
+            newXml = newXml.replace('\n', ' ');
+            newXml = newXml.replace('\r', ' ');
 
             // Get the system specific response from thread local to inject into the outbound message
-            String replacementXml = SdtContext.getContext ().getRawOutXml ();
+            String replacementXml = SdtContext.getContext().getRawOutXml();
 
             // Build search pattern for insertion point.
             //
             // Search for:
             // optional tag prefix (excluding comments, end tag, and other tags)
             // insertion tag (without attributes)
-            final Pattern pattern = Pattern.compile ("<[\\S:&&[^!>/]]*?" + getInsertionTag () + "/>");
-            final Matcher matcher = pattern.matcher (newXml);
+            final Pattern pattern = Pattern.compile("<[\\S:&&[^!>/]]*?" + getInsertionTag() + "/>");
+            final Matcher matcher = pattern.matcher(newXml);
 
-            if (StringUtils.isNotBlank (replacementXml) && matcher.find ())
-            {
-                LOGGER.debug ("Found matching group[" + matcher.group () + "]");
+            if (StringUtils.isNotBlank(replacementXml) && matcher.find()) {
+                LOGGER.debug("Found matching group[" + matcher.group() + "]");
 
                 // Get the string matching the regular expression.
-                final String singleLineTag = matcher.group ();
+                final String singleLineTag = matcher.group();
 
                 // Add the start and end tag to the replacement xml.
-                replacementXml = changeToStartTag (singleLineTag) + replacementXml + changeToEndTag (singleLineTag);
+                replacementXml = changeToStartTag(singleLineTag) + replacementXml + changeToEndTag(singleLineTag);
 
-                LOGGER.debug ("Replacement string[" + replacementXml + "]");
+                LOGGER.debug("Replacement string[" + replacementXml + "]");
 
                 // Escape any $ in the string, otherwise matcher may crash depending on what comes after $. N.B. Do not
                 // use replaceAll or anything making use of java.util.regex.Matcher because this will produce the
                 // problem we are trying to avoid.
-                replacementXml = this.escapeUnescapedCharacters ('$', replacementXml);
+                replacementXml = this.escapeUnescapedCharacters('$', replacementXml);
 
                 // Inject the system specific response into the current envelope.
-                newXml = matcher.replaceFirst (replacementXml);
+                newXml = matcher.replaceFirst(replacementXml);
             }
 
-            if (LOGGER.isDebugEnabled ())
-            {
-                LOGGER.debug ("Message after enrichment [" + newXml + "]");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Message after enrichment [" + newXml + "]");
             }
 
-        }
-        else
-        {
+        } else {
             // Failure to find matching request in outgoing XML.
-            if (LOGGER.isDebugEnabled ())
-            {
-                LOGGER.debug ("Parent tag [" + this.getParentTag () + "] not found...skipping enrichment.");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Parent tag [" + this.getParentTag() + "] not found...skipping enrichment.");
             }
         }
 

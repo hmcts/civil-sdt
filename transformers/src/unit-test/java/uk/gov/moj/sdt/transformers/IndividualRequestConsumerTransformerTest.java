@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -59,12 +59,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
 
 /**
  * Unit tests for IndividualRequestConsumerTransformer.
- * 
+ *
  * @author d164190
- * 
  */
-public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTestBase
-{
+public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Individual Request Consumer Transformer.
      */
@@ -73,19 +71,15 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests ()
-    {
+    public void setUpLocalTests() {
         Constructor<IndividualRequestConsumerTransformer> c;
-        try
-        {
+        try {
             // Make the constructor visible so we can get a new instance of it.
-            c = IndividualRequestConsumerTransformer.class.getDeclaredConstructor ();
-            c.setAccessible (true);
-            transformer = c.newInstance ();
-        }
-        catch (final Exception e)
-        {
-            e.printStackTrace ();
+            c = IndividualRequestConsumerTransformer.class.getDeclaredConstructor();
+            c.setAccessible(true);
+            transformer = c.newInstance();
+        } catch (final Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -95,22 +89,21 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
      * ACCEPTED.
      */
     @Test
-    public void testTransformJaxbToDomainAccepted ()
-    {
+    public void testTransformJaxbToDomainAccepted() {
         // Set up the jaxb object to transform
-        final IndividualResponseType jaxb = new IndividualResponseType ();
-        final CreateStatusType statusType = new CreateStatusType ();
-        statusType.setCode (CreateStatusCodeType.ACCEPTED);
-        jaxb.setStatus (statusType);
+        final IndividualResponseType jaxb = new IndividualResponseType();
+        final CreateStatusType statusType = new CreateStatusType();
+        statusType.setCode(CreateStatusCodeType.ACCEPTED);
+        jaxb.setStatus(statusType);
 
-        final IIndividualRequest domain = new IndividualRequest ();
-        transformer.transformJaxbToDomain (jaxb, domain);
+        final IIndividualRequest domain = new IndividualRequest();
+        transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.ACCEPTED.getStatus (),
-                domain.getRequestStatus ());
-        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
-        Assert.assertNotNull ("Request completed data should be populated", domain.getCompletedDate ());
+        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.ACCEPTED.getStatus(),
+                domain.getRequestStatus());
+        Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
+        Assert.assertNotNull("Request completed data should be populated", domain.getCompletedDate());
     }
 
     /**
@@ -118,21 +111,20 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
      * INITIALLY ACCEPTED.
      */
     @Test
-    public void testTransformJaxbToDomainInitiallyAccepted ()
-    {
+    public void testTransformJaxbToDomainInitiallyAccepted() {
         // Set up the jaxb object to transform
-        final IndividualResponseType jaxb = new IndividualResponseType ();
-        final CreateStatusType statusType = new CreateStatusType ();
-        statusType.setCode (CreateStatusCodeType.INITIALLY_ACCEPTED);
-        jaxb.setStatus (statusType);
+        final IndividualResponseType jaxb = new IndividualResponseType();
+        final CreateStatusType statusType = new CreateStatusType();
+        statusType.setCode(CreateStatusCodeType.INITIALLY_ACCEPTED);
+        jaxb.setStatus(statusType);
 
-        final IIndividualRequest domain = new IndividualRequest ();
-        transformer.transformJaxbToDomain (jaxb, domain);
+        final IIndividualRequest domain = new IndividualRequest();
+        transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus (),
-                domain.getRequestStatus ());
-        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
+        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus(),
+                domain.getRequestStatus());
+        Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
     }
 
     /**
@@ -140,21 +132,20 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
      * AWAITING DATA.
      */
     @Test
-    public void testTransformJaxbToDomainAwaitingData ()
-    {
+    public void testTransformJaxbToDomainAwaitingData() {
         // Set up the jaxb object to transform
-        final IndividualResponseType jaxb = new IndividualResponseType ();
-        final CreateStatusType statusType = new CreateStatusType ();
-        statusType.setCode (CreateStatusCodeType.AWAITING_DATA);
-        jaxb.setStatus (statusType);
+        final IndividualResponseType jaxb = new IndividualResponseType();
+        final CreateStatusType statusType = new CreateStatusType();
+        statusType.setCode(CreateStatusCodeType.AWAITING_DATA);
+        jaxb.setStatus(statusType);
 
-        final IIndividualRequest domain = new IndividualRequest ();
-        transformer.transformJaxbToDomain (jaxb, domain);
+        final IIndividualRequest domain = new IndividualRequest();
+        transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.AWAITING_DATA.getStatus (),
-                domain.getRequestStatus ());
-        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
+        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.AWAITING_DATA.getStatus(),
+                domain.getRequestStatus());
+        Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
     }
 
     /**
@@ -162,32 +153,31 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
      * REJECTED.
      */
     @Test
-    public void testTransformJaxbToDomainRejected ()
-    {
+    public void testTransformJaxbToDomainRejected() {
         // Set up the jaxb object to transform
-        final IndividualResponseType jaxb = new IndividualResponseType ();
-        final CreateStatusType statusType = new CreateStatusType ();
-        final ErrorType errorType = new ErrorType ();
-        final IIndividualRequest domain = new IndividualRequest ();
+        final IndividualResponseType jaxb = new IndividualResponseType();
+        final CreateStatusType statusType = new CreateStatusType();
+        final ErrorType errorType = new ErrorType();
+        final IIndividualRequest domain = new IndividualRequest();
 
-        statusType.setCode (CreateStatusCodeType.REJECTED);
-        errorType.setCode ("FAILURE");
-        errorType.setDescription ("MCOL has Failed to process the request");
-        statusType.setError (errorType);
-        jaxb.setStatus (statusType);
+        statusType.setCode(CreateStatusCodeType.REJECTED);
+        errorType.setCode("FAILURE");
+        errorType.setDescription("MCOL has Failed to process the request");
+        statusType.setError(errorType);
+        jaxb.setStatus(statusType);
 
-        transformer.transformJaxbToDomain (jaxb, domain);
+        transformer.transformJaxbToDomain(jaxb, domain);
 
-        final IErrorLog errorLog = domain.getErrorLog ();
+        final IErrorLog errorLog = domain.getErrorLog();
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus (), domain
-                .getRequestStatus ().toString ());
-        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
-        Assert.assertNotNull ("Request completed data should be populated", domain.getCompletedDate ());
-        Assert.assertEquals ("Error code is incorrect", "FAILURE", errorLog.getErrorCode ());
-        Assert.assertEquals ("Error description is incorrect", "MCOL has Failed to process the request",
-                errorLog.getErrorText ());
+        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus(), domain
+                .getRequestStatus().toString());
+        Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
+        Assert.assertNotNull("Request completed data should be populated", domain.getCompletedDate());
+        Assert.assertEquals("Error code is incorrect", "FAILURE", errorLog.getErrorCode());
+        Assert.assertEquals("Error description is incorrect", "MCOL has Failed to process the request",
+                errorLog.getErrorText());
     }
 
     /**
@@ -195,83 +185,80 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
      * ERROR.
      */
     @Test
-    public void testTransformJaxbToDomainError ()
-    {
+    public void testTransformJaxbToDomainError() {
         // Set up the jaxb object to transform
-        final IndividualResponseType jaxb = new IndividualResponseType ();
-        final CreateStatusType statusType = new CreateStatusType ();
-        final ErrorType errorType = new ErrorType ();
-        final IIndividualRequest domain = new IndividualRequest ();
+        final IndividualResponseType jaxb = new IndividualResponseType();
+        final CreateStatusType statusType = new CreateStatusType();
+        final ErrorType errorType = new ErrorType();
+        final IIndividualRequest domain = new IndividualRequest();
 
-        statusType.setCode (CreateStatusCodeType.ERROR);
-        errorType.setCode ("ERROR");
-        errorType.setDescription ("MCOL has found an error in processing the request");
-        statusType.setError (errorType);
-        jaxb.setStatus (statusType);
+        statusType.setCode(CreateStatusCodeType.ERROR);
+        errorType.setCode("ERROR");
+        errorType.setDescription("MCOL has found an error in processing the request");
+        statusType.setError(errorType);
+        jaxb.setStatus(statusType);
 
-        transformer.transformJaxbToDomain (jaxb, domain);
+        transformer.transformJaxbToDomain(jaxb, domain);
 
-        final IErrorLog errorLog = domain.getErrorLog ();
+        final IErrorLog errorLog = domain.getErrorLog();
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals ("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus (), domain
-                .getRequestStatus ().toString ());
-        Assert.assertNotNull ("Request updated data should be populated", domain.getUpdatedDate ());
-        Assert.assertNotNull ("Request completed data should be populated", domain.getCompletedDate ());
-        Assert.assertEquals ("Error code is incorrect", "ERROR", errorLog.getErrorCode ());
-        Assert.assertEquals ("Error description is incorrect", "MCOL has found an error in processing the request",
-                errorLog.getErrorText ());
+        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus(), domain
+                .getRequestStatus().toString());
+        Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
+        Assert.assertNotNull("Request completed data should be populated", domain.getCompletedDate());
+        Assert.assertEquals("Error code is incorrect", "ERROR", errorLog.getErrorCode());
+        Assert.assertEquals("Error description is incorrect", "MCOL has found an error in processing the request",
+                errorLog.getErrorText());
     }
 
     /**
      * Test the transformation from domain (IIndividualRequest) to jaxb (IndividualRequestType) object.
      */
     @Test
-    public void testTransformDomainToJaxb ()
-    {
-        final IIndividualRequest domain = new IndividualRequest ();
-        final IBulkSubmission bulkSubmission = new BulkSubmission ();
-        final ITargetApplication targetApplication = new TargetApplication ();
-        final IBulkCustomer bulkCustomer = new BulkCustomer ();
+    public void testTransformDomainToJaxb() {
+        final IIndividualRequest domain = new IndividualRequest();
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final ITargetApplication targetApplication = new TargetApplication();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
 
-        domain.setRequestType ("MCOL_Request_type");
-        domain.setSdtRequestReference ("SDT0001234");
+        domain.setRequestType("MCOL_Request_type");
+        domain.setSdtRequestReference("SDT0001234");
 
-        targetApplication.setTargetApplicationCode ("MCOL");
-        bulkSubmission.setTargetApplication (targetApplication);
+        targetApplication.setTargetApplicationCode("MCOL");
+        bulkSubmission.setTargetApplication(targetApplication);
 
-        bulkCustomer.setSdtCustomerId (12345L);
-        bulkCustomer.setBulkCustomerApplications (createBulkCustomerApplications ("MCOL"));
+        bulkCustomer.setSdtCustomerId(12345L);
+        bulkCustomer.setBulkCustomerApplications(createBulkCustomerApplications("MCOL"));
 
-        bulkSubmission.setBulkCustomer (bulkCustomer);
-        domain.setBulkSubmission (bulkSubmission);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
+        domain.setBulkSubmission(bulkSubmission);
 
-        final IndividualRequestType jaxb = transformer.transformDomainToJaxb (domain);
-        final HeaderType header = jaxb.getHeader ();
+        final IndividualRequestType jaxb = transformer.transformDomainToJaxb(domain);
+        final HeaderType header = jaxb.getHeader();
 
         // Test the domain object has been transformed to a jaxb object
-        Assert.assertEquals ("", "MCOL_Request_type", header.getRequestType ());
-        Assert.assertEquals ("", "SDT0001234", header.getSdtRequestId ());
-        Assert.assertEquals ("", "appId", header.getTargetAppCustomerId ());
+        Assert.assertEquals("", "MCOL_Request_type", header.getRequestType());
+        Assert.assertEquals("", "SDT0001234", header.getSdtRequestId());
+        Assert.assertEquals("", "appId", header.getTargetAppCustomerId());
 
     }
 
     /**
      * the list of applications for a customer.
-     * 
+     *
      * @param applicationName the application name
      * @return the set of bulk customer applications for this customer
      */
-    private Set<IBulkCustomerApplication> createBulkCustomerApplications (final String applicationName)
-    {
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication> ();
+    private Set<IBulkCustomerApplication> createBulkCustomerApplications(final String applicationName) {
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication>();
 
-        final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication ();
-        bulkCustomerApp.setCustomerApplicationId ("appId");
-        final ITargetApplication application = new TargetApplication ();
-        application.setTargetApplicationCode (applicationName);
-        bulkCustomerApp.setTargetApplication (application);
-        bulkCustomerApplications.add (bulkCustomerApp);
+        final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication();
+        bulkCustomerApp.setCustomerApplicationId("appId");
+        final ITargetApplication application = new TargetApplication();
+        application.setTargetApplicationCode(applicationName);
+        bulkCustomerApp.setTargetApplication(application);
+        bulkCustomerApplications.add(bulkCustomerApp);
         return bulkCustomerApplications;
     }
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -40,35 +40,30 @@ import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 
 /**
  * Class to intercept outgoing messages to audit them.
- * 
+ *
  * @author d195274
- * 
  */
-public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest
-{
+public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Default constructor.
      */
-    public ServiceRequestOutboundInterceptor ()
-    {
-        super (Phase.PREPARE_SEND_ENDING);
-        addAfter (XmlOutboundInterceptor.class.getName ());
+    public ServiceRequestOutboundInterceptor() {
+        super(Phase.PREPARE_SEND_ENDING);
+        addAfter(XmlOutboundInterceptor.class.getName());
     }
 
     /**
      * Create instance of {@link ServiceRequestOutboundInterceptor}.
-     * 
+     *
      * @param phase the phase of the CXF interceptor chain.
      */
-    public ServiceRequestOutboundInterceptor (final String phase)
-    {
-        super (phase);
+    public ServiceRequestOutboundInterceptor(final String phase) {
+        super(phase);
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
-    public void handleMessage (final SoapMessage message) throws Fault
-    {
-        this.persistEnvelope (this.readOutputMessage (message));
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handleMessage(final SoapMessage message) throws Fault {
+        this.persistEnvelope(this.readOutputMessage(message));
     }
 }

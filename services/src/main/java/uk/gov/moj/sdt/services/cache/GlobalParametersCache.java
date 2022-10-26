@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -47,17 +47,15 @@ import uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache;
 
 /**
  * Cache bean for the Global parameters.
- * 
+ *
  * @author Manoj Kulkarni/Robin Compston
- * 
  */
-@Transactional (propagation = Propagation.SUPPORTS)
-public final class GlobalParametersCache extends AbstractCacheControl implements IGlobalParametersCache
-{
+@Transactional(propagation = Propagation.SUPPORTS)
+public final class GlobalParametersCache extends AbstractCacheControl implements IGlobalParametersCache {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (GlobalParametersCache.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(GlobalParametersCache.class);
 
     /**
      * DAO to retrieve error messages.
@@ -67,102 +65,88 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
     /**
      * The cache variable that holds the global parameters as a key-value pair for this singleton.
      */
-    private Map<String, IGlobalParameter> globalParameters = new HashMap<String, IGlobalParameter> ();
+    private Map<String, IGlobalParameter> globalParameters = new HashMap<String, IGlobalParameter>();
 
     /**
      * Get the map holding cached values.
-     * 
+     *
      * @return the map holding cached values.
      */
-    protected Map<String, IGlobalParameter> getGlobalParameters ()
-    {
+    protected Map<String, IGlobalParameter> getGlobalParameters() {
         return globalParameters;
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRED)
-    protected <DomainType extends IDomainObject> DomainType getSpecificValue (final Class<DomainType> domainType,
-                                                                              final String paramName)
-    {
+    @Transactional(propagation = Propagation.REQUIRED)
+    protected <DomainType extends IDomainObject> DomainType getSpecificValue(final Class<DomainType> domainType,
+                                                                             final String paramName) {
         // Assume map is uninitialised if empty.
-        if (this.getGlobalParameters ().isEmpty ())
-        {
-            loadCache ();
+        if (this.getGlobalParameters().isEmpty()) {
+            loadCache();
         }
 
-        LOGGER.debug ("Retrieving global parameter with key [" + paramName + "]");
+        LOGGER.debug("Retrieving global parameter with key [" + paramName + "]");
 
         // Get the value of the named parameter.
-        final Object someObject = this.getGlobalParameters ().get (paramName);
+        final Object someObject = this.getGlobalParameters().get(paramName);
 
         DomainType domainObject = null;
 
-        if (someObject == null)
-        {
-            LOGGER.warn ("Parameter with name [" + paramName + "] not found.");
+        if (someObject == null) {
+            LOGGER.warn("Parameter with name [" + paramName + "] not found.");
             return null;
         }
 
         // Double check that the expected class matches the retrieved class.
-        if (domainType.isAssignableFrom (someObject.getClass ()))
-        {
+        if (domainType.isAssignableFrom(someObject.getClass())) {
             // Prepare object of correct type to return to caller.
-            domainObject = domainType.cast (someObject);
-        }
-        else
-        {
+            domainObject = domainType.cast(someObject);
+        } else {
             // Unsupported entity type.
-            throw new UnsupportedOperationException ("Expected class [" + domainType.getCanonicalName () +
-                    "] does not match retrieved class [" + someObject.getClass ().getCanonicalName () + "].");
+            throw new UnsupportedOperationException("Expected class [" + domainType.getCanonicalName() +
+                    "] does not match retrieved class [" + someObject.getClass().getCanonicalName() + "].");
         }
 
         return domainObject;
     }
 
     @Override
-    @Transactional (propagation = Propagation.REQUIRED)
-    protected void loadCache ()
-    {
+    @Transactional(propagation = Propagation.REQUIRED)
+    protected void loadCache() {
         // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
-        synchronized (this.getGlobalParameters ())
-        {
+        synchronized (this.getGlobalParameters()) {
             // Assume map is uninitialised if empty.
-            if (this.getGlobalParameters ().isEmpty ())
-            {
-                LOGGER.info ("Loading global parameters into cache.");
+            if (this.getGlobalParameters().isEmpty()) {
+                LOGGER.info("Loading global parameters into cache.");
 
                 // Retrieve all rows from global parameters table.
-                final IGlobalParameter[] result = genericDao.query (IGlobalParameter.class);
+                final IGlobalParameter[] result = genericDao.query(IGlobalParameter.class);
 
-                for (IGlobalParameter globalParameter : result)
-                {
+                for (IGlobalParameter globalParameter : result) {
                     // Add all retrieved parameters to a map, keyed by the global parameter name.
-                    this.getGlobalParameters ().put (globalParameter.getName (), globalParameter);
+                    this.getGlobalParameters().put(globalParameter.getName(), globalParameter);
                 }
             }
         }
     }
 
     @Override
-    protected void uncache ()
-    {
+    protected void uncache() {
         // This object should be a singleton but play safe and only let one instance at a time refresh the cache.
-        synchronized (this.getGlobalParameters ())
-        {
+        synchronized (this.getGlobalParameters()) {
             // Clear map but do not destroy it.
-            this.getGlobalParameters ().clear ();
+            this.getGlobalParameters().clear();
 
-            LOGGER.info ("Uncaching global parammeters.");
+            LOGGER.info("Uncaching global parammeters.");
         }
     }
 
     /**
      * Setter for generic DAO.
-     * 
+     *
      * @param genericDao the genericDao to set.
      */
-    public void setGenericDao (final IGenericDao genericDao)
-    {
+    public void setGenericDao(final IGenericDao genericDao) {
         this.genericDao = genericDao;
     }
 }

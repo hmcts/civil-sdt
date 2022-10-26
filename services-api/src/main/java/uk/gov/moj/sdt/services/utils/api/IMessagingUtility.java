@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,15 +35,12 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 /**
  * Messaging utility interface that define generic message queueing methods that can be
  * used by classes sharing same functionality.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IMessagingUtility
-{
+public interface IMessagingUtility {
     /**
-     * 
      * @param individualRequest the individual request to be queued on messaging server.
      */
-    void enqueueRequest (final IIndividualRequest individualRequest);
+    void enqueueRequest(final IIndividualRequest individualRequest);
 }

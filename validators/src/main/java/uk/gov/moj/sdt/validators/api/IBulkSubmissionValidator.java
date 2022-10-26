@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -34,18 +34,16 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 /**
  * An interface to provide validation methods for {@link uk.gov.moj.sdt.domain.BulkSubmission}.
- * 
+ *
  * @author Saurabh Agarwal
- * 
  */
-public interface IBulkSubmissionValidator
-{
+public interface IBulkSubmissionValidator {
 
     /**
      * Check all individual requests are not rejected. This method is not part of the tree walking process since it
      * needs to be done after all the domain objects have been validated.
-     * 
+     *
      * @param bulkSubmission bulk submission to validate
      */
-    void checkIndividualRequests (final IBulkSubmission bulkSubmission);
+    void checkIndividualRequests(final IBulkSubmission bulkSubmission);
 }

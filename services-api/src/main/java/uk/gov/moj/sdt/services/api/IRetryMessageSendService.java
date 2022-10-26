@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -32,17 +32,14 @@ package uk.gov.moj.sdt.services.api;
 
 /**
  * Interface for the Message task service.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IRetryMessageSendService
-{
+public interface IRetryMessageSendService {
     /**
      * This method looks for any individual requests that have not yet been successfully
      * sent to the target application and puts them on the target application queue.
-     * 
      */
-    void queueMessages ();
+    void queueMessages();
 
 }

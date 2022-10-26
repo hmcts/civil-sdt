@@ -8,14 +8,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter1;
 
 
 /**
  * <p>Java class for mcolDefenceCriteriaType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="mcolDefenceCriteriaType">
  *   &lt;complexContent>
@@ -28,32 +29,28 @@ import org.w3._2001.xmlschema.Adapter1;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "mcolDefenceCriteriaType", propOrder = {
-    "fromDate",
-    "toDate"
+        "fromDate",
+        "toDate"
 })
 public class McolDefenceCriteriaType {
 
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlJavaTypeAdapter(Adapter1.class)
     @XmlSchemaType(name = "dateTime")
     protected Calendar fromDate;
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlJavaTypeAdapter(Adapter1.class)
     @XmlSchemaType(name = "dateTime")
     protected Calendar toDate;
 
     /**
      * Gets the value of the fromDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getFromDate() {
         return fromDate;
@@ -61,11 +58,9 @@ public class McolDefenceCriteriaType {
 
     /**
      * Sets the value of the fromDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setFromDate(Calendar value) {
         this.fromDate = value;
@@ -73,11 +68,9 @@ public class McolDefenceCriteriaType {
 
     /**
      * Gets the value of the toDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getToDate() {
         return toDate;
@@ -85,11 +78,9 @@ public class McolDefenceCriteriaType {
 
     /**
      * Sets the value of the toDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setToDate(Calendar value) {
         this.toDate = value;

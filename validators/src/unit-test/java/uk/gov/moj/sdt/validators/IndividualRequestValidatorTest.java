@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: SubmitQueryEnricherTest.java 17032 2013-09-12 15:25:50Z agarwals $
  * $LastChangedRevision: 17032 $
  * $LastChangedDate: 2013-09-12 16:25:50 +0100 (Thu, 12 Sep 2013) $
@@ -52,15 +52,11 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
 /**
  * Tests for {@link IndividualRequestValidatorTest}.
- * 
- * 
- * 
+ *
  * @author d120520
- * 
  */
 
-public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
-{
+public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
     /**
      * IndividualRequestValidator.
      */
@@ -121,48 +117,47 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
     /**
      * Setup of the Validator and Domain class instance.
      */
-    public void setUpLocalTests ()
-    {
+    public void setUpLocalTests() {
         // subject of test
-        validator = new IndividualRequestValidator ();
+        validator = new IndividualRequestValidator();
 
         // mock BulkCustomer object
-        mockIndividualRequestDao = EasyMock.createMock (IIndividualRequestDao.class);
+        mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
 
         // create a bulk customer
-        bulkCustomer = new BulkCustomer ();
-        bulkCustomer.setSdtCustomerId (12345L);
+        bulkCustomer = new BulkCustomer();
+        bulkCustomer.setSdtCustomerId(12345L);
 
-        bulkSubmission = new BulkSubmission ();
-        bulkSubmission.setBulkCustomer (bulkCustomer);
+        bulkSubmission = new BulkSubmission();
+        bulkSubmission.setBulkCustomer(bulkCustomer);
 
         // create an individual request
-        individualRequest = new IndividualRequest ();
-        individualRequest.setId (requestId);
-        individualRequest.setBulkSubmission (bulkSubmission);
-        individualRequest.setCustomerRequestReference ("customerRequestReference");
+        individualRequest = new IndividualRequest();
+        individualRequest.setId(requestId);
+        individualRequest.setBulkSubmission(bulkSubmission);
+        individualRequest.setCustomerRequestReference("customerRequestReference");
 
         // Setup global parameters cache
-        globalParameter = new GlobalParameter ();
-        globalParameter.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
-        globalParameter.setValue (Integer.toString (dataRetentionPeriod));
-        globalParameterCache = EasyMock.createMock (ICacheable.class);
-        expect (
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ())).andReturn (globalParameter);
-        replay (globalParameterCache);
+        globalParameter = new GlobalParameter();
+        globalParameter.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
+        globalParameter.setValue(Integer.toString(dataRetentionPeriod));
+        globalParameterCache = EasyMock.createMock(ICacheable.class);
+        expect(
+                globalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameter);
+        replay(globalParameterCache);
 
-        validator.setGlobalParameterCache (globalParameterCache);
+        validator.setGlobalParameterCache(globalParameterCache);
 
         // Set up Error messages cache
-        errorMessage = new ErrorMessage ();
-        errorMessage.setErrorCode (IErrorMessage.ErrorCode.DUP_CUST_REQID.name ());
-        errorMessage.setErrorText ("Duplicate Unique Request Identifier submitted {0}.");
-        errorMessagesCache = EasyMock.createMock (ICacheable.class);
-        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.DUP_CUST_REQID.name ()))
-                .andReturn (errorMessage);
-        replay (errorMessagesCache);
-        validator.setErrorMessagesCache (errorMessagesCache);
+        errorMessage = new ErrorMessage();
+        errorMessage.setErrorCode(IErrorMessage.ErrorCode.DUP_CUST_REQID.name());
+        errorMessage.setErrorText("Duplicate Unique Request Identifier submitted {0}.");
+        errorMessagesCache = EasyMock.createMock(ICacheable.class);
+        expect(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.DUP_CUST_REQID.name()))
+                .andReturn(errorMessage);
+        replay(errorMessagesCache);
+        validator.setErrorMessagesCache(errorMessagesCache);
 
     }
 
@@ -170,25 +165,24 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
      * The purpose of this test is to test an invalid request and test the exception.
      */
     @Test
-    public void testInvalidRequest ()
-    {
+    public void testInvalidRequest() {
 
-        expect (
-                mockIndividualRequestDao.getIndividualRequest (bulkCustomer,
-                        individualRequest.getCustomerRequestReference (), dataRetentionPeriod)).andReturn (
+        expect(
+                mockIndividualRequestDao.getIndividualRequest(bulkCustomer,
+                        individualRequest.getCustomerRequestReference(), dataRetentionPeriod)).andReturn(
                 individualRequest);
-        replay (mockIndividualRequestDao);
+        replay(mockIndividualRequestDao);
 
         // inject the bulk customer into the validator
-        validator.setIndividualRequestDao (mockIndividualRequestDao);
-        individualRequest.accept (validator, null);
-        EasyMock.verify (mockIndividualRequestDao);
-        Assert.assertEquals (
+        validator.setIndividualRequestDao(mockIndividualRequestDao);
+        individualRequest.accept(validator, null);
+        EasyMock.verify(mockIndividualRequestDao);
+        Assert.assertEquals(
 
-        individualRequest.getErrorLog ().getErrorText (), "Duplicate Unique Request Identifier submitted " +
-                individualRequest.getCustomerRequestReference () + ".");
-        Assert.assertEquals (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus (),
-                individualRequest.getRequestStatus ());
+                individualRequest.getErrorLog().getErrorText(), "Duplicate Unique Request Identifier submitted " +
+                        individualRequest.getCustomerRequestReference() + ".");
+        Assert.assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(),
+                individualRequest.getRequestStatus());
 
     }
 
@@ -196,18 +190,17 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest
      * The purpose of this test is to pass a valid request.
      */
     @Test
-    public void testValidRequest ()
-    {
+    public void testValidRequest() {
 
-        expect (
-                mockIndividualRequestDao.getIndividualRequest (bulkCustomer,
-                        individualRequest.getCustomerRequestReference (), dataRetentionPeriod)).andReturn (null);
-        replay (mockIndividualRequestDao);
+        expect(
+                mockIndividualRequestDao.getIndividualRequest(bulkCustomer,
+                        individualRequest.getCustomerRequestReference(), dataRetentionPeriod)).andReturn(null);
+        replay(mockIndividualRequestDao);
 
         // inject the bulk customer into the validator
-        validator.setIndividualRequestDao (mockIndividualRequestDao);
-        individualRequest.accept (validator, null);
-        EasyMock.verify (mockIndividualRequestDao);
+        validator.setIndividualRequestDao(mockIndividualRequestDao);
+        individualRequest.accept(validator, null);
+        EasyMock.verify(mockIndividualRequestDao);
 
     }
 }

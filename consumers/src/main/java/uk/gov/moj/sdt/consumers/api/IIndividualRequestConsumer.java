@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,22 +36,19 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 /**
  * Interface for the IndividualRequestConsumer.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IIndividualRequestConsumer
-{
+public interface IIndividualRequestConsumer {
     /**
-     * 
      * @param individualRequest the Individual Request part of the
-     *            submission request.
+     *                          submission request.
      * @param connectionTimeOut - the connection time out parameter value for the target application.
-     * @param receiveTimeOut - the receive time out parameter value for the target application.
-     * @throws OutageException if the target server is un-reachable.
+     * @param receiveTimeOut    - the receive time out parameter value for the target application.
+     * @throws OutageException  if the target server is un-reachable.
      * @throws TimeoutException if the target server response cannot be obtained
-     *             within the timeout period.
+     *                          within the timeout period.
      */
-    void processIndividualRequest (final IIndividualRequest individualRequest, final long connectionTimeOut,
-                                   final long receiveTimeOut) throws OutageException, TimeoutException;
+    void processIndividualRequest(final IIndividualRequest individualRequest, final long connectionTimeOut,
+                                  final long receiveTimeOut) throws OutageException, TimeoutException;
 }

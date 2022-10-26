@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for bulkRequestType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="bulkRequestType">
  *   &lt;complexContent>
@@ -24,13 +24,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "bulkRequestType", propOrder = {
-    "header",
-    "requests"
+        "header",
+        "requests"
 })
 public class BulkRequestType {
 
@@ -41,11 +39,9 @@ public class BulkRequestType {
 
     /**
      * Gets the value of the header property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @return possible object is
+     * {@link HeaderType }
      */
     public HeaderType getHeader() {
         return header;
@@ -53,11 +49,9 @@ public class BulkRequestType {
 
     /**
      * Sets the value of the header property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link HeaderType }
      */
     public void setHeader(HeaderType value) {
         this.header = value;
@@ -65,11 +59,9 @@ public class BulkRequestType {
 
     /**
      * Gets the value of the requests property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RequestsType }
-     *     
+     *
+     * @return possible object is
+     * {@link RequestsType }
      */
     public RequestsType getRequests() {
         return requests;
@@ -77,11 +69,9 @@ public class BulkRequestType {
 
     /**
      * Sets the value of the requests property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RequestsType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link RequestsType }
      */
     public void setRequests(RequestsType value) {
         this.requests = value;

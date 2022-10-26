@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -47,12 +47,11 @@ import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
@@ -63,60 +62,54 @@ import uk.gov.moj.sdt.test.utils.DBUnitUtility;
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class IndividualRequestMdbIntTest extends AbstractIntegrationTest
-{
+public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
     /**
      * Setup the test.
      */
     @Before
-    public void setUp ()
-    {
-        DBUnitUtility.loadDatabase (this.getClass (), true);
+    public void setUp() {
+        DBUnitUtility.loadDatabase(this.getClass(), true);
 
         // Write a Message to the MDB
-        final ISdtMessage sdtMessage = new SdtMessage ();
-        sdtMessage.setSdtRequestReference ("SDT_REQ_TEST_1");
-        sdtMessage.setMessageSentTimestamp (System.currentTimeMillis ());
-        sdtMessage.setEnqueueLoggingId (1);
+        final ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("SDT_REQ_TEST_1");
+        sdtMessage.setMessageSentTimestamp(System.currentTimeMillis());
+        sdtMessage.setEnqueueLoggingId(1);
         final IMessageWriter messageWriter =
                 (IMessageWriter) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
-        messageWriter.queueMessage (sdtMessage, "MCOLS", false);
+                        .getBean("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
+        messageWriter.queueMessage(sdtMessage, "MCOLS", false);
     }
 
     /**
      * This method tests the read message.
-     * 
+     *
      * @throws InterruptedException if the thread call is interrupted
-     * @throws IOException if there is any problem when reading the file
+     * @throws IOException          if there is any problem when reading the file
      */
     @Test
-    public void testReadMessage () throws InterruptedException, IOException
-    {
-        Thread.sleep (5000);
-        Assert.assertTrue ("Submission read successfully.", true);
+    public void testReadMessage() throws InterruptedException, IOException {
+        Thread.sleep(5000);
+        Assert.assertTrue("Submission read successfully.", true);
     }
 
     /**
      * This method tests that the multiple MDB setup is working fine.
      */
     @Test
-    public void testMultipleMdbSetup ()
-    {
+    public void testMultipleMdbSetup() {
         final DefaultMessageListenerContainer mcolsContainer =
-                (DefaultMessageListenerContainer) this.applicationContext.getBean ("messageListenerContainer");
+                (DefaultMessageListenerContainer) this.applicationContext.getBean("messageListenerContainer");
 
-        if (mcolsContainer.isActive ())
-        {
-            Assert.assertTrue (true);
+        if (mcolsContainer.isActive()) {
+            Assert.assertTrue(true);
         }
 
         final DefaultMessageListenerContainer mcolContainer =
-                (DefaultMessageListenerContainer) this.applicationContext.getBean ("messageListenerContainerMCol");
+                (DefaultMessageListenerContainer) this.applicationContext.getBean("messageListenerContainerMCol");
 
-        if (mcolContainer.isActive ())
-        {
-            Assert.assertTrue (true);
+        if (mcolContainer.isActive()) {
+            Assert.assertTrue(true);
         }
     }
 }

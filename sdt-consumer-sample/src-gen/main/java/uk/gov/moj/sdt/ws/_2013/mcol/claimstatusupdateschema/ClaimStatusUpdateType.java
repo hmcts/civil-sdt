@@ -8,14 +8,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.w3._2001.xmlschema.Adapter2;
 
 
 /**
  * <p>Java class for claimStatusUpdateType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="claimStatusUpdateType">
  *   &lt;complexContent>
@@ -30,15 +31,13 @@ import org.w3._2001.xmlschema.Adapter2;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "claimStatusUpdateType", propOrder = {
-    "claimNumber",
-    "defendantId",
-    "notificationType",
-    "paidInFullDate"
+        "claimNumber",
+        "defendantId",
+        "notificationType",
+        "paidInFullDate"
 })
 public class ClaimStatusUpdateType {
 
@@ -48,17 +47,15 @@ public class ClaimStatusUpdateType {
     @XmlElement(required = true)
     protected NotificationType notificationType;
     @XmlElement(type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "date")
     protected Calendar paidInFullDate;
 
     /**
      * Gets the value of the claimNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getClaimNumber() {
         return claimNumber;
@@ -66,11 +63,9 @@ public class ClaimStatusUpdateType {
 
     /**
      * Sets the value of the claimNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setClaimNumber(String value) {
         this.claimNumber = value;
@@ -78,11 +73,9 @@ public class ClaimStatusUpdateType {
 
     /**
      * Gets the value of the defendantId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDefendantId() {
         return defendantId;
@@ -90,11 +83,9 @@ public class ClaimStatusUpdateType {
 
     /**
      * Sets the value of the defendantId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDefendantId(String value) {
         this.defendantId = value;
@@ -102,11 +93,9 @@ public class ClaimStatusUpdateType {
 
     /**
      * Gets the value of the notificationType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link NotificationType }
-     *     
+     *
+     * @return possible object is
+     * {@link NotificationType }
      */
     public NotificationType getNotificationType() {
         return notificationType;
@@ -114,11 +103,9 @@ public class ClaimStatusUpdateType {
 
     /**
      * Sets the value of the notificationType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link NotificationType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link NotificationType }
      */
     public void setNotificationType(NotificationType value) {
         this.notificationType = value;
@@ -126,11 +113,9 @@ public class ClaimStatusUpdateType {
 
     /**
      * Gets the value of the paidInFullDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Calendar getPaidInFullDate() {
         return paidInFullDate;
@@ -138,11 +123,9 @@ public class ClaimStatusUpdateType {
 
     /**
      * Sets the value of the paidInFullDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPaidInFullDate(Calendar value) {
         this.paidInFullDate = value;

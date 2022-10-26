@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -44,33 +44,27 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
  * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
  * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
- * 
+ *
  * @author Robin Compston
  */
-public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao
-{
+public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (BulkCustomerDao.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDao.class);
 
     /**
      * Default constructor for {@link GenericDaoTest}.
      */
-    public BulkCustomerDao ()
-    {
-        super ();
+    public BulkCustomerDao() {
+        super();
     }
 
     @Override
-    public IBulkCustomer getBulkCustomerBySdtId (final long sdtCustomerId) throws DataAccessException
-    {
-        LOGGER.debug ("Get bulk customer matching sdt customer id [" + sdtCustomerId + "]");
+    public IBulkCustomer getBulkCustomerBySdtId(final long sdtCustomerId) throws DataAccessException {
+        LOGGER.debug("Get bulk customer matching sdt customer id [{}]", sdtCustomerId);
 
         // Call the generic dao to perform this query.
-        final IBulkCustomer bulkCustomer =
-                this.uniqueResult (IBulkCustomer.class, Restrictions.eq ("sdtCustomerId", sdtCustomerId));
-
-        return bulkCustomer;
+        return this.uniqueResult(IBulkCustomer.class, Restrictions.eq("sdtCustomerId", sdtCustomerId));
     }
 }

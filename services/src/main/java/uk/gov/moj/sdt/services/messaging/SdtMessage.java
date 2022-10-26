@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -37,16 +37,14 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 /**
  * Message class that holds the actual message text and additional information
  * to be put on the messaging queue.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public class SdtMessage implements Serializable, ISdtMessage
-{
+public class SdtMessage implements Serializable, ISdtMessage {
     /**
-     * 
+     *
      */
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     /**
      * This variable holds the sdtRequestReference of the individual request
@@ -67,44 +65,37 @@ public class SdtMessage implements Serializable, ISdtMessage
     private long enqueueLoggingId;
 
     @Override
-    public String getSdtRequestReference ()
-    {
+    public String getSdtRequestReference() {
         return sdtRequestReference;
     }
 
     @Override
-    public void setSdtRequestReference (final String sdtRequestReference)
-    {
+    public void setSdtRequestReference(final String sdtRequestReference) {
         this.sdtRequestReference = sdtRequestReference;
     }
 
     @Override
-    public long getMessageSentTimestamp ()
-    {
+    public long getMessageSentTimestamp() {
         return messageSentTimestamp;
     }
 
     @Override
-    public void setMessageSentTimestamp (final long messageSentTimestamp)
-    {
+    public void setMessageSentTimestamp(final long messageSentTimestamp) {
         this.messageSentTimestamp = messageSentTimestamp;
     }
 
     @Override
-    public long getEnqueueLoggingId ()
-    {
+    public long getEnqueueLoggingId() {
         return enqueueLoggingId;
     }
 
     @Override
-    public void setEnqueueLoggingId (final long enqueueLoggingId)
-    {
+    public void setEnqueueLoggingId(final long enqueueLoggingId) {
         this.enqueueLoggingId = enqueueLoggingId;
     }
 
     @Override
-    public String toString ()
-    {
+    public String toString() {
         return "SdtMessage [sdtRequestReference=" + sdtRequestReference + ", messageSentTimestamp=" +
                 messageSentTimestamp + ", enqueueLoggingId=" + enqueueLoggingId + "]";
     }

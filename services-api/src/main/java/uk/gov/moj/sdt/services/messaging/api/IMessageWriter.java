@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -33,20 +33,18 @@ package uk.gov.moj.sdt.services.messaging.api;
 
 /**
  * Interface for any classes wanting to implement the {@link IMessageWriter} interface.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-public interface IMessageWriter
-{
+public interface IMessageWriter {
     /**
      * Writes a message to the message queue. The target application code
      * is required so the message writer can resolve reference to the message queue.
-     * 
-     * @param sdtMessage the message object to be written to the message queue.
+     *
+     * @param sdtMessage    the message object to be written to the message queue.
      * @param targetAppCode the code of the target application.
-     * @param deadLetter is the message to be written to dead letter queue.
+     * @param deadLetter    is the message to be written to dead letter queue.
      */
-    void queueMessage (ISdtMessage sdtMessage, String targetAppCode, boolean deadLetter);
+    void queueMessage(ISdtMessage sdtMessage, String targetAppCode, boolean deadLetter);
 
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -50,12 +50,11 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
- * 
+ *
  * @author Manoj Kulkarni
- * 
  */
-@RunWith (SpringJUnit4ClassRunner.class)
-@ContextConfiguration (locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
@@ -66,98 +65,90 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
         "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
         "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
-public class MessageWriterIntTest extends AbstractIntegrationTest
-{
+public class MessageWriterIntTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger (MessageWriterIntTest.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(MessageWriterIntTest.class);
 
     /**
      * Test method to test the sending of message.
-     * 
-     * @throws JMSException exception
+     *
+     * @throws JMSException         exception
      * @throws InterruptedException exception
-     * 
      */
     @Test
-    public void testQueueMessage () throws JMSException, InterruptedException
-    {
+    public void testQueueMessage() throws JMSException, InterruptedException {
         // Get message writer from Spring.
         final MessageWriter messageWriter =
                 (MessageWriter) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
+                        .getBean("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyyMMddHHmmss");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
-        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean ("jmsTemplate");
+        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean("jmsTemplate");
 
         // Clear any old messages off the queue.
-        jmsTemplate.setReceiveTimeout (1);
-        while (true)
-        {
+        jmsTemplate.setReceiveTimeout(1);
+        while (true) {
             // Read any old messages.
-            final Message message = jmsTemplate.receive ("Test1Queue");
-            if (message == null)
-            {
+            final Message message = jmsTemplate.receive("Test1Queue");
+            if (message == null) {
                 break;
             }
         }
 
         // Send the first message.
-        final ISdtMessage message1 = new SdtMessage ();
+        final ISdtMessage message1 = new SdtMessage();
         final String strMessage1 =
-                "TestMessage1" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        message1.setSdtRequestReference (strMessage1);
-        messageWriter.queueMessage (message1, "TEST1", false);
+                "TestMessage1" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
+        message1.setSdtRequestReference(strMessage1);
+        messageWriter.queueMessage(message1, "TEST1", false);
 
         // Send the second message.
-        final ISdtMessage message2 = new SdtMessage ();
+        final ISdtMessage message2 = new SdtMessage();
         final String strMessage2 =
-                "TestMessage2" + dateFormat.format (new java.util.Date (System.currentTimeMillis ()));
-        message2.setSdtRequestReference (strMessage2);
-        messageWriter.queueMessage (message2, "TEST1", false);
+                "TestMessage2" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
+        message2.setSdtRequestReference(strMessage2);
+        messageWriter.queueMessage(message2, "TEST1", false);
 
         // Read the two messages and ensure they are read back in the same order.
-        Message message = jmsTemplate.receive ("Test1Queue");
+        Message message = jmsTemplate.receive("Test1Queue");
         ObjectMessage objmessage = (ObjectMessage) message;
-        if (objmessage == null)
-        {
-            Assert.fail ("Test failed because JMS receive timed out.");
+        if (objmessage == null) {
+            Assert.fail("Test failed because JMS receive timed out.");
         }
 
-        ISdtMessage sdtMessage = (ISdtMessage) objmessage.getObject ();
-        LOGGER.debug ("Message Receieved 1 - " + sdtMessage.toString ());
-        Assert.assertTrue (sdtMessage.getSdtRequestReference ().equals (strMessage1));
+        ISdtMessage sdtMessage = (ISdtMessage) objmessage.getObject();
+        LOGGER.debug("Message Receieved 1 - " + sdtMessage.toString());
+        Assert.assertTrue(sdtMessage.getSdtRequestReference().equals(strMessage1));
 
-        message = jmsTemplate.receive ("Test1Queue");
+        message = jmsTemplate.receive("Test1Queue");
         objmessage = (ObjectMessage) message;
-        sdtMessage = (ISdtMessage) objmessage.getObject ();
-        LOGGER.debug ("Message Receieved2 - " + sdtMessage.toString ());
-        Assert.assertTrue (sdtMessage.getSdtRequestReference ().equals (strMessage2));
+        sdtMessage = (ISdtMessage) objmessage.getObject();
+        LOGGER.debug("Message Receieved2 - " + sdtMessage.toString());
+        Assert.assertTrue(sdtMessage.getSdtRequestReference().equals(strMessage2));
 
     }
 
     /**
      * Test method to test failure behaviour when ACTIVE MQ not running.
-     * 
+     *
      * @throws JMSException exception
-     * 
      */
     @Test
-    public void testActiveMqDown () throws JMSException
-    {
+    public void testActiveMqDown() throws JMSException {
         // Get message writer from Spring.
         final MessageWriter messageWriter =
                 (MessageWriter) this.applicationContext
-                        .getBean ("uk.gov.moj.sdt.services.messaging.api.IMessageWriterBad");
+                        .getBean("uk.gov.moj.sdt.services.messaging.api.IMessageWriterBad");
 
         // Send the message.
-        final ISdtMessage message = new SdtMessage ();
-        message.setSdtRequestReference ("Test message");
+        final ISdtMessage message = new SdtMessage();
+        message.setSdtRequestReference("Test message");
 
-        messageWriter.queueMessage (message, "TEST1", false);
-        Assert.assertTrue ("Test completed", true);
+        messageWriter.queueMessage(message, "TEST1", false);
+        Assert.assertTrue("Test completed", true);
 
     }
 }

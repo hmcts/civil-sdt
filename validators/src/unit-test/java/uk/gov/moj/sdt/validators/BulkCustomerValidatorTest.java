@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: SubmitQueryEnricherTest.java 17032 2013-09-12 15:25:50Z agarwals $
  * $LastChangedRevision: 17032 $
  * $LastChangedDate: 2013-09-12 16:25:50 +0100 (Thu, 12 Sep 2013) $
@@ -49,12 +49,10 @@ import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 
 /**
  * Tests for {@link BulkCustomerValidatorTest}.
- * 
+ *
  * @author d120520
- * 
  */
-public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest
-{
+public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Subject for test.
      */
@@ -103,36 +101,35 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest
     /**
      * Setup of the Validator and Domain class instance.
      */
-    public void setUpLocalTests ()
-    {
+    public void setUpLocalTests() {
 
-        validator = new BulkCustomerValidator ();
+        validator = new BulkCustomerValidator();
 
         // Create mocks needed for this test.
-        mockIBulkCustomerDao = EasyMock.createMock (IBulkCustomerDao.class);
-        bulkCustomer = new BulkCustomer ();
+        mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        bulkCustomer = new BulkCustomer();
 
         // Set up Global parameters cache
-        globalParameter = new GlobalParameter ();
-        globalParameter.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
-        globalParameter.setValue (contact);
-        globalParameterCache = EasyMock.createMock (ICacheable.class);
-        expect (
-                globalParameterCache.getValue (IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ())).andReturn (globalParameter);
-        replay (globalParameterCache);
-        validator.setGlobalParameterCache (globalParameterCache);
+        globalParameter = new GlobalParameter();
+        globalParameter.setName(IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
+        globalParameter.setValue(contact);
+        globalParameterCache = EasyMock.createMock(ICacheable.class);
+        expect(
+                globalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name())).andReturn(globalParameter);
+        replay(globalParameterCache);
+        validator.setGlobalParameterCache(globalParameterCache);
 
         // Set up Error messages cache
-        errorMessage = new ErrorMessage ();
-        errorMessage.setErrorCode (IErrorMessage.ErrorCode.CUST_ID_INVALID.name ());
-        errorMessage.setErrorText ("The Bulk Customer organisation does not have an SDT Customer ID set up. "
+        errorMessage = new ErrorMessage();
+        errorMessage.setErrorCode(IErrorMessage.ErrorCode.CUST_ID_INVALID.name());
+        errorMessage.setErrorText("The Bulk Customer organisation does not have an SDT Customer ID set up. "
                 + "Please contact {1} for assistance.");
-        errorMessagesCache = EasyMock.createMock (ICacheable.class);
-        expect (errorMessagesCache.getValue (IErrorMessage.class, IErrorMessage.ErrorCode.CUST_ID_INVALID.name ()))
-                .andReturn (errorMessage);
-        replay (errorMessagesCache);
-        validator.setErrorMessagesCache (errorMessagesCache);
+        errorMessagesCache = EasyMock.createMock(ICacheable.class);
+        expect(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.CUST_ID_INVALID.name()))
+                .andReturn(errorMessage);
+        replay(errorMessagesCache);
+        validator.setErrorMessagesCache(errorMessagesCache);
 
     }
 
@@ -140,59 +137,54 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest
      * Test success flow.
      */
     @Test
-    public void testCustomerFound ()
-    {
+    public void testCustomerFound() {
         // Setup bulk customer for test.
-        bulkCustomer.setSdtCustomerId (12345L);
+        bulkCustomer.setSdtCustomerId(12345L);
 
         // Tell the mock dao to return the same bulk customer.
-        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId)).andReturn (bulkCustomer);
-        replay (mockIBulkCustomerDao);
+        expect(mockIBulkCustomerDao.getBulkCustomerBySdtId(sdtCustomerId)).andReturn(bulkCustomer);
+        replay(mockIBulkCustomerDao);
 
         // Inject the mock dao into the validator.
-        validator.setBulkCustomerDao (mockIBulkCustomerDao);
+        validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
         // Validate the bulk customer.
-        bulkCustomer.accept (validator, null);
-        EasyMock.verify (mockIBulkCustomerDao);
+        bulkCustomer.accept(validator, null);
+        EasyMock.verify(mockIBulkCustomerDao);
 
-        Assert.assertEquals (bulkCustomer.getSdtCustomerId (), sdtCustomerId);
-        Assert.assertTrue (true);
+        Assert.assertEquals(bulkCustomer.getSdtCustomerId(), sdtCustomerId);
+        Assert.assertTrue(true);
     }
 
     /**
      * Test success flow.
      */
     @Test
-    public void testCustomerNotFound ()
-    {
-        bulkCustomer.setSdtCustomerId (12345L);
+    public void testCustomerNotFound() {
+        bulkCustomer.setSdtCustomerId(12345L);
 
         // Tell the mock dao to return the same bulk customer.
-        expect (mockIBulkCustomerDao.getBulkCustomerBySdtId (sdtCustomerId)).andReturn (null);
-        replay (mockIBulkCustomerDao);
+        expect(mockIBulkCustomerDao.getBulkCustomerBySdtId(sdtCustomerId)).andReturn(null);
+        replay(mockIBulkCustomerDao);
 
         // Inject the mock dao into the validator.
-        validator.setBulkCustomerDao (mockIBulkCustomerDao);
+        validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
-        try
-        {
+        try {
             // Validate the bulk customer.
-            bulkCustomer.accept (validator, null);
+            bulkCustomer.accept(validator, null);
 
-            Assert.fail ("Test failed to throw CustomerNotFoundException.");
-        }
-        catch (final CustomerNotFoundException e)
-        {
-            EasyMock.verify (mockIBulkCustomerDao);
+            Assert.fail("Test failed to throw CustomerNotFoundException.");
+        } catch (final CustomerNotFoundException e) {
+            EasyMock.verify(mockIBulkCustomerDao);
 
             // [^\[]*\[CUST_NOT_SETUP\][^\[]*\[12345\].*
-            Assert.assertTrue ("Error code incorrect",
-                    e.getErrorCode ().equals (IErrorMessage.ErrorCode.CUST_ID_INVALID.name ()));
+            Assert.assertTrue("Error code incorrect",
+                    e.getErrorCode().equals(IErrorMessage.ErrorCode.CUST_ID_INVALID.name()));
             // CHECKSTYLE:OFF
-            Assert.assertTrue (
+            Assert.assertTrue(
                     "Substitution value incorrect",
-                    e.getErrorDescription ().equals (
+                    e.getErrorDescription().equals(
                             "The Bulk Customer organisation does not have an SDT Customer ID set up. Please contact " +
                                     contact + " for assistance."));
             // CHECKSTYLE:ON

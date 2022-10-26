@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for bulkFeedbackRequestType complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="bulkFeedbackRequestType">
  *   &lt;complexContent>
@@ -23,12 +23,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "bulkFeedbackRequestType", propOrder = {
-    "header"
+        "header"
 })
 public class BulkFeedbackRequestType {
 
@@ -37,11 +35,9 @@ public class BulkFeedbackRequestType {
 
     /**
      * Gets the value of the header property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @return possible object is
+     * {@link HeaderType }
      */
     public HeaderType getHeader() {
         return header;
@@ -49,11 +45,9 @@ public class BulkFeedbackRequestType {
 
     /**
      * Sets the value of the header property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HeaderType }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link HeaderType }
      */
     public void setHeader(HeaderType value) {
         this.header = value;
