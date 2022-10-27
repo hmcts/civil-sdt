@@ -12,6 +12,10 @@ repositories {
 sourceSets.test.java.srcDirs += "unit-test/java"
 sourceSets.test.java.srcDirs += "integ-test/java"
 
+dependencyCheck {
+  suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
+}
+
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
