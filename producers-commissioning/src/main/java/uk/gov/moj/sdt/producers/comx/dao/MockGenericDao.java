@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -50,11 +50,11 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
 
 /**
  * Base class for Mock DAO classes containing helper methods for mock dao sub classes.
- * 
+ *
  * Contains a static list of data for testing with the commissioning system.
- * 
+ *
  * @author d130680
- * 
+ *
  */
 public class MockGenericDao implements IGenericDao
 {
@@ -84,9 +84,9 @@ public class MockGenericDao implements IGenericDao
 
     /**
      * Check the customer reference is valid for a bulk submission against a static list.
-     * 
+     *
      * @param customerReference customer reference
-     * 
+     *
      * @return BulkSubmission if not valid null otherwise
      */
     protected IBulkSubmission getBulkSubmission (final String customerReference)
@@ -97,7 +97,7 @@ public class MockGenericDao implements IGenericDao
             bulkSubmission.setCustomerReference (customerReference.toLowerCase ());
             bulkSubmission.setSdtBulkReference ("MCOL_20130722000000_B00000001");
             // CHECKSTYLE:OFF
-            bulkSubmission.setCreatedDate (new LocalDateTime (2013, 7, 22, 13, 0));
+            bulkSubmission.setCreatedDate (LocalDateTime.of (2013, 7, 22, 13, 0));
             // CHECKSTYLE:ON
             return bulkSubmission;
         }

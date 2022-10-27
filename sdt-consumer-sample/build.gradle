@@ -4,6 +4,14 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
+sourceSets.main.java.srcDirs += "src-gen/main/java"
+
+dependencies {
+  implementation project(':producers-api')
+  implementation project(':producers-api')
+  testImplementation project(':producers-api').sourceSets.main.output
+}
+
 jar {
     enabled = true
     baseName = 'civil-sdt-sdt-consumer-sample'
@@ -11,4 +19,8 @@ jar {
 
 bootJar {
     enabled = false
+}
+
+bootJarMainClassName {
+  enabled = false
 }

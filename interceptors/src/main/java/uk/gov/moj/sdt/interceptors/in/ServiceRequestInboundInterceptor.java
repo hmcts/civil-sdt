@@ -112,7 +112,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
         final IServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setBulkCustomerId(extractBulkCustomerId(rawXml));
         serviceRequest.setRequestPayload(rawXml);
-        serviceRequest.setRequestDateTime(new LocalDateTime());
+        serviceRequest.setRequestDateTime(LocalDateTime.now());
         serviceRequest.setRequestType(extractRequestType(rawXml));
 
         // Get the server Host Name

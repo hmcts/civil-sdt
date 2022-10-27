@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,8 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -46,9 +46,9 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 /**
  * Custom class used to generate bulk submissions and individual requests.
  * The class is defined as bean and the sample data is also read from the spring XML.
- * 
+ *
  * @author d130680
- * 
+ *
  */
 public class BulkFeedbackFactory
 {
@@ -95,7 +95,7 @@ public class BulkFeedbackFactory
 
     /**
      * Constructor.
-     * 
+     *
      * @param bulkSubmission bulk submission
      */
     public BulkFeedbackFactory (final IBulkSubmission bulkSubmission)
@@ -107,7 +107,7 @@ public class BulkFeedbackFactory
 
     /**
      * Create an individual request and add it the list of individual requests.
-     * 
+     *
      * @param customerRequestReference customer request reference from individual request domain object
      * @param requestType request type from individual request domain object
      * @param requestStatus request status from individual request domain object
@@ -146,10 +146,10 @@ public class BulkFeedbackFactory
     /**
      * Create a list of individual request and add it the list.
      * This method is called from the spring configuration files with the list of params passed in.
-     * 
-     * 
+     *
+     *
      * @param params list of strings containing the information we need
-     * 
+     *
      */
     public void createIndividualRequests (final List<List<String>> params)
     {
@@ -173,7 +173,7 @@ public class BulkFeedbackFactory
 
     /**
      * Get the bulk submission.
-     * 
+     *
      * @return bulk submission
      */
     public IBulkSubmission getBulkSubmission ()
@@ -183,7 +183,7 @@ public class BulkFeedbackFactory
 
     /**
      * Set the bulk submission.
-     * 
+     *
      * @param bulkSubmission bulk submission.
      */
     public void setBulkSubmission (final IBulkSubmission bulkSubmission)
@@ -193,7 +193,7 @@ public class BulkFeedbackFactory
 
     /**
      * Get the target response map.
-     * 
+     *
      * @return target response map
      */
     public Map<String, String> getTargetResponseMap ()

@@ -36,6 +36,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -156,4 +163,30 @@ public final class Utilities {
         return textToReplace;
     }
 
+    /**
+     * Converts Joda {@link LocalDateTime} into {@link Calendar}.
+     *
+     * @param localDateTime local date time instance.
+     * @return Calendar
+     */
+    public static Calendar convertLocalDateTimeToCalendar (final LocalDateTime localDateTime)
+    {
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        Date date = Date.from(instant);
+        final Calendar calendar = Calendar.getInstance ();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    /**
+     * Formats a LocalDateTime into a string.
+     *
+     * @param localDateTime local date time object
+     * @return formatted date
+     */
+    public static String formatDateTimeForMessage (final LocalDateTime localDateTime)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");
+        return  localDateTime.format(formatter);
+    }
 }

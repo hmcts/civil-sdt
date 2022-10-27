@@ -102,7 +102,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
 
             individualRequest.setRequestType(request.getRequestType());
 
-            individualRequest.setCreatedDate(new LocalDateTime());
+            individualRequest.setCreatedDate(LocalDateTime.now());
 
             bulkSubmission.addIndividualRequest(individualRequest);
         }
@@ -124,7 +124,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
 
         bulkSubmission.setTargetApplication(targetApplication);
         bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus());
-        bulkSubmission.setCreatedDate(new LocalDateTime());
+        bulkSubmission.setCreatedDate(LocalDateTime.now());
 
         // Set bulk customer
         final BulkCustomer bulkCustomer = mapToBulkCustomer(headerType);

@@ -1,10 +1,13 @@
 apply plugin: 'info.solidsoft.pitest'
 
-sourceSets.main.java.srcDirs += "src-gen.main"
+sourceSets.main.java.srcDirs += "src-gen/main/java"
 
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
+
+sourceSets.test.java.srcDirs += "unit-test/java"
+sourceSets.test.java.srcDirs += "integ-test/java"
 
 dependencies {
     implementation project(':domain')

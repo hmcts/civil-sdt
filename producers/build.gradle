@@ -4,13 +4,20 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
+sourceSets.test.java.srcDirs += "unit-test/java"
+sourceSets.test.java.srcDirs += "integ-test/java"
+
 dependencies {
     implementation project(':handlers')
     implementation project(':domain')
     implementation project(':utils')
+    implementation project(':producers-api')
+    implementation project(':handlers-api')
     testImplementation project(":handlers").sourceSets.main.output
     testImplementation project(":domain").sourceSets.main.output
     testImplementation project(":utils").sourceSets.main.output
+    testImplementation project(':producers-api').sourceSets.main.output
+    testImplementation project(":handlers-api").sourceSets.main.output
 }
 
 jar {

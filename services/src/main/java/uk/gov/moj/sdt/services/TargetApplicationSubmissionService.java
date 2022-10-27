@@ -252,8 +252,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         // Set the updated date.
         // We've already incremented the forwarding attempts and set the status to forwarded so
         // no need to do that here again.
-        individualRequest
-                .setUpdatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        individualRequest.setUpdatedDate(LocalDateTime.now());
 
         // Get the Error message to indicate that call to target application has timed out
         final IErrorMessage errorMessageParam =

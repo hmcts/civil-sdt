@@ -322,7 +322,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                 // Another thread has beaten us - report the SDT bulk reference of the winning thread to the client.
                 final List<String> replacements = new ArrayList<>();
                 replacements.add(String.valueOf(bulkSubmission.getCustomerReference()));
-                replacements.add(Utilities.formatDateTimeForMessage(new LocalDateTime(System.currentTimeMillis())));
+                replacements.add(Utilities.formatDateTimeForMessage(LocalDateTime.now()));
                 replacements.add(winningSdtBulkReference);
                 final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString();
                 final IErrorMessage errorMessage = errorMessagesCache.getValue(IErrorMessage.class, errorCodeStr);

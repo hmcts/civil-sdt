@@ -57,7 +57,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
  * @author Robin Compston
  */
 
-public final class SdtManagementMBean implements ISdtManagementMBean {
+public class SdtManagementMBean implements ISdtManagementMBean {
     /**
      * Static logging object.
      */
@@ -209,7 +209,7 @@ public final class SdtManagementMBean implements ISdtManagementMBean {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public String processDLQRequest(final String sdtRequestReference, final String requestStatus) {
+    public String processDlqRequest(final String sdtRequestReference, final String requestStatus) {
         IIndividualRequest individualRequest = null;
 
         // Parameters validation.
