@@ -282,12 +282,38 @@ subprojects { subproject ->
   apply plugin: 'jacoco'
   apply plugin: 'uk.gov.hmcts.java'
 
+  sourceSets {
+    unitTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/unit-test/java')
+      }
+      resources.srcDir file('src/unit-test/resources')
+    }
+
+    integTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/integ-test/java')
+      }
+      resources.srcDir file('src/integ-test/resources')
+    }
+  }
+
   configurations {
     providedRuntime
 
     aatCompile.extendsFrom(testImplementation)
     aatRuntime.extendsFrom(testRuntimeOnly)
     cucumberRuntime.extendsFrom(functionalRuntime)
+
+    unitTestImplementation.extendsFrom testImplementation
+    unitTestImplementation.extendsFrom runtimeOnly
+
+    integTestImplementation.extendsFrom testImplementation
+    integTestImplementation.extendsFrom runtimeOnly
   }
 
   dependencyUpdates.resolutionStrategy = {
@@ -446,6 +472,18 @@ subprojects { subproject ->
     reports {
       html.enabled = true
     }
+  }
+
+  task unit(type: Test) {
+    description = "Runs Unit Tests"
+    testClassesDirs = sourceSets.unitTest.output.classesDirs
+    classpath = sourceSets.unitTest.runtimeClasspath
+  }
+
+  task integ(type: Test) {
+    description = "Runs Integ Tests"
+    testClassesDirs = sourceSets.integTest.output.classesDirs
+    classpath = sourceSets.integTest.runtimeClasspath
   }
 
   check.dependsOn jacocoTestReport
