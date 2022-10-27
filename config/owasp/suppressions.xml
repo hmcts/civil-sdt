@@ -16,6 +16,8 @@
   <suppress>
     <notes>Temporary Suppression</notes>
     <cve>CVE-2022-38752</cve>
+    <cve>CVE-2015-3208</cve>
+    <cve>CVE-2020-5408</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
