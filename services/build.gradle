@@ -5,11 +5,13 @@ dependencyCheck {
 }
 
 dependencies {
+    implementation project(':consumers')
     implementation project(':dao')
     implementation project(':dao-api')
     implementation project(':domain')
     implementation project(':services-api')
     implementation project(':utils')
+    testImplementation project(":consumers").sourceSets.main.output
     testImplementation project(":dao").sourceSets.main.output
     testImplementation project(":dao-api").sourceSets.main.output
     testImplementation project(":domain").sourceSets.main.output
