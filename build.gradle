@@ -399,7 +399,7 @@ subprojects { subproject ->
 
   sonarqube {
     properties {
-      properties["sonar.tests"] += sourceSets.integTest.allSource.srcDirs
+      properties["sonar.tests"] = sourceSets.integTest.allSource.srcDirs
       properties["sonar.tests"] += sourceSets.unitTest.allSource.srcDirs
     }
   }
