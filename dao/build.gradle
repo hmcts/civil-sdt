@@ -4,16 +4,17 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
-sourceSets.test.java.srcDirs += "unit-test/java"
-sourceSets.test.java.srcDirs += "integ-test/java"
-
 dependencies {
     implementation project(':dao-api')
     implementation project(':domain')
     implementation project(':utils')
-    testImplementation project(":dao-api").sourceSets.main.output
-    testImplementation project(":domain").sourceSets.main.output
-    testImplementation project(":utils").sourceSets.main.output
+    testImplementation project(":dao-api").sourceSets.unitTest.output
+    testImplementation project(":domain").sourceSets.unitTest.output
+    testImplementation project(":utils").sourceSets.unitTest.output
+
+    testImplementation project(":dao-api").sourceSets.integTest.output
+    testImplementation project(":domain").sourceSets.integTest.output
+    testImplementation project(":utils").sourceSets.integTest.output
 }
 jar {
     enabled = true

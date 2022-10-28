@@ -143,10 +143,8 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
     public void testGetBulkSubmissionLower() {
         final String customerRequestReference = "customer request reference 2";
         // Set the created date to be 90 days ago
-        Date d = new Date();
-        d = DateUtils.addDays(d, dataRetentionPeriod * -1);
 
-        createIndividualRequest(customerRequestReference, LocalDateTime.fromDateFields(d));
+        createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays(dataRetentionPeriod * -1));
         final IIndividualRequest individualRequest =
                 individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
 
@@ -161,11 +159,8 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
     @Test
     public void testGetIndividualRequestPastRetention() {
         final String customerRequestReference = "customer request reference 1";
-        // Set the created date to be 91 days ago
-        Date d = new Date();
-        d = DateUtils.addDays(d, (dataRetentionPeriod + 1) * -1);
 
-        createIndividualRequest(customerRequestReference, LocalDateTime.fromDateFields(d));
+        createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays((dataRetentionPeriod + 1) * -1));
 
         final IIndividualRequest individualRequest =
                 individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);

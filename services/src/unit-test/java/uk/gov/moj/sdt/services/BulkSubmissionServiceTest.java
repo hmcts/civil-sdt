@@ -390,7 +390,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         bulkSubmission.setBulkCustomer(bulkCustomer);
 
-        bulkSubmission.setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        bulkSubmission.setCreatedDate(LocalDateTime.now());
         bulkSubmission.setCustomerReference("TEST_CUST_REF");
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(2);
@@ -398,10 +398,8 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setSubmissionStatus("SUBMITTED");
 
         final IndividualRequest individualRequest = new IndividualRequest();
-        individualRequest.setCompletedDate(LocalDateTime.fromDateFields(new java.util.Date(System
-                .currentTimeMillis())));
-        individualRequest
-                .setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        individualRequest.setCompletedDate(LocalDateTime.now());
+        individualRequest.setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference("ICustReq123");
         individualRequest.setId(1L);
         individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
@@ -417,10 +415,8 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      */
     private void addValidIndividualRequest(final IBulkSubmission bulkSubmission, final String customerReference) {
         final IndividualRequest individualRequest = new IndividualRequest();
-        individualRequest.setCompletedDate(LocalDateTime.fromDateFields(new java.util.Date(System
-                .currentTimeMillis())));
-        individualRequest
-                .setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        individualRequest.setCompletedDate(LocalDateTime.now());
+        individualRequest.setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference(customerReference);
         individualRequest.setId(1L);
         individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());

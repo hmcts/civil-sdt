@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.utils;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,4 +190,29 @@ public final class Utilities {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");
         return  localDateTime.format(formatter);
     }
+
+    /**
+     * Obtain xml contents from given file. Removes line feeds from content so that regular expressions work as
+     * expected.
+     *
+     * @param dirName directory for the file.
+     * @param fileName name of the file.
+     * @return raw xml read from the file.
+     * @throws IOException in case of errors during read operation
+     */
+    public static String getRawXml (final String dirName, final String fileName) throws IOException
+    {
+        String message = "";
+
+        final File myFile = new File (Utilities.checkFileExists (dirName, fileName, false));
+
+        message = FileUtils.readFileToString (myFile);
+
+        // Remove linefeeds as they stop the regular expression working.
+        message = message.replace ('\n', ' ');
+        message = message.replace ('\r', ' ');
+        return message;
+
+    }
+
 }

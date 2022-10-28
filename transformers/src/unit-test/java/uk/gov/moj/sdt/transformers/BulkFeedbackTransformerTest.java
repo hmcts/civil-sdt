@@ -116,7 +116,7 @@ public class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
         final long numberOfRequest = 8;
         final String sdtBulkReference = "A123456789";
         final String customerRef = "C10000123";
-        final LocalDateTime createdDate = new LocalDateTime();
+        final LocalDateTime createdDate = LocalDateTime.now();
         final String submissionStatus = "Validated";
 
         domain.setNumberOfRequest(numberOfRequest);

@@ -75,7 +75,6 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
  *
  * @author Manoj kulkarni
  */
-@Slf4J
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
         "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
@@ -184,7 +183,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
         bulkSubmission.setNumberOfRequest(62L);
 
         // Set the service request id so it can be retrieved in the saveBulkSubmission code
-        SdtContext.getContext().setServiceRequestId(10800L));
+        SdtContext.getContext().setServiceRequestId(10800L);
 
         // Setup concurrency map as if validator had done it.
         IInFlightMessage inFlightMessage = new InFlightMessage();
@@ -320,7 +319,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         bulkSubmission.setBulkCustomer(bulkCustomer);
 
-        bulkSubmission.setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        bulkSubmission.setCreatedDate(LocalDateTime.now());
         bulkSubmission.setCustomerReference("10711");
         bulkSubmission.setNumberOfRequest(1);
 
@@ -352,8 +351,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
                                                       final String customerReference, final String status,
                                                       final int lineNumber) {
         final IndividualRequest individualRequest = new IndividualRequest();
-        individualRequest
-                .setCreatedDate(LocalDateTime.fromDateFields(new java.util.Date(System.currentTimeMillis())));
+        individualRequest.setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference(customerReference);
         individualRequest.setRequestStatus(status);
         individualRequest.setLineNumber(lineNumber);

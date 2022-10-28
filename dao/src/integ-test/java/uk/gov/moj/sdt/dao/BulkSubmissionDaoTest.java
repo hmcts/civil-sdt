@@ -137,7 +137,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
 
         LOGGER.debug("payload for bulk submission is " + submission.getPayload());
 
-        Assert.assertEquals(submission.getPayload()), xmlToLoad);
+        Assert.assertEquals(submission.getPayload(), xmlToLoad);
         Assert.assertEquals(submission.getCustomerReference(), "REF1");
     }
 
@@ -196,10 +196,8 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     public void testGetBulkSubmissionLower() {
         final String customerReference = "customer reference 2";
         // Set the created date to be 90 days ago
-        Date d = new Date();
-        d = DateUtils.addDays(d, dataRetentionPeriod * -1);
 
-        createBulkSubmission(customerReference, LocalDateTime.fromDateFields(d), sdtBulkReference);
+        createBulkSubmission(customerReference, LocalDateTime.now().minusDays(dataRetentionPeriod), sdtBulkReference);
         final IBulkSubmission bulkSubmission =
                 bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
         Assert.assertNotNull(bulkSubmission);
@@ -214,10 +212,10 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     public void testGetBulkSubmissionPastRetention() {
         final String customerReference = "customer reference 1";
         // Set the created date to be 91 days ago
-        Date d = new Date();
-        d = DateUtils.addDays(d, (dataRetentionPeriod + 1) * -1);
 
-        createBulkSubmission(customerReference, LocalDateTime.fromDateFields(d), sdtBulkReference);
+        createBulkSubmission(customerReference,
+                             LocalDateTime.now().minusDays(dataRetentionPeriod + 1),
+                             sdtBulkReference);
         final IBulkSubmission bulkSubmission =
                 bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
         Assert.assertNull(bulkSubmission);

@@ -279,7 +279,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void processDLQRequestWithNullParams() {
-        final String returnVal = this.sdtManagementMBean.processDLQRequest(null, null);
+        final String returnVal = this.sdtManagementMBean.processDlqRequest(null, null);
 
         Assert.assertEquals("Expected an error message.", MANDATORY_PARAMETERS_ERR_MSG, returnVal);
     }
@@ -290,7 +290,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void processDLQRequestWithInvalidStatus() {
-        final String returnVal = this.sdtManagementMBean.processDLQRequest(TEST_SDT_REQ_REF, "RECEIVED");
+        final String returnVal = this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF, "RECEIVED");
 
         Assert.assertEquals("Expected an error message.", INVALID_PARAM_VALUES_MSG, returnVal);
     }
@@ -308,7 +308,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         EasyMock.replay(mockIndividualRequestDao);
 
         final String returnVal =
-                this.sdtManagementMBean.processDLQRequest(invalidSdtReqReference,
+                this.sdtManagementMBean.processDlqRequest(invalidSdtReqReference,
                         IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);
@@ -334,7 +334,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         EasyMock.replay(mockIndividualRequestDao);
 
         final String returnVal =
-                this.sdtManagementMBean.processDLQRequest(TEST_SDT_REQ_REF,
+                this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
                         IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);
@@ -384,7 +384,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         EasyMock.replay(mockTargetAppSubmissionService);
 
         final String returnVal =
-                this.sdtManagementMBean.processDLQRequest(TEST_SDT_REQ_REF,
+                this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
                         IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);
@@ -435,7 +435,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         EasyMock.replay(mockTargetAppSubmissionService);
 
         final String returnVal =
-                this.sdtManagementMBean.processDLQRequest(TEST_SDT_REQ_REF,
+                this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
                         IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);

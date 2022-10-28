@@ -152,7 +152,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Current date time.
      */
-    private LocalDateTime now = new LocalDateTime();
+    private LocalDateTime now = LocalDateTime.now();
 
     /**
      * Setup of the Validator and Domain class instance.

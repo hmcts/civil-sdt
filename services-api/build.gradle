@@ -7,8 +7,11 @@ dependencyCheck {
 dependencies {
     implementation project(':domain')
     implementation project(':utils')
-    testImplementation project(":domain").sourceSets.main.output
-    testImplementation project(":utils").sourceSets.main.output
+    testImplementation project(":domain").sourceSets.unitTest.output
+    testImplementation project(":utils").sourceSets.unitTest.output
+
+    testImplementation project(":domain").sourceSets.integTest.output
+    testImplementation project(":utils").sourceSets.integTest.output
 }
 
 jar {

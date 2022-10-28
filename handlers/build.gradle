@@ -4,9 +4,6 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
-sourceSets.test.java.srcDirs += "unit-test/java"
-sourceSets.test.java.srcDirs += "integ-test/java"
-
 dependencies {
     implementation project(':domain')
     implementation project(':handlers-api')
@@ -15,13 +12,21 @@ dependencies {
     implementation project(':services-api')
     implementation project(':transformers')
     implementation project(':validators')
-    testImplementation project(":domain").sourceSets.main.output
-    testImplementation project(":handlers-api").sourceSets.main.output
-    testImplementation project(":producers-api").sourceSets.main.output
-    testImplementation project(":utils").sourceSets.main.output
-    testImplementation project(':services-api').sourceSets.main.output
-    testImplementation project(':transformers').sourceSets.main.output
-    testImplementation project(':validators').sourceSets.main.output
+    testImplementation project(":domain").sourceSets.unitTest.output
+    testImplementation project(":handlers-api").sourceSets.unitTest.output
+    testImplementation project(":producers-api").sourceSets.unitTest.output
+    testImplementation project(":utils").sourceSets.unitTest.output
+    testImplementation project(':services-api').sourceSets.unitTest.output
+    testImplementation project(':transformers').sourceSets.unitTest.output
+    testImplementation project(':validators').sourceSets.unitTest.output
+
+    testImplementation project(":domain").sourceSets.integTest.output
+    testImplementation project(":handlers-api").sourceSets.integTest.output
+    testImplementation project(":producers-api").sourceSets.integTest.output
+    testImplementation project(":utils").sourceSets.integTest.output
+    testImplementation project(':services-api').sourceSets.integTest.output
+    testImplementation project(':transformers').sourceSets.integTest.output
+    testImplementation project(':validators').sourceSets.integTest.output
 }
 
 jar {

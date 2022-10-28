@@ -9,7 +9,9 @@ sourceSets.main.java.srcDirs += "src-gen/main/java"
 dependencies {
   implementation project(':producers-api')
   implementation project(':producers-api')
-  testImplementation project(':producers-api').sourceSets.main.output
+  testImplementation project(':producers-api').sourceSets.unitTest.output
+
+  testImplementation project(':producers-api').sourceSets.integTest.output
 }
 
 jar {

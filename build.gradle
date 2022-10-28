@@ -346,16 +346,18 @@ subprojects { subproject ->
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    implementation group: 'com.sun.xml.ws', name: 'jaxws-ri', version: '3.0.2'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
+    implementation 'org.flywaydb:flyway-core:6.5.7'
+    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
+    implementation 'com.vladmihalcea:hibernate-types-52:2.16.3'
+    implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
-    implementation group: 'com.sun.xml.ws', name: 'jaxws-ri', version: '3.0.2'
-
-    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
-
-    implementation 'org.flywaydb:flyway-core:6.5.7'
-    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
-
     testImplementation "org.postgresql:postgresql:${postgresqlVersion}"
     testImplementation "org.testcontainers:postgresql:1.17.2"
     testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
@@ -381,24 +383,17 @@ subprojects { subproject ->
     testImplementation "org.exparity:hamcrest-date:2.0.4"
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
-
-    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
-
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
-
     testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
-
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
       exclude group: 'junit', module: 'junit'
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
-    implementation 'com.vladmihalcea:hibernate-types-52:2.16.3'
-    implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+    testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
+    testImplementation group: 'org.jdom', name: 'jdom', version: '2.0.2'
+    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
 
   }
 
