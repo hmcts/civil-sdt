@@ -78,7 +78,7 @@ tasks.withType(JavaExec).configureEach {
 }
 
 tasks.withType(Test) {
-  useJUnitPlatform()
+  useJUnit()
 
   testLogging {
     exceptionFormat = 'full'
@@ -141,7 +141,7 @@ ext {
   hibernateValidatorVersion = '6.0.20.Final'
   jacksonVersion = '2.13.2'
   javaxValidationVersion = '2.0.1.Final'
-  junitJupiterVersion = '5.7.0'
+  junitJupiterVersion = '5.8.1'
   junitVintageVersion = '5.7.0'
   log4jVersion = '2.17.1'
   postgresqlVersion = '42.4.1'
@@ -399,8 +399,10 @@ subprojects { subproject ->
 
   sonarqube {
     properties {
-      properties["sonar.tests"] = sourceSets.integTest.allSource.srcDirs
-      properties["sonar.tests"] += sourceSets.unitTest.allSource.srcDirs
+      property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+      property "sonar.sources", "src"
+      property "sonar.tests", "src"
+      property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
     }
   }
 
@@ -415,7 +417,7 @@ subprojects { subproject ->
       }
 
       classDirectories.setFrom((classDirectories.files.collect {
-        fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**'])
+        fileTree(dir: it)
       }))
 
       doLast {
@@ -465,7 +467,7 @@ subprojects { subproject ->
   test {
     environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     generateCucumberReports.enabled = false
-    useJUnitPlatform()
+    useJUnit()
 
     testLogging {
       events "passed", "skipped", "failed"
@@ -474,18 +476,27 @@ subprojects { subproject ->
     reports {
       html.enabled = true
     }
-  }
+    failFast = true
 
-  task unit(type: Test) {
-    description = "Runs Unit Tests"
+    description = "Runs Tests"
     testClassesDirs = sourceSets.unitTest.output.classesDirs
     classpath = sourceSets.unitTest.runtimeClasspath
   }
 
-  task integ(type: Test) {
-    description = "Runs Integ Tests"
+  task integration(type: Test, dependsOn: "test") {
+    description = "Runs integration tests"
+    group = "Verification"
     testClassesDirs = sourceSets.integTest.output.classesDirs
     classpath = sourceSets.integTest.runtimeClasspath
+    failFast = true
+  }
+
+  tasks.withType(Test) {
+    useJUnit()
+
+    testLogging {
+      exceptionFormat = 'full'
+    }
   }
 
   check.dependsOn jacocoTestReport
