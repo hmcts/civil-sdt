@@ -89,7 +89,7 @@ test {
   failFast = true
 }
 
-task functional(type: Test, dependsOn: ":aat:functional") {
+task functional(type: Test) {
   description = "Runs functional tests"
   group = "Verification"
   testClassesDirs = sourceSets.functionalTest.output.classesDirs
@@ -104,7 +104,7 @@ task integration(type: Test) {
   failFast = true
 }
 
-task smoke(type: Test, dependsOn: ":aat:smoke") {
+task smoke(type: Test) {
   description = "Runs Smoke Tests"
   testClassesDirs = sourceSets.smokeTest.output.classesDirs
   classpath = sourceSets.smokeTest.runtimeClasspath
@@ -304,9 +304,6 @@ subprojects { subproject ->
 
   configurations {
     providedRuntime
-
-    aatCompile.extendsFrom(testImplementation)
-    aatRuntime.extendsFrom(testRuntimeOnly)
     cucumberRuntime.extendsFrom(functionalRuntime)
 
     unitTestImplementation.extendsFrom testImplementation
@@ -483,7 +480,7 @@ subprojects { subproject ->
     classpath = sourceSets.unitTest.runtimeClasspath
   }
 
-  task integration(type: Test, dependsOn: "test") {
+  task integration(type: Test) {
     description = "Runs integration tests"
     group = "Verification"
     testClassesDirs = sourceSets.integTest.output.classesDirs
@@ -499,6 +496,9 @@ subprojects { subproject ->
     }
   }
 
+  test.finalizedBy jacocoTestReport
+  integration.dependsOn test
+  jacocoTestReport.dependsOn integration
   check.dependsOn jacocoTestReport
 }
 // end::subprojects[]
