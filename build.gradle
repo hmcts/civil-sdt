@@ -397,6 +397,13 @@ subprojects { subproject ->
 
   }
 
+  sonarqube {
+    properties {
+      properties["sonar.tests"] += sourceSets.integTest.allSource.srcDirs
+      properties["sonar.tests"] += sourceSets.unitTest.allSource.srcDirs
+    }
+  }
+
   // from https://github.com/junit-team/junit5/issues/1024'
   afterEvaluate {
     jacocoTestReport {
@@ -490,6 +497,8 @@ sonarqube {
     property "sonar.projectName", "Reform :: civil-sdt-gateway"
     property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt-gateway"
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+    properties["sonar.tests"] += sourceSets.integTest.allSource.srcDirs
+    properties["sonar.tests"] += sourceSets.unitTest.allSource.srcDirs
   }
 }
 
