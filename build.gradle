@@ -24,7 +24,7 @@ version = '0.0.1'
 
 java {
   toolchain {
-    languageVersion = JavaLanguageVersion.of(18)
+    languageVersion = JavaLanguageVersion.of(17)
   }
 }
 
