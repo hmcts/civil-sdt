@@ -16,8 +16,8 @@ dependencies {
     testImplementation project(":domain").sourceSets.integTest.output
     testImplementation project(":utils").sourceSets.integTest.output
 }
+
 jar {
-    enabled = true
     baseName = 'civil-sdt-dao'
 }
 

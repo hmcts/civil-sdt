@@ -1,17 +1,11 @@
-plugins {
-    id 'java'
-}
-
-group 'uk.gov.hmcts.reform'
-version '0.0.1'
+apply plugin: 'info.solidsoft.pitest'
 
 dependencyCheck {
-  suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
+    suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
 jar {
-  enabled = true
-  baseName = 'civil-sdt-utils'
+    baseName = 'civil-sdt-utils'
 }
 
 bootJar {

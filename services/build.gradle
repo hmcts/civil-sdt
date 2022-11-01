@@ -28,8 +28,8 @@ dependencies {
     testImplementation project(":utils").sourceSets.integTest.output
     testImplementation project(":validators").sourceSets.integTest.output
 }
+
 jar {
-    enabled = true
     baseName = 'civil-sdt-services'
 }
 

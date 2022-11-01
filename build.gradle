@@ -187,15 +187,34 @@ allprojects {
     maven {
       url  "https://jitpack.io"
     }
+    flatDir {
+      dirs "$rootProject.projectDir/libs"
+    }
   }
 
   apply plugin: 'java'
 
   dependencies {
+    implementation files(
+      'consumers/build/libs/civil-sdt-consumers-0.0.1-SNAPSHOT.jar',
+      'dao/build/libs/civil-sdt-dao-0.0.1-SNAPSHOT.jar',
+      'dao-api/build/libs/civil-sdt-dao-api-0.0.1-SNAPSHOT.jar',
+      'domain/build/libs/civil-sdt-domain-0.0.1-SNAPSHOT.jar',
+      'handlers/build/libs/civil-sdt-handlers-0.0.1-SNAPSHOT.jar',
+      'handlers-api/build/libs/civil-sdt-handlers-api-0.0.1-SNAPSHOT.jar',
+      'interceptors/build/libs/civil-sdt-interceptors-0.0.1-SNAPSHOT.jar',
+      'producers/build/libs/civil-sdt-producers-0.0.1-SNAPSHOT.jar',
+      'producers-api/build/libs/civil-sdt-producers-api-0.0.1-SNAPSHOT.jar',
+      'services/build/libs/civil-sdt-services-0.0.1-SNAPSHOT.jar',
+      'services-api/build/libs/civil-sdt-services-api-0.0.1-SNAPSHOT.jar',
+      'transformers/build/libs/civil-sdt-transformers-0.0.1-SNAPSHOT.jar',
+      'utils/build/libs/civil-sdt-utils-0.0.1-SNAPSHOT.jar',
+      'validators/build/libs/civil-sdt-validators-0.0.1-SNAPSHOT.jar')
+
     testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    implementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
@@ -414,7 +433,7 @@ subprojects { subproject ->
         logger.lifecycle("Checking coverage results: ${report}")
 
         def parser = new XmlParser()
-        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
         parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
         def results = parser.parse(report)
 
@@ -480,6 +499,12 @@ subprojects { subproject ->
     failFast = true
   }
 
+  tasks.jar {
+    enabled = true
+    // Remove `plain` postfix from jar file name
+    archiveClassifier.set("")
+  }
+
   tasks.withType(Test) {
     useJUnit()
 
@@ -542,6 +567,7 @@ idea {
 
 // this allows ./gradlew run
 bootJar {
+
   manifest {
     attributes 'Implementation-Title': project.name,
             'Implementation-Version': project.version
