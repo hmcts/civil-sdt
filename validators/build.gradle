@@ -22,7 +22,7 @@ dependencies {
 
 jar {
     enabled = true
-    baseName = 'civil-sdt-domain'
+    baseName = 'civil-sdt-validators'
 }
 
 bootJar {

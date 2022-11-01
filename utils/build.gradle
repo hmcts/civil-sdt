@@ -5,12 +5,13 @@ plugins {
 group 'uk.gov.hmcts.reform'
 version '0.0.1'
 
-repositories {
-    mavenCentral()
-}
-
 dependencyCheck {
   suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
+}
+
+jar {
+  enabled = true
+  baseName = 'civil-sdt-utils'
 }
 
 bootJar {
