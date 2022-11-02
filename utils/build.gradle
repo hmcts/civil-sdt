@@ -1,8 +1,5 @@
 apply plugin: 'info.solidsoft.pitest'
 
-group 'uk.gov.hmcts.reform'
-version '0.0.1'
-
 dependencyCheck {
   suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
