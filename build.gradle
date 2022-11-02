@@ -145,7 +145,7 @@ ext {
   restAssuredVersion = '4.3.0!!'
   springBootVersion = '2.7.4'
   springCloudVersion = '2021.0.3'
-  tomcatVersion = '9.0.67!!'
+  tomcatVersion = '9.0.67'
   cxfVersion = '3.5.4'
   limits = [
     'instruction': 99,
