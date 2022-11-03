@@ -209,7 +209,7 @@ allprojects {
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.20.0'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.5.Final'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
-    implementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
+    implementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
