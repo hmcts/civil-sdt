@@ -1,0 +1,26 @@
+original build xml structure for db setup:
+
+build-current-database
+    create-current-schemas
+        drop_users, production, utils/drop_users.sql
+        create_users, production, utils/create_users.sql
+        create_sdt_owner_ddl, production, utils/install_all_ddl.sql
+        create_sdt_owner_grants, production, utils/install_all_grants.sql
+        create_sdt_user_ddl, production, utils/install_all_ddl.sql
+        create_sdt_user_grants, production, utils/install_all_grants.sql
+        create_sdt_user_ddl, production, utils/install_all_ddl.sql
+        create_sdt_user_grants, production, utils/install_all_grants.sql
+   populate-data
+        populate-start
+            disable_fk_constraints, populate-data, utils/fk_constraints.sql
+            disable_triggers, populate-data, utils/triggers.sql
+            truncate_tables, populate-data, utils/truncate_tables.sql
+        populate-reference-data
+            create_reference_data, populate-data, data/create_reference_data.sql
+        populate-transactional-data
+            nada!
+        reset-sequences
+            reset_sequence, populate-data, utils/reset_sequence.sql
+        populate-finish
+            enable_fk_constraints, populate-data, utils/fk_constraints.sql
+            enable_triggers, populate-data, utils/triggers.sql
