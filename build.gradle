@@ -193,7 +193,7 @@ allprojects {
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
-    implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
+    implementation group: 'net.minidev', name: 'json-smart', version: '2.4.8'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
