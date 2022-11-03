@@ -1,17 +1,22 @@
 plugins {
+  id 'se.patrikerdes.use-latest-versions' version '0.2.7'
+
   id 'application'
   id 'checkstyle'
   id 'jacoco'
   id 'java'
   id "io.freefair.lombok" version "6.5.1"
   id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+  id 'com.github.ben-manes.versions' version '0.42.0'
   id 'org.springframework.boot' version '2.7.5'
   id 'org.owasp.dependencycheck' version '6.5.3'
   id 'com.github.kt3k.coveralls' version '2.8.2'
-  id 'com.github.ben-manes.versions' version '0.42.0'
+  id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
   id 'org.sonarqube' version '3.4.0.2513'
-  id 'uk.gov.hmcts.java' version '0.12.0'
+  id 'uk.gov.hmcts.java' version '0.12.27'
   id "com.jfrog.bintray" version "1.8.5" apply false
+  id "info.solidsoft.pitest" version '1.5.1' apply(false)
+  id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
 }
 
 group = 'uk.gov.hmcts.civil.sdt'
@@ -73,7 +78,7 @@ tasks.withType(JavaExec).configureEach {
 }
 
 tasks.withType(Test) {
-  useJUnitPlatform()
+  useJUnit()
 
   testLogging {
     exceptionFormat = 'full'
@@ -105,45 +110,17 @@ task smoke(type: Test) {
   classpath = sourceSets.smokeTest.runtimeClasspath
 }
 
-checkstyle {
-  maxWarnings = 0
-  toolVersion = '9.2.1'
-  getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
-}
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: "org.sonarqube"
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.github.ben-manes.versions'
 
-jacocoTestReport {
-  executionData(test, integration)
-  reports {
-    xml.required = true
-    csv.required = false
-    xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-  }
-}
+mainClassName = 'uk.gov.hmcts.reform.demo.Application'
 
-project.tasks['sonarqube'].dependsOn jacocoTestReport
-project.tasks['check'].dependsOn integration
-
-sonarqube {
-  properties {
-    property "sonar.projectName", "Reform :: civil-sdt"
-    property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt"
-    property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
-  }
-}
-
-// before committing a change, make sure task still works
-dependencyUpdates {
-  def isNonStable = { String version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { qualifier -> version.toUpperCase().contains(qualifier) }
-    def regex = /^[0-9,.v-]+$/
-    return !stableKeyword && !(version ==~ regex)
-  }
-  rejectVersionIf { selection -> // <---- notice how the closure argument is named
-    return isNonStable(selection.candidate.version) && !isNonStable(selection.currentVersion)
-  }
-}
-
-// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
   // Specifies if the build should be failed if a CVSS score above a specified level is identified.
   // range of 0-10 fails the build, anything greater and it doesn't fail the build
@@ -157,22 +134,19 @@ dependencyCheck {
 }
 
 ext {
-  log4JVersion = "2.17.0"
-  restAssuredVersion = '4.3.0!!'
-  lombokVersion = "1.18.24"
-  junit_version = "4.12"
-  junitJupiterVersion = '5.7.1'
-  junitVintageVersion = '5.7.1'
-  powermockVersion = '2.0.7'
-  springSecurity   =  '5.7.4'
-  springCloudVersion = '2021.0.3'
-  springfoxSwaggerVersion = '3.0.0'
-  hamcrestVersion = '1.3'
-  reformLogging= '5.1.9'
-  groovyVersion = '3.0.2!!'
-  tomcatVersion = '9.0.67!!'
-  hibernateVersion = '5.4.24.Final!!'
   feignJackson = '11.6'
+  groovyVersion = '3.0.11!!'
+  hamcrestVersion = '1.3'
+  junitJupiterVersion = '5.8.1'
+  junitVintageVersion = '5.7.0'
+  log4jVersion = '2.17.1'
+  postgresqlVersion = '42.4.1'
+  reformLogging= '5.1.9'
+  restAssuredVersion = '4.3.0!!'
+  springBootVersion = '2.7.4'
+  springCloudVersion = '2021.0.3'
+  tomcatVersion = '9.0.67'
+  cxfVersion = '3.5.4'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -184,12 +158,17 @@ ext {
 }
 
 ext['jackson.version'] = '2.14.0-rc1'
+ext['guava.version'] = '30.0-jre'
+ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
 ext['spring-security.version'] = '5.7.4'
 ext['postgresql.version'] = '42.2.16'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext {
-  springBootVersion = '2.4.4'
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
 }
 
 allprojects {
@@ -202,6 +181,9 @@ allprojects {
     maven {
       url  "https://jitpack.io"
     }
+    flatDir {
+      dirs "$rootProject.projectDir/libs"
+    }
   }
 
   apply plugin: 'java'
@@ -210,28 +192,57 @@ allprojects {
     testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    implementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
-    implementation 'net.minidev:json-smart:2.4.7'
-  }
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+    implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
 
-  // Global constraints
-  dependencies {
-    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
-    implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
-    implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
+
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
+
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core',  version: tomcatVersion
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: tomcatVersion
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatVersion
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.20.0'
-    implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
-    implementation "org.apache.commons:commons-compress:1.21"
-    implementation "org.glassfish:jakarta.el:4.0.1"
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.5.Final'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
+    implementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-    testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
-    testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
-    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
-    testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
-    testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-    testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
+    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
+    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
+      exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+    }
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    implementation group: 'io.rest-assured', name: 'rest-assured'
+
+    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
+    testImplementation group: 'io.rest-assured', name: 'xml-path', version: restAssuredVersion
+    testImplementation group: 'io.rest-assured', name:'json-path', version: restAssuredVersion
+    testImplementation group: 'org.codehaus.groovy', name: 'groovy', version: groovyVersion
+    testImplementation group: 'org.codehaus.groovy', name: 'groovy-xml', version: groovyVersion
+    testImplementation group: 'org.codehaus.groovy', name: 'groovy-json', version: groovyVersion
+    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.2.0:all'
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
+      exclude group: 'junit', module: 'junit'
+      exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
   }
 
   configurations.all {
@@ -254,54 +265,355 @@ allprojects {
   }
 }
 
-dependencies {
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
+subprojects { subproject ->
+  version = project.version
 
-  implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
+  apply plugin: 'org.springframework.boot'
+  apply plugin: 'io.spring.dependency-management'
+  apply plugin: 'jacoco'
+  apply plugin: 'uk.gov.hmcts.java'
 
-  implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
+  sourceSets {
+    unitTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/unit-test/java')
+      }
+      resources.srcDir file('src/unit-test/resources')
+    }
 
-  implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4JVersion
-  implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4JVersion
-
-  implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
-    exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+    integTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/integ-test/java')
+      }
+      resources.srcDir file('src/integ-test/resources')
+    }
   }
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
-  implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
 
-  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
-  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
-  implementation group: 'io.rest-assured', name: 'rest-assured'
+  configurations {
+    providedRuntime
+    cucumberRuntime.extendsFrom(functionalRuntime)
 
-  testImplementation(platform('org.junit:junit-bom:5.8.2'))
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-    exclude group: 'junit', module: 'junit'
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    unitTestImplementation.extendsFrom testImplementation
+    unitTestImplementation.extendsFrom runtimeOnly
+
+    integTestImplementation.extendsFrom testImplementation
+    integTestImplementation.extendsFrom runtimeOnly
+  }
+
+  dependencyUpdates.resolutionStrategy = {
+    componentSelection { rules ->
+      rules.all { ComponentSelection selection ->
+        boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
+          selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+        }
+        if (rejected) {
+          selection.reject('Release candidate')
+        }
+      }
+    }
+  }
+
+  dependencies {
+    implementation group: 'com.sun.xml.ws', name: 'jaxws-ri', version: '3.0.2'
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.16.3'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
+
+    implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
+    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
+    implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
+
+    implementation group: 'org.apache.cxf', name: 'cxf-core', version: cxfVersion
+    implementation group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: cxfVersion
+    implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: cxfVersion
+
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
+
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
+
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+
+    implementation group: 'org.springframework.security', name: 'spring-security-web'
+    implementation group: 'org.springframework.security', name: 'spring-security-config'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
+      exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+    }
+
+    implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
+
+
+    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
+    testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.2'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: junitVintageVersion
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE') {
+      exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
+      exclude group: 'commons-beanutils', module: 'commons-beanutils'
+    }
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.25.1'
+    testImplementation ('org.springframework.cloud:spring-cloud-contract-wiremock:2.2.1.RELEASE') {
+      exclude group: 'commons-beanutils', module: 'commons-beanutils'
+    }
+    testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
+    testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
+    testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
+    testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+    testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.4'
+    testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
+      exclude group: 'junit', module: 'junit'
+      exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
+    testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
+    testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
+    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
+
+  }
+
+  sonarqube {
+    properties {
+      property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+      property "sonar.sources", "src"
+      property "sonar.tests", "src"
+      property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
+    }
+  }
+
+  // from https://github.com/junit-team/junit5/issues/1024'
+  afterEvaluate {
+    jacocoTestReport {
+      reports {
+        // XML required by coveralls and for the below coverage checks
+        // and html are generated by default
+        xml.enabled true
+        html.enabled true
+      }
+
+      classDirectories.setFrom((classDirectories.files.collect {
+        fileTree(dir: it)
+      }))
+
+      doLast {
+        def report = file("${jacoco.reportsDir}/test/jacocoTestReport.xml")
+        logger.lifecycle("Checking coverage results: ${report}")
+
+        def parser = new XmlParser()
+        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
+        parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
+        def results = parser.parse(report)
+
+        def percentage = {
+          def covered = it.'@covered' as Double
+          def missed = it.'@missed' as Double
+          ((covered / (covered + missed)) * 100).round(2)
+        }
+
+        def counters = results.counter
+        def metrics = [:]
+        metrics << [
+                'class'      : percentage(counters.find { it.'@type'.equals('CLASS') })
+        ]
+
+
+        def failures = []
+        metrics.each {
+          def limit = limits[it.key]
+          if (it.value < limit) {
+            failures.add("- ${it.key} coverage rate is: ${it.value}%, minimum is ${limit}%")
+          }
+        }
+
+        if (failures) {
+          logger.quiet("------------------ Code Coverage Failed -----------------------")
+          failures.each {
+            logger.quiet(it)
+          }
+          logger.quiet("---------------------------------------------------------------")
+//          throw new GradleException("Code coverage failed")
+        } else{
+          logger.quiet("Passed Code Coverage Checks")
+        }
+      }
+    }
+  }
+
+  test {
+    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+    generateCucumberReports.enabled = false
+    useJUnit()
+
+    testLogging {
+      events "passed", "skipped", "failed"
+    }
+
+    reports {
+      html.enabled = true
+    }
+    failFast = true
+
+    description = "Runs Tests"
+    testClassesDirs = sourceSets.unitTest.output.classesDirs
+    classpath = sourceSets.unitTest.runtimeClasspath
+  }
+
+  task integration(type: Test) {
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integTest.output.classesDirs
+    classpath = sourceSets.integTest.runtimeClasspath
+    failFast = true
+  }
+
+  tasks.jar {
+    enabled = true
+    // Remove `plain` postfix from jar file name
+    archiveClassifier.set("")
+  }
+
+  tasks.withType(Test) {
+    useJUnit()
+
+    testLogging {
+      exceptionFormat = 'full'
+    }
+  }
+
+  test.finalizedBy jacocoTestReport
+  integration.dependsOn test
+  jacocoTestReport.dependsOn integration
+  check.dependsOn jacocoTestReport
+}
+// end::subprojects[]
+
+sonarqube {
+  properties {
+    property "sonar.projectName", "Reform :: civil-sdt-gateway"
+    property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt-gateway"
+    property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
   }
 }
 
-mainClassName = 'uk.gov.hmcts.reform.demo.Application'
+compileJava {
+  options.compilerArgs << '-parameters' << '-Xlint:deprecation'
+}
 
+idea.project.settings {
+  compiler {
+    javac {
+      javacAdditionalOptions "-parameters"
+    }
+  }
+}
+
+idea {
+  project {
+    ipr {
+      withXml { provider ->
+        // Get XML as groovy.util.Node to work with.
+        def projectXml = provider.asNode()
+        // Find compiler configuration component.
+        def compilerConfiguration = projectXml.component.find { component ->
+          component.'@name' == 'CompilerConfiguration'
+        }
+        // Replace current annotationProcessing
+        // that is part of the compiler configuration.
+        def currentAnnotationProcessing = compilerConfiguration.annotationProcessing
+        currentAnnotationProcessing.replaceNode {
+          annotationProcessing {
+            profile(name: 'Default', default: true, enabled: true) {
+              processorPath(useClasspath: true)
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// this allows ./gradlew run
 bootJar {
-  archiveFileName = "civil-sdt.jar"
-
   manifest {
-    attributes('Implementation-Version': project.version.toString())
+    attributes 'Implementation-Title': project.name,
+            'Implementation-Version': project.version
+  }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  archiveName = 'civil-sdt.jar'
+  from {
+    subprojects.collect { it.sourceSets.main.output }
   }
 }
 
-// Gradle 7.x issue, workaround from: https://github.com/gradle/gradle/issues/17236#issuecomment-894768083
-rootProject.tasks.named("processSmokeTestResources") {
-  duplicatesStrategy = 'include'
+
+
+task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
+
+  // Gather execution data from all subprojects
+  // (change this if you e.g. want to calculate unit test/integration test coverage separately)
+  executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+  // Add all relevant sourcesets from the subprojects
+  allprojects.each {
+    sourceSets it.sourceSets.main
+  }
+
+  reports {
+    csv.enabled = false
+    html.enabled = true
+    html.destination = file("${buildDir}/reports/jacoco/html")
+    xml.enabled = true
+    xml.destination = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
+  }
 }
 
-wrapper {
-    distributionType = Wrapper.DistributionType.ALL
+// for cnp pipeline
+task dependencyCheck(dependsOn: dependencyCheckAnalyze)
+
+configurations { codacy }
+
+dependencies {
+  codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
+}
+task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
+  main = "com.codacy.CodacyCoverageReporter"
+  classpath = configurations.codacy
+  args = [
+          "report",
+          "-l",
+          "Java",
+          "-r",
+          "${buildDir}/reports/jacoco/jacocoTestReport.xml"
+  ]
+}
+
+task fortifyScan(type: JavaExec)  {
+  main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+  classpath += sourceSets.test.runtimeClasspath
+  jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+  // The line below prevents the build from failing if the Fortify scan detects issues
+  ignoreExitValue = true
+}
+
+cucumberReports {
+  outputDir = file("${rootDir}/target/cucumber")
+  reports = files("${rootDir}/target/cucumber.json")
 }

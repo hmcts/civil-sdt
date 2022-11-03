@@ -1,0 +1,26 @@
+apply plugin: 'info.solidsoft.pitest'
+
+dependencyCheck {
+    suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':producers-api')
+    implementation project(':utils')
+    testImplementation project(":domain").sourceSets.unitTest.output
+    testImplementation project(":producers-api").sourceSets.unitTest.output
+    testImplementation project(":utils").sourceSets.unitTest.output
+
+    testImplementation project(":domain").sourceSets.integTest.output
+    testImplementation project(":producers-api").sourceSets.integTest.output
+    testImplementation project(":utils").sourceSets.integTest.output
+}
+
+jar {
+    baseName = 'civil-sdt-transformers'
+}
+
+bootJar {
+    enabled = false
+}

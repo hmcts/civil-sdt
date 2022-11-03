@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Note all ids should be based on fully qualified names (interfaces where 
+		this is not ambiguous) and all classes should have an interface. -->
+
+	<!-- Global store of all error messages. -->
+	 
+	<bean id="uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache" class="uk.gov.moj.sdt.services.cache.ErrorMessagesCache" lazy-init="true">
+        <property name="managementMBean" ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" />
+		<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
+	</bean>
+	 
+
+	<!-- Global store of all global parameters. -->
+	<bean id="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache" class="uk.gov.moj.sdt.services.cache.GlobalParametersCache" lazy-init="true">
+        <property name="managementMBean" ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" />
+        <property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />
+	</bean>
+
+</beans>
