@@ -195,22 +195,6 @@ allprojects {
   apply plugin: 'java'
 
   dependencies {
-    implementation files(
-      "consumers/build/libs/civil-sdt-consumers-${version}.jar",
-      "dao/build/libs/civil-sdt-dao-${version}.jar",
-      "dao-api/build/libs/civil-sdt-dao-api-${version}.jar",
-      "domain/build/libs/civil-sdt-domain-${version}.jar",
-      "handlers/build/libs/civil-sdt-handlers-${version}.jar",
-      "handlers-api/build/libs/civil-sdt-handlers-api-${version}.jar",
-      "interceptors/build/libs/civil-sdt-interceptors-${version}.jar",
-      "producers/build/libs/civil-sdt-producers-${version}.jar",
-      "producers-api/build/libs/civil-sdt-producers-api-${version}.jar",
-      "services/build/libs/civil-sdt-services-${version}.jar",
-      "services-api/build/libs/civil-sdt-services-api-${version}.jar",
-      "transformers/build/libs/civil-sdt-transformers-${version}.jar",
-      "utils/build/libs/civil-sdt-utils-${version}.jar",
-      "validators/build/libs/civil-sdt-validators-${version}.jar")
-
     testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
