@@ -15,7 +15,6 @@ dependencies {
 }
 
 jar {
-    enabled = true
     baseName = 'civil-sdt-sdt-consumer-sample'
 }
 

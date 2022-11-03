@@ -181,6 +181,9 @@ allprojects {
     maven {
       url  "https://jitpack.io"
     }
+    flatDir {
+      dirs "$rootProject.projectDir/libs"
+    }
   }
 
   apply plugin: 'java'
@@ -189,7 +192,7 @@ allprojects {
     testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    implementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
@@ -415,7 +418,7 @@ subprojects { subproject ->
         logger.lifecycle("Checking coverage results: ${report}")
 
         def parser = new XmlParser()
-        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
         parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
         def results = parser.parse(report)
 
@@ -479,6 +482,12 @@ subprojects { subproject ->
     testClassesDirs = sourceSets.integTest.output.classesDirs
     classpath = sourceSets.integTest.runtimeClasspath
     failFast = true
+  }
+
+  tasks.jar {
+    enabled = true
+    // Remove `plain` postfix from jar file name
+    archiveClassifier.set("")
   }
 
   tasks.withType(Test) {
@@ -547,8 +556,13 @@ bootJar {
     attributes 'Implementation-Title': project.name,
             'Implementation-Version': project.version
   }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   archiveName = 'civil-sdt.jar'
+  from {
+    subprojects.collect { it.sourceSets.main.output }
+  }
 }
+
 
 
 task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {

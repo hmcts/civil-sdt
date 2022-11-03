@@ -27,7 +27,6 @@ dependencies {
 }
 
 jar {
-    enabled = true
     baseName = 'civil-sdt-producers-commissioning'
 }
 
