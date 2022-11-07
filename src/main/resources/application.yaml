@@ -42,3 +42,13 @@ azure:
 sdt:
   tx-timeout:
     default:  1000
+
+jms:
+  servicebus:
+    internal:
+      queueConfig:
+        MCOL:${MCOL.Queue}
+      queues:
+        inbound:
+          connection-string:
+

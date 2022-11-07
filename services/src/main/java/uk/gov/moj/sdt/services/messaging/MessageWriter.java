@@ -31,26 +31,26 @@
 
 package uk.gov.moj.sdt.services.messaging;
 
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.UncategorizedJmsException;
-import org.springframework.jms.core.JmsTemplate;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.messaging.asb.MessageSender;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+
+import java.util.GregorianCalendar;
+import java.util.Map;
 
 /**
  * Message writer that handles writing messages to a message queue.
  *
  * @author Manoj Kulkarni
  */
+@Component
 public class MessageWriter implements IMessageWriter {
     /**
      * Logger object.
@@ -70,25 +70,20 @@ public class MessageWriter implements IMessageWriter {
     /**
      * The JmsTemplate object from Spring framework.
      */
-    private final JmsTemplate jmsTemplate;
+    private final MessageSender messageSender;
 
-    /**
-     * This variable holds the queue name mapping with the key
-     * as the Target application and the value as the queue name.
-     */
-    private Map<String, String> queueNameMap = new HashMap<String, String>();
+    private final QueueConfig queueConfig;
 
-    /**
-     * Creates a message sender with the JmsTemplate.
-     *
-     * @param jmsTemplate The JMS template
-     */
-    public MessageWriter(final JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
+    @Autowired
+    public MessageWriter(MessageSender messageSender,
+                         QueueConfig queueConfig) {
+        this.messageSender = messageSender;
+        this.queueConfig = queueConfig;
     }
 
     @Override
-    public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode, final boolean deadLetter) {
+    public void queueMessage(final ISdtMessage sdtMessage,
+                             final String targetAppCode, final boolean deadLetter) {
 
         // Check the target application code is valid and return queue name.
         final String queueName = getQueueName(targetAppCode, deadLetter);
@@ -112,17 +107,8 @@ public class MessageWriter implements IMessageWriter {
                     detail.toString());
         }
 
-        try {
+        this.messageSender.sendMessage(queueName, sdtMessage);
 
-            this.jmsTemplate.convertAndSend(queueName, sdtMessage);
-        } catch (final UncategorizedJmsException e) {
-            // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
-            // periodically check the database and requeue any messages that are stuck on a state indicating that they
-            // have not been sent to the case management system.
-            LOGGER.error("Failed to connect to the ActiveMQ queue [" + queueName +
-                    "] while queueing message request reference [" + sdtMessage.getSdtRequestReference() + "]", e);
-
-        }
 
         return;
     }
@@ -140,8 +126,8 @@ public class MessageWriter implements IMessageWriter {
     /**
      * @return map containing the target application to queue name mapping.
      */
-    public Map<String, String> getQueueNameMap() {
-        return queueNameMap;
+    private Map<String, String> getQueueNameMap() {
+        return queueConfig.getQueueConfig();
     }
 
     /**
@@ -149,7 +135,7 @@ public class MessageWriter implements IMessageWriter {
      *                     with the key as the the target application code and value as the queue name
      */
     public void setQueueNameMap(final Map<String, String> queueNameMap) {
-        this.queueNameMap = queueNameMap;
+        this.queueConfig.setQueueConfig(queueNameMap);
     }
 
     /**
