@@ -132,7 +132,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
      * @throws JMSException exception
      */
     @Test
-    public void testActiveMqDown() throws JMSException {
+    public void testAzureServiceBusDown() throws JMSException {
         // Get message writer from Spring.
         final MessageWriter messageWriter =
                 (MessageWriter) this.applicationContext

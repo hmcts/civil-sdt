@@ -11,7 +11,7 @@ import java.util.Map;
 @Component
 @Data
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix = "ms.servicebus.internal")
+@ConfigurationProperties(prefix = "jms.servicebus.internal")
 public class QueueConfig {
 
     private Map<String, String> queueConfig;

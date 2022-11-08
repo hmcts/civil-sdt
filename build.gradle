@@ -133,11 +133,8 @@ dependencyCheck {
   }
 }
 
-def versions = [
-  lombok          : '1.18.24'
-]
-
 ext {
+  lombok          : '1.18.24'
   feignJackson = '11.6'
   groovyVersion = '3.0.11!!'
   hamcrestVersion = '1.3'
@@ -196,9 +193,9 @@ allprojects {
 
     // Add lombok
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final', 'org.projectlombok:lombok:1.18.16', 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
-    implementation group: 'org.projectlombok', name: 'lombok', version: versions.lombok
-    testImplementation group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombok
+    implementation group: 'org.projectlombok', name: 'lombok', version: lombok
+    testImplementation group: 'org.projectlombok', name: 'lombok', version: lombok
 
     testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

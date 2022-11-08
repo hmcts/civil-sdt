@@ -15,16 +15,12 @@ public class MessageSender {
 
     private String connectionString;
 
-    private String queueName;
-
     private JsonConverter jsonConverter;
 
     @Autowired
     public MessageSender(@Value("${jms.servicebus.internal.queues.inbound.connection-string}") String connectionString,
-                         @Value("${jms.servicebus.internal.queues.inbound.queue-name}") String queueName,
                          JsonConverter jsonConverter) {
         this.connectionString = connectionString;
-        this.queueName = queueName;
         this.jsonConverter = jsonConverter;
     }
 
@@ -42,7 +38,7 @@ public class MessageSender {
 
             log.debug("Message has been sent to the queue {}", queueName);
         } catch (Exception e) {
-            log.error("Error while sending the message to queue:{}", e.getMessage());
+            log.error("Error while sending the message to queue {}", e.getMessage());
         }
     }
 }
