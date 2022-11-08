@@ -25,20 +25,15 @@ public class MessageSender {
     }
 
     public void sendMessage(String queueName, ISdtMessage sdtMessage) {
-        try {
-            final ServiceBusSenderClient senderClient = new ServiceBusClientBuilder()
-                .connectionString(connectionString)
-                .sender()
-                .queueName(queueName)
-                .buildClient();
-            log.debug("Connected to queue {}", queueName);
-            String message = jsonConverter.convertToString(sdtMessage);
-            ServiceBusMessage serviceBusMessage = new ServiceBusMessage(message);
-            senderClient.sendMessage(serviceBusMessage);
-
-            log.debug("Message has been sent to the queue {}", queueName);
-        } catch (Exception e) {
-            log.error("Error while sending the message to queue {}", e.getMessage());
-        }
+        final ServiceBusSenderClient senderClient = new ServiceBusClientBuilder()
+            .connectionString(connectionString)
+            .sender()
+            .queueName(queueName)
+            .buildClient();
+        log.debug("Connected to queue {}", queueName);
+        String message = jsonConverter.convertToString(sdtMessage);
+        ServiceBusMessage serviceBusMessage = new ServiceBusMessage(message);
+        senderClient.sendMessage(serviceBusMessage);
+        log.debug("Message has been sent to the queue {}", queueName);
     }
 }

@@ -107,10 +107,19 @@ public class MessageWriter implements IMessageWriter {
                     detail.toString());
         }
 
-        this.messageSender.sendMessage(queueName, sdtMessage);
+        try
+        {
+            this.messageSender.sendMessage(queueName, sdtMessage);
+        }
+        catch (final Exception e)
+        {
+            // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
+            // periodically check the database and requeue any messages that are stuck on a state indicating that they
+            // have not been sent to the case management system.
+            LOGGER.error ("Failed to connect to the queue [" + queueName +
+                              "] while queueing message request reference [" + sdtMessage.getSdtRequestReference () + "]", e);
+        }
 
-
-        return;
     }
 
     /**
