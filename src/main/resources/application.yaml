@@ -50,5 +50,5 @@ jms:
         MCOL:${MCOL.Queue}
       queues:
         inbound:
-          connection-string:
+          connection-string: ${SDT_QUEUE_CONNECTION_STRING}
 
