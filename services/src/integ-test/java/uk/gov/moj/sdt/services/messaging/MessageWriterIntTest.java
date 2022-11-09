@@ -127,7 +127,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
     }
 
     /**
-     * Test method to test failure behaviour when ACTIVE MQ not running.
+     * Test method to test failure behaviour when Azure Service Bus
      *
      * @throws JMSException exception
      */

@@ -39,17 +39,12 @@ public class MessageReceiver {
     }
 
     public IterableStream<ServiceBusReceivedMessage> receiveMessage(String queueName, int maxMessages) {
-        try {
-            final ServiceBusReceiverClient receiverClient = new ServiceBusClientBuilder()
-                .connectionString(connectionString)
-                .receiver()
-                .queueName(queueName)
-                .buildClient();
-            log.debug("Connected to queue {}", queueName);
-            return receiverClient.receiveMessages(maxMessages);
-        } catch (Exception e) {
-            log.error("Error while sending the message to queue:{}", e.getMessage());
-        }
-        return null;
+        final ServiceBusReceiverClient receiverClient = new ServiceBusClientBuilder()
+            .connectionString(connectionString)
+            .receiver()
+            .queueName(queueName)
+            .buildClient();
+        log.debug("Connected to queue {}", queueName);
+        return receiverClient.receiveMessages(maxMessages);
     }
 }
