@@ -1,18 +1,18 @@
 -------------------------------------------------------------
 -- Drop each of the schemas used by SDT and all their contents
 --------------------------------------------------------------
---DROP SCHEMA IF EXISTS "SDT_USER" CASCADE;
---DROP SCHEMA IF EXISTS "SDT_BATCH_USER" CASCADE;
---DROP SCHEMA IF EXISTS "SDT_OWNER" CASCADE;
+DROP SCHEMA IF EXISTS "SDT_USER" CASCADE;
+DROP SCHEMA IF EXISTS "SDT_BATCH_USER" CASCADE;
+DROP SCHEMA IF EXISTS "SDT_OWNER" CASCADE;
 
 -------------------------------------------------------------
 -- Drop each of the users used by SD
 --------------------------------------------------------------
 ---- non schema owners first
---DROP USER IF EXISTS "SDT_USER";
---DROP USER IF EXISTS "SDT_BATCH_USER";
+DROP USER IF EXISTS "SDT_USER";
+DROP USER IF EXISTS "SDT_BATCH_USER";
 ---- now schema owners
---DROP USER IF EXISTS "SDT_OWNER";
+DROP USER IF EXISTS "SDT_OWNER";
 
 -------------------------------------------------------------
 -- Create the schemas used by SDT and all their contents
@@ -36,71 +36,57 @@ GRANT POSTGRES TO "SDT_BATCH_USER";
 -- Create tables for SDT_OWNER
 ------------------------------------------------
 CREATE TABLE "SDT_OWNER"."BULK_CUSTOMERS"
-   ("BULK_CUSTOMER_ID" NUMERIC NOT NULL, "SDT_CUSTOMER_ID" NUMERIC(8),
-	"VERSION_NUMBER" NUMERIC DEFAULT 0 ) ;
+("BULK_CUSTOMER_ID" NUMERIC NOT NULL, "SDT_CUSTOMER_ID" NUMERIC(8), "VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 CREATE TABLE "SDT_OWNER"."BULK_CUSTOMER_APPLICATIONS"
-   ("BULK_CUSTOMER_APPLICATIONS_ID" NUMERIC NOT NULL,
-	"BULK_CUSTOMER_ID" NUMERIC,	"TARGET_APPLICATION_ID" NUMERIC,
-	"CUSTOMER_APPLICATION_ID" VARCHAR(32),	"VERSION_NUMBER" NUMERIC DEFAULT 0 );
+("BULK_CUSTOMER_APPLICATIONS_ID" NUMERIC NOT NULL, "BULK_CUSTOMER_ID" NUMERIC,	"TARGET_APPLICATION_ID" NUMERIC,
+"CUSTOMER_APPLICATION_ID" VARCHAR(32),	"VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 CREATE TABLE "SDT_OWNER"."BULK_SUBMISSIONS"
-   ("BULK_SUBMISSION_ID" NUMERIC NOT NULL,	"BULK_CUSTOMER_ID" NUMERIC,
-	"TARGET_APPLICATION_ID" NUMERIC, "SERVICE_REQUEST_ID" NUMERIC,
-	"SDT_BULK_REFERENCE" VARCHAR(29), "CUSTOMER_REFERENCE" VARCHAR(32),
-	"CREATED_DATE" TIMESTAMP(6),	"NUMBER_OF_REQUESTS" NUMERIC,
-	"BULK_SUBMISSION_STATUS" VARCHAR(20), "COMPLETED_DATE" TIMESTAMP(6),
-	"UPDATED_DATE" TIMESTAMP(6), "ERROR_CODE" VARCHAR(32),
-	"ERROR_TEXT" VARCHAR(1000),	"VERSION_NUMBER" NUMERIC DEFAULT 0,
-	"BULK_PAYLOAD" BYTEA );
+("BULK_SUBMISSION_ID" NUMERIC NOT NULL,	"BULK_CUSTOMER_ID" NUMERIC,	"TARGET_APPLICATION_ID" NUMERIC,
+"SERVICE_REQUEST_ID" NUMERIC, "SDT_BULK_REFERENCE" VARCHAR(29), "CUSTOMER_REFERENCE" VARCHAR(32),
+"CREATED_DATE" TIMESTAMP(6), "NUMBER_OF_REQUESTS" NUMERIC, "BULK_SUBMISSION_STATUS" VARCHAR(20),
+"COMPLETED_DATE" TIMESTAMP(6),	"UPDATED_DATE" TIMESTAMP(6), "ERROR_CODE" VARCHAR(32), "ERROR_TEXT" VARCHAR(1000),
+"VERSION_NUMBER" NUMERIC DEFAULT 0,	"BULK_PAYLOAD" BYTEA);
 
 CREATE TABLE "SDT_OWNER"."ERROR_LOGS"
-   ("ERROR_LOG_ID" NUMERIC NOT NULL, "INDIVIDUAL_REQUEST_ID" NUMERIC,
-	"ERROR_CODE" VARCHAR(32), "CREATED_DATE" TIMESTAMP(6),
-	"UPDATED_DATE" TIMESTAMP(6), "VERSION_NUMBER" NUMERIC DEFAULT 0,
-	"ERROR_TEXT" VARCHAR(1000) );
+("ERROR_LOG_ID" NUMERIC NOT NULL, "INDIVIDUAL_REQUEST_ID" NUMERIC, "ERROR_CODE" VARCHAR(32),
+"CREATED_DATE" TIMESTAMP(6), "UPDATED_DATE" TIMESTAMP(6), "VERSION_NUMBER" NUMERIC DEFAULT 0,
+"ERROR_TEXT" VARCHAR(1000));
 
 CREATE TABLE "SDT_OWNER"."ERROR_MESSAGES"
-    ("ERROR_MESSAGE_ID" NUMERIC, "ERROR_CODE" VARCHAR(32),
- 	"ERROR_TEXT" VARCHAR(1000),	"ERROR_DESCRIPTION" VARCHAR(2000),
- 	"VERSION_NUMBER" NUMERIC DEFAULT 0 );
+("ERROR_MESSAGE_ID" NUMERIC, "ERROR_CODE" VARCHAR(32), "ERROR_TEXT" VARCHAR(1000), "ERROR_DESCRIPTION" VARCHAR(2000),
+"VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 CREATE TABLE "SDT_OWNER"."GLOBAL_PARAMETERS"
-    ("GLOBAL_PARAMETER_ID" NUMERIC, "PARAMETER_NAME" VARCHAR(32),
- 	"PARAMETER_VALUE" VARCHAR(32), "PARAMETER_DESCRIPTION" VARCHAR(2000),
- 	"VERSION_NUMBER" NUMERIC DEFAULT 0 );
+("GLOBAL_PARAMETER_ID" NUMERIC, "PARAMETER_NAME" VARCHAR(32), "PARAMETER_VALUE" VARCHAR(32),
+"PARAMETER_DESCRIPTION" VARCHAR(2000), "VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 CREATE TABLE "SDT_OWNER"."INDIVIDUAL_REQUESTS"
-   ("INDIVIDUAL_REQUEST_ID" NUMERIC NOT NULL, "BULK_SUBMISSION_ID" NUMERIC,
-	"CUSTOMER_REQUEST_REF" VARCHAR(32),	"REQUEST_STATUS" VARCHAR(32),
-	"SDT_BULK_REFERENCE" VARCHAR(29), "LINE_NUMBER" NUMERIC,
-	"SDT_REQUEST_REFERENCE" VARCHAR(37), "CREATED_DATE" TIMESTAMP(6),
-	"UPDATED_DATE" TIMESTAMP(6), "COMPLETED_DATE" TIMESTAMP(6),
-	"FORWARDING_ATTEMPTS" NUMERIC, "DEAD_LETTER" CHAR(1),
-	"INTERNAL_SYSTEM_ERROR" VARCHAR(4000), "REQUEST_TYPE" VARCHAR(50),
-	"VERSION_NUMBER" NUMERIC DEFAULT 0,	"INDIVIDUAL_PAYLOAD" BYTEA,
-	"TARGET_APPLICATION_RESPONSE" BYTEA );
+("INDIVIDUAL_REQUEST_ID" NUMERIC NOT NULL, "BULK_SUBMISSION_ID" NUMERIC, "CUSTOMER_REQUEST_REF" VARCHAR(32),
+"REQUEST_STATUS" VARCHAR(32), "SDT_BULK_REFERENCE" VARCHAR(29), "LINE_NUMBER" NUMERIC,
+"SDT_REQUEST_REFERENCE" VARCHAR(37), "CREATED_DATE" TIMESTAMP(6), "UPDATED_DATE" TIMESTAMP(6),
+"COMPLETED_DATE" TIMESTAMP(6), "FORWARDING_ATTEMPTS" NUMERIC, "DEAD_LETTER" CHAR(1),
+"INTERNAL_SYSTEM_ERROR" VARCHAR(4000), "REQUEST_TYPE" VARCHAR(50), "VERSION_NUMBER" NUMERIC DEFAULT 0,
+"INDIVIDUAL_PAYLOAD" BYTEA, "TARGET_APPLICATION_RESPONSE" BYTEA);
 
 CREATE TABLE "SDT_OWNER"."SERVICE_REQUESTS"
-   ("SERVICE_REQUEST_ID" NUMERIC NOT NULL, "REQUEST_PAYLOAD" BYTEA,
-	"REQUEST_TIMESTAMP" TIMESTAMP(6), "RESPONSE_PAYLOAD" BYTEA,
-	"RESPONSE_TIMESTAMP" TIMESTAMP(6), "REQUEST_TYPE" VARCHAR(32),
-	"SDT_CUSTOMER_ID" VARCHAR(32), "SDT_BULK_REFERENCE" VARCHAR(29),
-	"SERVER_HOST_NAME" VARCHAR(255), "VERSION_NUMBER" NUMERIC DEFAULT 0 );
+("SERVICE_REQUEST_ID" NUMERIC NOT NULL, "REQUEST_PAYLOAD" BYTEA, "REQUEST_TIMESTAMP" TIMESTAMP(6),
+"RESPONSE_PAYLOAD" BYTEA, "RESPONSE_TIMESTAMP" TIMESTAMP(6), "REQUEST_TYPE" VARCHAR(32),
+"SDT_CUSTOMER_ID" VARCHAR(32), "SDT_BULK_REFERENCE" VARCHAR(29), "SERVER_HOST_NAME" VARCHAR(255),
+"VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 CREATE TABLE "SDT_OWNER"."SERVICE_ROUTINGS"
-   ("SERVICE_ROUTINGS_ID" NUMERIC NOT NULL,	"SERVICE_TYPE_ID" NUMERIC,
-	"TARGET_APPLICATION_ID" NUMERIC, "WEB_SERVICE_ENDPOINT" VARCHAR(255),
-	"VERSION_NUMBER" NUMERIC DEFAULT 0 );
+("SERVICE_ROUTINGS_ID" NUMERIC NOT NULL, "SERVICE_TYPE_ID" NUMERIC,	"TARGET_APPLICATION_ID" NUMERIC,
+"WEB_SERVICE_ENDPOINT" VARCHAR(255), "VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 CREATE TABLE "SDT_OWNER"."SERVICE_TYPES"
-   ("SERVICE_TYPE_ID" NUMERIC NOT NULL,	"SERVICE_TYPE_NAME" VARCHAR(50),
-	"SERVICE_TYPE_STATUS" VARCHAR(1), "SERVICE_TYPE_DESCRIPTION" VARCHAR(2000),
-	"VERSION_NUMBER" NUMERIC DEFAULT 0 );
+("SERVICE_TYPE_ID" NUMERIC NOT NULL, "SERVICE_TYPE_NAME" VARCHAR(50), "SERVICE_TYPE_STATUS" VARCHAR(1),
+"SERVICE_TYPE_DESCRIPTION" VARCHAR(2000), "VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 CREATE TABLE "SDT_OWNER"."TARGET_APPLICATIONS"
-   ("TARGET_APPLICATION_ID" NUMERIC NOT NULL, "TARGET_APPLICATION_CODE" VARCHAR(4),
-	"TARGET_APPLICATION_NAME" VARCHAR(255),	"VERSION_NUMBER" NUMERIC DEFAULT 0 );
+("TARGET_APPLICATION_ID" NUMERIC NOT NULL, "TARGET_APPLICATION_CODE" VARCHAR(4), "TARGET_APPLICATION_NAME" VARCHAR(255),
+"VERSION_NUMBER" NUMERIC DEFAULT 0);
 
 ------------------------------------------------
 -- Create indices for SDT_OWNER
@@ -150,7 +136,6 @@ ALTER TABLE "SDT_OWNER"."TARGET_APPLICATIONS" ADD CONSTRAINT "TARGET_APPLICATION
 ------------------------------------------------
 -- Create Check Constraints for SDT_OWNER
 ------------------------------------------------
--- capitalised names reqd?
 ALTER TABLE "SDT_OWNER"."BULK_CUSTOMER_APPLICATIONS" ADD CONSTRAINT "BCA_CAI_NN" CHECK ("CUSTOMER_APPLICATION_ID" IS NOT NULL);
 ALTER TABLE "SDT_OWNER"."BULK_CUSTOMER_APPLICATIONS" ADD CONSTRAINT "BCA_VN_NN" CHECK ("VERSION_NUMBER" IS NOT NULL);
 ALTER TABLE "SDT_OWNER"."BULK_CUSTOMERS" ADD CONSTRAINT "BC_SCI_NN" CHECK ("SDT_CUSTOMER_ID" IS NOT NULL);
@@ -225,22 +210,19 @@ ALTER TABLE "SDT_OWNER"."TARGET_APPLICATIONS" ADD CONSTRAINT "TA_TAN_UNI" UNIQUE
 -- Create Sequences for SDT_OWNER
 ------------------------------------------------
 -- BIGINT/NUMERIC = 18 digits, but seq was formerly 27 digits! Consider type change
-CREATE SEQUENCE  "SDT_OWNER"."BULK_CUST_APP_SEQ"  MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."BULK_CUST_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."BULK_SUB_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."ERR_LOG_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."ERR_MESG_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."GLB_PAR_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."IND_REQ_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 2000 NO CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."SDT_REF_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."SER_ROU_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."SER_TYP_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."SRV_REQ_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE  "SDT_OWNER"."TAR_APP_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."BULK_CUST_APP_SEQ"  MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."BULK_CUST_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."BULK_SUB_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."ERR_LOG_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."ERR_MESG_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."GLB_PAR_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."IND_REQ_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 2000 NO CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."SDT_REF_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."SER_ROU_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."SER_TYP_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."SRV_REQ_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
+CREATE SEQUENCE "SDT_OWNER"."TAR_APP_SEQ"  MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
 
-------------------------------------------------
--- TOD: Grants! Tablespaces Synonym for SDT_OWNER
-------------------------------------------------
 ------------------------------------------------
 -- Create Grants for SDT_OWNER
 ------------------------------------------------
@@ -314,19 +296,13 @@ GRANT SELECT ON "SDT_OWNER"."TAR_APP_SEQ" TO "SDT_USER";
 GRANT SELECT ON "SDT_OWNER"."SDT_REF_SEQ" TO "SDT_USER";
 GRANT SELECT ON "SDT_OWNER"."SRV_REQ_SEQ" TO "SDT_USER";
 -----------------
---- System Grants
------------------
---GRANT UNLIMITED TABLESPACE TO "SDT_OWNER";
---GRANT CREATE SYNONYM TO "SDT_USER";
---GRANT CREATE SYNONYM TO "SDT_BATCH_USER";
------------------
 --- Sys Grants
 -----------------
 --GRANT EXECUTE ON "SYS"."UTL_FILE" TO "SDT_OWNER";
 
-------------------------------------------------
--- Create Views (not Synonyms!) for SDT_USER
-------------------------------------------------
+---------------------------------------------------------
+-- Create Views (instead of Oracle Synonyms) for SDT_USER
+---------------------------------------------------------
 CREATE OR REPLACE VIEW "SDT_USER"."BULK_CUSTOMERS" AS SELECT * FROM "SDT_OWNER"."BULK_CUSTOMERS";
 CREATE OR REPLACE VIEW "SDT_USER"."BULK_CUSTOMER_APPLICATIONS" AS SELECT * FROM "SDT_OWNER"."BULK_CUSTOMER_APPLICATIONS";
 CREATE OR REPLACE VIEW "SDT_USER"."BULK_CUST_APP_SEQ" AS SELECT * FROM "SDT_OWNER"."BULK_CUST_APP_SEQ";
@@ -341,7 +317,6 @@ CREATE OR REPLACE VIEW "SDT_USER"."GLB_PAR_SEQ" AS SELECT * FROM "SDT_OWNER"."GL
 CREATE OR REPLACE VIEW "SDT_USER"."GLOBAL_PARAMETERS" AS SELECT * FROM "SDT_OWNER"."GLOBAL_PARAMETERS";
 CREATE OR REPLACE VIEW "SDT_USER"."INDIVIDUAL_REQUESTS" AS SELECT * FROM "SDT_OWNER"."INDIVIDUAL_REQUESTS";
 CREATE OR REPLACE VIEW "SDT_USER"."IND_REQ_SEQ" AS SELECT * FROM "SDT_OWNER"."IND_REQ_SEQ";
---CREATE OR REPLACE VIEW "SDT_USER"."MESSAGE_LOGS" AS SELECT * FROM "SDT_OWNER"."MESSAGE_LOGS";
 CREATE OR REPLACE VIEW "SDT_USER"."SDT_REF_SEQ" AS SELECT * FROM "SDT_OWNER"."SDT_REF_SEQ";
 CREATE OR REPLACE VIEW "SDT_USER"."SERVICE_REQUESTS" AS SELECT * FROM "SDT_OWNER"."SERVICE_REQUESTS";
 CREATE OR REPLACE VIEW "SDT_USER"."SERVICE_ROUTINGS" AS SELECT * FROM "SDT_OWNER"."SERVICE_ROUTINGS";
@@ -352,9 +327,9 @@ CREATE OR REPLACE VIEW "SDT_USER"."SRV_REQ_SEQ" AS SELECT * FROM "SDT_OWNER"."SR
 CREATE OR REPLACE VIEW "SDT_USER"."TARGET_APPLICATIONS" AS SELECT * FROM "SDT_OWNER"."TARGET_APPLICATIONS";
 CREATE OR REPLACE VIEW "SDT_USER"."TAR_APP_SEQ" AS SELECT * FROM "SDT_OWNER"."TAR_APP_SEQ";
 
-------------------------------------------------
--- Create Views (Not Synonyms!) for SDT_BATCH_USER
-------------------------------------------------
+---------------------------------------------------------------
+-- Create Views (instead of Oracle Synonyms) for SDT_BATCH_USER
+---------------------------------------------------------------
 CREATE OR REPLACE VIEW "SDT_BATCH_USER"."BULK_SUBMISSIONS" AS SELECT * FROM "SDT_OWNER"."BULK_SUBMISSIONS";
 CREATE OR REPLACE VIEW "SDT_BATCH_USER"."ERROR_LOGS" AS SELECT * FROM "SDT_OWNER"."ERROR_LOGS";
 CREATE OR REPLACE VIEW "SDT_BATCH_USER"."GLOBAL_PARAMETERS" AS SELECT * FROM "SDT_OWNER"."GLOBAL_PARAMETERS";
@@ -362,48 +337,30 @@ CREATE OR REPLACE VIEW "SDT_BATCH_USER"."INDIVIDUAL_REQUESTS" AS SELECT * FROM "
 --CREATE OR REPLACE VIEW "SDT_BATCH_USER"."PURGE" AS SELECT * FROM "SDT_OWNER"."PURGE";
 CREATE OR REPLACE VIEW "SDT_BATCH_USER"."SERVICE_REQUESTS" AS SELECT * FROM "SDT_OWNER"."SERVICE_REQUESTS";
 
-
 ------------------------------------------------
 -- Create Reference Data
 ------------------------------------------------
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 1,'DATA_RETENTION_PERIOD',90
-,'Duration in days, to retain data in the tables subject to a prescribed purge');
-
+VALUES ( 1,'DATA_RETENTION_PERIOD',90,'Duration in days, to retain data in the tables subject to a prescribed purge');
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 2,'TARGET_APP_TIMEOUT',15000
-,'Period in milliseconds, to wait for next re-try to reach the target application');
-
+VALUES ( 2,'TARGET_APP_TIMEOUT',15000,'Period in milliseconds, to wait for next re-try to reach the target application');
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 3,'MAX_FORWARDING_ATTEMPTS',3
-,'Number of forwarding attempts made to transmit an individual request to target application');
-
+VALUES ( 3,'MAX_FORWARDING_ATTEMPTS',3,'Number of forwarding attempts made to transmit an individual request to target application');
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 4,'MCOL_MAX_CONCURRENT_INDV_REQ',5
-,'Maximum number of concurrent Individual Requests that can be forwarded to MCOL');
-
+VALUES ( 4,'MCOL_MAX_CONCURRENT_INDV_REQ',5,'Maximum number of concurrent Individual Requests that can be forwarded to MCOL');
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 5,'MCOL_INDV_REQ_DELAY',10
-,'Time delay in milliseconds before processing the next Individual Request that can be forwarded to MCOL');
-
+VALUES ( 5,'MCOL_INDV_REQ_DELAY',10,'Time delay in milliseconds before processing the next Individual Request that can be forwarded to MCOL');
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 6,'MCOL_MAX_CONCURRENT_QUERY_REQ',5
-,'Maximum number of concurrent Submit Query Requests that can be forwarded to MCOL');
-
+VALUES ( 6,'MCOL_MAX_CONCURRENT_QUERY_REQ',5,'Maximum number of concurrent Submit Query Requests that can be forwarded to MCOL');
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 7,'CONTACT_DETAILS','tbc'
-,'Current contact details for outgoing SDT application messages to Bulk Customer System');
-
+VALUES ( 7,'CONTACT_DETAILS','tbc','Current contact details for outgoing SDT application messages to Bulk Customer System');
 INSERT INTO "SDT_OWNER"."GLOBAL_PARAMETERS" ("GLOBAL_PARAMETER_ID","PARAMETER_NAME","PARAMETER_VALUE","PARAMETER_DESCRIPTION")
-VALUES ( 8,'TARGET_APP_RESP_TIMEOUT',30000
-,'Period in milliseconds, read timeout to wait for response from target application');
-
+VALUES ( 8,'TARGET_APP_RESP_TIMEOUT',30000,'Period in milliseconds, read timeout to wait for response from target application');
 
 INSERT INTO "SDT_OWNER"."SERVICE_TYPES" ("SERVICE_TYPE_ID","SERVICE_TYPE_NAME","SERVICE_TYPE_STATUS","SERVICE_TYPE_DESCRIPTION")
 VALUES (1,'SUBMIT_INDIVIDUAL','A', 'Submit individual request web service');
 INSERT INTO "SDT_OWNER"."SERVICE_TYPES" ("SERVICE_TYPE_ID","SERVICE_TYPE_NAME","SERVICE_TYPE_STATUS","SERVICE_TYPE_DESCRIPTION")
 VALUES (2,'SUBMIT_QUERY','A', 'Submit query web service');
-
 
 INSERT INTO "SDT_OWNER"."TARGET_APPLICATIONS" ("TARGET_APPLICATION_ID","TARGET_APPLICATION_CODE","TARGET_APPLICATION_NAME")
 VALUES (1,'MCOL','mcol live service');
@@ -423,59 +380,41 @@ INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR
 VALUES (1,'SDT_INT_ERR','A system error has occurred. Please contact {0} for assistance.'
 ,'A system error has occured');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (2,'CUST_NOT_SETUP'
-,'The Bulk Customer organisation is not setup to send Service Request messages to the {0}. Please contact {1} for assistance.'
-,'The SDT Customer ID for the Bulk Customer organisation is not recognised by SDT.');
+VALUES (2,'CUST_NOT_SETUP',
+'The Bulk Customer organisation is not setup to send Service Request messages to the {0}. Please contact {1} for assistance.',
+'The SDT Customer ID for the Bulk Customer organisation is not recognised by SDT.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (3,'CUST_ID_INVALID'
-,'The Bulk Customer organisation does not have an SDT Customer ID set up. Please contact {1} for assistance.'
-,'The Bulk Customer organisation is recognised by the SDT Service, but is not set up to send a Service Request message to the specified Target Application.');
+VALUES (3,'CUST_ID_INVALID',
+'The Bulk Customer organisation does not have an SDT Customer ID set up. Please contact {1} for assistance.',
+'The Bulk Customer organisation is recognised by the SDT Service, but is not set up to send a Service Request message to the specified Target Application.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (4,'DUP_CUST_FILEID'
-,'Duplicate User File Reference {0} supplied. This was previously used to submit a Bulk Request on {1} and the SDT Bulk Reference {2} was allocated.'
-,'A duplicate User File Reference is identified by SDT for the Bulk Customer.');
+VALUES (4,'DUP_CUST_FILEID','Duplicate User File Reference {0} supplied. This was previously used to submit a Bulk Request on {1} and the SDT Bulk Reference {2} was allocated.',
+'A duplicate User File Reference is identified by SDT for the Bulk Customer.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (5,'REQ_COUNT_MISMATCH'
-,'Unexpected Total Number of Requests identified. {0} requested identified, {1} requests expected in Bulk Request {2}.'
-,'The Total Number of Requests identified by SDT does not match the Total Number of Requests expected (provided by the Submit Bulk Request).');
+VALUES (5,'REQ_COUNT_MISMATCH','Unexpected Total Number of Requests identified. {0} requested identified, {1} requests expected in Bulk Request {2}.',
+'The Total Number of Requests identified by SDT does not match the Total Number of Requests expected (provided by the Submit Bulk Request).');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (6,'BULK_REF_INVALID','There is no Bulk Request submission associated with your account for the supplied SDT Bulk Reference {0}.'
-,'The supplied SDT Bulk Reference is not listed against the Bulk Customers Bulk Submissions detail');
+VALUES (6,'BULK_REF_INVALID','There is no Bulk Request submission associated with your account for the supplied SDT Bulk Reference {0}.',
+'The supplied SDT Bulk Reference is not listed against the Bulk Customers Bulk Submissions detail');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (7,'TAR_APP_BUSY','The Target Application is currently busy and cannot process your Submit Query request. Please try again later.'
-,'SDT has reached the maximum number of concurrent Submit Query requests that can be forwarded to the Target Application for processing.');
+VALUES (7,'TAR_APP_BUSY','The Target Application is currently busy and cannot process your Submit Query request. Please try again later.',
+'SDT has reached the maximum number of concurrent Submit Query requests that can be forwarded to the Target Application for processing.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (8,'TAR_APP_ERROR'
-,'The system encountered a problem when processing your Submit Query request. Please try again later or contact {0} for assistance.'
-,'The Target Appliation does not send a response to SDT within the expected timescale, or an error message is received.');
+VALUES (8,'TAR_APP_ERROR','The system encountered a problem when processing your Submit Query request. Please try again later or contact {0} for assistance.',
+'The Target Appliation does not send a response to SDT within the expected timescale, or an error message is received.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (9,'DUP_CUST_REFID','Duplicate User File Reference {0} supplied'
-,'A duplicate User File Reference is identified by SDT for the Bulk Customer.');
+VALUES (9,'DUP_CUST_REFID','Duplicate User File Reference {0} supplied','A duplicate User File Reference is identified by SDT for the Bulk Customer.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (10,'NO_VALID_REQS','The submitted Bulk Request {0} does not contain valid individual Requests.'
-,'The Submit Bulk Request message does not contain Individual Requests deemed to be valid. The Individual Requests have all failed SDT format validation and been rejected and processing has been completed as far as possible.');
+VALUES (10,'NO_VALID_REQS','The submitted Bulk Request {0} does not contain valid individual Requests.',
+'The Submit Bulk Request message does not contain Individual Requests deemed to be valid. The Individual Requests have all failed SDT format validation and been rejected and processing has been completed as far as possible.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (11,'DUPLD_CUST_REQID','Unique Request Identifier has been specified more than once within the originating Bulk Request.'
-,'SDT identifies that a Unique Request Identifier has been associated with more than one Individual Request within the same Bulk Request.');
+VALUES (11,'DUPLD_CUST_REQID','Unique Request Identifier has been specified more than once within the originating Bulk Request.',
+'SDT identifies that a Unique Request Identifier has been associated with more than one Individual Request within the same Bulk Request.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (12,'DUP_CUST_REQID','Duplicate Unique Request Identifier submitted {0}.'
-,'SDT identifies that a Unique Request Identifier has been associated with more than one Individual Request within the same Bulk Request.');
+VALUES (12,'DUP_CUST_REQID','Duplicate Unique Request Identifier submitted {0}.','SDT identifies that a Unique Request Identifier has been associated with more than one Individual Request within the same Bulk Request.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (13,'REQ_NOT_ACK','Individual Request not acknowledged by Target Application. Please contact {0} for assistance.'
-,'The Target Application does not send back an acknowledgement response within the expected period, or returns a response indicating that there was an error with the transmission.');
+VALUES (13,'REQ_NOT_ACK','Individual Request not acknowledged by Target Application. Please contact {0} for assistance.',
+'The Target Application does not send back an acknowledgement response within the expected period, or returns a response indicating that there was an error with the transmission.');
 INSERT INTO "SDT_OWNER"."ERROR_MESSAGES" ("ERROR_MESSAGE_ID","ERROR_CODE","ERROR_TEXT","ERROR_DESCRIPTION")
-VALUES (14,'CUST_XML_ERR','Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or contact {0} for assistance.'
-,'Client data has caused SOAP Fault error and rejected the request.');
-
-
-
-
-
-
-
-
-
-
-
-
-
+VALUES (14,'CUST_XML_ERR','Individual Request format could not be processed by the Target Application. Please check the data and resubmit the request, or contact {0} for assistance.',
+'Client data has caused SOAP Fault error and rejected the request.');
