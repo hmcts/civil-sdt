@@ -30,23 +30,21 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import java.text.SimpleDateFormat;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-
+import com.azure.core.util.serializer.TypeReference;
+import com.azure.messaging.servicebus.ServiceBusReceivedMessage;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.messaging.asb.MessageReceiver;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
+
+import java.text.SimpleDateFormat;
+import javax.jms.JMSException;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -71,6 +69,8 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriterIntTest.class);
 
+    private MessageReceiver messageReceiver;
+
     /**
      * Test method to test the sending of message.
      *
@@ -86,13 +86,10 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
-        final JmsTemplate jmsTemplate = (JmsTemplate) this.applicationContext.getBean("jmsTemplate");
-
         // Clear any old messages off the queue.
-        jmsTemplate.setReceiveTimeout(1);
         while (true) {
             // Read any old messages.
-            final Message message = jmsTemplate.receive("Test1Queue");
+            final ServiceBusReceivedMessage message = messageReceiver.receiveMessage("Test1Queue");
             if (message == null) {
                 break;
             }
@@ -113,31 +110,29 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
         messageWriter.queueMessage(message2, "TEST1", false);
 
         // Read the two messages and ensure they are read back in the same order.
-        Message message = jmsTemplate.receive("Test1Queue");
-        ObjectMessage objmessage = (ObjectMessage) message;
-        if (objmessage == null) {
+        ServiceBusReceivedMessage message = messageReceiver.receiveMessage("Test1Queue");
+        if (message == null) {
             Assert.fail("Test failed because JMS receive timed out.");
         }
 
-        ISdtMessage sdtMessage = (ISdtMessage) objmessage.getObject();
+        ISdtMessage sdtMessage = message.getBody().toObject(new TypeReference<SdtMessage>() {});
         LOGGER.debug("Message Receieved 1 - " + sdtMessage.toString());
         Assert.assertTrue(sdtMessage.getSdtRequestReference().equals(strMessage1));
 
-        message = jmsTemplate.receive("Test1Queue");
-        objmessage = (ObjectMessage) message;
-        sdtMessage = (ISdtMessage) objmessage.getObject();
+        message = messageReceiver.receiveMessage("Test1Queue");
+        sdtMessage = message.getBody().toObject(new TypeReference<SdtMessage>() {});
         LOGGER.debug("Message Receieved2 - " + sdtMessage.toString());
         Assert.assertTrue(sdtMessage.getSdtRequestReference().equals(strMessage2));
 
     }
 
     /**
-     * Test method to test failure behaviour when ACTIVE MQ not running.
+     * Test method to test failure behaviour when Azure Service Bus not running.
      *
      * @throws JMSException exception
      */
     @Test
-    public void testActiveMqDown() throws JMSException {
+    public void testAzureServiceBusDown() throws JMSException {
         // Get message writer from Spring.
         final MessageWriter messageWriter =
                 (MessageWriter) this.applicationContext
