@@ -300,6 +300,15 @@ subprojects { subproject ->
       }
       resources.srcDir file('src/integ-test/resources')
     }
+
+    endToEndTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/end-to-end-test/java')
+      }
+      resources.srcDir file('src/end-to-end-test/resources')
+    }
   }
 
   configurations {
@@ -311,6 +320,9 @@ subprojects { subproject ->
 
     integTestImplementation.extendsFrom testImplementation
     integTestImplementation.extendsFrom runtimeOnly
+
+    endToEndTestImplementation.extendsFrom testImplementation
+    endToEndTestImplementation.extendsFrom runtimeOnly
   }
 
   dependencyUpdates.resolutionStrategy = {
@@ -500,6 +512,14 @@ subprojects { subproject ->
     failFast = true
   }
 
+  task endToEnd(type: Test) {
+    description = "Runs end to end tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.endToEndTest.output.classesDirs
+    classpath = sourceSets.endToEndTest.runtimeClasspath
+    failFast = true
+  }
+
   tasks.jar {
     enabled = true
     // Remove `plain` postfix from jar file name
@@ -516,7 +536,8 @@ subprojects { subproject ->
 
   test.finalizedBy jacocoTestReport
   integration.dependsOn test
-  jacocoTestReport.dependsOn integration
+  endToEnd.dependsOn integration
+  jacocoTestReport.dependsOn endToEnd
   check.dependsOn jacocoTestReport
 }
 // end::subprojects[]

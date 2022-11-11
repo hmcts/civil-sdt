@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- Implementation for Bulk Feedback Service -->        
+    <bean id="uk.gov.moj.sdt.services.api.IBulkFeedbackService" 
+        class="uk.gov.moj.sdt.services.BulkFeedbackService">
+        <property name="bulkSubmissionDao" ref="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao"/>
+        <property name="globalParametersCache" ref="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache"/>           
+    </bean>
+	
+	<!-- Implementation for Submit Query Service -->        
+    <bean id="uk.gov.moj.sdt.services.api.ISubmitQueryService" 
+        class="uk.gov.moj.sdt.services.SubmitQueryService">
+        <property name="requestConsumer" ref="uk.gov.moj.sdt.consumers.api.IConsumerGateway"/>
+        <property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao"/>
+        <property name="errorMessagesCache" ref="uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache"/>
+        <property name="globalParametersCache" ref="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache"/>
+        <property name="queryResponseXmlParser" ref="uk.gov.moj.sdt.services.utils.SubmitQueryResponseXmlParser"/>
+        <property name="queryRequestXmlParser" ref="uk.gov.moj.sdt.services.utils.SubmitQueryRequestXmlParser"/>
+    </bean>    
+    
+        
+    <!-- Implementation for Bulk Submission Service -->
+    <bean id="uk.gov.moj.sdt.services.api.IBulkSubmissionService" 
+    	class="uk.gov.moj.sdt.services.BulkSubmissionService">
+    	<property name="genericDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao"/>
+    	<property name="individualRequestsXmlparser" ref="uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser"/>
+    	<property name="bulkCustomerDao" ref="uk.gov.moj.sdt.dao.api.IBulkCustomerDao"/>
+    	<property name="targetApplicationDao" ref="uk.gov.moj.sdt.dao.api.ITargetApplicationDao"/>
+    	<property name="sdtBulkReferenceGenerator" ref="uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator"/>
+    	<property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
+    	<property name="concurrencyMap" ref="uk.gov.moj.sdt.validators.concurrencyMap"/>
+    	<property name="errorMessagesCache" ref="uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache"/>
+    </bean>   
+    
+    <!-- Implementation for Target Application Submission Service -->
+    <bean id="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"
+    	class="uk.gov.moj.sdt.services.TargetApplicationSubmissionService" 
+    	parent="uk.gov.moj.sdt.services.AbstractSdtService">
+    	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+    	<property name="requestConsumer" ref="uk.gov.moj.sdt.consumers.api.IConsumerGateway"/>
+    	<property name="globalParametersCache" ref="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache"/>
+    	<property name="messageWriter" ref="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"/>
+    	<property name="errorMessagesCache" ref="uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache"/>
+    </bean>
+    
+    <!-- Abstract Sdt Service -->
+    <bean id="uk.gov.moj.sdt.services.AbstractSdtService" class="uk.gov.moj.sdt.services.AbstractSdtService" abstract="true">
+    	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+    	<property name="individualResponseXmlParser" ref="uk.gov.moj.sdt.services.utils.IndividualResponseXmlParser"/>
+    </bean>
+    
+    <!-- Implementation for the Update Request Service -->
+    <bean id="uk.gov.moj.sdt.services.api.IUpdateRequestService" class="uk.gov.moj.sdt.services.UpdateRequestService" 
+    	parent="uk.gov.moj.sdt.services.AbstractSdtService">
+        <property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
+    </bean>
+    
+    <!-- Implementation of the RetryMessageSend service -->
+    <bean id="uk.gov.moj.sdt.services.api.IRetryMessageAlreadySentService" class="uk.gov.moj.sdt.services.RetryMessageAlreadySentService">
+    	<property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
+    	<property name="messagingUtility" ref="uk.gov.moj.sdt.services.utils.api.IMessagingUtility"/>
+    	<property name="globalParametersCache" ref="uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache"/>
+    </bean>
+</beans>

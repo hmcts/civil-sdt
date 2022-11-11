@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- Implementation of BulkRequestTransformer -->
+	<bean id="uk.gov.moj.sdt.transformers.BulkRequestTransformer"
+		class="uk.gov.moj.sdt.transformers.BulkRequestTransformer">
+	</bean>
+
+	<!-- Implementation of BulkFeedbackTransformer -->
+	<bean id="uk.gov.moj.sdt.transformers.BulkFeedbackTransformer"
+		class="uk.gov.moj.sdt.transformers.BulkFeedbackTransformer">
+	</bean>
+
+	<!-- Implementation of SubmitQueryTransformer -->
+	<bean id="uk.gov.moj.sdt.transformers.SubmitQueryTransformer"
+		class="uk.gov.moj.sdt.transformers.SubmitQueryTransformer">
+	</bean>
+
+    <bean id="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer"
+        class="uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer">
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.transformers.SubmitQueryConsumerTransformer"
+        class="uk.gov.moj.sdt.transformers.SubmitQueryConsumerTransformer">
+    </bean>
+    
+    <bean id="uk.gov.moj.sdt.transformers.UpdateItemTransformer"
+    	class="uk.gov.moj.sdt.transformers.UpdateItemTransformer">
+    </bean>
+
+</beans>
+    

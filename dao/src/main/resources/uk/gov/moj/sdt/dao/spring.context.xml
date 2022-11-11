@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- Note all ids should be based on fully qualified names (interfaces where 
+		this is not ambiguous) and all classes should have an interface. -->
+
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.IGenericDao" class="uk.gov.moj.sdt.dao.GenericDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>
+
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.IBulkCustomerDao" class="uk.gov.moj.sdt.dao.BulkCustomerDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>
+	
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.IBulkSubmissionDao" class="uk.gov.moj.sdt.dao.BulkSubmissionDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>
+	
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.IIndividualRequestDao" class="uk.gov.moj.sdt.dao.IndividualRequestDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>	
+	
+	<!-- Configure the generic DAO as bean within the Spring's application context. -->
+	<bean id="uk.gov.moj.sdt.dao.api.ITargetApplicationDao" class="uk.gov.moj.sdt.dao.TargetApplicationDao">
+		<property name="sessionFactory"
+			ref="org.springframework.orm.hibernate4.LocalSessionFactoryBean" />
+	</bean>	
+</beans>

@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+	
+    <bean id="uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor" 
+        class="uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor">
+    </bean>
+
+	<!-- XML out bound interceptor to modify the outgoing message using a list of enricher classes -->
+	<bean id="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor" 
+		class="uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor">
+		<property name="enricherList">
+			<list>
+				<ref bean="uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher" />				
+				<ref bean="uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher" />
+                <ref bean="uk.gov.moj.sdt.interceptors.enricher.IndividualRequestEnricher" />
+                <ref bean="uk.gov.moj.sdt.interceptors.enricher.SubmitQueryRequestEnricher"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor" 
+		class="uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor">
+		<property name="serviceRequestDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />		
+	</bean>
+	
+    <bean id="uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor" 
+        class="uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor">
+        <property name="serviceRequestDao" ref="uk.gov.moj.sdt.dao.api.IGenericDao" />      
+    </bean>
+
+    <bean id="uk.gov.moj.sdt.interceptors.out.PerformanceLoggerOutboundInterceptor" 
+        class="uk.gov.moj.sdt.interceptors.out.PerformanceLoggerOutboundInterceptor">
+    </bean>
+
+	<bean id="uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor" 
+		class="uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor">
+	</bean>
+</beans>
