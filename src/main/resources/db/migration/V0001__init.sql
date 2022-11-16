@@ -269,48 +269,9 @@ CREATE SEQUENCE sdt_owner.ser_typ_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY
 CREATE SEQUENCE sdt_owner.srv_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
 CREATE SEQUENCE sdt_owner.tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
 
----------------------------------------------------------
--- Create Views (instead of Oracle Synonyms) for SDT_USER
----------------------------------------------------------
-CREATE OR REPLACE VIEW sdt_user.bulk_customers AS SELECT * FROM sdt_owner.bulk_customers;
-CREATE OR REPLACE VIEW sdt_user.bulk_customer_applications AS SELECT * FROM sdt_owner.bulk_customer_applications;
-CREATE OR REPLACE VIEW sdt_user.bulk_cust_app_seq AS SELECT * FROM sdt_owner.bulk_cust_app_seq;
-CREATE OR REPLACE VIEW sdt_user.bulk_cust_seq AS SELECT * FROM sdt_owner.bulk_cust_seq;
-CREATE OR REPLACE VIEW sdt_user.bulk_submissions AS SELECT * FROM sdt_owner.bulk_submissions;
-CREATE OR REPLACE VIEW sdt_user.bulk_sub_seq AS SELECT * FROM sdt_owner.bulk_sub_seq;
-CREATE OR REPLACE VIEW sdt_user.error_logs AS SELECT * FROM sdt_owner.error_logs;
-CREATE OR REPLACE VIEW sdt_user.error_messages AS SELECT * FROM sdt_owner.error_messages;
-CREATE OR REPLACE VIEW sdt_user.err_log_seq AS SELECT * FROM sdt_owner.err_log_seq;
-CREATE OR REPLACE VIEW sdt_user.err_mesg_seq AS SELECT * FROM sdt_owner.err_mesg_seq;
-CREATE OR REPLACE VIEW sdt_user.glb_par_seq AS SELECT * FROM sdt_owner.glb_par_seq;
-CREATE OR REPLACE VIEW sdt_user.global_parameters AS SELECT * FROM sdt_owner.global_parameters;
-CREATE OR REPLACE VIEW sdt_user.individual_requests AS SELECT * FROM sdt_owner.individual_requests;
-CREATE OR REPLACE VIEW sdt_user.ind_req_seq AS SELECT * FROM sdt_owner.ind_req_seq;
-CREATE OR REPLACE VIEW sdt_user.sdt_ref_seq AS SELECT * FROM sdt_owner.sdt_ref_seq;
-CREATE OR REPLACE VIEW sdt_user.service_requests AS SELECT * FROM sdt_owner.service_requests;
-CREATE OR REPLACE VIEW sdt_user.service_routings AS SELECT * FROM sdt_owner.service_routings;
-CREATE OR REPLACE VIEW sdt_user.service_types AS SELECT * FROM sdt_owner.service_types;
-CREATE OR REPLACE VIEW sdt_user.ser_rou_seq AS SELECT * FROM sdt_owner.ser_rou_seq;
-CREATE OR REPLACE VIEW sdt_user.ser_typ_seq AS SELECT * FROM sdt_owner.ser_typ_seq;
-CREATE OR REPLACE VIEW sdt_user.srv_req_seq AS SELECT * FROM sdt_owner.srv_req_seq;
-CREATE OR REPLACE VIEW sdt_user.target_applications AS SELECT * FROM sdt_owner.target_applications;
-CREATE OR REPLACE VIEW sdt_user.tar_app_seq AS SELECT * FROM sdt_owner.tar_app_seq;
-
----------------------------------------------------------------
--- Create Views (instead of Oracle Synonyms) for SDT_BATCH_USER
----------------------------------------------------------------
-CREATE OR REPLACE VIEW sdt_batch_user.bulk_submissions AS SELECT * FROM sdt_owner.bulk_submissions;
-CREATE OR REPLACE VIEW sdt_batch_user.error_logs AS SELECT * FROM sdt_owner.error_logs;
-CREATE OR REPLACE VIEW sdt_batch_user.global_parameters AS SELECT * FROM sdt_owner.global_parameters;
-CREATE OR REPLACE VIEW sdt_batch_user.individual_requests AS SELECT * FROM sdt_owner.individual_requests;
---CREATE OR REPLACE VIEW sdt_batch_user.purge AS SELECT * FROM sdt_owner.purge;
-CREATE OR REPLACE VIEW sdt_batch_user.service_requests AS SELECT * FROM sdt_owner.service_requests;
-
-
 ------------------------------------------------
 -- Create Grants for SDT_OWNER
 ------------------------------------------------
-
 ALTER ROLE sdt_owner SET search_path TO sdt_owner;
 ALTER ROLE sdt_user SET search_path TO sdt_user, sdt_owner;
 ALTER ROLE sdt_batch_user SET search_path TO sdt_batch_user, sdt_owner;
@@ -319,10 +280,6 @@ GRANT USAGE ON SCHEMA sdt_owner TO sdt_user;
 GRANT USAGE ON SCHEMA sdt_owner TO sdt_batch_user;
 
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA sdt_owner TO sdt_user;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA sdt_owner TO sdt_batch_user;
-
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA sdt_owner TO sdt_user;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA sdt_owner TO sdt_batch_user;
 
 -----------------
 --- Object Grants
@@ -381,8 +338,8 @@ GRANT DELETE ON sdt_owner.target_applications TO sdt_user;
 GRANT INSERT ON sdt_owner.target_applications TO sdt_user;
 GRANT SELECT ON sdt_owner.target_applications TO sdt_user;
 GRANT UPDATE ON sdt_owner.target_applications TO sdt_user;
-GRANT SELECT ON sdt_owner.bulk_cust_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.bulk_cust_app_seq TO sdt_user;
+GRANT USAGE, SELECT ON sdt_owner.bulk_cust_seq TO sdt_user;
+GRANT USAGE, SELECT ON sdt_owner.bulk_cust_app_seq TO sdt_user;
 GRANT SELECT ON sdt_owner.bulk_sub_seq TO sdt_user;
 GRANT SELECT ON sdt_owner.err_log_seq TO sdt_user;
 GRANT SELECT ON sdt_owner.err_mesg_seq TO sdt_user;
@@ -397,7 +354,6 @@ GRANT SELECT ON sdt_owner.srv_req_seq TO sdt_user;
 --- Sys Grants
 -----------------
 --GRANT EXECUTE ON "SYS"."UTL_FILE" TO sdt_owner;
-
 
 ------------------------------------------------
 -- Create Reference Data
