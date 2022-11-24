@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+<!--  <bean id="jmsqpidConnectionFactory" class="org.apache.qpid.jms.JmsConnectionFactory">-->
+<!--    <property name="remoteURI" value="${jms.servicebus.internal.queues.inbound.connection-string}"/>-->
+<!--  </bean>-->
+
+<!--  <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">-->
+<!--    <constructor-arg ref="jmsqpidConnectionFactory"/>-->
+<!--    <property name="sessionCacheSize" value="100"/>-->
+<!--  </bean>-->
+
+<!--  <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">-->
+<!--    <constructor-arg ref="connectionFactory"/>-->
+<!--  </bean>-->
+
+	<bean id="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"
+		class="uk.gov.moj.sdt.services.messaging.MessageWriter">
+    <constructor-arg ref="jmsTemplate"/>
+	</bean>
+
+  <bean id="uk.gov.moj.sdt.services.messaging.QueueConfig" class="uk.gov.moj.sdt.services.messaging.QueueConfig">
+    <property name="queueConfig">
+      <map>
+        <entry key="MCOL" value="${jms.servicebus.internal.queueConfig.MCOL}"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="uk.gov.moj.sdt.services.messaging.asb.JsonConverter" class="uk.gov.moj.sdt.services.messaging.asb.JsonConverter">
+  </bean>
+
+  <bean id="uk.gov.moj.sdt.services.messaging.asb.MessageSender" class="uk.gov.moj.sdt.services.messaging.asb.MessageSender">
+    <property name="connectionString" value="${jms.servicebus.connection-string}"/>
+    <constructor-arg ref="uk.gov.moj.sdt.services.messaging.asb.JsonConverter"/>
+  </bean>
+
+  <bean id="uk.gov.moj.sdt.services.messaging.asb.MessageReceiver" class="uk.gov.moj.sdt.services.messaging.asb.MessageReceiver">
+    <property name="connectionString" value="${jms.servicebus.connection-string}"/>
+    <constructor-arg ref="uk.gov.moj.sdt.services.messaging.asb.JsonConverter"/>
+  </bean>
+
+	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter" scope="prototype">
+		<constructor-arg>
+			<bean class="uk.gov.moj.sdt.services.messaging.IndividualRequestMdb">
+				<property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>
+			</bean>
+		</constructor-arg>
+		<property name="defaultListenerMethod" value="readMessage"/>
+		<property name="messageConverter"><null/></property>
+	</bean>
+
+
+</beans>

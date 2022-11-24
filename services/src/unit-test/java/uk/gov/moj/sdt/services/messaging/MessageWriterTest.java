@@ -42,9 +42,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jms.core.JmsTemplate;
 
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
-import uk.gov.moj.sdt.services.messaging.asb.MessageSender;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
@@ -58,10 +58,10 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriterTest.class);
 
-
-    private MessageSender messageSender;
-
-    private QueueConfig queueConfig;
+    /**
+     * JMS Template for mocking.
+     */
+    private JmsTemplate jmsTemplate;
 
     /**
      * MessageWriter for mocking.
@@ -74,11 +74,8 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
     @Before
     public void setUp() {
         // Nicemock returns default values
-        messageSender = EasyMock.createMock(MessageSender.class);
-        queueConfig = new QueueConfig();
-        Map<String, String> mockedMap = new HashMap<>();
-        queueConfig.setQueueConfig(mockedMap);
-        messageWriter = new MessageWriter(messageSender, queueConfig);
+        jmsTemplate = EasyMock.createMock(JmsTemplate.class);
+        messageWriter = new MessageWriter(jmsTemplate);
     }
 
     /**
@@ -90,11 +87,11 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
 
-        messageSender.sendMessage("UnitTestQueue", sdtMessage);
+        jmsTemplate.convertAndSend("UnitTestQueue", sdtMessage);
         EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay(messageSender);
+        replay(jmsTemplate);
 
         // Send the message.
         try {
@@ -115,11 +112,11 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
 
-        messageSender.sendMessage("UnitTestQueue", sdtMessage);
+        jmsTemplate.convertAndSend("UnitTestQueue", sdtMessage);
         EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay(messageSender);
+        replay(jmsTemplate);
 
         // Send the message.
         try {
@@ -139,11 +136,11 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
 
-        messageSender.sendMessage("UnitTestQueue", sdtMessage);
+        jmsTemplate.convertAndSend("UnitTestQueue", sdtMessage);
         EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay(messageSender);
+        replay(jmsTemplate);
 
         // Send the message.
         try {
@@ -159,7 +156,7 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
             Assert.fail("Not Expected to fail");
         }
 
-        EasyMock.verify(messageSender);
+        EasyMock.verify(jmsTemplate);
     }
 
     /**
@@ -171,11 +168,11 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
 
-        messageSender.sendMessage("UnitTestQueue.DLQ", sdtMessage);
+        jmsTemplate.convertAndSend("UnitTestQueue.DLQ", sdtMessage);
         EasyMock.expectLastCall();
 
         // Get ready to call the mock.
-        replay(messageSender);
+        replay(jmsTemplate);
 
         // Send the message.
         try {
@@ -191,6 +188,6 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
             Assert.fail("Not Expected to fail");
         }
 
-        EasyMock.verify(messageSender);
+        EasyMock.verify(jmsTemplate);
     }
 }

@@ -6,16 +6,8 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-  <!-- Copied this from producers config  -->
-  <bean id="javax.sql.DataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-    <description>
-      Data source for use in the web application. This looks up the data source in JNDI to allow it to be
-      externalised.
-    </description>
-    <property name="jndiName" value="java:comp/env/jdbc/SDTDB"/>
-    <property name="lookupOnStartup" value="false"/>
-    <property name="proxyInterface" value="javax.sql.DataSource"/>
-  </bean>
+	<!-- Import the Spring datasource configuration -->
+	<import resource="classpath:uk/gov/moj/sdt/dao/spring.datasource.xml" />
 
 	<!-- Factory to make session objects -->
 	<bean id="org.springframework.orm.hibernate5.LocalSessionFactoryBean"

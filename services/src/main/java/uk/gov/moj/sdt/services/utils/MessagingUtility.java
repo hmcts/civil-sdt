@@ -87,7 +87,7 @@ public class MessagingUtility implements IMessagingUtility {
     }
 
     /**
-     * @param messageSynchronizer the message synchronizer for synchronising the JMS message queue.
+     * @param messageSynchronizer the message synchronizer for synchronising the messages read.
      */
     public void setMessageSynchronizer(final IMessageSynchronizer messageSynchronizer) {
         this.messageSynchronizer = messageSynchronizer;

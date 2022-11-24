@@ -12,10 +12,21 @@ management:
         include: health, info, prometheus
 
 springdoc:
-  packagesToScan: uk.gov.hmcts.reform.demo.controllers
+  packagesToScan: uk.gov.moj.sdt.controllers
 
 #If you use a database then uncomment below lines and update db properties accordingly
 spring:
+  jms:
+    servicebus:
+      connection-string: ${SDT_QUEUE_CONNECTION_STRING::Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
+      internal:
+        queueConfig:
+          MCOL: ${MCOL.Queue}
+  aop:
+    proxy-target-class: false
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
   config:
     import: "optional:configtree:/mnt/secrets/"
   application:
@@ -42,13 +53,3 @@ azure:
 sdt:
   tx-timeout:
     default:  1000
-
-jms:
-  servicebus:
-    internal:
-      queueConfig:
-        MCOL:${MCOL.Queue}
-      queues:
-        inbound:
-          connection-string: ${SDT_QUEUE_CONNECTION_STRING}
-

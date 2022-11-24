@@ -119,7 +119,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.github.ben-manes.versions'
 
-mainClassName = 'uk.gov.hmcts.reform.demo.Application'
+mainClassName = 'uk.gov.moj.sdt.Application'
 
 dependencyCheck {
   // Specifies if the build should be failed if a CVSS score above a specified level is identified.
@@ -203,7 +203,6 @@ allprojects {
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
 
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
@@ -349,6 +348,10 @@ subprojects { subproject ->
 
     implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation (group: 'com.microsoft.azure', name: 'azure-servicebus-jms-spring-boot-starter', version: '2.3.5'){
+      exclude group: 'org.simpleframework', module: 'simple-xml'
+      exclude group: 'org.nanohttpd', module: 'nanohttpd'
+    }
 
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
@@ -372,9 +375,6 @@ subprojects { subproject ->
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
       exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
-
-    implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
-
 
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
@@ -585,6 +585,12 @@ idea {
       }
     }
   }
+
+  module {
+    inheritOutputDirs = false
+    outputDir = new File("${rootDir}/build/java/${name}")
+    testOutputDir = new File("${rootDir}/build/java/test/${name}")
+  }
 }
 
 // this allows ./gradlew run
@@ -626,6 +632,24 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
 task dependencyCheck(dependsOn: dependencyCheckAnalyze)
 
 configurations { codacy }
+
+dependencies {
+  implementation project(':consumers')
+  implementation project(':dao')
+  implementation project(':dao-api')
+  implementation project(':domain')
+  implementation project(':handlers')
+  implementation project(':handlers-api')
+  implementation project(':interceptors')
+  implementation project(':producers')
+  implementation project(':producers-api')
+  implementation project(':producers-commissioning')
+  implementation project(':services')
+  implementation project(':services-api')
+  implementation project(':transformers')
+  implementation project(':utils')
+  implementation project(':validators')
+}
 
 dependencies {
   codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'

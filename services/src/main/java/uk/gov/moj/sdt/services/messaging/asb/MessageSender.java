@@ -4,8 +4,6 @@ import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 
@@ -17,10 +15,7 @@ public class MessageSender {
 
     private JsonConverter jsonConverter;
 
-    @Autowired
-    public MessageSender(@Value("${jms.servicebus.internal.queues.inbound.connection-string}") String connectionString,
-                         JsonConverter jsonConverter) {
-        this.connectionString = connectionString;
+    public MessageSender(JsonConverter jsonConverter) {
         this.jsonConverter = jsonConverter;
     }
 
@@ -35,5 +30,13 @@ public class MessageSender {
         ServiceBusMessage serviceBusMessage = new ServiceBusMessage(message);
         senderClient.sendMessage(serviceBusMessage);
         log.debug("Message has been sent to the queue {}", queueName);
+    }
+
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
     }
 }

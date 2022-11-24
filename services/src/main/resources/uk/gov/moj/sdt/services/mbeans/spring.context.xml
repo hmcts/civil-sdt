@@ -7,10 +7,10 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-	<!-- Note all ids should be based on fully qualified names (interfaces where 
+	<!-- Note all ids should be based on fully qualified names (interfaces where
 		this is not ambiguous) and all classes should have an interface. -->
-
-    <bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" class="uk.gov.moj.sdt.services.mbeans.SdtManagementMBean" >
+  
+  <bean id="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" class="uk.gov.moj.sdt.services.mbeans.SdtManagementMBean" >
         <property name="messageListenerContainer" ref="messageListenerContainer"/>
         <property name="individualRequestDao" ref="uk.gov.moj.sdt.dao.api.IIndividualRequestDao"/>
         <property name="messageWriter" ref="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"/>

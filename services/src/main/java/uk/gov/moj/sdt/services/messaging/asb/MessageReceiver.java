@@ -2,15 +2,10 @@ package uk.gov.moj.sdt.services.messaging.asb;
 
 import com.azure.core.util.IterableStream;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
-import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusReceivedMessage;
 import com.azure.messaging.servicebus.ServiceBusReceiverClient;
-import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 
 @Slf4j
 @Component
@@ -18,16 +13,9 @@ public class MessageReceiver {
 
     private String connectionString;
 
-    private String queueName;
-
     private JsonConverter jsonConverter;
 
-    @Autowired
-    public MessageReceiver(@Value("${jms.servicebus.internal.queues.inbound.connection-string}") String connectionString,
-                           @Value("${jms.servicebus.internal.queues.inbound.queue-name}") String queueName,
-                           JsonConverter jsonConverter) {
-        this.connectionString = connectionString;
-        this.queueName = queueName;
+    public MessageReceiver(JsonConverter jsonConverter) {
         this.jsonConverter = jsonConverter;
     }
 
@@ -46,5 +34,13 @@ public class MessageReceiver {
             .buildClient();
         log.debug("Connected to queue {}", queueName);
         return receiverClient.receiveMessages(maxMessages);
+    }
+
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
     }
 }
