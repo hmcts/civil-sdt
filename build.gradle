@@ -227,6 +227,7 @@ allprojects {
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
       exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
@@ -346,6 +347,7 @@ subprojects { subproject ->
     implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: cxfVersion
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
