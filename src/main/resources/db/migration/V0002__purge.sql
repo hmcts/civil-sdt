@@ -15,7 +15,7 @@ success NUMERIC);
 CREATE TABLE sdt_owner.purge_job_audit_messages
 (purge_job_message_id NUMERIC NOT NULL,
 purge_job_id NUMERIC,
-created_date TIMESTAMP(6),
+message_date TIMESTAMP(6),
 log_message VARCHAR(256));
 
 -- add indexes --
@@ -128,7 +128,7 @@ DECLARE i_purge_job_message_id NUMERIC;
                           t_retention_date;
 
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Purge retention period is ' || i_retention_period ||
 			' days, deleting all data prior to ' || t_retention_date);
 
@@ -138,7 +138,7 @@ DECLARE i_purge_job_message_id NUMERIC;
     RAISE NOTICE 'Commencing deletion of error_logs records';
 
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Commencing deletion of error_logs records');
 
 	i_purge_job_message_id := i_purge_job_message_id + 1;
@@ -154,7 +154,7 @@ DECLARE i_purge_job_message_id NUMERIC;
     RAISE NOTICE '% records deleted from error_logs table.', n_iteration;
 
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), n_iteration || ' records deleted from error_logs table.');
 
 	i_purge_job_message_id := i_purge_job_message_id + 1;
@@ -176,7 +176,7 @@ DECLARE i_purge_job_message_id NUMERIC;
 
     RAISE NOTICE '% records deleted from individual_requests table.', n_iteration;
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), n_iteration || ' records deleted from individual_requests table.');
 	i_purge_job_message_id := i_purge_job_message_id + 1;
 
@@ -188,7 +188,7 @@ DECLARE i_purge_job_message_id NUMERIC;
     RAISE NOTICE 'Commencing deletion of bulk_submissions records';
 
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Commencing deletion of bulk_submissions records');
 
 	i_purge_job_message_id := i_purge_job_message_id + 1;
@@ -204,7 +204,7 @@ DECLARE i_purge_job_message_id NUMERIC;
     RAISE NOTICE '% records deleted from bulk_submissions table.', n_iteration;
 
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), n_iteration || ' records deleted from bulk_submissions table.');
 
 	i_purge_job_message_id := i_purge_job_message_id + 1;
@@ -214,8 +214,9 @@ DECLARE i_purge_job_message_id NUMERIC;
   	WHERE purge_job_id=i_purge_job_id;
 
     RAISE NOTICE 'Commencing deletion of service_requests records';
+
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Commencing deletion of service_requests records');
 
 	i_purge_job_message_id := i_purge_job_message_id + 1;
@@ -231,7 +232,7 @@ DECLARE i_purge_job_message_id NUMERIC;
     RAISE NOTICE '% records deleted from service_requests table.', n_iteration;
 
     INSERT INTO sdt_owner.purge_job_audit_messages
-    (purge_job_message_id, purge_job_id, created_date,log_message)
+    (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (i_purge_job_message_id, i_purge_job_id, now(), n_iteration || ' records deleted from service_requests table.');
 
 	i_purge_job_message_id := i_purge_job_message_id + 1;
@@ -241,4 +242,6 @@ DECLARE i_purge_job_message_id NUMERIC;
   	WHERE purge_job_id=i_purge_job_id;
 
   END;
+
 $$
+
