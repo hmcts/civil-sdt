@@ -38,53 +38,52 @@ DECLARE t_job_end_date TIMESTAMP;
 DECLARE i_purge_job_id NUMERIC;
 DECLARE i_purge_job_message_id NUMERIC;
 
-  -- cursor1 service requests created before given retention date
-  c1 CURSOR
-            FOR SELECT service_request_id
-               FROM sdt_owner.service_requests
-               WHERE request_timestamp < t_retention_date;
+-- cursor1 service requests created before given retention date
+c1 CURSOR
+    FOR SELECT service_request_id
+        FROM sdt_owner.service_requests
+        WHERE request_timestamp < t_retention_date;
 
-  -- cursor2 bulk submissions with service requests created before given retention date
-  c2 CURSOR
-            FOR SELECT bulk_submission_id
-               FROM sdt_owner.bulk_submissions
-               WHERE service_request_id IN (
-                   SELECT  service_request_id
-                   FROM sdt_owner.service_requests
-                   WHERE request_timestamp < t_retention_date);
+-- cursor2 bulk submissions with service requests created before given retention date
+c2 CURSOR
+    FOR SELECT bulk_submission_id
+       FROM sdt_owner.bulk_submissions
+       WHERE service_request_id IN (
+           SELECT  service_request_id
+           FROM sdt_owner.service_requests
+           WHERE request_timestamp < t_retention_date);
 
-  -- cursor3 individual requests for bulk submissions
-  --   with service requests created before given retention date
-  c3 CURSOR
-            FOR SELECT individual_request_id,sdt_request_reference
-               FROM sdt_owner.individual_requests
-               WHERE bulk_submission_id IN  (
-                   SELECT bulk_submission_id
-                   FROM sdt_owner.bulk_submissions
-                   WHERE service_request_id IN (
-                       SELECT service_request_id
-                       FROM sdt_owner.service_requests
-                       WHERE request_timestamp < t_retention_date));
+-- cursor3 individual requests for bulk submissions
+--   with service requests created before given retention date
+c3 CURSOR
+    FOR SELECT individual_request_id,sdt_request_reference
+        FROM sdt_owner.individual_requests
+        WHERE bulk_submission_id IN  (
+            SELECT bulk_submission_id
+            FROM sdt_owner.bulk_submissions
+            WHERE service_request_id IN (
+                SELECT service_request_id
+                FROM sdt_owner.service_requests
+                WHERE request_timestamp < t_retention_date));
 
-  -- cursor4 error logs for individual requests for bulk submissions
-  --   with service requests created before given retention date
-  c4 CURSOR
-            FOR SELECT error_log_id
-               FROM sdt_owner.error_logs
-               WHERE individual_request_id IN (
-                   SELECT individual_request_id
-                   FROM sdt_owner.individual_requests
-                   WHERE bulk_submission_id IN (
-                       SELECT bulk_submission_id
-                       FROM sdt_owner.bulk_submissions
-                       WHERE service_request_id IN (
-                           SELECT service_request_id
-                           FROM sdt_owner.service_requests
-                           WHERE request_timestamp < t_retention_date)));
+-- cursor4 error logs for individual requests for bulk submissions
+--   with service requests created before given retention date
+c4 CURSOR
+    FOR SELECT error_log_id
+        FROM sdt_owner.error_logs
+        WHERE individual_request_id IN (
+            SELECT individual_request_id
+            FROM sdt_owner.individual_requests
+            WHERE bulk_submission_id IN (
+                SELECT bulk_submission_id
+                FROM sdt_owner.bulk_submissions
+                WHERE service_request_id IN (
+                    SELECT service_request_id
+                    FROM sdt_owner.service_requests
+                    WHERE request_timestamp < t_retention_date)));
 
-  n_iteration   INT;
-  BEGIN
-
+n_iteration   INT;
+BEGIN
     -- retention period
 	SELECT parameter_value
     INTO i_retention_period
@@ -144,18 +143,18 @@ DECLARE i_purge_job_message_id NUMERIC;
 
 	n_iteration := 0;
     FOR c4_rec IN c4 LOOP
-      DELETE FROM sdt_owner.error_logs
-      WHERE error_log_id = c4_rec.error_log_id;
+        DELETE FROM sdt_owner.error_logs
+        WHERE error_log_id = c4_rec.error_log_id;
 
-	  RAISE NOTICE 'Deleted error_logs : %', c4_rec.error_log_id;
+	    RAISE NOTICE 'Deleted error_logs : %', c4_rec.error_log_id;
 
-	  INSERT INTO sdt_owner.purge_job_audit_messages
+	    INSERT INTO sdt_owner.purge_job_audit_messages
 		(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Deleted error_logs : ' || c4_rec.error_log_id);
 
-	  i_purge_job_message_id := i_purge_job_message_id + 1;
+	    i_purge_job_message_id := i_purge_job_message_id + 1;
 
-      n_iteration := n_iteration + 1;
+        n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from error_logs table.', n_iteration;
@@ -175,18 +174,18 @@ DECLARE i_purge_job_message_id NUMERIC;
 
     n_iteration := 0;
     FOR c3_rec IN c3 LOOP
-      DELETE FROM sdt_owner.individual_requests
-      WHERE individual_request_id = c3_rec.individual_request_id;
+        DELETE FROM sdt_owner.individual_requests
+        WHERE individual_request_id = c3_rec.individual_request_id;
 
-      RAISE NOTICE 'Deleted individual_request : %', c3_rec.sdt_request_reference;
+        RAISE NOTICE 'Deleted individual_request : %', c3_rec.sdt_request_reference;
 
-	  INSERT INTO sdt_owner.purge_job_audit_messages
+	    INSERT INTO sdt_owner.purge_job_audit_messages
 		(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Deleted individual_request : ' || c3_rec.sdt_request_reference);
 
-	  i_purge_job_message_id := i_purge_job_message_id + 1;
+	    i_purge_job_message_id := i_purge_job_message_id + 1;
 
-	  n_iteration := n_iteration + 1;
+	    n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from individual_requests table.', n_iteration;
@@ -212,18 +211,18 @@ DECLARE i_purge_job_message_id NUMERIC;
 
     n_iteration := 0;
     FOR c2_rec IN c2 LOOP
-      DELETE FROM sdt_owner.bulk_submissions
-      WHERE bulk_submission_id = c2_rec.bulk_submission_id;
+        DELETE FROM sdt_owner.bulk_submissions
+        WHERE bulk_submission_id = c2_rec.bulk_submission_id;
 
-      RAISE NOTICE 'Deleted bulk_submissions : %', c2_rec.bulk_submission_id;
+        RAISE NOTICE 'Deleted bulk_submissions : %', c2_rec.bulk_submission_id;
 
-	  INSERT INTO sdt_owner.purge_job_audit_messages
+	    INSERT INTO sdt_owner.purge_job_audit_messages
 		(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Deleted bulk_submissions : ' || c2_rec.bulk_submission_id);
 
-	  i_purge_job_message_id := i_purge_job_message_id + 1;
+	    i_purge_job_message_id := i_purge_job_message_id + 1;
 
-      n_iteration := n_iteration + 1;
+        n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from bulk_submissions table.', n_iteration;
@@ -248,18 +247,18 @@ DECLARE i_purge_job_message_id NUMERIC;
 
     n_iteration := 0;
     FOR c1_rec IN c1 LOOP
-      DELETE FROM sdt_owner.service_requests
-      WHERE service_request_id = c1_rec.service_request_id;
+        DELETE FROM sdt_owner.service_requests
+        WHERE service_request_id = c1_rec.service_request_id;
 
-	  RAISE NOTICE 'Deleted service_requests : %', c1_rec.service_request_id;
+	    RAISE NOTICE 'Deleted service_requests : %', c1_rec.service_request_id;
 
-      INSERT INTO sdt_owner.purge_job_audit_messages
+        INSERT INTO sdt_owner.purge_job_audit_messages
     	(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (i_purge_job_message_id, i_purge_job_id, now(), 'Deleted service_requests : ' || c1_rec.service_request_id);
 
-	  i_purge_job_message_id := i_purge_job_message_id + 1;
+	    i_purge_job_message_id := i_purge_job_message_id + 1;
 
-      n_iteration := n_iteration + 1;
+        n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from service_requests table.', n_iteration;
@@ -274,7 +273,7 @@ DECLARE i_purge_job_message_id NUMERIC;
   	SET count_of_service_requests=n_iteration,job_end_date=now(), success=1
   	WHERE purge_job_id=i_purge_job_id;
 
-  END;
+END;
 
 $$
 
