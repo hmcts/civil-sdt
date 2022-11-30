@@ -31,7 +31,6 @@ ALTER TABLE sdt_owner.purge_job_audit_messages ADD CONSTRAINT purge_job_audit_me
 
 
 CREATE OR REPLACE PROCEDURE sdt_owner.purge (i_CommitInterval IN INT) language plpgsql AS $$
-DECLARE
 DECLARE i_retention_period VARCHAR(32);
 DECLARE t_retention_date TIMESTAMP;
 DECLARE t_job_start_date TIMESTAMP;
