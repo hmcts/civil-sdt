@@ -136,11 +136,6 @@ BEGIN
 
 	    RAISE NOTICE 'Deleted error_logs : %', c4_rec.error_log_id;
 
-	    INSERT INTO sdt_owner.purge_job_audit_messages
-		(purge_job_message_id, purge_job_id, message_date,log_message)
-    	VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
-				'Deleted error_logs : ' || c4_rec.error_log_id);
-
         n_iteration := n_iteration + 1;
     END LOOP;
 
