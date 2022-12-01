@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS sdt_owner.purge_job_audit CASCADE;
 DROP TABLE IF EXISTS sdt_owner.purge_job_audit_messages CASCADE;
 
 CREATE TABLE sdt_owner.purge_job_audit
-(purge_job_id NUMERIC NOT NULL,
+(purge_job_id NUMERIC UNIQUE NOT NULL,
 job_start_date TIMESTAMP(6),
 job_end_date TIMESTAMP(6),
 retention_date TIMESTAMP(6),
@@ -15,15 +15,12 @@ count_of_service_requests_deleted NUMERIC,
 success NUMERIC);
 
 CREATE TABLE sdt_owner.purge_job_audit_messages
-(purge_job_message_id NUMERIC NOT NULL,
-purge_job_id NUMERIC,
+(purge_job_message_id NUMERIC UNIQUE NOT NULL,
+purge_job_id NUMERIC REFERENCES sdt_owner.purge_job_audit (purge_job_id),
 message_date TIMESTAMP(6),
 log_message VARCHAR(256));
 
 -- add indexes --
-CREATE INDEX pja_purge_job_id ON sdt_owner.purge_job_audit (purge_job_id);
-CREATE INDEX pjam_purge_job_message_id ON sdt_owner.purge_job_audit_messages (purge_job_message_id);
-
 CREATE UNIQUE INDEX purge_job_audit_pk ON sdt_owner.purge_job_audit (purge_job_id);
 CREATE UNIQUE INDEX purge_job_audit_messages_pk ON sdt_owner.purge_job_audit_messages (purge_job_message_id);
 
@@ -234,11 +231,6 @@ BEGIN
         WHERE service_request_id = c1_rec.service_request_id;
 
 	    RAISE NOTICE 'Deleted service_requests : %', c1_rec.service_request_id;
-
-        INSERT INTO sdt_owner.purge_job_audit_messages
-    	(purge_job_message_id, purge_job_id, message_date,log_message)
-    	VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
-				'Deleted service_requests : ' || c1_rec.service_request_id);
 
         n_iteration := n_iteration + 1;
     END LOOP;
