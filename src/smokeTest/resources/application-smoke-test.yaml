@@ -6,7 +6,7 @@ spring:
     password: ${SDT_DB_PASSWORD:test}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     database: postgresql
   flyway:
     enabled: false

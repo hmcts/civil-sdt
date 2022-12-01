@@ -41,6 +41,7 @@ import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +64,7 @@ import uk.gov.moj.sdt.utils.ServerHostName;
  *
  * @author d195274
  */
+@Component("ServiceRequestInboundInterceptor")
 public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
 
     /**

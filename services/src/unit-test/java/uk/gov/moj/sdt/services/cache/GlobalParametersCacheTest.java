@@ -35,10 +35,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
@@ -74,11 +78,16 @@ public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        cache = new GlobalParametersCache();
         mockGenericDao = EasyMock.createMock(IGenericDao.class);
-        cache.setGenericDao(mockGenericDao);
-        managementMBean = new SdtManagementMBean();
-        cache.setManagementMBean(managementMBean);
+        DefaultMessageListenerContainer messageListenerContainer = EasyMock.createMock(DefaultMessageListenerContainer.class);
+        IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
+        IMessagingUtility messagingUtility  = EasyMock.createMock(IMessagingUtility.class);
+        ITargetApplicationSubmissionService targetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
+        mockGenericDao = EasyMock.createMock(IGenericDao.class);
+        managementMBean = new SdtManagementMBean(individualRequestDao,
+                                                 messagingUtility,
+                                                 targetAppSubmissionService);
+        cache = new GlobalParametersCache(managementMBean, mockGenericDao);
 
         // Setup some results
         result = new GlobalParameter[3];

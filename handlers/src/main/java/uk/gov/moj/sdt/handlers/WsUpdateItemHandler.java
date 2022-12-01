@@ -34,6 +34,9 @@ import java.util.GregorianCalendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +55,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
  * @author Manoj Kulkarni
  */
 @Transactional(propagation = Propagation.REQUIRED)
+@Component("WsUpdateItemHandler")
 public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateItemHandler {
     /**
      * Logger object.
@@ -70,6 +74,15 @@ public class WsUpdateItemHandler extends AbstractWsHandler implements IWsUpdateI
     private ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest> transformer;
 
     // CHECKSTYLE:ON
+
+    @Autowired
+    public WsUpdateItemHandler(@Qualifier("UpdateRequestService")
+                                       IUpdateRequestService updateRequestService,
+                               @Qualifier("UpdateItemTransformer")
+                                   ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest> transformer) {
+        this.updateRequestService = updateRequestService;
+        this.transformer = transformer;
+    }
 
     @Override
     public UpdateResponseType updateItem(final UpdateRequestType updateRequestType) {

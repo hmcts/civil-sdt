@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -122,29 +123,24 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      */
     @Before
     public void setUp() {
-        targetAppSubmissionService = new TargetApplicationSubmissionService();
 
         // Instantiate all the mocked objects and set them in the target application submission service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
-        targetAppSubmissionService.setIndividualRequestDao(mockIndividualRequestDao);
-
         mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
-
-        targetAppSubmissionService.setRequestConsumer(mockConsumerGateway);
-
         mockCacheable = EasyMock.createMock(ICacheable.class);
-        targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
-
         mockMessageWriter = EasyMock.createMock(IMessageWriter.class);
-        targetAppSubmissionService.setMessageWriter(mockMessageWriter);
-
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
-        targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
 
-        targetAppSubmissionService.setIndividualResponseXmlParser(genericParser);
+        targetAppSubmissionService = new TargetApplicationSubmissionService(mockIndividualRequestDao,
+                                                                            genericParser,
+                                                                            mockConsumerGateway,
+                                                                            mockMessageWriter);
+        targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
+        targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
+
     }
 
     /**

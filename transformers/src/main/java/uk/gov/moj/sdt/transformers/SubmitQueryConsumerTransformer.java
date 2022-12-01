@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.transformers;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -51,6 +52,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQue
  * @author D274994
  */
 // CHECKSTYLE:OFF
+@Component("SubmitQueryConsumerTransformer")
 public final class SubmitQueryConsumerTransformer extends AbstractTransformer implements
         IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> {
     // CHECKSTYLE:ON

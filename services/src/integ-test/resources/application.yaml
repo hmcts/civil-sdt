@@ -1,9 +1,0 @@
-jms:
-  servicebus:
-    enabled: false
-  activemq:
-    in-memory: true
-    internal:
-      queueConfig:
-        MCOL: ${MCOL.Queue}
-      

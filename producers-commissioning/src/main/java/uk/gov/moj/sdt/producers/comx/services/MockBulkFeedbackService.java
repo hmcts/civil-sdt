@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -36,6 +36,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.producers.comx.utils.BulkFeedbackFactory;
@@ -45,10 +46,11 @@ import uk.gov.moj.sdt.utils.SdtContext;
 /**
  * Implementation for mocking of SDT Get Bulk Feedback service.
  * This class will provide a static list of responses based on the SDT Bulk Reference.
- * 
+ *
  * @author d130680
- * 
+ *
  */
+@Component("MockBulkFeedbackService")
 public class MockBulkFeedbackService implements IBulkFeedbackService
 {
     /**
@@ -79,7 +81,7 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
 
     /**
      * Populate the bulk submission with the sdt bulk reference.
-     * 
+     *
      * @param bulkFeedbackFactory bulk feedback factory containing bulk submission
      * @param sdtBulkReference sdt bulk reference
      * @return populate bulk submission
@@ -95,7 +97,7 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
 
     /**
      * Set bulk feedback factory map.
-     * 
+     *
      * @param bulkFeedbackFactoryMap bulk feedback factory map
      */
     public void setBulkFeedbackFactoryMap (final Map<String, BulkFeedbackFactory> bulkFeedbackFactoryMap)

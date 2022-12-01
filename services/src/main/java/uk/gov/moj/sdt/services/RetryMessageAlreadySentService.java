@@ -34,6 +34,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +53,7 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
  * @author Manoj Kulkarni
  */
 @Transactional(propagation = Propagation.REQUIRES_NEW)
+@Service("RetryMessageAlreadySentService")
 public class RetryMessageAlreadySentService implements IRetryMessageSendService {
 
     /**
@@ -77,6 +81,18 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService 
      * The ICacheable reference to the global parameters cache.
      */
     private ICacheable globalParametersCache;
+
+    @Autowired
+    public RetryMessageAlreadySentService(@Qualifier("IndividualRequestDao")
+                                              IIndividualRequestDao individualRequestDao,
+                                          @Qualifier("MessagingUtility")
+                                              IMessagingUtility messagingUtility,
+                                          @Qualifier("GlobalParametersCache")
+                                              ICacheable globalParametersCache) {
+        this.individualRequestDao = individualRequestDao;
+        this.messagingUtility = messagingUtility;
+        this.globalParametersCache = globalParametersCache;
+    }
 
     @Override
     public void queueMessages() {

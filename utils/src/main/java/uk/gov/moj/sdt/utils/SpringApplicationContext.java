@@ -34,12 +34,14 @@ package uk.gov.moj.sdt.utils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * A utility class to hold give access to the Spring ApplicationContext instance.
  *
  * @author Robin Compston
  */
+@Component
 public class SpringApplicationContext implements ApplicationContextAware {
     /**
      * Static property to hold application context.

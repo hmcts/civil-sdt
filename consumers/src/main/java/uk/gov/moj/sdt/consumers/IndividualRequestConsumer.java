@@ -37,6 +37,9 @@ import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -56,6 +59,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
  * @author Manoj Kulkarni
  */
 // CHECKSTYLE:OFF
+@Component("IndividualRequestConsumer")
 public class IndividualRequestConsumer extends AbstractWsConsumer implements IIndividualRequestConsumer {
     // CHECKSTYLE:ON
 
@@ -70,6 +74,12 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     // CHECKSTYLE:OFF
     private IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer;
 
+    @Autowired
+    public IndividualRequestConsumer(@Qualifier("IndividualRequestConsumerTransformer")
+                                         IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer) {
+        this.transformer = transformer;
+    }
+
     // CHECKSTYLE:ON
 
     /**
@@ -78,7 +88,7 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
      * The default value is false i.e. the error will not be thrown to the client and the
      * consumer will keep trying to connect to the target application.
      */
-    private boolean rethrowOnFailureToConnect;
+    private boolean rethrowOnFailureToConnect = false;
 
     @Override
     public void processIndividualRequest(final IIndividualRequest individualRequest, final long connectionTimeOut,

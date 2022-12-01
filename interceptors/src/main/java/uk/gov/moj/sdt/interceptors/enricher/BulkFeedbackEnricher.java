@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -47,11 +48,17 @@ import uk.gov.moj.sdt.utils.SdtContext;
  *
  * @author d130680
  */
+@Component("BulkFeedbackEnricher")
 public class BulkFeedbackEnricher extends AbstractSdtEnricher {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackEnricher.class);
+
+    public BulkFeedbackEnricher() {
+        setParentTag("bulkFeedbackResponse");
+        setInsertionTag("responses");
+    }
 
     @Override
     public String enrichXml(final String message) {
@@ -98,9 +105,9 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher {
             // optional namespace prefix and the responseDetail start tag
             // optional namespace prefix and the status start tag
             //
-            // Capture: 
-            // entire response start tag (1), 
-            // request id value (2), 
+            // Capture:
+            // entire response start tag (1),
+            // request id value (2),
             // responseDetail namespace prefix (3),
             // responseDetail (4)
             // status namespace plus opening tag (without attributes) (5)

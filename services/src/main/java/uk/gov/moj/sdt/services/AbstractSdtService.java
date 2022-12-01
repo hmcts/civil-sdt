@@ -35,6 +35,8 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -60,6 +62,14 @@ public abstract class AbstractSdtService {
      * Parser for individual response.
      */
     private GenericXmlParser individualResponseXmlParser;
+
+    public AbstractSdtService(@Qualifier("IndividualRequestDao")
+                                      IIndividualRequestDao individualRequestDao,
+                              @Qualifier("IndividualResponseXmlParser")
+                                  GenericXmlParser individualResponseXmlParser) {
+        this.individualRequestDao = individualRequestDao;
+        this.individualResponseXmlParser = individualResponseXmlParser;
+    }
 
     /**
      * Update the request object. This method is to be called to update the request object on

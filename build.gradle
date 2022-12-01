@@ -353,6 +353,10 @@ subprojects { subproject ->
       exclude group: 'org.nanohttpd', module: 'nanohttpd'
     }
 
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
+    implementation group: 'org.apache.activemq', name: 'activemq-client', version: '5.16.1'
+    implementation group: 'org.apache.activemq', name: 'activemq-broker', version: '5.16.1'
+
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
 
@@ -379,7 +383,6 @@ subprojects { subproject ->
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.2'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion

@@ -95,18 +95,18 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        updateRequestService = new UpdateRequestService();
 
         // Instantiate all the mocked objects and set them in the target application submission service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
-        updateRequestService.setIndividualRequestDao(mockIndividualRequestDao);
 
         mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
-        updateRequestService.setMessagingUtility(mockMessagingUtility);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
-        updateRequestService.setIndividualResponseXmlParser(genericParser);
+        updateRequestService = new UpdateRequestService(mockIndividualRequestDao,
+                                                        genericParser,
+                                                        mockMessagingUtility);
+
     }
 
     /**

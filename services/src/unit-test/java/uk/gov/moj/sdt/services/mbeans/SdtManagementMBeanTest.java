@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.util.ReflectionUtils;
 
+import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -134,7 +135,13 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        sdtManagementMBean = new SdtManagementMBean();
+        DefaultMessageListenerContainer messageListenerContainer = EasyMock.createMock(DefaultMessageListenerContainer.class);
+        IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
+        IMessagingUtility messagingUtility  = EasyMock.createMock(IMessagingUtility.class);
+        ITargetApplicationSubmissionService targetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
+        sdtManagementMBean = new SdtManagementMBean(individualRequestDao,
+                                                 messagingUtility,
+                                                 targetAppSubmissionService);
 
         // Instantiate all the mocked objects and set them up in the MBean
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);

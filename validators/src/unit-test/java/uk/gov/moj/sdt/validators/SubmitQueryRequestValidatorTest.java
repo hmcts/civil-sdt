@@ -112,8 +112,6 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     public void setUpLocalTests() {
         // subject of test
-        validator = new SubmitQueryRequestValidator();
-
         // domain objects
         bulkCustomer = createCustomer(createBulkCustomerApplications("PCOL"));
 
@@ -132,7 +130,9 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
                 globalParameterCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name())).andReturn(globalParameter);
         replay(globalParameterCache);
-        validator.setGlobalParameterCache(globalParameterCache);
+
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        validator = new SubmitQueryRequestValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**

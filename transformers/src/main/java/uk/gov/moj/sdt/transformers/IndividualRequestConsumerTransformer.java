@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.transformers;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -49,6 +50,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
  *
  * @author d130680
  */
+@Component("IndividualRequestConsumerTransformer")
 public final class IndividualRequestConsumerTransformer extends AbstractTransformer implements
         IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> {
     /**

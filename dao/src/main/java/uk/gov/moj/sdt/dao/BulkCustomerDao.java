@@ -30,11 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
@@ -47,17 +50,17 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  *
  * @author Robin Compston
  */
+@Repository("BulkCustomerDao")
 public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDao.class);
 
-    /**
-     * Default constructor for {@link GenericDaoTest}.
-     */
-    public BulkCustomerDao() {
-        super();
+
+    @Autowired
+    public BulkCustomerDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
 
     @Override

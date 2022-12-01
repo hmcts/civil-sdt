@@ -1,66 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:jms="http://www.springframework.org/schema/jms"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans.xsd
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-	">
+	http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+           <list>
+               <value>classpath:uk/gov/moj/sdt/services/messaging/jms.properties</value>
+           </list>
+         </property>
     </bean>
 
-<!--  <bean id="jmsqpidConnectionFactory" class="org.apache.qpid.jms.JmsConnectionFactory">-->
-<!--    <property name="remoteURI" value="${jms.servicebus.internal.queues.inbound.connection-string}"/>-->
-<!--  </bean>-->
+<!--	<bean id="jmsqpidConnectionFactory" class="org.apache.qpid.jms.JmsConnectionFactory">-->
+<!-- 		<property name="remoteURI" value="${jms.servicebus.connection-string}"/>-->
+<!-- 	</bean>-->
 
-<!--  <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">-->
-<!--    <constructor-arg ref="jmsqpidConnectionFactory"/>-->
-<!--    <property name="sessionCacheSize" value="100"/>-->
-<!--  </bean>-->
+<!-- 	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">-->
+<!--		<constructor-arg ref="jmsConnectionFactory"/>-->
+<!--		<property name="sessionCacheSize" value="100"/>-->
+<!--	</bean>-->
 
 <!--  <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">-->
-<!--    <constructor-arg ref="connectionFactory"/>-->
-<!--  </bean>-->
+<!--		<constructor-arg ref="jmsConnectionFactory"/>-->
+<!--		&lt;!&ndash; <property name="destinationResolver">-->
+<!--    			<ref bean="jmsDestResolver"/>-->
+<!--  			</property>-->
+<!--		&ndash;&gt;-->
+<!--	</bean>-->
 
-	<bean id="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"
-		class="uk.gov.moj.sdt.services.messaging.MessageWriter">
-    <constructor-arg ref="jmsTemplate"/>
-	</bean>
+	<!--  Un-comment the lines below if JNDI queue name is required -->
 
-  <bean id="uk.gov.moj.sdt.services.messaging.QueueConfig" class="uk.gov.moj.sdt.services.messaging.QueueConfig">
-    <property name="queueConfig">
-      <map>
-        <entry key="MCOL" value="${jms.servicebus.internal.queueConfig.MCOL}"/>
-      </map>
-    </property>
-  </bean>
+ 	<!--
+ 	<bean id="jndiQueueName" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true">
+ 		<property name="jndiName" value="java:comp/env/jms/jmsMqQueue"/>
+ 	</bean>
 
-  <bean id="uk.gov.moj.sdt.services.messaging.asb.JsonConverter" class="uk.gov.moj.sdt.services.messaging.asb.JsonConverter">
-  </bean>
+ 	A JNDI resolver
+	<bean id="jmsDestResolver"
+  		class="org.springframework.jms.support.destination.JndiDestinationResolver"/>
 
-  <bean id="uk.gov.moj.sdt.services.messaging.asb.MessageSender" class="uk.gov.moj.sdt.services.messaging.asb.MessageSender">
-    <property name="connectionString" value="${jms.servicebus.connection-string}"/>
-    <constructor-arg ref="uk.gov.moj.sdt.services.messaging.asb.JsonConverter"/>
-  </bean>
+  	-->
 
-  <bean id="uk.gov.moj.sdt.services.messaging.asb.MessageReceiver" class="uk.gov.moj.sdt.services.messaging.asb.MessageReceiver">
-    <property name="connectionString" value="${jms.servicebus.connection-string}"/>
-    <constructor-arg ref="uk.gov.moj.sdt.services.messaging.asb.JsonConverter"/>
-  </bean>
+<!--	<bean id="uk.gov.moj.sdt.services.messaging.api.IMessageWriter"-->
+<!--		class="uk.gov.moj.sdt.services.messaging.MessageWriter">-->
+<!--		<constructor-arg ref="jmsTemplate"/>-->
+<!--		&lt;!&ndash; The map below holds the mapping between the target application code-->
+<!--			and the queue name in JMS. IMPORTANT - The key i.e. the target application code-->
+<!--			should be specified as a String in Upper Case (CAPS ON) characters.-->
+<!--		&ndash;&gt;-->
+<!--		<property name="queueNameMap">-->
+<!--			<map>-->
+<!--				<entry key="MCOL" value="${MCOL.Queue}"/>-->
+<!--			</map>-->
+<!--		</property>-->
+<!--	</bean>-->
 
-	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter" scope="prototype">
-		<constructor-arg>
-			<bean class="uk.gov.moj.sdt.services.messaging.IndividualRequestMdb">
-				<property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>
-			</bean>
-		</constructor-arg>
-		<property name="defaultListenerMethod" value="readMessage"/>
-		<property name="messageConverter"><null/></property>
-	</bean>
+<!--	<bean id="messageListener"  class="org.springframework.jms.listener.adapter.MessageListenerAdapter" scope="prototype">-->
+<!--		<constructor-arg>-->
+<!--			<bean class="uk.gov.moj.sdt.services.messaging.IndividualRequestMdb">-->
+<!--				<property name="targetAppSubmissionService" ref="uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService"/>-->
+<!--			</bean>-->
+<!--		</constructor-arg>-->
+<!--		<property name="defaultListenerMethod" value="readMessage"/>-->
+<!--		<property name="messageConverter"><null/></property>-->
+<!--	</bean>-->
 
+<!--	<bean id="messageListenerContainer"-->
+<!--		class="org.springframework.jms.listener.DefaultMessageListenerContainer"-->
+<!--		depends-on="transactionManager">-->
+<!--&lt;!&ndash;		<property name="connectionFactory" ref="connectionFactory" />&ndash;&gt;-->
+<!--		<property name="destinationName" value="${MCOL.Queue}"/>-->
+<!--		&lt;!&ndash; <property name="destinationName" value="jndiqueue name"/>-->
+<!--		<property name="destinationResolver" ref="jmsDestResolver"/> &ndash;&gt;-->
+<!--		<property name="messageListener" ref="messageListener" />-->
+<!--		<property name="transactionManager" ref="transactionManager" />-->
+<!--		<property name="concurrentConsumers" value="1"/>-->
+<!--        &lt;!&ndash; we have implemented an mbean to change maxConcurrentConsumers at runtime. &ndash;&gt;-->
+<!--		<property name="maxConcurrentConsumers" value="5"/>-->
+<!--		<property name="receiveTimeout" value="30000"/>-->
+<!--        &lt;!&ndash; idleTaskExecutionLimit controls how many seconds a thread hangs around without doing work. &ndash;&gt;-->
+<!--		<property name="idleTaskExecutionLimit" value="10"/>-->
+<!--        &lt;!&ndash; idleConsumerLimit controls the maximum number of idle threads that hang around without doing work. &ndash;&gt;-->
+<!--		<property name="idleConsumerLimit" value="5"/>-->
+<!--	</bean>-->
+
+	<!-- Define new message listener container for other target application queue -->
 
 </beans>

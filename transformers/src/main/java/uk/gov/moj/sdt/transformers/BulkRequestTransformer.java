@@ -35,6 +35,7 @@ import java.util.List;
 
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -57,6 +58,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
  *
  * @author d130680
  */
+@Component("BulkRequestTransformer")
 public final class BulkRequestTransformer extends AbstractTransformer implements
         ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> {
     /**

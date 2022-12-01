@@ -128,10 +128,8 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        bulkFeedbackService = new BulkFeedbackService();
 
         mockBulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
-        bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
 
         mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
 
@@ -144,7 +142,8 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameterData);
         replay(mockGlobalParameterCache);
 
-        bulkFeedbackService.setGlobalParametersCache(mockGlobalParameterCache);
+        bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
+
         dataRetentionPeriod = 90;
 
         // create a bulk customer
@@ -157,6 +156,8 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkFeedbackRequest.setId(requestId);
         bulkFeedbackRequest.setSdtBulkReference(reference);
         bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
+
+
     }
 
     /**

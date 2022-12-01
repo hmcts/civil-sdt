@@ -34,6 +34,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -68,6 +70,17 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor {
      * Error messages cache.
      */
     private ICacheable errorMessagesCache;
+
+    public AbstractSdtValidator(@Qualifier("BulkCustomerDao")
+                                    IBulkCustomerDao bulkCustomerDao,
+                                @Qualifier("GlobalParametersCache")
+                                    ICacheable globalParameterCache,
+                                @Qualifier("ErrorMessagesCache")
+                                    ICacheable errorMessagesCache) {
+        this.bulkCustomerDao = bulkCustomerDao;
+        this.globalParameterCache = globalParameterCache;
+        this.errorMessagesCache = errorMessagesCache;
+    }
 
     /**
      * Check that the bulk customer exists has access to the target application.

@@ -38,6 +38,9 @@ import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -54,6 +57,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 /**
  * @author D274994
  */
+@Component("SubmitQueryConsumer")
 public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQueryConsumer {
     /**
      * Logger object.
@@ -67,6 +71,12 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
     private IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer;
 
     // CHECKSTYLE:ON
+
+    @Autowired
+    public SubmitQueryConsumer(@Qualifier("SubmitQueryConsumerTransformer")
+                                   IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
+        this.transformer = transformer;
+    }
 
     /* (non-Javadoc)
      *

@@ -45,7 +45,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -62,6 +66,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
+import uk.gov.moj.sdt.services.config.ServicesConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -75,18 +80,10 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
  *
  * @author Manoj kulkarni
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
-        "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@SpringBootTest(classes = {
+    ServicesConfig.class
+})
+@ActiveProfiles("integ")
 public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
     /**

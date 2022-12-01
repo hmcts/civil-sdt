@@ -33,6 +33,8 @@ package uk.gov.moj.sdt.domain.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
@@ -55,6 +57,10 @@ public abstract class AbstractCacheControl implements ICacheable {
      * MBean which holds value controlling uncache operation.
      */
     private ISdtManagementMBean managementMBean;
+
+    public AbstractCacheControl(ISdtManagementMBean managementMBean) {
+        this.managementMBean = managementMBean;
+    }
 
     /**
      * Value of the cache count for this {@link AbstractCacheControl} instance need to be uncached.

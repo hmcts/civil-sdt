@@ -45,8 +45,10 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
@@ -67,6 +69,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  */
 // @Transactional (propagation = Propagation.MANDATORY)
 // @Transactional
+@Repository("GenericDao")
 public class GenericDao implements IGenericDao {
     /**
      * Logger object.
@@ -81,8 +84,10 @@ public class GenericDao implements IGenericDao {
     /**
      * Default constructor for {@link GenericDao}.
      */
-    public GenericDao() {
+    @Autowired
+    public GenericDao(SessionFactory sessionFactory) {
         super();
+        this.sessionFactory = sessionFactory;
     }
 
     /**

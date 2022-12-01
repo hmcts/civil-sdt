@@ -34,6 +34,7 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
@@ -42,6 +43,7 @@ import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
  *
  * @author d195274
  */
+@Component("PerformanceLoggerOutboundInterceptor")
 public class PerformanceLoggerOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Default constructor.

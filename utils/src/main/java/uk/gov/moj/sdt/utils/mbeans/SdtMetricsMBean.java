@@ -33,6 +33,9 @@ package uk.gov.moj.sdt.utils.mbeans;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
@@ -93,6 +96,7 @@ import java.util.GregorianCalendar;
  * @author Robin Compston
  */
 
+@Component("SdtMetricsMBean")
 public final class SdtMetricsMBean implements ISdtMetricsMBean {
     /**
      * Static logging object.
@@ -408,6 +412,12 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
      * Utility class for counting unique customers.
      */
     private ICustomerCounter customerCounter;
+
+    @Autowired
+    public SdtMetricsMBean(@Qualifier("CustomerCounter")
+                               ICustomerCounter customerCounter) {
+        this.customerCounter = customerCounter;
+    }
 
     /**
      * Constructor for {@link SdtMetricsMBean}. This called by Spring and should become the bean that all subsequent

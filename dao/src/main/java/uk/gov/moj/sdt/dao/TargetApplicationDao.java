@@ -30,11 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
@@ -47,17 +50,16 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  *
  * @author Son Loi
  */
+@Repository("TargetApplicationDao")
 public class TargetApplicationDao extends GenericDao implements ITargetApplicationDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetApplicationDao.class);
 
-    /**
-     * Default constructor for {@link GenericDaoTest}.
-     */
-    public TargetApplicationDao() {
-        super();
+    @Autowired
+    public TargetApplicationDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
 
     @Override

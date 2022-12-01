@@ -92,8 +92,6 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
      * Setup of the mock dao and injection of other objects.
      */
     public void setUpLocalTests() {
-        wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler();
-
         mockBulkFeedbackService = EasyMock.createMock(IBulkFeedbackService.class);
         // ITransformer transformer = new BulkFeedbackTransformer();
         Constructor<BulkFeedbackTransformer> c;
@@ -112,8 +110,8 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
             e.printStackTrace();
         }
 
-        wsReadBulkFeedbackReqHandler.setBulkFeedbackService(mockBulkFeedbackService);
-        wsReadBulkFeedbackReqHandler.setTransformer(transformer);
+        wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler(mockBulkFeedbackService,
+                                                                            transformer);
 
         bulkFeedbackRequestType = new BulkFeedbackRequestType();
     }

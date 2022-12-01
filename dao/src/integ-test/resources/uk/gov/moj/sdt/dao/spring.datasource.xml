@@ -20,11 +20,11 @@
          </property>
     </bean>
 
-    <bean id="javax.sql.DataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="${db.driver}" />
-        <property name="url" value="${db.url}" />
-        <property name="username" value="${db.user}" />
-        <property name="password" value="${db.pass}" />
-    </bean>
+<!--    <bean id="javax.sql.DataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">-->
+<!--        <property name="driverClass" value="${db.driver}" />-->
+<!--        <property name="url" value="${db.url}" />-->
+<!--        <property name="username" value="${db.user}" />-->
+<!--        <property name="password" value="${db.pass}" />-->
+<!--    </bean>-->
 
 </beans>

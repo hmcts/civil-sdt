@@ -38,6 +38,7 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -119,7 +120,6 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     public void setUpLocalTests() {
         // subject of test
-        validator = new IndividualRequestValidator();
 
         // mock BulkCustomer object
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
@@ -147,7 +147,6 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameter);
         replay(globalParameterCache);
 
-        validator.setGlobalParameterCache(globalParameterCache);
 
         // Set up Error messages cache
         errorMessage = new ErrorMessage();
@@ -157,8 +156,10 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
         expect(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.DUP_CUST_REQID.name()))
                 .andReturn(errorMessage);
         replay(errorMessagesCache);
-        validator.setErrorMessagesCache(errorMessagesCache);
 
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
+        validator = new IndividualRequestValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache, individualRequestDao);
     }
 
     /**

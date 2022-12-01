@@ -37,6 +37,7 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,7 @@ import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
  *
  * @author Robin Compston
  */
+@Component("FaultOutboundInterceptor")
 public class FaultOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Logger object.

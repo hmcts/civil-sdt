@@ -45,6 +45,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Lookup;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -140,7 +141,8 @@ public abstract class AbstractWsConsumer {
      *
      * @return ITargetAppInternalEndpointPortType the end point interface.
      */
-    protected ITargetAppInternalEndpointPortType createTargetAppEndPoint() {
+    @Lookup
+    public ITargetAppInternalEndpointPortType createTargetAppEndPoint() {
         // IMPORTANT: Please do not add any implementation here. The method intentionally returns null. At run-time,
         // Spring will
         // override this method with

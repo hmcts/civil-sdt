@@ -49,6 +49,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -124,7 +125,7 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase {
     public void setUp() {
         mockTransformer = EasyMock.createMock(IConsumerTransformer.class);
         mockClient = EasyMock.createMock(ITargetAppInternalEndpointPortType.class);
-        individualRequestConsumer = new IndRequestConsumer();
+        individualRequestConsumer = new IndRequestConsumer(mockTransformer);
         individualRequestConsumer.setTransformer(mockTransformer);
         individualRequestConsumer.setRethrowOnFailureToConnect(true);
 
@@ -365,6 +366,12 @@ public class IndividualRequestConsumerTest extends AbstractSdtUnitTestBase {
      * of the getClient as it is abstract method.
      */
     private class IndRequestConsumer extends IndividualRequestConsumer {
+
+        public IndRequestConsumer(@Qualifier("IndividualRequestConsumerTransformer")
+                                      IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer) {
+            super(transformer);
+        }
+
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.

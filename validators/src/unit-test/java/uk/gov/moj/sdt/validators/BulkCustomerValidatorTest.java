@@ -103,8 +103,6 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest {
      */
     public void setUpLocalTests() {
 
-        validator = new BulkCustomerValidator();
-
         // Create mocks needed for this test.
         mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
         bulkCustomer = new BulkCustomer();
@@ -118,7 +116,6 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest {
                 globalParameterCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name())).andReturn(globalParameter);
         replay(globalParameterCache);
-        validator.setGlobalParameterCache(globalParameterCache);
 
         // Set up Error messages cache
         errorMessage = new ErrorMessage();
@@ -130,6 +127,10 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest {
                 .andReturn(errorMessage);
         replay(errorMessagesCache);
         validator.setErrorMessagesCache(errorMessagesCache);
+        validator.setGlobalParameterCache(globalParameterCache);
+
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        validator = new BulkCustomerValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
 
     }
 

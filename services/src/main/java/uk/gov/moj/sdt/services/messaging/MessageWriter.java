@@ -31,26 +31,27 @@
 
 package uk.gov.moj.sdt.services.messaging;
 
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.core.JmsTemplate;
-
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
+import java.util.GregorianCalendar;
+import java.util.Map;
+
 /**
  * Message writer that handles writing messages to a message queue.
  *
  * @author Manoj Kulkarni
  */
+@Component("MessageWriter")
 public class MessageWriter implements IMessageWriter {
     /**
      * Logger object.
@@ -72,19 +73,19 @@ public class MessageWriter implements IMessageWriter {
      */
     private final JmsTemplate jmsTemplate;
 
-    /**
-     * This variable holds the queue name mapping with the key
-     * as the Target application and the value as the queue name.
-     */
-    private Map<String, String> queueNameMap = new HashMap<String, String>();
+    private final QueueConfig queueConfig;
+
 
     /**
      * Creates a message sender with the JmsTemplate.
      *
      * @param jmsTemplate The JMS template
      */
-    public MessageWriter(final JmsTemplate jmsTemplate) {
+    @Autowired
+    public MessageWriter(final JmsTemplate jmsTemplate,
+                         QueueConfig queueConfig) {
         this.jmsTemplate = jmsTemplate;
+        this.queueConfig = queueConfig;
     }
 
     @Override
@@ -141,7 +142,7 @@ public class MessageWriter implements IMessageWriter {
      * @return map containing the target application to queue name mapping.
      */
     public Map<String, String> getQueueNameMap() {
-        return queueNameMap;
+        return queueConfig.getQueueConfig();
     }
 
     /**
@@ -149,7 +150,7 @@ public class MessageWriter implements IMessageWriter {
      *                     with the key as the the target application code and value as the queue name
      */
     public void setQueueNameMap(final Map<String, String> queueNameMap) {
-        this.queueNameMap = queueNameMap;
+        queueConfig.setQueueConfig(queueNameMap);
     }
 
     /**

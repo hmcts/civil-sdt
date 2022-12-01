@@ -35,11 +35,14 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -53,17 +56,16 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
  *
  * @author Son Loi
  */
+@Repository("IndividualRequestDao")
 public class IndividualRequestDao extends GenericDao implements IIndividualRequestDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestDao.class);
 
-    /**
-     * Default constructor for {@link GenericDaoTest}.
-     */
-    public IndividualRequestDao() {
-        super();
+    @Autowired
+    public IndividualRequestDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
 
     @Override

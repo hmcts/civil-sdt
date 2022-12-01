@@ -31,9 +31,13 @@
 
 package uk.gov.moj.sdt.validators;
 
+import org.easymock.EasyMock;
 import org.junit.Test;
 
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
 /**
  * Tests for {@link ErrorLogValidatorTest}.
@@ -52,7 +56,10 @@ public class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
      */
     public void setUpLocalTests() {
         // subject of test
-        validator = new ErrorLogValidator();
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        ICacheable globalParameterCache = EasyMock.createMock(ICacheable.class);
+        ICacheable errorMessagesCache = EasyMock.createMock(ICacheable.class);
+        validator = new ErrorLogValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**

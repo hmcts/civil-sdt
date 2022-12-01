@@ -38,6 +38,10 @@ import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
@@ -55,6 +59,7 @@ import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
@@ -63,6 +68,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  *
  * @author Manoj Kulkarni
  */
+@Service("TargetApplicationSubmissionService")
 public class TargetApplicationSubmissionService extends AbstractSdtService implements
         ITargetApplicationSubmissionService {
 
@@ -90,6 +96,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * The ICacheable reference to the global parameters cache.
      */
+    @Qualifier("GlobalParametersCache")
+    @Lazy
     private ICacheable globalParametersCache;
 
     /**
@@ -100,7 +108,24 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * The ICacheable reference to the error messages cache.
      */
+    @Qualifier("ErrorMessagesCache")
+    @Lazy
     private ICacheable errorMessagesCache;
+
+    @Autowired
+    public TargetApplicationSubmissionService(@Qualifier("IndividualRequestDao")
+                                                  IIndividualRequestDao individualRequestDao,
+                                              @Qualifier("IndividualResponseXmlParser")
+                                                  GenericXmlParser individualResponseXmlParser,
+                                              @Qualifier("ConsumerGateway")
+                                                  IConsumerGateway requestConsumer,
+                                              @Qualifier("MessageWriter")
+                                                  IMessageWriter messageWriter) {
+        super(individualRequestDao, individualResponseXmlParser);
+        this.individualRequestDao = individualRequestDao;
+        this.requestConsumer = requestConsumer;
+        this.messageWriter = messageWriter;
+    }
 
     @Override
     public void processRequestToSubmit(final String sdtRequestReference) {

@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!-- Note all ids should be based on fully qualified names (interfaces 
+    <!-- Note all ids should be based on fully qualified names (interfaces
         where this is not ambiguous) and all classes should have an interface. -->
 
     <bean class="org.springframework.jmx.export.MBeanExporter">
@@ -24,7 +24,7 @@
             <bean
                 class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
                 <property name="managedMethods">
-                    <value>getTime, 
+                    <value>getTime,
                         getOsStats,
                         getBulkSubmitStats,
                         getBulkFeedbackStats,
@@ -35,14 +35,14 @@
                         getDatabaseReadsStats,
                         getDatabaseWritesStats,
                         getActiveCustomersStats,
-                        getRequestQueueStats, 
+                        getRequestQueueStats,
                         getTargetAppStats,
-                        getErrorStats, 
+                        getErrorStats,
                         getLastRefStats,
                         getPerformanceLoggingString,
                         uncache,
-                        setPerformanceLoggingFlags, 
-                        reset, 
+                        setPerformanceLoggingFlags,
+                        reset,
                         dumpMetrics
                     </value>
                 </property>
@@ -50,27 +50,27 @@
         </property>
     </bean>
 
-    <bean class="org.springframework.jmx.export.MBeanExporter">
-        <property name="registrationBehaviorName">
-            <value>REGISTRATION_REPLACE_EXISTING</value>
-        </property>
-        <property name="beans">
-            <map>
-                <entry key="bean:name=sdtProducersManagement"
-                    value-ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" />
-            </map>
-        </property>
-        <property name="assembler">
-            <bean
-                class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">
-                <property name="managedMethods">
-                    <value>uncache, 
-                        setMdbPoolSize,
-                        requeueOldIndividualRequests,
-                        processDLQRequest
-                    </value>
-                </property>
-            </bean>
-        </property>
-    </bean>
+<!--    <bean class="org.springframework.jmx.export.MBeanExporter">-->
+<!--        <property name="registrationBehaviorName">-->
+<!--            <value>REGISTRATION_REPLACE_EXISTING</value>-->
+<!--        </property>-->
+<!--        <property name="beans">-->
+<!--            <map>-->
+<!--                <entry key="bean:name=sdtProducersManagement"-->
+<!--                    value-ref="uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean" />-->
+<!--            </map>-->
+<!--        </property>-->
+<!--        <property name="assembler">-->
+<!--            <bean-->
+<!--                class="org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler">-->
+<!--                <property name="managedMethods">-->
+<!--                    <value>uncache, -->
+<!--                        setMdbPoolSize,-->
+<!--                        requeueOldIndividualRequests,-->
+<!--                        processDLQRequest-->
+<!--                    </value>-->
+<!--                </property>-->
+<!--            </bean>-->
+<!--        </property>-->
+<!--    </bean>-->
 </beans>

@@ -36,7 +36,11 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +60,8 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
  *
  * @author Robin Compston
  */
-
+@Component("SdtManagementMBean")
+@Lazy
 public class SdtManagementMBean implements ISdtManagementMBean {
     /**
      * Static logging object.
@@ -114,8 +119,7 @@ public class SdtManagementMBean implements ISdtManagementMBean {
     /**
      * Map of all message driven bean message listener containers, defining the MDB pool size.
      */
-    private Map<String, DefaultMessageListenerContainer> containerMap =
-            new HashMap<String, DefaultMessageListenerContainer>();
+    private Map<String, DefaultMessageListenerContainer> containerMap = new HashMap<String, DefaultMessageListenerContainer>();
 
     /**
      * Individual Request Dao to perform operations on the individual request object.
@@ -132,11 +136,17 @@ public class SdtManagementMBean implements ISdtManagementMBean {
      */
     private ITargetApplicationSubmissionService targetAppSubmissionService;
 
-    /**
-     * Constructor for {@link SdtManagementMBean}. This is called by Spring and should become the bean that all
-     * subsequent executes management commands.
-     */
-    public SdtManagementMBean() {
+    @Autowired
+    public SdtManagementMBean(@Qualifier("IndividualRequestDao")
+                                  IIndividualRequestDao individualRequestDao,
+                              @Qualifier("MessagingUtility")
+                                  IMessagingUtility messagingUtility,
+                              @Qualifier("TargetApplicationSubmissionService")
+                                  ITargetApplicationSubmissionService targetAppSubmissionService) {
+        this.individualRequestDao = individualRequestDao;
+        this.messagingUtility = messagingUtility;
+        this.targetAppSubmissionService = targetAppSubmissionService;
+//        setMessageListenerContainer(messageListenerContainer);
     }
 
     @Override

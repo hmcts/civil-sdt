@@ -38,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 /**
@@ -45,11 +46,17 @@ import uk.gov.moj.sdt.utils.SdtContext;
  *
  * @author d130680
  */
+@Component("SubmitQueryEnricher")
 public class SubmitQueryEnricher extends AbstractSdtEnricher {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryEnricher.class);
+
+    public SubmitQueryEnricher() {
+        setParentTag("submitQueryResponse");
+        setInsertionTag("results");
+    }
 
     @Override
     public String enrichXml(final String message) {

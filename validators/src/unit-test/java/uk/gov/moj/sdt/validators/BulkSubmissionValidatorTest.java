@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -160,14 +161,12 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     public void setUpLocalTests() {
 
         // subject of test
-        validator = new BulkSubmissionValidator();
-        validator.setConcurrencyMap(new HashMap<String, IInFlightMessage>());
-
-        // mock BulkCustomer object
         mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-
         globalParameterCache = EasyMock.createMock(ICacheable.class);
-
+        ICacheable errorMessagesCache = EasyMock.createMock(ICacheable.class);
+        IBulkSubmissionDao bulkSubmissionDao  = EasyMock.createMock(IBulkSubmissionDao.class);
+        validator = new BulkSubmissionValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache, bulkSubmissionDao);
+        validator.setConcurrencyMap(new HashMap<String, IInFlightMessage>());
     }
 
     /**

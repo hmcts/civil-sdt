@@ -33,8 +33,13 @@ package uk.gov.moj.sdt.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.IUpdateRequestService;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 
 /**
@@ -42,6 +47,7 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
  *
  * @author Manoj Kulkarni
  */
+@Component("UpdateRequestService")
 public class UpdateRequestService extends AbstractSdtService implements IUpdateRequestService {
 
     /**
@@ -53,6 +59,17 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
      * Messaging utility for queueing messages in the messaging server.
      */
     private IMessagingUtility messagingUtility;
+
+    @Autowired
+    public UpdateRequestService(@Qualifier("IndividualRequestDao")
+                                    IIndividualRequestDao individualRequestDao,
+                                @Qualifier("IndividualResponseXmlParser")
+                                    GenericXmlParser individualResponseXmlParser,
+                                @Qualifier("MessagingUtility")
+                                    IMessagingUtility messagingUtility) {
+        super(individualRequestDao, individualResponseXmlParser);
+        this.messagingUtility = messagingUtility;
+    }
 
     @Override
     public void updateIndividualRequest(final IIndividualRequest individualRequestParam) {

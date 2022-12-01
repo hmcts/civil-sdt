@@ -32,11 +32,15 @@ package uk.gov.moj.sdt.dao;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -50,17 +54,17 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
  *
  * @author Robin Compston
  */
+@Repository("BulkSubmissionDao")
 public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDao.class);
 
-    /**
-     * Default constructor for {@link GenericDaoTest}.
-     */
-    public BulkSubmissionDao() {
-        super();
+
+    @Autowired
+    public BulkSubmissionDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
 
     @Override

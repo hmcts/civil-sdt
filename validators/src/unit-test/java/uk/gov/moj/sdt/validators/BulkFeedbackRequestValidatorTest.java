@@ -40,6 +40,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -126,8 +127,6 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
      */
     public void setUpLocalTests() {
 
-        validator = new BulkFeedbackRequestValidator();
-
         // Create mocks needed for this test.
         mockIBulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
 
@@ -155,7 +154,6 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
         expect(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.BULK_REF_INVALID.name()))
                 .andReturn(errorMessage);
         replay(errorMessagesCache);
-        validator.setErrorMessagesCache(errorMessagesCache);
 
         final IGlobalParameter globalParameterData = new GlobalParameter();
         globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
@@ -165,7 +163,10 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
                 globalParameterCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameterData);
         replay(globalParameterCache);
-        validator.setGlobalParameterCache(globalParameterCache);
+
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        IBulkSubmissionDao bulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
+        validator = new BulkFeedbackRequestValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache, bulkSubmissionDao);
 
         dataRetentionPeriod = 90;
     }

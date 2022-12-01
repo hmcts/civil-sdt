@@ -35,6 +35,8 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
@@ -63,6 +65,11 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor {
      */
     protected AbstractServiceRequest(final String phase) {
         super(phase);
+    }
+
+    public AbstractServiceRequest(String phase, @Qualifier("GenericDao") IGenericDao serviceRequestDao) {
+        super(phase);
+        this.serviceRequestDao = serviceRequestDao;
     }
 
     /**

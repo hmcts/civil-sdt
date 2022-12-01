@@ -39,6 +39,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -95,9 +98,9 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
         mockErrorMessagesCache = EasyMock.createMock(ICacheable.class);
         mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
 
-        validator = new BulkSubmissionValidator();
-        validator.setErrorMessagesCache(mockErrorMessagesCache);
-        validator.setGlobalParameterCache(mockGlobalParameterCache);
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        IBulkSubmissionDao bulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
+        validator = new BulkSubmissionValidator(mockIBulkCustomerDao, mockGlobalParameterCache, mockErrorMessagesCache, bulkSubmissionDao);
 
         result = new ErrorMessage[7];
         result[0] = new ErrorMessage();

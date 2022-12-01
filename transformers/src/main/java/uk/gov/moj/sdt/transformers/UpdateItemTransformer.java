@@ -30,6 +30,7 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.transformers;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -50,6 +51,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponse
  *
  * @author Manoj Kulkarni
  */
+@Component("UpdateItemTransformer")
 public class UpdateItemTransformer extends AbstractTransformer implements
     ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest> {
     @Override

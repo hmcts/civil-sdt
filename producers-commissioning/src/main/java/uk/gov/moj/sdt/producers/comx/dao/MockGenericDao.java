@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ServiceRequest;
@@ -56,6 +57,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
  * @author d130680
  *
  */
+@Repository("MockGenericDao")
 public class MockGenericDao implements IGenericDao
 {
     /**

@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
@@ -49,6 +50,7 @@ import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
  *
  * @author D303894
  */
+@Component("IndividualRequestsXmlParser")
 public class IndividualRequestsXmlParser {
     /**
      * Logger object.

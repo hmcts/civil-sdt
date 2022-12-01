@@ -31,14 +31,19 @@
 package uk.gov.moj.sdt.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
@@ -65,6 +70,7 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
  *
  * @author Manoj Kulkarni
  */
+@Component("BulkSubmissionService")
 public class BulkSubmissionService implements IBulkSubmissionService {
     /**
      * Logger for debugging.
@@ -100,6 +106,30 @@ public class BulkSubmissionService implements IBulkSubmissionService {
      * SDT Bulk reference generator.
      */
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
+
+    @Autowired
+    public BulkSubmissionService(@Qualifier("GenericDao")
+                                     IGenericDao genericDao,
+                                 @Qualifier("BulkCustomerDao")
+                                     IBulkCustomerDao bulkCustomerDao,
+                                 @Qualifier("TargetApplicationDao")
+                                     ITargetApplicationDao targetApplicationDao,
+                                 @Qualifier("IndividualRequestsXmlParser")
+                                     IndividualRequestsXmlParser individualRequestsXmlParser,
+                                 IMessagingUtility messagingUtility,
+                                 @Qualifier("SdtBulkReferenceGenerator")
+                                     ISdtBulkReferenceGenerator sdtBulkReferenceGenerator,
+                                 @Qualifier("ErrorMessagesCache")
+                                     ICacheable errorMessagesCache) {
+        this.genericDao = genericDao;
+        this.bulkCustomerDao = bulkCustomerDao;
+        this.targetApplicationDao = targetApplicationDao;
+        this.individualRequestsXmlParser = individualRequestsXmlParser;
+        this.messagingUtility = messagingUtility;
+        this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
+        this.errorMessagesCache = errorMessagesCache;
+        this.concurrencyMap = new ConcurrentHashMap<>();
+    }
 
     /**
      * The concurrencyMap to hold bulk reference keyed on sdtCustId + custRef. This is used to prevent the customer

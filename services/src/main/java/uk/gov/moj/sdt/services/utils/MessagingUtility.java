@@ -30,6 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +51,7 @@ import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
  * @author Manoj Kulkarni
  */
 @Transactional(propagation = Propagation.SUPPORTS)
+@Component("MessagingUtility")
 public class MessagingUtility implements IMessagingUtility {
 
     /**
@@ -59,6 +64,15 @@ public class MessagingUtility implements IMessagingUtility {
      * the hibernate transactions.
      */
     private IMessageSynchronizer messageSynchronizer;
+
+    @Autowired
+    public MessagingUtility(@Qualifier("MessageWriter")
+                                IMessageWriter messageWriter,
+                            @Qualifier("MessageSynchronizer")
+                                IMessageSynchronizer messageSynchronizer) {
+        this.messageWriter = messageWriter;
+        this.messageSynchronizer = messageSynchronizer;
+    }
 
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {

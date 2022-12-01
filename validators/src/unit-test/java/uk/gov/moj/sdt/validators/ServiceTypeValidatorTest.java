@@ -31,9 +31,13 @@
 
 package uk.gov.moj.sdt.validators;
 
+import org.easymock.EasyMock;
 import org.junit.Test;
 
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ServiceType;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
 /**
  * Tests for {@link ServiceTypeValidatorTest}.
@@ -52,7 +56,11 @@ public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest {
      */
     public void setUpLocalTests() {
         // subject of test
-        validator = new ServiceTypeValidator();
+
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        ICacheable globalParameterCache = EasyMock.createMock(ICacheable.class);
+        ICacheable errorMessagesCache = EasyMock.createMock(ICacheable.class);
+        validator = new ServiceTypeValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**

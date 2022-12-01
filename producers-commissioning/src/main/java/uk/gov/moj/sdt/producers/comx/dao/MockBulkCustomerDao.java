@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -34,6 +34,7 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
@@ -44,10 +45,11 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
 /**
  * Mock Bulk Customer DAO class used in commissioning project.
- * 
+ *
  * @author d130680
- * 
+ *
  */
+@Repository("MockBulkCustomerDao")
 public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomerDao
 {
     /**
@@ -57,7 +59,7 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
 
     /**
      * Mock the behaviour of Bulk customer DAO, returns a static array of bulk customer.
-     * 
+     *
      * @param sdtCustomerId the SDT ID to match when retrieving the bulk customer.
      * @return the bulk customer matching the given SDT ID.
      * @throws DataAccessException Hibernate exception
@@ -82,7 +84,7 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
     /**
      * Creates an instance of {@link IBulkCustomerApplication} for given {@link IBulkCustomer} and target application
      * code.
-     * 
+     *
      * @param bulkCustomer bulk customer for which bulk customer application is created
      * @param targetAppCode target application code
      * @return IBulkCustomerApplication
@@ -105,7 +107,7 @@ public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomer
 
     /**
      * Setter for targetAppCodes property. Used to configure target applications for customer.
-     * 
+     *
      * @param targetAppCodes target application codes.
      */
     public void setTargetAppCodes (final List<String> targetAppCodes)

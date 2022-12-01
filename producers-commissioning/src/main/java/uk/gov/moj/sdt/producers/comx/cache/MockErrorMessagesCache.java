@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,13 +23,14 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.producers.comx.cache;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -38,10 +39,11 @@ import uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache;
 
 /**
  * Mock implementation of the ErrorMessagessCache.
- * 
+ *
  * @author d164190
- * 
+ *
  */
+@Component("MockErrorMessagesCache")
 public class MockErrorMessagesCache implements ICacheable, IErrorMessagesCache
 {
 

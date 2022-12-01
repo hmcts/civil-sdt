@@ -36,6 +36,10 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +48,7 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
 import uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 /**
  * Cache bean for the Global parameters.
@@ -51,7 +56,9 @@ import uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache;
  * @author Manoj Kulkarni/Robin Compston
  */
 @Transactional(propagation = Propagation.SUPPORTS)
-public final class GlobalParametersCache extends AbstractCacheControl implements IGlobalParametersCache {
+@Component("GlobalParametersCache")
+@Lazy
+public class GlobalParametersCache extends AbstractCacheControl implements IGlobalParametersCache {
     /**
      * Logger object.
      */
@@ -66,6 +73,13 @@ public final class GlobalParametersCache extends AbstractCacheControl implements
      * The cache variable that holds the global parameters as a key-value pair for this singleton.
      */
     private Map<String, IGlobalParameter> globalParameters = new HashMap<String, IGlobalParameter>();
+
+    @Autowired
+    public GlobalParametersCache(@Qualifier("SdtManagementMBean") ISdtManagementMBean managementMBean,
+                              @Qualifier("GenericDao") IGenericDao genericDao) {
+        super(managementMBean);
+        this.genericDao = genericDao;
+    }
 
     /**
      * Get the map holding cached values.
