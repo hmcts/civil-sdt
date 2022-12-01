@@ -8,10 +8,10 @@ CREATE TABLE sdt_owner.purge_job_audit
 job_start_date TIMESTAMP(6),
 job_end_date TIMESTAMP(6),
 retention_date TIMESTAMP(6),
-count_of_error_logs NUMERIC,
-count_of_individual_requests NUMERIC,
-count_of_bulk_submissions NUMERIC,
-count_of_service_requests NUMERIC,
+count_of_error_logs_deleted NUMERIC,
+count_of_individual_requests_deleted NUMERIC,
+count_of_bulk_submissions_deleted NUMERIC,
+count_of_service_requests_deleted NUMERIC,
 success NUMERIC);
 
 CREATE TABLE sdt_owner.purge_job_audit_messages
@@ -156,7 +156,7 @@ BEGIN
 
 	-- update count of deletions - error logs
     UPDATE sdt_owner.purge_job_audit
-  	SET count_of_error_logs=n_iteration
+  	SET count_of_error_logs_deleted=n_iteration
   	WHERE purge_job_id=i_purge_job_id;
 
     RAISE NOTICE 'Commencing deletion of individual_request records';
@@ -185,7 +185,7 @@ BEGIN
 
 	-- update count of deletions - error logs
     UPDATE sdt_owner.purge_job_audit
-  	SET count_of_individual_requests=n_iteration
+  	SET count_of_individual_requests_deleted =n_iteration
   	WHERE purge_job_id=i_purge_job_id;
 
     RAISE NOTICE 'Commencing deletion of bulk_submissions records';
@@ -218,7 +218,7 @@ BEGIN
 			n_iteration || ' records deleted from bulk_submissions table.');
 
 	UPDATE sdt_owner.purge_job_audit
-  	SET count_of_bulk_submissions=n_iteration
+  	SET count_of_bulk_submissions_deleted=n_iteration
   	WHERE purge_job_id=i_purge_job_id;
 
     RAISE NOTICE 'Commencing deletion of service_requests records';
@@ -251,7 +251,7 @@ BEGIN
 			n_iteration || ' records deleted from service_requests table.');
 
 	UPDATE sdt_owner.purge_job_audit
-  	SET count_of_service_requests=n_iteration,job_end_date=now(), success=1
+  	SET count_of_service_requests_deleted=n_iteration,job_end_date=now(), success=1
   	WHERE purge_job_id=i_purge_job_id;
 
   END;
