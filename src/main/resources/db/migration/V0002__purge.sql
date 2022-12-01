@@ -116,9 +116,7 @@ BEGIN
   	(purge_job_id, job_start_date, retention_date, success)
   	VALUES (i_purge_job_id, t_job_start_date, t_retention_date, 0);
 
-    RAISE NOTICE 'Purge retention period is % days, deleting all data prior to %',
-                          i_retention_period,
-                          t_retention_date;
+    RAISE NOTICE 'Purge retention period is % days, deleting all data prior to %', i_retention_period, t_retention_date;
 
     INSERT INTO sdt_owner.purge_job_audit_messages
     (purge_job_message_id, purge_job_id, message_date,log_message)
@@ -136,17 +134,17 @@ BEGIN
 
 	n_iteration := 0;
     FOR c4_rec IN c4 LOOP
-      DELETE FROM sdt_owner.error_logs
-      WHERE error_log_id = c4_rec.error_log_id;
+        DELETE FROM sdt_owner.error_logs
+        WHERE error_log_id = c4_rec.error_log_id;
 
-	  RAISE NOTICE 'Deleted error_logs : %', c4_rec.error_log_id;
+	    RAISE NOTICE 'Deleted error_logs : %', c4_rec.error_log_id;
 
-	  INSERT INTO sdt_owner.purge_job_audit_messages
+	    INSERT INTO sdt_owner.purge_job_audit_messages
 		(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
 				'Deleted error_logs : ' || c4_rec.error_log_id);
 
-      n_iteration := n_iteration + 1;
+        n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from error_logs table.', n_iteration;
@@ -165,17 +163,17 @@ BEGIN
 
     n_iteration := 0;
     FOR c3_rec IN c3 LOOP
-      DELETE FROM sdt_owner.individual_requests
-      WHERE individual_request_id = c3_rec.individual_request_id;
+        DELETE FROM sdt_owner.individual_requests
+        WHERE individual_request_id = c3_rec.individual_request_id;
 
-      RAISE NOTICE 'Deleted individual_request : %', c3_rec.sdt_request_reference;
+        RAISE NOTICE 'Deleted individual_request : %', c3_rec.sdt_request_reference;
 
-	  INSERT INTO sdt_owner.purge_job_audit_messages
+	    INSERT INTO sdt_owner.purge_job_audit_messages
 		(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
 				'Deleted individual_request : ' || c3_rec.sdt_request_reference);
 
-	  n_iteration := n_iteration + 1;
+	    n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from individual_requests table.', n_iteration;
@@ -183,7 +181,7 @@ BEGIN
     INSERT INTO sdt_owner.purge_job_audit_messages
     (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
-			n_iteration || ' records deleted from individual_requests table.');
+	        n_iteration || ' records deleted from individual_requests table.');
 
 	-- update count of deletions - error logs
     UPDATE sdt_owner.purge_job_audit
@@ -199,17 +197,17 @@ BEGIN
 
     n_iteration := 0;
     FOR c2_rec IN c2 LOOP
-      DELETE FROM sdt_owner.bulk_submissions
-      WHERE bulk_submission_id = c2_rec.bulk_submission_id;
+        DELETE FROM sdt_owner.bulk_submissions
+        WHERE bulk_submission_id = c2_rec.bulk_submission_id;
 
-      RAISE NOTICE 'Deleted bulk_submissions : %', c2_rec.bulk_submission_id;
+        RAISE NOTICE 'Deleted bulk_submissions : %', c2_rec.bulk_submission_id;
 
-	  INSERT INTO sdt_owner.purge_job_audit_messages
+	    INSERT INTO sdt_owner.purge_job_audit_messages
 		(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
 				'Deleted bulk_submissions : ' || c2_rec.bulk_submission_id);
 
-      n_iteration := n_iteration + 1;
+        n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from bulk_submissions table.', n_iteration;
@@ -228,21 +226,21 @@ BEGIN
     INSERT INTO sdt_owner.purge_job_audit_messages
     (purge_job_message_id, purge_job_id, message_date,log_message)
     VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
-			'Commencing deletion of service_requests records');
+	        'Commencing deletion of service_requests records');
 
     n_iteration := 0;
     FOR c1_rec IN c1 LOOP
-      DELETE FROM sdt_owner.service_requests
-      WHERE service_request_id = c1_rec.service_request_id;
+        DELETE FROM sdt_owner.service_requests
+        WHERE service_request_id = c1_rec.service_request_id;
 
-	  RAISE NOTICE 'Deleted service_requests : %', c1_rec.service_request_id;
+	    RAISE NOTICE 'Deleted service_requests : %', c1_rec.service_request_id;
 
-      INSERT INTO sdt_owner.purge_job_audit_messages
+        INSERT INTO sdt_owner.purge_job_audit_messages
     	(purge_job_message_id, purge_job_id, message_date,log_message)
     	VALUES (nextval('purge_job_audit_messages_seq'), i_purge_job_id, now(),
 				'Deleted service_requests : ' || c1_rec.service_request_id);
 
-      n_iteration := n_iteration + 1;
+        n_iteration := n_iteration + 1;
     END LOOP;
 
     RAISE NOTICE '% records deleted from service_requests table.', n_iteration;
