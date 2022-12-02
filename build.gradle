@@ -517,8 +517,6 @@ subprojects { subproject ->
   }
 
   test.finalizedBy jacocoTestReport
-  integration.dependsOn test
-  jacocoTestReport.dependsOn integration
   check.dependsOn jacocoTestReport
 }
 // end::subprojects[]
@@ -583,7 +581,7 @@ bootJar {
 
 
 
-task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
+task codeCoverageReport(type: JacocoReport, dependsOn: [allprojects*.test, allprojects*.jacocoTestReport]) {
 
   // Gather execution data from all subprojects
   // (change this if you e.g. want to calculate unit test/integration test coverage separately)
