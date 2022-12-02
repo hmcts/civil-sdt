@@ -20,7 +20,6 @@
       CVE-2020-5408
       CVE-2022-31690
       CVE-2022-31692
-      CVE-2022-41946
       CVE-2022-42252
     </notes>
     <cve>CVE-2022-38752</cve>
@@ -28,7 +27,6 @@
     <cve>CVE-2020-5408</cve>
     <cve>CVE-2022-31690</cve>
     <cve>CVE-2022-31692</cve>
-    <cve>CVE-2022-41946</cve>
     <cve>CVE-2022-42252</cve>
   </suppress>
   <!--End of temporary suppression section -->
