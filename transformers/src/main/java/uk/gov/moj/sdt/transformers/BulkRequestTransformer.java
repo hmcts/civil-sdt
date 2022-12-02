@@ -61,11 +61,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 @Component("BulkRequestTransformer")
 public final class BulkRequestTransformer extends AbstractTransformer implements
         ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> {
-    /**
-     * Private constructor.
-     */
-    private BulkRequestTransformer() {
-    }
 
     /**
      * Maps the header to a Bulk Customer object.

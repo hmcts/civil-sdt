@@ -53,11 +53,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
 @Component("IndividualRequestConsumerTransformer")
 public final class IndividualRequestConsumerTransformer extends AbstractTransformer implements
         IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> {
-    /**
-     * Private constructor.
-     */
-    private IndividualRequestConsumerTransformer() {
-    }
 
     @Override
     public void

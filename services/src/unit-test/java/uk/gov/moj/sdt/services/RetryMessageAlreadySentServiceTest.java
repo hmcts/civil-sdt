@@ -40,6 +40,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -90,17 +91,15 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      */
     @Before
     public void setUp() {
-        messageTaskService = new RetryMessageAlreadySentService();
+
 
         // Instantiate all the mocked objects and set them in the message task service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
-        messageTaskService.setIndividualRequestDao(mockIndividualRequestDao);
-
         mockCacheable = EasyMock.createMock(ICacheable.class);
-        messageTaskService.setGlobalParametersCache(mockCacheable);
-
         mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
-        messageTaskService.setMessagingUtility(mockMessagingUtility);
+        messageTaskService = new RetryMessageAlreadySentService(mockIndividualRequestDao,
+                                                                mockMessagingUtility,
+                                                                mockCacheable);
 
     }
 

@@ -30,17 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -48,13 +42,15 @@ import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
 import uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A cache of all the error messages.
  *
  * @author d301488/Robin Compston
  */
 @Component("ErrorMessagesCache")
-@Lazy
 public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMessagesCache {
     /**
      * Logger object.

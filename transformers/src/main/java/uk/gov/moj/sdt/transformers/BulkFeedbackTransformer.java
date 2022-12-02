@@ -64,11 +64,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
 @Component("BulkFeedbackTransformer")
 public final class BulkFeedbackTransformer extends AbstractTransformer implements
         ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission> {
-    /**
-     * Private constructor.
-     */
-    private BulkFeedbackTransformer() {
-    }
 
     @Override
     public IBulkFeedbackRequest transformJaxbToDomain(final BulkFeedbackRequestType bulkFeedbackRequest) {

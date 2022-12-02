@@ -42,6 +42,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -104,27 +105,25 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        submitQueryService = new SubmitQueryService();
 
         // Instantiate all the mocked objects and set them in the target
 
         mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
-        submitQueryService.setRequestConsumer(mockConsumerGateway);
-
         mockGlobalParamCache = EasyMock.createMock(ICacheable.class);
-        submitQueryService.setGlobalParametersCache(mockGlobalParamCache);
-
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
-        submitQueryService.setErrorMessagesCache(mockErrorMsgCacheable);
-
         mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
 
-        submitQueryService.setQueryRequestXmlParser(genericParser);
-        submitQueryService.setQueryResponseXmlParser(genericParser);
+        submitQueryService = new SubmitQueryService(mockConsumerGateway,
+                                                    mockGlobalParamCache,
+                                                    mockErrorMsgCacheable,
+                                                    genericParser,
+                                                    genericParser,
+                                                    mockBulkCustomerDao);
+        submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
+
     }
 
     /**

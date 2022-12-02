@@ -136,7 +136,7 @@ dependencyCheck {
 ext {
   lombokVersion = '1.18.24'
   feignJackson = '11.6'
-  groovyVersion = '3.0.11!!'
+  groovyVersion = '3.0.13!!'
   hamcrestVersion = '1.3'
   junitJupiterVersion = '5.8.1'
   junitVintageVersion = '5.7.0'
@@ -148,6 +148,7 @@ ext {
   springCloudVersion = '2021.0.3'
   tomcatVersion = '9.0.67'
   cxfVersion = '3.5.4'
+  testcontainers = '1.15.2'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -237,7 +238,7 @@ allprojects {
     implementation group: 'io.rest-assured', name: 'rest-assured'
 
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
 
     testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
     testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
@@ -381,7 +382,7 @@ subprojects { subproject ->
     }
 
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion

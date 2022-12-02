@@ -56,11 +56,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 @Component("SubmitQueryTransformer")
 public final class SubmitQueryTransformer extends AbstractTransformer implements
         ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> {
-    /**
-     * Private constructor.
-     */
-    private SubmitQueryTransformer() {
-    }
 
     @Override
     public ISubmitQueryRequest transformJaxbToDomain(final SubmitQueryRequestType submitQueryRequestType) {

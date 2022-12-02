@@ -57,12 +57,6 @@ public final class SubmitQueryConsumerTransformer extends AbstractTransformer im
         IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> {
     // CHECKSTYLE:ON
 
-    /**
-     * Private constructor.
-     */
-    private SubmitQueryConsumerTransformer() {
-    }
-
     /* (non-Javadoc)
      *
      * @see

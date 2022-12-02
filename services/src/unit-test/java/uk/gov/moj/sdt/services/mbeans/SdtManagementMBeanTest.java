@@ -139,9 +139,10 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
         IMessagingUtility messagingUtility  = EasyMock.createMock(IMessagingUtility.class);
         ITargetApplicationSubmissionService targetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
-        sdtManagementMBean = new SdtManagementMBean(individualRequestDao,
-                                                 messagingUtility,
-                                                 targetAppSubmissionService);
+        sdtManagementMBean = new SdtManagementMBean(messageListenerContainer,
+                                                    individualRequestDao,
+                                                    messagingUtility,
+                                                    targetAppSubmissionService);
 
         // Instantiate all the mocked objects and set them up in the MBean
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);

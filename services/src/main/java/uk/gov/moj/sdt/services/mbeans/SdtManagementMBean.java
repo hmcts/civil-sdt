@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -61,7 +62,6 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
  * @author Robin Compston
  */
 @Component("SdtManagementMBean")
-@Lazy
 public class SdtManagementMBean implements ISdtManagementMBean {
     /**
      * Static logging object.
@@ -137,7 +137,9 @@ public class SdtManagementMBean implements ISdtManagementMBean {
     private ITargetApplicationSubmissionService targetAppSubmissionService;
 
     @Autowired
-    public SdtManagementMBean(@Qualifier("IndividualRequestDao")
+    public SdtManagementMBean(@Qualifier("messageListenerContainer")
+                                  DefaultMessageListenerContainer messageListenerContainer,
+                              @Qualifier("IndividualRequestDao")
                                   IIndividualRequestDao individualRequestDao,
                               @Qualifier("MessagingUtility")
                                   IMessagingUtility messagingUtility,
@@ -146,7 +148,7 @@ public class SdtManagementMBean implements ISdtManagementMBean {
         this.individualRequestDao = individualRequestDao;
         this.messagingUtility = messagingUtility;
         this.targetAppSubmissionService = targetAppSubmissionService;
-//        setMessageListenerContainer(messageListenerContainer);
+        setMessageListenerContainer(messageListenerContainer);
     }
 
     @Override

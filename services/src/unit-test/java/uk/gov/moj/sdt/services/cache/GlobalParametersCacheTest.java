@@ -84,7 +84,8 @@ public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         IMessagingUtility messagingUtility  = EasyMock.createMock(IMessagingUtility.class);
         ITargetApplicationSubmissionService targetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
         mockGenericDao = EasyMock.createMock(IGenericDao.class);
-        managementMBean = new SdtManagementMBean(individualRequestDao,
+        managementMBean = new SdtManagementMBean(messageListenerContainer,
+                                                 individualRequestDao,
                                                  messagingUtility,
                                                  targetAppSubmissionService);
         cache = new GlobalParametersCache(managementMBean, mockGenericDao);

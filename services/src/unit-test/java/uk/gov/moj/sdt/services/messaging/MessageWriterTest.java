@@ -76,7 +76,8 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
     public void setUp() {
         // Nicemock returns default values
         jmsTemplate = EasyMock.createMock(JmsTemplate.class);
-        queueConfig = EasyMock.createMock(QueueConfig.class);
+        queueConfig = new QueueConfig();
+        queueConfig.setQueueConfig(new HashMap<>());
         messageWriter = new MessageWriter(jmsTemplate, queueConfig);
     }
 

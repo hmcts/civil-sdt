@@ -76,8 +76,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageSuccess() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb();
-        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
+        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         // Create the actual message to send.
         final ISdtMessage sdtMessage = new SdtMessage();
@@ -113,8 +112,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageDataAccessException() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb();
-        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
+        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         // Create the actual message to send.
         final ISdtMessage sdtMessage = new SdtMessage();
@@ -155,8 +153,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageInvalidObject() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb();
-        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
+        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         final Message message = EasyMock.createMock(Message.class);
 

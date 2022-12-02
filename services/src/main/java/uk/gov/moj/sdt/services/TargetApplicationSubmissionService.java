@@ -30,12 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.text.MessageFormat;
-
-import javax.xml.ws.WebServiceException;
-
-import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +37,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -62,6 +55,10 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import javax.xml.ws.WebServiceException;
 
 /**
  * Service class that implements the TargetApplicationSubmissionService.
@@ -96,8 +93,9 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * The ICacheable reference to the global parameters cache.
      */
-    @Qualifier("GlobalParametersCache")
     @Lazy
+    @Qualifier("GlobalParametersCache")
+    @Autowired
     private ICacheable globalParametersCache;
 
     /**
@@ -108,8 +106,9 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * The ICacheable reference to the error messages cache.
      */
-    @Qualifier("ErrorMessagesCache")
     @Lazy
+    @Qualifier("ErrorMessagesCache")
+    @Autowired
     private ICacheable errorMessagesCache;
 
     @Autowired

@@ -31,24 +31,22 @@
 
 package uk.gov.moj.sdt.services.cache;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
 import uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Cache bean for the Global parameters.
@@ -57,7 +55,6 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
  */
 @Transactional(propagation = Propagation.SUPPORTS)
 @Component("GlobalParametersCache")
-@Lazy
 public class GlobalParametersCache extends AbstractCacheControl implements IGlobalParametersCache {
     /**
      * Logger object.

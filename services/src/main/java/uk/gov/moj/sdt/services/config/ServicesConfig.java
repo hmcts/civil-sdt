@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.moj.sdt.services.messaging.IndividualRequestMdb;
-import uk.gov.moj.sdt.services.messaging.api.IMessageDrivenBean;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 
@@ -19,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.jms.ConnectionFactory;
 
+@ComponentScan("uk.gov.moj.sdt")
 @Configuration
 @EnableTransactionManagement
 public class ServicesConfig {
@@ -33,17 +33,17 @@ public class ServicesConfig {
     private PlatformTransactionManager transactionManager;
 
     @Autowired
-    @Qualifier("IndividualRequestMdb")
-    private IMessageDrivenBean individualRequestMdb;
+    @Lazy
+    private MessageListenerAdapter messageListenerAdapter;
 
-    @Qualifier("messageListenerContainer")
     @Bean
     @Lazy
+    @Qualifier("messageListenerContainer")
     public DefaultMessageListenerContainer messageListenerContainer() {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
         defaultMessageListenerContainer.setDestinationName(destinationName);
-        defaultMessageListenerContainer.setMessageListener(messageListenerContainer(individualRequestMdb));
+        defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
         defaultMessageListenerContainer.setTransactionManager(transactionManager);
         defaultMessageListenerContainer.setConcurrentConsumers(1);
         defaultMessageListenerContainer.setMaxConcurrentConsumers(5);
@@ -51,14 +51,6 @@ public class ServicesConfig {
         defaultMessageListenerContainer.setIdleTaskExecutionLimit(10);
         defaultMessageListenerContainer.setIdleConsumerLimit(5);
         return defaultMessageListenerContainer;
-    }
-
-    @Bean
-    public MessageListenerAdapter messageListenerContainer(IMessageDrivenBean individualRequestMdb) {
-        MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(individualRequestMdb);
-        messageListenerAdapter.setMessageConverter(null);
-        messageListenerAdapter.setDefaultListenerMethod("readMessage");
-        return messageListenerAdapter;
     }
 
     @Bean

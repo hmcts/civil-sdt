@@ -3,9 +3,11 @@ package uk.gov.moj.sdt.producers.sdtws.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
@@ -19,6 +21,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
 import java.util.HashMap;
 import java.util.Map;
 
+@ComponentScan("uk.gov.moj.sdt")
 @Configuration
 public class ProducersConfig {
 
