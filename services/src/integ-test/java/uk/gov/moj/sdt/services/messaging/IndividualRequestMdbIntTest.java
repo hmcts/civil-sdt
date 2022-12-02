@@ -69,9 +69,7 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
         sdtMessage.setSdtRequestReference("SDT_REQ_TEST_1");
         sdtMessage.setMessageSentTimestamp(System.currentTimeMillis());
         sdtMessage.setEnqueueLoggingId(1);
-        final IMessageWriter messageWriter =
-                (IMessageWriter) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
+        final IMessageWriter messageWriter = (IMessageWriter) this.applicationContext.getBean("MessageWriter");
         messageWriter.queueMessage(sdtMessage, "MCOLS", false);
     }
 

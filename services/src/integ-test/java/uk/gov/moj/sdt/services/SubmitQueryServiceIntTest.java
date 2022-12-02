@@ -93,9 +93,7 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
     public void setUp() {
         DBUnitUtility.loadDatabase(this.getClass(), true);
 
-        submitQueryService =
-                (SubmitQueryService) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.api.ISubmitQueryService");
+        submitQueryService = (SubmitQueryService) this.applicationContext.getBean("SubmitQueryService");
     }
 
     /**

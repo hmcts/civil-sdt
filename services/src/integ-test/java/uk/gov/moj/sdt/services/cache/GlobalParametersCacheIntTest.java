@@ -71,9 +71,7 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
     @Before
     public void setUp() {
         DBUnitUtility.loadDatabase(this.getClass(), true);
-        globalParameterCache =
-                (ICacheable) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache");
+        globalParameterCache = (ICacheable) this.applicationContext.getBean("GlobalParametersCache");
 
     }
 
@@ -123,14 +121,11 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
                 IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(), "90", globalParameter.getValue());
 
         // Do uncache operation.
-        final ISdtManagementMBean sdtManagementMBean =
-                (ISdtManagementMBean) SpringApplicationContext
-                        .getBean("uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean");
+        final ISdtManagementMBean sdtManagementMBean = (ISdtManagementMBean) SpringApplicationContext.getBean("SdtManagementMBean");
         sdtManagementMBean.uncache();
 
         // Change the value in the database.
-        final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) SpringApplicationContext.getBean("GenericDao");
         globalParameter.setValue("91");
         genericDao.persist(globalParameter);
 

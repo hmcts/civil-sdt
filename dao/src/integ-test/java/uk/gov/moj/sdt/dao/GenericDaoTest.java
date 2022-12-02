@@ -78,8 +78,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testFetch() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("GenericDao");
 
         final long id = 10711;
         final IBulkCustomer bulkCustomer = genericDao.fetch(BulkCustomer.class, id);
@@ -92,8 +91,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testQuery() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("GenericDao");
 
         final IBulkCustomer[] bulkCustomers =
                 genericDao.query(BulkCustomer.class, Restrictions.eq("sdtCustomerId", 2L));
@@ -112,8 +110,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testQueryAsCount() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
 
         final long customerCount = genericDao.queryAsCount(BulkCustomer.class, Restrictions.eq("sdtCustomerId", 2L));
 
@@ -127,8 +124,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testGlobalParametersQuery() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
 
         final IGlobalParameter[] globalParameters = genericDao.query(GlobalParameter.class);
 
@@ -145,8 +141,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testInsert() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
 
         final IBulkCustomer bulkCustomer = new BulkCustomer();
         // bulkCustomer.setId (2);
@@ -160,8 +155,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testBulkInsert() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
 
         final List<IBulkCustomer> bulkObjectList = new ArrayList<>();
         final IBulkCustomer bulkCustomer = new BulkCustomer();
@@ -193,8 +187,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testBulkUpdate() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
 
         final List<IBulkCustomer> bulkObjectList = new ArrayList<>();
         final IBulkCustomer bulkCustomer = new BulkCustomer();

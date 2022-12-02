@@ -73,7 +73,7 @@ public class ErrorMessageDaoTest extends AbstractIntegrationTest {
     @Test
     public void testGetAllErrorMessages() {
         final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+                (IGenericDao) this.applicationContext.getBean("GenericDao");
 
         final IErrorMessage[] errorMessages = genericDao.query(IErrorMessage.class);
 

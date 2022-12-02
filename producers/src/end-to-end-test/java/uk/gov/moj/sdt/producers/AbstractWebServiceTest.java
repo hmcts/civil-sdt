@@ -316,9 +316,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     protected ISdtEndpointPortType getSdtEndpointClient(final long connTimeout, final long responseTimeout) {
 
         // Get the SOAP proxy client.
-        ISdtEndpointPortType client =
-                (ISdtEndpointPortType) SpringApplicationContext
-                        .getBean("uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType");
+        ISdtEndpointPortType client = (ISdtEndpointPortType) SpringApplicationContext.getBean("ISdtEndpointPortType");
 
         Client clientProxy = ClientProxy.getClient(client);
 

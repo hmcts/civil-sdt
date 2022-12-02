@@ -90,9 +90,7 @@ public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, Up
     @Override
     protected UpdateResponseType callTestWebService(final UpdateRequestType request) {
         // Get the SOAP proxy client.
-        ISdtInternalEndpointPortType client =
-                (ISdtInternalEndpointPortType) SpringApplicationContext
-                        .getBean("uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType");
+        ISdtInternalEndpointPortType client = (ISdtInternalEndpointPortType) SpringApplicationContext.getBean("ISdtInternalEndpointPortType");
 
         Client clientProxy = ClientProxy.getClient(client);
 

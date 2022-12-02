@@ -72,7 +72,7 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractIntegrationTest {
     public void testGetSdtBulkReference() {
         final ISdtBulkReferenceGenerator referenceGenerator =
                 (ISdtBulkReferenceGenerator) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator");
+                        .getBean("SdtBulkReferenceGenerator");
 
         // Negative Test 1 - Supply blank application name
         try {

@@ -93,9 +93,8 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
     public void setUp() {
         DBUnitUtility.loadDatabase(this.getClass(), true);
 
-        individualRequestDao =
-                (IIndividualRequestDao) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.dao.api.IIndividualRequestDao");
+        individualRequestDao = (IIndividualRequestDao) this.applicationContext.getBean("IndividualRequestDao");
+
         bulkSubmission = individualRequestDao.fetch(IBulkSubmission.class, 10710);
         bulkCustomer = individualRequestDao.fetch(BulkCustomer.class, 10711);
         dataRetentionPeriod = 90;

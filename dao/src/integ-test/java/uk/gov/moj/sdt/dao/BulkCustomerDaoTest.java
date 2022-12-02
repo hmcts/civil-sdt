@@ -73,8 +73,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
     @Test
     @Ignore
     public void testGetBulkCustomerBySdtId() {
-        final IBulkCustomerDao bulkCustomersDao =
-                (IBulkCustomerDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId(2);
         if (bulkCustomer != null) {

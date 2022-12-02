@@ -41,6 +41,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.messaging.asb.MessageReceiver;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
@@ -74,9 +75,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
     @Test
     public void testQueueMessage() throws JMSException, InterruptedException {
         // Get message writer from Spring.
-        final MessageWriter messageWriter =
-                (MessageWriter) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
+        final IMessageWriter messageWriter = (IMessageWriter) this.applicationContext.getBean("MessageWriter");
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -128,9 +127,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
     @Test
     public void testAzureServiceBusDown() throws JMSException {
         // Get message writer from Spring.
-        final MessageWriter messageWriter =
-                (MessageWriter) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.messaging.api.IMessageWriterBad");
+        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("IMessageWriterBad");
 
         // Send the message.
         final ISdtMessage message = new SdtMessage();

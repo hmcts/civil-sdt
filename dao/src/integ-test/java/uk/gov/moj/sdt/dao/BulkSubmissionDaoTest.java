@@ -97,8 +97,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     public void setUp() {
         DBUnitUtility.loadDatabase(this.getClass(), true);
 
-        bulkSubmissionDao =
-                (IBulkSubmissionDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IBulkSubmissionDao");
+        bulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
         bulkCustomer = bulkSubmissionDao.fetch(IBulkCustomer.class, 10711);
         targetApplication = bulkSubmissionDao.fetch(ITargetApplication.class, 10713L);
         dataRetentionPeriod = 90;

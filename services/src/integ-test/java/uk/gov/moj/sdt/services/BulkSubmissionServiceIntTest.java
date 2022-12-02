@@ -104,12 +104,10 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         bulkSubmissionService =
                 (IBulkSubmissionService) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
+                        .getBean("BulkSubmissionService");
 
         // Get the concurrency map so we can clear it after test.
-        concurrencyMap =
-                (Map<String, IInFlightMessage>) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.validators.concurrencyMap");
+        concurrencyMap = new HashMap<>();
 
     }
 
