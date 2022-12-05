@@ -252,6 +252,12 @@ allprojects {
       exclude group: 'junit', module: 'junit'
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    /*
+    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
+    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
+    tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
+    */
+    testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
   configurations.all {
@@ -402,7 +408,12 @@ subprojects { subproject ->
     testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
     testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
     testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
-
+    /*
+    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
+    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
+    tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
+    */
+    testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
   sonarqube {
