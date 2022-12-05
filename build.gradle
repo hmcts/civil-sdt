@@ -162,7 +162,7 @@ ext['jackson.version'] = '2.14.0-rc1'
 ext['guava.version'] = '30.0-jre'
 ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
-ext['spring-security.version'] = '5.7.4'
+ext['spring-security.version'] = '5.7.5'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 
 dependencyManagement {
