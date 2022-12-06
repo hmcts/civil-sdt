@@ -51,6 +51,7 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
@@ -113,7 +114,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         if (invalidBulkSubmission != null) {
             replacements = new ArrayList<>();
             replacements.add(String.valueOf(sdtCustomerReference));
-            replacements.add(invalidBulkSubmission.getCreatedDate().toString());
+            replacements.add(Utilities.formatDateTimeForMessage(invalidBulkSubmission.getCreatedDate()));
             replacements.add(invalidBulkSubmission.getSdtBulkReference());
             createValidationException(replacements, IErrorMessage.ErrorCode.DUP_CUST_FILEID);
         }

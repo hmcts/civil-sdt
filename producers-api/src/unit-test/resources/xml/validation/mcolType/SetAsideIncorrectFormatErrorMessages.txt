@@ -1,4 +1,4 @@
-cvc-complex-type.2.4.a: Invalid content was found starting with element 'tns:supportingInformation'. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/SetAsideSchema":evidence}' is expected.
+cvc-complex-type.2.4.e: 'tns:supportingInformation' can occur a maximum of '3' times in the current sequence. This limit was exceeded. At this point one of '{"http://ws.sdt.moj.gov.uk/2013/mcol/SetAsideSchema":evidence}' is expected.
 cvc-datatype-valid.1.2.1: 'blah' is not a valid value for 'boolean'.
 cvc-enumeration-valid: Value 'PH' is not facet-valid with respect to enumeration '[AH, WH, TH]'. It must be a value from the enumeration.
 cvc-enumeration-valid: Value 'PS' is not facet-valid with respect to enumeration '[WS, SC, EV]'. It must be a value from the enumeration.
