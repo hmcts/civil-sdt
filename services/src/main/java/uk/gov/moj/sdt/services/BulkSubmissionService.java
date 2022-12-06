@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
@@ -206,8 +207,12 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         bulkSubmission.setBulkCustomer(bulkCustomer);
 
         // Set the SDT Bulk Reference
-        bulkSubmission.setSdtBulkReference(sdtBulkReferenceGenerator.getSdtBulkReference(bulkSubmission
-                .getTargetApplication().getTargetApplicationCode()));
+        if (StringUtils.hasText(bulkSubmission.getSdtBulkReference())) {
+            bulkSubmission.setSdtBulkReference(sdtBulkReferenceGenerator
+                                                   .getSdtBulkReference(bulkSubmission
+                                                                            .getTargetApplication()
+                                                                            .getTargetApplicationCode()));
+        }
 
         // Store this in the context for the sake of the outbound interceptor.
         SdtContext.getContext().setSubmitBulkReference(bulkSubmission.getSdtBulkReference());

@@ -42,7 +42,6 @@ import java.lang.reflect.Array;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -74,16 +73,6 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
     private final CrudRepository<DT, Long> crudRepository;
 
     private EntityManager entityManager;
-
-    private LongSupplier longSupplier = new LongSupplier() {
-
-        Long value = 0L;
-
-        @Override
-        public long getAsLong() {
-            return value++;
-        }
-    };
 
     public GenericDao(final CrudRepository<DT, Long> crudRepository) {
         super();
@@ -235,17 +224,16 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
             throw new IllegalArgumentException("Invalid sequence name");
         }
 
-//        Long result = Long.parseLong(getEntityManager().createNativeQuery(String.format("SELECT nextval('%s')", sequenceName))
-//                                         .getSingleResult().toString());
-
-        Long result = longSupplier.getAsLong();
+        String result = getEntityManager()
+                                         .createNativeQuery(String.format("SELECT nextval('%s')", sequenceName))
+                                         .getSingleResult().toString();
 
         // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
 
-        return result;
+        return Long.valueOf(result);
     }
 
     public <DomainType extends IDomainObject> DomainType uniqueResult(final Class<DomainType> domainType,
