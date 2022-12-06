@@ -207,7 +207,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         bulkSubmission.setBulkCustomer(bulkCustomer);
 
         // Set the SDT Bulk Reference
-        if (StringUtils.hasText(bulkSubmission.getSdtBulkReference())) {
+        if (!StringUtils.hasText(bulkSubmission.getSdtBulkReference())) {
             bulkSubmission.setSdtBulkReference(sdtBulkReferenceGenerator
                                                    .getSdtBulkReference(bulkSubmission
                                                                             .getTargetApplication()
