@@ -31,18 +31,17 @@
 
 package uk.gov.moj.sdt.services.utils;
 
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
+
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * This class is the implementation of the ISdtBulkReferenceGenerator interface.
@@ -59,8 +58,7 @@ public class SdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator {
     private IGenericDao genericDao;
 
     @Autowired
-    public SdtBulkReferenceGenerator(@Qualifier("GenericDao")
-                                         IGenericDao genericDao) {
+    public SdtBulkReferenceGenerator(@Qualifier("GlobalParametersDao") IGenericDao genericDao) {
         this.genericDao = genericDao;
     }
 

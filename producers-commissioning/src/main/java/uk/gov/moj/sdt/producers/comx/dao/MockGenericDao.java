@@ -31,23 +31,24 @@
 
 package uk.gov.moj.sdt.producers.comx.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 
 /**
  * Base class for Mock DAO classes containing helper methods for mock dao sub classes.
@@ -57,7 +58,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
  * @author d130680
  *
  */
-@Repository("MockGenericDao")
+@Component("MockGenericDao")
 public class MockGenericDao implements IGenericDao
 {
     /**
@@ -126,9 +127,14 @@ public class MockGenericDao implements IGenericDao
 
     @Override
     public <DomainType extends IDomainObject> DomainType[] query (final Class<DomainType> domainType,
-                                                                  final Criterion... restrictions)
+                                                                  Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
         throws DataAccessException
     {
+        return null;
+    }
+
+    @Override
+    public <DomainType extends IDomainObject> DomainType[] query(Class<DomainType> domainType) throws DataAccessException {
         return null;
     }
 
@@ -168,30 +174,27 @@ public class MockGenericDao implements IGenericDao
 
     @Override
     public <DomainType extends IDomainObject> List<DomainType> queryAsList (final Class<DomainType> domainType,
-                                                                            final Criterion... restrictions)
+                                                                            Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
     {
         return null;
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
-                                                                       final Criterion... restrictions)
-    {
-        return null;
-    }
-
-    @Override
-    public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
-                                                                       final Criteria criteria)
-    {
+    public <DomainType extends IDomainObject> DomainType uniqueResult(Class<DomainType> domainType,
+                                                                      Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier) {
         return null;
     }
 
     @Override
     public <DomainType extends IDomainObject> long queryAsCount (final Class<DomainType> domainType,
-                                                                 final Criterion... restrictions)
+                                                                 Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
     {
         return 0;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return null;
     }
 
     @Override

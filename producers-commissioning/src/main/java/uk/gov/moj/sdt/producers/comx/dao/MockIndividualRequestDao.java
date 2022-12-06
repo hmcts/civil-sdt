@@ -36,6 +36,7 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -48,7 +49,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
  * @author d130680
  *
  */
-@Repository("MockIndividualRequestDao")
+@Component("MockIndividualRequestDao")
 public class MockIndividualRequestDao extends MockGenericDao implements IIndividualRequestDao
 {
 

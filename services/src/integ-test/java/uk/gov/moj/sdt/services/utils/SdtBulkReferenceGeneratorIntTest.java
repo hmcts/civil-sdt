@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,7 @@ import uk.gov.moj.sdt.test.utils.TestConfig;
 @ActiveProfiles("integ")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/SubmitQueryServiceIntTest.sql"})
 @Transactional
 public class SdtBulkReferenceGeneratorIntTest extends AbstractIntegrationTest {
     /**

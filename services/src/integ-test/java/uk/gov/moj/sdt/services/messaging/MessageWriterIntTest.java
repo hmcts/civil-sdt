@@ -64,8 +64,6 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriterIntTest.class);
 
-    private MessageReceiver messageReceiver;
-
     /**
      * Test method to test the sending of message.
      *
@@ -76,6 +74,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
     public void testQueueMessage() throws JMSException, InterruptedException {
         // Get message writer from Spring.
         final IMessageWriter messageWriter = (IMessageWriter) this.applicationContext.getBean("MessageWriter");
+        final MessageReceiver messageReceiver = this.applicationContext.getBean(MessageReceiver.class);
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 

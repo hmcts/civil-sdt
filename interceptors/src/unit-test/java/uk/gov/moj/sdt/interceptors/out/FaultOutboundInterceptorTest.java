@@ -45,6 +45,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import uk.gov.moj.sdt.dao.GenericDao;
+import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -101,8 +102,9 @@ public class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Test
     public void testHandleMessage() {
         SdtContext.getContext().setServiceRequestId(1L);
+        ServiceRequestDao serviceRequestDao = EasyMock.mock(ServiceRequestDao.class);
         final SoapMessage soapMessage = getDummySoapMessageWithFault();
-        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor();
+        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(serviceRequestDao);
         final ServiceRequest serviceRequest = new ServiceRequest();
         faultOutboundInterceptor.setServiceRequestDao(getMockedGenericDao(serviceRequest));
         assertNull(serviceRequest.getResponseDateTime());

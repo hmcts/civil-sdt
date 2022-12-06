@@ -31,16 +31,20 @@
 package uk.gov.moj.sdt.services;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Abstract Sdt Service class for any common functionality between the various services.
@@ -111,10 +115,15 @@ public abstract class AbstractSdtService {
                 new String[]{IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus(),
                         IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus()};
 
-        final long requestsCount =
-                this.getIndividualRequestDao().queryAsCount(IIndividualRequest.class,
-                        Restrictions.eq("sdtBulkReference", bulkSubmission.getSdtBulkReference()),
-                        Restrictions.not(Restrictions.in("requestStatus", completeRequestStatus)));
+
+        final long requestsCount = this.getIndividualRequestDao().queryAsCount(
+            IndividualRequest.class,
+            () -> createCriteria(
+                getIndividualRequestDao(),
+                bulkSubmission.getSdtBulkReference(),
+                completeRequestStatus
+            )
+        );
 
         if (requestsCount == 0) {
 
@@ -166,5 +175,16 @@ public abstract class AbstractSdtService {
      */
     public void setIndividualRequestDao(final IIndividualRequestDao individualRequestDao) {
         this.individualRequestDao = individualRequestDao;
+    }
+
+    private CriteriaQuery<IndividualRequest> createCriteria(IIndividualRequestDao individualRequestDao, String sdtBulkReference,
+                                       String[] completeRequestStatus) {
+        CriteriaBuilder criteriaBuilder = individualRequestDao.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<IndividualRequest> criteriaQuery = criteriaBuilder.createQuery(IndividualRequest.class);
+        Root<IndividualRequest> root = criteriaQuery.from(IndividualRequest.class);
+        Predicate[] predicates = new Predicate[2];
+        predicates[0] = criteriaBuilder.equal(root.get("sdtBulkReference"), sdtBulkReference);
+        predicates[1] = criteriaBuilder.not(criteriaBuilder.in(root.get("requestStatus")).value(completeRequestStatus));
+        return criteriaQuery.select(root).where(predicates);
     }
 }

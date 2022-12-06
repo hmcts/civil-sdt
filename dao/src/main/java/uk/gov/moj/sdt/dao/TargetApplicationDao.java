@@ -30,49 +30,72 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
+import uk.gov.moj.sdt.dao.repository.TargetApplicationRepository;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Implements specific DAO functionality based on {@link ITargetApplicationDao}. This is a derived DAO extending
- * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct domain
+ * {@link GenericDao} which provides generic JPA access. This specific DAO exists in order to construct domain
  * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
- * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
- * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
+ * constructs an array of JPA Predicate which are passed to the generic method.
  *
  * @author Son Loi
  */
-@Repository("TargetApplicationDao")
+@Component("TargetApplicationDao")
 public class TargetApplicationDao extends GenericDao implements ITargetApplicationDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetApplicationDao.class);
 
+    private final Root<TargetApplication> root;
+
+    private final CriteriaBuilder criteriaBuilder;
+
+    private final CriteriaQuery<TargetApplication> criteriaQuery;
+
     @Autowired
-    public TargetApplicationDao(SessionFactory sessionFactory) {
-        super(sessionFactory);
+    public TargetApplicationDao(final TargetApplicationRepository crudRepository, EntityManager entityManager) {
+        super(crudRepository, entityManager);
+        criteriaBuilder = entityManager.getCriteriaBuilder();
+        criteriaQuery = criteriaBuilder.createQuery(TargetApplication.class);
+        root = criteriaQuery.from(TargetApplication.class);
     }
 
     @Override
     public ITargetApplication getTargetApplicationByCode(final String targetAppCode) throws DataAccessException {
         LOGGER.debug("Get a target application matching the code " + targetAppCode);
-        final ITargetApplication[] targetApplication =
-                this.query(ITargetApplication.class, Restrictions.eq("targetApplicationCode", targetAppCode));
+
+        final IDomainObject[] targetApplication = this.query(TargetApplication.class, () -> {
+            Predicate[] sdtCustomerPredicate = createCriteria(targetAppCode);
+            return criteriaQuery.select(root).where(sdtCustomerPredicate);
+        });
 
         // Should only return one or none at all
         if (targetApplication == null || targetApplication.length == 0) {
             return null;
         }
 
-        return targetApplication[0];
+        return (ITargetApplication) targetApplication[0];
+    }
+
+    private Predicate[] createCriteria(String targetAppCode) {
+        Predicate[] predicates = new Predicate[1];
+        predicates[0] = criteriaBuilder.equal(root.get("targetApplicationCode"), targetAppCode);
+        return predicates;
     }
 }

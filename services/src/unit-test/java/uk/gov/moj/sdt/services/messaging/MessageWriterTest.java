@@ -31,11 +31,6 @@
 
 package uk.gov.moj.sdt.services.messaging;
 
-import static org.easymock.EasyMock.replay;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,9 +38,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
-
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.replay;
 
 /**
  * Test class for testing the MessageWriter implementation.

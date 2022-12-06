@@ -3,6 +3,7 @@ package uk.gov.moj.sdt.services.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import uk.gov.moj.sdt.services.messaging.QueueConfig;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 
@@ -20,11 +22,9 @@ import javax.jms.ConnectionFactory;
 
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
+@EnableConfigurationProperties(QueueConfig.class)
 @EnableTransactionManagement
 public class ServicesConfig {
-
-    @Value("${MCOL.Queue}")
-    private String destinationName;
 
     @Autowired
     private ConnectionFactory jmsConnectionFactory;
@@ -36,13 +36,16 @@ public class ServicesConfig {
     @Lazy
     private MessageListenerAdapter messageListenerAdapter;
 
+    @Autowired
+    private QueueConfig queueConfig;
+
     @Bean
     @Lazy
     @Qualifier("messageListenerContainer")
     public DefaultMessageListenerContainer messageListenerContainer() {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
-        defaultMessageListenerContainer.setDestinationName(destinationName);
+        defaultMessageListenerContainer.setDestinationName(queueConfig.getQueueConfig().get("MCOL"));
         defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
         defaultMessageListenerContainer.setTransactionManager(transactionManager);
         defaultMessageListenerContainer.setConcurrentConsumers(1);

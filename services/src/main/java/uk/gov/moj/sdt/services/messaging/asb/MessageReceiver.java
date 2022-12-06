@@ -5,18 +5,19 @@ import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusReceivedMessage;
 import com.azure.messaging.servicebus.ServiceBusReceiverClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class MessageReceiver {
 
+    @Value("${spring.jms.servicebus.connection-string}")
     private String connectionString;
 
-    private JsonConverter jsonConverter;
-
-    public MessageReceiver(JsonConverter jsonConverter) {
-        this.jsonConverter = jsonConverter;
+    @Autowired
+    public MessageReceiver() {
     }
 
     public ServiceBusReceivedMessage receiveMessage(String queueName) {

@@ -38,9 +38,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -59,7 +64,8 @@ import java.util.List;
  */
 @ActiveProfiles("integ")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class})
+@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/IndividualRequestDaoTest.sql"})
 public class IndividualRequestDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
@@ -70,6 +76,10 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
      * *Individual Request DAO.
      */
     private IIndividualRequestDao individualRequestDao;
+
+    private IBulkCustomerDao iBulkCustomerDao;
+
+    private IBulkSubmissionDao iBulkSubmissionDao;
 
     /**
      * Bulk Customer to use for the test.
@@ -91,12 +101,12 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-
         individualRequestDao = (IIndividualRequestDao) this.applicationContext.getBean("IndividualRequestDao");
+        iBulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
+        iBulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
-        bulkSubmission = individualRequestDao.fetch(IBulkSubmission.class, 10710);
-        bulkCustomer = individualRequestDao.fetch(BulkCustomer.class, 10711);
+        bulkSubmission = iBulkSubmissionDao.fetch(BulkSubmission.class, 10710);
+        bulkCustomer = iBulkCustomerDao.fetch(BulkCustomer.class, 10711);
         dataRetentionPeriod = 90;
     }
 
@@ -108,8 +118,7 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
 
         final String sdtRequestReference = "SDT_REQ_TEST_1";
         // There should already be a record in the DB loaded as part of the test
-        final IIndividualRequest individualRequest =
-                individualRequestDao.getRequestBySdtReference(sdtRequestReference);
+        final IIndividualRequest individualRequest = individualRequestDao.getRequestBySdtReference(sdtRequestReference);
 
         Assert.assertNotNull(individualRequest);
         Assert.assertEquals(sdtRequestReference, individualRequest.getSdtRequestReference());
@@ -142,7 +151,7 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
 
         createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays(dataRetentionPeriod * -1));
         final IIndividualRequest individualRequest =
-                individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
+                individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod + 1);
 
         Assert.assertNotNull(individualRequest);
         Assert.assertEquals(individualRequest.getCustomerRequestReference(), customerRequestReference);
@@ -157,10 +166,12 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final String customerRequestReference = "customer request reference 1";
 
         createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays((dataRetentionPeriod + 1) * -1));
-
-        final IIndividualRequest individualRequest =
+        IIndividualRequest individualRequest = null;
+        try {
+            individualRequest =
                 individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
-
+        } catch (Exception e) {
+        }
         Assert.assertNull(individualRequest);
 
     }

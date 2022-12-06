@@ -30,19 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.easymock.EasyMock;
-import org.hibernate.criterion.Criterion;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -62,6 +55,12 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Test class for Update Request Service.
@@ -130,8 +129,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         mockIndividualRequestDao.persist(bulkSubmission);
         EasyMock.expectLastCall();
@@ -177,8 +175,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.expectLastCall();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
         mockIndividualRequestDao.persist(bulkSubmission);
@@ -225,8 +222,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.expectLastCall();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
         mockIndividualRequestDao.persist(bulkSubmission);
@@ -307,8 +303,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         indRequests.add(individualRequest);
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
                 Long.valueOf(indRequests.size()));
 
         EasyMock.replay(mockIndividualRequestDao);

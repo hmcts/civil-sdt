@@ -1,15 +1,15 @@
 spring:
   jms:
     servicebus:
+      internal:
+        queueConfig:
+          MCOL: ${MCOL.Queue}
       connection-string: ${SDT_QUEUE_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       enabled: false
     activemq:
       in-memory: true
       pool:
         enabled: false
-      internal:
-        queueConfig:
-          MCOL: ${MCOL.Queue}
   aop:
     proxy-target-class: false
   main:
@@ -21,8 +21,6 @@ spring:
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
   jpa:
-    hibernate:
-      ddl-auto: none
     database: postgresql
   flyway:
     enabled: false

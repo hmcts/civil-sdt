@@ -35,26 +35,51 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * SDT will maintain routing information for target applications based on the Request Type Tag.
  *
  * @author d130680
  */
+@Table(name = "SERVICE_ROUTINGS")
+@Entity
 public class ServiceRouting extends AbstractDomainObject implements IServiceRouting {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "srv_req_seq")
+    @Column(name = "SERVICE_ROUTINGS_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
 
     /**
      * Target application.
      */
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = TargetApplication.class)
+    @JoinColumn(name="TARGET_APPLICATION_ID")
     private ITargetApplication targetApplication;
 
     /**
      * Service type.
      */
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = ServiceType.class)
+    @JoinColumn(name="SERVICE_TYPE_ID")
     private IServiceType serviceType;
 
     /**
      * Web service endpoint.
      */
+    @Column(name = "WEB_SERVICE_ENDPOINT")
     private String webServiceEndpoint;
 
     @Override
@@ -85,6 +110,21 @@ public class ServiceRouting extends AbstractDomainObject implements IServiceRout
     @Override
     public void setWebServiceEndpoint(final String webServiceEndpoint) {
         this.webServiceEndpoint = webServiceEndpoint;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

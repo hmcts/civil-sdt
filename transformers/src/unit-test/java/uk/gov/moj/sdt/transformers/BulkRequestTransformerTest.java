@@ -157,7 +157,7 @@ public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
                 IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus(), actual.getRequestStatus());
         Assert.assertEquals("Request id for individual request " + row + " does not match", expected.getRequestId(),
                 actual.getCustomerRequestReference());
-        Assert.assertEquals("Line number for individual request " + row + " does not match", row,
+        Assert.assertEquals("Line number for individual request " + row + " does not match", Integer.valueOf(row),
                 actual.getLineNumber());
         Assert.assertEquals("Request type mismatch", expected.getRequestType(), actual.getRequestType());
     }

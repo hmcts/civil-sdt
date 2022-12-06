@@ -67,11 +67,6 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor {
         super(phase);
     }
 
-    public AbstractServiceRequest(String phase, @Qualifier("GenericDao") IGenericDao serviceRequestDao) {
-        super(phase);
-        this.serviceRequestDao = serviceRequestDao;
-    }
-
     /**
      * The ServiceRequestDAO.
      *

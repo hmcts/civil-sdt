@@ -166,7 +166,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         ICacheable errorMessagesCache = EasyMock.createMock(ICacheable.class);
         IBulkSubmissionDao bulkSubmissionDao  = EasyMock.createMock(IBulkSubmissionDao.class);
         validator = new BulkSubmissionValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache, bulkSubmissionDao);
-        validator.setConcurrencyMap(new HashMap<String, IInFlightMessage>());
+        validator.setConcurrencyMap(new HashMap<>());
     }
 
     /**

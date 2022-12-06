@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.GenericDao;
+import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -79,8 +80,9 @@ public class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBas
     @Test
     public void testHandleMessage() {
         try {
+            ServiceRequestDao serviceRequestDao = EasyMock.mock(ServiceRequestDao.class);
             // Create the service request inbound interceptor.
-            final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor();
+            final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor(serviceRequestDao);
 
             // Inject dummy service request into interceptor.
             sRII.setServiceRequestDao(getMockedGenericDao(new ServiceRequest()));

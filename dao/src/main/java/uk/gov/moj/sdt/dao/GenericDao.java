@@ -30,34 +30,30 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+
+import java.lang.reflect.Array;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.LongSupplier;
+import java.util.function.Supplier;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * Implements generic DAO functionality based on {@link IGenericDao} allowing a single DAO class to provide access to
  * all database entities. The DAO an object tree of domain objects. Business logic implemented in service layer acts
- * upon domain objects returned by Hibernate. These are translated into JAXB objects before being returned to the SOAP
+ * upon domain objects returned by JPA. These are translated into JAXB objects before being returned to the SOAP
  * layer.
  *
  * <p>
@@ -69,43 +65,43 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  */
 // @Transactional (propagation = Propagation.MANDATORY)
 // @Transactional
-@Repository("GenericDao")
-public class GenericDao implements IGenericDao {
+public class GenericDao<DT extends IDomainObject> implements IGenericDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericDao.class);
 
-    /**
-     * The Hibernate session factory needed to acquire the session.
-     */
-    private SessionFactory sessionFactory;
+    private final CrudRepository<DT, Long> crudRepository;
+
+    private EntityManager entityManager;
+
+    private LongSupplier longSupplier = new LongSupplier() {
+
+        Long value = 0L;
+
+        @Override
+        public long getAsLong() {
+            return value++;
+        }
+    };
+
+    public GenericDao(final CrudRepository<DT, Long> crudRepository) {
+        super();
+        this.crudRepository = crudRepository;
+    }
 
     /**
      * Default constructor for {@link GenericDao}.
      */
-    @Autowired
-    public GenericDao(SessionFactory sessionFactory) {
+    public GenericDao(final CrudRepository<DT, Long> crudRepository,
+                      EntityManager entityManager) {
         super();
-        this.sessionFactory = sessionFactory;
+        this.crudRepository = crudRepository;
+        this.entityManager = entityManager;
     }
 
-    /**
-     * Get the Hibernate session factory.
-     *
-     * @return the Hibernate session factory.
-     */
-    public SessionFactory getSessionFactory() {
-        return this.sessionFactory;
-    }
-
-    /**
-     * Set the Hibernate session factory.
-     *
-     * @param sessionFactory the Hibernate session factory to be injected into this object.
-     */
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     @Override
@@ -116,43 +112,20 @@ public class GenericDao implements IGenericDao {
 
         LOGGER.debug("fetch(): domainType={}, id=", domainType, id);
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tdomain type=" + domainType.getName() + "\n\tid=" + id + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3, "GenericDao.fetch start",
-                    detail.toString());
-        }
-
         // Domain object of type asked for by caller.
         DomainType domainObject = null;
 
-        // Get active session.
-        final Session session = this.getSessionFactory().getCurrentSession();
-
-        // Setup criteria to retrieve given type of domain object using id.
-        final Criteria criteria = session.createCriteria(domainType);
-        criteria.add(Restrictions.eq("id", id));
-
         // Get unique result using criteria and assign to domain object. This will be a tree of objects up to lazy
         // boundaries
-        final Object o = criteria.uniqueResult();
-        domainObject = domainType.cast(o);
+        final Optional<DT> value = this.crudRepository.findById(id);
+        if (value.isPresent()) {
+            domainObject = domainType.cast(value.get());
+        }
 
-        // Calculate time in hibernate/database.
+        // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tdomain object=" + (domainObject == null ? "\n" : domainObject.toString() + "\n"));
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4, "GenericDao.fetch end",
-                    detail.toString());
-        }
 
         // Validate results.
         if (domainObject == null) {
@@ -166,14 +139,18 @@ public class GenericDao implements IGenericDao {
         return domainObject;
     }
 
+    public <DomainType extends IDomainObject> DomainType[] query(final Class<DomainType> domainType) throws DataAccessException {
+        return query(domainType, () -> createSelectQuery(domainType));
+    }
+
     @Override
     public final <DomainType extends IDomainObject> DomainType[] query(final Class<DomainType> domainType,
-                                                                       final Criterion... restrictions)
+                                                                       Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
             throws DataAccessException {
         LOGGER.debug("query(): domainType={}", domainType);
 
-        // Get a list of results from Hibernate.
-        final List<?> domainObjects = queryAsList(domainType, restrictions);
+        // Get a list of results from JPA.
+        final List<?> domainObjects = queryAsList(domainType, criteriaQuerySupplier);
 
         @SuppressWarnings("unchecked") final DomainType[] results =
                 (DomainType[]) Array.newInstance(domainType, domainObjects.size());
@@ -183,62 +160,29 @@ public class GenericDao implements IGenericDao {
 
     @Override
     public final <DomainType extends IDomainObject> List<DomainType> queryAsList(final Class<DomainType> domainType,
-                                                                                 final Criterion... restrictions)
+                                                                                 Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
             throws DataAccessException {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
         LOGGER.debug("queryAsList(): domainType={}", domainType);
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tdomain type=" + domainType.getName());
-            for (Criterion criterion : restrictions) {
-                detail.append("\n\trestriction=" + criterion.toString());
-            }
-            detail.append("\n");
+        TypedQuery<DomainType> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
 
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3, "GenericDao.queryAsList start",
-                    detail.toString());
-        }
+        // Get a list of results from JPA.
+        @SuppressWarnings("unchecked") final List<DomainType> domainObjects = typedQuery.getResultList();
 
-        final Session session = this.getSessionFactory().getCurrentSession();
-
-        // Add any restrictions passed by caller.
-        final Criteria criteria = session.createCriteria(domainType);
-        for (final Criterion restriction : restrictions) {
-            // Added condition to check for null, if restriction null then it should not be added to criteria.
-            if (restriction != null) {
-                criteria.add(restriction);
-            }
-        }
-
-        // Get a list of results from Hibernate.
-        @SuppressWarnings("unchecked") final List<DomainType> domainObjects = criteria.list();
-
-        // Calculate time in hibernate/database.
+        // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final StringBuilder detail = new StringBuilder();
-            if (domainObjects == null || domainObjects.size() == 0) {
-                detail.append("\n\n\tdomain object=\n");
-            } else {
-                for (Object domainObject : domainObjects) {
-                    detail.append("\n\n\tdomain object=" + domainObject.toString());
-                }
-                detail.append("\n");
-            }
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4, "GenericDao.queryAsList end",
-                    detail.toString());
-        }
-
         return domainObjects;
+    }
+
+    public <T extends IDomainObject> void persist(final IDomainObject domainObject,
+                                                  CrudRepository<IDomainObject, Long> repository) throws DataAccessException {
+        repository.save(domainObject);
     }
 
     @Override
@@ -248,31 +192,12 @@ public class GenericDao implements IGenericDao {
 
         LOGGER.debug("Persist domain object " + domainObject.toString());
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tdomain object=" + domainObject.toString() + "\n");
+        crudRepository.save((DT) domainObject);
 
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3, "GenericDao.persist start",
-                    detail.toString());
-        }
-
-        final Session session = this.getSessionFactory().getCurrentSession();
-        session.saveOrUpdate(domainObject);
-
-        // Calculate time in hibernate/database.
+        // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseWritesTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseWritesCount();
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tdomain object=" + domainObject.toString() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4, "GenericDao.persist end",
-                    detail.toString());
-        }
     }
 
     @Override
@@ -283,42 +208,20 @@ public class GenericDao implements IGenericDao {
 
         LOGGER.debug("Persist domain object list {}", domainObjectList.toString());
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tdomain object list=" + domainObjectList.toString() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3, "GenericDao.persist start",
-                    detail.toString());
-        }
-
-        final Session session = this.getSessionFactory().getCurrentSession();
-        final int maxBatchSize = 20;
-
         int i = 1;
+        final int maxBatchSize = 20;
         for (Object domainObject : domainObjectList) {
-            session.saveOrUpdate(domainObject);
+            crudRepository.save((DT) domainObject);
             if (i % maxBatchSize == 0) {
-                // Flush a batch of insert/updates and release memory.
-                session.flush();
-                session.clear();
+                getEntityManager().flush();
             }
             i++;
         }
 
-        // Calculate time in hibernate/database.
+        // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseWritesTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseWritesCount();
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tdomain object list=" + domainObjectList.toString() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4, "GenericDao.persist end",
-                    detail.toString());
-        }
     }
 
     @Override
@@ -328,217 +231,65 @@ public class GenericDao implements IGenericDao {
 
         LOGGER.debug("Sequence generation for " + sequenceName);
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tsequence name=" + sequenceName + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3,
-                    "GenericDao.getNextSequenceValue start", detail.toString());
-        }
-
         if (sequenceName == null || sequenceName.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid sequence name");
         }
 
-        final Session session = this.getSessionFactory().getCurrentSession();
-        final Query query = session.createSQLQuery("SELECT " + sequenceName + ".nextval FROM DUAL");
-        final Object result = query.uniqueResult();
+//        Long result = Long.parseLong(getEntityManager().createNativeQuery(String.format("SELECT nextval('%s')", sequenceName))
+//                                         .getSingleResult().toString());
 
-        // Calculate time in hibernate/database.
+        Long result = longSupplier.getAsLong();
+
+        // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tsequence value=" + ((BigDecimal) result).longValue() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4,
-                    "GenericDao.getNextSequenceValue end", detail.toString());
-        }
-
-        return ((BigDecimal) result).longValue();
+        return result;
     }
 
-    /**
-     * Create a restriction for a date field that falls between two dates. We use the data retention period to work out
-     * the start and end of the date.
-     *
-     * @param field               date field
-     * @param dataRetentionPeriod data retention period
-     * @return hibernate restriction
-     */
-    protected Criterion createDateRestriction(final String field, final int dataRetentionPeriod) {
-        // TODO: update date processing with LocalDateTime
-//
-//        // Get today's date
-//        final Date today = new Date ();
-//
-//        // Subtract the retention period from todays date and truncate the time part to get the floor of the date
-//        Date start = DateUtils.truncate (today, Calendar.DATE);
-//        start = DateUtils.addDays (start, dataRetentionPeriod * -1);
-//
-//        // Truncate the time part then add 1 day to the ceiling of the date, i.e. the next day
-//        Date end = DateUtils.truncate (today, Calendar.DATE);
-//        end = DateUtils.addDays (end, 1);
-//
-//        // Add date criteria and convert to LocalDateTime
-//
-//        return Restrictions.between ("createdDate", LocalDateTime.fromDateFields (start),
-//                LocalDateTime.fromDateFields (end));
-
-        // Get today's date
-        final LocalDateTime today = LocalDateTime.now();
-
-        // Subtract the retention period from todays date and truncate the time part to get the floor of the date
-        LocalDateTime start = today.plusDays(dataRetentionPeriod * -1);
-
-        // Truncate the time part then add 1 day to the ceiling of the date, i.e. the next day
-        LocalDateTime end = today.plusDays(1);
-
-        // Add date criteria and convert to LocalDateTime
-        return Restrictions.between("createdDate", start, end);
-    }
-
-    @Override
     public <DomainType extends IDomainObject> DomainType uniqueResult(final Class<DomainType> domainType,
-                                                                      final Criterion... restrictions) {
-        final long startTime = new GregorianCalendar().getTimeInMillis();
+                                                                      Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier) {
 
+        final long startTime = new GregorianCalendar().getTimeInMillis();
         LOGGER.debug("uniqueResult(): domainType={}", domainType);
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tdomain type=" + domainType.getName());
-            for (Criterion criterion : restrictions) {
-                detail.append("\n\trestriction=" + criterion.toString());
-            }
-            detail.append("\n");
+        TypedQuery<DomainType> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
+        // Get unique result from JPA.
+        final DomainType domainObject = typedQuery.getSingleResult();
 
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3,
-                    "GenericDao.uniqueResult start", detail.toString());
-        }
-
-        final Session session = this.getSessionFactory().getCurrentSession();
-
-        // Add any restrictions passed by caller.
-        final Criteria criteria = session.createCriteria(domainType);
-        for (final Criterion restriction : restrictions) {
-            // Added condition to check for null, if restriction null then it should not be added to criteria.
-            if (restriction != null) {
-                criteria.add(restriction);
-            }
-        }
-
-        // Get unique result from Hibernate.
-        @SuppressWarnings("unchecked") final DomainType domainObject = (DomainType) criteria.uniqueResult();
-
-        // Calculate time in hibernate/database.
+        // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final String detail =
-                    "\n\n\tdomain object=" + (domainObject == null ? "\n" : domainObject.toString() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4, "GenericDao.uniqueResult end",
-                    detail);
-        }
-
-        return domainObject;
-    }
-
-    @Override
-    public final <DomainType extends IDomainObject> DomainType uniqueResult(final Class<DomainType> domainType,
-                                                                            final Criteria criteria)
-            throws DataAccessException {
-        // Record start time.
-        final long startTime = new GregorianCalendar().getTimeInMillis();
-
-        LOGGER.debug("queryAsList(): domainType={}", domainType);
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final String detail = "\n\n\tdomain type=" + domainType.getName() + "\n\tcriteria=" + criteria + "\n";
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3, "GenericDao.queryAsList start",
-                    detail);
-        }
-
-        // Get a list of results from Hibernate.
-        @SuppressWarnings("unchecked") final DomainType domainObject = (DomainType) criteria.uniqueResult();
-
-        // Calculate time in hibernate/database.
-        final long endTime = new GregorianCalendar().getTimeInMillis();
-        SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
-        SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final String detail =
-                    "\n\n\tdomain object=" + (domainObject == null ? "\n" : domainObject.toString() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4, "GenericDao.queryAsList end",
-                    detail);
-        }
 
         return domainObject;
     }
 
     @Override
     public <DomainType extends IDomainObject> long queryAsCount(final Class<DomainType> domainType,
-                                                                final Criterion... restrictions) {
+                                                                Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier) {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
         LOGGER.debug("queryAsCount(): domainType={}", domainType);
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_3)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tdomain type=" + domainType.getName());
-            for (Criterion criterion : restrictions) {
-                detail.append("\n\trestriction=" + criterion.toString());
-            }
-            detail.append("\n");
+        TypedQuery<DomainType> query = getEntityManager().createQuery(criteriaQuerySupplier.get());
+        // Get unique result from JPA.
+        final Number countOfObjects = query.getResultList().size();
 
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_3,
-                    "GenericDao.queryAsCount start", detail.toString());
-        }
-
-        final Session session = this.getSessionFactory().getCurrentSession();
-
-        // Add any restrictions passed by caller.
-        final Criteria criteria = session.createCriteria(domainType);
-        for (final Criterion restriction : restrictions) {
-            // Added condition to check for null, if restriction null then it should not be added to criteria.
-            if (restriction != null) {
-                criteria.add(restriction);
-            }
-        }
-
-        // Get a list of results from Hibernate.
-        final Number countOfObjects = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
-
-        // Calculate time in hibernate/database.
+        // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_4)) {
-            final String detail =
-                    "\n\n\tdomain object count =" + (countOfObjects != null ? countOfObjects.longValue() : 0) + "\n";
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_4, "GenericDao.queryAsCount end",
-                    detail);
-        }
-
         return countOfObjects != null ? countOfObjects.longValue() : 0;
+    }
+
+    private <DomainType extends IDomainObject> CriteriaQuery<DomainType> createSelectQuery(Class<DomainType> domainType) {
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<DomainType> criteriaQuery = criteriaBuilder.createQuery(domainType);
+        Root<DomainType> root = criteriaQuery.from(domainType);
+        return criteriaQuery.select(root);
     }
 }

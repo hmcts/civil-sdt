@@ -5,8 +5,6 @@ spring:
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
   jpa:
-    hibernate:
-      ddl-auto: none
     database: postgresql
   flyway:
     enabled: false

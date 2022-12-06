@@ -36,6 +36,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -48,8 +49,7 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
  * @author d130680
  *
  */
-@Repository
-@Qualifier("MockBulkSubmissionDao")
+@Component("MockBulkSubmissionDao")
 public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmissionDao
 {
 

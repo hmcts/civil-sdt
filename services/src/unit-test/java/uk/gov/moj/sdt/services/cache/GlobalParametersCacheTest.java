@@ -34,7 +34,6 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -114,7 +113,7 @@ public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
     public void testGetErrorMessage() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IGlobalParameter.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(GlobalParameter.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         // Get some values
@@ -143,7 +142,7 @@ public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
     @Test
     public void testParamNotFound() {
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IGlobalParameter.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(GlobalParameter.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         // Get some values
@@ -161,7 +160,7 @@ public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
     public void testUncache() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IGlobalParameter.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(GlobalParameter.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         // Get some values to prove the cache is not empty

@@ -31,18 +31,11 @@
 
 package uk.gov.moj.sdt.services;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.ws.WebServiceException;
-
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -68,6 +61,10 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.xml.ws.WebServiceException;
 
 /**
  * Test class for SubmitQueryService.

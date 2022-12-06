@@ -30,6 +30,27 @@
  * LastChangedBy: $ */
 package uk.gov.moj.sdt.test.utils;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.CompositeDataSet;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.FilteredDataSet;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
+import org.dbunit.dataset.filter.ExcludeTableFilter;
+import org.dbunit.dataset.filter.ITableFilter;
+import org.dbunit.dataset.xml.FlatDtdDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
+import org.dbunit.operation.DatabaseOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,28 +69,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.DatabaseConfig;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.CompositeDataSet;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.FilteredDataSet;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ReplacementDataSet;
-import org.dbunit.dataset.filter.ExcludeTableFilter;
-import org.dbunit.dataset.filter.ITableFilter;
-import org.dbunit.dataset.xml.FlatDtdDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.ext.oracle.OracleDataTypeFactory;
-import org.dbunit.operation.DatabaseOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import oracle.jdbc.pool.OracleDataSource;
+import javax.sql.DataSource;
 
 /**
  * The Class DBUnitUtility.
@@ -272,7 +272,7 @@ public final class DBUnitUtility {
             DatabaseOperation.INSERT.execute(dbConnection, targetDataset);
 
             // Enable triggers & constraints
-            finishDbunitLoad(targetSchema);
+//            finishDbunitLoad(targetSchema);
 
         } catch (final DatabaseUnitException e) {
             LOGGER.error("Error loading data for Schema '" + targetSchema + "': " + e);
@@ -476,7 +476,7 @@ public final class DBUnitUtility {
             final IDataSet cleanDataset = builder.build(DBUnitUtility.class.getResourceAsStream(cleanDataPath));
 
             // Disable triggers & constraints
-            prepareForDbunitLoad(targetSchema);
+//            prepareForDbunitLoad(targetSchema);
 
             // Clean the DB
             LOGGER.debug("Cleaning database");
@@ -497,7 +497,7 @@ public final class DBUnitUtility {
             // }
 
             // Enable triggers & constraints
-            finishDbunitLoad(targetSchema);
+//            finishDbunitLoad(targetSchema);
         } catch (final DatabaseUnitException e) {
             LOGGER.error("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace();
@@ -528,33 +528,18 @@ public final class DBUnitUtility {
             if (null == dbConnection) {
                 final Properties p = new Properties();
                 try {
-                    final File f = new File("./src/integ-test/resources/dbunit.properties");
-                    LOGGER.info("File [" + f.getAbsolutePath() + "] exists=" + f.exists());
-                    p.load(DBUnitUtility.class.getResourceAsStream("/dbunit.properties"));
-                    final String dbUrl = p.getProperty("db.url");
-                    final String username = p.getProperty("db.system.user");
-                    final String password = p.getProperty("db.system.pass");
-                    final OracleDataSource ds = new OracleDataSource();
-                    ds.setDriverType("thin");
-                    ds.setURL(dbUrl);
-                    ds.setUser(username);
-                    ds.setPassword(password);
 
+                    DataSource ds = SpringApplicationContext.getBean(DataSource.class);
                     final Connection connection = ds.getConnection();
-                    LOGGER.info("Connection created for username: " + username + ", password: " + password +
-                            ", url: " + dbUrl);
-
                     dbConnection = new DatabaseConnection(connection, schema);
                     dbConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
-                            new OracleDataTypeFactory());
+                            new PostgresqlDataTypeFactory());
 
                     dbConnection.getConnection().setAutoCommit(false);
 
                     // Cache the connection for this schema.
                     allConnections.put(schema, dbConnection);
                 } catch (final DatabaseUnitException e) {
-                    LOGGER.error("Unable to initialise DBUnit Connection: " + e);
-                } catch (final IOException e) {
                     LOGGER.error("Unable to initialise DBUnit Connection: " + e);
                 } catch (final SQLException e) {
                     LOGGER.error("Unable to initialise DBUnit Connection: " + e);

@@ -30,26 +30,32 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.hibernate.criterion.Restrictions;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test {@link GenericDao} CRUD methods.
@@ -58,19 +64,24 @@ import java.util.List;
  */
 @ActiveProfiles("integ")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class})
+@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/GenericDaoTest.sql"})
 public class GenericDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericDaoTest.class);
 
-    /**
-     * Default constructor for {@link GenericDaoTest}.
-     */
-    public GenericDaoTest() {
-        super();
-        DBUnitUtility.loadDatabase(this.getClass(), false);
+    CriteriaBuilder criteriaBuilder;
+    CriteriaQuery<BulkCustomer> criteriaQuery;
+    Root<BulkCustomer> root;
+
+    @Before
+    public void setUp() {
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
+        criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
+        criteriaQuery = criteriaBuilder.createQuery(BulkCustomer.class);
+        root = criteriaQuery.from(BulkCustomer.class);
     }
 
     /**
@@ -78,12 +89,11 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testFetch() {
-        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("GenericDao");
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final long id = 10711;
-        final IBulkCustomer bulkCustomer = genericDao.fetch(BulkCustomer.class, id);
-        bulkCustomer.getId();
-
+        final IBulkCustomer bulkCustomer = bulkCustomersDao.fetch(BulkCustomer.class, id);
+        assertNotNull(bulkCustomer);
     }
 
     /**
@@ -91,10 +101,13 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testQuery() {
-        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("GenericDao");
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer[] bulkCustomers =
-                genericDao.query(BulkCustomer.class, Restrictions.eq("sdtCustomerId", 2L));
+            bulkCustomersDao.query(BulkCustomer.class, () -> {
+                Predicate[] sdtCustomerPredicate = createCriteria(2L);
+                return criteriaQuery.select(root).where(sdtCustomerPredicate);
+            });
 
         if (bulkCustomers.length == 1) {
             // User found
@@ -110,9 +123,12 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testQueryAsCount() {
-        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
-        final long customerCount = genericDao.queryAsCount(BulkCustomer.class, Restrictions.eq("sdtCustomerId", 2L));
+        final long customerCount = bulkCustomersDao.queryAsCount(BulkCustomer.class, () -> {
+            Predicate[] sdtCustomerPredicate = createCriteria(2L);
+            return criteriaQuery.select(root).where(sdtCustomerPredicate);
+        });
 
         if (customerCount == 1) {
             Assert.assertTrue("Found expected number of rows", true);
@@ -124,9 +140,13 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testGlobalParametersQuery() {
-        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
+        final GlobalParametersDao genericDao = this.applicationContext.getBean(GlobalParametersDao.class);
+        CriteriaBuilder criteriaBuilder = genericDao.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<GlobalParameter> criteriaQuery = criteriaBuilder.createQuery(GlobalParameter.class);
+        Root<GlobalParameter> root = criteriaQuery.from(GlobalParameter.class);
 
-        final IGlobalParameter[] globalParameters = genericDao.query(GlobalParameter.class);
+        final IGlobalParameter[] globalParameters = (IGlobalParameter[]) genericDao.query(GlobalParameter.class,
+                                                                                          () -> criteriaQuery.select(root));
 
         if (globalParameters.length == 2) {
             // Found the global parameters
@@ -136,78 +156,9 @@ public class GenericDaoTest extends AbstractIntegrationTest {
         }
     }
 
-    /**
-     * Tests insert.
-     */
-    @Test
-    public void testInsert() {
-        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
-
-        final IBulkCustomer bulkCustomer = new BulkCustomer();
-        // bulkCustomer.setId (2);
-        bulkCustomer.setSdtCustomerId(456);
-
-        genericDao.persist(bulkCustomer);
+    private Predicate[] createCriteria(long... value) {
+        Predicate[] predicates = new Predicate[1];
+        predicates[0] = criteriaBuilder.equal(root.get("sdtCustomerId"), value[0]);
+        return predicates;
     }
-
-    /**
-     * Tests the bulk insert.
-     */
-    @Test
-    public void testBulkInsert() {
-        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
-
-        final List<IBulkCustomer> bulkObjectList = new ArrayList<>();
-        final IBulkCustomer bulkCustomer = new BulkCustomer();
-        // bulkCustomer.setId (2);
-        bulkCustomer.setSdtCustomerId(456);
-
-        final IBulkCustomer bulkCustomer2 = new BulkCustomer();
-        bulkCustomer2.setSdtCustomerId(457);
-
-        bulkObjectList.add(bulkCustomer);
-        bulkObjectList.add(bulkCustomer2);
-
-        genericDao.persistBulk(bulkObjectList);
-
-        final List<IBulkCustomer> savedBulkObjectList =
-                genericDao
-                        .queryAsList(IBulkCustomer.class, Restrictions.in("sdtCustomerId", new Long[]{456L, 457L}));
-
-        Assert.assertNotNull(savedBulkObjectList);
-        Assert.assertEquals(2, savedBulkObjectList.size());
-        for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
-            Assert.assertNotNull(savedBulkCustomer);
-        }
-
-    }
-
-    /**
-     * Tests the bulk update.
-     */
-    @Test
-    public void testBulkUpdate() {
-        final IGenericDao genericDao = (IGenericDao) this.applicationContext.getBean("IGenericDao");
-
-        final List<IBulkCustomer> bulkObjectList = new ArrayList<>();
-        final IBulkCustomer bulkCustomer = new BulkCustomer();
-        bulkCustomer.setId(10711L);
-        bulkCustomer.setSdtCustomerId(456);
-
-        bulkObjectList.add(bulkCustomer);
-
-        genericDao.persistBulk(bulkObjectList);
-
-        final List<IBulkCustomer> savedBulkObjectList =
-                genericDao.queryAsList(IBulkCustomer.class, Restrictions.in("sdtCustomerId", new Long[]{456L}));
-
-        Assert.assertNotNull(savedBulkObjectList);
-        Assert.assertEquals(1, savedBulkObjectList.size());
-        for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
-            Assert.assertNotNull(savedBulkCustomer);
-            Assert.assertEquals(456, savedBulkCustomer.getSdtCustomerId());
-        }
-
-    }
-
 }

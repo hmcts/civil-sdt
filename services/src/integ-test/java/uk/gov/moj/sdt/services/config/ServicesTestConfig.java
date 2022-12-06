@@ -2,7 +2,6 @@ package uk.gov.moj.sdt.services.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +15,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.QueueConfig;
-import uk.gov.moj.sdt.services.utils.GenericXmlParser;
-import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +23,9 @@ import javax.jms.ConnectionFactory;
 @Configuration
 @ComponentScan("uk.gov.moj.sdt")
 @EnableAutoConfiguration
-@EnableConfigurationProperties
+@EnableConfigurationProperties(QueueConfig.class)
 @EnableTransactionManagement
 public class ServicesTestConfig {
-
-    @Value("${MCOL.Queue}")
-    private String destinationName;
 
     @Autowired
     private ConnectionFactory jmsConnectionFactory;
@@ -50,12 +44,11 @@ public class ServicesTestConfig {
     private QueueConfig queueConfig;
 
     @Bean
-    @Lazy
     @Qualifier("messageListenerContainerMCol")
-    public DefaultMessageListenerContainer messageListenerContainer() {
+    public DefaultMessageListenerContainer messageListenerContainerMCol() {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
-        defaultMessageListenerContainer.setDestinationName(destinationName);
+        defaultMessageListenerContainer.setDestinationName(queueConfig.getQueueConfig().get("MCOLS"));
         defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
         defaultMessageListenerContainer.setTransactionManager(transactionManager);
         defaultMessageListenerContainer.setConcurrentConsumers(1);
@@ -69,7 +62,7 @@ public class ServicesTestConfig {
     @Bean
     @Lazy
     @Qualifier("IMessageWriterBad")
-    public MessageWriter messageWriter() {
+    public MessageWriter IMessageWriterBad() {
         MessageWriter messageWriter = new MessageWriter(jmsTemplate,
                                                         queueConfig);
         Map<String, String> map = new HashMap<>();

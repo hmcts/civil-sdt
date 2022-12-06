@@ -35,7 +35,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.ErrorMessageDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
@@ -69,7 +71,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
 
     @Autowired
     public ErrorMessagesCache(@Qualifier("SdtManagementMBean") ISdtManagementMBean managementMBean,
-                              @Qualifier("GenericDao") IGenericDao genericDao) {
+                              @Qualifier("ErrorMessageDao") IGenericDao genericDao) {
         super(managementMBean);
         this.genericDao = genericDao;
     }
@@ -126,7 +128,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
                 LOGGER.info("Loading error messages into cache.");
 
                 // Retrieve all rows from error messages table.
-                final IErrorMessage[] result = genericDao.query(IErrorMessage.class);
+                final IErrorMessage[] result = genericDao.query(ErrorMessage.class);
 
                 for (IErrorMessage errorMessage : result) {
                     // Add all retrieved messages to a map, keyed by the Error Code.

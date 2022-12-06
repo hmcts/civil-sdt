@@ -37,10 +37,11 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.consumers.config.ConsumersTestConfig;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.ServiceRouting;
 import uk.gov.moj.sdt.domain.ServiceType;
@@ -53,7 +54,6 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -73,7 +73,8 @@ import static org.junit.Assert.assertTrue;
  */
 @ActiveProfiles("integ")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConsumersTestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConsumersTestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/SubmitQueryServiceIntTest.sql"})
 public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
 
     /**
@@ -91,8 +92,6 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-
         submitQueryService = (SubmitQueryService) this.applicationContext.getBean("SubmitQueryService");
     }
 
@@ -102,7 +101,6 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback(false)
     public void updateRequestSoapError() throws IOException {
         final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testSampleErrorRequest.xml");
         SdtContext.getContext().setRawInXml(rawXml);

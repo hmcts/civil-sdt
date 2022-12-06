@@ -30,41 +30,53 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.dao.repository.BulkSubmissionRepository;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
+import java.time.LocalDateTime;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 /**
  * Implements specific DAO functionality based on {@link IBulkSubmissionDao}. This is a derived DAO extending
- * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct domain
+ * {@link GenericDao} which provides generic jpa access. This specific DAO exists in order to construct domain
  * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
- * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
- * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
  *
  * @author Robin Compston
  */
-@Repository("BulkSubmissionDao")
+@Component("BulkSubmissionDao")
 public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDao.class);
 
+    private final Root<BulkSubmission> root;
+
+    private final CriteriaBuilder criteriaBuilder;
+
+    private final CriteriaQuery<BulkSubmission> criteriaQuery;
 
     @Autowired
-    public BulkSubmissionDao(SessionFactory sessionFactory) {
-        super(sessionFactory);
+    public BulkSubmissionDao(final BulkSubmissionRepository crudRepository,
+                             EntityManager entityManager) {
+        super(crudRepository, entityManager);
+        criteriaBuilder = entityManager.getCriteriaBuilder();
+        criteriaQuery = criteriaBuilder.createQuery(BulkSubmission.class);
+        root = criteriaQuery.from(BulkSubmission.class);
     }
 
     @Override
@@ -72,23 +84,37 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao 
                                              final int dataRetention) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
-                    "customer reference[" + customerReference + "] and the data retention period[" + dataRetention +
-                    "]");
+                             "customer reference[" + customerReference + "] and the data retention period[" + dataRetention +
+                             "]");
         }
 
-        // Create the criteria
-        final Session session = getSessionFactory().getCurrentSession();
-        final Criteria criteria = session.createCriteria(IBulkSubmission.class).createAlias("bulkCustomer", "bc");
-        criteria.add(Restrictions.eq("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId()));
-        criteria.add(Restrictions.eq("customerReference", customerReference).ignoreCase());
+        Predicate sdtCustomerPredicate = criteriaBuilder.equal(
+            root.get("bulkCustomer").get("sdtCustomerId"),
+            bulkCustomer.getSdtCustomerId()
+        );
+        Predicate customerReferencePredicate = criteriaBuilder.equal(
+            criteriaBuilder.lower(root.get("customerReference")),
+            customerReference.toLowerCase()
+        );
+        TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
+                                                                                   .where(
+                                                                                       sdtCustomerPredicate,
+                                                                                       customerReferencePredicate,
+                                                                                       createDatePredicate(dataRetention)
+                                                                                   ));
 
-        // Only bring back bulk submission within the data retention period
-        criteria.add(createDateRestriction("createdDate", dataRetention));
 
-        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult();
+        return typedQuery.getSingleResult();
+    }
 
-        return bulkSubmission;
-
+    private Predicate createDatePredicate(int dataRetention) {
+        final LocalDateTime today = LocalDateTime.now();
+        LocalDateTime start = today.plusDays(dataRetention * -1);
+        LocalDateTime end = today.plusDays(1);
+        Path<LocalDateTime> createdDatePath = root.get("createdDate");
+        return criteriaBuilder.and(
+            criteriaBuilder.greaterThanOrEqualTo((createdDatePath), start),
+            criteriaBuilder.lessThan((createdDatePath), end));
     }
 
     @Override
@@ -96,22 +122,25 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao 
                                                      final int dataRetention) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
-                    "SDT bulk reference[" + sdtBulkReference + "] and the data retention period [" + dataRetention +
-                    "]");
+                             "SDT bulk reference[" + sdtBulkReference + "] and the data retention period [" + dataRetention +
+                             "]");
         }
 
-        // Create the criteria
-        final Session session = getSessionFactory().getCurrentSession();
-        final Criteria criteria = session.createCriteria(IBulkSubmission.class).createAlias("bulkCustomer", "bc");
-        criteria.add(Restrictions.eq("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId()));
-        criteria.add(Restrictions.eq("sdtBulkReference", sdtBulkReference).ignoreCase());
+        Predicate sdtCustomerPredicate = criteriaBuilder.equal(
+            root.get("bulkCustomer").get("sdtCustomerId"),
+            bulkCustomer.getSdtCustomerId()
+        );
+        Predicate sdtBulkRefPredicate = criteriaBuilder.equal(
+            criteriaBuilder.lower(root.get("sdtBulkReference")),
+            sdtBulkReference.toLowerCase()
+        );
 
-        // Only bring back bulk submission within the data retention period
-        criteria.add(createDateRestriction("createdDate", dataRetention));
-
-        final IBulkSubmission bulkSubmission = (IBulkSubmission) criteria.uniqueResult();
-
-        return bulkSubmission;
-
+        TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
+                                                                                   .where(
+                                                                                       sdtCustomerPredicate,
+                                                                                       sdtBulkRefPredicate,
+                                                                                       createDatePredicate(dataRetention)
+                                                                                   ));
+        return typedQuery.getSingleResult();
     }
 }

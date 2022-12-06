@@ -30,14 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import static org.junit.Assert.fail;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -48,6 +44,8 @@ import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import static org.junit.Assert.fail;
 
 /**
  * Test class for error messages cache.
@@ -113,7 +111,7 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     public void testGetErrorMessage() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(ErrorMessage.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         // Get some values
@@ -140,7 +138,7 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     public void testKeyNotFound() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(ErrorMessage.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         IErrorMessage errorMessage = null;
@@ -163,7 +161,7 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     public void testUncache() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(ErrorMessage.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         // Get some values to prove the cache is not empty

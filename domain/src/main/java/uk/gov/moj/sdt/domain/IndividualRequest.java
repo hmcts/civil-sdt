@@ -38,6 +38,18 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  * When processing an Individual Request within the Bulk Request, the SDT application records
@@ -45,22 +57,37 @@ import java.time.LocalDateTime;
  *
  * @author d130680
  */
+@Table(name = "INDIVIDUAL_REQUESTS")
+@Entity
 public class IndividualRequest extends AbstractDomainObject implements IIndividualRequest {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ind_req_seq")
+    @Column(name = "INDIVIDUAL_REQUEST_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
+
     /**
      * Bulk submission.
      */
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = BulkSubmission.class)
+    @JoinColumn(name="BULK_SUBMISSION_ID")
     private IBulkSubmission bulkSubmission;
 
     /**
      * Identifier defined by End User to uniquely (unique for the End User within
      * the SDT Data Retention Period) identify individual requests within a Bulk Request.
      */
+    @Column(name = "CUSTOMER_REQUEST_REF")
     private String customerRequestReference;
 
     /**
      * The status of the Individual Request - one of "Forwarded", "Received", "Rejected", "Initially Accepted" or
      * "Accepted".
      */
+    @Column(name = "REQUEST_STATUS")
     private String requestStatus;
 
     /**
@@ -74,69 +101,83 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     /**
      * SDT bulk reference.
      */
+    @Column(name = "SDT_BULK_REFERENCE")
     private String sdtBulkReference;
 
     /**
      * Line number.
      */
-    private int lineNumber;
+    @Column(name = "LINE_NUMBER")
+    private Integer lineNumber;
 
     /**
      * SDT request reference.
      */
+    @Column(name = "SDT_REQUEST_REFERENCE")
     private String sdtRequestReference;
 
     /**
      * Date record was created.
      */
+    @Column(name = "CREATED_DATE")
     private LocalDateTime createdDate;
 
     /**
      * Date record was updated.
      */
+    @Column(name = "UPDATED_DATE")
     private LocalDateTime updatedDate;
 
     /**
      * Date/Time the Individual Request processing was completed. This is the Date/Time that the final outcome
      * was received from the Court Case Management system following full processing
      */
+    @Column(name = "COMPLETED_DATE")
     private LocalDateTime completedDate;
 
     /**
      * An Individual Request can be forwarded for up to the defined maximum forwarding attempts.
      * This value indicates the number of attempts to forward the Individual Request to date.
      */
+    @Column(name = "FORWARDING_ATTEMPTS")
     private int forwardingAttempts;
 
     /**
      * Target Application Response for Individual Request processing.
      */
+    @Column(name = "TARGET_APPLICATION_RESPONSE")
     private String targetApplicationResponse;
 
     /**
      * Error log.
      */
+    @OneToOne(cascade = CascadeType.ALL, targetEntity= ErrorLog.class)
+    @JoinColumn(name="ERROR_LOG_ID")
     private IErrorLog errorLog;
 
     /**
      * XML request payload.
      */
+    @Column(name = "INDIVIDUAL_PAYLOAD")
     private String requestPayload;
 
     /**
      * Internal system error.
      */
+    @Column(name = "INTERNAL_SYSTEM_ERROR")
     private String internalSystemError;
 
     /**
      * Request type like mcolClaim, mcolJudgment etc.
      */
+    @Column(name = "REQUEST_TYPE")
     private String requestType;
 
     /**
      * Flags whether message is dead letter i.e. cannot be processed due to unknown problem and requires further
      * investigation.
      */
+    @Column(name = "DEAD_LETTER")
     private boolean deadLetter;
 
     @Override
@@ -180,12 +221,12 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
-    public int getLineNumber() {
+    public Integer getLineNumber() {
         return lineNumber;
     }
 
     @Override
-    public void setLineNumber(final int lineNumber) {
+    public void setLineNumber(final Integer lineNumber) {
         this.lineNumber = lineNumber;
     }
 
@@ -401,6 +442,21 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     public void setDeadLetter(final boolean deadLetter) {
         this.deadLetter = deadLetter;
 
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

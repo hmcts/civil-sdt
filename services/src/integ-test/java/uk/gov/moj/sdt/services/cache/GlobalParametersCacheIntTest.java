@@ -40,6 +40,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
@@ -59,6 +60,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 @ActiveProfiles("integ")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/GlobalParametersCacheIntTest.sql"})
 public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
     /**
      * Test subject.
@@ -70,7 +72,6 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
         globalParameterCache = (ICacheable) this.applicationContext.getBean("GlobalParametersCache");
 
     }
@@ -125,7 +126,7 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
         sdtManagementMBean.uncache();
 
         // Change the value in the database.
-        final IGenericDao genericDao = (IGenericDao) SpringApplicationContext.getBean("GenericDao");
+        final IGenericDao genericDao = (IGenericDao) SpringApplicationContext.getBean("GlobalParametersDao");
         globalParameter.setValue("91");
         genericDao.persist(globalParameter);
 

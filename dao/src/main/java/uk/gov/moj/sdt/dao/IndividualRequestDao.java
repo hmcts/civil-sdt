@@ -30,42 +30,55 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.dao.repository.IndividualRequestRepository;
+import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Implements specific DAO functionality based on {@link IIndividualRequestDao}. This is a derived DAO extending
- * {@link GenericDao} which provides generic Hibernate access. This specific DAO exists in order to construct domain
+ * {@link GenericDao} which provides generic JPA access. This specific DAO exists in order to construct domain
  * specific selections where column matches are needed on columns other than the id. For each domain specific query, it
- * constructs an array of {@link org.hibernate.criterion.Criterion} which are passed to the generic method
- * {@link uk.gov.moj.sdt.dao.GenericDao#query(Class, org.hibernate.criterion.Criterion...)}.
+ * constructs an array of JPA predicates which are passed to the generic method.
  *
  * @author Son Loi
  */
-@Repository("IndividualRequestDao")
+@Component("IndividualRequestDao")
 public class IndividualRequestDao extends GenericDao implements IIndividualRequestDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestDao.class);
 
+    private final Root<IndividualRequest> root;
+
+    private final CriteriaBuilder criteriaBuilder;
+
+    private final CriteriaQuery<IndividualRequest> criteriaQuery;
+
     @Autowired
-    public IndividualRequestDao(SessionFactory sessionFactory) {
-        super(sessionFactory);
+    public IndividualRequestDao(final IndividualRequestRepository crudRepository, EntityManager entityManager) {
+        super(crudRepository, entityManager);
+        criteriaBuilder = entityManager.getCriteriaBuilder();
+        criteriaQuery = criteriaBuilder.createQuery(IndividualRequest.class);
+        root = criteriaQuery.from(IndividualRequest.class);
     }
 
     @Override
@@ -77,21 +90,17 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                     "]");
         }
 
-        // Create the criteria - this is necessary because Hibernate does not allow dot notation in restrictions and
-        // using an alias is the only way to avoid this.
-        final Session session = getSessionFactory().getCurrentSession();
-        final Criteria criteria =
-                session.createCriteria(IIndividualRequest.class).createAlias("bulkSubmission", "bs")
-                        .createAlias("bs.bulkCustomer", "bc");
-
-        criteria.add(Restrictions.eq("bc.sdtCustomerId", bulkCustomer.getSdtCustomerId()));
-        criteria.add(Restrictions.eq("customerRequestReference", customerReference).ignoreCase());
-
-        // Only bring back individual request within the data retention period - we do not trust the housekeeping to
-        // have cleared up the old records.
-        criteria.add(createDateRestriction("createdDate", dataRetention));
-
-        final List<IIndividualRequest> individualRequests = (List<IIndividualRequest>) criteria.list();
+        Predicate sdtCustomerPredicate = criteriaBuilder.equal(root.get("bulkSubmission").get("bulkCustomer").get("sdtCustomerId"),
+                                                               bulkCustomer.getSdtCustomerId());
+        Predicate customerReferencePredicate = criteriaBuilder.equal(criteriaBuilder.lower(root.get("customerRequestReference")),
+                                                                     customerReference.toLowerCase());
+        TypedQuery<IndividualRequest> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
+                                                                                   .where(
+                                                                                       sdtCustomerPredicate,
+                                                                                       customerReferencePredicate,
+                                                                                       createDatePredicate(dataRetention)
+                                                                                   ));
+        final List<IndividualRequest> individualRequests = typedQuery.getResultList();
 
         // Return null or the first individual request
         if (individualRequests == null || individualRequests.size() == 0) {
@@ -108,8 +117,10 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         }
 
         // Call the generic dao to do this query.
-        final IIndividualRequest[] individualRequests =
-                this.query(IIndividualRequest.class, Restrictions.eq("sdtRequestReference", sdtReferenceId));
+        final IDomainObject[] individualRequests = this.query(IndividualRequest.class, () -> {
+            Predicate[] sdtCustomerPredicate = createCriteria(sdtReferenceId);
+            return criteriaQuery.select(root).where(sdtCustomerPredicate);
+        });
 
         // Should only return one or none at all
         if (individualRequests == null || individualRequests.length == 0) {
@@ -121,7 +132,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                     sdtReferenceId);
         }
 
-        return individualRequests[0];
+        return (IIndividualRequest) individualRequests[0];
     }
 
     @Override
@@ -132,16 +143,11 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                     + "reached their maximum forwarding attempts.");
         }
 
-        // Call the generic dao to do this query
-        final List<IIndividualRequest> individualRequests =
-                this.queryAsList(
-                        IIndividualRequest.class,
-                        Restrictions.eq("requestStatus",
-                                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus()),
-                        Restrictions.ge("forwardingAttempts", maxAllowedAttempts),
-                        Restrictions.eq("deadLetter", false));
-
-        return individualRequests;
+        return this.queryAsList(IIndividualRequest.class, () -> {
+            Predicate[] sdtCustomerPredicate =  createCriteria(IndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                                                               maxAllowedAttempts, false);
+            return criteriaQuery.select(root).where(sdtCustomerPredicate);
+        });
     }
 
     @Override
@@ -152,27 +158,45 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                     " minutes ago");
         }
 
-        // Calculate time of latest individual request (based on last updated time) that can be requeued, given the
-        // minimum age of requests to be requeued.
         final LocalDateTime now = LocalDateTime.now();
         final LocalDateTime latestTime = now.minusMinutes(minimumAgeInMinutes);
 
-        // Call the generic dao to do this query.
-        // Only look for requests that are
-        // 1. either have received or forwarded status
-        // 2. either have no updated date set (null) or have updated date older than minimumAgeInMinutes set.
-        // 3. are not on the dead letter queue
-        final List<IIndividualRequest> individualRequests =
-                this.queryAsList(
-                        IIndividualRequest.class,
-                        Restrictions.or(
-                                Restrictions.eq("requestStatus",
-                                        IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus()),
-                                Restrictions.eq("requestStatus",
-                                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus())),
-                        Restrictions.or(Restrictions.lt("updatedDate", latestTime),
-                                Restrictions.isNull("updatedDate")), Restrictions.eq("deadLetter", false));
+        return this.queryAsList(IndividualRequest.class, () -> {
+            Predicate[] sdtCustomerPredicate =   createCriteria(false, latestTime);
+            return criteriaQuery.select(root).where(sdtCustomerPredicate);
+        });
+    }
 
-        return individualRequests;
+    private Predicate[] createCriteria(boolean deadLetter, LocalDateTime latestTime) {
+        Predicate[] predicates = new Predicate[3];
+        predicates[0] = criteriaBuilder.or(criteriaBuilder.equal(root.get("requestStatus"), IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus()),
+                                           criteriaBuilder.equal(root.get("requestStatus"), IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus()));
+        predicates[1] = criteriaBuilder.equal(root.get("deadLetter"), deadLetter);
+        predicates[2] = criteriaBuilder.or(criteriaBuilder.lessThan(root.get("updatedDate"), latestTime), criteriaBuilder.isNull(root.get("updatedDate")));
+        return predicates;
+    }
+
+    private Predicate[] createCriteria(String sdtRequestReference) {
+        Predicate[] predicates = new Predicate[1];
+        predicates[0] = criteriaBuilder.equal(root.get("sdtRequestReference"), sdtRequestReference);
+        return predicates;
+    }
+
+    private Predicate[] createCriteria(String requestStatus, int maxAllowedAttempts, boolean deadLetter) {
+        Predicate[] predicates = new Predicate[3];
+        predicates[0] = criteriaBuilder.equal(root.get("requestStatus"), requestStatus);
+        predicates[1] = criteriaBuilder.equal(root.get("deadLetter"), deadLetter);
+        predicates[2] = criteriaBuilder.ge(root.get("forwardingAttempts"), maxAllowedAttempts);
+        return predicates;
+    }
+
+    private Predicate createDatePredicate(int dataRetention) {
+        final LocalDateTime today = LocalDateTime.now();
+        LocalDateTime start = today.plusDays(dataRetention * -1);
+        LocalDateTime end = today.plusDays(1);
+        Path<LocalDateTime> createdDatePath = root.get("createdDate");
+        return criteriaBuilder.and(
+            criteriaBuilder.greaterThanOrEqualTo((createdDatePath), start),
+            criteriaBuilder.lessThan((createdDatePath), end));
     }
 }

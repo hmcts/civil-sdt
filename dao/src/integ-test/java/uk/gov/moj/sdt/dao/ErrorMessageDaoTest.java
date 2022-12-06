@@ -31,18 +31,24 @@
 package uk.gov.moj.sdt.dao;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
+import uk.gov.moj.sdt.domain.ErrorMessage;
+import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.test.utils.TestConfig;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * Test {@link ErrorMessageDao} query methods.
@@ -51,7 +57,8 @@ import uk.gov.moj.sdt.test.utils.TestConfig;
  */
 @ActiveProfiles("integ")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class})
+@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/ErrorMessageDaoTest.sql"})
 public class ErrorMessageDaoTest extends AbstractIntegrationTest {
 
     /**
@@ -59,28 +66,28 @@ public class ErrorMessageDaoTest extends AbstractIntegrationTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorMessageDaoTest.class);
 
-    /**
-     * Default constructor for {@link BulkCustomerDaoTest}.
-     */
-    public ErrorMessageDaoTest() {
-        super();
-        DBUnitUtility.loadDatabase(getClass(), false);
+    CriteriaBuilder criteriaBuilder;
+    CriteriaQuery<ErrorMessage> criteriaQuery;
+    Root<ErrorMessage> root;
+
+    @Before
+    public void setup() {
+        final ErrorMessageDao bulkCustomersDao = this.applicationContext.getBean(ErrorMessageDao.class);
+        criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
+        criteriaQuery = criteriaBuilder.createQuery(ErrorMessage.class);
+        root = criteriaQuery.from(ErrorMessage.class);
     }
 
     /**
-     * Tests {@link uk.gov.moj.sdt.dao.IGenericDao} query.
      */
     @Test
     public void testGetAllErrorMessages() {
-        final IGenericDao genericDao =
-                (IGenericDao) this.applicationContext.getBean("GenericDao");
+        final ErrorMessageDao genericDao =  this.applicationContext.getBean(ErrorMessageDao.class);
 
-        final IErrorMessage[] errorMessages = genericDao.query(IErrorMessage.class);
+        final IDomainObject[] errorMessages = genericDao.query(ErrorMessage.class, () -> criteriaQuery.select(root));
 
         LOGGER.debug("Retrieved " + errorMessages.length + " error message(s).");
 
         Assert.assertEquals(2, errorMessages.length);
-
-        return;
     }
 }

@@ -108,7 +108,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
 
     @Autowired
-    public BulkSubmissionService(@Qualifier("GenericDao")
+    public BulkSubmissionService(@Qualifier("ServiceRequestDao")
                                      IGenericDao genericDao,
                                  @Qualifier("BulkCustomerDao")
                                      IBulkCustomerDao bulkCustomerDao,

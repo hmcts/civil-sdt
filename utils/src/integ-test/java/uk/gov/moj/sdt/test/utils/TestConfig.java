@@ -10,6 +10,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAutoConfiguration
 @EnableConfigurationProperties
 @EnableTransactionManagement
-@ComponentScan({"uk.gov.moj.sdt"})
+@ComponentScan("uk.gov.moj.sdt")
 public class TestConfig {
 }

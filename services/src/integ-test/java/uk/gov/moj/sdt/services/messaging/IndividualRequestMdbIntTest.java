@@ -40,6 +40,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ActiveProfiles;
 
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
@@ -56,14 +57,13 @@ import uk.gov.moj.sdt.test.utils.TestConfig;
 @ActiveProfiles("integ")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/IndividualRequestMdbIntTest.sql"})
 public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
     /**
      * Setup the test.
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-
         // Write a Message to the MDB
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("SDT_REQ_TEST_1");

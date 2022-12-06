@@ -39,6 +39,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
@@ -73,7 +74,7 @@ public class GlobalParametersCache extends AbstractCacheControl implements IGlob
 
     @Autowired
     public GlobalParametersCache(@Qualifier("SdtManagementMBean") ISdtManagementMBean managementMBean,
-                              @Qualifier("GenericDao") IGenericDao genericDao) {
+                              @Qualifier("GlobalParametersDao") IGenericDao genericDao) {
         super(managementMBean);
         this.genericDao = genericDao;
     }
@@ -131,7 +132,7 @@ public class GlobalParametersCache extends AbstractCacheControl implements IGlob
                 LOGGER.info("Loading global parameters into cache.");
 
                 // Retrieve all rows from global parameters table.
-                final IGlobalParameter[] result = genericDao.query(IGlobalParameter.class);
+                final IGlobalParameter[] result = genericDao.query(GlobalParameter.class);
 
                 for (IGlobalParameter globalParameter : result) {
                     // Add all retrieved parameters to a map, keyed by the global parameter name.

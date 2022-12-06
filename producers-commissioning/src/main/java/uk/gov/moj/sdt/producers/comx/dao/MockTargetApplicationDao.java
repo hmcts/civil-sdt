@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.producers.comx.dao;
 
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.domain.TargetApplication;
@@ -44,7 +45,7 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  * @author d130680
  *
  */
-@Repository("MockTargetApplicationDao")
+@Component("MockTargetApplicationDao")
 public class MockTargetApplicationDao extends MockGenericDao implements ITargetApplicationDao
 {
 

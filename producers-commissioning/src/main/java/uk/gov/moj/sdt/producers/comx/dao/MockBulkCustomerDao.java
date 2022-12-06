@@ -34,6 +34,7 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -49,7 +50,7 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
  * @author d130680
  *
  */
-@Repository("MockBulkCustomerDao")
+@Component("MockBulkCustomerDao")
 public class MockBulkCustomerDao extends MockGenericDao implements IBulkCustomerDao
 {
     /**
