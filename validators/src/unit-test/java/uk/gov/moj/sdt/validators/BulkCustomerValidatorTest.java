@@ -126,11 +126,11 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest {
         expect(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.CUST_ID_INVALID.name()))
                 .andReturn(errorMessage);
         replay(errorMessagesCache);
-        validator.setErrorMessagesCache(errorMessagesCache);
-        validator.setGlobalParameterCache(globalParameterCache);
 
         IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
         validator = new BulkCustomerValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
+        validator.setErrorMessagesCache(errorMessagesCache);
+        validator.setGlobalParameterCache(globalParameterCache);
 
     }
 
