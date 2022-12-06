@@ -16,11 +16,13 @@
   <suppress>
     <notes>Temporary Suppression
       CVE-2015-3208
+      CVE-2017-10355 https://github.com/jeremylong/DependencyCheck/issues/4614 (xercesImpl - may be false positive)
       CVE-2020-5408
       CVE-2022-1471  https://github.com/google/security-research/security/advisories/GHSA-mjmj-j48q-9wg2 (SnakeYaml)
       CVE-2022-40152 https://github.com/advisories/GHSA-3f7h-mf4q-vrm4 (woodstox-core - may be false positive)
     </notes>
     <cve>CVE-2015-3208</cve>
+    <cve>CVE-2017-10355</cve>
     <cve>CVE-2020-5408</cve>
     <cve>CVE-2022-1471</cve>
     <cve>CVE-2022-40152</cve>
