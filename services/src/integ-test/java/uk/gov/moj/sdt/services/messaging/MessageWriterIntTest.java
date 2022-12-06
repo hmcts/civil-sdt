@@ -119,7 +119,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
     }
 
     /**
-     * Test method to test failure behaviour when Azure Service Bus
+     * Test method to test failure behaviour when Azure Service Bus not running.
      *
      * @throws JMSException exception
      */
