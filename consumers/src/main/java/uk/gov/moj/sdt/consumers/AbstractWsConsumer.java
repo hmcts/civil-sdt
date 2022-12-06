@@ -55,10 +55,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
  * @author Manoj Kulkarni
  */
 public abstract class AbstractWsConsumer {
-    /**
-     * Thirty seconds in milliseconds.
-     */
-    protected static final long THIRTY_SECONDS = 30000;
 
     /**
      * Logger object.
@@ -70,7 +66,7 @@ public abstract class AbstractWsConsumer {
      * as string concatenation of the target application and service type.
      */
     private Map<String, ITargetAppInternalEndpointPortType> clientCache =
-            new ConcurrentHashMap<String, ITargetAppInternalEndpointPortType>();
+            new ConcurrentHashMap<>();
 
     /**
      * Get the client for the specified target application. If the client is not cached already, a new client
@@ -87,9 +83,8 @@ public abstract class AbstractWsConsumer {
                                                         final String webServiceEndPoint, final long connectionTimeOut,
                                                         final long receiveTimeOut) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Get client for target [" + targetApplicationCode + "] service [" + serviceType +
-                    "] endpoint [" + webServiceEndPoint + "] conn timeout [" + connectionTimeOut + "] recv timeout [" +
-                    receiveTimeOut + "]");
+            LOGGER.debug("Get client for target [{}] service [{}] endpoint [{}] conn timeout [{}] recv timeout [{}]",
+                    targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
         }
 
         final String clientCacheKey = targetApplicationCode + serviceType;
@@ -128,10 +123,7 @@ public abstract class AbstractWsConsumer {
      */
     private ITargetAppInternalEndpointPortType createClient() {
         // Get the SOAP proxy client.
-        final ITargetAppInternalEndpointPortType client = this.createTargetAppEndPoint();
-
-        return client;
-
+        return this.createTargetAppEndPoint();
     }
 
     /**
@@ -174,14 +166,12 @@ public abstract class AbstractWsConsumer {
         }
         // If the target application is unavailable continue trying to send message indefinitely.
         else if (wsException.getCause() instanceof ConnectException)
-        // CHECKSTYLE:OFF
         {
             // Target application must be unavailable - update stats.
             SdtMetricsMBean.getMetrics().upTargetAppUnavailable();
 
             // Swallow exception - we want to carry on trying to connect.
         }
-        // CHECKSTYLE:ON
         // Timeout waiting for target application to respond.
         else if (wsException.getCause() instanceof SocketTimeoutException) {
             // Target application must be unavailable - update stats.

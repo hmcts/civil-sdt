@@ -63,10 +63,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
     /**
      * transformer for submit query request.
      */
-    // CHECKSTYLE:OFF
     private IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer;
-
-    // CHECKSTYLE:ON
 
     /* (non-Javadoc)
      *
@@ -119,11 +116,11 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
         try {
             SdtMetricsMBean.getMetrics().upTargetAppCallCount();
 
-            LOGGER.debug("Submitting query to target application[" + targetAppCode + "], for customer[" +
-                    submitQueryRequestType.getHeader().getTargetAppCustomerId() + "]");
+            LOGGER.debug("Submitting query to target application[{}], for customer[{}]",
+                    targetAppCode, submitQueryRequestType.getHeader().getTargetAppCustomerId());
 
             if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_7)) {
-                final StringBuffer detail = new StringBuffer();
+                final StringBuilder detail = new StringBuilder();
                 detail.append("\n\n\ttarget application customer id=" +
                         submitQueryRequestType.getHeader().getTargetAppCustomerId() + "\n\n\ttarget application=" +
                         serviceRouting.getTargetApplication().getTargetApplicationName() + "\n\tendpoint=" +
@@ -142,7 +139,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
             final SubmitQueryResponseType submitQueryResponseType = client.submitQuery(submitQueryRequestType);
 
             if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_8)) {
-                final StringBuffer detail = new StringBuffer();
+                final StringBuilder detail = new StringBuilder();
                 detail.append("\n\n\ttarget application customer id=" +
                         submitQueryResponseType.getTargetAppCustomerId() + "\n\n\tresult count=" +
                         submitQueryResponseType.getResultCount() + "\n\tstatus code=" +
@@ -161,10 +158,9 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
 
             return submitQueryResponseType;
         } catch (final WebServiceException f) {
-            LOGGER.error("Target application [" +
-                    submitQueryRequest.getTargetApplication().getTargetApplicationCode() +
-                    "] error sending submit query request [" + submitQueryRequest.getCriteriaType() + "]");
-
+            LOGGER.error("Target application [{}] error sending submit query request [{}]",
+                    submitQueryRequest.getTargetApplication().getTargetApplicationCode(),
+                    submitQueryRequest.getCriteriaType());
             super.handleClientErrors(true, f, submitQueryRequest.getCriteriaType());
         } finally {
             // Measure total time spent in target application.
@@ -176,27 +172,13 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
     }
 
     /**
-     * @return the transformer for SubmitQueryConsumer
-     */
-    // CHECKSTYLE:OFF
-    public IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
-    getTransformer() {
-        return this.transformer;
-    }
-
-    // CHECKSTYLE:ON
-
-    /**
      * Mutator method for transformer.
      *
      * @param transformer
      */
-    // CHECKSTYLE:OFF
     public void
     setTransformer(IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
         this.transformer = transformer;
     }
-
-    // CHECKSTYLE:ON
 
 }
