@@ -65,9 +65,6 @@ public class ServicesTestConfig {
     public MessageWriter IMessageWriterBad() {
         MessageWriter messageWriter = new MessageWriter(jmsTemplate,
                                                         queueConfig);
-        Map<String, String> map = new HashMap<>();
-        map.put("TEST1", "Test1Queue");
-        messageWriter.setQueueNameMap(map);
         return messageWriter;
     }
 }

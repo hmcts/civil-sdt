@@ -30,15 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -54,8 +49,6 @@ import java.util.List;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
-import javax.jms.QueueBrowser;
-import javax.jms.Session;
 
 import static org.junit.Assert.assertEquals;
 
@@ -68,10 +61,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
 public class MessageWriterIntTest extends AbstractIntegrationTest {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriterIntTest.class);
 
     /**
      * Test method to test the sending of message.
@@ -126,16 +115,15 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
 
     public void readMessageFromQueue(int countOfMessages) {
         final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
-        List<Message> listMessages = new ArrayList<>();
-        jmsTemplate.setReceiveTimeout(1);
-        jmsTemplate.browse("Test1Queue", (session, browser) -> {
+        final QueueConfig queueConfig = applicationContext.getBean(QueueConfig.class);
+        List<ISdtMessage> listMessages = new ArrayList<>();
+        jmsTemplate.browse(queueConfig.getQueueConfig().get("TEST1"), (session, browser) -> {
             Enumeration<Message> messages = browser.getEnumeration();
             while (messages.hasMoreElements()) {
                 Message message = messages.nextElement();
-                listMessages.add(message);
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 ISdtMessage sdtMessage = (ISdtMessage) objectMessage.getObject();
-                System.out.println("message found : -"+ sdtMessage.getSdtRequestReference());
+                listMessages.add(sdtMessage);
             }
             return listMessages;
         });
