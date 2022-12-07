@@ -30,25 +30,34 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import com.azure.core.util.serializer.TypeReference;
-import com.azure.messaging.servicebus.ServiceBusReceivedMessage;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.BrowserCallback;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
-import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
-import uk.gov.moj.sdt.services.messaging.asb.MessageReceiver;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
+import javax.jms.QueueBrowser;
+import javax.jms.Session;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -73,19 +82,9 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
     @Test
     public void testQueueMessage() throws JMSException, InterruptedException {
         // Get message writer from Spring.
-        final IMessageWriter messageWriter = (IMessageWriter) this.applicationContext.getBean("MessageWriter");
-        final MessageReceiver messageReceiver = this.applicationContext.getBean(MessageReceiver.class);
+        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("MessageWriter");
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-
-        // Clear any old messages off the queue.
-        while (true) {
-            // Read any old messages.
-            final ServiceBusReceivedMessage message = messageReceiver.receiveMessage("Test1Queue");
-            if (message == null) {
-                break;
-            }
-        }
 
         // Send the first message.
         final ISdtMessage message1 = new SdtMessage();
@@ -101,20 +100,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
         message2.setSdtRequestReference(strMessage2);
         messageWriter.queueMessage(message2, "TEST1", false);
 
-        // Read the two messages and ensure they are read back in the same order.
-        ServiceBusReceivedMessage message = messageReceiver.receiveMessage("Test1Queue");
-        if (message == null) {
-            Assert.fail("Test failed because JMS receive timed out.");
-        }
-
-        ISdtMessage sdtMessage = message.getBody().toObject(new TypeReference<SdtMessage>() {});
-        LOGGER.debug("Message Receieved 1 - " + sdtMessage.toString());
-        Assert.assertTrue(sdtMessage.getSdtRequestReference().equals(strMessage1));
-
-        message = messageReceiver.receiveMessage("Test1Queue");
-        sdtMessage = message.getBody().toObject(new TypeReference<SdtMessage>() {});
-        LOGGER.debug("Message Receieved2 - " + sdtMessage.toString());
-        Assert.assertTrue(sdtMessage.getSdtRequestReference().equals(strMessage2));
+        readMessageFromQueue(3);
 
     }
 
@@ -135,5 +121,24 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
         messageWriter.queueMessage(message, "TEST1", false);
         Assert.assertTrue("Test completed", true);
 
+        readMessageFromQueue(1);
+    }
+
+    public void readMessageFromQueue(int countOfMessages) {
+        final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
+        List<Message> listMessages = new ArrayList<>();
+        jmsTemplate.setReceiveTimeout(1);
+        jmsTemplate.browse("Test1Queue", (session, browser) -> {
+            Enumeration<Message> messages = browser.getEnumeration();
+            while (messages.hasMoreElements()) {
+                Message message = messages.nextElement();
+                listMessages.add(message);
+                ObjectMessage objectMessage = (ObjectMessage) message;
+                ISdtMessage sdtMessage = (ISdtMessage) objectMessage.getObject();
+                System.out.println("message found : -"+ sdtMessage.getSdtRequestReference());
+            }
+            return listMessages;
+        });
+        assertEquals(countOfMessages, listMessages.size());
     }
 }

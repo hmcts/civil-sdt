@@ -1,16 +1,20 @@
 spring:
+  activemq:
+    packages:
+      trust-all: true
+    in-memory: true
+    pool:
+      enabled: false
   jms:
     servicebus:
       internal:
         queueConfig:
-          MCOL: ${MCOL.Queue}
-          MCOLS: ${MCOLS.Queue}
+          MCOL: ${MCOL.Queue:Test1Queue}
+          MCOLS: ${MCOLS.Queue:Test1Queue}
+          TEST1: ${MCOL.Queue:Test1Queue}
       connection-string: ${SDT_QUEUE_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       enabled: false
-    activemq:
-      in-memory: true
-      pool:
-        enabled: false
+
   aop:
     proxy-target-class: false
   main:
