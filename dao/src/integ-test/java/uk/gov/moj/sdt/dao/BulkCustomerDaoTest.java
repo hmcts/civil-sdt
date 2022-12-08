@@ -105,7 +105,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
         if (bulkCustomer != null) {
             LOGGER.debug("Retrieved bulk customer id [" + bulkCustomer.getId() + "]");
         } else {
-            Assert.fail("Could not find bulk customer [" + 2 + "]");
+            Assert.fail("Could not find bulk customer [" + 10711 + "]");
         }
     }
 
@@ -118,7 +118,6 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
 
         final List<BulkCustomer> bulkObjectList = new ArrayList<>();
         final BulkCustomer bulkCustomer = new BulkCustomer();
-        // bulkCustomer.setId (2);
         bulkCustomer.setSdtCustomerId(456);
 
         final BulkCustomer bulkCustomer2 = new BulkCustomer();

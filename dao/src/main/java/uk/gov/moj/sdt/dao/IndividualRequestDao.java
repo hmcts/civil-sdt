@@ -48,7 +48,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -98,7 +97,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
                                                                                    .where(
                                                                                        sdtCustomerPredicate,
                                                                                        customerReferencePredicate,
-                                                                                       createDatePredicate(dataRetention)
+                                                                                       createDatePredicate(criteriaBuilder, root, dataRetention)
                                                                                    ));
         final List<IndividualRequest> individualRequests = typedQuery.getResultList();
 
@@ -118,7 +117,7 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
 
         // Call the generic dao to do this query.
         final IDomainObject[] individualRequests = this.query(IndividualRequest.class, () -> {
-            Predicate[] sdtCustomerPredicate = createCriteria(sdtReferenceId);
+            Predicate[] sdtCustomerPredicate = createSdtRequestReferencePredicate(sdtReferenceId);
             return criteriaQuery.select(root).where(sdtCustomerPredicate);
         });
 
@@ -144,8 +143,8 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         }
 
         return this.queryAsList(IIndividualRequest.class, () -> {
-            Predicate[] sdtCustomerPredicate =  createCriteria(IndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
-                                                               maxAllowedAttempts, false);
+            Predicate[] sdtCustomerPredicate =  createIndividualRequestPredicate(IndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                                                                                 maxAllowedAttempts, false);
             return criteriaQuery.select(root).where(sdtCustomerPredicate);
         });
     }
@@ -162,12 +161,12 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         final LocalDateTime latestTime = now.minusMinutes(minimumAgeInMinutes);
 
         return this.queryAsList(IndividualRequest.class, () -> {
-            Predicate[] sdtCustomerPredicate =   createCriteria(false, latestTime);
+            Predicate[] sdtCustomerPredicate =   createIndividualRequestPredicate(false, latestTime);
             return criteriaQuery.select(root).where(sdtCustomerPredicate);
         });
     }
 
-    private Predicate[] createCriteria(boolean deadLetter, LocalDateTime latestTime) {
+    private Predicate[] createIndividualRequestPredicate(boolean deadLetter, LocalDateTime latestTime) {
         Predicate[] predicates = new Predicate[3];
         predicates[0] = criteriaBuilder.or(criteriaBuilder.equal(root.get("requestStatus"), IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus()),
                                            criteriaBuilder.equal(root.get("requestStatus"), IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus()));
@@ -176,27 +175,17 @@ public class IndividualRequestDao extends GenericDao implements IIndividualReque
         return predicates;
     }
 
-    private Predicate[] createCriteria(String sdtRequestReference) {
+    private Predicate[] createSdtRequestReferencePredicate(String sdtRequestReference) {
         Predicate[] predicates = new Predicate[1];
         predicates[0] = criteriaBuilder.equal(root.get("sdtRequestReference"), sdtRequestReference);
         return predicates;
     }
 
-    private Predicate[] createCriteria(String requestStatus, int maxAllowedAttempts, boolean deadLetter) {
+    private Predicate[] createIndividualRequestPredicate(String requestStatus, int maxAllowedAttempts, boolean deadLetter) {
         Predicate[] predicates = new Predicate[3];
         predicates[0] = criteriaBuilder.equal(root.get("requestStatus"), requestStatus);
         predicates[1] = criteriaBuilder.equal(root.get("deadLetter"), deadLetter);
         predicates[2] = criteriaBuilder.ge(root.get("forwardingAttempts"), maxAllowedAttempts);
         return predicates;
-    }
-
-    private Predicate createDatePredicate(int dataRetention) {
-        final LocalDateTime today = LocalDateTime.now();
-        LocalDateTime start = today.plusDays(dataRetention * -1);
-        LocalDateTime end = today.plusDays(1);
-        Path<LocalDateTime> createdDatePath = root.get("createdDate");
-        return criteriaBuilder.and(
-            criteriaBuilder.greaterThanOrEqualTo((createdDatePath), start),
-            criteriaBuilder.lessThan((createdDatePath), end));
     }
 }

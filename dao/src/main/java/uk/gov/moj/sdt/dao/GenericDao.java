@@ -39,6 +39,8 @@ import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +49,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
@@ -279,5 +283,20 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         CriteriaQuery<DomainType> criteriaQuery = criteriaBuilder.createQuery(domainType);
         Root<DomainType> root = criteriaQuery.from(domainType);
         return criteriaQuery.select(root);
+    }
+
+    protected <T> Predicate createDatePredicate(CriteriaBuilder criteriaBuilder, Root<T> root, int dataRetention) {
+        Path<LocalDateTime> createdDatePath = root.get("createdDate");
+        return criteriaBuilder.and(
+            criteriaBuilder.greaterThanOrEqualTo((createdDatePath), atStartOfDay(dataRetention)),
+            criteriaBuilder.lessThan((createdDatePath), atBeginningOfNextDay()));
+    }
+
+    private LocalDateTime atBeginningOfNextDay() {
+        return LocalDate.now().plusDays(1).atStartOfDay();
+    }
+
+    private LocalDateTime atStartOfDay(int dataRetention) {
+        return LocalDate.now().plusDays(dataRetention * -1).atStartOfDay();
     }
 }

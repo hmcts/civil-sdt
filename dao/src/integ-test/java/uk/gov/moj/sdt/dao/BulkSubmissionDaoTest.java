@@ -172,11 +172,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     @Test
     public void testGetBulkSubmissionBySdtBulkRefNotFound() {
         final String sbr = "NO_SUCH_ID";
-        IBulkSubmission submission = null;
-        try {
-            submission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod);
-        } catch (Exception e) {
-        }
+        IBulkSubmission submission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod);
         Assert.assertNull(submission);
 
     }
@@ -205,7 +201,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
 
         createBulkSubmission(customerReference, LocalDateTime.now().minusDays(dataRetentionPeriod), sdtBulkReference);
         final IBulkSubmission bulkSubmission =
-                bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod + 1);
+                bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
         Assert.assertNotNull(bulkSubmission);
         Assert.assertEquals(bulkSubmission.getCustomerReference(), customerReference);
 
@@ -222,12 +218,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         createBulkSubmission(customerReference,
                              LocalDateTime.now().minusDays(dataRetentionPeriod + 1),
                              sdtBulkReference);
-        IBulkSubmission bulkSubmission = null;
-        try {
-            bulkSubmission =
-                bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
-        } catch (Exception e) {
-        }
+        IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
         Assert.assertNull(bulkSubmission);
     }
 

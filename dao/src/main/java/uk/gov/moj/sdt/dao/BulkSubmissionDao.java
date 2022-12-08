@@ -100,21 +100,11 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao 
                                                                                    .where(
                                                                                        sdtCustomerPredicate,
                                                                                        customerReferencePredicate,
-                                                                                       createDatePredicate(dataRetention)
+                                                                                       createDatePredicate(criteriaBuilder, root, dataRetention)
                                                                                    ));
 
 
         return typedQuery.getSingleResult();
-    }
-
-    private Predicate createDatePredicate(int dataRetention) {
-        final LocalDateTime today = LocalDateTime.now();
-        LocalDateTime start = today.plusDays(dataRetention * -1);
-        LocalDateTime end = today.plusDays(1);
-        Path<LocalDateTime> createdDatePath = root.get("createdDate");
-        return criteriaBuilder.and(
-            criteriaBuilder.greaterThanOrEqualTo((createdDatePath), start),
-            criteriaBuilder.lessThan((createdDatePath), end));
     }
 
     @Override
@@ -139,7 +129,7 @@ public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao 
                                                                                    .where(
                                                                                        sdtCustomerPredicate,
                                                                                        sdtBulkRefPredicate,
-                                                                                       createDatePredicate(dataRetention)
+                                                                                       createDatePredicate(criteriaBuilder, root, dataRetention)
                                                                                    ));
         return typedQuery.getSingleResult();
     }

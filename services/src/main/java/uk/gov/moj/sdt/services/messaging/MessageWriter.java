@@ -141,7 +141,7 @@ public class MessageWriter implements IMessageWriter {
     /**
      * @return map containing the target application to queue name mapping.
      */
-    public Map<String, String> getQueueNameMap() {
+    private Map<String, String> getQueueNameMap() {
         return queueConfig.getQueueConfig();
     }
 

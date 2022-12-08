@@ -151,7 +151,7 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
 
         createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays(dataRetentionPeriod * -1));
         final IIndividualRequest individualRequest =
-                individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod + 1);
+                individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
 
         Assert.assertNotNull(individualRequest);
         Assert.assertEquals(individualRequest.getCustomerRequestReference(), customerRequestReference);
@@ -166,12 +166,7 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final String customerRequestReference = "customer request reference 1";
 
         createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays((dataRetentionPeriod + 1) * -1));
-        IIndividualRequest individualRequest = null;
-        try {
-            individualRequest =
-                individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
-        } catch (Exception e) {
-        }
+        IIndividualRequest individualRequest = individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);;
         Assert.assertNull(individualRequest);
 
     }

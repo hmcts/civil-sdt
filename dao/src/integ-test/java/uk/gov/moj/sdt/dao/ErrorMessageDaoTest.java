@@ -78,8 +78,6 @@ public class ErrorMessageDaoTest extends AbstractIntegrationTest {
         root = criteriaQuery.from(ErrorMessage.class);
     }
 
-    /**
-     */
     @Test
     public void testGetAllErrorMessages() {
         final ErrorMessageDao genericDao =  this.applicationContext.getBean(ErrorMessageDao.class);

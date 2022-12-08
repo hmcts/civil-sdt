@@ -148,6 +148,7 @@ ext {
   springCloudVersion = '2021.0.3'
   tomcatVersion = '9.0.68'
   cxfVersion = '3.5.4'
+  activeMQVersion = '5.16.1'
   testcontainers = '1.15.2'
   limits = [
     'instruction': 99,
@@ -361,8 +362,8 @@ subprojects { subproject ->
     }
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
-    implementation group: 'org.apache.activemq', name: 'activemq-client', version: '5.16.1'
-    implementation group: 'org.apache.activemq', name: 'activemq-broker', version: '5.16.1'
+    implementation group: 'org.apache.activemq', name: 'activemq-client', version: activeMQVersion
+    implementation group: 'org.apache.activemq', name: 'activemq-broker', version: activeMQVersion
 
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
@@ -378,8 +379,6 @@ subprojects { subproject ->
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
 
-    implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
-
     implementation group: 'org.springframework.security', name: 'spring-security-web'
     implementation group: 'org.springframework.security', name: 'spring-security-config'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
@@ -388,7 +387,6 @@ subprojects { subproject ->
       exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
 
-    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
