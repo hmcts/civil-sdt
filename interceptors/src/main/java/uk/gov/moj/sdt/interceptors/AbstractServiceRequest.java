@@ -30,17 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors;
 
-import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.time.LocalDateTime;
 
 /**
  * Shared abstract class for audit logging.

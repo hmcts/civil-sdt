@@ -81,8 +81,8 @@ public class TargetApplicationDao extends GenericDao implements ITargetApplicati
         LOGGER.debug("Get a target application matching the code " + targetAppCode);
 
         final IDomainObject[] targetApplication = this.query(TargetApplication.class, () -> {
-            Predicate[] sdtCustomerPredicate = createCriteria(targetAppCode);
-            return criteriaQuery.select(root).where(sdtCustomerPredicate);
+            Predicate[] targetApplicationPredicate = createCriteria(targetAppCode);
+            return criteriaQuery.select(root).where(targetApplicationPredicate);
         });
 
         // Should only return one or none at all
