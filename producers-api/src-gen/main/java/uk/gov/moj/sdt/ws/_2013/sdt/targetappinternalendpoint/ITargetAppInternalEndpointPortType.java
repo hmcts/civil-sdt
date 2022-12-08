@@ -1,7 +1,5 @@
 package uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint;
 
-import org.springframework.stereotype.Component;
-
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -17,7 +15,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @WebService(targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/TargetAppInternalEndpoint", name = "ITargetAppInternalEndpointPortType")
 @XmlSeeAlso({uk.gov.moj.sdt.ws._2013.sdt.baseschema.ObjectFactory.class, uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.ObjectFactory.class, uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.ObjectFactory.class, uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.ObjectFactory.class, uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.ObjectFactory.class})
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-@Component("ITargetAppInternalEndpointPortType")
 public interface ITargetAppInternalEndpointPortType {
 
     @WebResult(name = "submitQueryResponse", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema", partName = "submitQueryResponse")
