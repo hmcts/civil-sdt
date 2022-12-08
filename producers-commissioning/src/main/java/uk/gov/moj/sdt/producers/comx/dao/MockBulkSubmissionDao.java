@@ -31,17 +31,14 @@
 
 package uk.gov.moj.sdt.producers.comx.dao;
 
-import java.util.List;
-
-import java.time.LocalDateTime;
-
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Mock Bulk Submission DAO class used in commissioning project.

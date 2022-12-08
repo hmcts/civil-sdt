@@ -31,17 +31,15 @@
 
 package uk.gov.moj.sdt.producers.comx.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
-
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Mock Individual Request DAO class used in commissioning project.

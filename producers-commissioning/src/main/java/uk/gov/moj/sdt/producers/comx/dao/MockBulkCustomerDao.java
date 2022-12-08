@@ -30,12 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.producers.comx.dao;
 
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
-
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
@@ -43,6 +39,8 @@ import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+
+import java.util.List;
 
 /**
  * Mock Bulk Customer DAO class used in commissioning project.

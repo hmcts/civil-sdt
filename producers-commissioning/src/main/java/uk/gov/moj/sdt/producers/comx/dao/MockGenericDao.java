@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 
 /**
  * Base class for Mock DAO classes containing helper methods for mock dao sub classes.
