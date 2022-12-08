@@ -62,7 +62,6 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
         consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
     }
 
-
     /**
      * Test to verify submit query consumer does throw expected exception.
      */
