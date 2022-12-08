@@ -30,16 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -47,10 +42,13 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Integration test for the Global Parameters Cache.

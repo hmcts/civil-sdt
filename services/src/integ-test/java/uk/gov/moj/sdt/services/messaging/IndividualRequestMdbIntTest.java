@@ -30,8 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,15 +37,15 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ActiveProfiles;
-
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.test.utils.TestConfig;
+
+import java.io.IOException;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.

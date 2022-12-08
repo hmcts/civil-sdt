@@ -30,17 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import java.time.LocalDateTime;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -64,6 +55,12 @@ import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
