@@ -50,7 +50,7 @@ import javax.persistence.Table;
 public class ErrorMessage extends AbstractDomainObject implements IErrorMessage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "msg_log_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "err_mesg_seq")
     @Column(name = "ERROR_MESSAGE_ID")
     private long id;
 
