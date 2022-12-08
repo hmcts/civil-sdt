@@ -48,7 +48,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -74,7 +76,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test class for the submit query consumer.
@@ -139,6 +144,18 @@ class SubmitQueryConsumerTest {
 
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
+    }
+
+    @Test
+    void getClient() {
+        final String targetApplicationCode = "";
+        final String serviceType = "";
+        final String webServiceEndPoint = "";
+        final long connectionTimeOut = 0L;
+        final long receiveTimeOut = 0L;
+        ITargetAppInternalEndpointPortType portType = submitQueryConsumer.getClient(targetApplicationCode,
+                serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+        Assertions.assertTrue(null != portType);
     }
 
     /**
@@ -220,29 +237,29 @@ class SubmitQueryConsumerTest {
         when(mockClient.submitQuery(submitQueryRequestType)).thenReturn(submitQueryResponseType);
         mockTransformer.transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
-//        doNothing(invocation -> {
-//                (SubmitQueryResponseType) invocation..getArgument(0)).setResultCount(new BigInteger("1"));
-//                final StatusType statusType = new StatusType();
-//                statusType.setCode(StatusCodeType.OK);
-//                ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus(statusType);
-//                // required to be null for a void method
-//
-//                Assertions.assertEquals("Status code is not equal.", submitQueryResponseType.getStatus().getCode().value(),
-//                    submitQueryRequest.getStatus());
-//                Assertions.assertEquals(submitQueryResponseType.getResultCount().intValue(),
-//                    submitQueryRequest.getResultCount(), "Result count is not equal.");
-//                return;
-//        }).when(submitQueryConsumer.processSubmitQuery(any(), any(), any()));
+        doAnswer (new Answer<Void>()
+        {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable
+            {
+                ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount (BigInteger.valueOf(1));
+                final StatusType statusType = new StatusType ();
+                statusType.setCode (StatusCodeType.OK);
+                ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus (statusType);
+                // required to be null for a void method
+                return null;
+            }
+        }).when(mockTransformer).transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
         this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-//        verify(mockTransformer.transformDomainToJaxb(any()), times(1));
-//        verify(mockClient.submitIndividual(any()), times(1));
+        verify(mockTransformer).transformDomainToJaxb(any());
+        verify(mockClient).submitQuery(any());
 
-//        Assertions.assertEquals("Status code is not equal.", submitQueryResponseType.getStatus().getCode().value(),
-//                submitQueryRequest.getStatus());
-//        Assertions.assertEquals(submitQueryResponseType.getResultCount().intValue(),
-//                submitQueryRequest.getResultCount(), "Result count is not equal.");
+        Assertions.assertEquals(submitQueryResponseType.getStatus().getCode().value(),
+                submitQueryRequest.getStatus(), "Status code is not equal.");
+        Assertions.assertEquals(submitQueryResponseType.getResultCount().intValue(),
+                submitQueryRequest.getResultCount(), "Result count is not equal.");
 
     }
 
@@ -297,11 +314,11 @@ class SubmitQueryConsumerTest {
         bulkCustomerApplications.add(bulkCustomerApplication);
         bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
 
-        final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
-        submitQueryRequest.setBulkCustomer(bulkCustomer);
-        submitQueryRequest.setTargetApplication(targetApp);
-        submitQueryRequest.setResultCount(1);
-        return submitQueryRequest;
+        final ISubmitQueryRequest ssubmitQueryRequest = new SubmitQueryRequest();
+        ssubmitQueryRequest.setBulkCustomer(bulkCustomer);
+        ssubmitQueryRequest.setTargetApplication(targetApp);
+        ssubmitQueryRequest.setResultCount(1);
+        return ssubmitQueryRequest;
 
     }
 

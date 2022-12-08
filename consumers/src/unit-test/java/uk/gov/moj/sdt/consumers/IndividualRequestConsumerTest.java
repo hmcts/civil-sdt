@@ -42,6 +42,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -69,7 +70,10 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test class for the individual request consumer.
@@ -136,6 +140,18 @@ class IndividualRequestConsumerTest {
         individualRequestType = this.createRequestType(individualRequest);
     }
 
+    @Test
+    void getClient() {
+        final String targetApplicationCode = "";
+        final String serviceType = "";
+        final String webServiceEndPoint = "";
+        final long connectionTimeOut = 0L;
+        final long receiveTimeOut = 0L;
+        ITargetAppInternalEndpointPortType portType = individualRequestConsumer.getClient(targetApplicationCode,
+                serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+        Assertions.assertTrue(null != portType);
+    }
+
     /**
      * Test method for successful processing of individual request.
      */
@@ -149,21 +165,18 @@ class IndividualRequestConsumerTest {
 
         mockTransformer.transformJaxbToDomain(individualResponseType, individualRequest);
 
-//       doAnswer(new Object() {
-//            @Override
-//            public Object answer() throws Throwable {
-//                ((IndividualRequest) getAArguments()[1])
-//                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
-//                // required to be null for a void method
-//                return null;
-//            }
-//        });
+        doAnswer((Answer<Void>) invocation -> {
+            ((IndividualRequest) invocation.getArgument(0))
+                    .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
+            // required to be null for a void method
+            return null;
+        }).when(mockTransformer).transformDomainToJaxb(any());
 
-        this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
+        individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                 RECEIVE_TIME_OUT);
 
-        verify(mockTransformer, times(1)).transformDomainToJaxb(any());
-        verify(mockClient, times(1)).submitIndividual(any());
+        verify(mockTransformer).transformDomainToJaxb(any());
+        verify(mockClient).submitIndividual(any());
 
         Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
 
@@ -190,8 +203,8 @@ class IndividualRequestConsumerTest {
             Assertions.assertTrue(true, "Got the exception as expected");
         }
 
-//        verify(mockTransformer.transformDomainToJaxb(any()), times(1));
-//        verify(mockClient.submitIndividual(any()), times(1));
+        verify(mockTransformer).transformDomainToJaxb(any());
+        verify(mockClient).submitIndividual(any());
 
         Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
 
@@ -223,8 +236,8 @@ class IndividualRequestConsumerTest {
             Assertions.assertTrue(true, "Got the exception as expected");
         }
 
-//        verify(mockTransformer);
-//        verify(mockClient);
+        verify(mockTransformer).transformDomainToJaxb(any());
+        verify(mockClient).submitIndividual(any());
 
         Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
 
@@ -257,7 +270,7 @@ class IndividualRequestConsumerTest {
         targetApp.setId(1L);
         targetApp.setTargetApplicationCode("MCOL");
         targetApp.setTargetApplicationName("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
         final ServiceRouting serviceRouting = new ServiceRouting();
         serviceRouting.setId(1L);
