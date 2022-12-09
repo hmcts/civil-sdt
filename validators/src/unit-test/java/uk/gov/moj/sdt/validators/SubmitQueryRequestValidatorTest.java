@@ -107,9 +107,6 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     private IErrorMessage errorMessage;
 
-    /**
-     * Setup of the Validator and Domain class instance.
-     */
     public void setUpLocalTests() {
         // subject of test
         // domain objects

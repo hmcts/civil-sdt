@@ -56,3 +56,10 @@ azure:
 sdt:
   tx-timeout:
     default:  1000
+  service:
+      config:
+          concurrentConsumers: ${CONCURRENT_CONSUMERS:1}
+          maxConcurrentConsumers: ${MAX_CONCURRENT_CONSUMERS:5}
+          receiveTimeout: ${RECEIVE_TIMEOUT:30000}
+          idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
+          idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}

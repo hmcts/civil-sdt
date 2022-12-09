@@ -149,7 +149,7 @@ ext {
   tomcatVersion = '9.0.68'
   cxfVersion = '3.5.4'
   activeMQVersion = '5.16.1'
-  testcontainers = '1.15.2'
+  testcontainers = '1.17.5'
   limits = [
     'instruction': 99,
     'branch'     : 99,

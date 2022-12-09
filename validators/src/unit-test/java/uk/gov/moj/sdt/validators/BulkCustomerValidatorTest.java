@@ -129,9 +129,6 @@ public class BulkCustomerValidatorTest extends AbstractValidatorUnitTest {
 
         IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
         validator = new BulkCustomerValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
-        validator.setErrorMessagesCache(errorMessagesCache);
-        validator.setGlobalParameterCache(globalParameterCache);
-
     }
 
     /**

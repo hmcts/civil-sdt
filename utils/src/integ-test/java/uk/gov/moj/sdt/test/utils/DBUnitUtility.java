@@ -272,7 +272,7 @@ public final class DBUnitUtility {
             DatabaseOperation.INSERT.execute(dbConnection, targetDataset);
 
             // Enable triggers & constraints
-//            finishDbunitLoad(targetSchema);
+            finishDbunitLoad(targetSchema);
 
         } catch (final DatabaseUnitException e) {
             LOGGER.error("Error loading data for Schema '" + targetSchema + "': " + e);
@@ -476,7 +476,7 @@ public final class DBUnitUtility {
             final IDataSet cleanDataset = builder.build(DBUnitUtility.class.getResourceAsStream(cleanDataPath));
 
             // Disable triggers & constraints
-//            prepareForDbunitLoad(targetSchema);
+            prepareForDbunitLoad(targetSchema);
 
             // Clean the DB
             LOGGER.debug("Cleaning database");
@@ -497,7 +497,7 @@ public final class DBUnitUtility {
             // }
 
             // Enable triggers & constraints
-//            finishDbunitLoad(targetSchema);
+            finishDbunitLoad(targetSchema);
         } catch (final DatabaseUnitException e) {
             LOGGER.error("Error loading data for Schema '" + targetSchema + "': " + e);
             e.printStackTrace();

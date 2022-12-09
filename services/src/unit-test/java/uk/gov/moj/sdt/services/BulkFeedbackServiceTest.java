@@ -153,8 +153,6 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkFeedbackRequest.setId(requestId);
         bulkFeedbackRequest.setSdtBulkReference(reference);
         bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
-
-
     }
 
     /**

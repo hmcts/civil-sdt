@@ -26,6 +26,17 @@ import javax.jms.ConnectionFactory;
 @EnableTransactionManagement
 public class ServicesConfig {
 
+    private static final String TARGET_APP_SUBMIT_QUERY_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema";
+    public static final String SUBMIT_QUERY_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema";
+    public static final String SDT_SUBMIT_QUERY_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema";
+    public static final String TARGET_APP_SUBMIT_QUERY_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema";
+    public static final String SDT_TARGET_APP_INDV_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema";
+    public static final String SDT_BULK_FEEDBACK_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema";
+    public static final String SDT_INDIVIDUAL_UPDATE_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema";
+    public static final String BULK_FEEDBACK_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema";
+    public static final String SDT_BULK_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema";
+    public static final String SDT_TARGET_APP_INDV_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema";
+
     @Autowired
     private ConnectionFactory jmsConnectionFactory;
 
@@ -39,6 +50,18 @@ public class ServicesConfig {
     @Autowired
     private QueueConfig queueConfig;
 
+    @Value("${sdt.service.config.concurrentConsumers}")
+    private int concurrentConsumers = 1;
+    @Value("${sdt.service.config.maxConcurrentConsumers}")
+    private int maxConcurrentConsumers = 5;
+    @Value("${sdt.service.config.receiveTimeout}")
+    private int receiveTimeout = 30000;
+    @Value("${sdt.service.config.idleTaskExecutionLimit}")
+    private int idleTaskExecutionLimit = 10;
+
+    @Value("${sdt.service.config.idleConsumerLimit}")
+    private int idleConsumerLimit = 5;
+
     @Bean
     @Lazy
     @Qualifier("messageListenerContainer")
@@ -48,11 +71,11 @@ public class ServicesConfig {
         defaultMessageListenerContainer.setDestinationName(queueConfig.getQueueConfig().get("MCOL"));
         defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
         defaultMessageListenerContainer.setTransactionManager(transactionManager);
-        defaultMessageListenerContainer.setConcurrentConsumers(1);
-        defaultMessageListenerContainer.setMaxConcurrentConsumers(5);
-        defaultMessageListenerContainer.setReceiveTimeout(30000);
-        defaultMessageListenerContainer.setIdleTaskExecutionLimit(10);
-        defaultMessageListenerContainer.setIdleConsumerLimit(5);
+        defaultMessageListenerContainer.setConcurrentConsumers(concurrentConsumers);
+        defaultMessageListenerContainer.setMaxConcurrentConsumers(maxConcurrentConsumers);
+        defaultMessageListenerContainer.setReceiveTimeout(receiveTimeout);
+        defaultMessageListenerContainer.setIdleTaskExecutionLimit(idleTaskExecutionLimit);
+        defaultMessageListenerContainer.setIdleConsumerLimit(idleConsumerLimit);
         return defaultMessageListenerContainer;
     }
 
@@ -62,8 +85,10 @@ public class ServicesConfig {
         GenericXmlParser genericXmlParser = new GenericXmlParser();
         genericXmlParser.setEnclosingTag("targetAppDetail");
         Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema",
-                                  "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+        replacementNamespaces.put(
+            TARGET_APP_SUBMIT_QUERY_RESPONSE_SCHEMA,
+            SUBMIT_QUERY_RESPONSE_SCHEMA
+        );
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         return genericXmlParser;
     }
@@ -74,8 +99,10 @@ public class ServicesConfig {
         GenericXmlParser genericXmlParser = new GenericXmlParser();
         genericXmlParser.setEnclosingTag("criterion");
         Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema",
-                                  "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema");
+        replacementNamespaces.put(
+            SDT_SUBMIT_QUERY_REQUEST_SCHEMA,
+            TARGET_APP_SUBMIT_QUERY_REQUEST_SCHEMA
+        );
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         return genericXmlParser;
     }
@@ -86,10 +113,14 @@ public class ServicesConfig {
         GenericXmlParser genericXmlParser = new GenericXmlParser();
         genericXmlParser.setEnclosingTag("targetAppDetail");
         Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema",
-                                  "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
-        replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema",
-                                  "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+        replacementNamespaces.put(
+            SDT_TARGET_APP_INDV_RESPONSE_SCHEMA,
+            SDT_BULK_FEEDBACK_RESPONSE_SCHEMA
+        );
+        replacementNamespaces.put(
+            SDT_INDIVIDUAL_UPDATE_REQUEST_SCHEMA,
+            SDT_BULK_FEEDBACK_RESPONSE_SCHEMA
+        );
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         return genericXmlParser;
     }
@@ -99,8 +130,10 @@ public class ServicesConfig {
     public IndividualRequestsXmlParser individualRequestsXmlParser() {
         IndividualRequestsXmlParser genericXmlParser = new IndividualRequestsXmlParser();
         Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
-                                  "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
+        replacementNamespaces.put(
+            SDT_BULK_REQUEST_SCHEMA,
+            SDT_TARGET_APP_INDV_REQUEST_SCHEMA
+        );
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         return genericXmlParser;
     }

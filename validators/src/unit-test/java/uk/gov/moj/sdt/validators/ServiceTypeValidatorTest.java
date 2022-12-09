@@ -33,9 +33,7 @@ package uk.gov.moj.sdt.validators;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
-import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
