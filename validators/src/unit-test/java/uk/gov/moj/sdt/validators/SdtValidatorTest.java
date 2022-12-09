@@ -33,9 +33,12 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.easymock.EasyMock;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,25 +55,42 @@ import uk.gov.moj.sdt.validators.exception.DuplicateUserRequestIdentifierExcepti
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Test Class for SDT Validator.
  *
  * @author d164190
  */
-public class SdtValidatorTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class SdtValidatorTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(SdtValidatorTest.class);
 
+    private static final String ERR_CODE_BULK_REF_INVALID = "BULK_REF_INVALID";
+    private static final String ERR_CODE_CONTACT_DETAILS = "CONTACT_DETAILS";
+    private static final String ERR_CODE_CUST_ID_INVALID = "CUST_ID_INVALID";
+    private static final String ERR_CODE_CUST_NOT_SETUP = "CUST_NOT_SETUP";
+    private static final String ERR_CODE_DUP_CUST_FILEID = "DUP_CUST_FILEID";
+    private static final String ERR_CODE_DUP_CUST_REQID = "DUP_CUST_REQID";
+    private static final String ERR_CODE_REQ_COUNT_MISMATCH = "REQ_COUNT_MISMATCH";
+
+    private static final String ERR_MSG_FAILED_WITH_CODE = "Failed with code";
+    private static final String ERR_MSG_SUBSTITUTION_VALUE_INCORRECT = "Substitution value incorrect";
+
     /**
      * Mock Error messages cache.
      */
+    @Mock
     private ICacheable mockErrorMessagesCache;
 
     /**
      * Mock global parameters cache.
      */
+    @Mock
     private ICacheable mockGlobalParameterCache;
 
     /**
@@ -91,22 +111,21 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
     /**
      * Set up test artefact.
      */
+    @BeforeEach
+    @Override
     public void setUpLocalTests() {
-        mockErrorMessagesCache = EasyMock.createMock(ICacheable.class);
-        mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
-
         validator = new BulkSubmissionValidator();
         validator.setErrorMessagesCache(mockErrorMessagesCache);
         validator.setGlobalParameterCache(mockGlobalParameterCache);
 
         result = new ErrorMessage[7];
         result[0] = new ErrorMessage();
-        result[0].setErrorCode("DUP_CUST_FILEID");
+        result[0].setErrorCode(ERR_CODE_DUP_CUST_FILEID);
         result[0].setErrorText("Duplicate User File Reference {0} supplied. This was previously used to submit a "
                 + "Bulk Request on {1} and the SDT Bulk Reference {2} was allocated.");
 
         result[1] = new ErrorMessage();
-        result[1].setErrorCode("REQ_COUNT_MISMATCH");
+        result[1].setErrorCode(ERR_CODE_REQ_COUNT_MISMATCH);
         result[1].setErrorText("Unexpected Total Number of Requests identified. {0} requested identified,"
                 + " {1} requests expected in Bulk Request {2}.");
 
@@ -115,86 +134,85 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
         result[2].setErrorText("A system error has occurred. Please contact {0} for assistance.");
 
         result[3] = new ErrorMessage();
-        result[3].setErrorCode("CUST_NOT_SETUP");
+        result[3].setErrorCode(ERR_CODE_CUST_NOT_SETUP);
         result[3].setErrorText("The Bulk Customer organisation is not setup to send Service Request messages to "
                 + "the {0}. Please contact {1} for assistance.");
 
         result[4] = new ErrorMessage();
-        result[4].setErrorCode("CUST_ID_INVALID");
+        result[4].setErrorCode(ERR_CODE_CUST_ID_INVALID);
         result[4].setErrorText("The Bulk Customer organisation does not have an SDT Customer ID set up."
                 + " Please contact {0} for assistance.");
 
         result[5] = new ErrorMessage();
-        result[5].setErrorCode("BULK_REF_INVALID");
+        result[5].setErrorCode(ERR_CODE_BULK_REF_INVALID);
         result[5].setErrorText("There is no Bulk Request submission associated with your account for the supplied"
                 + " SDT Bulk Reference {0}.");
 
         result[6] = new ErrorMessage();
-        result[6].setErrorCode("DUP_CUST_REQID");
+        result[6].setErrorCode(ERR_CODE_DUP_CUST_REQID);
         result[6].setErrorText("Duplicate Unique Request Identifier submitted {0}.");
 
         globalParam = new GlobalParameter();
-        globalParam.setName("CONTACT_DETAILS");
+        globalParam.setName(ERR_CODE_CONTACT_DETAILS);
         globalParam.setValue("TBD");
     }
 
     /**
      * Test that the correct message is retrieved.
      */
-    public void testGetErrorMessage() {
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, "DUP_CUST_REQID")).andReturn(result[6]);
-        EasyMock.replay(mockErrorMessagesCache);
+    @Test
+    void testGetErrorMessage() {
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_REQID)).thenReturn(result[6]);
 
         List<String> replacements = null;
-        replacements = new ArrayList<String>();
+        replacements = new ArrayList<>();
         replacements.add("MCOL0000012345");
 
         final String description = validator.getErrorMessage(replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
-        LOGGER.debug("testGetErrorMessage [" + description + "]");
-        EasyMock.verify(mockErrorMessagesCache);
-        Assert.assertTrue("Incorrect Message and/or substitution",
-                description.contains("Duplicate Unique Request Identifier submitted MCOL0000012345."));
+        LOGGER.debug("testGetErrorMessage [{}]", description);
+        verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_REQID);
+        Assertions.assertTrue(description.contains("Duplicate Unique Request Identifier submitted MCOL0000012345."),
+                "Incorrect Message and/or substitution");
     }
 
     /**
      *
      */
-    public void testGetContactDetails() {
-        EasyMock.expect(mockGlobalParameterCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(
+    @Test
+    void testGetContactDetails() {
+        when(mockGlobalParameterCache.getValue(IGlobalParameter.class, ERR_CODE_CONTACT_DETAILS)).thenReturn(
                 globalParam);
-        EasyMock.replay(mockGlobalParameterCache);
 
         final String contactDetails = validator.getContactDetails();
-        LOGGER.debug("testGetContactDetails [" + contactDetails + "]");
-        EasyMock.verify(mockGlobalParameterCache);
-        Assert.assertTrue("Incorrect contact details", contactDetails.contains("TBD"));
+        LOGGER.debug("testGetContactDetails [{}]", contactDetails);
+        verify(mockGlobalParameterCache).getValue(IGlobalParameter.class, ERR_CODE_CONTACT_DETAILS);
+        Assertions.assertTrue(contactDetails.contains("TBD"), "Incorrect contact details");
     }
 
     /**
      * Test that the correct exception is created.
      */
     @Test
-    public void testCreateValidationExceptionDupCustFileid() {
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, "DUP_CUST_FILEID"))
-                .andReturn(result[0]);
-        EasyMock.replay(mockErrorMessagesCache);
+    void testCreateValidationExceptionDupCustFileid() {
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_FILEID))
+                .thenReturn(result[0]);
 
         List<String> replacements = null;
-        replacements = new ArrayList<String>();
+        replacements = new ArrayList<>();
         replacements.add("MCOL00001234");
         replacements.add("09/10/2013");
         replacements.add("SDT00001234");
 
         try {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.DUP_CUST_FILEID);
-            Assert.fail("Failed to throw expected CustomerReferenceNotUniqueException for error code DUP_CUST_FILEID");
+            Assertions.fail("Failed to throw expected CustomerReferenceNotUniqueException for error code DUP_CUST_FILEID");
         } catch (final CustomerReferenceNotUniqueException e) {
             LOGGER.debug(e.getMessage());
-            EasyMock.verify(mockErrorMessagesCache);
-            Assert.assertTrue("Failed with code", e.getMessage().contains("DUP_CUST_FILEID"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("MCOL00001234"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("09/10/2013"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("SDT00001234"));
+            verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_FILEID);
+            Assertions.assertTrue(e.getMessage().contains(ERR_CODE_DUP_CUST_FILEID), ERR_MSG_FAILED_WITH_CODE);
+            Assertions.assertTrue(e.getMessage().contains("MCOL00001234"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
+            Assertions.assertTrue(e.getMessage().contains("09/10/2013"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
+            Assertions.assertTrue(e.getMessage().contains("SDT00001234"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
         }
     }
 
@@ -202,24 +220,22 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
      * Test that the correct exception is created.
      */
     @Test
-    public void testCreateValidationExceptionReqCountMismatch() {
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, "REQ_COUNT_MISMATCH")).andReturn(
-                result[1]);
-        EasyMock.replay(mockErrorMessagesCache);
+    void testCreateValidationExceptionReqCountMismatch() {
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, ERR_CODE_REQ_COUNT_MISMATCH)).thenReturn(result[1]);
 
         List<String> replacements = null;
-        replacements = new ArrayList<String>();
+        replacements = new ArrayList<>();
         replacements.add("9");
         replacements.add("10");
         replacements.add("MCOL0000123");
         try {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH);
-            Assert.fail("Failed to throw expected RequestCountMismatchException for error code REQ_COUNT_MISMATCH");
+            Assertions.fail("Failed to throw expected RequestCountMismatchException for error code REQ_COUNT_MISMATCH");
         } catch (final RequestCountMismatchException e) {
             LOGGER.debug(e.getMessage());
-            EasyMock.verify(mockErrorMessagesCache);
-            Assert.assertTrue("Failed with code", e.getMessage().contains("REQ_COUNT_MISMATCH"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("MCOL0000123"));
+            verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_REQ_COUNT_MISMATCH);
+            Assertions.assertTrue(e.getMessage().contains(ERR_CODE_REQ_COUNT_MISMATCH), ERR_MSG_FAILED_WITH_CODE);
+            Assertions.assertTrue(e.getMessage().contains("MCOL0000123"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
         }
     }
 
@@ -227,24 +243,23 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
      * Test that the correct exception is created.
      */
     @Test
-    public void testCreateValidationExceptionCustNotSetup() {
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, "CUST_NOT_SETUP")).andReturn(result[3]);
-        EasyMock.replay(mockErrorMessagesCache);
+    void testCreateValidationExceptionCustNotSetup() {
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, ERR_CODE_CUST_NOT_SETUP)).thenReturn(result[3]);
 
         List<String> replacements = null;
-        replacements = new ArrayList<String>();
+        replacements = new ArrayList<>();
         replacements.add("MCOL");
         replacements.add("TBD");
 
         try {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.CUST_NOT_SETUP);
-            Assert.fail("Failed to throw expected CustomerNotSetupException for error code CUST_NOT_SETUP");
+            Assertions.fail("Failed to throw expected CustomerNotSetupException for error code CUST_NOT_SETUP");
         } catch (final CustomerNotSetupException e) {
             LOGGER.debug(e.getMessage());
-            EasyMock.verify(mockErrorMessagesCache);
-            Assert.assertTrue("Failed with code", e.getMessage().contains("CUST_NOT_SETUP"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("MCOL"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("TBD"));
+            verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_CUST_NOT_SETUP);
+            Assertions.assertTrue(e.getMessage().contains(ERR_CODE_CUST_NOT_SETUP), ERR_MSG_FAILED_WITH_CODE);
+            Assertions.assertTrue(e.getMessage().contains("MCOL"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
+            Assertions.assertTrue(e.getMessage().contains("TBD"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
         }
     }
 
@@ -252,23 +267,21 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
      * Test that the correct exception is created.
      */
     @Test
-    public void testCreateValidationExceptionCustRefMissing() {
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, "CUST_ID_INVALID"))
-                .andReturn(result[4]);
-        EasyMock.replay(mockErrorMessagesCache);
+    void testCreateValidationExceptionCustRefMissing() {
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, ERR_CODE_CUST_ID_INVALID)).thenReturn(result[4]);
 
         List<String> replacements = null;
-        replacements = new ArrayList<String>();
+        replacements = new ArrayList<>();
         replacements.add("TBD");
 
         try {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.CUST_ID_INVALID);
-            Assert.fail("Failed to throw expected CustomerNotFoundException for error code CUST_ID_INVALID");
+            Assertions.fail("Failed to throw expected CustomerNotFoundException for error code CUST_ID_INVALID");
         } catch (final CustomerNotFoundException e) {
             LOGGER.debug(e.getMessage());
-            EasyMock.verify(mockErrorMessagesCache);
-            Assert.assertTrue("Failed with code", e.getMessage().contains("CUST_ID_INVALID"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("TBD"));
+            verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_CUST_ID_INVALID);
+            Assertions.assertTrue(e.getMessage().contains(ERR_CODE_CUST_ID_INVALID), ERR_MSG_FAILED_WITH_CODE);
+            Assertions.assertTrue(e.getMessage().contains("TBD"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
         }
     }
 
@@ -276,23 +289,21 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
      * Test that the correct exception is created.
      */
     @Test
-    public void testCreateValidationExceptionBulkRefInvalid() {
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, "BULK_REF_INVALID")).andReturn(
-                result[5]);
-        EasyMock.replay(mockErrorMessagesCache);
+    void testCreateValidationExceptionBulkRefInvalid() {
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, ERR_CODE_BULK_REF_INVALID)).thenReturn(result[5]);
 
         List<String> replacements = null;
-        replacements = new ArrayList<String>();
+        replacements = new ArrayList<>();
         replacements.add("MCOL000001234");
 
         try {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.BULK_REF_INVALID);
-            Assert.fail("Failed to throw expected InvalidBulkReferenceException for error code BULK_REF_INVALID");
+            Assertions.fail("Failed to throw expected InvalidBulkReferenceException for error code BULK_REF_INVALID");
         } catch (final InvalidBulkReferenceException e) {
             LOGGER.debug(e.getMessage());
-            EasyMock.verify(mockErrorMessagesCache);
-            Assert.assertTrue("Failed with code", e.getMessage().contains("BULK_REF_INVALID"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("MCOL000001234"));
+            verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_BULK_REF_INVALID);
+            Assertions.assertTrue(e.getMessage().contains(ERR_CODE_BULK_REF_INVALID), ERR_MSG_FAILED_WITH_CODE);
+            Assertions.assertTrue(e.getMessage().contains("MCOL000001234"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
         }
     }
 
@@ -300,23 +311,22 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
      * Test that the correct exception is created.
      */
     @Test
-    public void testCreateValidationExceptionDupCustReqid() {
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, "DUP_CUST_REQID")).andReturn(result[6]);
-        EasyMock.replay(mockErrorMessagesCache);
+    void testCreateValidationExceptionDupCustReqid() {
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_REQID)).thenReturn(result[6]);
 
         List<String> replacements = null;
-        replacements = new ArrayList<String>();
+        replacements = new ArrayList<>();
         replacements.add("MCOL000009876");
 
         try {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
-            Assert.fail("Failed to throw expected DuplicateUserRequestIdentifierException for error code"
+            Assertions.fail("Failed to throw expected DuplicateUserRequestIdentifierException for error code"
                     + " DUP_CUST_REQID");
         } catch (final DuplicateUserRequestIdentifierException e) {
             LOGGER.debug(e.getMessage());
-            EasyMock.verify(mockErrorMessagesCache);
-            Assert.assertTrue("Failed with code", e.getMessage().contains("DUP_CUST_REQID"));
-            Assert.assertTrue("Substitution value incorrect", e.getMessage().contains("MCOL000009876"));
+            verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_REQID);
+            Assertions.assertTrue(e.getMessage().contains(ERR_CODE_DUP_CUST_REQID), ERR_MSG_FAILED_WITH_CODE);
+            Assertions.assertTrue(e.getMessage().contains("MCOL000009876"),ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
         }
     }
 }

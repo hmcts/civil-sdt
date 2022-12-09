@@ -32,11 +32,14 @@ package uk.gov.moj.sdt.validators.validation;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.junit.Test;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.XmlValidationDetails;
@@ -47,11 +50,14 @@ import uk.gov.moj.sdt.validators.XmlValidator;
  *
  * @author Simon Holmes
  */
-public class XmlValidatorTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class XmlValidatorTest extends AbstractSdtUnitTestBase {
     /**
      * Path of the xsd.
      */
-    private final String xsdPath = "src/unit-test/resources/validation/xsd/testXSD.xsd";
+    private static final String XSD_PATH = "src/unit-test/resources/validation/xsd/testXSD.xsd";
+
+    private static final String XML_PATH = "src/unit-test/resources/validation/xml/";
 
     /**
      * Test validateXML method with valid XML.
@@ -61,22 +67,22 @@ public class XmlValidatorTest extends AbstractSdtUnitTestBase {
      * @throws IOException an IO Exception
      */
     @Test
-    public void testValidateXmlValidXml() throws IOException {
+    void testValidateXmlValidXml() throws IOException {
 
         File myFile;
         String theXmlToValidate = "";
 
         myFile =
-                new File(Utilities.checkFileExists("src/unit-test/resources/validation/xml/", "testXMLValid.xml",
+                new File(Utilities.checkFileExists(XML_PATH, "testXMLValid.xml",
                         false));
 
-        theXmlToValidate = FileUtils.readFileToString(myFile);
+        theXmlToValidate = FileUtils.readFileToString(myFile, Charset.defaultCharset());
 
-        final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, xsdPath);
+        final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, XSD_PATH);
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml();
 
-        Assert.assertEquals("The given XML is no longer valid.", XmlValidationDetails.Result.PASS,
-                xmlValidationDetails.getResult());
+        Assertions.assertEquals(XmlValidationDetails.Result.PASS, xmlValidationDetails.getResult(),
+                "The given XML is no longer valid.");
     }
 
     /**
@@ -87,22 +93,23 @@ public class XmlValidatorTest extends AbstractSdtUnitTestBase {
      * @throws IOException an IO Exception
      */
     @Test
-    public void testValidateXmlInvalidXml() throws IOException {
+    void testValidateXmlInvalidXml() throws IOException {
 
         File myFile;
         String theXmlToValidate = "";
 
         myFile =
-                new File(Utilities.checkFileExists("src/unit-test/resources/validation/xml/", "testXMLInvalid.xml",
+                new File(Utilities.checkFileExists(XML_PATH, "testXMLInvalid.xml",
                         false));
 
-        theXmlToValidate = FileUtils.readFileToString(myFile);
+        theXmlToValidate = FileUtils.readFileToString(myFile, Charset.defaultCharset());
 
-        final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, xsdPath);
+        final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, XSD_PATH);
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml();
 
-        Assert.assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
-        Assert.assertEquals("The given XML is now valid.", 24, xmlValidationDetails.getResultMessages().size());
+        Assertions.assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
+        Assertions.assertEquals(24, xmlValidationDetails.getResultMessages().size(),
+                "The given XML is now valid.");
     }
 
     /**
@@ -113,26 +120,26 @@ public class XmlValidatorTest extends AbstractSdtUnitTestBase {
      * @throws IOException an IO Exception
      */
     @Test
-    public void testValidateXmlNoXsd() throws IOException {
-        final String xsdPath = "invalidDir/FileDoesNotExist.xsd";
+    void testValidateXmlNoXsd() throws IOException {
+        final String xsdPathInvalid = "invalidDir/FileDoesNotExist.xsd";
 
         File myFile;
         String theXmlToValidate = "";
 
         myFile =
-                new File(Utilities.checkFileExists("src/unit-test/resources/validation/xml/", "testXMLInvalid.xml",
+                new File(Utilities.checkFileExists(XML_PATH, "testXMLInvalid.xml",
                         false));
 
-        theXmlToValidate = FileUtils.readFileToString(myFile);
+        theXmlToValidate = FileUtils.readFileToString(myFile, Charset.defaultCharset());
 
-        final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, xsdPath);
+        final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, xsdPathInvalid);
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml();
 
-        Assert.assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
+        Assertions.assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
 
         final String errorMessage = "** ERROR - Unable to find the " + "file [FileDoesNotExist.xsd]";
 
-        Assert.assertEquals("The XML is now considered valid against an XSD.", errorMessage, xmlValidationDetails
-                .getResultMessages().get(0));
+        Assertions.assertEquals(errorMessage, xmlValidationDetails.getResultMessages().get(0),
+                "The XML is now considered valid against an XSD.");
     }
 }

@@ -31,8 +31,10 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.domain.ErrorLog;
 
 /**
@@ -41,6 +43,7 @@ import uk.gov.moj.sdt.domain.ErrorLog;
  * @author d120520
  */
 
+@ExtendWith(MockitoExtension.class)
 public class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Test subject.
@@ -50,7 +53,8 @@ public class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Setup of the Validator and Domain class instance.
      */
-    public void setUpLocalTests() {
+    @BeforeEach
+    public void setUp() {
         // subject of test
         validator = new ErrorLogValidator();
     }
