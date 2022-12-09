@@ -433,14 +433,14 @@ subprojects { subproject ->
     testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
-  sonarqube {
-    properties {
-      property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
-      property "sonar.sources", "src"
-      property "sonar.tests", "src"
-      property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
+    sonarqube {
+        properties {
+            property "sonar.sources", "src"
+            property "sonar.tests", "src"
+            property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
+            property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
+        }
     }
-  }
 
   // from https://github.com/junit-team/junit5/issues/1024'
   afterEvaluate {
@@ -558,7 +558,7 @@ sonarqube {
   properties {
     property "sonar.projectName", "Reform :: civil-sdt-gateway"
     property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt-gateway"
-    property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+    property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
   }
 }
 
