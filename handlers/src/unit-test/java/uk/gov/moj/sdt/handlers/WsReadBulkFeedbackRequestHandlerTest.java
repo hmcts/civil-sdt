@@ -36,10 +36,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.easymock.EasyMock;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -57,21 +58,27 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequest
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Test class for BulkSubmissionService.
  *
  * @author Sally Vonka
  */
 public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
-    /**
-     * Bulk Feedback Service for testing.
-     */
-    private WsReadBulkFeedbackRequestHandler wsReadBulkFeedbackReqHandler;
 
     /**
      * Bulk Submission DAO property for looking up the bulk submission object.
      */
+    @Mock
     private IBulkFeedbackService mockBulkFeedbackService;
+
+    /**
+     * Bulk Feedback Service for testing.
+     */
+    private WsReadBulkFeedbackRequestHandler wsReadBulkFeedbackReqHandler;
 
     /**
      * The transformer associated with this handler.
@@ -91,10 +98,12 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
      * /**
      * Setup of the mock dao and injection of other objects.
      */
+    @Override
     public void setUpLocalTests() {
+        MockitoAnnotations.openMocks(this);
+
         wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler();
 
-        mockBulkFeedbackService = EasyMock.createMock(IBulkFeedbackService.class);
         // ITransformer transformer = new BulkFeedbackTransformer();
         Constructor<BulkFeedbackTransformer> c;
         try {
@@ -102,13 +111,7 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
             c = BulkFeedbackTransformer.class.getDeclaredConstructor();
             c.setAccessible(true);
             transformer = c.newInstance();
-        } catch (final InstantiationException e) {
-            e.printStackTrace();
-        } catch (final IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (final InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (final NoSuchMethodException e) {
+        } catch (final InstantiationException|IllegalAccessException|InvocationTargetException|NoSuchMethodException e) {
             e.printStackTrace();
         }
 
@@ -125,6 +128,7 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
     @Ignore
     public void testGetBulkFeedback() throws IOException {
         final long customerId = 12345678;
+        final String MCOL_BULK_REF = "MCOL-10012013010101-100099999";
         final IBulkFeedbackRequest bulkFeedbackRequestDomain = new BulkFeedbackRequest();
         final BulkCustomer bulkCustomer = new BulkCustomer();
         final IBulkSubmission bulkSubmission = new BulkSubmission();
@@ -133,23 +137,22 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
         bulkCustomer.setSdtCustomerId(customerId);
         bulkCustomer.setBulkCustomerApplications(createBulkCustomerApplications("MCOL"));
         bulkFeedbackRequestDomain.setBulkCustomer(bulkCustomer);
-        bulkFeedbackRequestDomain.setSdtBulkReference("MCOL-10012013010101-100099999");
+        bulkFeedbackRequestDomain.setSdtBulkReference(MCOL_BULK_REF);
 
-        bulkSubmission.setSdtBulkReference("MCOL-10012013010101-100099999");
+        bulkSubmission.setSdtBulkReference(MCOL_BULK_REF);
 
         final HeaderType headerType = new HeaderType();
-        headerType.setSdtBulkReference("MCOL-10012013010101-100099999");
-        headerType.setSdtCustomerId((long) customerId);
+        headerType.setSdtBulkReference(MCOL_BULK_REF);
+        headerType.setSdtCustomerId(customerId);
 
         bulkFeedbackRequestType.setHeader(headerType);
 
-        EasyMock.expect(mockBulkFeedbackService.getBulkFeedback(bulkFeedbackRequestDomain))
-                .andReturn(bulkSubmission);
-        EasyMock.replay(mockBulkFeedbackService);
+        when(mockBulkFeedbackService.getBulkFeedback(bulkFeedbackRequestDomain))
+                .thenReturn(bulkSubmission);
 
         wsReadBulkFeedbackReqHandler.getBulkFeedback(bulkFeedbackRequestType);
 
-        EasyMock.verify(mockBulkFeedbackService);
+        verify(mockBulkFeedbackService).getBulkFeedback(any());
 
     }
 
@@ -160,7 +163,7 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
      * @return the set of bulk customer applications for this customer
      */
     private Set<IBulkCustomerApplication> createBulkCustomerApplications(final String applicationName) {
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication>();
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
 
         final IBulkCustomerApplication bulkCustomerApp = new BulkCustomerApplication();
         bulkCustomerApp.setCustomerApplicationId("appId");
