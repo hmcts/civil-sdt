@@ -45,6 +45,8 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * This class reads a bulk submission xml and parses it into individual raw xml requests.
  *
@@ -143,7 +145,7 @@ public class IndividualRequestsXmlParser {
             final IIndividualRequest individualRequest = iter.next();
 
             if (individualRequest.getRequestStatus().equals(
-                    IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus())) {
+                    REJECTED.getStatus())) {
                 // Do not get the payload for this one as it may have a duplicate customer reference and does not need
                 // to be sent to the case management system.
                 continue;

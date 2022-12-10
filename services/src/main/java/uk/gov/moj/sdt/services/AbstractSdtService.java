@@ -45,6 +45,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * Abstract Sdt Service class for any common functionality between the various services.
  *
@@ -112,7 +114,7 @@ public abstract class AbstractSdtService {
 
         final String[] completeRequestStatus =
                 new String[]{IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus(),
-                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus()};
+                        REJECTED.getStatus()};
 
 
         final long requestsCount = this.getIndividualRequestDao().queryAsCount(

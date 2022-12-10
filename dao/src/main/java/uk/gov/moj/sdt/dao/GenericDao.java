@@ -98,7 +98,7 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType fetch(final Class<DomainType> domainType, final long id)
+    public <D extends IDomainObject> D fetch(final Class<D> domainType, final long id)
             throws DataAccessException {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
@@ -106,7 +106,7 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         LOGGER.debug("fetch(): domainType={}, id=", domainType, id);
 
         // Domain object of type asked for by caller.
-        DomainType domainObject = null;
+        D domainObject = null;
 
         // Get unique result using criteria and assign to domain object. This will be a tree of objects up to lazy
         // boundaries
@@ -132,38 +132,38 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         return domainObject;
     }
 
-    public <DomainType extends IDomainObject> DomainType[] query(final Class<DomainType> domainType) throws DataAccessException {
+    public <D extends IDomainObject> D[] query(final Class<D> domainType) throws DataAccessException {
         return query(domainType, () -> createSelectQuery(domainType));
     }
 
     @Override
-    public final <DomainType extends IDomainObject> DomainType[] query(final Class<DomainType> domainType,
-                                                                       Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
+    public final <D extends IDomainObject> D[] query(final Class<D> domainType,
+                                                     Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
             throws DataAccessException {
         LOGGER.debug("query(): domainType={}", domainType);
 
         // Get a list of results from JPA.
         final List<?> domainObjects = queryAsList(domainType, criteriaQuerySupplier);
 
-        @SuppressWarnings("unchecked") final DomainType[] results =
-                (DomainType[]) Array.newInstance(domainType, domainObjects.size());
+        @SuppressWarnings("unchecked") final D[] results =
+                (D[]) Array.newInstance(domainType, domainObjects.size());
 
         return domainObjects.toArray(results);
     }
 
     @Override
-    public final <DomainType extends IDomainObject> List<DomainType> queryAsList(final Class<DomainType> domainType,
-                                                                                 Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
+    public final <D extends IDomainObject> List<D> queryAsList(final Class<D> domainType,
+                                                               Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
             throws DataAccessException {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
         LOGGER.debug("queryAsList(): domainType={}", domainType);
 
-        TypedQuery<DomainType> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
+        TypedQuery<D> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
 
         // Get a list of results from JPA.
-        @SuppressWarnings("unchecked") final List<DomainType> domainObjects = typedQuery.getResultList();
+        @SuppressWarnings("unchecked") final List<D> domainObjects = typedQuery.getResultList();
 
         // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
@@ -194,7 +194,7 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
     }
 
     @Override
-    public <DomainType extends IDomainObject> void persistBulk(final List<DomainType> domainObjectList)
+    public <D extends IDomainObject> void persistBulk(final List<D> domainObjectList)
             throws DataAccessException {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
@@ -240,15 +240,15 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         return Long.valueOf(result);
     }
 
-    public <DOMAINTYPE extends IDomainObject> DOMAINTYPE uniqueResult(final Class<DOMAINTYPE> domainType,
-                                                                      Supplier<CriteriaQuery<DOMAINTYPE>> criteriaQuerySupplier) {
+    public <D extends IDomainObject> D uniqueResult(final Class<D> domainType,
+                                                    Supplier<CriteriaQuery<D>> criteriaQuerySupplier) {
 
         final long startTime = new GregorianCalendar().getTimeInMillis();
         LOGGER.debug("uniqueResult(): domainType={}", domainType);
 
-        TypedQuery<DOMAINTYPE> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
+        TypedQuery<D> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
         // Get unique result from JPA.
-        final DOMAINTYPE domainObject = typedQuery.getSingleResult();
+        final D domainObject = typedQuery.getSingleResult();
 
         // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
@@ -259,14 +259,14 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
     }
 
     @Override
-    public <DomainType extends IDomainObject> long queryAsCount(final Class<DomainType> domainType,
-                                                                Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier) {
+    public <D extends IDomainObject> long queryAsCount(final Class<D> domainType,
+                                                       Supplier<CriteriaQuery<D>> criteriaQuerySupplier) {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
         LOGGER.debug("queryAsCount(): domainType={}", domainType);
 
-        TypedQuery<DomainType> query = getEntityManager().createQuery(criteriaQuerySupplier.get());
+        TypedQuery<D> query = getEntityManager().createQuery(criteriaQuerySupplier.get());
         // Get unique result from JPA.
         final Number countOfObjects = query.getResultList().size();
 
@@ -278,10 +278,10 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         return countOfObjects != null ? countOfObjects.longValue() : 0;
     }
 
-    private <DomainType extends IDomainObject> CriteriaQuery<DomainType> createSelectQuery(Class<DomainType> domainType) {
+    private <D extends IDomainObject> CriteriaQuery<D> createSelectQuery(Class<D> domainType) {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<DomainType> criteriaQuery = criteriaBuilder.createQuery(domainType);
-        Root<DomainType> root = criteriaQuery.from(domainType);
+        CriteriaQuery<D> criteriaQuery = criteriaBuilder.createQuery(domainType);
+        Root<D> root = criteriaQuery.from(domainType);
         return criteriaQuery.select(root);
     }
 

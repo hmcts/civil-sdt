@@ -85,8 +85,8 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
     }
 
     @Override
-    protected <DomainType extends IDomainObject> DomainType getSpecificValue(final Class<DomainType> domainType,
-                                                                             final String errorMessageCode) {
+    protected <D extends IDomainObject> D getSpecificValue(final Class<D> domainType,
+                                                           final String errorMessageCode) {
         // Assume map is uninitialised if empty.
         if (this.getErrorMessages().isEmpty()) {
             loadCache();
@@ -103,7 +103,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
             throw new IllegalStateException("Error message with key [" + errorMessageCode + "] not found.");
         }
 
-        DomainType domainObject = null;
+        D domainObject = null;
 
         // Double check that the expected class matches the retrieved class.
         if (domainType.isAssignableFrom(someObject.getClass())) {

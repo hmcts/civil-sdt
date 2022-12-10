@@ -47,6 +47,7 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
@@ -59,6 +60,9 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import javax.xml.ws.WebServiceException;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Service class that implements the TargetApplicationSubmissionService.
@@ -182,7 +186,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         // Re-set the Dead Letter flag to false.
         individualRequest.setDeadLetter(false);
 
-        if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus().equals(requestStatusVal)) {
+        if (REJECTED.getStatus().equals(requestStatusVal)) {
             // If the request status is rejected, add an error log entry, mark as
             // REJECTED and persist the record. Update the bulk submission status
             // to COMPLETED by checking if all the individual requests are either
@@ -192,7 +196,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         } else {
             // If the request status is FORWARDED, update the status and
             // persist the record in database.
-            individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+            individualRequest.setRequestStatus(FORWARDED.getStatus());
             individualRequest.setUpdatedDate(LocalDateTime.now());
             this.getIndividualRequestDao().persist(individualRequest);
         }

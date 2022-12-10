@@ -57,6 +57,8 @@ import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * Implementation of {@link IBulkSubmissionValidator}.
  *
@@ -167,7 +169,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         long rejectedRequests = 0;
         for (IIndividualRequest individualRequest : individualRequests) {
             if (individualRequest.getRequestStatus().equals(
-                    IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus())) {
+                    REJECTED.getStatus())) {
                 rejectedRequests++;
             }
         }

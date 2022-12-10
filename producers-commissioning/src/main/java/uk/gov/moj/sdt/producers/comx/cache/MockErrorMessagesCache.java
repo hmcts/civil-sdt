@@ -49,8 +49,8 @@ public class MockErrorMessagesCache implements ICacheable, IErrorMessagesCache
 
     @SuppressWarnings ("unchecked")
     @Override
-    public <DomainType extends IDomainObject> DomainType
-            getValue (final Class<DomainType> domainType, final String key)
+    public <D extends IDomainObject> D
+            getValue (final Class<D> domainType, final String key)
     {
         final IErrorMessage errorMessage = new ErrorMessage ();
 
@@ -101,7 +101,7 @@ public class MockErrorMessagesCache implements ICacheable, IErrorMessagesCache
             errorMessage.setErrorText ("Unique Request Identifier has been specified more than once "
                     + "within the originating Bulk Request.");
         }
-        return (DomainType) errorMessage;
+        return (D) errorMessage;
 
     }
 

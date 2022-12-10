@@ -50,6 +50,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.AWAITING_DATA;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * When processing an Individual Request within the Bulk Request, the SDT application records
  * the following information as part of the Individual Request details.
@@ -332,7 +337,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     @Override
     public void incrementForwardingAttempts() {
-        this.setRequestStatus(IndividualRequestStatus.FORWARDED.getStatus());
+        this.setRequestStatus(FORWARDED.getStatus());
         this.setForwardingAttempts(this.getForwardingAttempts() + 1);
         this.setUpdatedDate(LocalDateTime.now());
     }
@@ -354,7 +359,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     @Override
     public void markRequestAsRejected(final IErrorLog errorLog) {
-        this.setRequestStatus(IndividualRequestStatus.REJECTED.getStatus());
+        this.setRequestStatus(REJECTED.getStatus());
 
         // Reset forward attempts
         this.setForwardingAttempts(0);
@@ -375,7 +380,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     @Override
     public void markRequestAsInitiallyAccepted() {
-        this.setRequestStatus(IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus());
+        this.setRequestStatus(INITIALLY_ACCEPTED.getStatus());
         // Reset forward attempts
         this.setForwardingAttempts(0);
 
@@ -386,7 +391,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     @Override
     public void markRequestAsAwaitingData() {
-        this.setRequestStatus(IndividualRequestStatus.AWAITING_DATA.getStatus());
+        this.setRequestStatus(AWAITING_DATA.getStatus());
         // Reset forward attempts
         this.setForwardingAttempts(0);
 

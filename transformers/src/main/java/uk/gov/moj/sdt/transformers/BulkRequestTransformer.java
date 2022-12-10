@@ -53,6 +53,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+
 /**
  * Maps bulk request JAXB object tree to domain object tree and vice versa.
  *
@@ -95,7 +97,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
 
             individualRequest.setLineNumber(lineNumber++);
 
-            individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
+            individualRequest.setRequestStatus(RECEIVED.getStatus());
 
             individualRequest.setRequestType(request.getRequestType());
 

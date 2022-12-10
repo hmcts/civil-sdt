@@ -62,6 +62,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE;
+
 /**
  * Test class for Update Request Service.
  *
@@ -144,7 +148,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
 
         // CHECKSTYLE:OFF
         Assert.assertEquals("Individual request status is incorrect",
-                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(), individualRequest.getRequestStatus());
+                REJECTED.getStatus(), individualRequest.getRequestStatus());
         Assert.assertNotNull("Individual request should have error", individualRequest.getErrorLog());
         Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
                 .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus());
@@ -244,7 +248,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
 
         // CHECKSTYLE:OFF
         Assert.assertEquals("Individual request status is incorrect",
-                IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus(), individualRequest.getRequestStatus());
+                RECEIVED.getStatus(), individualRequest.getRequestStatus());
         Assert.assertNull("Individual request should not have error", individualRequest.getErrorLog());
         Assert.assertEquals("Forwarding attempts should be reset to 0", 0, individualRequest.getForwardingAttempts());
         Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
@@ -337,7 +341,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = new IndividualRequest();
         domainObject.setSdtRequestReference("MCOL_IREQ_0001");
 
-        domainObject.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus());
+        domainObject.setRequestStatus(RESUBMIT_MESSAGE.getStatus());
 
         return domainObject;
     }

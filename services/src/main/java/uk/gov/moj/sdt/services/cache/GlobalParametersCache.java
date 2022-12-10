@@ -90,8 +90,8 @@ public class GlobalParametersCache extends AbstractCacheControl implements IGlob
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    protected <DomainType extends IDomainObject> DomainType getSpecificValue(final Class<DomainType> domainType,
-                                                                             final String paramName) {
+    protected <D extends IDomainObject> D getSpecificValue(final Class<D> domainType,
+                                                           final String paramName) {
         // Assume map is uninitialised if empty.
         if (this.getGlobalParameters().isEmpty()) {
             loadCache();
@@ -102,7 +102,7 @@ public class GlobalParametersCache extends AbstractCacheControl implements IGlob
         // Get the value of the named parameter.
         final Object someObject = this.getGlobalParameters().get(paramName);
 
-        DomainType domainObject = null;
+        D domainObject = null;
 
         if (someObject == null) {
             LOGGER.warn("Parameter with name [" + paramName + "] not found.");

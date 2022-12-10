@@ -73,6 +73,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+
 /**
  * Test class for BulkSubmissionService.
  *
@@ -391,7 +393,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference("ICustReq123");
         individualRequest.setId(1L);
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
 
         bulkSubmission.addIndividualRequest(individualRequest);
 
@@ -408,7 +410,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference(customerReference);
         individualRequest.setId(1L);
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
 
         bulkSubmission.addIndividualRequest(individualRequest);
     }

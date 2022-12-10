@@ -42,6 +42,10 @@ import uk.gov.moj.sdt.services.api.IUpdateRequestService;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE;
+
 /**
  * Service class implementing the IUpdateRequestService.
  *
@@ -81,7 +85,7 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
         if (individualRequest != null) {
 
             // Resubmit message to target application by enqueuing it.
-            if (IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus().equals(
+            if (RESUBMIT_MESSAGE.getStatus().equals(
                     individualRequestParam.getRequestStatus())) {
                 individualRequest.resetForwardingAttempts();
                 getMessagingUtility().enqueueRequest(individualRequest);
@@ -89,10 +93,10 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
 
             // Refresh the individual request from the database with the status and the error code
             // from the target application.
-            if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus().equals(
+            if (REJECTED.getStatus().equals(
                     individualRequestParam.getRequestStatus())) {
                 individualRequest.markRequestAsRejected(individualRequestParam.getErrorLog());
-            } else if (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus().equals(
+            } else if (ACCEPTED.getStatus().equals(
                     individualRequestParam.getRequestStatus())) {
                 individualRequest.markRequestAsAccepted();
             }

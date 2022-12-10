@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.validators;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -182,8 +183,9 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
 
                 individualRequest.getErrorLog().getErrorText(), "Duplicate Unique Request Identifier submitted " +
                         individualRequest.getCustomerRequestReference() + ".");
-        Assert.assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(),
-                individualRequest.getRequestStatus());
+        Assert.assertEquals(
+            REJECTED.getStatus(),
+            individualRequest.getRequestStatus());
 
     }
 

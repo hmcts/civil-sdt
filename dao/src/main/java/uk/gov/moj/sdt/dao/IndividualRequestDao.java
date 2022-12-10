@@ -41,6 +41,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
 
 /**
  * Implements specific DAO functionality based on {@link IIndividualRequestDao}. This is a derived DAO extending
@@ -148,7 +152,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
                     + "reached their maximum forwarding attempts.");
         }
         List<IndividualRequest> queryList = this.queryAsList(IndividualRequest.class, () -> {
-            Predicate[] sdtCustomerPredicate =  createIndividualRequestPredicate(IndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+            Predicate[] sdtCustomerPredicate =  createIndividualRequestPredicate(FORWARDED.getStatus(),
                                                                                  maxAllowedAttempts, false);
             return criteriaQuery.select(root).where(sdtCustomerPredicate);
         });
@@ -174,8 +178,8 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
 
     private Predicate[] createIndividualRequestPredicate(boolean deadLetter, LocalDateTime latestTime) {
         Predicate[] predicates = new Predicate[3];
-        predicates[0] = criteriaBuilder.or(criteriaBuilder.equal(root.get(REQUEST_STATUS), IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus()),
-                                           criteriaBuilder.equal(root.get(REQUEST_STATUS), IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus()));
+        predicates[0] = criteriaBuilder.or(criteriaBuilder.equal(root.get(REQUEST_STATUS), RECEIVED.getStatus()),
+                                           criteriaBuilder.equal(root.get(REQUEST_STATUS), FORWARDED.getStatus()));
         predicates[1] = criteriaBuilder.equal(root.get(DEAD_LETTER), deadLetter);
         predicates[2] = criteriaBuilder.or(criteriaBuilder.lessThan(root.get(UPDATED_DATE), latestTime), criteriaBuilder.isNull(root.get(UPDATED_DATE)));
         return predicates;

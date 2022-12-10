@@ -49,8 +49,8 @@ public class MockGlobalParametersCache implements ICacheable, IGlobalParametersC
 
     @SuppressWarnings ("unchecked")
     @Override
-    public <DomainType extends IDomainObject> DomainType
-            getValue (final Class<DomainType> domainType, final String key)
+    public <D extends IDomainObject> D
+            getValue (final Class<D> domainType, final String key)
     {
 
         if (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ().equals (key))
@@ -59,7 +59,7 @@ public class MockGlobalParametersCache implements ICacheable, IGlobalParametersC
             globalParameter.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
             globalParameter.setValue ("90");
 
-            return (DomainType) globalParameter;
+            return (D) globalParameter;
         }
         if (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ().equals (key))
         {
@@ -67,7 +67,7 @@ public class MockGlobalParametersCache implements ICacheable, IGlobalParametersC
             globalParameter.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
             globalParameter.setValue ("TBD");
 
-            return (DomainType) globalParameter;
+            return (D) globalParameter;
         }
 
         return null;

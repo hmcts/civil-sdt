@@ -68,6 +68,8 @@ import java.util.Set;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Test class for BulkSubmissionService.
@@ -162,9 +164,9 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     public void testGetBulkFeedback() throws IOException {
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
-        addValidIndividualRequest(bulkSubmission, "ICustReq124", IndividualRequestStatus.RECEIVED.getStatus());
-        addValidIndividualRequest(bulkSubmission, "ICustReq125", IndividualRequestStatus.REJECTED.getStatus());
-        addValidIndividualRequest(bulkSubmission, "ICustReq126", IndividualRequestStatus.RECEIVED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq124", RECEIVED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq125", REJECTED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq126", RECEIVED.getStatus());
 
         LOGGER.debug("Size of Individual Requests in Bulk Submission is " +
                 bulkSubmission.getIndividualRequests().size());
@@ -234,7 +236,7 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
                 .setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference("ICustReq123");
         individualRequest.setId(1L);
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
 
         bulkSubmission.addIndividualRequest(individualRequest);
 
@@ -255,7 +257,7 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setCustomerRequestReference(customerReference);
         individualRequest.setId(1L);
         individualRequest.setRequestStatus(status);
-        if (IndividualRequestStatus.REJECTED.getStatus().equals(status)) {
+        if (REJECTED.getStatus().equals(status)) {
             final IErrorLog errorLog =
                     new ErrorLog(IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
                             "Duplicate Unique Request Identifier submitted {0}");

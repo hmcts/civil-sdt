@@ -110,7 +110,7 @@ public class MockGenericDao implements IGenericDao
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final long id)
+    public <D extends IDomainObject> D fetch (final Class<D> domainType, final long id)
         throws DataAccessException
     {
         // Create dummy service request to satisfy logging of outbound request.
@@ -125,16 +125,16 @@ public class MockGenericDao implements IGenericDao
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType[] query (final Class<DomainType> domainType,
-                                                                  Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
+    public <D extends IDomainObject> D[] query (final Class<D> domainType,
+                                                Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
         throws DataAccessException
     {
-        return (DomainType[]) new IDomainObject[0];
+        return (D[]) new IDomainObject[0];
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType[] query(Class<DomainType> domainType) throws DataAccessException {
-        return (DomainType[]) new IDomainObject[0];
+    public <D extends IDomainObject> D[] query(Class<D> domainType) throws DataAccessException {
+        return (D[]) new IDomainObject[0];
     }
 
     @Override
@@ -172,21 +172,21 @@ public class MockGenericDao implements IGenericDao
     }
 
     @Override
-    public <DomainType extends IDomainObject> List<DomainType> queryAsList (final Class<DomainType> domainType,
-                                                                            Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
+    public <D extends IDomainObject> List<D> queryAsList (final Class<D> domainType,
+                                                          Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
     {
         return new ArrayList<>();
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType uniqueResult(Class<DomainType> domainType,
-                                                                      Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier) {
+    public <D extends IDomainObject> D uniqueResult(Class<D> domainType,
+                                                    Supplier<CriteriaQuery<D>> criteriaQuerySupplier) {
         return null;
     }
 
     @Override
-    public <DomainType extends IDomainObject> long queryAsCount (final Class<DomainType> domainType,
-                                                                 Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
+    public <D extends IDomainObject> long queryAsCount (final Class<D> domainType,
+                                                        Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
     {
         return 0;
     }

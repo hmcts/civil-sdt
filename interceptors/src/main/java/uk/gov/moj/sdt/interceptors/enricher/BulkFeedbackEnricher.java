@@ -43,6 +43,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * Bulk feedback enricher used to enrich outbound messages for get bulk feedback.
  *
@@ -208,7 +210,7 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher {
             matcher = pattern.matcher(newXml);
             if (matcher.find()) {
                 // Use the captured status code to ignore rejected responses which do not need to be enhanced.
-                if (!matcher.group(1).equals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus())) {
+                if (!matcher.group(1).equals(REJECTED.getStatus())) {
                     // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
                     LOGGER.error("Detected unenriched response tag[{}] within bulk feedback response XML.",
                             matcher.group());

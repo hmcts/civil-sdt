@@ -62,6 +62,7 @@ import java.util.List;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Tests for {@link BulkSubmissionValidatorTest}.
@@ -282,7 +283,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         bulkSubmission.accept(validator, null);
 
         // Check the duplicate individual request has been rejected
-        Assert.assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(), bulkSubmission
+        Assert.assertEquals(REJECTED.getStatus(), bulkSubmission
                 .getIndividualRequests().get(1).getRequestStatus());
 
     }

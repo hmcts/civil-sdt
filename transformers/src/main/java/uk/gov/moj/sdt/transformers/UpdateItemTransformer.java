@@ -46,6 +46,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE;
+
 /**
  * Maps UpdateItem JAXB object tree to domain object and vice-versa.
  *
@@ -70,7 +72,7 @@ public class UpdateItemTransformer extends AbstractTransformer implements
         } else if (UpdateStatusCodeType.ACCEPTED.equals(statusCode)) {
             individualRequest.markRequestAsAccepted();
         } else if (UpdateStatusCodeType.RESUBMIT_MESSAGE.equals(statusCode)) {
-            individualRequest.setRequestStatus(IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus());
+            individualRequest.setRequestStatus(RESUBMIT_MESSAGE.getStatus());
         }
 
         return individualRequest;

@@ -52,6 +52,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestsType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+
 /**
  * Unit tests for BulkRequestTransformer.
  *
@@ -154,7 +156,7 @@ public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
     private void verify(final RequestItemType expected, final IIndividualRequest actual, final int row) {
         Assert.assertNotNull(actual.getBulkSubmission());
         Assert.assertEquals("Customer reference does not match",
-                IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus(), actual.getRequestStatus());
+                RECEIVED.getStatus(), actual.getRequestStatus());
         Assert.assertEquals("Request id for individual request " + row + " does not match", expected.getRequestId(),
                 actual.getCustomerRequestReference());
         Assert.assertEquals("Line number for individual request " + row + " does not match", Integer.valueOf(row),
