@@ -41,7 +41,6 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

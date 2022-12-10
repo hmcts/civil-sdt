@@ -30,18 +30,16 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.enricher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.utils.SdtContext;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.utils.SdtContext;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -208,15 +206,13 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher {
                             + "requestId=[\"\'][ \\w]*?[\"\']>\\s*<[\\S:&&[^!>/]]*?"
                             + "responseDetail/>\\s*<[\\S:&&[^!>/]]*?status code=[\"\']([ \\w]+)[\"\']");
             matcher = pattern.matcher(newXml);
-            if (matcher.find()) {
+            if (matcher.find() && !matcher.group(1).equals(REJECTED.getStatus())) {
                 // Use the captured status code to ignore rejected responses which do not need to be enhanced.
-                if (!matcher.group(1).equals(REJECTED.getStatus())) {
-                    // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
-                    LOGGER.error("Detected unenriched response tag[{}] within bulk feedback response XML.",
-                            matcher.group());
-                    throw new UnsupportedOperationException("Detected unenriched response tag[" + matcher.group() +
-                            "] within bulk feedback response XML.");
-                }
+                // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
+                LOGGER.error("Detected unenriched response tag[{}] within bulk feedback response XML.",
+                             matcher.group());
+                throw new UnsupportedOperationException("Detected unenriched response tag[" + matcher.group() +
+                                                            "] within bulk feedback response XML.");
             }
 
             if (LOGGER.isDebugEnabled()) {

@@ -89,7 +89,6 @@ public class GlobalParametersCache extends AbstractCacheControl implements IGlob
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
     protected <D extends IDomainObject> D getSpecificValue(final Class<D> domainType,
                                                            final String paramName) {
         // Assume map is uninitialised if empty.

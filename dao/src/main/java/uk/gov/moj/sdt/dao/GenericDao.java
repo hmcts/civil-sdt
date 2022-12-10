@@ -68,17 +68,17 @@ import javax.persistence.criteria.Root;
  */
 // @Transactional (propagation = Propagation.MANDATORY)
 // @Transactional
-public class GenericDao<DT extends IDomainObject> implements IGenericDao {
+public class GenericDao<T extends IDomainObject> implements IGenericDao {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericDao.class);
 
-    private final CrudRepository<DT, Long> crudRepository;
+    private final CrudRepository<T, Long> crudRepository;
 
     private EntityManager entityManager;
 
-    public GenericDao(final CrudRepository<DT, Long> crudRepository) {
+    public GenericDao(final CrudRepository<T, Long> crudRepository) {
         super();
         this.crudRepository = crudRepository;
     }
@@ -86,7 +86,7 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
     /**
      * Default constructor for {@link GenericDao}.
      */
-    public GenericDao(final CrudRepository<DT, Long> crudRepository,
+    public GenericDao(final CrudRepository<T, Long> crudRepository,
                       EntityManager entityManager) {
         super();
         this.crudRepository = crudRepository;
@@ -110,7 +110,7 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
 
         // Get unique result using criteria and assign to domain object. This will be a tree of objects up to lazy
         // boundaries
-        final Optional<DT> value = this.crudRepository.findById(id);
+        final Optional<T> value = this.crudRepository.findById(id);
         if (value.isPresent()) {
             domainObject = domainType.cast(value.get());
         }
@@ -173,11 +173,6 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         return domainObjects;
     }
 
-    public <T extends IDomainObject> void persist(final IDomainObject domainObject,
-                                                  CrudRepository<IDomainObject, Long> repository) throws DataAccessException {
-        repository.save(domainObject);
-    }
-
     @Override
     public void persist(final Object domainObject) throws DataAccessException {
         // Record start time.
@@ -185,7 +180,7 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
 
         LOGGER.debug("Persist domain object " + domainObject.toString());
 
-        crudRepository.save((DT) domainObject);
+        crudRepository.save((T) domainObject);
 
         // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();
@@ -204,7 +199,7 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         int i = 1;
         final int maxBatchSize = 20;
         for (Object domainObject : domainObjectList) {
-            crudRepository.save((DT) domainObject);
+            crudRepository.save((T) domainObject);
             if (i % maxBatchSize == 0) {
                 getEntityManager().flush();
             }
@@ -297,6 +292,6 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
     }
 
     private LocalDateTime atStartOfDay(int dataRetention) {
-        return LocalDate.now().plusDays(dataRetention * -1).atStartOfDay();
+        return LocalDate.now().plusDays(dataRetention * -1L).atStartOfDay();
     }
 }
