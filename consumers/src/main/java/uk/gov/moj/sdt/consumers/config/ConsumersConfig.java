@@ -29,6 +29,14 @@ import java.util.Map;
 @EnableTransactionManagement
 public class ConsumersConfig {
 
+    public static final String SDT_TARGET_APP_SUBMIT_QUERY_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema";
+    public static final String SDT_TARGET_APP_SUBMIT_QUERY_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema";
+    public static final String SDT_BASE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema";
+    public static final String SDT_TARGET_APP_INDV_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema";
+    public static final String SDT_TARGET_APP_INDV_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema";
+    public static final String OVERRIDDEN_DYNAMICALLY = "http://dummhost/overridden/dynamically";
+    public static final String SOAP_BINDINGS_HTTP = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
+
     @Bean
     @Scope("prototype")
     public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType(@Qualifier("XmlOutboundInterceptor")
@@ -47,8 +55,8 @@ public class ConsumersConfig {
                                                                                           SdtUnmarshallInterceptor sdtUnmarshallInterceptor
                                                                                       ) {
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
-        jaxWsProxyFactoryBean.setAddress("http://dummhost/overridden/dynamically");
-        jaxWsProxyFactoryBean.setBindingId("http://www.w3.org/2003/05/soap/bindings/HTTP/");
+        jaxWsProxyFactoryBean.setAddress(OVERRIDDEN_DYNAMICALLY);
+        jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
         List<Interceptor<? extends Message>> outInterceptors = new ArrayList<>();
         outInterceptors.add(cacheSetupOutboundInterceptor);
         outInterceptors.add(xmlOutboundInterceptor);
@@ -69,11 +77,11 @@ public class ConsumersConfig {
         Map<String, Object> properties = new HashMap<>();
         properties.put("disable.outputstream.optimization", true);
         Map<String, String>  soapEnvNsMap = new HashMap<>();
-        soapEnvNsMap.put("tsqreq", "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema");
-        soapEnvNsMap.put("tsqres", "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema");
-        soapEnvNsMap.put("base", "http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema");
-        soapEnvNsMap.put("tireq", "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
-        soapEnvNsMap.put("tires", "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema");
+        soapEnvNsMap.put("tsqreq", SDT_TARGET_APP_SUBMIT_QUERY_REQUEST_SCHEMA);
+        soapEnvNsMap.put("tsqres", SDT_TARGET_APP_SUBMIT_QUERY_RESPONSE_SCHEMA);
+        soapEnvNsMap.put("base", SDT_BASE_SCHEMA);
+        soapEnvNsMap.put("tireq", SDT_TARGET_APP_INDV_REQUEST_SCHEMA);
+        soapEnvNsMap.put("tires", SDT_TARGET_APP_INDV_RESPONSE_SCHEMA);
         properties.put("soap.env.ns.map", soapEnvNsMap);
 
         jaxWsProxyFactoryBean.setProperties(properties);

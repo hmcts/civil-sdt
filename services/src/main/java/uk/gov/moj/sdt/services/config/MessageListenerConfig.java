@@ -1,6 +1,5 @@
 package uk.gov.moj.sdt.services.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,14 +11,10 @@ import uk.gov.moj.sdt.services.messaging.api.IMessageDrivenBean;
 @Configuration
 public class MessageListenerConfig {
 
-    @Autowired
-    @Lazy
-    @Qualifier("IndividualRequestMdb")
-    private IMessageDrivenBean individualRequestMdb;
-
     @Bean
     @Scope("prototype")
-    public MessageListenerAdapter messageListenerAdapter() {
+    public MessageListenerAdapter messageListenerAdapter(@Qualifier("IndividualRequestMdb")
+                                                         @Lazy IMessageDrivenBean individualRequestMdb) {
         MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(individualRequestMdb);
         messageListenerAdapter.setMessageConverter(null);
         messageListenerAdapter.setDefaultListenerMethod("readMessage");

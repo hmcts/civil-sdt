@@ -1,6 +1,5 @@
 package uk.gov.moj.sdt.services.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -33,13 +32,8 @@ public class ServicesConfig {
     public static final String SDT_TARGET_APP_INDV_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvResponseSchema";
     public static final String SDT_BULK_FEEDBACK_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema";
     public static final String SDT_INDIVIDUAL_UPDATE_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema";
-    public static final String BULK_FEEDBACK_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema";
     public static final String SDT_BULK_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema";
     public static final String SDT_TARGET_APP_INDV_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema";
-
-    @Autowired
-    @Lazy
-    private MessageListenerAdapter messageListenerAdapter;
 
     @Value("${sdt.service.config.concurrentConsumers}")
     private int concurrentConsumers = 1;
@@ -58,7 +52,8 @@ public class ServicesConfig {
     @Qualifier("messageListenerContainer")
     public DefaultMessageListenerContainer messageListenerContainer(ConnectionFactory jmsConnectionFactory,
                                                                     PlatformTransactionManager transactionManager,
-                                                                    QueueConfig queueConfig) {
+                                                                    QueueConfig queueConfig,
+                                                                    @Lazy MessageListenerAdapter messageListenerAdapter) {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
         defaultMessageListenerContainer.setDestinationName(queueConfig.getTargetAppQueue().get("MCOL"));
