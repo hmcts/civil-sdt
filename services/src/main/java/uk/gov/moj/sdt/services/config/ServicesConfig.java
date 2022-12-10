@@ -38,17 +38,8 @@ public class ServicesConfig {
     public static final String SDT_TARGET_APP_INDV_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema";
 
     @Autowired
-    private ConnectionFactory jmsConnectionFactory;
-
-    @Autowired
-    private PlatformTransactionManager transactionManager;
-
-    @Autowired
     @Lazy
     private MessageListenerAdapter messageListenerAdapter;
-
-    @Autowired
-    private QueueConfig queueConfig;
 
     @Value("${sdt.service.config.concurrentConsumers}")
     private int concurrentConsumers = 1;
@@ -65,7 +56,9 @@ public class ServicesConfig {
     @Bean
     @Lazy
     @Qualifier("messageListenerContainer")
-    public DefaultMessageListenerContainer messageListenerContainer() {
+    public DefaultMessageListenerContainer messageListenerContainer(ConnectionFactory jmsConnectionFactory,
+                                                                    PlatformTransactionManager transactionManager,
+                                                                    QueueConfig queueConfig) {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
         defaultMessageListenerContainer.setDestinationName(queueConfig.getQueueConfig().get("MCOL"));

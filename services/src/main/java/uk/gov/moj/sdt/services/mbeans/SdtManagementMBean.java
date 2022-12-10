@@ -116,7 +116,7 @@ public class SdtManagementMBean implements ISdtManagementMBean {
     /**
      * Map of all message driven bean message listener containers, defining the MDB pool size.
      */
-    private Map<String, DefaultMessageListenerContainer> containerMap = new HashMap<String, DefaultMessageListenerContainer>();
+    private Map<String, DefaultMessageListenerContainer> containerMap = new HashMap<>();
 
     /**
      * Individual Request Dao to perform operations on the individual request object.

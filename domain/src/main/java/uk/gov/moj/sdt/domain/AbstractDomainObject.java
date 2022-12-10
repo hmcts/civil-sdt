@@ -86,6 +86,20 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable 
     }
 
     @Override
+    public Long getId() {
+        return null;
+    }
+
+    public void setId(final Long id) {
+    }
+
+    @Override
+    public int getVersion() {
+        return 0;
+    }
+
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("AbstractEntity[");
         sb.append("id=" + this.getId());

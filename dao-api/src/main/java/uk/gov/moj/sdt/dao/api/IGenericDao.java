@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 
 /**
  * core interface of GenericDao.
@@ -56,13 +55,13 @@ public interface IGenericDao {
      * boundaries, regardless of whether the objects referenced got loaded already.
      * </p>
      *
-     * @param <DomainType> of entity to load
+     * @param <DOMAIINTYP> of entity to load
      * @param domainType   of entity to load.
      * @param id           of entity to load.
      * @return business domain entity model hierarchy root object.
      * @throws DataAccessException on any I/O related error.
      */
-    <DomainType extends IDomainObject> DomainType fetch(final Class<DomainType> domainType, final long id)
+    <DOMAIINTYP extends IDomainObject> DOMAIINTYP fetch(final Class<DOMAIINTYP> domainType, final long id)
             throws DataAccessException;
 
     /**
@@ -75,15 +74,15 @@ public interface IGenericDao {
      * This can be used to load a user by name, for example.
      * </p>
      *
-     * @param <DomainType> of entity to load.
+     * @param <DOMAINTYPE> of entity to load.
      * @param domainType   of entity to load.
      * @return business domain entity model hierarchy root object.
      * @throws DataAccessException on any I/O related error.
      */
-    <DomainType extends IDomainObject> DomainType[] query(final Class<DomainType> domainType,
-                                                          Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier) throws DataAccessException;
+    <DOMAINTYPE extends IDomainObject> DOMAINTYPE[] query(final Class<DOMAINTYPE> domainType,
+                                                          Supplier<CriteriaQuery<DOMAINTYPE>> criteriaQuerySupplier) throws DataAccessException;
 
-    <DomainType extends IDomainObject> DomainType[] query(final Class<DomainType> domainType) throws DataAccessException;
+    <DOMAINTYPE extends IDomainObject> DOMAINTYPE[] query(final Class<DOMAINTYPE> domainType) throws DataAccessException;
 
     /**
      * Returns a list of domain object model hierarchies with a set of
@@ -95,13 +94,13 @@ public interface IGenericDao {
      * This can be used to load a user by name, for example.
      * </p>
      *
-     * @param <DomainType> of entity to load.
+     * @param <DOMAINTYPE> of entity to load.
      * @param domainType   of entity to load.
      * @return business domain entity model hierarchy root object.
      * @throws DataAccessException on any I/O related error.
      */
-    <DomainType extends IDomainObject> List<DomainType> queryAsList(final Class<DomainType> domainType,
-                                                                    Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier);
+    <DOMAINTYPE extends IDomainObject> List<DOMAINTYPE> queryAsList(final Class<DOMAINTYPE> domainType,
+                                                                    Supplier<CriteriaQuery<DOMAINTYPE>> criteriaQuerySupplier);
 
     /**
      * Returns unique domain object model hierarchy with a set of
@@ -113,13 +112,13 @@ public interface IGenericDao {
      * This can be used to load a user by name, for example.
      * </p>
      *
-     * @param <DomainType> of entity to load.
+     * @param <DOMAINTYPE> of entity to load.
      * @param domainType   of entity to load.
      * @return business domain entity model hierarchy root object.
      * @throws DataAccessException on any I/O related error.
      */
-    <DomainType extends IDomainObject> DomainType uniqueResult(final Class<DomainType> domainType,
-                                                               Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier);
+    <DOMAINTYPE extends IDomainObject> DOMAINTYPE uniqueResult(final Class<DOMAINTYPE> domainType,
+                                                               Supplier<CriteriaQuery<DOMAINTYPE>> criteriaQuerySupplier);
 
 
     /**
@@ -155,11 +154,11 @@ public interface IGenericDao {
      * either assigned as part of a insert operation or its previous value if this is an update.
      * </p>
      *
-     * @param <DomainType>     of entity to persist.
+     * @param <DOMAINTYPE>     of entity to persist.
      * @param domainObjectList the list of instance to insert or update.
      * @throws DataAccessException on any I/O related error.
      */
-    <DomainType extends IDomainObject> void persistBulk(final List<DomainType> domainObjectList)
+    <DOMAINTYPE extends IDomainObject> void persistBulk(final List<DOMAINTYPE> domainObjectList)
             throws DataAccessException;
 
     /**
@@ -182,13 +181,13 @@ public interface IGenericDao {
      * This can be used where there is no use for the actual objects, for example.
      * </p>
      *
-     * @param <DomainType> of entity to load.
+     * @param <DOMAINTYPE> of entity to load.
      * @param domainType   of entity to load.
      * @return the unique count of the domain object heirarchy matching the criteria
      * @throws DataAccessException on any I/O related error.
      */
-    <DomainType extends IDomainObject> long queryAsCount(final Class<DomainType> domainType,
-                                                         Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier);
+    <DOMAINTYPE extends IDomainObject> long queryAsCount(final Class<DOMAINTYPE> domainType,
+                                                         Supplier<CriteriaQuery<DOMAINTYPE>> criteriaQuerySupplier);
 
     EntityManager getEntityManager();
 

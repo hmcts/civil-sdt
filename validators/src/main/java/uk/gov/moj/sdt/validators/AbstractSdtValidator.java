@@ -70,7 +70,7 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor {
      */
     private ICacheable errorMessagesCache;
 
-    public AbstractSdtValidator(@Qualifier("BulkCustomerDao")
+    protected AbstractSdtValidator(@Qualifier("BulkCustomerDao")
                                     IBulkCustomerDao bulkCustomerDao,
                                 @Qualifier("GlobalParametersCache")
                                     ICacheable globalParameterCache,

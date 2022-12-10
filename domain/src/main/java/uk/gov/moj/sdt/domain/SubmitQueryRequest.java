@@ -197,19 +197,4 @@ public class SubmitQueryRequest extends AbstractDomainObject implements ISubmitQ
         sb.append("]");
         return sb.toString();
     }
-
-    @Override
-    public Long getId() {
-        return null;
-    }
-
-    @Override
-    public void setId(Long id) {
-
-    }
-
-    @Override
-    public int getVersion() {
-        return 0;
-    }
 }

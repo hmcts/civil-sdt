@@ -124,8 +124,6 @@ public class MessageWriter implements IMessageWriter {
                     "] while queueing message request reference [" + sdtMessage.getSdtRequestReference() + "]", e);
 
         }
-
-        return;
     }
 
     /**

@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.repository.ServiceRequestRepository;
+import uk.gov.moj.sdt.domain.ServiceRequest;
 
 import javax.persistence.EntityManager;
 
@@ -46,7 +47,7 @@ import javax.persistence.EntityManager;
  * @author Robin Compston
  */
 @Component("ServiceRequestDao")
-public class ServiceRequestDao extends GenericDao {
+public class ServiceRequestDao extends GenericDao<ServiceRequest> {
 
     @Autowired
     public ServiceRequestDao(final ServiceRequestRepository crudRepository,

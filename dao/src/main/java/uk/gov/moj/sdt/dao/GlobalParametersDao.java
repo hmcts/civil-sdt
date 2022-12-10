@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.repository.GlobalParametersRepository;
+import uk.gov.moj.sdt.domain.GlobalParameter;
 
 import javax.persistence.EntityManager;
 
@@ -46,7 +47,7 @@ import javax.persistence.EntityManager;
  * @author Robin Compston
  */
 @Component("GlobalParametersDao")
-public class GlobalParametersDao extends GenericDao {
+public class GlobalParametersDao extends GenericDao<GlobalParameter> {
 
     @Autowired
     public GlobalParametersDao(final GlobalParametersRepository crudRepository,

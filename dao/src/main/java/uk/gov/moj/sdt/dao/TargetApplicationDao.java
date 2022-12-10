@@ -56,7 +56,7 @@ import javax.persistence.criteria.Root;
  * @author Son Loi
  */
 @Component("TargetApplicationDao")
-public class TargetApplicationDao extends GenericDao implements ITargetApplicationDao {
+public class TargetApplicationDao extends GenericDao<TargetApplication> implements ITargetApplicationDao {
     /**
      * Logger object.
      */

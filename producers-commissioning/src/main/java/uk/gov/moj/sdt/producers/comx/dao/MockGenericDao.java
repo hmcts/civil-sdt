@@ -129,12 +129,12 @@ public class MockGenericDao implements IGenericDao
                                                                   Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
         throws DataAccessException
     {
-        return null;
+        return (DomainType[]) new IDomainObject[0];
     }
 
     @Override
     public <DomainType extends IDomainObject> DomainType[] query(Class<DomainType> domainType) throws DataAccessException {
-        return null;
+        return (DomainType[]) new IDomainObject[0];
     }
 
     @Override
@@ -175,7 +175,7 @@ public class MockGenericDao implements IGenericDao
     public <DomainType extends IDomainObject> List<DomainType> queryAsList (final Class<DomainType> domainType,
                                                                             Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier)
     {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

@@ -240,15 +240,15 @@ public class GenericDao<DT extends IDomainObject> implements IGenericDao {
         return Long.valueOf(result);
     }
 
-    public <DomainType extends IDomainObject> DomainType uniqueResult(final Class<DomainType> domainType,
-                                                                      Supplier<CriteriaQuery<DomainType>> criteriaQuerySupplier) {
+    public <DOMAINTYPE extends IDomainObject> DOMAINTYPE uniqueResult(final Class<DOMAINTYPE> domainType,
+                                                                      Supplier<CriteriaQuery<DOMAINTYPE>> criteriaQuerySupplier) {
 
         final long startTime = new GregorianCalendar().getTimeInMillis();
         LOGGER.debug("uniqueResult(): domainType={}", domainType);
 
-        TypedQuery<DomainType> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
+        TypedQuery<DOMAINTYPE> typedQuery = getEntityManager().createQuery(criteriaQuerySupplier.get());
         // Get unique result from JPA.
-        final DomainType domainObject = typedQuery.getSingleResult();
+        final DOMAINTYPE domainObject = typedQuery.getSingleResult();
 
         // Calculate time in JPA/database.
         final long endTime = new GregorianCalendar().getTimeInMillis();

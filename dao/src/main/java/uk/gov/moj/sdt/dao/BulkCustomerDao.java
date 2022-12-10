@@ -55,7 +55,7 @@ import javax.persistence.criteria.Root;
  * @author Robin Compston
  */
 @Component("BulkCustomerDao")
-public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao {
+public class BulkCustomerDao extends GenericDao<BulkCustomer> implements IBulkCustomerDao {
     /**
      * Logger object.
      */
@@ -81,7 +81,7 @@ public class BulkCustomerDao extends GenericDao implements IBulkCustomerDao {
         LOGGER.debug("Get bulk customer matching sdt customer id [{}]", sdtCustomerId);
 
         // Call the generic dao to perform this query.
-        return (IBulkCustomer) this.uniqueResult(IBulkCustomer.class, () -> {
+        return this.uniqueResult(BulkCustomer.class, () -> {
             Predicate sdtCustomerPredicate = criteriaBuilder.equal(root.get("sdtCustomerId"), sdtCustomerId);
             return criteriaQuery.select(root).where(sdtCustomerPredicate);
         });

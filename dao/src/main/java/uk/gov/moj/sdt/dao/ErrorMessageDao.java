@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.repository.ErrorMessageRepository;
+import uk.gov.moj.sdt.domain.ErrorMessage;
 
 import javax.persistence.EntityManager;
 
@@ -46,7 +47,7 @@ import javax.persistence.EntityManager;
  * @author Robin Compston
  */
 @Component("ErrorMessageDao")
-public class ErrorMessageDao extends GenericDao {
+public class ErrorMessageDao extends GenericDao<ErrorMessage> {
 
     @Autowired
     public ErrorMessageDao(final ErrorMessageRepository crudRepository,

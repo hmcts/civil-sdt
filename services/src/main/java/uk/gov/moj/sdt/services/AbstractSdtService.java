@@ -66,7 +66,7 @@ public abstract class AbstractSdtService {
      */
     private GenericXmlParser individualResponseXmlParser;
 
-    public AbstractSdtService(@Qualifier("IndividualRequestDao")
+    protected AbstractSdtService(@Qualifier("IndividualRequestDao")
                                       IIndividualRequestDao individualRequestDao,
                               @Qualifier("IndividualResponseXmlParser")
                                   GenericXmlParser individualResponseXmlParser) {

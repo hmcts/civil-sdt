@@ -1,13 +1,11 @@
 package uk.gov.moj.sdt.producers.sdtws.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssembler;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
@@ -25,27 +23,8 @@ import java.util.Map;
 @Configuration
 public class ProducersConfig {
 
-    @Autowired
-    private ISdtManagementMBean sdtManagementMBean;
-
-    @Autowired
-    @Qualifier("WsReadSubmitQueryHandler")
-    private IWsReadSubmitQueryHandler wsReadSubmitQueryHandler;
-
-    @Autowired
-    @Qualifier("WsReadBulkFeedbackRequestHandler")
-    private IWsReadBulkRequestHandler wsReadBulkRequestHandler;
-
-    @Autowired
-    @Qualifier("WsCreateBulkRequestHandler")
-    private IWsCreateBulkRequestHandler wsCreateBulkRequestHandler;
-
-    @Autowired
-    @Qualifier("WsUpdateItemHandler")
-    private IWsUpdateItemHandler wsUpdateItemHandler;
-
     @Bean
-    public MBeanExporter mBeanExporter() {
+    public MBeanExporter mBeanExporter(ISdtManagementMBean sdtManagementMBean) {
         MBeanExporter mBeanExporter = new MBeanExporter();
         Map<String, Object> beans = new HashMap<>();
         beans.put("bean:name=sdtProducersManagement", sdtManagementMBean);
@@ -63,7 +42,12 @@ public class ProducersConfig {
 
     @Bean
     @Qualifier("ISdtEndpointPortType")
-    public ISdtEndpointPortType sdtEndpointPortType() {
+    public ISdtEndpointPortType sdtEndpointPortType(@Qualifier("WsReadSubmitQueryHandler")
+                                                    IWsReadSubmitQueryHandler wsReadSubmitQueryHandler,
+                                                    @Qualifier("WsReadBulkFeedbackRequestHandler")
+                                                    IWsReadBulkRequestHandler wsReadBulkRequestHandler,
+                                                    @Qualifier("WsCreateBulkRequestHandler")
+                                                    IWsCreateBulkRequestHandler wsCreateBulkRequestHandler) {
         SdtEndpointPortType sdtEndpointPortType = new SdtEndpointPortType();
         sdtEndpointPortType.setWsCreateBulkRequestHandler(wsCreateBulkRequestHandler);
         sdtEndpointPortType.setWsReadBulkRequestHandler(wsReadBulkRequestHandler);
@@ -73,7 +57,8 @@ public class ProducersConfig {
 
     @Bean
     @Qualifier("ISdtInternalEndpointPortType")
-    public ISdtInternalEndpointPortType sdtInternalEndpointPortType() {
+    public ISdtInternalEndpointPortType sdtInternalEndpointPortType(@Qualifier("WsUpdateItemHandler")
+                                                                    IWsUpdateItemHandler wsUpdateItemHandler) {
         SdtInternalEndpointPortType sdtEndpointPortType = new SdtInternalEndpointPortType();
         sdtEndpointPortType.setUpdateItemHandler(wsUpdateItemHandler);
         return sdtEndpointPortType;

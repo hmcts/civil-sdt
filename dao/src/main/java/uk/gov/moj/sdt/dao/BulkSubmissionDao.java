@@ -58,7 +58,7 @@ import javax.persistence.criteria.Root;
  * @author Robin Compston
  */
 @Component("BulkSubmissionDao")
-public class BulkSubmissionDao extends GenericDao implements IBulkSubmissionDao {
+public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBulkSubmissionDao {
     /**
      * Logger object.
      */

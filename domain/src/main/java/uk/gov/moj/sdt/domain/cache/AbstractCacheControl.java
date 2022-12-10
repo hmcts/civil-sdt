@@ -56,7 +56,7 @@ public abstract class AbstractCacheControl implements ICacheable {
      */
     private ISdtManagementMBean managementMBean;
 
-    public AbstractCacheControl(ISdtManagementMBean managementMBean) {
+    protected AbstractCacheControl(ISdtManagementMBean managementMBean) {
         this.managementMBean = managementMBean;
     }
 
