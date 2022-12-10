@@ -198,7 +198,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
 
         int i = 1;
         final int maxBatchSize = 20;
-        for (Object domainObject : domainObjectList) {
+        for (D domainObject : domainObjectList) {
             crudRepository.save((T) domainObject);
             if (i % maxBatchSize == 0) {
                 getEntityManager().flush();
@@ -280,7 +280,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         return criteriaQuery.select(root);
     }
 
-    protected <T> Predicate createDatePredicate(CriteriaBuilder criteriaBuilder, Root<T> root, int dataRetention) {
+    protected Predicate createDatePredicate(CriteriaBuilder criteriaBuilder, Root<T> root, int dataRetention) {
         Path<LocalDateTime> createdDatePath = root.get("createdDate");
         return criteriaBuilder.and(
             criteriaBuilder.greaterThanOrEqualTo((createdDatePath), atStartOfDay(dataRetention)),

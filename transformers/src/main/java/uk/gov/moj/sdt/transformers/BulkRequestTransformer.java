@@ -31,17 +31,12 @@
 
 package uk.gov.moj.sdt.transformers;
 
-import java.util.List;
-
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -52,6 +47,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
 
