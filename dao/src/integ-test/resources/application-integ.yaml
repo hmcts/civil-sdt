@@ -6,7 +6,7 @@ spring:
   jms:
     servicebus:
       internal:
-        queueConfig:
+        targetAppQueue:
           MCOL: ${MCOL.Queue}
       enabled: false
   aop:

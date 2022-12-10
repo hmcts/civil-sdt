@@ -117,7 +117,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
         final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
         final QueueConfig queueConfig = applicationContext.getBean(QueueConfig.class);
         List<ISdtMessage> listMessages = new ArrayList<>();
-        jmsTemplate.browse(queueConfig.getQueueConfig().get("TEST1"), (session, browser) -> {
+        jmsTemplate.browse(queueConfig.getTargetAppQueue().get("TEST1"), (session, browser) -> {
             Enumeration<Message> messages = browser.getEnumeration();
             while (messages.hasMoreElements()) {
                 Message message = messages.nextElement();

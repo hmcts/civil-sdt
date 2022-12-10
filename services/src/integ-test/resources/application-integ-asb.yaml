@@ -2,7 +2,7 @@ spring:
   jms:
     servicebus:
       internal:
-        queueConfig:
+        targetAppQueue:
           MCOL: ${MCOL.Queue:civil_sdt_inbound}
           MCOLS: ${MCOLS.Queue:civil_sdt_inbound}
           TEST1: ${MCOL.Queue:civil_sdt_inbound}

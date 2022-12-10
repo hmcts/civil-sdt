@@ -61,7 +61,7 @@ public class ServicesConfig {
                                                                     QueueConfig queueConfig) {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
-        defaultMessageListenerContainer.setDestinationName(queueConfig.getQueueConfig().get("MCOL"));
+        defaultMessageListenerContainer.setDestinationName(queueConfig.getTargetAppQueue().get("MCOL"));
         defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
         defaultMessageListenerContainer.setTransactionManager(transactionManager);
         defaultMessageListenerContainer.setConcurrentConsumers(concurrentConsumers);

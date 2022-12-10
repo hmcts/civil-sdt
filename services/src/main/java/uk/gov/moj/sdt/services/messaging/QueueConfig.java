@@ -11,13 +11,13 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "spring.jms.servicebus.internal")
 public class QueueConfig {
 
-    private Map<String, String> queueConfig = new HashMap<>();
+    private Map<String, String> targetAppQueue = new HashMap<>();
 
-    public Map<String, String> getQueueConfig() {
-        return queueConfig;
+    public Map<String, String> getTargetAppQueue() {
+        return targetAppQueue;
     }
 
-    public void setQueueConfig(Map<String, String> queueConfig) {
-         this.queueConfig = queueConfig;
+    public void setTargetAppQueue(Map<String, String> targetAppQueue) {
+         this.targetAppQueue = targetAppQueue;
     }
 }

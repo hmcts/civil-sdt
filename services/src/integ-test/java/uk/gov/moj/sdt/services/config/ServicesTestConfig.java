@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.QueueConfig;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.jms.ConnectionFactory;
 
 @Configuration
@@ -48,7 +46,7 @@ public class ServicesTestConfig {
     public DefaultMessageListenerContainer messageListenerContainerMCol() {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
-        defaultMessageListenerContainer.setDestinationName(queueConfig.getQueueConfig().get("MCOLS"));
+        defaultMessageListenerContainer.setDestinationName(queueConfig.getTargetAppQueue().get("MCOLS"));
         defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
         defaultMessageListenerContainer.setTransactionManager(transactionManager);
         defaultMessageListenerContainer.setConcurrentConsumers(1);

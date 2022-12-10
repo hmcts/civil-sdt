@@ -8,7 +8,7 @@ spring:
   jms:
     servicebus:
       internal:
-        queueConfig:
+        targetAppQueue:
           MCOL: ${MCOL.Queue:Test1Queue}
           MCOLS: ${MCOLS.Queue:Test1Queue}
           TEST1: ${MCOL.Queue:Test1Queue}

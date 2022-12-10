@@ -3,5 +3,5 @@ spring:
     servicebus:
       connection-string: ${SDT_QUEUE_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       internal:
-        queueConfig:
+        targetAppQueue:
           MCOL: ${MCOL.Queue}

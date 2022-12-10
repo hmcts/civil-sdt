@@ -140,7 +140,7 @@ public class MessageWriter implements IMessageWriter {
      * @return map containing the target application to queue name mapping.
      */
     private Map<String, String> getQueueNameMap() {
-        return queueConfig.getQueueConfig();
+        return queueConfig.getTargetAppQueue();
     }
 
     /**
@@ -148,7 +148,7 @@ public class MessageWriter implements IMessageWriter {
      *                     with the key as the the target application code and value as the queue name
      */
     public void setQueueNameMap(final Map<String, String> queueNameMap) {
-        queueConfig.setQueueConfig(queueNameMap);
+        queueConfig.setTargetAppQueue(queueNameMap);
     }
 
     /**
