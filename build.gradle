@@ -371,6 +371,7 @@ subprojects { subproject ->
     implementation group: 'org.apache.cxf', name: 'cxf-core', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: cxfVersion
+    implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: '3.3.4'
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
