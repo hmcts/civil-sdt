@@ -90,6 +90,7 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable 
         return null;
     }
 
+    @Override
     public void setId(final Long id) {
     }
 

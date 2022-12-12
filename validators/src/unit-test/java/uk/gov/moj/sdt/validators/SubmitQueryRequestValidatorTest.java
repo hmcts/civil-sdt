@@ -108,17 +108,13 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
     private IErrorMessage errorMessage;
 
     public void setUpLocalTests() {
-        // subject of test
-        // domain objects
         bulkCustomer = createCustomer(createBulkCustomerApplications("PCOL"));
 
         submitQueryRequest = new SubmitQueryRequest();
         submitQueryRequest.setBulkCustomer(bulkCustomer);
 
-        // mock BulkCustomer object
         mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
 
-        // Set up Global parameters cache
         globalParameter = new GlobalParameter();
         globalParameter.setName(IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
         globalParameter.setValue(contact);
@@ -141,11 +137,9 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
         try {
 
             submitQueryRequest.setTargetApplication(createTargetApp(mcolCode));
-            // set up the mock objects
             expect(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).andReturn(bulkCustomer);
             replay(mockIBulkCustomerDao);
 
-            // Set up Error messages cache
             errorMessage = new ErrorMessage();
             errorMessage.setErrorCode(IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
             errorMessage.setErrorText("The Bulk Customer organisation is not setup to send Service "
@@ -156,7 +150,6 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
             replay(errorMessagesCache);
             validator.setErrorMessagesCache(errorMessagesCache);
 
-            // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
             submitQueryRequest.accept(validator, null);
@@ -167,11 +160,9 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
             EasyMock.verify(mockIBulkCustomerDao);
 
             Assert.assertEquals(e.getErrorCode(), IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
-            // CHECKSTYLE:OFF
             Assert.assertEquals(e.getErrorDescription(),
                     "The Bulk Customer organisation is not setup to send Service Request messages to the " + mcolCode +
                             ". Please contact " + contact + " for assistance.");
-            // CHECKSTYLE:OFF
         }
     }
 
@@ -181,13 +172,10 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
     @Test
     public void testCustomerHasAccess() {
 
-        // set up QueryRequest to use PCOL as the application, to match the customer application list.
         submitQueryRequest.setTargetApplication(createTargetApp("PCOL"));
-        // set up the mock objects
         expect(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).andReturn(bulkCustomer);
         replay(mockIBulkCustomerDao);
 
-        // inject the bulk customer into the validator
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
         submitQueryRequest.accept(validator, null);
