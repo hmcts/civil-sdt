@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
+import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,11 +47,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -89,7 +92,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
         message2.setSdtRequestReference(strMessage2);
         messageWriter.queueMessage(message2, "TEST1", false);
 
-        readMessageFromQueue(3);
+        readMessageFromQueue(3, Lists.newArrayList(strMessage1, strMessage2));
 
     }
 
@@ -113,7 +116,7 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
         readMessageFromQueue(1);
     }
 
-    public void readMessageFromQueue(int countOfMessages) {
+    public List<ISdtMessage> readMessageFromQueue(int countOfMessages) {
         final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
         final QueueConfig queueConfig = applicationContext.getBean(QueueConfig.class);
         List<ISdtMessage> listMessages = new ArrayList<>();
@@ -128,5 +131,13 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
             return listMessages;
         });
         assertEquals(countOfMessages, listMessages.size());
+        return listMessages;
+    }
+
+    public void readMessageFromQueue(int countOfMessages, List<String> messagesToValidate) {
+        List<ISdtMessage> listMessages = readMessageFromQueue(countOfMessages);
+
+        assertTrue(listMessages.stream().map(iSdtMessage -> iSdtMessage.getSdtRequestReference()).collect(Collectors.toSet())
+                       .containsAll(messagesToValidate));
     }
 }
