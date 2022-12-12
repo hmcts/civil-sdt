@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.consumers;
 
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
+import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -113,6 +115,7 @@ class IndividualRequestConsumerTest {
     private static final long RECEIVE_TIME_OUT = 60000;
 
     private static final String TEST_FINISHED_SUCCESSFULLY = "Test finished successfully";
+    private static final String GOT_THE_EXCEPTION_AS_EXPECTED = "Got the exception as expected";
 
     /**
      * Individual Request instance for testing in the methods.
@@ -170,7 +173,7 @@ class IndividualRequestConsumerTest {
                     .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
             // required to be null for a void method
             return null;
-        }).when(mockTransformer).transformDomainToJaxb(any());
+        }).when(mockTransformer).transformDomainToJaxb(individualRequest);
 
         individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                 RECEIVE_TIME_OUT);
@@ -179,6 +182,35 @@ class IndividualRequestConsumerTest {
         verify(mockClient).submitIndividual(any());
 
         Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+
+    }
+
+    /**
+     * Test method for processing of individual request outage error.
+     */
+    @Test
+    public void processIndividualRequestOutage ()
+    {
+        when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
+
+        final WebServiceException wsException = new WebServiceException ();
+        wsException.initCause (new ConnectException("Server down error"));
+
+        when(mockClient.submitIndividual(individualRequestType)).thenThrow (wsException);
+
+        try {
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+                    RECEIVE_TIME_OUT);
+
+            Assertions.fail ("Expecting an OutageException here.");
+        } catch (final OutageException toe) {
+            Assertions.assertTrue (true, GOT_THE_EXCEPTION_AS_EXPECTED);
+        }
+
+        verify(mockTransformer).transformDomainToJaxb(individualRequest);
+        verify(mockClient).submitIndividual(individualRequestType);
+
+        Assertions.assertTrue (true, TEST_FINISHED_SUCCESSFULLY);
 
     }
 
@@ -200,7 +232,7 @@ class IndividualRequestConsumerTest {
 
             Assertions.fail("Expecting a Timeout here.");
         } catch (final TimeoutException toe) {
-            Assertions.assertTrue(true, "Got the exception as expected");
+            Assertions.assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
         verify(mockTransformer).transformDomainToJaxb(any());
@@ -233,7 +265,7 @@ class IndividualRequestConsumerTest {
 
             Assertions.fail("Expecting an Soap Fault here.");
         } catch (final SoapFaultException toe) {
-            Assertions.assertTrue(true, "Got the exception as expected");
+            Assertions.assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
         verify(mockTransformer).transformDomainToJaxb(any());

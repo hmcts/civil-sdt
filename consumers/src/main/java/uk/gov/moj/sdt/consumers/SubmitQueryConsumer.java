@@ -172,6 +172,17 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
     }
 
     /**
+     *
+     * @return the transformer for SubmitQueryConsumer
+     */
+    public
+            IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
+            getTransformer ()
+    {
+        return this.transformer;
+    }
+
+    /**
      * Mutator method for transformer.
      *
      * @param transformer

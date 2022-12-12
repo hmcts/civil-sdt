@@ -52,7 +52,6 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
 
         submitQueryConsumer = new SubQueryConsumer();
         submitQueryConsumer.setTransformer(mockTransformer);
-        // submitQueryConsumer.setRethrowOnFailureToConnect (true);
 
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
@@ -78,9 +77,9 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
         TimeoutException timeoutException = assertThrows(TimeoutException.class, () ->
                 this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
 
-        assertEquals(timeoutException.getErrorCode(), "TIMEOUT_ERROR");
-        assertEquals(timeoutException.getErrorDescription(), "Read time out error sending [null]");
-        assertEquals(timeoutException.getCause(), null);
+        assertEquals("TIMEOUT_ERROR", timeoutException.getErrorCode());
+        assertEquals("Read time out error sending [null]", timeoutException.getErrorDescription());
+        assertEquals(null, timeoutException.getCause());
     }
 
     /**
@@ -107,9 +106,9 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
             assertEquals(this.soapFault.getFaultString(), "Invalid request");
         });
 
-        assertEquals(soapFaultException.getErrorCode(), "SOAP_FAULT");
-        assertEquals(soapFaultException.getErrorDescription(), null);
-        assertEquals(soapFaultException.getCause(), null);
+        assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
+        assertEquals(null, soapFaultException.getErrorDescription());
+        assertEquals(null, soapFaultException.getCause());
     }
 
     /**
@@ -128,8 +127,8 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
         OutageException outageException = assertThrows(OutageException.class, () ->
                 this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
 
-        assertEquals(outageException.getErrorCode(), "OUTAGE_ERROR");
-        assertEquals(outageException.getErrorDescription(), null);
+        assertEquals("OUTAGE_ERROR", outageException.getErrorCode());
+        assertEquals(null, outageException.getErrorDescription());
     }
 
     /**
