@@ -175,10 +175,8 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
      *
      * @return the transformer for SubmitQueryConsumer
      */
-    public
-            IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
-            getTransformer ()
-    {
+    public IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest,
+            ISubmitQueryRequest> getTransformer () {
         return this.transformer;
     }
 
@@ -187,8 +185,8 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
      *
      * @param transformer
      */
-    public void
-    setTransformer(IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
+    public void setTransformer(IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType,
+            ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
         this.transformer = transformer;
     }
 

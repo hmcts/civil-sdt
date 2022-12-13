@@ -8,17 +8,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -37,18 +43,40 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class ConsumerGatewayTest extends BaseConsumerTest {
 
+    /**
+     * Consumer transformer for submit query.
+     */
+    @Mock
+    protected IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> mockTransformer;
+
+    /**
+     * Mock Client instance.
+     */
+    @Mock
+    ITargetAppInternalEndpointPortType mockClient;
+
     @Mock
     IIndividualRequestConsumer individualRequestConsumer;
 
+    @Mock
+    SOAPFault soapFault;
+
     ConsumerGateway consumerGateway;
+
+    SubQueryConsumer submitQueryConsumer;
 
     /**
      * Method to do any pre-test set-up.
      */
     @BeforeEach
-    @Override
     public void setUp() {
-        super.setUp();
+        MockitoAnnotations.openMocks(this);
+
+        submitQueryConsumer = new SubQueryConsumer();
+        submitQueryConsumer.setTransformer(mockTransformer);
+
+        submitQueryRequest = this.createSubmitQueryRequest();
+        submitQueryRequestType = this.createRequestType(submitQueryRequest);
 
         consumerGateway = new ConsumerGateway();
         consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
@@ -145,6 +173,32 @@ class ConsumerGatewayTest extends BaseConsumerTest {
                 submitQueryRequest.getStatus(), "Status code is not equal.");
         Assertions.assertEquals(submitQueryResponseType.getResultCount().intValue(),
                 submitQueryRequest.getResultCount(), "Result count is not equal.");
+    }
+
+    /**
+     * Need to extend the consumer class under test for overriding base class methods
+     * of the getClient as it is abstract method.
+     */
+    protected class SubQueryConsumer extends SubmitQueryConsumer
+    {
+        /**
+         * Get the client for the specified target application. If the client is not cached already, a new client
+         * connection is created otherwise the already cached client is returned.
+         *
+         * @param targetApplicationCode the target application code
+         * @param serviceType the service type associated with the target application code
+         * @param webServiceEndPoint the Web Service End Point URL
+         * @param connectionTimeOut the connection time out value
+         * @param receiveTimeOut the acknowledgement time out value
+         * @return the target application end point port bean i.e. the client interface.
+         */
+        @Override
+        public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
+                                                             final String serviceType, final String webServiceEndPoint,
+                                                             final long connectionTimeOut, final long receiveTimeOut)
+        {
+            return mockClient;
+        }
     }
 
 }

@@ -37,6 +37,7 @@ import java.net.SocketTimeoutException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -44,6 +45,7 @@ import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.HeaderType;
@@ -52,6 +54,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -68,9 +71,25 @@ import static org.mockito.Mockito.verify;
 class IndividualRequestConsumerTest extends BaseConsumerTest {
 
     /**
+     * Consumer transformer for submit query.
+     */
+    @Mock
+    protected IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest,
+            IIndividualRequest> mockTransformer;
+
+    /**
+     * Mock Client instance.
+     */
+    @Mock
+    ITargetAppInternalEndpointPortType mockClient;
+
+    @Mock
+    SOAPFault soapFault;
+
+    /**
      * Individual Request Consumer instance of the inner class under test.
      */
-    private IndRequestConsumer individualRequestConsumer;
+    IndividualRequestConsumer individualRequestConsumer;
 
     private static final String TEST_FINISHED_SUCCESSFULLY = "Test finished successfully";
     private static final String GOT_THE_EXCEPTION_AS_EXPECTED = "Got the exception as expected";
@@ -89,12 +108,10 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
      * Method to do any pre-test set-up.
      */
     @BeforeEach
-    @Override
     public void setUp() {
-        super.setUp();
         MockitoAnnotations.openMocks(this);
 
-        individualRequestConsumer = new IndRequestConsumer();
+        individualRequestConsumer = new IndConsumerGateway();
         individualRequestConsumer.setTransformer(mockTransformer);
         individualRequestConsumer.setRethrowOnFailureToConnect(true);
 
@@ -203,7 +220,6 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
         verify(mockClient).submitIndividual(any());
 
         Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
-
     }
 
     /**
@@ -236,7 +252,6 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
         verify(mockClient).submitIndividual(any());
 
         Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
-
     }
 
     /**
@@ -280,22 +295,24 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
      * Need to extend the consumer class under test for overriding base class methods
      * of the getClient as it is abstract method.
      */
-    private class IndRequestConsumer extends IndividualRequestConsumer {
+    protected class IndConsumerGateway extends IndividualRequestConsumer
+    {
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.
          *
          * @param targetApplicationCode the target application code
-         * @param serviceType           the service type associated with the target application code
-         * @param webServiceEndPoint    the Web Service End Point URL
-         * @param connectionTimeOut     the connection time out value
-         * @param receiveTimeOut        the acknowledgement time out value
+         * @param serviceType the service type associated with the target application code
+         * @param webServiceEndPoint the Web Service End Point URL
+         * @param connectionTimeOut the connection time out value
+         * @param receiveTimeOut the acknowledgement time out value
          * @return the target application end point port bean i.e. the client interface.
          */
         @Override
-        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
-                                                            final String serviceType, final String webServiceEndPoint,
-                                                            final long connectionTimeOut, final long receiveTimeOut) {
+        public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
+                                                             final String serviceType, final String webServiceEndPoint,
+                                                             final long connectionTimeOut, final long receiveTimeOut)
+        {
             return mockClient;
         }
     }

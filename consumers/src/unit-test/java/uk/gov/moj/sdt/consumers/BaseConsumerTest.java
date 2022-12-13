@@ -1,10 +1,5 @@
 package uk.gov.moj.sdt.consumers;
 
-import javax.xml.soap.SOAPFault;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -21,10 +16,8 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,26 +30,6 @@ import java.util.Set;
  * @author Mark Dathorne
  */
 class BaseConsumerTest {
-
-    /**
-     * Consumer transformer for submit query.
-     */
-    @Mock
-    protected IConsumerTransformer mockTransformer;
-
-    /**
-     * Mock Client instance.
-     */
-    @Mock
-    protected ITargetAppInternalEndpointPortType mockClient;
-
-    @Mock
-    protected SOAPFault soapFault;
-
-    /**
-     * Submit Query Consumer instance of the inner class under test.
-     */
-    protected SubQueryConsumer submitQueryConsumer;
 
     /**
      * Submit query request instance for testing in the methods.
@@ -79,47 +52,6 @@ class BaseConsumerTest {
     protected static final long RECEIVE_TIME_OUT = 60000;
 
     /**
-     * Method to do any pre-test set-up.
-     */
-    @SuppressWarnings("unchecked")
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
-        submitQueryConsumer = new SubQueryConsumer();
-        submitQueryConsumer.setTransformer(mockTransformer);
-        // submitQueryConsumer.setRethrowOnFailureToConnect (true);
-
-        submitQueryRequest = this.createSubmitQueryRequest();
-        submitQueryRequestType = this.createRequestType(submitQueryRequest);
-    }
-
-
-    /**
-     * Need to extend the consumer class under test for overriding base class methods
-     * of the getClient as it is abstract method.
-     */
-    protected class SubQueryConsumer extends SubmitQueryConsumer {
-        /**
-         * Get the client for the specified target application. If the client is not cached already, a new client
-         * connection is created otherwise the already cached client is returned.
-         *
-         * @param targetApplicationCode the target application code
-         * @param serviceType           the service type associated with the target application code
-         * @param webServiceEndPoint    the Web Service End Point URL
-         * @param connectionTimeOut     the connection time out value
-         * @param receiveTimeOut        the acknowledgement time out value
-         * @return the target application end point port bean i.e. the client interface.
-         */
-        @Override
-        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
-                                                            final String serviceType, final String webServiceEndPoint,
-                                                            final long connectionTimeOut, final long receiveTimeOut) {
-            return mockClient;
-        }
-    }
-
-    /**
      * @param domainObject the submit query domain object.
      * @return the Jaxb submit query request type.
      */
@@ -137,7 +69,6 @@ class BaseConsumerTest {
      * @return submit query request domain object
      */
     protected ISubmitQueryRequest createSubmitQueryRequest() {
-        // final IBulkSubmission bulkSubmission = new BulkSubmission ();
         final IBulkCustomer bulkCustomer = new BulkCustomer();
         bulkCustomer.setId(1L);
         bulkCustomer.setSdtCustomerId(10L);
