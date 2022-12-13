@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.dao;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -48,14 +47,15 @@ import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
 import java.time.LocalDateTime;
+import javax.persistence.NoResultException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test class for the Bulk Submissions Dao.
@@ -172,9 +172,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     @Test
     public void testGetBulkSubmissionBySdtBulkRefNotFound() {
         final String sbr = "NO_SUCH_ID";
-        IBulkSubmission submission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod);
-        Assert.assertNull(submission);
-
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod));
     }
 
     /**
@@ -218,8 +216,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         createBulkSubmission(customerReference,
                              LocalDateTime.now().minusDays(dataRetentionPeriod + 1),
                              sdtBulkReference);
-        IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
-        Assert.assertNull(bulkSubmission);
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod));
     }
 
     /**
