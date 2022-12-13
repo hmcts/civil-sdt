@@ -34,7 +34,6 @@ package uk.gov.moj.sdt.consumers;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -58,6 +57,8 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
@@ -108,7 +109,8 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
      * Method to do any pre-test set-up.
      */
     @BeforeEach
-    public void setUp() {
+    @Override
+    public void setUpLocalTests() {
         MockitoAnnotations.openMocks(this);
 
         individualRequestConsumer = new IndConsumerGateway();
@@ -128,12 +130,12 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
         final long receiveTimeOut = 0L;
         ITargetAppInternalEndpointPortType portType = individualRequestConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
-        Assertions.assertTrue(null != portType);
+        assertTrue(null != portType);
     }
 
     @Test
     void getTransformer() {
-        Assertions.assertTrue(null != individualRequestConsumer.getTransformer());
+        assertTrue(null != individualRequestConsumer.getTransformer());
     }
 
     /**
@@ -162,7 +164,7 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitIndividual(any());
 
-        Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
 
     }
 
@@ -183,15 +185,15 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
             this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assertions.fail ("Expecting an OutageException here.");
+            fail("Expecting an OutageException here.");
         } catch (final OutageException toe) {
-            Assertions.assertTrue (true, GOT_THE_EXCEPTION_AS_EXPECTED);
+            assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
         verify(mockTransformer).transformDomainToJaxb(individualRequest);
         verify(mockClient).submitIndividual(individualRequestType);
 
-        Assertions.assertTrue (true, TEST_FINISHED_SUCCESSFULLY);
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
 
     }
 
@@ -211,15 +213,15 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
             this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assertions.fail("Expecting a Timeout here.");
+            fail("Expecting a Timeout here.");
         } catch (final TimeoutException toe) {
-            Assertions.assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
+            assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitIndividual(any());
 
-        Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
     }
 
     /**
@@ -243,15 +245,15 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
             this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assertions.fail("Expecting an Soap Fault here.");
+            fail("Expecting an Soap Fault here.");
         } catch (final SoapFaultException toe) {
-            Assertions.assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
+            assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitIndividual(any());
 
-        Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
     }
 
     /**

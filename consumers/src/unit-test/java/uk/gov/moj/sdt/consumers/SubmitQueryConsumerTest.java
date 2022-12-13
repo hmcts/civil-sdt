@@ -40,7 +40,6 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,6 +59,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQue
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -96,7 +97,8 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
      * Method to do any pre-test set-up.
      */
     @BeforeEach
-    public void setUp() {
+    @Override
+    public void setUpLocalTests() {
         MockitoAnnotations.openMocks(this);
 
         submitQueryConsumer = new SubQueryConsumer();
@@ -115,7 +117,7 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
         final long receiveTimeOut = 0L;
         ITargetAppInternalEndpointPortType portType = submitQueryConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
-        Assertions.assertTrue(null != portType);
+        assertNotNull(portType);
     }
 
     /**
@@ -135,7 +137,7 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
 
         assertEquals("TIMEOUT_ERROR", timeoutException.getErrorCode());
         assertEquals("Read time out error sending [null]", timeoutException.getErrorDescription());
-        assertEquals(null, timeoutException.getCause());
+        assertNull(timeoutException.getCause());
     }
 
     /**
@@ -162,8 +164,8 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
         });
 
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
-        assertEquals(null, soapFaultException.getErrorDescription());
-        assertEquals(null, soapFaultException.getCause());
+        assertNull(soapFaultException.getErrorDescription());
+        assertNull(soapFaultException.getCause());
     }
 
     /**
@@ -183,7 +185,7 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
 
 
         assertEquals("OUTAGE_ERROR", outageException.getErrorCode());
-        assertEquals(null, outageException.getErrorDescription());
+        assertNull(outageException.getErrorDescription());
     }
 
     /**
@@ -211,9 +213,9 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitQuery(any());
 
-        Assertions.assertEquals(submitQueryResponseType.getStatus().getCode().value(),
+        assertEquals(submitQueryResponseType.getStatus().getCode().value(),
                 submitQueryRequest.getStatus(), "Status code is not equal.");
-        Assertions.assertEquals(submitQueryResponseType.getResultCount().intValue(),
+        assertEquals(submitQueryResponseType.getResultCount().intValue(),
                 submitQueryRequest.getResultCount(), "Result count is not equal.");
     }
 
@@ -237,8 +239,7 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
         @Override
         public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
                                                              final String serviceType, final String webServiceEndPoint,
-                                                             final long connectionTimeOut, final long receiveTimeOut)
-        {
+                                                             final long connectionTimeOut, final long receiveTimeOut) {
             return mockClient;
         }
     }

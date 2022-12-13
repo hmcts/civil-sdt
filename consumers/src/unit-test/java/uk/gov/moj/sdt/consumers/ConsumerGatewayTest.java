@@ -3,7 +3,6 @@ package uk.gov.moj.sdt.consumers;
 import java.math.BigInteger;
 import java.net.ConnectException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,9 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
@@ -69,7 +70,8 @@ class ConsumerGatewayTest extends BaseConsumerTest {
      * Method to do any pre-test set-up.
      */
     @BeforeEach
-    public void setUp() {
+    @Override
+    public void setUpLocalTests() {
         MockitoAnnotations.openMocks(this);
 
         submitQueryConsumer = new SubQueryConsumer();
@@ -88,13 +90,13 @@ class ConsumerGatewayTest extends BaseConsumerTest {
         IIndividualRequest individualRequest = createIndividualRequest();
         consumerGateway.individualRequest(individualRequest,
                 CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        Assertions.assertTrue(null != consumerGateway.getIndividualRequestConsumer());
+        assertTrue(null != consumerGateway.getIndividualRequestConsumer());
     }
 
     @Test
     void getIndividualRequest() {
         IIndividualRequestConsumer iIndividualRequestConsumer = consumerGateway.getIndividualRequestConsumer();
-        Assertions.assertTrue(null != iIndividualRequestConsumer);
+        assertTrue(null != iIndividualRequestConsumer);
     }
 
     /**
@@ -121,8 +123,8 @@ class ConsumerGatewayTest extends BaseConsumerTest {
         });
 
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
-        assertEquals(null, soapFaultException.getErrorDescription());
-        assertEquals(null, soapFaultException.getCause());
+        assertNull(soapFaultException.getErrorDescription());
+        assertNull(soapFaultException.getCause());
     }
 
     /**
@@ -141,7 +143,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
                 this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
 
         assertEquals("OUTAGE_ERROR", outageException.getErrorCode());
-        assertEquals(null, outageException.getErrorDescription());
+        assertNull(outageException.getErrorDescription());
     }
 
     /**
@@ -169,9 +171,9 @@ class ConsumerGatewayTest extends BaseConsumerTest {
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitQuery(any());
 
-        Assertions.assertEquals(submitQueryResponseType.getStatus().getCode().value(),
+        assertEquals(submitQueryResponseType.getStatus().getCode().value(),
                 submitQueryRequest.getStatus(), "Status code is not equal.");
-        Assertions.assertEquals(submitQueryResponseType.getResultCount().intValue(),
+        assertEquals(submitQueryResponseType.getResultCount().intValue(),
                 submitQueryRequest.getResultCount(), "Result count is not equal.");
     }
 
@@ -195,8 +197,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
         @Override
         public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
                                                              final String serviceType, final String webServiceEndPoint,
-                                                             final long connectionTimeOut, final long receiveTimeOut)
-        {
+                                                             final long connectionTimeOut, final long receiveTimeOut) {
             return mockClient;
         }
     }

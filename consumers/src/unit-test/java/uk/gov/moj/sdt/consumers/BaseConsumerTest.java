@@ -16,6 +16,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 
@@ -29,7 +30,7 @@ import java.util.Set;
  *
  * @author Mark Dathorne
  */
-class BaseConsumerTest {
+class BaseConsumerTest extends AbstractSdtUnitTestBase {
 
     /**
      * Submit query request instance for testing in the methods.
