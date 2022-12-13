@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.services.messaging;
 
 import com.google.common.collect.Lists;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,6 +63,7 @@ import static org.junit.Assert.assertTrue;
 @ActiveProfiles("integ-asb")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@Ignore("Preiew environments don't support Azure Service bus queues")
 public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
 
     /**
