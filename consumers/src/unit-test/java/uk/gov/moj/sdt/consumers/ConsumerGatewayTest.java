@@ -13,6 +13,7 @@ import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
@@ -23,7 +24,10 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test class for the consumer gateway.
@@ -42,12 +46,27 @@ class ConsumerGatewayTest extends BaseConsumerTest {
      * Method to do any pre-test set-up.
      */
     @BeforeEach
+    @Override
     public void setUp() {
         super.setUp();
 
         consumerGateway = new ConsumerGateway();
         consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
         consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
+    }
+
+    @Test
+    void individualRequest() {
+        IIndividualRequest individualRequest = createIndividualRequest();
+        consumerGateway.individualRequest(individualRequest,
+                CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        Assertions.assertTrue(null != consumerGateway.getIndividualRequestConsumer());
+    }
+
+    @Test
+    void getIndividualRequest() {
+        IIndividualRequestConsumer iIndividualRequestConsumer = consumerGateway.getIndividualRequestConsumer();
+        Assertions.assertTrue(null != iIndividualRequestConsumer);
     }
 
     /**

@@ -33,33 +33,17 @@ package uk.gov.moj.sdt.consumers;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.ServiceRouting;
-import uk.gov.moj.sdt.domain.ServiceType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IServiceRouting;
-import uk.gov.moj.sdt.domain.api.IServiceType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.HeaderType;
@@ -68,7 +52,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualRespon
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -82,37 +65,12 @@ import static org.mockito.Mockito.verify;
  *
  * @author Manoj Kulkarni
  */
-class IndividualRequestConsumerTest {
-
-    /**
-     * Consumer transformer for individual request.
-     */
-    @Mock
-    private IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> mockTransformer;
-
-    /**
-     * Mock Client instance.
-     */
-    @Mock
-    private ITargetAppInternalEndpointPortType mockClient;
-
-    @Mock
-    private SOAPFault soapFault;
+class IndividualRequestConsumerTest extends BaseConsumerTest {
 
     /**
      * Individual Request Consumer instance of the inner class under test.
      */
     private IndRequestConsumer individualRequestConsumer;
-
-    /**
-     * Connection time out constant.
-     */
-    private static final long CONNECTION_TIME_OUT = 30000;
-
-    /**
-     * Received time out constant.
-     */
-    private static final long RECEIVE_TIME_OUT = 60000;
 
     private static final String TEST_FINISHED_SUCCESSFULLY = "Test finished successfully";
     private static final String GOT_THE_EXCEPTION_AS_EXPECTED = "Got the exception as expected";
@@ -130,9 +88,10 @@ class IndividualRequestConsumerTest {
     /**
      * Method to do any pre-test set-up.
      */
-    @SuppressWarnings("unchecked")
     @BeforeEach
+    @Override
     public void setUp() {
+        super.setUp();
         MockitoAnnotations.openMocks(this);
 
         individualRequestConsumer = new IndRequestConsumer();
@@ -153,6 +112,11 @@ class IndividualRequestConsumerTest {
         ITargetAppInternalEndpointPortType portType = individualRequestConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
         Assertions.assertTrue(null != portType);
+    }
+
+    @Test
+    void getTransformer() {
+        Assertions.assertTrue(null != individualRequestConsumer.getTransformer());
     }
 
     /**
@@ -289,60 +253,6 @@ class IndividualRequestConsumerTest {
         requestType.setHeader(headerType);
 
         return requestType;
-    }
-
-    /**
-     * @return individual request domain object
-     */
-    private IIndividualRequest createIndividualRequest() {
-        final IBulkSubmission bulkSubmission = new BulkSubmission();
-        final IBulkCustomer bulkCustomer = new BulkCustomer();
-        final ITargetApplication targetApp = new TargetApplication();
-
-        targetApp.setId(1L);
-        targetApp.setTargetApplicationCode("MCOL");
-        targetApp.setTargetApplicationName("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
-
-        final ServiceRouting serviceRouting = new ServiceRouting();
-        serviceRouting.setId(1L);
-        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
-
-        final IServiceType serviceType = new ServiceType();
-        serviceType.setId(1L);
-        serviceType.setName(IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name());
-        serviceType.setDescription("RequestTestDesc1");
-        serviceType.setStatus("RequestTestStatus");
-
-        serviceRouting.setServiceType(serviceType);
-        serviceRouting.setTargetApplication(targetApp);
-
-        serviceRoutings.add(serviceRouting);
-
-        targetApp.setServiceRoutings(serviceRoutings);
-
-        bulkSubmission.setTargetApplication(targetApp);
-
-        bulkCustomer.setId(1L);
-        bulkCustomer.setSdtCustomerId(10L);
-
-        bulkSubmission.setBulkCustomer(bulkCustomer);
-        bulkSubmission.setCustomerReference("TEST_CUST_REF");
-        bulkSubmission.setId(1L);
-        bulkSubmission.setNumberOfRequest(1);
-
-        final IIndividualRequest iindividualRequest = new IndividualRequest();
-        iindividualRequest.setSdtRequestReference("Test");
-
-        final List<IIndividualRequest> requests = new ArrayList<>();
-        requests.add(iindividualRequest);
-
-        bulkSubmission.setIndividualRequests(requests);
-
-        iindividualRequest.setBulkSubmission(bulkSubmission);
-
-        return iindividualRequest;
-
     }
 
     /**

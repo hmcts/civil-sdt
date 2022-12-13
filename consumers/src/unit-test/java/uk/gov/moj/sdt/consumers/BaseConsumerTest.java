@@ -7,12 +7,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.ServiceRouting;
 import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -20,10 +24,11 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
-import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,8 +42,7 @@ class BaseConsumerTest {
      * Consumer transformer for submit query.
      */
     @Mock
-    protected IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest,
-            ISubmitQueryRequest> mockTransformer;
+    protected IConsumerTransformer mockTransformer;
 
     /**
      * Mock Client instance.
@@ -171,6 +175,60 @@ class BaseConsumerTest {
         ssubmitQueryRequest.setTargetApplication(targetApp);
         ssubmitQueryRequest.setResultCount(1);
         return ssubmitQueryRequest;
+
+    }
+
+    /**
+     * @return individual request domain object
+     */
+    protected IIndividualRequest createIndividualRequest() {
+        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        final ITargetApplication targetApp = new TargetApplication();
+
+        targetApp.setId(1L);
+        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationName("TEST_TargetApp");
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
+
+        final ServiceRouting serviceRouting = new ServiceRouting();
+        serviceRouting.setId(1L);
+        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
+
+        final IServiceType serviceType = new ServiceType();
+        serviceType.setId(1L);
+        serviceType.setName(IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name());
+        serviceType.setDescription("RequestTestDesc1");
+        serviceType.setStatus("RequestTestStatus");
+
+        serviceRouting.setServiceType(serviceType);
+        serviceRouting.setTargetApplication(targetApp);
+
+        serviceRoutings.add(serviceRouting);
+
+        targetApp.setServiceRoutings(serviceRoutings);
+
+        bulkSubmission.setTargetApplication(targetApp);
+
+        bulkCustomer.setId(1L);
+        bulkCustomer.setSdtCustomerId(10L);
+
+        bulkSubmission.setBulkCustomer(bulkCustomer);
+        bulkSubmission.setCustomerReference("TEST_CUST_REF");
+        bulkSubmission.setId(1L);
+        bulkSubmission.setNumberOfRequest(1);
+
+        final IIndividualRequest iindividualRequest = new IndividualRequest();
+        iindividualRequest.setSdtRequestReference("Test");
+
+        final List<IIndividualRequest> requests = new ArrayList<>();
+        requests.add(iindividualRequest);
+
+        bulkSubmission.setIndividualRequests(requests);
+
+        iindividualRequest.setBulkSubmission(bulkSubmission);
+
+        return iindividualRequest;
 
     }
 
