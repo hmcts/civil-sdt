@@ -26,6 +26,7 @@ import java.util.Map;
 public class ProducersConfig {
 
     @Bean
+    @Qualifier("sdtProducersManagement")
     public MBeanExporter mBeanExporter(ISdtManagementMBean sdtManagementMBean) {
         MBeanExporter mBeanExporter = new MBeanExporter();
         Map<String, Object> beans = new HashMap<>();
@@ -44,7 +45,8 @@ public class ProducersConfig {
     }
 
     @Bean
-    public MBeanExporter mBeanExporter(ISdtMetricsMBean sdtMetricsMBean) {
+    @Qualifier("sdtProducersMetrics")
+    public MBeanExporter mBeanExporterProducerMetrics(ISdtMetricsMBean sdtMetricsMBean) {
         MBeanExporter mBeanExporter = new MBeanExporter();
         Map<String, Object> beans = new HashMap<>();
         beans.put("bean:name=sdtProducersMetrics", sdtMetricsMBean);

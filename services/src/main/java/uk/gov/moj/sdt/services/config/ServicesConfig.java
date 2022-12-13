@@ -21,7 +21,7 @@ import javax.jms.ConnectionFactory;
 
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
-@EnableConfigurationProperties(QueueConfig.class)
+@EnableConfigurationProperties
 @EnableTransactionManagement
 public class ServicesConfig {
 
