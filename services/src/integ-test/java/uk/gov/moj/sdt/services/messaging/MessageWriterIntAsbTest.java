@@ -52,7 +52,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -92,7 +91,7 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
         message2.setSdtRequestReference(strMessage2);
         messageWriter.queueMessage(message2, "TEST1", false);
 
-        readMessageFromQueue(3, Lists.newArrayList(strMessage1, strMessage2));
+        readMessageFromQueue(Lists.newArrayList(strMessage1, strMessage2));
 
     }
 
@@ -108,15 +107,17 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
 
         // Send the message.
         final ISdtMessage message = new SdtMessage();
-        message.setSdtRequestReference("Test message");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String requestReference =  "Test message" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
+        message.setSdtRequestReference(requestReference);
 
         messageWriter.queueMessage(message, "TEST1", false);
         Assert.assertTrue("Test completed", true);
 
-        readMessageFromQueue(1);
+        readMessageFromQueue(Lists.newArrayList(requestReference));
     }
 
-    public List<ISdtMessage> readMessageFromQueue(int countOfMessages) {
+    public List<ISdtMessage> readMessageFromQueue() {
         final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
         final QueueConfig queueConfig = applicationContext.getBean(QueueConfig.class);
         List<ISdtMessage> listMessages = new ArrayList<>();
@@ -130,12 +131,11 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
             }
             return listMessages;
         });
-        assertEquals(countOfMessages, listMessages.size());
         return listMessages;
     }
 
-    public void readMessageFromQueue(int countOfMessages, List<String> messagesToValidate) {
-        List<ISdtMessage> listMessages = readMessageFromQueue(countOfMessages);
+    public void readMessageFromQueue(List<String> messagesToValidate) {
+        List<ISdtMessage> listMessages = readMessageFromQueue();
 
         assertTrue(listMessages.stream().map(iSdtMessage -> iSdtMessage.getSdtRequestReference()).collect(Collectors.toSet())
                        .containsAll(messagesToValidate));
