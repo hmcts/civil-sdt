@@ -23,3 +23,7 @@ jar {
 bootJar {
     enabled = false
 }
+
+sonarqube {
+  skipProject = true
+}
