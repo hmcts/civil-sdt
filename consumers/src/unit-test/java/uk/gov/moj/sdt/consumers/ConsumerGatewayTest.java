@@ -2,21 +2,17 @@ package uk.gov.moj.sdt.consumers;
 
 import java.math.BigInteger;
 import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
-import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
@@ -35,7 +31,7 @@ import static org.mockito.Mockito.*;
  * @author Mark Dathorne
  */
 @ExtendWith(MockitoExtension.class)
-class ConsumerGatewayTest extends SubmitQueryConsumerTest {
+class ConsumerGatewayTest extends BaseConsumerTest {
 
     @Mock
     IIndividualRequestConsumer individualRequestConsumer;
@@ -46,15 +42,8 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
      * Method to do any pre-test set-up.
      */
     @BeforeEach
-    @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
-        submitQueryConsumer = new SubQueryConsumer();
-        submitQueryConsumer.setTransformer(mockTransformer);
-
-        submitQueryRequest = this.createSubmitQueryRequest();
-        submitQueryRequestType = this.createRequestType(submitQueryRequest);
+        super.setUp();
 
         consumerGateway = new ConsumerGateway();
         consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
@@ -63,32 +52,10 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
 
     /**
      * Test to verify submit query consumer does throw expected exception.
-     */
-    @Test
-    @Override
-    void testSubmitQueryRequestTimeout() {
-        when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
-
-        final WebServiceException wsException = new WebServiceException();
-        wsException.initCause(new SocketTimeoutException("Timed out waiting for response"));
-
-        when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
-
-        TimeoutException timeoutException = assertThrows(TimeoutException.class, () ->
-                this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
-
-        assertEquals("TIMEOUT_ERROR", timeoutException.getErrorCode());
-        assertEquals("Read time out error sending [null]", timeoutException.getErrorDescription());
-        assertEquals(null, timeoutException.getCause());
-    }
-
-    /**
-     * Test to verify submit query consumer does throw expected exception.
      *
      * @throws SOAPException exception
      */
     @Test
-    @Override
     void testSubmitQueryRequestSoapFault() throws SOAPException {
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
 
@@ -115,7 +82,6 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
      * Test to verify submit query consumer does throw expected exception.
      */
     @Test
-    @Override
     void testSubmitQueryRequestOutage() {
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
 
@@ -135,7 +101,6 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
      * Test method for successful processing of submit query.
      */
     @Test
-    @Override
     void testSubmitQuerySuccess() {
         final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
 
@@ -143,18 +108,13 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
         when(mockClient.submitQuery(submitQueryRequestType)).thenReturn(submitQueryResponseType);
         mockTransformer.transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
-        doAnswer (new Answer<Void>()
-        {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable
-            {
-                ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount(BigInteger.valueOf(1));
-                final StatusType statusType = new StatusType ();
-                statusType.setCode (StatusCodeType.OK);
-                ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus (statusType);
-                // required to be null for a void method
-                return null;
-            }
+        doAnswer ((Answer<Void>) invocation -> {
+            ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount(BigInteger.valueOf(1));
+            final StatusType statusType = new StatusType ();
+            statusType.setCode (StatusCodeType.OK);
+            ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus (statusType);
+            // required to be null for a void method
+            return null;
         }).when(mockTransformer).transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
         this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
@@ -166,7 +126,6 @@ class ConsumerGatewayTest extends SubmitQueryConsumerTest {
                 submitQueryRequest.getStatus(), "Status code is not equal.");
         Assertions.assertEquals(submitQueryResponseType.getResultCount().intValue(),
                 submitQueryRequest.getResultCount(), "Result count is not equal.");
-
     }
 
 }
