@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.consumers;
 
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Base Consumer Test class for the submit query consumer and consumer gateway .
@@ -51,6 +54,11 @@ class BaseConsumerTest extends AbstractSdtUnitTestBase {
      * Received time out constant.
      */
     protected static final long RECEIVE_TIME_OUT = 60000;
+
+    @Test
+    void shouldConvertDos2Unix() {
+        assertNotNull(dos2Unix("TEST"));
+    }
 
     /**
      * @param domainObject the submit query domain object.
@@ -107,7 +115,6 @@ class BaseConsumerTest extends AbstractSdtUnitTestBase {
         sSubmitQueryRequest.setTargetApplication(targetApp);
         sSubmitQueryRequest.setResultCount(1);
         return sSubmitQueryRequest;
-
     }
 
     /**

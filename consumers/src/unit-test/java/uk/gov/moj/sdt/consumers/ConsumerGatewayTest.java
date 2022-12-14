@@ -56,9 +56,15 @@ class ConsumerGatewayTest extends BaseConsumerTest {
     @Mock
     ITargetAppInternalEndpointPortType mockClient;
 
+    /**
+     * Mock Individual Request Consumer.
+     */
     @Mock
     IIndividualRequestConsumer individualRequestConsumer;
 
+    /**
+     * Mock Soap Fault.
+     */
     @Mock
     SOAPFault soapFault;
 
@@ -86,7 +92,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
     }
 
     @Test
-    void individualRequest() {
+    void shouldProcessAndGetNotNullIndividualRequest() {
         IIndividualRequest individualRequest = createIndividualRequest();
         consumerGateway.individualRequest(individualRequest,
                 CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
@@ -94,7 +100,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
     }
 
     @Test
-    void getIndividualRequest() {
+    void shouldGetNotNullIndividualRequest() {
         IIndividualRequestConsumer iIndividualRequestConsumer = consumerGateway.getIndividualRequestConsumer();
         assertNotNull(iIndividualRequestConsumer);
     }
@@ -105,7 +111,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
      * @throws SOAPException exception
      */
     @Test
-    void testSubmitQueryRequestSoapFault() throws SOAPException {
+    void shouldGetSoapFaultExceptionOnSubmitQuery() throws SOAPException {
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
 
         final WebServiceException wsException = new WebServiceException();
@@ -131,7 +137,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
      * Test to verify submit query consumer does throw expected exception.
      */
     @Test
-    void testSubmitQueryRequestOutage() {
+    void shouldGetOutageExceptionOnSubmitQuery() {
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
 
         final WebServiceException wsException = new WebServiceException();
@@ -150,7 +156,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
      * Test method for successful processing of submit query.
      */
     @Test
-    void testSubmitQuerySuccess() {
+    void shouldSuccesssfullySubmitQuery() {
         final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
 
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
@@ -159,8 +165,8 @@ class ConsumerGatewayTest extends BaseConsumerTest {
 
         doAnswer ((Answer<Void>) invocation -> {
             ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount(BigInteger.valueOf(1));
-            final StatusType statusType = new StatusType ();
-            statusType.setCode (StatusCodeType.OK);
+            final StatusType statusType = new StatusType();
+            statusType.setCode(StatusCodeType.OK);
             ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus (statusType);
             // required to be null for a void method
             return null;

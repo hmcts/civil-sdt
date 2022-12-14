@@ -54,11 +54,6 @@ public abstract class AbstractSdtUnitTestBase {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtUnitTestBase.class);
 
     /**
-     * Name of log4j configuration file (in classpath).
-     */
-    // private static final String LOG4J_XML_FILE = "../utils/src/main/java/log4j.xml";
-
-    /**
      * Watcher to detect current test name.
      */
     // CHECKSTYLE:OFF
@@ -71,18 +66,11 @@ public abstract class AbstractSdtUnitTestBase {
          *
          * @param description Information about the test.
          */
+        @Override
         protected void starting(final Description description) {
-            LOGGER.info("Start Test: " + description.getClassName() + "." + description.getMethodName() + ".");
+            LOGGER.info("Start Test: {}.{}", description.getClassName(), description.getMethodName());
         }
     };
-
-    /**
-     * Do one time initialization for this test class.
-     */
-    private void init() {
-        // Initialize log4j for test purposes.
-        // DOMConfigurator.configure (LOG4J_XML_FILE);
-    }
 
     /**
      * Standard JUnit setUp method. Gets run before each test method.
@@ -133,7 +121,7 @@ public abstract class AbstractSdtUnitTestBase {
      *
      * <p>
      * Scenario: field exists without a getter and is protected or private. This allows you to inspect that field's
-     * state e.g. <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccesibleField(
+     * state e.g. <code>LocalDateTime requestDateTimeField = (LocalDateTime) getAccessibleField(
      * ServiceRequest.class, "requestDateTime", LocalDateTime.class,
      * serviceRequest)</code>
      * </p>
@@ -144,7 +132,7 @@ public abstract class AbstractSdtUnitTestBase {
      * @param target         this is the object which has the variable
      * @return the field from the target object as an object.
      */
-    public Object getAccesibleField(final Class<?> clazzUnderTest, final String fieldName,
+    public Object getAccessibleField(final Class<?> clazzUnderTest, final String fieldName,
                                     final Class<?> clazzOfField, final Object target) {
         Field field = ReflectionUtils.findField(clazzUnderTest, fieldName);
         if (null == field) {
@@ -167,7 +155,7 @@ public abstract class AbstractSdtUnitTestBase {
      * @param clazzUnderTest This is the class that owns the method
      * @param methodName     this is the method name
      */
-    public void makeMethodAccesible(final Class<?> clazzUnderTest, final String methodName) {
+    public void makeMethodAccessible(final Class<?> clazzUnderTest, final String methodName) {
         final Method method = ReflectionUtils.findMethod(clazzUnderTest, methodName);
         ReflectionUtils.makeAccessible(method);
     }
