@@ -158,8 +158,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
 
         SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () ->
-            this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        );
+            this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
 
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
         assertNull(soapFaultException.getErrorDescription());
@@ -180,7 +179,6 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
 
         OutageException outageException = assertThrows(OutageException.class, () ->
             this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
-
 
         assertEquals("OUTAGE_ERROR", outageException.getErrorCode());
         assertNull(outageException.getErrorDescription());
