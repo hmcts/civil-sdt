@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
  * @author Mark Dathorne
  */
 @ExtendWith(MockitoExtension.class)
-class ConsumerGatewayTest extends BaseConsumerTest {
+class ConsumerGatewayTest extends ConsumerTestBase {
 
     /**
      * Consumer transformer for submit query.

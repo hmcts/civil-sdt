@@ -70,7 +70,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Manoj Kulkarni
  */
-class IndividualRequestConsumerTest extends BaseConsumerTest {
+class IndividualRequestConsumerTest extends ConsumerTestBase {
 
     /**
      * Consumer transformer for submit query.

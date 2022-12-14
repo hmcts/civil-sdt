@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Mark Dathorne
  */
-class ConsumerBaseTest extends AbstractSdtUnitTestBase {
+class ConsumerTestBase extends AbstractSdtUnitTestBase {
 
     /**
      * Submit query request instance for testing in the methods.
