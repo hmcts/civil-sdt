@@ -2,6 +2,7 @@ package uk.gov.moj.sdt.consumers;
 
 import java.math.BigInteger;
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
@@ -105,6 +107,27 @@ class ConsumerGatewayTest extends BaseConsumerTest {
         assertNotNull(iIndividualRequestConsumer);
     }
 
+
+    /**
+     * Test to verify submit query consumer does throw expected exception.
+     */
+    @Test
+    void shouldFailWithTimeoutException() {
+        when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
+
+        final WebServiceException wsException = new WebServiceException();
+        wsException.initCause(new SocketTimeoutException("Timed out waiting for response"));
+
+        when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
+
+        TimeoutException timeoutException = assertThrows(TimeoutException.class, () ->
+                this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
+
+        assertEquals(timeoutException.getErrorCode(), "TIMEOUT_ERROR");
+        assertEquals(timeoutException.getErrorDescription(), "Read time out error sending [null]");
+        assertEquals(timeoutException.getCause(), null);
+    }
+
     /**
      * Test to verify submit query consumer does throw expected exception.
      *
@@ -125,6 +148,7 @@ class ConsumerGatewayTest extends BaseConsumerTest {
         SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () -> {
             this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
         });
+
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
         assertNull(soapFaultException.getErrorDescription());
         assertNull(soapFaultException.getCause());
