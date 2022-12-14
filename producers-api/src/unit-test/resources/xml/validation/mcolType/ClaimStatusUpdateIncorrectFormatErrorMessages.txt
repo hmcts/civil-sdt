@@ -1,4 +1,4 @@
-cvc-complex-type.2.4.a: Invalid content was found starting with element 'tns:lastPaymentDate'. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema":paidInFullDate, "http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema":section38Compliancy}' is expected.
+cvc-complex-type.2.4.a: Invalid content was found starting with element '{"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema":lastPaymentDate}'. One of '{"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema":paidInFullDate, "http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema":section38Compliancy}' is expected.
 cvc-enumeration-valid: Value 'UNKNOWN' is not facet-valid with respect to enumeration '[MP, WD, DI]'. It must be a value from the enumeration.
 cvc-pattern-valid: Value '-1' is not facet-valid with respect to pattern '1|2' for type 'defendantIdType'.
 cvc-pattern-valid: Value '123456789' is not facet-valid with respect to pattern '[0-9A-Za-z]{8}' for type 'claimNumberType'.
