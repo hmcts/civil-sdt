@@ -102,11 +102,11 @@ class BaseConsumerTest extends AbstractSdtUnitTestBase {
         bulkCustomerApplications.add(bulkCustomerApplication);
         bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
 
-        final ISubmitQueryRequest ssubmitQueryRequest = new SubmitQueryRequest();
-        ssubmitQueryRequest.setBulkCustomer(bulkCustomer);
-        ssubmitQueryRequest.setTargetApplication(targetApp);
-        ssubmitQueryRequest.setResultCount(1);
-        return ssubmitQueryRequest;
+        final ISubmitQueryRequest sSubmitQueryRequest = new SubmitQueryRequest();
+        sSubmitQueryRequest.setBulkCustomer(bulkCustomer);
+        sSubmitQueryRequest.setTargetApplication(targetApp);
+        sSubmitQueryRequest.setResultCount(1);
+        return sSubmitQueryRequest;
 
     }
 
@@ -150,17 +150,17 @@ class BaseConsumerTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(1);
 
-        final IIndividualRequest iindividualRequest = new IndividualRequest();
-        iindividualRequest.setSdtRequestReference("Test");
+        final IIndividualRequest iIndividualRequest = new IndividualRequest();
+        iIndividualRequest.setSdtRequestReference("Test");
 
         final List<IIndividualRequest> requests = new ArrayList<>();
-        requests.add(iindividualRequest);
+        requests.add(iIndividualRequest);
 
         bulkSubmission.setIndividualRequests(requests);
 
-        iindividualRequest.setBulkSubmission(bulkSubmission);
+        iIndividualRequest.setBulkSubmission(bulkSubmission);
 
-        return iindividualRequest;
+        return iIndividualRequest;
 
     }
 
