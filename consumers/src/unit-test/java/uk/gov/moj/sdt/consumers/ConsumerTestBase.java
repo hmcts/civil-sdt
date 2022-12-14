@@ -29,7 +29,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Base Consumer Test class for the submit query consumer and consumer gateway .
+ * Base Consumer Test class.
  *
  * @author Mark Dathorne
  */
@@ -168,7 +168,6 @@ class ConsumerTestBase extends AbstractSdtUnitTestBase {
         iIndividualRequest.setBulkSubmission(bulkSubmission);
 
         return iIndividualRequest;
-
     }
 
 }
