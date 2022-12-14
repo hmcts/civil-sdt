@@ -159,8 +159,6 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
 
         SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () -> {
             this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-            assertEquals("REQ_FAULT", this.soapFault.getFaultCode());
-            assertEquals("Invalid request", this.soapFault.getFaultString());
         });
 
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());

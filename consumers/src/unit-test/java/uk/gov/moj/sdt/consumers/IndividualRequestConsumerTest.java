@@ -173,7 +173,7 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
      * Test method for processing of individual request outage error.
      */
     @Test
-    public void processIndividualRequestOutage ()
+    void processIndividualRequestOutage ()
     {
         when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
 
