@@ -141,12 +141,12 @@ ext {
   junitJupiterVersion = '5.8.1'
   junitVintageVersion = '5.7.0'
   log4jVersion = '2.17.1'
-  postgresqlVersion = '42.4.1'
+  postgresqlVersion = '42.5.1'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
   springBootVersion = '2.7.4'
   springCloudVersion = '2021.0.3'
-  tomcatVersion = '9.0.67'
+  tomcatVersion = '9.0.68'
   cxfVersion = '3.5.4'
   limits = [
     'instruction': 99,
@@ -162,8 +162,7 @@ ext['jackson.version'] = '2.14.0-rc1'
 ext['guava.version'] = '30.0-jre'
 ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
-ext['spring-security.version'] = '5.7.4'
-ext['postgresql.version'] = '42.2.16'
+ext['spring-security.version'] = '5.7.5'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 
 dependencyManagement {
@@ -227,6 +226,7 @@ allprojects {
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
       exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
@@ -234,10 +234,10 @@ allprojects {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     implementation group: 'io.rest-assured', name: 'rest-assured'
 
-    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
 
     testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
@@ -252,6 +252,12 @@ allprojects {
       exclude group: 'junit', module: 'junit'
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    /*
+    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
+    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
+    tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
+    */
+    testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
   configurations.all {
@@ -346,12 +352,13 @@ subprojects { subproject ->
     implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: cxfVersion
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
 
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
 
     implementation group: 'org.springframework.security', name: 'spring-security-web'
     implementation group: 'org.springframework.security', name: 'spring-security-config'
@@ -364,10 +371,8 @@ subprojects { subproject ->
     implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
 
 
-    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.2'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.5'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
@@ -403,7 +408,12 @@ subprojects { subproject ->
     testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
     testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
     testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
-
+    /*
+    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
+    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
+    tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
+    */
+    testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
   sonarqube {
@@ -515,16 +525,14 @@ subprojects { subproject ->
   }
 
   test.finalizedBy jacocoTestReport
-  integration.dependsOn test
-  jacocoTestReport.dependsOn integration
   check.dependsOn jacocoTestReport
 }
 // end::subprojects[]
 
 sonarqube {
   properties {
-    property "sonar.projectName", "Reform :: civil-sdt-gateway"
-    property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt-gateway"
+    property "sonar.projectName", "Reform :: civil-sdt"
+    property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt"
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
   }
 }
@@ -581,7 +589,7 @@ bootJar {
 
 
 
-task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
+task codeCoverageReport(type: JacocoReport, dependsOn: [allprojects*.test, allprojects*.jacocoTestReport]) {
 
   // Gather execution data from all subprojects
   // (change this if you e.g. want to calculate unit test/integration test coverage separately)
