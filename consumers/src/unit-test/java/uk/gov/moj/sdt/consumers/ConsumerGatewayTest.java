@@ -123,9 +123,9 @@ class ConsumerGatewayTest extends ConsumerTestBase {
         TimeoutException timeoutException = assertThrows(TimeoutException.class, () ->
                 this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
 
-        assertEquals(timeoutException.getErrorCode(), "TIMEOUT_ERROR");
-        assertEquals(timeoutException.getErrorDescription(), "Read time out error sending [null]");
-        assertEquals(timeoutException.getCause(), null);
+        assertEquals("TIMEOUT_ERROR", timeoutException.getErrorCode());
+        assertEquals("Read time out error sending [null]", timeoutException.getErrorDescription());
+        assertNull(timeoutException.getCause());
     }
 
     /**
