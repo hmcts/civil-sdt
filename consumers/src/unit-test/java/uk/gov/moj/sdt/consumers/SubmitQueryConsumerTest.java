@@ -73,7 +73,7 @@ import static org.mockito.Mockito.verify;
  * @author Amit Nigam
  */
 @ExtendWith(MockitoExtension.class)
-class SubmitQueryConsumerTest extends BaseConsumerTest {
+class SubmitQueryConsumerTest extends ConsumerTestBase {
 
     /**
      * Consumer transformer for submit query.
@@ -157,9 +157,9 @@ class SubmitQueryConsumerTest extends BaseConsumerTest {
 
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
 
-        SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () -> {
+        SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () ->
             this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        });
+        );
 
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
         assertNull(soapFaultException.getErrorDescription());
