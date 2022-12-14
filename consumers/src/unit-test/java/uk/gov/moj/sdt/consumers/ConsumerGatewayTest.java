@@ -28,9 +28,9 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
@@ -90,13 +90,13 @@ class ConsumerGatewayTest extends BaseConsumerTest {
         IIndividualRequest individualRequest = createIndividualRequest();
         consumerGateway.individualRequest(individualRequest,
                 CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        assertTrue(null != consumerGateway.getIndividualRequestConsumer());
+        assertNotNull(consumerGateway.getIndividualRequestConsumer());
     }
 
     @Test
     void getIndividualRequest() {
         IIndividualRequestConsumer iIndividualRequestConsumer = consumerGateway.getIndividualRequestConsumer();
-        assertTrue(null != iIndividualRequestConsumer);
+        assertNotNull(iIndividualRequestConsumer);
     }
 
     /**

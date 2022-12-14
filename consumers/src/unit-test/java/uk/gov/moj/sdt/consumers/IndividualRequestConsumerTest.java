@@ -57,6 +57,7 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.any;
@@ -130,12 +131,12 @@ class IndividualRequestConsumerTest extends BaseConsumerTest {
         final long receiveTimeOut = 0L;
         ITargetAppInternalEndpointPortType portType = individualRequestConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
-        assertTrue(null != portType);
+        assertNotNull(portType);
     }
 
     @Test
     void getTransformer() {
-        assertTrue(null != individualRequestConsumer.getTransformer());
+        assertNotNull(individualRequestConsumer.getTransformer());
     }
 
     /**
