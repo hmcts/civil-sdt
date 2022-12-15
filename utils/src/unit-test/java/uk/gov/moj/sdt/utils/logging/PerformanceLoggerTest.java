@@ -33,22 +33,24 @@ package uk.gov.moj.sdt.utils.logging;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Class to test performance logging.
  *
  * @author Robin Compston.
  */
-public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
+class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
     /**
      * Pathname of performance log file.
      */
@@ -70,7 +72,7 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
                 outChan.truncate(0);
                 outChan.close();
             } catch (final Exception e) {
-                Assert.fail(e.getStackTrace().toString());
+                fail(Arrays.toString(e.getStackTrace()));
             }
         }
 
@@ -80,7 +82,7 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
      * Test writing of a performance message to performance log.
      */
     @Test
-    public void testPerformanceMessage() {
+    void testPerformanceMessage() {
         // Setup SDT context for logging.
         SdtContext.getContext().getLoggingContext().setLoggingFlags(Integer.MAX_VALUE);
         SdtContext.getContext().getLoggingContext().setMajorLoggingId(987);
@@ -110,9 +112,9 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
             // Match it against the result of all previous match replacements.
             final Matcher matcher = pattern.matcher(text);
 
-            Assert.assertTrue("Failed to find message [" + contents + "] in performance log", matcher.find());
+            assertTrue(matcher.find(), "Failed to find message [" + contents + "] in performance log");
         } catch (final Exception e) {
-            Assert.fail("Failed to find contents [" + contents + "] in performance log.");
+            fail("Failed to find contents [" + contents + "] in performance log.");
         }
     }
 }

@@ -34,10 +34,13 @@ package uk.gov.moj.sdt.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
+import org.junit.jupiter.api.BeforeEach;
+//import org.junit.Rule;
+//import org.junit.rules.TestWatcher;
+//import org.junit.runner.Description;
+import org.junit.jupiter.api.extension.TestWatcher;
+//import org.junit.jupiter.api.Description;
+import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -56,19 +59,17 @@ public abstract class AbstractSdtUnitTestBase {
     /**
      * Watcher to detect current test name.
      */
-    // CHECKSTYLE:OFF
-    @Rule
+    //@Rule
     public TestWatcher watcher = new TestWatcher() {
-        // CHECKSTYLE:ON
 
         /**
          * Method called whenever JUnit starts a test.
          *
          * @param description Information about the test.
          */
-        @Override
-        protected void starting(final Description description) {
-            LOGGER.info("Start Test: {}.{}", description.getClassName(), description.getMethodName());
+        //@Override
+        protected void starting(final TestMethodTestDescriptor description) {
+            LOGGER.info("Start Test: {}.{}", description.getTestClass(), description.getTestMethod().getName());
         }
     };
 
@@ -77,7 +78,7 @@ public abstract class AbstractSdtUnitTestBase {
      *
      * @throws Exception May throw runtime exception.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // Local set up if we are running outside of the appserver.
         this.setUpLocalTests();

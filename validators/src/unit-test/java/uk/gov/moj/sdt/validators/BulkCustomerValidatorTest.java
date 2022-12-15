@@ -30,7 +30,6 @@
  * $LastChangedBy: agarwals $ */
 package uk.gov.moj.sdt.validators;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +46,9 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -150,8 +152,8 @@ class BulkCustomerValidatorTest {
         bulkCustomer.accept(validator, null);
         verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(sdtCustomerId);
 
-        Assertions.assertEquals(bulkCustomer.getSdtCustomerId(), sdtCustomerId);
-        Assertions.assertTrue(true);
+        assertEquals(bulkCustomer.getSdtCustomerId(), sdtCustomerId);
+        assertTrue(true);
     }
 
     /**
@@ -177,16 +179,14 @@ class BulkCustomerValidatorTest {
             // Validate the bulk customer.
             bulkCustomer.accept(validator, null);
 
-            Assertions.fail("Test failed to throw CustomerNotFoundException.");
+            fail("Test failed to throw CustomerNotFoundException.");
         } catch (final CustomerNotFoundException e) {
             verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(sdtCustomerId);
 
             // [^\[]*\[CUST_NOT_SETUP\][^\[]*\[12345\].*
-            Assertions.assertTrue(
-                    e.getErrorCode().equals(IErrorMessage.ErrorCode.CUST_ID_INVALID.name()),
+            assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.CUST_ID_INVALID.name()),
                     "Error code incorrect");
-            Assertions.assertTrue(
-                    e.getErrorDescription().equals(
+            assertTrue(e.getErrorDescription().equals(
                             "The Bulk Customer organisation does not have an SDT Customer ID set up. Please contact " +
                                     contact + " for assistance."),
                     "Substitution value incorrect");

@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +48,7 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -59,7 +59,7 @@ import static org.mockito.Mockito.when;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
+class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
 
     /**
      * IIndividualRequestDao.
@@ -163,10 +163,10 @@ public class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
         individualRequest.accept(validator, null);
         verify(mockIndividualRequestDao).getIndividualRequest(bulkCustomer,
                 individualRequest.getCustomerRequestReference(), DATA_RETENTION_PERIOD);
-        Assertions.assertEquals(individualRequest.getErrorLog().getErrorText(),
+        assertEquals(individualRequest.getErrorLog().getErrorText(),
                 "Duplicate Unique Request Identifier submitted "
                         + individualRequest.getCustomerRequestReference() + ".");
-        Assertions.assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(),
+        assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(),
                 individualRequest.getRequestStatus());
     }
 

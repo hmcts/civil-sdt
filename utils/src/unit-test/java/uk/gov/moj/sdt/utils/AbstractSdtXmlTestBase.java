@@ -50,12 +50,13 @@ import javax.xml.validation.SchemaFactory;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * A base test class that compares XML file output.
@@ -151,7 +152,7 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_OUTPUT_DIR, xmlFileName + ".out", true);
 
             // Create Writer for the formatter to use.
-            AbstractSdtXmlTestBase.LOGGER.debug("File to write is: " + xmlOutPath);
+            AbstractSdtXmlTestBase.LOGGER.debug("File to write is: {}", xmlOutPath);
             final BufferedWriter bw = new BufferedWriter(new FileWriter(xmlOutPath));
 
             // Format XML output as pretty.
@@ -160,13 +161,13 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
             bw.close();
 
             // Check good file also exists.
-            AbstractSdtXmlTestBase.LOGGER.debug("Written file: " + xmlOutPath);
+            AbstractSdtXmlTestBase.LOGGER.debug("Written file: {}", xmlOutPath);
             final String xmlGoodPath =
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
 
             // compare the output and the good file.
-            AbstractSdtXmlTestBase.LOGGER.info("Comparing XML file " + xmlOutPath + " against good file " +
-                    xmlGoodPath);
+            AbstractSdtXmlTestBase.LOGGER.info("Comparing XML file {} against good file {}",
+                    xmlOutPath, xmlGoodPath);
             return this.compareTestOutputFiles(xmlOutPath, xmlGoodPath, useDelimiters);
         } catch (final IOException e) {
             AbstractSdtXmlTestBase.LOGGER.error("Exception: ", e);
@@ -185,8 +186,7 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
      * @throws SAXException                 SAXException.
      * @throws ParserConfigurationException ParserConfigurationException.
      */
-    private List<String>
-    evaluateXsd(final String xmlPathname, final String xsdPathname, final String errorFilePathname)
+    private List<String> evaluateXsd(final String xmlPathname, final String xsdPathname, final String errorFilePathname)
             throws IOException, SAXException, ParserConfigurationException {
         errorEncountered = false;
 
@@ -245,7 +245,7 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                     expectedMessages.remove(e.getMessage());
                 } else {
                     LOGGER.error("Parser encountered unexpected error: [" + e.getMessage() + "]");
-                    Assert.fail("Parser encountered unexpected error: [" + e.getMessage() + "]");
+                    fail("Parser encountered unexpected error: [" + e.getMessage() + "]");
                 }
 
             }
@@ -271,7 +271,7 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         if (errorFilePathname != null) {
             errorFilePath =
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
-            LOGGER.debug("Error message file - " + errorFilePath);
+            LOGGER.debug("Error message file - {}", errorFilePath);
         } else {
             return new ArrayList();
         }
@@ -299,22 +299,16 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         List<String> remainingExpectedErrors = null;
         try {
             remainingExpectedErrors = evaluateXsd(xmlPathname, xsdPathname, errorFilePathname);
-        } catch (final IOException e) {
-            LOGGER.error("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
-            Assert.fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
-        } catch (final SAXException e) {
-            LOGGER.error("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname +
-                    "] on line " + ((SAXParseException) e).getLineNumber(), e);
-            Assert.fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
-        } catch (final ParserConfigurationException e) {
-            LOGGER.error("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]", e);
-            Assert.fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
+        } catch (final IOException|SAXException|ParserConfigurationException e) {
+            LOGGER.error("Exception while validating XML [{}] with XSD [{}]",
+                    xmlPathname, xsdPathname, e);
+            fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
 
         // Has no error been reported and yet we expected one?
         if (!this.errorEncountered && errorFilePathname != null) {
             LOGGER.error("Parser failed to encounter all expected error(s).  The following errors were not found:");
-            Assert.fail("Parser failed to encounter all expected error(s)");
+            fail("Parser failed to encounter all expected error(s)");
         }
 
         // If there was not an exception thrown (so remainingExpectedErrors is not null) and there are errors still in
@@ -325,7 +319,7 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
             for (String remainingError : remainingExpectedErrors) {
                 LOGGER.error(remainingError);
             }
-            Assert.fail("Parser failed to encounter all expected error(s)");
+            fail("Parser failed to encounter all expected error(s)");
         }
     }
 }

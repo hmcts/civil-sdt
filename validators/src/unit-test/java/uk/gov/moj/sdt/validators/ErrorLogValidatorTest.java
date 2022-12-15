@@ -44,7 +44,7 @@ import uk.gov.moj.sdt.domain.ErrorLog;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
+class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Test subject.
      */

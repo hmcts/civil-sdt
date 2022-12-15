@@ -32,12 +32,14 @@ package uk.gov.moj.sdt.validators.validation;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.validators.DateValidator;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test class for DateValidation.
@@ -60,7 +62,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
         final LocalDate startDate = LocalDate.now().minusMonths(12);
         final LocalDate endDate = LocalDate.now().plusMonths(12);
 
-        Assertions.assertTrue(DateValidator.isDateWitinRange(dateToTest, startDate, endDate),
+        assertTrue(DateValidator.isDateWitinRange(dateToTest, startDate, endDate),
                 "The date is no longer considered as within range.");
     }
 
@@ -75,7 +77,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
 
         final LocalDate startDate = LocalDate.now().minusMonths(12);
 
-        Assertions.assertTrue(DateValidator.isDateWitinRange(dateToTest, startDate, dateToTest),
+        assertTrue(DateValidator.isDateWitinRange(dateToTest, startDate, dateToTest),
                 "The date is no longer considered as within range.");
     }
 
@@ -93,7 +95,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
         final LocalDate startDate = LocalDate.now();
         final LocalDate endDate = LocalDate.now().minusMonths(12);
 
-        Assertions.assertFalse(DateValidator.isDateWitinRange(dateToTest, startDate, endDate),
+        assertFalse(DateValidator.isDateWitinRange(dateToTest, startDate, endDate),
                 "The test date no longer is outside the end of the given range.");
     }
 
@@ -111,7 +113,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
         final LocalDate startDate = LocalDate.now().plusMonths(12);
         final LocalDate endDate = LocalDate.now();
 
-        Assertions.assertFalse(DateValidator.isDateWitinRange(dateToTest, startDate, endDate),
+        assertFalse(DateValidator.isDateWitinRange(dateToTest, startDate, endDate),
                 "The test date no longer is before the start of the given range.");
     }
 
@@ -126,7 +128,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
 
         final LocalDate endDate = LocalDate.now().plusMonths(12);
 
-        Assertions.assertTrue(DateValidator.isDateBefore(dateToTest, endDate),
+        assertTrue(DateValidator.isDateBefore(dateToTest, endDate),
                 "The test date is no longer considered to be after the given date.");
     }
 
@@ -141,7 +143,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
 
         final LocalDate endDate = LocalDate.now();
 
-        Assertions.assertFalse(DateValidator.isDateBefore(dateToTest, endDate),
+        assertFalse(DateValidator.isDateBefore(dateToTest, endDate),
                 "The test date is now considered to be before or on the same day the given date.");
     }
 
@@ -156,7 +158,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
 
         final LocalDate endDate = LocalDate.now();
 
-        Assertions.assertTrue(DateValidator.isDateAfter(dateToTest, endDate),
+        assertTrue(DateValidator.isDateAfter(dateToTest, endDate),
                 "The test date is now considered to be before the given date.");
     }
 
@@ -171,7 +173,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
 
         final LocalDate endDate = LocalDate.now().plusMonths(12);
 
-        Assertions.assertFalse(DateValidator.isDateAfter(dateToTest, endDate),
+        assertFalse(DateValidator.isDateAfter(dateToTest, endDate),
                 "The test date is now considered to be after or on the same day the given date.");
     }
 
@@ -184,7 +186,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
     void testIsDateWithinXDaysWITHIN() {
         final LocalDate dateToTest = LocalDate.now().minusDays(5);
 
-        Assertions.assertTrue(DateValidator.isDateWitinLastXDays(dateToTest, 10),
+        assertTrue(DateValidator.isDateWitinLastXDays(dateToTest, 10),
                 "The date is now considered to be further away than the given number of days.");
     }
 
@@ -197,7 +199,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
     void testIsDateWithinXDaysONBOUNDARY() {
         final LocalDate dateToTest = LocalDate.now().minusDays(10);
 
-        Assertions.assertTrue(DateValidator.isDateWitinLastXDays(dateToTest, 10),
+        assertTrue(DateValidator.isDateWitinLastXDays(dateToTest, 10),
                 "The date is now considered to be further away than the given number of days.");
     }
 
@@ -210,7 +212,7 @@ class DateValidatorTest extends AbstractSdtUnitTestBase {
     void testIsDateWithinXDaysOUTSIDE() {
         final LocalDate dateToTest = LocalDate.now().minusDays(15);
 
-        Assertions.assertFalse(DateValidator.isDateWitinLastXDays(dateToTest, 10),
+        assertFalse(DateValidator.isDateWitinLastXDays(dateToTest, 10),
                 "The date is now considered to be within the given number of days.");
     }
 }

@@ -39,9 +39,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * This class is a base class to verify the result of a testcase by comparing the output files.
@@ -63,28 +64,17 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
     /**
      * Flag to say whether comparison with good file is required.
      */
-    protected boolean COMPARE_TO_GOOD = true; // SUPPRESS CHECKSTYLE Just some identifier.
+    protected static final boolean COMPARE_TO_GOOD = true;
 
     /**
      * Flag to say whether comparison with good file is not required.
      */
-    protected boolean NO_COMPARE_TO_GOOD = false; // SUPPRESS CHECKSTYLE Just some identifier.
+    protected static final boolean NO_COMPARE_TO_GOOD = false;
 
     /**
      * The first lines in 'out' and 'good' files that do not match.
      */
-    protected String badLine = ""; // SUPPRESS CHECKSTYLE Just some identifier.
-
-    // /**
-    // * Constructs a new {@link AbstractSdtGoodFileTestBase}.
-    // *
-    // * @param testName Name of this test.
-    // */
-    // public AbstractSdtGoodFileTestBase (final String testName)
-    // {
-    // super (testName);
-    // }
-    //
+    protected static String badLine = "";
 
     /**
      * Compares the contents two named text files and returns true if they are exatcly the same. Note - Any data not
@@ -98,11 +88,8 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
      * @return true - files match, false - files do not match.
      * @noinspection ResultOfMethodCallIgnored
      */
-    // CHECKSTYLE:OFF Complexity is acceptable
     protected boolean compareTestOutputFiles(final String outFilePath, final String goodFilePath,
-                                             final boolean useDelimiters)
-    // CHECKSTYLE:ON
-    {
+                                             final boolean useDelimiters) {
         boolean filesMatch = false;
         boolean foundDifference = false;
         BufferedReader outFileBuf;
@@ -116,8 +103,8 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                 // Check we have an output file.
                 if (!outFile.exists()) {
                     AbstractSdtGoodFileTestBase.LOGGER
-                            .error("** ERROR - Unable to find the output file for this test (" +
-                                    outFile.getAbsolutePath() + ")");
+                            .error("** ERROR - Unable to find the output file for this test ({})",
+                                    outFile.getAbsolutePath());
                     throw new IOException("** ERROR - Unable to find the output file from the script (" +
                             outFile.getAbsolutePath() + ")");
                 }
@@ -125,8 +112,8 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                 // Check we have a good file.
                 if (!goodFile.exists()) {
                     AbstractSdtGoodFileTestBase.LOGGER
-                            .error("** ERROR - Unable to find the good file for this test (" +
-                                    goodFile.getAbsolutePath() + ")");
+                            .error("** ERROR - Unable to find the good file for this test ({})",
+                                    goodFile.getAbsolutePath());
                     throw new IOException("** ERROR - Unable to find the good file for the script (" +
                             goodFile.getAbsolutePath() + ")");
                 }
@@ -233,9 +220,9 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                 while (outIter.hasNext() && goodIter.hasNext() && !foundDifference) {
                     line++;
                     outStr = outIter.next();
-                    outStr = outStr.replaceAll(" />", "/>").trim();
+                    outStr = outStr.replace(" />", "/>").trim();
                     goodStr = goodIter.next();
-                    goodStr = goodStr.replaceAll(" />", "/>").trim();
+                    goodStr = goodStr.replace(" />", "/>").trim();
 
                     // Compare each sorted record.
                     if (outStr.compareTo(goodStr) != 0) {
@@ -268,13 +255,13 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
 
         if (!filesMatch) {
             if (useDelimiters) {
-                AbstractSdtGoodFileTestBase.LOGGER.info("** Check the block of text between the (" +
-                        this.getTestStartString() + ") and (" + this.getTestCompletedString() + ") messages.");
-                AbstractSdtGoodFileTestBase.LOGGER.info("** All other text before and after this block is "
-                        + "ignored for comparison purposes.");
+                AbstractSdtGoodFileTestBase.LOGGER.info("** Check the block of text between the ({}) and ({}) messages.",
+                        this.getTestStartString(), this.getTestCompletedString());
+                AbstractSdtGoodFileTestBase.LOGGER.info(
+                        "** All other text before and after this block is ignored for comparison purposes.");
             }
 
-            Assert.fail("Comparison failure between out file [" + outFilePath + "] and good file [" + goodFilePath +
+            fail("Comparison failure between out file [" + outFilePath + "] and good file [" + goodFilePath +
                     "].\nFirst mismatch: \n" + this.badLine);
         } else {
             AbstractSdtGoodFileTestBase.LOGGER.info("Output file matches the reference comparison file - " +

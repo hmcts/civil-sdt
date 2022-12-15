@@ -31,10 +31,11 @@
 
 package uk.gov.moj.sdt.validators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -158,14 +159,14 @@ class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
             submitQueryRequest.accept(validator, null);
-            Assertions.fail("Test failed to throw CustomerNotSetupException ");
+            fail("Test failed to throw CustomerNotSetupException ");
 
         } catch (final CustomerNotSetupException e) {
             LOGGER.debug(e.getMessage());
             verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
 
-            Assertions.assertEquals(e.getErrorCode(), IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
-            Assertions.assertEquals(e.getErrorDescription(),
+            assertEquals(e.getErrorCode(), IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
+            assertEquals(e.getErrorDescription(),
                     "The Bulk Customer organisation is not setup to send Service Request messages to the " + mcolCode +
                             ". Please contact " + contact + " for assistance.");
         }

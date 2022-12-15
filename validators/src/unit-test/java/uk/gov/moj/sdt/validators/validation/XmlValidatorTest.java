@@ -45,6 +45,8 @@ import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.validators.XmlValidationDetails;
 import uk.gov.moj.sdt.validators.XmlValidator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Unit tests for XmlValidation.
  *
@@ -81,7 +83,7 @@ class XmlValidatorTest extends AbstractSdtUnitTestBase {
         final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, XSD_PATH);
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml();
 
-        Assertions.assertEquals(XmlValidationDetails.Result.PASS, xmlValidationDetails.getResult(),
+        assertEquals(XmlValidationDetails.Result.PASS, xmlValidationDetails.getResult(),
                 "The given XML is no longer valid.");
     }
 
@@ -107,8 +109,8 @@ class XmlValidatorTest extends AbstractSdtUnitTestBase {
         final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, XSD_PATH);
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml();
 
-        Assertions.assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
-        Assertions.assertEquals(24, xmlValidationDetails.getResultMessages().size(),
+        assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
+        assertEquals(24, xmlValidationDetails.getResultMessages().size(),
                 "The given XML is now valid.");
     }
 
@@ -135,11 +137,11 @@ class XmlValidatorTest extends AbstractSdtUnitTestBase {
         final XmlValidator xmlValidation = new XmlValidator(theXmlToValidate, xsdPathInvalid);
         final XmlValidationDetails xmlValidationDetails = xmlValidation.validateXml();
 
-        Assertions.assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
+        assertEquals(XmlValidationDetails.Result.FAIL, xmlValidationDetails.getResult());
 
         final String errorMessage = "** ERROR - Unable to find the " + "file [FileDoesNotExist.xsd]";
 
-        Assertions.assertEquals(errorMessage, xmlValidationDetails.getResultMessages().get(0),
+        assertEquals(errorMessage, xmlValidationDetails.getResultMessages().get(0),
                 "The XML is now considered valid against an XSD.");
     }
 }

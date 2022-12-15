@@ -31,45 +31,44 @@
 
 package uk.gov.moj.sdt.utils;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit test for {@link TokenReplacer} class.
  *
  * @author d130680
  */
-public class UtilitiesTest extends AbstractSdtUnitTestBase {
+class UtilitiesTest extends AbstractSdtUnitTestBase {
     /**
      * Test the tokenisation works.
      */
     @Test
-    public void testSingleTokenisation() {
-        final List<String> l = new ArrayList<String>();
+    void testSingleTokenisation() {
+        final List<String> l = new ArrayList<>();
         l.add("John Doe");
 
         final String s = Utilities.replaceTokens("User {0} was not found", l);
 
-        Assert.assertEquals("User John Doe was not found", s);
-
+        assertEquals("User John Doe was not found", s);
     }
 
     /**
      * Test the tokenisation works with multiple tokens and out of sequence tokens.
      */
     @Test
-    public void testMultipleTokenisation() {
-        final List<String> l = new ArrayList<String>();
+    void testMultipleTokenisation() {
+        final List<String> l = new ArrayList<>();
         l.add("fox");
         l.add("dog");
         l.add("over");
         final String s = Utilities.replaceTokens("The quick brown {0} jumped {2} the lazy brown {1}", l);
 
-        Assert.assertEquals("The quick brown fox jumped over the lazy brown dog", s);
-
+        assertEquals("The quick brown fox jumped over the lazy brown dog", s);
     }
 
 }
