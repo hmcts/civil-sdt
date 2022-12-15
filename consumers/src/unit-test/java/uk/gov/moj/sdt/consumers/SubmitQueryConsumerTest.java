@@ -233,7 +233,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
          * @return the target application end point port bean i.e. the client interface.
          */
         @Override
-        public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
+        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
                                                              final String serviceType, final String webServiceEndPoint,
                                                              final long connectionTimeOut, final long receiveTimeOut) {
             return mockClient;
