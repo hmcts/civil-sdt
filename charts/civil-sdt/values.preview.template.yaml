@@ -28,4 +28,3 @@ servicebus:
   setup:
     queues:
       - name: civil-sdt-in-out
-      - name: civil-sdt-in-out

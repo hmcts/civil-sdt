@@ -15,7 +15,7 @@ module "servicebus-namespace" {
 
 module "servicebus-queue-request" {
   source              = "git@github.com:hmcts/terraform-module-servicebus-queue?ref=master"
-  name                = "${var.product}-in-out-${var.env}"
+  name                = "${var.product}-${var.component}-in-out-${var.env}"
   namespace_name      = module.servicebus-namespace.name
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -45,21 +45,3 @@ resource "azurerm_key_vault_secret" "servicebus_primary_shared_access_key" {
   key_vault_id = module.vault.key_vault_id
 }
 
-module "servicebus-topic" {
-  source              = "git@github.com:hmcts/terraform-module-servicebus-topic?ref=master"
-  name                = "${var.product}-to-cft-${var.env}"
-  namespace_name      = module.servicebus-namespace.name
-  resource_group_name = azurerm_resource_group.rg.name
-
-  depends_on = [module.servicebus-namespace]
-}
-
-module "servicebus-subscription" {
-  source              = "git@github.com:hmcts/terraform-module-servicebus-subscription?ref=master"
-  name                = "${var.product}-subs-to-cft-${var.env}"
-  namespace_name      = module.servicebus-namespace.name
-  topic_name          = module.servicebus-topic.name
-  resource_group_name = azurerm_resource_group.rg.name
-
-  depends_on = [module.servicebus-topic]
-}
