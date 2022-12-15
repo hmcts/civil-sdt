@@ -7,7 +7,7 @@ spring:
     servicebus:
       internal:
         targetAppQueue:
-          MCOL: ${MCOL.Queue}
+          MCOL: ${CIVIL_SDT_QUEUE}
       enabled: false
   aop:
     proxy-target-class: false

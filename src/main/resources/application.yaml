@@ -18,10 +18,10 @@ springdoc:
 spring:
   jms:
     servicebus:
-      connection-string: ${SDT_QUEUE_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
+      connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       internal:
         targetAppQueue:
-          MCOL: ${MCOL.Queue}
+          MCOL: ${CIVIL_SDT_QUEUE}
   aop:
     proxy-target-class: false
   main:
