@@ -24,9 +24,9 @@ CREATE SCHEMA sdt_batch_user;
 ------------------------------------------------
 -- Create each of the schemas used by SDT
 ------------------------------------------------
-CREATE USER sdt_owner;
-CREATE USER sdt_user;
-CREATE USER sdt_batch_user;
+--CREATE USER sdt_owner;
+--CREATE USER sdt_user;
+--CREATE USER sdt_batch_user;
 
 ------------------------------------------------
 -- Create tables for SDT_OWNER
