@@ -170,7 +170,7 @@ public class MessageWriterTest extends AbstractSdtUnitTestBase {
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
 
-        jmsTemplate.convertAndSend("UnitTestQueue.DLQ", sdtMessage);
+        jmsTemplate.convertAndSend("UnitTestQueue/$deadletterqueue", sdtMessage);
         EasyMock.expectLastCall();
 
         // Get ready to call the mock.
