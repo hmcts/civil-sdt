@@ -207,6 +207,16 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     }
 
     /**
+     *
+     * @return the transformer for IndividualRequestConsumer
+     */
+    public IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest>
+            getTransformer ()
+    {
+        return this.transformer;
+    }
+
+    /**
      * Get the value for the rethrowOnFailureToConnect flag.
      *
      * @return rethrowOnFailureToConnect flag

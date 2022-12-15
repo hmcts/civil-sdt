@@ -31,34 +31,19 @@
 
 package uk.gov.moj.sdt.consumers;
 
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.ServiceRouting;
-import uk.gov.moj.sdt.domain.ServiceType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IServiceRouting;
-import uk.gov.moj.sdt.domain.api.IServiceType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
@@ -72,6 +57,9 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
@@ -82,40 +70,31 @@ import static org.mockito.Mockito.verify;
  *
  * @author Manoj Kulkarni
  */
-@ExtendWith(MockitoExtension.class)
-class IndividualRequestConsumerTest {
+class IndividualRequestConsumerTest extends ConsumerTestBase {
 
     /**
      * Consumer transformer for individual request.
      */
     @Mock
-    private IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> mockTransformer;
+    protected IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest,
+            IIndividualRequest> mockTransformer;
 
     /**
      * Mock Client instance.
      */
     @Mock
-    private ITargetAppInternalEndpointPortType mockClient;
+    ITargetAppInternalEndpointPortType mockClient;
 
     @Mock
-    private SOAPFault soapFault;
+    SOAPFault soapFault;
 
     /**
      * Individual Request Consumer instance of the inner class under test.
      */
-    private IndRequestConsumer individualRequestConsumer;
-
-    /**
-     * Connection time out constant.
-     */
-    private static final long CONNECTION_TIME_OUT = 30000;
-
-    /**
-     * Received time out constant.
-     */
-    private static final long RECEIVE_TIME_OUT = 60000;
+    IndividualRequestConsumer individualRequestConsumer;
 
     private static final String TEST_FINISHED_SUCCESSFULLY = "Test finished successfully";
+    private static final String GOT_THE_EXCEPTION_AS_EXPECTED = "Got the exception as expected";
 
     /**
      * Individual Request instance for testing in the methods.
@@ -130,12 +109,12 @@ class IndividualRequestConsumerTest {
     /**
      * Method to do any pre-test set-up.
      */
-    @SuppressWarnings("unchecked")
     @BeforeEach
-    public void setUp() {
+    @Override
+    public void setUpLocalTests() {
         MockitoAnnotations.openMocks(this);
 
-        individualRequestConsumer = new IndRequestConsumer();
+        individualRequestConsumer = new IndConsumerGateway();
         individualRequestConsumer.setTransformer(mockTransformer);
         individualRequestConsumer.setRethrowOnFailureToConnect(true);
 
@@ -152,7 +131,12 @@ class IndividualRequestConsumerTest {
         final long receiveTimeOut = 0L;
         ITargetAppInternalEndpointPortType portType = individualRequestConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
-        Assertions.assertTrue(null != portType);
+        assertNotNull(portType);
+    }
+
+    @Test
+    void getTransformer() {
+        assertNotNull(individualRequestConsumer.getTransformer());
     }
 
     /**
@@ -173,7 +157,7 @@ class IndividualRequestConsumerTest {
                     .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
             // required to be null for a void method
             return null;
-        }).when(mockTransformer).transformDomainToJaxb(any());
+        }).when(mockTransformer).transformDomainToJaxb(individualRequest);
 
         individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                 RECEIVE_TIME_OUT);
@@ -181,7 +165,36 @@ class IndividualRequestConsumerTest {
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitIndividual(any());
 
-        Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+
+    }
+
+    /**
+     * Test method for processing of individual request outage error.
+     */
+    @Test
+    void processIndividualRequestOutage ()
+    {
+        when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
+
+        final WebServiceException wsException = new WebServiceException ();
+        wsException.initCause (new ConnectException("Server down error"));
+
+        when(mockClient.submitIndividual(individualRequestType)).thenThrow (wsException);
+
+        try {
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+                    RECEIVE_TIME_OUT);
+
+            fail("Expecting an OutageException here.");
+        } catch (final OutageException toe) {
+            assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
+        }
+
+        verify(mockTransformer).transformDomainToJaxb(individualRequest);
+        verify(mockClient).submitIndividual(individualRequestType);
+
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
 
     }
 
@@ -201,16 +214,15 @@ class IndividualRequestConsumerTest {
             this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assertions.fail("Expecting a Timeout here.");
+            fail("Expecting a Timeout here.");
         } catch (final TimeoutException toe) {
-            Assertions.assertTrue(true, "Got the exception as expected");
+            assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitIndividual(any());
 
-        Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
-
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
     }
 
     /**
@@ -234,16 +246,15 @@ class IndividualRequestConsumerTest {
             this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                     RECEIVE_TIME_OUT);
 
-            Assertions.fail("Expecting an Soap Fault here.");
+            fail("Expecting an Soap Fault here.");
         } catch (final SoapFaultException toe) {
-            Assertions.assertTrue(true, "Got the exception as expected");
+            assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitIndividual(any());
 
-        Assertions.assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
-
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
     }
 
     /**
@@ -260,60 +271,6 @@ class IndividualRequestConsumerTest {
         requestType.setHeader(headerType);
 
         return requestType;
-    }
-
-    /**
-     * @return individual request domain object
-     */
-    private IIndividualRequest createIndividualRequest() {
-        final IBulkSubmission bulkSubmission = new BulkSubmission();
-        final IBulkCustomer bulkCustomer = new BulkCustomer();
-        final ITargetApplication targetApp = new TargetApplication();
-
-        targetApp.setId(1L);
-        targetApp.setTargetApplicationCode("MCOL");
-        targetApp.setTargetApplicationName("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
-
-        final ServiceRouting serviceRouting = new ServiceRouting();
-        serviceRouting.setId(1L);
-        serviceRouting.setWebServiceEndpoint("MCOL_END_POINT");
-
-        final IServiceType serviceType = new ServiceType();
-        serviceType.setId(1L);
-        serviceType.setName(IServiceType.ServiceTypeName.SUBMIT_INDIVIDUAL.name());
-        serviceType.setDescription("RequestTestDesc1");
-        serviceType.setStatus("RequestTestStatus");
-
-        serviceRouting.setServiceType(serviceType);
-        serviceRouting.setTargetApplication(targetApp);
-
-        serviceRoutings.add(serviceRouting);
-
-        targetApp.setServiceRoutings(serviceRoutings);
-
-        bulkSubmission.setTargetApplication(targetApp);
-
-        bulkCustomer.setId(1L);
-        bulkCustomer.setSdtCustomerId(10L);
-
-        bulkSubmission.setBulkCustomer(bulkCustomer);
-        bulkSubmission.setCustomerReference("TEST_CUST_REF");
-        bulkSubmission.setId(1L);
-        bulkSubmission.setNumberOfRequest(1);
-
-        final IIndividualRequest iindividualRequest = new IndividualRequest();
-        iindividualRequest.setSdtRequestReference("Test");
-
-        final List<IIndividualRequest> requests = new ArrayList<>();
-        requests.add(iindividualRequest);
-
-        bulkSubmission.setIndividualRequests(requests);
-
-        iindividualRequest.setBulkSubmission(bulkSubmission);
-
-        return iindividualRequest;
-
     }
 
     /**
@@ -334,29 +291,29 @@ class IndividualRequestConsumerTest {
         responseType.setStatus(status);
 
         return responseType;
-
     }
 
     /**
      * Need to extend the consumer class under test for overriding base class methods
      * of the getClient as it is abstract method.
      */
-    private class IndRequestConsumer extends IndividualRequestConsumer {
+    protected class IndConsumerGateway extends IndividualRequestConsumer
+    {
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.
          *
          * @param targetApplicationCode the target application code
-         * @param serviceType           the service type associated with the target application code
-         * @param webServiceEndPoint    the Web Service End Point URL
-         * @param connectionTimeOut     the connection time out value
-         * @param receiveTimeOut        the acknowledgement time out value
+         * @param serviceType the service type associated with the target application code
+         * @param webServiceEndPoint the Web Service End Point URL
+         * @param connectionTimeOut the connection time out value
+         * @param receiveTimeOut the acknowledgement time out value
          * @return the target application end point port bean i.e. the client interface.
          */
         @Override
         public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
-                                                            final String serviceType, final String webServiceEndPoint,
-                                                            final long connectionTimeOut, final long receiveTimeOut) {
+                                                             final String serviceType, final String webServiceEndPoint,
+                                                             final long connectionTimeOut, final long receiveTimeOut) {
             return mockClient;
         }
     }
