@@ -1,18 +1,18 @@
 -------------------------------------------------------------
 -- Drop each of the schemas used by SDT and all their contents
 --------------------------------------------------------------
-DROP SCHEMA IF EXISTS sdt_user CASCADE;
-DROP SCHEMA IF EXISTS sdt_batch_user CASCADE;
-DROP SCHEMA IF EXISTS sdt_owner CASCADE;
+--DROP SCHEMA IF EXISTS sdt_user CASCADE;
+--DROP SCHEMA IF EXISTS sdt_batch_user CASCADE;
+--DROP SCHEMA IF EXISTS sdt_owner CASCADE;
 
 -------------------------------------------------------------
 -- Drop each of the users used by SDT
 --------------------------------------------------------------
 ---- non schema owners first
-DROP USER IF EXISTS sdt_user;
-DROP USER IF EXISTS sdt_batch_user;
+--DROP USER IF EXISTS sdt_user;
+--DROP USER IF EXISTS sdt_batch_user;
 -- ---- now schema owners
-DROP USER IF EXISTS sdt_owner;
+--DROP USER IF EXISTS sdt_owner;
 
 -------------------------------------------------------------
 -- Create the schemas used by SDT and all their contents
@@ -24,9 +24,9 @@ CREATE SCHEMA sdt_batch_user;
 ------------------------------------------------
 -- Create each of the schemas used by SDT
 ------------------------------------------------
-CREATE USER sdt_owner;
-CREATE USER sdt_user;
-CREATE USER sdt_batch_user;
+--CREATE USER sdt_owner;
+--CREATE USER sdt_user;
+--CREATE USER sdt_batch_user;
 
 ------------------------------------------------
 -- Create tables for SDT_OWNER
