@@ -38,7 +38,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -50,6 +49,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -87,6 +87,7 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
      * Method called before the test methods.
      */
     @BeforeEach
+    @Override
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
@@ -98,7 +99,6 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
      * @throws IOException      the exception thrown on IO problems
      */
     @Test
-    @Disabled("temporarily")
     void doFilterTest() throws IOException, ServletException {
         // Add code to set something in SdtContext.
         SdtContext.getContext().setRawInXml("TestXml");
@@ -109,13 +109,7 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
 
         mockFilterChain.doFilter(mockServletRequest, mockServletResponse);
 
-        //EasyMock.expectLastCall();
-
         contextCleanupFilter.doFilter(mockServletRequest, mockServletResponse, mockFilterChain);
-
-        verify(mockServletRequest);
-        verify(mockServletResponse);
-        verify(mockFilterChain);
 
         // Add code to verify that the entities in SdtContext are removed.
         assertNull(SdtContext.getContext().getRawInXml(), "Sdt Context not cleaned up");
@@ -131,7 +125,6 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
      * @throws IOException      the exception thrown on IO problems
      */
     @Test
-    @Disabled("temporarily")
     void doFilterTestForError() throws IOException, ServletException {
         // Add code to set something in SdtContext.
         SdtContext.getContext().setRawInXml("TestXml");
@@ -142,18 +135,13 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
 
         mockFilterChain.doFilter(mockServletRequest, mockServletResponse);
 
-       // EasyMock.expectLastCall().andThrow(new ServletException("Error"));
-//        verify().
-
         try {
             contextCleanupFilter.doFilter(mockServletRequest, mockServletResponse, mockFilterChain);
         } catch (final ServletException e) {
             assertTrue(true);
         }
 
-        verify(mockServletRequest);
-        verify(mockServletResponse);
-        verify(mockFilterChain);
+        verify(mockFilterChain, times(2)).doFilter(mockServletRequest, mockServletResponse);
 
         // Add code to verify that the entities in SdtContext are removed.
         assertNull(SdtContext.getContext().getRawInXml(), "Sdt Context expected to be cleaned up");

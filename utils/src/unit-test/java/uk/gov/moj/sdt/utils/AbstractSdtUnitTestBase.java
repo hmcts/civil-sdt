@@ -35,12 +35,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.BeforeEach;
-//import org.junit.Rule;
-//import org.junit.rules.TestWatcher;
-//import org.junit.runner.Description;
-import org.junit.jupiter.api.extension.TestWatcher;
-//import org.junit.jupiter.api.Description;
-import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -55,23 +49,6 @@ public abstract class AbstractSdtUnitTestBase {
      * Static logging object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtUnitTestBase.class);
-
-    /**
-     * Watcher to detect current test name.
-     */
-    //@Rule
-    public TestWatcher watcher = new TestWatcher() {
-
-        /**
-         * Method called whenever JUnit starts a test.
-         *
-         * @param description Information about the test.
-         */
-        //@Override
-        protected void starting(final TestMethodTestDescriptor description) {
-            LOGGER.info("Start Test: {}.{}", description.getTestClass(), description.getTestMethod().getName());
-        }
-    };
 
     /**
      * Standard JUnit setUp method. Gets run before each test method.
@@ -139,7 +116,9 @@ public abstract class AbstractSdtUnitTestBase {
         if (null == field) {
             field = ReflectionUtils.findField(clazzUnderTest, fieldName, clazzOfField);
         }
-        ReflectionUtils.makeAccessible(field);
+        if (null != field) {
+            ReflectionUtils.makeAccessible(field);
+        }
         return ReflectionUtils.getField(field, target);
     }
 
