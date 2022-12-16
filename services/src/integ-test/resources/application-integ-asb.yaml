@@ -4,7 +4,7 @@ spring:
       internal:
         targetAppQueue:
           TEST1: ${CIVIL_SDT_QUEUE:civil_sdt_inbound}
-      connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://hmc-servicebus-demo.servicebus.windows.net/;SharedAccessKeyName=Root;SharedAccessKey=wS5bXXPPip8KKEKc9A4/P6krOazMvSCwcdW4PmbsD0A=;EntityPath=civil_sdt_inbound}
+      connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://hmc-servicebus-demo.servicebus.windows.net/;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
 
   aop:
     proxy-target-class: false
