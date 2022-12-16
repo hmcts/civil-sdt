@@ -283,9 +283,9 @@ CREATE SEQUENCE sdt_owner.tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY
 ------------------------------------------------
 -- Create Grants for SDT_OWNER
 ------------------------------------------------
-ALTER ROLE sdt_owner SET search_path TO sdt_owner;
-ALTER ROLE sdt_user SET search_path TO sdt_user, sdt_owner;
-ALTER ROLE sdt_batch_user SET search_path TO sdt_batch_user, sdt_owner;
+--ALTER ROLE sdt_owner SET search_path TO sdt_owner;
+--ALTER ROLE sdt_user SET search_path TO sdt_user, sdt_owner;
+--ALTER ROLE sdt_batch_user SET search_path TO sdt_batch_user, sdt_owner;
 
 GRANT USAGE ON SCHEMA sdt_owner TO sdt_user;
 GRANT USAGE ON SCHEMA sdt_owner TO sdt_batch_user;
