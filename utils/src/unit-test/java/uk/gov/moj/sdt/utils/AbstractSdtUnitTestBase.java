@@ -35,8 +35,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -45,10 +43,6 @@ import org.springframework.util.ReflectionUtils;
  * @author Robin Compston
  */
 public abstract class AbstractSdtUnitTestBase {
-    /**
-     * Static logging object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtUnitTestBase.class);
 
     /**
      * Standard JUnit setUp method. Gets run before each test method.
