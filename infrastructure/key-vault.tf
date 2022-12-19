@@ -20,17 +20,6 @@ resource "azurerm_key_vault_secret" "civil_sdt_service_s2s_secret" {
   key_vault_id = data.azurerm_key_vault.civil_vault.id
 }
 
-data "azurerm_key_vault_secret" "civil_sdt_inbound_adapter_s2s_key" {
-  name         = "microservicekey-civil-sdt-inbound-adapter"
-  key_vault_id = data.azurerm_key_vault.s2s_vault.id
-}
-
-resource "azurerm_key_vault_secret" "civil_sdt_inbound_adapter_s2s_secret" {
-  name         = "civil-sdt-inbound-adapter-s2s-secret"
-  value        = data.azurerm_key_vault_secret.civil_sdt_inbound_adapter_s2s_key.value
-  key_vault_id = data.azurerm_key_vault.civil_vault.id
-}
-
 data "azurerm_key_vault_secret" "api_gw_s2s_key" {
   name         = "microservicekey-api-gw"
   key_vault_id = data.azurerm_key_vault.s2s_vault.id
