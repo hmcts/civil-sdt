@@ -1,7 +1,7 @@
---DROP SEQUENCE IF EXISTS purge_job_audit_seq;
---DROP SEQUENCE IF EXISTS purge_job_audit_messages_seq;
---DROP TABLE IF EXISTS sdt_owner.purge_job_audit CASCADE;
---DROP TABLE IF EXISTS sdt_owner.purge_job_audit_messages CASCADE;
+DROP SEQUENCE IF EXISTS purge_job_audit_seq;
+DROP SEQUENCE IF EXISTS purge_job_audit_messages_seq;
+DROP TABLE IF EXISTS sdt_owner.purge_job_audit CASCADE;
+DROP TABLE IF EXISTS sdt_owner.purge_job_audit_messages CASCADE;
 
 CREATE TABLE sdt_owner.purge_job_audit
 (purge_job_id NUMERIC UNIQUE NOT NULL,
