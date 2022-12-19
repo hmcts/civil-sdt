@@ -67,6 +67,11 @@ public class XmlValidator implements IXmlValidator {
     private static final Logger LOGGER = LoggerFactory.getLogger(XmlValidator.class);
 
     /**
+     * Fully qualified name of class that implements SAXParserFactory.
+     */
+    private static final String SAX_PARSER_FACTORY_IMPL_CLASS = "org.apache.xerces.jaxp.SAXParserFactoryImpl";
+
+    /**
      * The xml that requires validation.
      */
     private String xmlToValidate;
@@ -135,7 +140,7 @@ public class XmlValidator implements IXmlValidator {
 
         // Create SAX parser factory; turn on validation and check all name
         // spaces; use given schema for validation.
-        final SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+        final SAXParserFactory saxFactory = SAXParserFactory.newInstance(SAX_PARSER_FACTORY_IMPL_CLASS, null);
         // saxFactory.setValidating (true);
         saxFactory.setNamespaceAware(true);
         saxFactory.setSchema(schema);
