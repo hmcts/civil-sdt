@@ -1,18 +1,18 @@
 -------------------------------------------------------------
 -- Drop each of the schemas used by SDT and all their contents
 --------------------------------------------------------------
-DROP SCHEMA IF EXISTS sdt_user CASCADE;
-DROP SCHEMA IF EXISTS sdt_batch_user CASCADE;
-DROP SCHEMA IF EXISTS sdt_owner CASCADE;
+--DROP SCHEMA IF EXISTS sdt_user CASCADE;
+--DROP SCHEMA IF EXISTS sdt_batch_user CASCADE;
+--DROP SCHEMA IF EXISTS sdt_owner CASCADE;
 
 -------------------------------------------------------------
 -- Drop each of the users used by SDT
 --------------------------------------------------------------
 ---- non schema owners first
-DROP USER IF EXISTS sdt_user;
-DROP USER IF EXISTS sdt_batch_user;
+--DROP USER IF EXISTS sdt_user;
+--DROP USER IF EXISTS sdt_batch_user;
 -- ---- now schema owners
-DROP USER IF EXISTS sdt_owner;
+--DROP USER IF EXISTS sdt_owner;
 
 -------------------------------------------------------------
 -- Create the schemas used by SDT and all their contents
@@ -24,9 +24,9 @@ CREATE SCHEMA sdt_batch_user;
 ------------------------------------------------
 -- Create each of the schemas used by SDT
 ------------------------------------------------
-CREATE USER sdt_owner;
-CREATE USER sdt_user;
-CREATE USER sdt_batch_user;
+--CREATE USER sdt_owner;
+--CREATE USER sdt_user;
+--CREATE USER sdt_batch_user;
 
 ------------------------------------------------
 -- Create tables for SDT_OWNER
@@ -42,6 +42,17 @@ bulk_customer_id NUMERIC,
 target_application_id NUMERIC,
 customer_application_id VARCHAR(32),
 version_number NUMERIC DEFAULT 0);
+
+CREATE TABLE sdt_owner.purge_job_audit
+(audit_id SERIAL PRIMARY KEY,
+created_date TIMESTAMP(6),
+success NUMERIC);
+
+CREATE TABLE sdt_owner.purge_job_audit_messages
+(audit_message_id SERIAL PRIMARY KEY,
+audit_id NUMERIC,
+created_date TIMESTAMP(6),
+error_message VARCHAR(32));
 
 CREATE TABLE sdt_owner.bulk_submissions
 (bulk_submission_id NUMERIC NOT NULL,
@@ -272,84 +283,84 @@ CREATE SEQUENCE sdt_owner.tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY
 ------------------------------------------------
 -- Create Grants for SDT_OWNER
 ------------------------------------------------
-ALTER ROLE sdt_owner SET search_path TO sdt_owner;
-ALTER ROLE sdt_user SET search_path TO sdt_user, sdt_owner;
-ALTER ROLE sdt_batch_user SET search_path TO sdt_batch_user, sdt_owner;
+--ALTER ROLE sdt_owner SET search_path TO sdt_owner;
+--ALTER ROLE sdt_user SET search_path TO sdt_user, sdt_owner;
+--ALTER ROLE sdt_batch_user SET search_path TO sdt_batch_user, sdt_owner;
 
-GRANT USAGE ON SCHEMA sdt_owner TO sdt_user;
-GRANT USAGE ON SCHEMA sdt_owner TO sdt_batch_user;
+--GRANT USAGE ON SCHEMA sdt_owner TO sdt_user;
+--GRANT USAGE ON SCHEMA sdt_owner TO sdt_batch_user;
 
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA sdt_owner TO sdt_user;
+--GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA sdt_owner TO sdt_user;
 
 -----------------
 --- Object Grants
 -----------------
-GRANT DELETE ON sdt_owner.bulk_submissions TO sdt_batch_user;
-GRANT SELECT ON sdt_owner.bulk_submissions TO sdt_batch_user;
-GRANT DELETE ON sdt_owner.error_logs TO sdt_batch_user;
-GRANT SELECT ON sdt_owner.error_logs TO sdt_batch_user;
-GRANT SELECT ON sdt_owner.global_parameters TO sdt_batch_user;
-GRANT DELETE ON sdt_owner.individual_requests TO sdt_batch_user;
-GRANT SELECT ON sdt_owner.individual_requests TO sdt_batch_user;
-GRANT DELETE ON sdt_owner.service_requests TO sdt_batch_user;
-GRANT SELECT ON sdt_owner.service_requests TO sdt_batch_user;
---GRANT EXECUTE ON sdt_owner.purge TO sdt_batch_user;
-GRANT DELETE ON sdt_owner.bulk_customers TO sdt_user;
-GRANT INSERT ON sdt_owner.bulk_customers TO sdt_user;
-GRANT SELECT ON sdt_owner.bulk_customers TO sdt_user;
-GRANT UPDATE ON sdt_owner.bulk_customers TO sdt_user;
-GRANT DELETE ON sdt_owner.bulk_customer_applications TO sdt_user;
-GRANT INSERT ON sdt_owner.bulk_customer_applications TO sdt_user;
-GRANT SELECT ON sdt_owner.bulk_customer_applications TO sdt_user;
-GRANT UPDATE ON sdt_owner.bulk_customer_applications TO sdt_user;
-GRANT DELETE ON sdt_owner.bulk_submissions TO sdt_user;
-GRANT INSERT ON sdt_owner.bulk_submissions TO sdt_user;
-GRANT SELECT ON sdt_owner.bulk_submissions TO sdt_user;
-GRANT UPDATE ON sdt_owner.bulk_submissions TO sdt_user;
-GRANT DELETE ON sdt_owner.error_logs TO sdt_user;
-GRANT INSERT ON sdt_owner.error_logs TO sdt_user;
-GRANT SELECT ON sdt_owner.error_logs TO sdt_user;
-GRANT UPDATE ON sdt_owner.error_logs TO sdt_user;
-GRANT DELETE ON sdt_owner.error_messages TO sdt_user;
-GRANT INSERT ON sdt_owner.error_messages TO sdt_user;
-GRANT SELECT ON sdt_owner.error_messages TO sdt_user;
-GRANT UPDATE ON sdt_owner.error_messages TO sdt_user;
-GRANT DELETE ON sdt_owner.global_parameters TO sdt_user;
-GRANT INSERT ON sdt_owner.global_parameters TO sdt_user;
-GRANT SELECT ON sdt_owner.global_parameters TO sdt_user;
-GRANT UPDATE ON sdt_owner.global_parameters TO sdt_user;
-GRANT DELETE ON sdt_owner.individual_requests TO sdt_user;
-GRANT INSERT ON sdt_owner.individual_requests TO sdt_user;
-GRANT SELECT ON sdt_owner.individual_requests TO sdt_user;
-GRANT UPDATE ON sdt_owner.individual_requests TO sdt_user;
-GRANT DELETE ON sdt_owner.service_routings TO sdt_user;
-GRANT INSERT ON sdt_owner.service_routings TO sdt_user;
-GRANT SELECT ON sdt_owner.service_routings TO sdt_user;
-GRANT UPDATE ON sdt_owner.service_routings TO sdt_user;
-GRANT DELETE ON sdt_owner.service_types TO sdt_user;
-GRANT INSERT ON sdt_owner.service_types TO sdt_user;
-GRANT SELECT ON sdt_owner.service_types TO sdt_user;
-GRANT UPDATE ON sdt_owner.service_types TO sdt_user;
-GRANT DELETE ON sdt_owner.service_requests TO sdt_user;
-GRANT INSERT ON sdt_owner.service_requests TO sdt_user;
-GRANT SELECT ON sdt_owner.service_requests TO sdt_user;
-GRANT UPDATE ON sdt_owner.service_requests TO sdt_user;
-GRANT DELETE ON sdt_owner.target_applications TO sdt_user;
-GRANT INSERT ON sdt_owner.target_applications TO sdt_user;
-GRANT SELECT ON sdt_owner.target_applications TO sdt_user;
-GRANT UPDATE ON sdt_owner.target_applications TO sdt_user;
-GRANT USAGE, SELECT ON sdt_owner.bulk_cust_seq TO sdt_user;
-GRANT USAGE, SELECT ON sdt_owner.bulk_cust_app_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.bulk_sub_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.err_log_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.err_mesg_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.glb_par_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.ind_req_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.ser_rou_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.ser_typ_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.tar_app_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.sdt_ref_seq TO sdt_user;
-GRANT SELECT ON sdt_owner.srv_req_seq TO sdt_user;
+--GRANT DELETE ON sdt_owner.bulk_submissions TO sdt_batch_user;
+--GRANT SELECT ON sdt_owner.bulk_submissions TO sdt_batch_user;
+--GRANT DELETE ON sdt_owner.error_logs TO sdt_batch_user;
+--GRANT SELECT ON sdt_owner.error_logs TO sdt_batch_user;
+--GRANT SELECT ON sdt_owner.global_parameters TO sdt_batch_user;
+--GRANT DELETE ON sdt_owner.individual_requests TO sdt_batch_user;
+--GRANT SELECT ON sdt_owner.individual_requests TO sdt_batch_user;
+--GRANT DELETE ON sdt_owner.service_requests TO sdt_batch_user;
+--GRANT SELECT ON sdt_owner.service_requests TO sdt_batch_user;
+----GRANT EXECUTE ON sdt_owner.purge TO sdt_batch_user;
+--GRANT DELETE ON sdt_owner.bulk_customers TO sdt_user;
+--GRANT INSERT ON sdt_owner.bulk_customers TO sdt_user;
+--GRANT SELECT ON sdt_owner.bulk_customers TO sdt_user;
+--GRANT UPDATE ON sdt_owner.bulk_customers TO sdt_user;
+--GRANT DELETE ON sdt_owner.bulk_customer_applications TO sdt_user;
+--GRANT INSERT ON sdt_owner.bulk_customer_applications TO sdt_user;
+--GRANT SELECT ON sdt_owner.bulk_customer_applications TO sdt_user;
+--GRANT UPDATE ON sdt_owner.bulk_customer_applications TO sdt_user;
+--GRANT DELETE ON sdt_owner.bulk_submissions TO sdt_user;
+--GRANT INSERT ON sdt_owner.bulk_submissions TO sdt_user;
+--GRANT SELECT ON sdt_owner.bulk_submissions TO sdt_user;
+--GRANT UPDATE ON sdt_owner.bulk_submissions TO sdt_user;
+--GRANT DELETE ON sdt_owner.error_logs TO sdt_user;
+--GRANT INSERT ON sdt_owner.error_logs TO sdt_user;
+--GRANT SELECT ON sdt_owner.error_logs TO sdt_user;
+--GRANT UPDATE ON sdt_owner.error_logs TO sdt_user;
+--GRANT DELETE ON sdt_owner.error_messages TO sdt_user;
+--GRANT INSERT ON sdt_owner.error_messages TO sdt_user;
+--GRANT SELECT ON sdt_owner.error_messages TO sdt_user;
+--GRANT UPDATE ON sdt_owner.error_messages TO sdt_user;
+--GRANT DELETE ON sdt_owner.global_parameters TO sdt_user;
+--GRANT INSERT ON sdt_owner.global_parameters TO sdt_user;
+--GRANT SELECT ON sdt_owner.global_parameters TO sdt_user;
+--GRANT UPDATE ON sdt_owner.global_parameters TO sdt_user;
+--GRANT DELETE ON sdt_owner.individual_requests TO sdt_user;
+--GRANT INSERT ON sdt_owner.individual_requests TO sdt_user;
+--GRANT SELECT ON sdt_owner.individual_requests TO sdt_user;
+--GRANT UPDATE ON sdt_owner.individual_requests TO sdt_user;
+--GRANT DELETE ON sdt_owner.service_routings TO sdt_user;
+--GRANT INSERT ON sdt_owner.service_routings TO sdt_user;
+--GRANT SELECT ON sdt_owner.service_routings TO sdt_user;
+--GRANT UPDATE ON sdt_owner.service_routings TO sdt_user;
+--GRANT DELETE ON sdt_owner.service_types TO sdt_user;
+--GRANT INSERT ON sdt_owner.service_types TO sdt_user;
+--GRANT SELECT ON sdt_owner.service_types TO sdt_user;
+--GRANT UPDATE ON sdt_owner.service_types TO sdt_user;
+--GRANT DELETE ON sdt_owner.service_requests TO sdt_user;
+--GRANT INSERT ON sdt_owner.service_requests TO sdt_user;
+--GRANT SELECT ON sdt_owner.service_requests TO sdt_user;
+--GRANT UPDATE ON sdt_owner.service_requests TO sdt_user;
+--GRANT DELETE ON sdt_owner.target_applications TO sdt_user;
+--GRANT INSERT ON sdt_owner.target_applications TO sdt_user;
+--GRANT SELECT ON sdt_owner.target_applications TO sdt_user;
+--GRANT UPDATE ON sdt_owner.target_applications TO sdt_user;
+--GRANT USAGE, SELECT ON sdt_owner.bulk_cust_seq TO sdt_user;
+--GRANT USAGE, SELECT ON sdt_owner.bulk_cust_app_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.bulk_sub_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.err_log_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.err_mesg_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.glb_par_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.ind_req_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.ser_rou_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.ser_typ_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.tar_app_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.sdt_ref_seq TO sdt_user;
+--GRANT SELECT ON sdt_owner.srv_req_seq TO sdt_user;
 -----------------
 --- Sys Grants
 -----------------
