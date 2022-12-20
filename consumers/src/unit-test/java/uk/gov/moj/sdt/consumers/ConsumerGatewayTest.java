@@ -15,7 +15,6 @@ import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -95,18 +94,15 @@ class ConsumerGatewayTest extends ConsumerTestBase {
 
     @Test
     void shouldProcessAndGetNotNullIndividualRequest() {
-        IIndividualRequest individualRequest = createIndividualRequest();
-        consumerGateway.individualRequest(individualRequest,
+        consumerGateway.individualRequest(createIndividualRequest(),
                 CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
         assertNotNull(consumerGateway.getIndividualRequestConsumer());
     }
 
     @Test
     void shouldGetNotNullIndividualRequest() {
-        IIndividualRequestConsumer iIndividualRequestConsumer = consumerGateway.getIndividualRequestConsumer();
-        assertNotNull(iIndividualRequestConsumer);
+        assertNotNull(consumerGateway.getIndividualRequestConsumer());
     }
-
 
     /**
      * Test to verify submit query consumer does throw expected exception.
@@ -145,9 +141,9 @@ class ConsumerGatewayTest extends ConsumerTestBase {
 
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
 
-        SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () -> {
-            this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        });
+        SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () ->
+            this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT)
+        );
 
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
         assertNull(soapFaultException.getErrorDescription());
