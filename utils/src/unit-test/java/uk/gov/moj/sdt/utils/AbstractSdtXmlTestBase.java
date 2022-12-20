@@ -96,6 +96,11 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
     public static final String ERROR_FILE_SUFFIX = "ErrorMessages.txt";
 
     /**
+     * Fully qualified name of class that implements SAXParserFactory.
+     */
+    private static final String SAX_PARSER_FACTORY_IMPL_CLASS = "org.apache.xerces.jaxp.SAXParserFactoryImpl";
+
+    /**
      * Logging object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtXmlTestBase.class);
@@ -206,7 +211,7 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
 
         // Create SAX parser factory; turn on validation and check all name
         // spaces; use given schema for validation.
-        final SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+        final SAXParserFactory saxFactory = SAXParserFactory.newInstance(SAX_PARSER_FACTORY_IMPL_CLASS, null);
         // saxFactory.setValidating (true);
         saxFactory.setNamespaceAware(true);
         saxFactory.setSchema(schema);

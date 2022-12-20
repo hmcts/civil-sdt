@@ -4,9 +4,13 @@
   <!--Please add all the false positives under the below section-->
   <suppress>
     <notes>False Positives
-      CVE-2018-1258
       CVE-2016-1000027
+      CVE-2020-10663
+      CVE-2018-1258
+      CVE-2020-7712
     </notes>
+    <cve>CVE-2020-7712</cve>
+    <cve>CVE-2020-10663</cve>
     <cve>CVE-2018-1258</cve>
     <cve>CVE-2016-1000027</cve>
   </suppress>
@@ -26,10 +30,14 @@
       CVE-2022-46364
     </notes>
     <cve>CVE-2015-3208</cve>
+    <cve>CVE-2016-1000027</cve>
     <cve>CVE-2017-10355</cve>
     <cve>CVE-2020-5408</cve>
+    <cve>CVE-2020-5412</cve>
     <cve>CVE-2021-37533</cve>
     <cve>CVE-2022-1471</cve>
+    <cve>CVE-2022-22976</cve>
+    <cve>CVE-2022-38752</cve>
     <cve>CVE-2022-40152</cve>
     <cve>CVE-2022-41915</cve>
     <cve>CVE-2022-46363</cve>
