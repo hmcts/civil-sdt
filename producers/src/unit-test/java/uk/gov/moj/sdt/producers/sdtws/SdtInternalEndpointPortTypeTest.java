@@ -30,14 +30,12 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.producers.sdtws;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -46,12 +44,20 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Unit test for {@link SdtInternalEndpointPortType}.
  *
  * @author d276205
  */
-public class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
     /**
      * Test subject.
@@ -61,53 +67,50 @@ public class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     /**
      * Mocked IWsUpdateItemHandler instance.
      */
+    @Mock
     private IWsUpdateItemHandler mockUpdateItemHandler;
 
     /**
      * Set up common for all tests.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
+
         portType = new SdtInternalEndpointPortType();
-
-        mockUpdateItemHandler = EasyMock.createMock(IWsUpdateItemHandler.class);
         portType.setUpdateItemHandler(mockUpdateItemHandler);
-
     }
 
     /**
      * Test update item method completes successfully.
      */
     @Test
-    public void testUpdateItemSuccess() {
-        EasyMock.expect(mockUpdateItemHandler.updateItem(EasyMock.anyObject(UpdateRequestType.class))).andReturn(
-                createUpdateResponse());
-        EasyMock.replay(mockUpdateItemHandler);
+    void testUpdateItemSuccess() {
+        when(mockUpdateItemHandler.updateItem(any())).thenReturn(createUpdateResponse());
 
         final UpdateResponseType response = portType.updateItem(createUpdateRequest());
-        EasyMock.verify(mockUpdateItemHandler);
-        assertNotNull("Response expected", response);
+        verify(mockUpdateItemHandler).updateItem(any());
+        assertNotNull(response, "Response expected");
     }
 
     /**
      * Test update item method handles exceptions successfully.
      */
     @Test
-    public void testUpdateItemException() {
-        EasyMock.expect(mockUpdateItemHandler.updateItem(EasyMock.anyObject(UpdateRequestType.class))).andThrow(
-                new RuntimeException("test"));
-        EasyMock.replay(mockUpdateItemHandler);
+    void testUpdateItemException() {
+        when(mockUpdateItemHandler.updateItem(any())).thenThrow(new RuntimeException("test"));
 
         try {
             portType.updateItem(createUpdateRequest());
             fail("Runtime exception should have been thrown");
         } catch (final RuntimeException re) {
-            assertEquals("",
+            assertEquals(
                     "A SDT system component error has occurred. Please contact the SDT support team for assistance",
-                    re.getMessage());
+                    re.getMessage(), "");
         }
 
-        EasyMock.verify(mockUpdateItemHandler);
+        verify(mockUpdateItemHandler).updateItem(any());
     }
 
     /**
