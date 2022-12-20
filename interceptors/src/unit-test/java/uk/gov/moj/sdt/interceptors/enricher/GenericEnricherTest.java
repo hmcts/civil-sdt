@@ -30,19 +30,19 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.interceptors.enricher;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link uk.gov.moj.sdt.interceptors.enricher.GenericEnricher}.
  *
  * @author d276205
  */
-public class GenericEnricherTest extends AbstractSdtUnitTestBase {
+class GenericEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Subject for test.
      */
@@ -51,7 +51,8 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Setup.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
         enricher = new GenericEnricher();
     }
@@ -60,7 +61,7 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase {
      * Test submit query enrichment.
      */
     @Test
-    public void testSubmitQueryEnrichmentSuccess() {
+    void testSubmitQueryEnrichmentSuccess() {
         enricher.setInsertionTag("results");
         enricher.setParentTag("submitQueryResponse");
 
@@ -68,14 +69,14 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase {
         final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected =
                 "<ns1:submitQueryResponse><ns2:results>" + "<record></record></ns2:results></ns1:submitQueryResponse>";
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     /**
      * Test submit query enrichment where the insertion tag does not have a preceding namespace.
      */
     @Test
-    public void testSubmitQueryEnrichmentNoNamespaceSuccess() {
+    void testSubmitQueryEnrichmentNoNamespaceSuccess() {
         enricher.setInsertionTag("results");
         enricher.setParentTag("submitQueryResponse");
 
@@ -83,7 +84,7 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase {
         final String result = enricher.enrichXml("<ns1:submitQueryResponse><results/></ns1:submitQueryResponse>");
         final String expected =
                 "<ns1:submitQueryResponse><results>" + "<record></record></results></ns1:submitQueryResponse>";
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     /**
@@ -91,7 +92,7 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase {
      */
     @Test
     // CHECKSTYLE:OFF
-    public void testIndRequestEnrichment() {
+    void testIndRequestEnrichment() {
         enricher.setInsertionTag("targetAppDetail");
         enricher.setParentTag("individualRequest");
 
@@ -105,7 +106,7 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase {
         final String expected =
                 "<ns1:individualRequest>" + requestHeader + "<ind:targetAppDetail>" +
                         "<claim></claim></ind:targetAppDetail></ns1:individualRequest>";
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     // CHECKSTYLE:ON
@@ -115,9 +116,9 @@ public class GenericEnricherTest extends AbstractSdtUnitTestBase {
      * escaped.
      */
     @Test
-    public void testEscapeUnescapedCharacters() {
+    void testEscapeUnescapedCharacters() {
         final String result =
                 enricher.escapeUnescapedCharacters('$', "$abcd$$abcd\\$$abcd$\\$abcd\\r\\\\abcd\\\\$abcd$");
-        Assert.assertEquals("\\$abcd\\$\\$abcd\\$\\$abcd\\$\\$abcd\\r\\\\abcd\\\\\\$abcd\\$", result);
+        assertEquals("\\$abcd\\$\\$abcd\\$\\$abcd\\$\\$abcd\\r\\\\abcd\\\\\\$abcd\\$", result);
     }
 }

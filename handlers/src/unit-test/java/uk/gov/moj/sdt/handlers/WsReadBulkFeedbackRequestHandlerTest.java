@@ -36,9 +36,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Ignore;
-import org.junit.Test;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -67,7 +67,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Sally Vonka
  */
-public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
+class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
 
     /**
      * Bulk Submission DAO property for looking up the bulk submission object.
@@ -83,9 +83,7 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
     /**
      * The transformer associated with this handler.
      */
-    // CHECKSTYLE:OFF
     private ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission> transformer;
-    // CHECKSTYLE:ON
     /**
      * The BulkFeedbackRequestType.
      */
@@ -104,7 +102,6 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
 
         wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler();
 
-        // ITransformer transformer = new BulkFeedbackTransformer();
         Constructor<BulkFeedbackTransformer> c;
         try {
             // Make the constructor visible so we can get a new instance of it.
@@ -125,14 +122,13 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
      * @throws IOException if there is any issue
      */
     @Test
-    @Ignore
-    public void testGetBulkFeedback() throws IOException {
+    @Disabled
+    public void testGetBulkFeedback () throws IOException {
         final long customerId = 12345678;
         final String MCOL_BULK_REF = "MCOL-10012013010101-100099999";
         final IBulkFeedbackRequest bulkFeedbackRequestDomain = new BulkFeedbackRequest();
         final BulkCustomer bulkCustomer = new BulkCustomer();
         final IBulkSubmission bulkSubmission = new BulkSubmission();
-        // final BulkFeedbackRequestType bulkFeedbackRequest = new BulkFeedbackRequestType();
 
         bulkCustomer.setSdtCustomerId(customerId);
         bulkCustomer.setBulkCustomerApplications(createBulkCustomerApplications("MCOL"));
