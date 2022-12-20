@@ -31,8 +31,7 @@
 
 package uk.gov.moj.sdt.producers.api;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
 
 /**
@@ -41,8 +40,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
  * @author Paul Ridout
  *
  */
-public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
-{
+class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase {
+
     /**
      * The name of the xsd.
      */
@@ -67,8 +66,7 @@ public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
      * Test that a file containing valid XML passes XSD validation.
      */
     @Test
-    public void testValidXml ()
-    {
+    void testValidXml() {
         final String condition = "Valid";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
 
@@ -79,8 +77,7 @@ public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
      * Test that a file containing XML that is missing the claimNumber element fails XSD validation.
      */
     @Test
-    public void testInvalidXmlMandatoryMissingClaimNumber ()
-    {
+    void testInvalidXmlMandatoryMissingClaimNumber() {
         final String condition = "MandatoryMissingClaimNumber";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
@@ -92,8 +89,7 @@ public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
      * Test that a file containing XML that is missing the defendantId element fails XSD validation.
      */
     @Test
-    public void testInvalidXmlMandatoryMissingDefendantId ()
-    {
+    void testInvalidXmlMandatoryMissingDefendantId() {
         final String condition = "MandatoryMissingDefendantId";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
@@ -105,8 +101,7 @@ public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
      * Test that a file containing XML that is missing the breathingSpaceNotificationType element fails XSD validation.
      */
     @Test
-    public void testInvalidXmlMandatoryMissingNotificationType ()
-    {
+    void testInvalidXmlMandatoryMissingNotificationType() {
         final String condition = "MandatoryMissingNotificationType";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
@@ -118,8 +113,7 @@ public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
      * Test that a file containing XML that has an incorrect value for the claimNumber element fails XSD validation.
      */
     @Test
-    public void testInvalidXmlIncorrectClaimNumber ()
-    {
+    void testInvalidXmlIncorrectClaimNumber() {
         final String condition = "IncorrectClaimNumber";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
@@ -131,8 +125,7 @@ public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
      * Test that a file containing XML that has an incorrect value for the defendantId element fails XSD validation.
      */
     @Test
-    public void testInvalidXmlIncorrectDefendantId ()
-    {
+    void testInvalidXmlIncorrectDefendantId() {
         final String condition = "IncorrectDefendantId";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
@@ -145,8 +138,7 @@ public class BreathingSpaceXsdTest extends AbstractSdtXmlTestBase
      * XSD validation.
      */
     @Test
-    public void testInvalidXmlIncorrectNotificationType ()
-    {
+    void testInvalidXmlIncorrectNotificationType() {
         final String condition = "IncorrectNotificationType";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
