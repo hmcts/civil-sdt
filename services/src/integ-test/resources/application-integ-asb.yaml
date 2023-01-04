@@ -24,7 +24,6 @@ spring:
   flyway:
     enabled: false
     ignore-migration-patterns: true
-
 sdt:
   tx-timeout:
     default:  1000
