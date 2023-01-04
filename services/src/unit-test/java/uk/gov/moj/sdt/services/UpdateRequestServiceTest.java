@@ -42,8 +42,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -82,11 +80,6 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger for debugging.
-     */
-    @SuppressWarnings("unused")
-    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateRequestServiceTest.class);
 
     /**
      * Mocked Individual Request Dao object.
