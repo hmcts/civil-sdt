@@ -37,8 +37,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -53,17 +51,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @ExtendWith(MockitoExtension.class)
 class GenericXmlParserTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericXmlParserTest.class);
 
     private static final String URL_TARGET_APP = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp";
+    private static final String URL_BULK_FEEDBACK_RESPONSE_SCHEMA =
+            "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema";
     private static final String URL_INDV_RESPONSE_SCHEMA = URL_TARGET_APP + "/IndvResponseSchema";
     private static final String URL_SUBMIT_QUERY_RESPONSE_SCHEMA = URL_TARGET_APP + "/SubmitQueryResponseSchema";
-
-    private static final String TEST_SUCCESSFUL_SCENARIO_FOR_SUBMIT_QUERY_RESPONSE
-            = "test successful scenario for submit query response.";
     private static final String FAILED_TO_FIND_EXPECTED_RESPONSE
             = "Failed to find expected response";
     private static final String TARGET_APP_DETAIL = "targetAppDetail";
@@ -91,7 +84,6 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testParseSubmitQueryResponseSuccess() throws Exception {
-        LOGGER.debug(TEST_SUCCESSFUL_SCENARIO_FOR_SUBMIT_QUERY_RESPONSE);
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
@@ -121,7 +113,6 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testParseSubmitQueryResponseNoNamespaceSuccess() throws Exception {
-        LOGGER.debug(TEST_SUCCESSFUL_SCENARIO_FOR_SUBMIT_QUERY_RESPONSE);
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
@@ -152,8 +143,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      * @throws Exception if there is any IO problems
      */
     @Test
-    void testSubmitQueryResponseEmbeddedNamespace() throws Exception {
-        LOGGER.debug(TEST_SUCCESSFUL_SCENARIO_FOR_SUBMIT_QUERY_RESPONSE);
+    void testSubmitQueryResponseEmbeddedNamespaceSuccess() throws Exception {
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
 
@@ -185,8 +175,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      * @throws Exception if there is any IO problems
      */
     @Test
-    void testSubmitQueryResponseEmbeddedDefaultNamespace() throws Exception {
-        LOGGER.debug(TEST_SUCCESSFUL_SCENARIO_FOR_SUBMIT_QUERY_RESPONSE);
+    void testSubmitQueryResponseEmbeddedDefaultNamespaceSuccess() throws Exception {
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
@@ -218,8 +207,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      * @throws Exception if there is any IO problems
      */
     @Test
-    void testParseSubmitQueryResponseSuccessForMultipleResults() throws Exception {
-        LOGGER.debug("scenario for submit query response when multiple records are returned in result.");
+    void testParseSubmitQueryResponseForMultipleResultsSuccess() throws Exception {
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
@@ -251,6 +239,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testParseIndividualResponseRejected() throws Exception {
+
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
@@ -278,6 +267,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testParseIndividualResponseSuccess() throws Exception {
+
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
@@ -308,6 +298,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testParseIndividualResponseEmptyDetailSuccess() throws Exception {
+
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
@@ -335,6 +326,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testParseIndividualUpdateRequestSuccess() throws Exception {
+
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
@@ -359,4 +351,5 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
                 FAILED_TO_FIND_EXPECTED_RESPONSE);
         // CHECKSTYLE:ON
     }
+
 }
