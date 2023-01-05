@@ -18,7 +18,7 @@ java:
         - name: AppInsightsInstrumentationKey
   secrets:
     CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:
-      secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-civil-sdt-in-out
+      secretRef: servicebus-secret-queue-{{ .Release.Name }}-servicebus-civil-sdt-in-out
       key: connectionString
 servicebus:
   enabled: true
