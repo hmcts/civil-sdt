@@ -41,8 +41,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -60,10 +58,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @ExtendWith(MockitoExtension.class)
 class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger instance.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestsXmlParserTest.class);
 
     private static final String FORWARDED = "Forwarded";
 
@@ -164,12 +158,8 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
 
         }
 
-        LOGGER.info("Start parsing for {} requests", requests.size());
-
         // Now call the parser to add the xml fragments into the payload of the individual requests.
         this.individualRequestsXmlParser.populateRawRequest(requests);
-
-        LOGGER.info("Completed parsing for {} requests", requests.size());
 
         int requestIndex = 0;
         for (IIndividualRequest request : requests) {
