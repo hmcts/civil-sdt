@@ -76,8 +76,10 @@ public class BulkCustomerTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void testHasAccess() {
-        Assert.assertTrue("Customer should have access", bulkCustomer.hasAccess("YES"));
-        Assert.assertFalse("Customer should not have access", bulkCustomer.hasAccess("NO"));
+        Assert.assertTrue("Customer should have access",
+                          bulkCustomer.hasAccess("YES"));
+        Assert.assertFalse("Customer should not have access",
+                           bulkCustomer.hasAccess("NO"));
     }
 
 }
