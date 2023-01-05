@@ -46,8 +46,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.messaging.asb.MessageSender;
@@ -60,12 +58,9 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
  */
 @ExtendWith(MockitoExtension.class)
 class MessageWriterTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriterTest.class);
 
     private static final String UNIT_TEST_QUEUE = "UnitTestQueue";
+
     private static final String UNIT_TEST = "UNITTEST";
 
     @Mock
@@ -153,7 +148,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
             assertTrue(true, "Success");
         } catch (final IllegalArgumentException e) {
-            LOGGER.error("Error", e);
             fail("Not Expected to fail");
         }
 
@@ -181,7 +175,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
             assertTrue(true, "Success");
         } catch (final IllegalArgumentException e) {
-            LOGGER.error("Error", e);
             fail("Not Expected to fail");
         }
 
