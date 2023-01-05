@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -43,8 +42,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -81,10 +78,6 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger for debugging.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackServiceTest.class);
 
     /**
      * Bulk Submission DAO property for looking up the bulk submission object.
@@ -95,7 +88,6 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Global parameter cache to retrieve data retention period.
      */
-
     @Mock
     private ICacheable mockGlobalParameterCache;
 
@@ -162,21 +154,13 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
     }
 
-    /**
-     * @throws IOException if there is any issue
-     */
     @Test
-    void testGetBulkFeedback() throws IOException {
+    void testGetBulkFeedback() {
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
         addValidIndividualRequest(bulkSubmission, "ICustReq124", IndividualRequestStatus.RECEIVED.getStatus());
         addValidIndividualRequest(bulkSubmission, "ICustReq125", IndividualRequestStatus.REJECTED.getStatus());
         addValidIndividualRequest(bulkSubmission, "ICustReq126", IndividualRequestStatus.RECEIVED.getStatus());
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Size of Individual Requests in Bulk Submission is {}",
-                    bulkSubmission.getIndividualRequests().size());
-        }
 
         // Tell the mock dao to return this request
         when(mockBulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod))
@@ -184,10 +168,6 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkFeedbackService.getBulkFeedback(bulkFeedbackRequest);
 
         final Map<String, String> targetApplicationRespMap = SdtContext.getContext().getTargetApplicationRespMap();
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Size of Individual Requests in SDT context is {}", targetApplicationRespMap.size());
-        }
 
         assertEquals(3, targetApplicationRespMap.size());
 
