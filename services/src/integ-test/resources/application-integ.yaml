@@ -9,10 +9,10 @@ spring:
     servicebus:
       internal:
         targetAppQueue:
-          MCOL: ${MCOL.Queue:Test1Queue}
-          MCOLS: ${MCOLS.Queue:Test1Queue}
-          TEST1: ${MCOL.Queue:Test1Queue}
-      connection-string: ${SDT_QUEUE_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
+          MCOL: ${CIVIL_SDT_QUEUE:Test1Queue}
+          MCOLS: ${CIVIL_SDT_QUEUE:Test1Queue}
+          TEST1: ${CIVIL_SDT_QUEUE:Test1Queue}
+      connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       enabled: false
 
   aop:

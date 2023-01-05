@@ -61,7 +61,7 @@ public class MessageWriter implements IMessageWriter {
     /**
      * Default suffix for DLQ name.
      */
-    private static final String DLQ_SUFFIX = ".DLQ";
+    private static final String DLQ_SUFFIX = "/$deadletterqueue";
 
     /**
      * The last id used for a queued message.
