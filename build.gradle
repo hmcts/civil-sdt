@@ -453,6 +453,7 @@ subprojects { subproject ->
             property "sonar.sources", "src"
             property "sonar.tests", "src"
             property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
+            property 'sonar.coverage.exclusions', "**/**"
             property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
         }
     }
@@ -573,6 +574,7 @@ sonarqube {
   properties {
     property "sonar.projectName", "Reform :: civil-sdt"
     property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt"
+    property 'sonar.coverage.exclusions', "**/**"
     property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
   }
 }
