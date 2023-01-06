@@ -37,14 +37,12 @@ import java.util.List;
 
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
@@ -65,6 +63,11 @@ import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -75,10 +78,6 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionValidatorTest.class);
 
     private static final String ERROR_CODE_INCORRECT = "Error code incorrect";
     private static final String SUBSTITUTION_VALUE_INCORRECT = "Substitution value incorrect";
@@ -96,7 +95,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     private ICacheable globalParameterCache;
 
     /**
-     * Parameter cache.
+     * Error messages cache.
      */
     @Mock
     private ICacheable errorMessagesCache;
@@ -121,7 +120,6 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
      * The bulk customer.
      */
     private IBulkCustomer bulkCustomer;
-
 
     /**
      * Error message.
@@ -168,7 +166,9 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
      * Setup of the Validator and Domain class instance.
      */
     @BeforeEach
+    @Override
     public void setUpLocalTests() {
+        MockitoAnnotations.openMocks(this);
 
         // subject of test
         validator = new BulkSubmissionValidator();
@@ -226,7 +226,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
         verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                 90);
-        //verify(globalParameterCache).getValue();
+        verify(globalParameterCache).getValue(any(), anyString());
 
     }
 
@@ -281,7 +281,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         bulkSubmission.accept(validator, null);
 
         // Check the duplicate individual request has been rejected
-        Assertions.assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(), bulkSubmission
+        assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(), bulkSubmission
                 .getIndividualRequests().get(1).getRequestStatus());
     }
 
@@ -324,16 +324,15 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             validator.setErrorMessagesCache(errorMessagesCache);
 
             bulkSubmission.accept(validator, null);
-            Assertions.fail("Test failed to throw CustomerNotSetupException ");
+            fail("Test failed to throw CustomerNotSetupException ");
 
         } catch (final CustomerNotSetupException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
 
-            Assertions.assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.CUST_NOT_SETUP.name()),
+            assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.CUST_NOT_SETUP.name()),
                     ERROR_CODE_INCORRECT);
             // CHECKSTYLE:OFF
-            Assertions.assertTrue(e.getErrorDescription().equals(
+            assertTrue(e.getErrorDescription().equals(
                             "The Bulk Customer organisation is not setup to send Service Request messages to the MCOL. "
                                     + "Please contact " + contact + " for assistance."),
                     SUBSTITUTION_VALUE_INCORRECT);
@@ -382,15 +381,15 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             validator.setErrorMessagesCache(errorMessagesCache);
 
             bulkSubmission.accept(validator, null);
-            Assertions.fail("Test failed to throw CustomerReferenceNotUniqueException ");
+            fail("Test failed to throw CustomerReferenceNotUniqueException ");
 
         } catch (final CustomerReferenceNotUniqueException e) {
             verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
             verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                     DATA_RETENTION_PERIOD);
-            Assertions.assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.DUP_CUST_FILEID.name()),
+            assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.DUP_CUST_FILEID.name()),
                     ERROR_CODE_INCORRECT);
-            Assertions.assertTrue(e.getErrorDescription().equals(
+            assertTrue(e.getErrorDescription().equals(
                             "Duplicate User File Reference " + bulkSubmission.getCustomerReference() + " supplied. " +
                                     "This was previously used to submit a Bulk Request on " +
                                     Utilities.formatDateTimeForMessage(now) + " and the SDT Bulk Reference " +
@@ -403,7 +402,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
      * This test will have an incorrect number of requests and catch the exception.
      */
     @Test
-    void testRequestCountdoesNotMatch() {
+    void testRequestCountDoesNotMatch() {
 
         final long mismatchTotal = 15;
         try {
@@ -442,16 +441,14 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
             bulkSubmission.accept(validator, null);
 
-            Assertions.fail("Test failed to throw RequestCountMismatchException ");
+            fail("Test failed to throw RequestCountMismatchException ");
         } catch (final RequestCountMismatchException e) {
-            LOGGER.debug(e.getMessage());
-
             verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
             verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                     DATA_RETENTION_PERIOD);
-            Assertions.assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name()),
+            assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name()),
                     ERROR_CODE_INCORRECT);
-            Assertions.assertTrue(e.getErrorDescription().equals(
+            assertTrue(e.getErrorDescription().equals(
                             "Unexpected Total Number of Requests identified. 1 requested identified, " + mismatchTotal +
                                     " requests expected in Bulk Request " + bulkSubmission.getCustomerReference() +
                                     "."),
@@ -512,9 +509,9 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         // Test the method
         validator.checkIndividualRequests(bulkSubmission);
 
-        Assertions.assertEquals(IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus(),
+        assertEquals(IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus(),
                 bulkSubmission.getSubmissionStatus());
-        Assertions.assertEquals(IErrorMessage.ErrorCode.NO_VALID_REQS.name(), bulkSubmission.getErrorCode());
+        assertEquals(IErrorMessage.ErrorCode.NO_VALID_REQS.name(), bulkSubmission.getErrorCode());
     }
 
     private void createBulkSubmission(final long numberOfRequests, final IBulkCustomer bulkCustomer,
