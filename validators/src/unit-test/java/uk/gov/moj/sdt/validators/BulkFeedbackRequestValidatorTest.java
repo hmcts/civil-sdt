@@ -38,8 +38,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -67,10 +65,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackRequestValidatorTest.class);
 
     /**
      * The Dao.
@@ -101,7 +95,7 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
     private IBulkFeedbackRequest bulkFeedbackRequest;
 
     /**
-     * The Dao.
+     * bulkSubmission.
      */
     private IBulkSubmission bulkSubmission;
 
@@ -134,6 +128,7 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
      * Setup of the Validator and Domain class instance.
      */
     @BeforeEach
+    @Override
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
@@ -210,8 +205,6 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
             Assertions.fail("Failed to throw expected InvalidBulkReferenceException");
 
         } catch (final InvalidBulkReferenceException e) {
-            LOGGER.debug(e.getMessage());
-
             Assertions.assertTrue(true);
         }
 
