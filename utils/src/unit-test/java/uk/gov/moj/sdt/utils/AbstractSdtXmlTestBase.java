@@ -50,8 +50,6 @@ import javax.xml.validation.SchemaFactory;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -99,11 +97,6 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
      * Fully qualified name of class that implements SAXParserFactory.
      */
     private static final String SAX_PARSER_FACTORY_IMPL_CLASS = "org.apache.xerces.jaxp.SAXParserFactoryImpl";
-
-    /**
-     * Logging object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtXmlTestBase.class);
 
     /**
      * Flag to detect whether parsing error was encountered.
@@ -157,7 +150,6 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_OUTPUT_DIR, xmlFileName + ".out", true);
 
             // Create Writer for the formatter to use.
-            AbstractSdtXmlTestBase.LOGGER.debug("File to write is: {}", xmlOutPath);
             final BufferedWriter bw = new BufferedWriter(new FileWriter(xmlOutPath));
 
             // Format XML output as pretty.
@@ -166,16 +158,12 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
             bw.close();
 
             // Check good file also exists.
-            AbstractSdtXmlTestBase.LOGGER.debug("Written file: {}", xmlOutPath);
             final String xmlGoodPath =
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
 
             // compare the output and the good file.
-            AbstractSdtXmlTestBase.LOGGER.info("Comparing XML file {} against good file {}",
-                    xmlOutPath, xmlGoodPath);
             return this.compareTestOutputFiles(xmlOutPath, xmlGoodPath, useDelimiters);
         } catch (final IOException e) {
-            AbstractSdtXmlTestBase.LOGGER.error("Exception: ", e);
             return false;
         }
     }
@@ -212,7 +200,6 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         // Create SAX parser factory; turn on validation and check all name
         // spaces; use given schema for validation.
         final SAXParserFactory saxFactory = SAXParserFactory.newInstance(SAX_PARSER_FACTORY_IMPL_CLASS, null);
-        // saxFactory.setValidating (true);
         saxFactory.setNamespaceAware(true);
         saxFactory.setSchema(schema);
 
@@ -242,14 +229,10 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 // Record that we hit an error during parsing.
                 AbstractSdtXmlTestBase.this.errorEncountered = true;
 
-                LOGGER.debug(e.getMessage());
-
                 // Was it the wrong error?
                 if (expectedMessages != null && expectedMessages.contains(e.getMessage())) {
-                    LOGGER.debug("Found expected error and removing it from list - " + e.getMessage());
                     expectedMessages.remove(e.getMessage());
                 } else {
-                    LOGGER.error("Parser encountered unexpected error: [" + e.getMessage() + "]");
                     fail("Parser encountered unexpected error: [" + e.getMessage() + "]");
                 }
 
@@ -268,7 +251,6 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
      * @throws IOException in case of any errors related with error file.
      */
     private List<String> getExpectedErrorMessages(final String errorFilePathname) throws IOException {
-        // final StringBuilder sb = new StringBuilder ();
         final List<String> expectedErrorMessages = new ArrayList<>();
 
         String errorFilePath = null;
@@ -276,9 +258,8 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         if (errorFilePathname != null) {
             errorFilePath =
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
-            LOGGER.debug("Error message file - {}", errorFilePath);
         } else {
-            return new ArrayList();
+            return new ArrayList<>();
         }
 
         String sCurrentLine;
@@ -305,25 +286,17 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         try {
             remainingExpectedErrors = evaluateXsd(xmlPathname, xsdPathname, errorFilePathname);
         } catch (final IOException|SAXException|ParserConfigurationException e) {
-            LOGGER.error("Exception while validating XML [{}] with XSD [{}]",
-                    xmlPathname, xsdPathname, e);
             fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         }
 
         // Has no error been reported and yet we expected one?
         if (!this.errorEncountered && errorFilePathname != null) {
-            LOGGER.error("Parser failed to encounter all expected error(s).  The following errors were not found:");
             fail("Parser failed to encounter all expected error(s)");
         }
 
         // If there was not an exception thrown (so remainingExpectedErrors is not null) and there are errors still in
         // the list of expected error messages.
         if (remainingExpectedErrors != null && !remainingExpectedErrors.isEmpty()) {
-            LOGGER.error("The parser failed to encounter all expected error messages that "
-                    + "are in the error messages file. The following errors were not found:");
-            for (String remainingError : remainingExpectedErrors) {
-                LOGGER.error(remainingError);
-            }
             fail("Parser failed to encounter all expected error(s)");
         }
     }

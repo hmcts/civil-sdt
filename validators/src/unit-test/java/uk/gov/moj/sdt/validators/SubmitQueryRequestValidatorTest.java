@@ -41,8 +41,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
@@ -62,10 +60,6 @@ import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 
 @ExtendWith(MockitoExtension.class)
 class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryRequestValidatorTest.class);
 
     /**
      * SubmitQueryRequestValidator.
@@ -114,6 +108,7 @@ class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
      * Setup of the Validator and Domain class instance.
      */
     @BeforeEach
+    @Override
     public void setUpLocalTests() {
         // subject of test
         validator = new SubmitQueryRequestValidator();
@@ -162,7 +157,6 @@ class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
             fail("Test failed to throw CustomerNotSetupException ");
 
         } catch (final CustomerNotSetupException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
 
             assertEquals(e.getErrorCode(), IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
