@@ -39,9 +39,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -55,11 +52,6 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
      * File separator for pathnames.
      */
     protected static final String FILE_SEPARATOR = "/";
-
-    /**
-     * Static logging object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtGoodFileTestBase.class);
 
     /**
      * Flag to say whether comparison with good file is required.
@@ -102,18 +94,12 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
 
                 // Check we have an output file.
                 if (!outFile.exists()) {
-                    AbstractSdtGoodFileTestBase.LOGGER
-                            .error("** ERROR - Unable to find the output file for this test ({})",
-                                    outFile.getAbsolutePath());
                     throw new IOException("** ERROR - Unable to find the output file from the script (" +
                             outFile.getAbsolutePath() + ")");
                 }
 
                 // Check we have a good file.
                 if (!goodFile.exists()) {
-                    AbstractSdtGoodFileTestBase.LOGGER
-                            .error("** ERROR - Unable to find the good file for this test ({})",
-                                    goodFile.getAbsolutePath());
                     throw new IOException("** ERROR - Unable to find the good file for the script (" +
                             goodFile.getAbsolutePath() + ")");
                 }
@@ -227,8 +213,6 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                     // Compare each sorted record.
                     if (outStr.compareTo(goodStr) != 0) {
                         foundDifference = true;
-                        AbstractSdtGoodFileTestBase.LOGGER
-                                .error("Differences detected between latest out file and 'good' file");
 
                         // Output the line with the difference and the expected line to the console for review
                         this.badLine =
@@ -248,24 +232,14 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                     outFile.delete();
                 }
             } catch (final IOException e) {
-                AbstractSdtGoodFileTestBase.LOGGER.error("Exception thrown : ", e);
                 filesMatch = false;
             }
         }
 
         if (!filesMatch) {
-            if (useDelimiters) {
-                AbstractSdtGoodFileTestBase.LOGGER.info("** Check the block of text between the ({}) and ({}) messages.",
-                        this.getTestStartString(), this.getTestCompletedString());
-                AbstractSdtGoodFileTestBase.LOGGER.info(
-                        "** All other text before and after this block is ignored for comparison purposes.");
-            }
 
             fail("Comparison failure between out file [" + outFilePath + "] and good file [" + goodFilePath +
                     "].\nFirst mismatch: \n" + this.badLine);
-        } else {
-            AbstractSdtGoodFileTestBase.LOGGER.info("Output file matches the reference comparison file - " +
-                    goodFilePath);
         }
 
         return filesMatch;
