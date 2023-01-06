@@ -218,7 +218,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
         when(mockIBulkSubmissionDao.getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
-                90)).thenReturn(null);
+                DATA_RETENTION_PERIOD)).thenReturn(null);
 
         validator.setBulkSubmissionDao(mockIBulkSubmissionDao);
 
@@ -228,7 +228,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
         verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
         verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
-                90);
+                DATA_RETENTION_PERIOD);
         verify(globalParameterCache).getValue(any(), anyString());
 
     }
