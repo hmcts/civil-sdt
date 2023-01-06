@@ -80,7 +80,15 @@ import static org.mockito.Mockito.when;
 class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
     private static final String ERROR_CODE_INCORRECT = "Error code incorrect";
+
     private static final String SUBSTITUTION_VALUE_INCORRECT = "Substitution value incorrect";
+
+    private static final Long LONG_12345 = 12345L;
+
+    /**
+     * Contact details for assistance.
+     */
+    private static final String CONTACT = "THE MOJ";
 
     /**
      * The bulk customer dao.
@@ -127,11 +135,6 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     private IErrorMessage errorMessage;
 
     /**
-     * Contact details for assistance.
-     */
-    private String contact = "THE MOJ";
-
-    /**
      * List of individual requests.
      */
     private List<IIndividualRequest> individualRequests;
@@ -160,7 +163,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Current date time.
      */
-    private LocalDateTime now = LocalDateTime.now();
+    private static final LocalDateTime NOW = LocalDateTime.now();
 
     /**
      * Setup of the Validator and Domain class instance.
@@ -209,7 +212,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         createBulkSubmission(NUMBER_OF_REQUESTS, bulkCustomer, individualRequests, "MCOL");
 
         // set up the mock objects
-        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
+        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
 
         // inject the bulk customer into the validator
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -223,7 +226,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
         bulkSubmission.accept(validator, null);
 
-        verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
+        verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
         verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                 90);
         verify(globalParameterCache).getValue(any(), anyString());
@@ -257,7 +260,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         createBulkSubmission(individualRequests.size(), bulkCustomer, individualRequests, "MCOL");
 
         // set up the mock objects
-        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
+        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
 
         // inject the bulk customer into the validator
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -299,7 +302,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             bulkCustomer = createCustomer(createBulkCustomerApplications("PCOL"));
 
             // set up the mock objects
-            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
+            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
 
             // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -327,14 +330,14 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             fail("Test failed to throw CustomerNotSetupException ");
 
         } catch (final CustomerNotSetupException e) {
-            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
+            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
 
             assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.CUST_NOT_SETUP.name()),
                     ERROR_CODE_INCORRECT);
             // CHECKSTYLE:OFF
             assertTrue(e.getErrorDescription().equals(
                             "The Bulk Customer organisation is not setup to send Service Request messages to the MCOL. "
-                                    + "Please contact " + contact + " for assistance."),
+                                    + "Please contact " + CONTACT + " for assistance."),
                     SUBSTITUTION_VALUE_INCORRECT);
         }
     }
@@ -350,7 +353,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             bulkCustomer = createCustomer(createBulkCustomerApplications("MCOL"));
 
             // set up the mock objects
-            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
+            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
 
             // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -384,7 +387,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             fail("Test failed to throw CustomerReferenceNotUniqueException ");
 
         } catch (final CustomerReferenceNotUniqueException e) {
-            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
+            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
             verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                     DATA_RETENTION_PERIOD);
             assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.DUP_CUST_FILEID.name()),
@@ -392,7 +395,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             assertTrue(e.getErrorDescription().equals(
                             "Duplicate User File Reference " + bulkSubmission.getCustomerReference() + " supplied. " +
                                     "This was previously used to submit a Bulk Request on " +
-                                    Utilities.formatDateTimeForMessage(now) + " and the SDT Bulk Reference " +
+                                    Utilities.formatDateTimeForMessage(NOW) + " and the SDT Bulk Reference " +
                                     SDT_BULK_REFERENCE + " was allocated."),
                     SUBSTITUTION_VALUE_INCORRECT);
         }
@@ -418,7 +421,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             createBulkSubmission(mismatchTotal, bulkCustomer, individualRequests, "MCOL");
 
             // set up the mock objects
-            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
+            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
 
             // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -443,7 +446,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
             fail("Test failed to throw RequestCountMismatchException ");
         } catch (final RequestCountMismatchException e) {
-            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
+            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
             verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                     DATA_RETENTION_PERIOD);
             assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name()),
@@ -523,7 +526,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         bulkSubmission.setTargetApplication(createTargetApp(application));
         bulkSubmission.setNumberOfRequest(numberOfRequests);
         bulkSubmission.setIndividualRequests(individualRequests);
-        bulkSubmission.setCreatedDate(now);
+        bulkSubmission.setCreatedDate(NOW);
         bulkSubmission.setSdtBulkReference(SDT_BULK_REFERENCE);
     }
 
@@ -550,7 +553,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         // Set up contact details
         final IGlobalParameter globalParameterContact = new GlobalParameter();
         globalParameterContact.setName(IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
-        globalParameterContact.setValue(contact);
+        globalParameterContact.setValue(CONTACT);
 
         when(globalParameterCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name())).thenReturn(globalParameterContact);
