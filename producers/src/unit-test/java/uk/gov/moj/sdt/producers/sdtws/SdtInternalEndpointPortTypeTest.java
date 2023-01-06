@@ -87,10 +87,10 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testUpdateItemSuccess() {
-        when(mockUpdateItemHandler.updateItem(any())).thenReturn(createUpdateResponse());
+        when(mockUpdateItemHandler.updateItem(any(UpdateRequestType.class))).thenReturn(createUpdateResponse());
 
         final UpdateResponseType response = portType.updateItem(createUpdateRequest());
-        verify(mockUpdateItemHandler).updateItem(any());
+        verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
         assertNotNull(response, "Response expected");
     }
 
@@ -99,7 +99,7 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testUpdateItemException() {
-        when(mockUpdateItemHandler.updateItem(any())).thenThrow(new RuntimeException("test"));
+        when(mockUpdateItemHandler.updateItem(any(UpdateRequestType.class))).thenThrow(new RuntimeException("test"));
 
         try {
             portType.updateItem(createUpdateRequest());
@@ -107,10 +107,10 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         } catch (final RuntimeException re) {
             assertEquals(
                     "A SDT system component error has occurred. Please contact the SDT support team for assistance",
-                    re.getMessage(), "");
+                    re.getMessage());
         }
 
-        verify(mockUpdateItemHandler).updateItem(any());
+        verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
     }
 
     /**
