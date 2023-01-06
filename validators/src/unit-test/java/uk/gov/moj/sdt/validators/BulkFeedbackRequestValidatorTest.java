@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +52,8 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -204,10 +205,10 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
             // Validate the request
             bulkFeedbackRequest.accept(validator, null);
             verify(mockIBulkSubmissionDao).getBulkSubmissionBySdtRef(any(IBulkCustomer.class), anyString(), anyInt());
-            Assertions.fail("Failed to throw expected InvalidBulkReferenceException");
+            fail("Failed to throw expected InvalidBulkReferenceException");
 
         } catch (final InvalidBulkReferenceException e) {
-            Assertions.assertTrue(true);
+            assertTrue(true);
         }
 
     }
