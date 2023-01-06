@@ -38,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.MessageImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -46,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.GenericDao;
+import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -69,6 +71,7 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
      * Setup.
      */
     @BeforeEach
+    @Override
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
@@ -83,7 +86,7 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
             final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor();
 
             // Inject dummy service request into interceptor.
-            sRII.setServiceRequestDao(mockServiceRequestDao);
+            sRII.setServiceRequestDao(getMockedGenericDao(new ServiceRequest ()));
 
             // Setup the raw XML as if the XmlInboundInterceptor had run.
             final String xml =
@@ -137,6 +140,17 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
         } catch (final SecurityException e) {
             LOGGER.error("testHandleMessage()", e);
         }
+    }
+
+    /**
+     * Build a mocked dao.
+     *
+     * @param serviceRequest possible superfluous object.
+     * @return the mocked dao.
+     */
+    private GenericDao getMockedGenericDao(final ServiceRequest serviceRequest) {
+        mockServiceRequestDao.persist(serviceRequest);
+        return mockServiceRequestDao;
     }
 
     /**
