@@ -54,6 +54,8 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -67,7 +69,7 @@ import static org.mockito.Mockito.when;
 public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
 
     /**
-     * The Dao.
+     * The IBulkSubmissionDao.
      */
     @Mock
     private IBulkSubmissionDao mockIBulkSubmissionDao;
@@ -201,7 +203,7 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
         try {
             // Validate the request
             bulkFeedbackRequest.accept(validator, null);
-            verify(mockIBulkSubmissionDao).getBulkSubmissionBySdtRef(any(), any(), any());
+            verify(mockIBulkSubmissionDao).getBulkSubmissionBySdtRef(any(IBulkCustomer.class), anyString(), anyInt());
             Assertions.fail("Failed to throw expected InvalidBulkReferenceException");
 
         } catch (final InvalidBulkReferenceException e) {
