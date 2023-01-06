@@ -111,6 +111,8 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
 
         contextCleanupFilter.doFilter(mockServletRequest, mockServletResponse, mockFilterChain);
 
+        verify(mockFilterChain, times(2)).doFilter(mockServletRequest, mockServletResponse);
+
         // Add code to verify that the entities in SdtContext are removed.
         assertNull(SdtContext.getContext().getRawInXml(), "Sdt Context not cleaned up");
 
