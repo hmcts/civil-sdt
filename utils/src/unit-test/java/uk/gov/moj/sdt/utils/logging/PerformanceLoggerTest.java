@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.utils.logging;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,15 +55,10 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
      */
     private static final String PERFORMANCE_LOG_PATH = "../logs/sdt.performance.log";
 
-    /**
-     * File for performance log.
-     */
-    private File performanceLogFile;
-
     @Override
     protected void setUpLocalTests() throws Exception {
-        // Clear performance log.
-        performanceLogFile = new File(PERFORMANCE_LOG_PATH);
+
+        File performanceLogFile = new File(PERFORMANCE_LOG_PATH);
         if (performanceLogFile.exists()) {
             FileChannel outChan;
             try {
@@ -72,10 +66,9 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
                 outChan.truncate(0);
                 outChan.close();
             } catch (final Exception e) {
-                fail(Arrays.toString(e.getStackTrace()));
+                fail(e.getMessage());
             }
         }
-
     }
 
     /**
