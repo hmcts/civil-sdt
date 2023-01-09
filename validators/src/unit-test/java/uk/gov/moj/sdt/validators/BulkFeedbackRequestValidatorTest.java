@@ -35,7 +35,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
@@ -133,8 +132,6 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         validator = new BulkFeedbackRequestValidator();
 
         // create a bulk customer
