@@ -207,7 +207,8 @@ allprojects {
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     testImplementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
-
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'io.rest-assured:rest-assured:4.3.0'
     testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -512,7 +513,8 @@ subprojects { subproject ->
     environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     generateCucumberReports.enabled = false
     useJUnit()
-
+    useJUnitPlatform()
+    
     testLogging {
       events "passed", "skipped", "failed"
     }
