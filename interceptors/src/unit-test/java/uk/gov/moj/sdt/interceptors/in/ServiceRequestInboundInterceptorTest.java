@@ -39,10 +39,10 @@ import java.nio.charset.StandardCharsets;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.MessageImpl;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +58,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  *
  * @author d195274
  */
+@ExtendWith(MockitoExtension.class)
 class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
@@ -66,15 +67,6 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     @Mock
     GenericDao mockServiceRequestDao;
-
-    /**
-     * Setup.
-     */
-    @BeforeEach
-    @Override
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     /**
      * Test that the process correctly works via mocked out extensions.
@@ -165,10 +157,9 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
          * there's no more data to read. Each line will appended to a StringBuilder
          * and returned as String. */
         final StringBuilder sb = new StringBuilder();
-        String line;
 
-        try {
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        String line;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");
             }
