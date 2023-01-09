@@ -49,9 +49,6 @@
     <cve>CVE-2022-46363</cve>
     <cve>CVE-2022-46364</cve>
     <cve>CVE-2022-41881</cve>
-
-    CVE-2021-4235, CVE-2022-3064
-
   </suppress>
   <!--End of temporary suppression section -->
 
