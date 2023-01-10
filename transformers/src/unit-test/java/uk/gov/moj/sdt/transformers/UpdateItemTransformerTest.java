@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.transformers;
 
 import java.lang.reflect.Constructor;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +70,6 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Set up variables for the test.
      */
-    @BeforeEach
     @Override
     public void setUpLocalTests() {
         Constructor<UpdateItemTransformer> c;
