@@ -30,19 +30,19 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.interceptors.enricher;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher}.
  *
  * @author d276205
  */
-public class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase {
+class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Subject for test.
      */
@@ -51,7 +51,8 @@ public class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Setup.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
         enricher = new SubmitQueryEnricher();
         enricher.setInsertionTag("results");
@@ -62,51 +63,46 @@ public class SubmitQueryEnricherTest extends AbstractSdtUnitTestBase {
      * Test success flow.
      */
     @Test
-    public void testSuccess() {
+    void testSuccess() {
         SdtContext.getContext().setRawOutXml("<record></record>");
         final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results>" +
                 "<record></record></ns2:results></ns1:submitQueryResponse>";
-        Assert.assertEquals(expected, result);
-
+        assertEquals(expected, result);
     }
 
     /**
      * Test success flow where insertion tag has no preceding namespace.
      */
     @Test
-    public void testSuccessNoNamespace() {
+    void testSuccessNoNamespace() {
         SdtContext.getContext().setRawOutXml("<record></record>");
         final String result = enricher.enrichXml("<submitQueryResponse><results/></submitQueryResponse>");
         final String expected = "<submitQueryResponse><results>" +
                 "<record></record></results></submitQueryResponse>";
-        Assert.assertEquals(expected, result);
-
+        assertEquals(expected, result);
     }
 
     /**
      * Test for null value.
      */
     @Test
-    public void testForNullValue() {
+    void testForNullValue() {
         SdtContext.getContext().setRawOutXml(null);
         final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>";
-        Assert.assertEquals(expected, result);
-
+        assertEquals(expected, result);
     }
 
     /**
      * Test for empty string value.
      */
     @Test
-    public void testForEmptyValue() {
+    void testForEmptyValue() {
         SdtContext.getContext().setRawOutXml("");
         final String result = enricher.enrichXml("<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>");
         final String expected = "<ns1:submitQueryResponse><ns2:results/></ns1:submitQueryResponse>";
-        Assert.assertEquals(expected, result);
-
+        assertEquals(expected, result);
     }
-
 
 }

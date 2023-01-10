@@ -30,8 +30,7 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.producers.api;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
 
 /**
@@ -40,8 +39,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
  * @author Simon Holmes
  * 
  */
-public class SubmitQueryRequestXsdTest extends AbstractSdtXmlTestBase
-{
+class SubmitQueryRequestXsdTest extends AbstractSdtXmlTestBase {
+
     /**
      * The name of the xsd.
      */
@@ -66,8 +65,7 @@ public class SubmitQueryRequestXsdTest extends AbstractSdtXmlTestBase
      * Tests XML file is valid.
      */
     @Test
-    public void testValidXml ()
-    {
+    void testValidXml() {
         final String condition = "Valid";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         this.validateXsd (xmlPath, XSD_PATH, null);
@@ -77,8 +75,7 @@ public class SubmitQueryRequestXsdTest extends AbstractSdtXmlTestBase
      * Tests that expected errors are reported for missing mandatory fields.
      */
     @Test
-    public void testInvalidXmlMandatoryMissing ()
-    {
+    void testInvalidXmlMandatoryMissing() {
         final String condition = "MandatoryMissing";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
@@ -90,8 +87,7 @@ public class SubmitQueryRequestXsdTest extends AbstractSdtXmlTestBase
      * Tests that expected errors are reported for incorrect format of fields.
      */
     @Test
-    public void testInvalidXmlIncorrectFormat ()
-    {
+    void testInvalidXmlIncorrectFormat() {
         final String condition = "IncorrectFormat";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;

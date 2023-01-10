@@ -31,8 +31,10 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.domain.ServiceType;
 
 /**
@@ -41,7 +43,8 @@ import uk.gov.moj.sdt.domain.ServiceType;
  * @author d120520
  */
 
-public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest {
+@ExtendWith(MockitoExtension.class)
+class ServiceTypeValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Test subject.
      */
@@ -50,6 +53,7 @@ public class ServiceTypeValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Setup of the Validator and Domain class instance.
      */
+    @BeforeEach
     public void setUpLocalTests() {
         // subject of test
         validator = new ServiceTypeValidator();

@@ -33,10 +33,11 @@ package uk.gov.moj.sdt.interceptors.enricher;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +45,15 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /**
  * Tests for {@link uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher}.
  *
  * @author Robin Compston.
  */
-public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
+class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
@@ -63,7 +67,7 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
     /**
      * Setup for this test.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         // Create enricher to be tested.
         enricher = new BulkFeedbackEnricher();
@@ -75,7 +79,7 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
      * Test enrichment of single response with no error.
      */
     @Test
-    public void testSingleResponse() {
+    void testSingleResponse() {
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
@@ -99,14 +103,14 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals("XML enriched by BulkFeedbackEnricher is not as expected:", expected, result);
+        assertEquals(expected, result, "XML enriched by BulkFeedbackEnricher is not as expected:");
     }
 
     /**
      * Test enrichment of single response (with no namespaces in front of tags) with no error.
      */
     @Test
-    public void testSingleResponseNoNamespace() {
+    void testSingleResponseNoNamespace() {
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
@@ -130,14 +134,14 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><bulkRequestStatus><customerReference>USER_FILE_REFERENCE_B1</customerReference><sdtBulkReference>MCOL_20130722_B00000001</sdtBulkReference><submittedDate>2013-07-22T13:00:00+01:00</submittedDate><sdtService>SDT Commissioning</sdtService><requestCount>16</requestCount><bulkStatus code=\"Validated\"/></bulkRequestStatus><responses><response requestId=\"USER_REQUEST_ID_B1\" requestType=\"mcolClaim\"><responseDetail><mcolResponseDetail><claimNumber>12345678</claimNumber><issueDate>2012-11-11</issueDate><serviceDate>2012-11-11</serviceDate><warrantNumber>12345678</warrantNumber><enforcingCourtCode>123</enforcingCourtCode><enforcingCourtName>enforcing_court_name</enforcingCourtName><fee>9999</fee></mcolResponseDetail></responseDetail><status code=\"Initially Accepted\"/></response></responses></bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals("XML enriched by BulkFeedbackEnricher is not as expected:", expected, result);
+        assertEquals(expected, result, "XML enriched by BulkFeedbackEnricher is not as expected:");
     }
 
     /**
      * Test enrichment of single response with the position of the requestId and requestType attributes reversed.
      */
     @Test
-    public void testSingleResponseReversedAttributes() {
+    void testSingleResponseReversedAttributes() {
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
@@ -161,14 +165,14 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     /**
      * Test enrichment of multiple responses.
      */
     @Test
-    public void testMultipleResponse() {
+    void testMultipleResponse() {
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
@@ -195,14 +199,14 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>987654321</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Rejected\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     /**
      * Test enrichment of XML which lacks one of the request ids in the targetApplicationRespMap.
      */
     @Test
-    public void testMissingRequestId() {
+    void testMissingRequestId() {
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
@@ -223,12 +227,12 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
             // Call the enricher.
             enricher.enrichXml(inXml);
 
-            Assert.fail("Failed to throw expected UnsupportedOperationException for missing request id");
+            fail("Failed to throw expected UnsupportedOperationException for missing request id");
         } catch (final UnsupportedOperationException e) {
             if (!e.getMessage().equals(
                     "Failure to find matching request in outgoing bulk feedback XML for request "
                             + "id[USER_REQUEST_ID_B3].")) {
-                Assert.fail("Failed to throw expected UnsupportedOperationException for missing request id.");
+                fail("Failed to throw expected UnsupportedOperationException for missing request id.");
             }
         }
     }
@@ -237,7 +241,7 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
      * Test failure to enrich one of the requests in the outgoing XML.
      */
     @Test
-    public void testUnenrichedResponse() {
+    void testUnenrichedResponse() {
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
@@ -257,12 +261,12 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
             // Call the enricher.
             enricher.enrichXml(inXml);
 
-            Assert.fail("Failed to throw expected UnsupportedOperationException for incomplete enrichment.");
+            fail("Failed to throw expected UnsupportedOperationException for incomplete enrichment.");
         } catch (final UnsupportedOperationException e) {
             if (!e.getMessage()
                     .equals(
                             "Detected unenriched response tag[<ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Initially Accepted\"] within bulk feedback response XML.")) {
-                Assert.fail("Failed to throw expected UnsupportedOperationException for missing parent tag.");
+                fail("Failed to throw expected UnsupportedOperationException for missing parent tag.");
             }
         }
     }
@@ -271,7 +275,7 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
      * Test failure to enrich one of the requests in the outgoing XML.
      */
     @Test
-    public void testUnenrichedRejectedResponse() {
+    void testUnenrichedRejectedResponse() {
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();
         // CHECKSTYLE:OFF Line length is acceptable
@@ -296,9 +300,9 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
                     "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"><soap:Body><ns5:bulkFeedbackResponse xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\" xmlns:ns4=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema\" xmlns:ns5=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema\" xmlns:ns6=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" xmlns:ns7=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema\"><ns5:bulkRequestStatus><ns5:customerReference>USER_FILE_REFERENCE_B1</ns5:customerReference><ns5:sdtBulkReference>MCOL_20130722_B00000001</ns5:sdtBulkReference><ns5:submittedDate>2013-07-22T13:00:00+01:00</ns5:submittedDate><ns5:sdtService>SDT Commissioning</ns5:sdtService><ns5:requestCount>16</ns5:requestCount><ns5:bulkStatus code=\"Validated\"/></ns5:bulkRequestStatus><ns5:responses><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B1\"><ns5:responseDetail><fake:mcolResponseDetail><phoney:claimNumber>12345678</phoney:claimNumber><phoney:issueDate>2012-11-11</phoney:issueDate><phoney:serviceDate>2012-11-11</phoney:serviceDate><phoney:warrantNumber>12345678</phoney:warrantNumber><phoney:enforcingCourtCode>123</phoney:enforcingCourtCode><phoney:enforcingCourtName>enforcing_court_name</phoney:enforcingCourtName><phoney:fee>9999</phoney:fee></fake:mcolResponseDetail></ns5:responseDetail><ns5:status code=\"Initially Accepted\"/></ns5:response><ns5:response requestType=\"mcolClaim\" requestId=\"USER_REQUEST_ID_B2\"><ns5:responseDetail/><ns5:status code=\"Rejected\"><ns2:error><ns2:code>39</ns2:code><ns2:description>First defendant's postcode is not in England or Wales.</ns2:description></ns2:error></ns5:status></ns5:response></ns5:responses></ns5:bulkFeedbackResponse></soap:Body></soap:Envelope>";
             // CHECKSTYLE:ON
 
-            Assert.assertEquals(expected, result);
+            assertEquals(expected, result);
         } catch (final UnsupportedOperationException e) {
-            Assert.fail("Unexpected exception thrown [" + e.getMessage() + "].");
+            fail("Unexpected exception thrown [" + e.getMessage() + "].");
         }
     }
 
@@ -307,8 +311,9 @@ public class BulkFeedbackEnricherTest extends AbstractSdtUnitTestBase {
      *
      * @throws IOException if test data file not found.
      */
-    @Test(timeout = 5000)
-    public void testLargeFeedbackResponse() throws IOException {
+    @Test
+    @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
+    void testLargeFeedbackResponse() throws IOException {
 
         // Create map to hold fake responses from MCOL.
         final Map<String, String> targetApplicationRespMap = new HashMap<>();

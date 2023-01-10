@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
@@ -79,8 +78,6 @@ class ConsumerGatewayTest extends ConsumerTestBase {
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        MockitoAnnotations.openMocks(this);
-
         submitQueryConsumer = new SubQueryConsumer();
         submitQueryConsumer.setTransformer(mockTransformer);
 

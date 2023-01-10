@@ -36,9 +36,7 @@ import java.util.List;
 
 import java.time.LocalDateTime;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -54,12 +52,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponseType;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * Unit tests for BulkRequestTransformer.
  *
  * @author d130680
  */
-public class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
+class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
 
     /**
      * Bulk feedback transformer.
@@ -100,9 +101,8 @@ public class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
 
         // Do the transformation
         final IBulkFeedbackRequest domain = transformer.transformJaxbToDomain(jaxb);
-        Assert.assertEquals("SDT Customer ID does not match", sdtCustomerId, domain.getBulkCustomer()
-                .getSdtCustomerId());
-        Assert.assertEquals("SDT Bulk Reference does not match", sdtBulkReference, domain.getSdtBulkReference());
+        assertEquals(sdtCustomerId, domain.getBulkCustomer().getSdtCustomerId(), "SDT Customer ID does not match");
+        assertEquals(sdtBulkReference, domain.getSdtBulkReference(), "SDT Bulk Reference does not match");
 
     }
 
@@ -110,7 +110,7 @@ public class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
      * Test the from transformation domain to jaxb object.
      */
     @Test
-    public void testTransformDomainToJaxb() {
+    void testTransformDomainToJaxb() {
         // Set up the domain object to transform
         final IBulkSubmission domain = new BulkSubmission();
         final long numberOfRequest = 8;
@@ -157,45 +157,45 @@ public class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
         final BulkFeedbackResponseType jaxb = transformer.transformDomainToJaxb(domain);
 
         // Check the domain object has been transformed
-        Assert.assertEquals("The number of request does not match", numberOfRequest, domain.getNumberOfRequest());
-        Assert.assertEquals("The SDT Bulk Reference does not match", sdtBulkReference, domain.getSdtBulkReference());
-        Assert.assertEquals("The Customer Reference does not match", customerRef, domain.getCustomerReference());
-        Assert.assertEquals("The created date does not match", createdDate, domain.getCreatedDate());
-        Assert.assertEquals("The submission status does not match", submissionStatus, domain.getSubmissionStatus());
+        assertEquals(numberOfRequest, domain.getNumberOfRequest(), "The number of request does not match");
+        assertEquals(sdtBulkReference, domain.getSdtBulkReference(), "The SDT Bulk Reference does not match");
+        assertEquals(customerRef, domain.getCustomerReference(), "The Customer Reference does not match");
+        assertEquals(createdDate, domain.getCreatedDate(), "The created date does not match");
+        assertEquals(submissionStatus, domain.getSubmissionStatus(), "The submission status does not match");
 
         final List<ResponseType> responseTypes = jaxb.getResponses().getResponse();
         // Individual request 1
         ResponseType responseType = responseTypes.get(0);
-        Assert.assertEquals("Request ID for individual request 1 does not match", customerRequestReference1,
-                responseType.getRequestId());
-        Assert.assertEquals("Status for individual request 1 does not match",
-                IndividualStatusCodeType.ACCEPTED.value(), responseType.getStatus().getCode().value());
-        Assert.assertNotNull("ResponseDetail should not be null", responseType.getResponseDetail());
+        assertEquals(customerRequestReference1, responseType.getRequestId(),
+                "Request ID for individual request 1 does not match");
+        assertEquals(IndividualStatusCodeType.ACCEPTED.value(), responseType.getStatus().getCode().value(),
+                "Status for individual request 1 does not match");
+        assertNotNull(responseType.getResponseDetail(), "ResponseDetail should not be null");
 
         // Individual request 2
         responseType = responseTypes.get(1);
-        Assert.assertEquals("Request ID for individual request 2 does not match", customerRequestReference2,
-                responseType.getRequestId());
-        Assert.assertEquals("Status for individual request 2 does not match",
-                IndividualStatusCodeType.RECEIVED.value(), responseType.getStatus().getCode().value());
-        Assert.assertNotNull("ResponseDetail should not be null", responseType.getResponseDetail());
+        assertEquals(customerRequestReference2, responseType.getRequestId(),
+                "Request ID for individual request 2 does not match");
+        assertEquals(IndividualStatusCodeType.RECEIVED.value(), responseType.getStatus().getCode().value(),
+                "Status for individual request 2 does not match");
+        assertNotNull(responseType.getResponseDetail(), "ResponseDetail should not be null");
 
         // Individual request 3
         responseType = responseTypes.get(2);
-        Assert.assertEquals("Request ID for individual request 3 does not match", customerRequestReference3,
-                responseType.getRequestId());
-        Assert.assertEquals("Status for individual request 3 does not match",
-                IndividualStatusCodeType.REJECTED.value(), responseType.getStatus().getCode().value());
-        Assert.assertNotNull("ResponseDetail should not be null", responseType.getResponseDetail());
+        assertEquals(customerRequestReference3, responseType.getRequestId(),
+                "Request ID for individual request 3 does not match");
+        assertEquals(IndividualStatusCodeType.REJECTED.value(), responseType.getStatus().getCode().value(),
+                "Status for individual request 3 does not match");
+        assertNotNull(responseType.getResponseDetail(), "ResponseDetail should not be null");
 
         // Check for the errors
         final IndividualStatusType individualStatusType = responseType.getStatus();
-        Assert.assertEquals("Error status for individual request 3 does not match",
-                IndividualStatusCodeType.REJECTED.value(), individualStatusType.getCode().value());
+        assertEquals(IndividualStatusCodeType.REJECTED.value(), individualStatusType.getCode().value(),
+                "Error status for individual request 3 does not match");
         final ErrorType errorType = individualStatusType.getError();
-        Assert.assertEquals("Error code for individual request 3 does not match", errorCode, errorType.getCode());
-        Assert.assertEquals("Error text for individual request 3 does not match", errorText,
-                errorType.getDescription());
-        Assert.assertNotNull("ResponseDetail should not be null", responseType.getResponseDetail());
+        assertEquals(errorCode, errorType.getCode(), "Error code for individual request 3 does not match");
+        assertEquals(errorText, errorType.getDescription(),
+                "Error text for individual request 3 does not match");
+        assertNotNull(responseType.getResponseDetail(), "ResponseDetail should not be null");
     }
 }
