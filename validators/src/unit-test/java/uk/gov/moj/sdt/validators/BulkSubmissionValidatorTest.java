@@ -37,7 +37,6 @@ import java.util.List;
 
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -82,7 +81,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
     private static final String SUBSTITUTION_VALUE_INCORRECT = "Substitution value incorrect";
 
-    private static final Long LONG_12345 = 12345L;
+    private static final Long SDT_CUSTOMER_ID = 12345L;
 
     /**
      * Contact details for assistance.
@@ -167,8 +166,6 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Setup of the Validator and Domain class instance.
      */
-    @BeforeEach
-    @Override
     public void setUpLocalTests() {
         // subject of test
         validator = new BulkSubmissionValidator();
@@ -209,7 +206,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         createBulkSubmission(NUMBER_OF_REQUESTS, bulkCustomer, individualRequests, "MCOL");
 
         // set up the mock objects
-        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
+        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(SDT_CUSTOMER_ID)).thenReturn(bulkCustomer);
 
         // inject the bulk customer into the validator
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -223,7 +220,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
         bulkSubmission.accept(validator, null);
 
-        verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
+        verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(SDT_CUSTOMER_ID);
         verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                 DATA_RETENTION_PERIOD);
         verify(globalParameterCache).getValue(any(), anyString());
@@ -257,7 +254,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         createBulkSubmission(individualRequests.size(), bulkCustomer, individualRequests, "MCOL");
 
         // set up the mock objects
-        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
+        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(SDT_CUSTOMER_ID)).thenReturn(bulkCustomer);
 
         // inject the bulk customer into the validator
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -299,7 +296,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             bulkCustomer = createCustomer(createBulkCustomerApplications("PCOL"));
 
             // set up the mock objects
-            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
+            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(SDT_CUSTOMER_ID)).thenReturn(bulkCustomer);
 
             // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -327,7 +324,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             fail("Test failed to throw CustomerNotSetupException ");
 
         } catch (final CustomerNotSetupException e) {
-            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
+            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(SDT_CUSTOMER_ID);
 
             assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.CUST_NOT_SETUP.name()),
                     ERROR_CODE_INCORRECT);
@@ -350,7 +347,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             bulkCustomer = createCustomer(createBulkCustomerApplications("MCOL"));
 
             // set up the mock objects
-            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
+            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(SDT_CUSTOMER_ID)).thenReturn(bulkCustomer);
 
             // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -384,7 +381,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             fail("Test failed to throw CustomerReferenceNotUniqueException ");
 
         } catch (final CustomerReferenceNotUniqueException e) {
-            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
+            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(SDT_CUSTOMER_ID);
             verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                     DATA_RETENTION_PERIOD);
             assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.DUP_CUST_FILEID.name()),
@@ -418,7 +415,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
             createBulkSubmission(mismatchTotal, bulkCustomer, individualRequests, "MCOL");
 
             // set up the mock objects
-            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(LONG_12345)).thenReturn(bulkCustomer);
+            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(SDT_CUSTOMER_ID)).thenReturn(bulkCustomer);
 
             // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
@@ -443,7 +440,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
 
             fail("Test failed to throw RequestCountMismatchException ");
         } catch (final RequestCountMismatchException e) {
-            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(LONG_12345);
+            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(SDT_CUSTOMER_ID);
             verify(mockIBulkSubmissionDao).getBulkSubmission(bulkCustomer, bulkSubmission.getCustomerReference(),
                     DATA_RETENTION_PERIOD);
             assertTrue(e.getErrorCode().equals(IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH.name()),
