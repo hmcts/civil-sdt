@@ -103,7 +103,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain(updateRequestType);
 
         assertNotNull(domainObject);
-        assertEquals(domainObject.getSdtRequestReference(), sdtRequestId, "Found correct sdt request id");
+        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), "Found correct sdt request id");
         assertEquals(UpdateStatusCodeType.RESUBMIT_MESSAGE.value(), domainObject.getRequestStatus(),
                 "Found correct request status");
     }
@@ -128,7 +128,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain(updateRequestType);
 
         assertNotNull(domainObject);
-        assertEquals(domainObject.getSdtRequestReference(), sdtRequestId, "Found correct sdt request id");
+        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), "Found correct sdt request id");
         assertEquals(UpdateStatusCodeType.ACCEPTED.value(), domainObject.getRequestStatus(),
                 "Found correct request status");
     }
