@@ -39,8 +39,9 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -67,6 +68,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Sally Vonka
  */
+@ExtendWith(MockitoExtension.class)
 class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
 
     /**
@@ -98,8 +100,6 @@ class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
      */
     @Override
     public void setUpLocalTests() {
-        MockitoAnnotations.openMocks(this);
-
         wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler();
 
         Constructor<BulkFeedbackTransformer> c;
@@ -148,8 +148,7 @@ class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
 
         wsReadBulkFeedbackReqHandler.getBulkFeedback(bulkFeedbackRequestType);
 
-        verify(mockBulkFeedbackService).getBulkFeedback(any());
-
+        verify(mockBulkFeedbackService).getBulkFeedback(any(IBulkFeedbackRequest.class));
     }
 
     /**

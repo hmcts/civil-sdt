@@ -34,7 +34,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
@@ -102,8 +101,6 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         portType = new SdtEndpointPortType();
         portType.setWsCreateBulkRequestHandler(mockCreateBulkRequestHandler);
 
@@ -139,7 +136,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
             portType.submitBulk(createBulkRequest());
             fail(RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
         } catch (final RuntimeException re) {
-            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage(), "");
+            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
         verify(mockCreateBulkRequestHandler).submitBulk(any());
@@ -171,7 +168,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
             portType.getBulkFeedback(createBulkFeedbackRequestType());
             fail(RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
         } catch (final RuntimeException re) {
-            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage(), "");
+            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
         verify(mockBulkRequestHandler).getBulkFeedback(any(BulkFeedbackRequestType.class));
@@ -203,7 +200,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
             portType.submitQuery(createsubmitQueryRequestType());
             fail(RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
         } catch (final RuntimeException re) {
-            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage(), "");
+            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
         verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));

@@ -39,6 +39,8 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -68,6 +70,14 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
         individualRequest = new IndividualRequest();
     }
 
+    private void assertsCommon(IndividualRequestStatus expectedStatus, Integer expectedForwardingAttempts,
+                               LocalDateTime updatedDate) {
+        assertEquals(expectedStatus.getStatus(), individualRequest.getRequestStatus(), STATUS_IS_INCORRECT);
+        assertEquals(expectedForwardingAttempts, individualRequest.getForwardingAttempts(),
+                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
+        assertNotNull(updatedDate, UPDATED_DATE_SHOULD_BE_POPULATED);
+    }
+
     /**
      * Tests that forwarding attempts is incremented correctly.
      */
@@ -75,11 +85,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     void testIncrementForwardingAttempts() {
         individualRequest.incrementForwardingAttempts();
 
-        assertEquals(IndividualRequestStatus.FORWARDED.getStatus(), individualRequest.getRequestStatus(),
-                STATUS_IS_INCORRECT);
-        assertEquals(1, individualRequest.getForwardingAttempts(),
-                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
-        assertNotNull(individualRequest.getUpdatedDate(), UPDATED_DATE_SHOULD_BE_POPULATED);
+        assertsCommon(IndividualRequestStatus.FORWARDED, 1, individualRequest.getUpdatedDate());
     }
 
     /**
@@ -89,11 +95,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     void testMarkRequestAsAccepted() {
         individualRequest.markRequestAsAccepted();
 
-        assertEquals(IndividualRequestStatus.ACCEPTED.getStatus(), individualRequest.getRequestStatus(),
-                STATUS_IS_INCORRECT);
-        assertEquals(0, individualRequest.getForwardingAttempts(),
-                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
-        assertNotNull(individualRequest.getUpdatedDate(), UPDATED_DATE_SHOULD_BE_POPULATED);
+        assertsCommon(IndividualRequestStatus.ACCEPTED, 0, individualRequest.getUpdatedDate());
         assertNotNull(individualRequest.getCompletedDate(), "Completed date should be populated");
     }
 
@@ -104,11 +106,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     void testMarkRequestAsInitiallyAccepted() {
         individualRequest.markRequestAsInitiallyAccepted();
 
-        assertEquals(IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus(), individualRequest.getRequestStatus(),
-                STATUS_IS_INCORRECT);
-        assertEquals(0, individualRequest.getForwardingAttempts(),
-                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
-        assertNotNull(individualRequest.getUpdatedDate(), UPDATED_DATE_SHOULD_BE_POPULATED);
+        assertsCommon(IndividualRequestStatus.INITIALLY_ACCEPTED, 0, individualRequest.getUpdatedDate());
     }
 
     /**
@@ -118,11 +116,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     void testMarkRequestAsAwaitingData() {
         individualRequest.markRequestAsAwaitingData();
 
-        assertEquals(IndividualRequestStatus.AWAITING_DATA.getStatus(), individualRequest.getRequestStatus(),
-                STATUS_IS_INCORRECT);
-        assertEquals(0, individualRequest.getForwardingAttempts(),
-                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
-        assertNotNull(individualRequest.getUpdatedDate(), UPDATED_DATE_SHOULD_BE_POPULATED);
+        assertsCommon(IndividualRequestStatus.AWAITING_DATA, 0, individualRequest.getUpdatedDate());
     }
 
     /**
@@ -133,11 +127,8 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
         final IErrorLog errorLog = new ErrorLog();
         individualRequest.markRequestAsRejected(errorLog);
 
-        assertEquals(IndividualRequestStatus.REJECTED.getStatus(), individualRequest.getRequestStatus(),
-                STATUS_IS_INCORRECT);
-        assertEquals(0, individualRequest.getForwardingAttempts(),
-                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
-        assertNotNull(individualRequest.getUpdatedDate(),UPDATED_DATE_SHOULD_BE_POPULATED);
+        assertsCommon(IndividualRequestStatus.REJECTED, 0, individualRequest.getUpdatedDate());
+
         assertNotNull(individualRequest.getCompletedDate(), "Completed date should be populated");
         assertEquals(errorLog, individualRequest.getErrorLog(), "Error log should be populated");
         assertEquals(individualRequest, errorLog.getIndividualRequest(),
@@ -151,11 +142,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     void testResetForwardingAttempts() {
         individualRequest.resetForwardingAttempts();
 
-        assertEquals(IndividualRequestStatus.RECEIVED.getStatus(), individualRequest.getRequestStatus(),
-                STATUS_IS_INCORRECT);
-        assertEquals(0, individualRequest.getForwardingAttempts(),
-                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
-        assertNotNull(individualRequest.getUpdatedDate(), UPDATED_DATE_SHOULD_BE_POPULATED);
+        assertsCommon(IndividualRequestStatus.RECEIVED, 0, individualRequest.getUpdatedDate());
     }
 
     /**

@@ -368,7 +368,7 @@ class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 combinedMap.get("xsi"), "Missing combined namespace");
         assertEquals("xmlns:aop=\"http://www.springframework.org/schema/aop\"",
                 combinedMap.get("aop"), "Missing combined namespace");
-        assertEquals(combinedMap.size(), 2, "Incorrect number of namespaces matching fragment");
+        assertEquals(2, combinedMap.size(), "Incorrect number of namespaces matching fragment");
     }
 
     /**

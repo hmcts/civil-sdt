@@ -36,8 +36,9 @@ import java.net.SocketTimeoutException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -60,7 +61,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -70,6 +71,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Manoj Kulkarni
  */
+@ExtendWith(MockitoExtension.class)
 class IndividualRequestConsumerTest extends ConsumerTestBase {
 
     /**
@@ -111,9 +113,7 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
      */
     @BeforeEach
     @Override
-    public void setUpLocalTests() {
-        MockitoAnnotations.openMocks(this);
-
+    public void setUp() {
         individualRequestConsumer = new IndConsumerGateway();
         individualRequestConsumer.setTransformer(mockTransformer);
         individualRequestConsumer.setRethrowOnFailureToConnect(true);
@@ -153,20 +153,20 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         mockTransformer.transformJaxbToDomain(individualResponseType, individualRequest);
 
         doAnswer((Answer<Void>) invocation -> {
-            ((IndividualRequest) invocation.getArgument(0))
+            ((IndividualRequest) invocation.getArgument(1))
                     .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
             // required to be null for a void method
             return null;
-        }).when(mockTransformer).transformDomainToJaxb(individualRequest);
+        }).when(mockTransformer).transformJaxbToDomain(individualResponseType, individualRequest);
 
         individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                 RECEIVE_TIME_OUT);
 
-        verify(mockTransformer).transformDomainToJaxb(any());
-        verify(mockClient).submitIndividual(any());
+        verify(mockTransformer, atLeastOnce()).transformJaxbToDomain(individualResponseType, individualRequest);
+        verify(mockTransformer).transformDomainToJaxb(individualRequest);
+        verify(mockClient).submitIndividual(individualRequestType);
 
         assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
-
     }
 
     /**
@@ -195,7 +195,6 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         verify(mockClient).submitIndividual(individualRequestType);
 
         assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
-
     }
 
     /**
@@ -219,8 +218,8 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
             assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
-        verify(mockTransformer).transformDomainToJaxb(any());
-        verify(mockClient).submitIndividual(any());
+        verify(mockTransformer).transformDomainToJaxb(individualRequest);
+        verify(mockClient).submitIndividual(individualRequestType);
 
         assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
     }
@@ -251,8 +250,8 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
             assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
         }
 
-        verify(mockTransformer).transformDomainToJaxb(any());
-        verify(mockClient).submitIndividual(any());
+        verify(mockTransformer).transformDomainToJaxb(individualRequest);
+        verify(mockClient).submitIndividual(individualRequestType);
 
         assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
     }

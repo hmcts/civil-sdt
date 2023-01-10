@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.transformers;
 
 import java.lang.reflect.Constructor;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +74,6 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Set up variables for the test.
      */
-    @BeforeEach
     @Override
     public void setUpLocalTests() {
         Constructor<UpdateItemTransformer> c;
@@ -134,7 +132,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain(updateRequestType);
 
         assertNotNull(domainObject);
-        assertEquals(domainObject.getSdtRequestReference(), sdtRequestId, FOUND_CORRECT_SDT_REQUEST_ID);
+        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
         assertEquals(UpdateStatusCodeType.ACCEPTED.value(), domainObject.getRequestStatus(),
                 FOUND_CORRECT_REQUEST_STATUS);
     }
@@ -166,7 +164,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IErrorLog errorLog = domainObject.getErrorLog();
 
         assertNotNull(domainObject);
-        assertEquals(domainObject.getSdtRequestReference(), sdtRequestId, FOUND_CORRECT_SDT_REQUEST_ID);
+        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
         assertEquals(UpdateStatusCodeType.REJECTED.value(), domainObject.getRequestStatus(),
                 FOUND_CORRECT_REQUEST_STATUS);
         assertEquals("FAILURE", errorLog.getErrorCode(), "Found correct error code");

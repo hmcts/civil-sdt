@@ -38,10 +38,10 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
@@ -57,6 +57,7 @@ import static org.mockito.Mockito.when;
  *
  * @author d195274
  */
+@ExtendWith(MockitoExtension.class)
 class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     @Mock
@@ -65,16 +66,8 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     /**
      * Error message returned when a fault occurs.
      */
-    private final String errorMessage = "A SDT system component error " +
+    private static final String ERROR_MESSAGE = "A SDT system component error " +
             "has occurred. Please contact the SDT support team for assistance";
-
-    /**
-     * Setup.
-     */
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     /**
      * Test method for
@@ -93,7 +86,7 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         assertNull(serviceRequest.getResponsePayload());
         faultOutboundInterceptor.handleMessage(soapMessage);
         assertNotNull(serviceRequest.getResponseDateTime());
-        assertTrue(serviceRequest.getResponsePayload().contains(errorMessage));
+        assertTrue(serviceRequest.getResponsePayload().contains(ERROR_MESSAGE));
     }
 
     /**
@@ -106,7 +99,7 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     private SoapMessage getDummySoapMessageWithFault() {
         final SoapMessage soapMessage = new SoapMessage(new MessageImpl());
         soapMessage.setExchange(new ExchangeImpl());
-        final Fault fault = new Fault(new RuntimeException(errorMessage
+        final Fault fault = new Fault(new RuntimeException(ERROR_MESSAGE
         ));
         soapMessage.setContent(Exception.class, fault);
         return soapMessage;

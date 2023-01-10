@@ -171,7 +171,7 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_GOOD_DIR, xmlFileName + ".good", false);
 
             // compare the output and the good file.
-            AbstractSdtXmlTestBase.LOGGER.info("Comparing XML file {} against good file {}",
+            AbstractSdtXmlTestBase.LOGGER.debug("Comparing XML file {} against good file {}",
                     xmlOutPath, xmlGoodPath);
             return this.compareTestOutputFiles(xmlOutPath, xmlGoodPath, useDelimiters);
         } catch (final IOException e) {
@@ -212,7 +212,6 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         // Create SAX parser factory; turn on validation and check all name
         // spaces; use given schema for validation.
         final SAXParserFactory saxFactory = SAXParserFactory.newInstance(SAX_PARSER_FACTORY_IMPL_CLASS, null);
-        // saxFactory.setValidating (true);
         saxFactory.setNamespaceAware(true);
         saxFactory.setSchema(schema);
 
@@ -242,8 +241,6 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                 // Record that we hit an error during parsing.
                 AbstractSdtXmlTestBase.this.errorEncountered = true;
 
-                LOGGER.debug(e.getMessage());
-
                 // Was it the wrong error?
                 if (expectedMessages != null && expectedMessages.contains(e.getMessage())) {
                     LOGGER.debug("Found expected error and removing it from list - " + e.getMessage());
@@ -268,7 +265,6 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
      * @throws IOException in case of any errors related with error file.
      */
     private List<String> getExpectedErrorMessages(final String errorFilePathname) throws IOException {
-        // final StringBuilder sb = new StringBuilder ();
         final List<String> expectedErrorMessages = new ArrayList<>();
 
         String errorFilePath = null;
@@ -278,15 +274,16 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
                     Utilities.checkFileExists(AbstractSdtXmlTestBase.XML_VALIDATION_DIR, errorFilePathname, false);
             LOGGER.debug("Error message file - {}", errorFilePath);
         } else {
-            return new ArrayList();
+            return new ArrayList<>();
         }
 
         String sCurrentLine;
 
-        final BufferedReader br = new BufferedReader(new FileReader(errorFilePath));
+        try (BufferedReader br = new BufferedReader(new FileReader(errorFilePath))) {
 
-        while ((sCurrentLine = br.readLine()) != null) {
-            expectedErrorMessages.add(sCurrentLine);
+            while ((sCurrentLine = br.readLine()) != null) {
+                expectedErrorMessages.add(sCurrentLine);
+            }
         }
         return expectedErrorMessages;
 

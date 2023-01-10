@@ -38,8 +38,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
@@ -66,10 +64,6 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 class SdtValidatorTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(SdtValidatorTest.class);
 
     private static final String ERR_CODE_BULK_REF_INVALID = "BULK_REF_INVALID";
     private static final String ERR_CODE_CONTACT_DETAILS = "CONTACT_DETAILS";
@@ -170,7 +164,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
         replacements.add("MCOL0000012345");
 
         final String description = validator.getErrorMessage(replacements, IErrorMessage.ErrorCode.DUP_CUST_REQID);
-        LOGGER.debug("testGetErrorMessage [{}]", description);
         verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_REQID);
         assertTrue(description.contains("Duplicate Unique Request Identifier submitted MCOL0000012345."),
                 "Incorrect Message and/or substitution");
@@ -185,7 +178,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
                 globalParam);
 
         final String contactDetails = validator.getContactDetails();
-        LOGGER.debug("testGetContactDetails [{}]", contactDetails);
         verify(mockGlobalParameterCache).getValue(IGlobalParameter.class, ERR_CODE_CONTACT_DETAILS);
         assertTrue(contactDetails.contains("TBD"), "Incorrect contact details");
     }
@@ -208,7 +200,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.DUP_CUST_FILEID);
             fail("Failed to throw expected CustomerReferenceNotUniqueException for error code DUP_CUST_FILEID");
         } catch (final CustomerReferenceNotUniqueException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_FILEID);
             assertTrue(e.getMessage().contains(ERR_CODE_DUP_CUST_FILEID), ERR_MSG_FAILED_WITH_CODE);
             assertTrue(e.getMessage().contains("MCOL00001234"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
@@ -233,7 +224,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.REQ_COUNT_MISMATCH);
             fail("Failed to throw expected RequestCountMismatchException for error code REQ_COUNT_MISMATCH");
         } catch (final RequestCountMismatchException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_REQ_COUNT_MISMATCH);
             assertTrue(e.getMessage().contains(ERR_CODE_REQ_COUNT_MISMATCH), ERR_MSG_FAILED_WITH_CODE);
             assertTrue(e.getMessage().contains("MCOL0000123"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
@@ -256,7 +246,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.CUST_NOT_SETUP);
             fail("Failed to throw expected CustomerNotSetupException for error code CUST_NOT_SETUP");
         } catch (final CustomerNotSetupException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_CUST_NOT_SETUP);
             assertTrue(e.getMessage().contains(ERR_CODE_CUST_NOT_SETUP), ERR_MSG_FAILED_WITH_CODE);
             assertTrue(e.getMessage().contains("MCOL"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
@@ -279,7 +268,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.CUST_ID_INVALID);
             fail("Failed to throw expected CustomerNotFoundException for error code CUST_ID_INVALID");
         } catch (final CustomerNotFoundException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_CUST_ID_INVALID);
             assertTrue(e.getMessage().contains(ERR_CODE_CUST_ID_INVALID), ERR_MSG_FAILED_WITH_CODE);
             assertTrue(e.getMessage().contains("TBD"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
@@ -301,7 +289,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
             validator.createValidationException(replacements, IErrorMessage.ErrorCode.BULK_REF_INVALID);
             fail("Failed to throw expected InvalidBulkReferenceException for error code BULK_REF_INVALID");
         } catch (final InvalidBulkReferenceException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_BULK_REF_INVALID);
             assertTrue(e.getMessage().contains(ERR_CODE_BULK_REF_INVALID), ERR_MSG_FAILED_WITH_CODE);
             assertTrue(e.getMessage().contains("MCOL000001234"), ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);
@@ -324,7 +311,6 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
             fail("Failed to throw expected DuplicateUserRequestIdentifierException for error code"
                     + " DUP_CUST_REQID");
         } catch (final DuplicateUserRequestIdentifierException e) {
-            LOGGER.debug(e.getMessage());
             verify(mockErrorMessagesCache).getValue(IErrorMessage.class, ERR_CODE_DUP_CUST_REQID);
             assertTrue(e.getMessage().contains(ERR_CODE_DUP_CUST_REQID), ERR_MSG_FAILED_WITH_CODE);
             assertTrue(e.getMessage().contains("MCOL000009876"),ERR_MSG_SUBSTITUTION_VALUE_INCORRECT);

@@ -38,14 +38,16 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.MessageImpl;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.GenericDao;
+import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -56,6 +58,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  *
  * @author d195274
  */
+@ExtendWith(MockitoExtension.class)
 class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
@@ -64,14 +67,6 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     @Mock
     GenericDao mockServiceRequestDao;
-
-    /**
-     * Setup.
-     */
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     /**
      * Test that the process correctly works via mocked out extensions.
@@ -83,7 +78,7 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
             final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor();
 
             // Inject dummy service request into interceptor.
-            sRII.setServiceRequestDao(mockServiceRequestDao);
+            sRII.setServiceRequestDao(getMockedGenericDao(new ServiceRequest ()));
 
             // Setup the raw XML as if the XmlInboundInterceptor had run.
             final String xml =
@@ -140,6 +135,17 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     }
 
     /**
+     * Build a mocked dao.
+     *
+     * @param serviceRequest possible superfluous object.
+     * @return the mocked dao.
+     */
+    private GenericDao getMockedGenericDao(final ServiceRequest serviceRequest) {
+        mockServiceRequestDao.persist(serviceRequest);
+        return mockServiceRequestDao;
+    }
+
+    /**
      * Utility method to get contents from input stream.
      *
      * @param is input stream from which to extract contents.
@@ -151,10 +157,9 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
          * there's no more data to read. Each line will appended to a StringBuilder
          * and returned as String. */
         final StringBuilder sb = new StringBuilder();
-        String line;
 
-        try {
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        String line;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");
             }

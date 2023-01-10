@@ -102,18 +102,12 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
 
                 // Check we have an output file.
                 if (!outFile.exists()) {
-                    AbstractSdtGoodFileTestBase.LOGGER
-                            .error("** ERROR - Unable to find the output file for this test ({})",
-                                    outFile.getAbsolutePath());
                     throw new IOException("** ERROR - Unable to find the output file from the script (" +
                             outFile.getAbsolutePath() + ")");
                 }
 
                 // Check we have a good file.
                 if (!goodFile.exists()) {
-                    AbstractSdtGoodFileTestBase.LOGGER
-                            .error("** ERROR - Unable to find the good file for this test ({})",
-                                    goodFile.getAbsolutePath());
                     throw new IOException("** ERROR - Unable to find the good file for the script (" +
                             goodFile.getAbsolutePath() + ")");
                 }
@@ -212,7 +206,7 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                 final Iterator<String> outIter = outList.iterator();
                 final Iterator<String> goodIter = goodList.iterator();
 
-                this.badLine = "";
+                badLine = "";
                 int line = 0;
 
                 // Check both lists match, stop processing if a difference is
@@ -231,7 +225,7 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
                                 .error("Differences detected between latest out file and 'good' file");
 
                         // Output the line with the difference and the expected line to the console for review
-                        this.badLine =
+                        badLine =
                                 "line: " + line + ", out file:  " + outStr + "\nline: " + line + ", good file: " +
                                         goodStr;
                     }
@@ -255,16 +249,17 @@ public abstract class AbstractSdtGoodFileTestBase extends AbstractSdtUnitTestBas
 
         if (!filesMatch) {
             if (useDelimiters) {
-                AbstractSdtGoodFileTestBase.LOGGER.info("** Check the block of text between the ({}) and ({}) messages.",
+                AbstractSdtGoodFileTestBase.LOGGER.debug(
+                        "** Check the block of text between the ({}) and ({}) messages.",
                         this.getTestStartString(), this.getTestCompletedString());
-                AbstractSdtGoodFileTestBase.LOGGER.info(
-                        "** All other text before and after this block is ignored for comparison purposes.");
+                AbstractSdtGoodFileTestBase.LOGGER.debug("** All other text before and after this block is "
+                        + "ignored for comparison purposes.");
             }
 
             fail("Comparison failure between out file [" + outFilePath + "] and good file [" + goodFilePath +
-                    "].\nFirst mismatch: \n" + this.badLine);
+                    "].\nFirst mismatch: \n" + badLine);
         } else {
-            AbstractSdtGoodFileTestBase.LOGGER.info("Output file matches the reference comparison file - " +
+            AbstractSdtGoodFileTestBase.LOGGER.debug("Output file matches the reference comparison file - {}",
                     goodFilePath);
         }
 

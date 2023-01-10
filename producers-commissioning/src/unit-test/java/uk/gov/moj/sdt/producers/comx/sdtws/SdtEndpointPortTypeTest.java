@@ -21,7 +21,7 @@ package uk.gov.moj.sdt.producers.comx.sdtws;
  * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
  * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
  * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+ * not limited to, procurement of substitute goods or services; loss of use, data, or profits
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
@@ -42,7 +42,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
@@ -111,8 +110,6 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUp ()
     {
-        MockitoAnnotations.openMocks(this);
-
         portType = new SdtEndpointPortType();
         portType.setWsCreateBulkRequestHandler(mockCreateBulkRequestHandler);
         portType.setWsReadBulkRequestHandler(mockBulkRequestHandler);
@@ -181,7 +178,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
             portType.getBulkFeedback (createBulkFeedbackRequestType());
             fail (RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
         } catch (final RuntimeException re) {
-            assertEquals (SDT_SYSTEM_COMPONENT_ERROR, re.getMessage(), "");
+            assertEquals (SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
         verify (mockBulkRequestHandler).getBulkFeedback(any(BulkFeedbackRequestType.class));
@@ -214,7 +211,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
             portType.submitQuery (createsubmitQueryRequestType());
             fail (RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
         } catch (final RuntimeException re) {
-            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage(), "");
+            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
         verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));

@@ -37,11 +37,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -84,15 +82,6 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
     private ContextCleanupFilter contextCleanupFilter;
 
     /**
-     * Method called before the test methods.
-     */
-    @BeforeEach
-    @Override
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    /**
      * Test method for the doFilter method of the filter.
      *
      * @throws ServletException the exception thrown by the doFilter
@@ -110,6 +99,8 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
         mockFilterChain.doFilter(mockServletRequest, mockServletResponse);
 
         contextCleanupFilter.doFilter(mockServletRequest, mockServletResponse, mockFilterChain);
+
+        verify(mockFilterChain, times(2)).doFilter(mockServletRequest, mockServletResponse);
 
         // Add code to verify that the entities in SdtContext are removed.
         assertNull(SdtContext.getContext().getRawInXml(), "Sdt Context not cleaned up");

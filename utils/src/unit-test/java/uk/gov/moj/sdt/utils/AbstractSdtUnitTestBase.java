@@ -51,7 +51,7 @@ public abstract class AbstractSdtUnitTestBase {
      */
     @BeforeEach
     public void setUp() throws Exception {
-        // Local set up if we are running outside of the appserver.
+        // Local set up if we are running outside the appserver.
         this.setUpLocalTests();
     }
 
@@ -106,14 +106,22 @@ public abstract class AbstractSdtUnitTestBase {
      */
     public Object getAccessibleField(final Class<?> clazzUnderTest, final String fieldName,
                                     final Class<?> clazzOfField, final Object target) {
+        Object object = null;
+
         Field field = ReflectionUtils.findField(clazzUnderTest, fieldName);
-        if (null == field) {
-            field = ReflectionUtils.findField(clazzUnderTest, fieldName, clazzOfField);
-        }
-        if (null != field) {
+        try {
+            if (null == field) {
+                field = ReflectionUtils.findField(clazzUnderTest, fieldName, clazzOfField);
+            }
             ReflectionUtils.makeAccessible(field);
+            object = ReflectionUtils.getField(field, target);
+            if (null == object) {
+                throw new RuntimeException("Field " + fieldName + " does not exist");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Field " + fieldName + " does not exist or is not accessible");
         }
-        return ReflectionUtils.getField(field, target);
+        return object;
     }
 
     /**
@@ -133,4 +141,5 @@ public abstract class AbstractSdtUnitTestBase {
         final Method method = ReflectionUtils.findMethod(clazzUnderTest, methodName);
         ReflectionUtils.makeAccessible(method);
     }
+
 }

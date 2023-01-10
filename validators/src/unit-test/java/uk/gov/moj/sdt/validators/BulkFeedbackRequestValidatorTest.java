@@ -31,15 +31,10 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -55,7 +50,8 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,14 +62,10 @@ import static org.mockito.Mockito.when;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackRequestValidatorTest.class);
+class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
 
     /**
-     * The Dao.
+     * The IBulkSubmissionDao.
      */
     @Mock
     private IBulkSubmissionDao mockIBulkSubmissionDao;
@@ -101,7 +93,7 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
     private IBulkFeedbackRequest bulkFeedbackRequest;
 
     /**
-     * The Dao.
+     * bulkSubmission.
      */
     private IBulkSubmission bulkSubmission;
 
@@ -133,10 +125,8 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
     /**
      * Setup of the Validator and Domain class instance.
      */
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
+    @Override
+    public void setUpLocalTests() {
         validator = new BulkFeedbackRequestValidator();
 
         // create a bulk customer
@@ -206,13 +196,11 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
         try {
             // Validate the request
             bulkFeedbackRequest.accept(validator, null);
-            verify(mockIBulkSubmissionDao).getBulkSubmissionBySdtRef(any(), any(), any());
-            Assertions.fail("Failed to throw expected InvalidBulkReferenceException");
+            verify(mockIBulkSubmissionDao).getBulkSubmissionBySdtRef(bulkCustomer, REFERENCE, dataRetentionPeriod);
+            fail("Failed to throw expected InvalidBulkReferenceException");
 
         } catch (final InvalidBulkReferenceException e) {
-            LOGGER.debug(e.getMessage());
-
-            Assertions.assertTrue(true);
+            assertTrue(true);
         }
 
     }
