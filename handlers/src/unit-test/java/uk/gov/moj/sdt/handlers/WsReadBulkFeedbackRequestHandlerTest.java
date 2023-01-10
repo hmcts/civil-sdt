@@ -148,7 +148,7 @@ class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
 
         wsReadBulkFeedbackReqHandler.getBulkFeedback(bulkFeedbackRequestType);
 
-        verify(mockBulkFeedbackService).getBulkFeedback(any());
+        verify(mockBulkFeedbackService).getBulkFeedback(any(IBulkFeedbackRequest.class));
     }
 
     /**
