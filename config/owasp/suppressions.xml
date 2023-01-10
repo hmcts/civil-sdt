@@ -19,21 +19,24 @@
   <!--Please add all the temporary suppression under the below section-->
   <suppress>
     <notes>Temporary Suppression
-      CVE-2015-3208
+      CVE-2015-3208 https://nvd.nist.gov/vuln/detail/CVE-2015-3208
       CVE-2017-10355 https://github.com/jeremylong/DependencyCheck/issues/4614 (xercesImpl - may be false positive)
-      CVE-2020-5408
+      CVE-2020-5408 https://nvd.nist.gov/vuln/detail/CVE-2020-5408
+      CVE-2020-5412 https://nvd.nist.gov/vuln/detail/CVE-2020-5412
+      CVE-2021-4235 https://nvd.nist.gov/vuln/detail/CVE-2021-4235
       CVE-2021-37533 https://nvd.nist.gov/vuln/detail/CVE-2021-37533 (apache commons)
       CVE-2021-4277  https://nvd.nist.gov/vuln/detail/CVE-2021-4277
       CVE-2022-1471  https://github.com/google/security-research/security/advisories/GHSA-mjmj-j48q-9wg2 (SnakeYaml)
+      CVE-2022-3064 https://nvd.nist.gov/vuln/detail/CVE-2022-30664
+      CVE-2022-22976 https://nvd.nist.gov/vuln/detail/CVE-2022-22976
+      CVE-2022-38752 https://nvd.nist.gov/vuln/detail/CVE-2022-38752
       CVE-2022-40152 https://github.com/advisories/GHSA-3f7h-mf4q-vrm4 (woodstox-core - may be false positive)
+      CVE-2022-41881 https://nvd.nist.gov/vuln/detail/CVE-2022-41881
       CVE-2022-41915 https://github.com/netty/netty/security/advisories/GHSA-hh82-3pmq-7frp (netty-codec)
-      CVE-2022-46363
-      CVE-2022-46364
-      CVE-2021-4235
-      CVE-2022-3064
+      CVE-2022-46363 https://nvd.nist.gov/vuln/detail/CVE-2022-46363
+      CVE-2022-46364 https://nvd.nist.gov/vuln/detail/CVE-2022-46364
     </notes>
     <cve>CVE-2015-3208</cve>
-    <cve>CVE-2016-1000027</cve>
     <cve>CVE-2017-10355</cve>
     <cve>CVE-2020-5408</cve>
     <cve>CVE-2020-5412</cve>
@@ -45,10 +48,10 @@
     <cve>CVE-2022-22976</cve>
     <cve>CVE-2022-38752</cve>
     <cve>CVE-2022-40152</cve>
+    <cve>CVE-2022-41881</cve>
     <cve>CVE-2022-41915</cve>
     <cve>CVE-2022-46363</cve>
     <cve>CVE-2022-46364</cve>
-    <cve>CVE-2022-41881</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
