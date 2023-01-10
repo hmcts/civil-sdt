@@ -31,7 +31,6 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -53,9 +52,6 @@ import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,7 +62,7 @@ import static org.mockito.Mockito.when;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
+class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
 
     /**
      * The IBulkSubmissionDao.
@@ -129,7 +125,6 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
     /**
      * Setup of the Validator and Domain class instance.
      */
-    @BeforeEach
     @Override
     public void setUpLocalTests() {
         validator = new BulkFeedbackRequestValidator();
@@ -201,7 +196,7 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
         try {
             // Validate the request
             bulkFeedbackRequest.accept(validator, null);
-            verify(mockIBulkSubmissionDao).getBulkSubmissionBySdtRef(any(IBulkCustomer.class), anyString(), anyInt());
+            verify(mockIBulkSubmissionDao).getBulkSubmissionBySdtRef(bulkCustomer, REFERENCE, dataRetentionPeriod);
             fail("Failed to throw expected InvalidBulkReferenceException");
 
         } catch (final InvalidBulkReferenceException e) {
