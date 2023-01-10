@@ -162,7 +162,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IErrorLog errorLog = domainObject.getErrorLog();
 
         assertNotNull(domainObject);
-        assertEquals(domainObject.getSdtRequestReference(), sdtRequestId,
+        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(),
                 "Found correct sdt request id");
         assertEquals(UpdateStatusCodeType.REJECTED.value(), domainObject.getRequestStatus(),
                 "Found correct request status");
