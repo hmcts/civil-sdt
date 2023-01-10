@@ -50,7 +50,6 @@ import javax.xml.validation.SchemaFactory;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -303,9 +302,9 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         try {
             remainingExpectedErrors = evaluateXsd(xmlPathname, xsdPathname, errorFilePathname);
         } catch (final SAXException e) {
-                LOGGER.error ("Exception while validating XML [{}] with XSD [{}] on line {}",
-                        xmlPathname, xsdPathname, ((SAXParseException) e).getLineNumber (), e);
-                Assert.fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
+            LOGGER.error ("Exception while validating XML [{}] with XSD [{}] on line {}",
+                    xmlPathname, xsdPathname, ((SAXParseException) e).getLineNumber (), e);
+            fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
         } catch (final IOException|ParserConfigurationException e) {
             LOGGER.error("Exception while validating XML [{}] with XSD [{}]",
                     xmlPathname, xsdPathname, e);
