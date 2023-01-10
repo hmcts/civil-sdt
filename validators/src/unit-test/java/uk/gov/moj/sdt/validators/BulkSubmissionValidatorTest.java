@@ -166,6 +166,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Setup of the Validator and Domain class instance.
      */
+    @Override
     public void setUpLocalTests() {
         // subject of test
         validator = new BulkSubmissionValidator();
