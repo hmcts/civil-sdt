@@ -131,7 +131,7 @@ public class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest 
      */
     @BeforeEach
     @Override
-    public void setUp() {
+    public void setUpLocalTests() {
         validator = new BulkFeedbackRequestValidator();
 
         // create a bulk customer
