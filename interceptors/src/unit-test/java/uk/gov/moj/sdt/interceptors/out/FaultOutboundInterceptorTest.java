@@ -29,7 +29,7 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 /**
- * Test this class handles faults correctlty.
+ * Test this class handles faults correctly.
  */
 package uk.gov.moj.sdt.interceptors.out;
 
@@ -81,7 +81,9 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor();
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
+        mockServiceRequestDao.persist(serviceRequest);
         faultOutboundInterceptor.setServiceRequestDao(mockServiceRequestDao);
+
         assertNull(serviceRequest.getResponseDateTime());
         assertNull(serviceRequest.getResponsePayload());
         faultOutboundInterceptor.handleMessage(soapMessage);
