@@ -301,7 +301,11 @@ public abstract class AbstractSdtXmlTestBase extends AbstractSdtGoodFileTestBase
         List<String> remainingExpectedErrors = null;
         try {
             remainingExpectedErrors = evaluateXsd(xmlPathname, xsdPathname, errorFilePathname);
-        } catch (final IOException|SAXException|ParserConfigurationException e) {
+        } catch (final SAXException e) {
+            LOGGER.error ("Exception while validating XML [{}] with XSD [{}] on line {}",
+                    xmlPathname, xsdPathname, ((SAXParseException) e).getLineNumber (), e);
+            fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");
+        } catch (final IOException|ParserConfigurationException e) {
             LOGGER.error("Exception while validating XML [{}] with XSD [{}]",
                     xmlPathname, xsdPathname, e);
             fail("Exception while validating XML [" + xmlPathname + "] with XSD [" + xsdPathname + "]");

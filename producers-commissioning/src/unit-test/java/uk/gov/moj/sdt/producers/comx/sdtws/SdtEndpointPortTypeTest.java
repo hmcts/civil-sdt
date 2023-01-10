@@ -145,7 +145,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
             portType.submitBulk(createBulkRequest());
             fail(RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
         } catch (final RuntimeException re) {
-            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage(), "");
+            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
         verify(mockCreateBulkRequestHandler).submitBulk(any(BulkRequestType.class));
