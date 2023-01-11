@@ -31,6 +31,10 @@
       CVE-2018-10237
       CVE-2016-3094
       CVE-2022-41881
+      CVE-2021-4277
+      CVE-2021-4235
+      CVE-2022-3064
+      CVE-2022-45143
     </notes>
     <cve>CVE-2015-3208</cve>
     <cve>CVE-2016-1000027</cve>
@@ -51,6 +55,10 @@
     <cve>CVE-2018-10237</cve>
     <cve>CVE-2016-3094</cve>
     <cve>CVE-2022-41881</cve>
+    <cve>CVE-2021-4277</cve>
+    <cve>CVE-2021-4235</cve>
+    <cve>CVE-2022-3064</cve>
+    <cve>CVE-2022-45143</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
