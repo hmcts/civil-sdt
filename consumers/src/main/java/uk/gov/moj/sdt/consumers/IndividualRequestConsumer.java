@@ -58,10 +58,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
  *
  * @author Manoj Kulkarni
  */
-// CHECKSTYLE:OFF
 @Component("IndividualRequestConsumer")
 public class IndividualRequestConsumer extends AbstractWsConsumer implements IIndividualRequestConsumer {
-    // CHECKSTYLE:ON
 
     /**
      * Logger object.
@@ -71,7 +69,6 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     /**
      * Consumer transformer for individual request.
      */
-    // CHECKSTYLE:OFF
     private IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer;
 
     @Autowired
@@ -79,8 +76,6 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                                          IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer) {
         this.transformer = transformer;
     }
-
-    // CHECKSTYLE:ON
 
     /**
      * A boolean flag to indicate if the WebServiceException is to be thrown back to the client
@@ -143,11 +138,11 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
 
                 attemptCount++;
 
-                LOGGER.debug("Submitting individual request[" + iRequest.getSdtRequestReference() +
-                        "] to target application[" + targetAppCode + "], attempt[" + attemptCount + "]");
+                LOGGER.debug("Submitting individual request[{}] to target application[{}], attempt[{}]",
+                        iRequest.getSdtRequestReference(), targetAppCode, attemptCount);
 
                 if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_7)) {
-                    final StringBuffer detail = new StringBuffer();
+                    final StringBuilder detail = new StringBuilder();
                     detail.append("\n\n\tsdt request reference=" + iRequest.getSdtRequestReference() +
                             "\n\tcustomer request reference=" + iRequest.getCustomerRequestReference() +
                             "\n\tline number=" + iRequest.getLineNumber() + "\n\trequest type=" +
@@ -170,10 +165,11 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 final IndividualResponseType individualResponseType = client.submitIndividual(request);
 
                 if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_8)) {
-                    final StringBuffer detail = new StringBuffer();
-                    detail.append("\n\n\tsdt request reference=" +
-                            individualResponseType.getHeader().getSdtRequestId() + "\n\tstatus code=" +
-                            individualResponseType.getStatus().getCode().name());
+                    final StringBuilder detail = new StringBuilder();
+                    detail.append("\n\n\tsdt request reference=")
+                            .append(individualResponseType.getHeader().getSdtRequestId())
+                            .append("\n\tstatus code=")
+                            .append(individualResponseType.getStatus().getCode().name());
                     if (individualResponseType.getStatus().getError() != null) {
                         detail.append("\n\terror code=" + individualResponseType.getStatus().getError().getCode() +
                                 "\n\terror description=" +
@@ -213,19 +209,19 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
     /**
      * @param transformer the transformer
      */
-    // CHECKSTYLE:OFF
     public void
-    setTransformer(final IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer) {
+    setTransformer(final IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest,
+            IIndividualRequest> transformer) {
         this.transformer = transformer;
     }
 
-    // CHECKSTYLE:ON
-
     /**
+     *
      * @return the transformer for IndividualRequestConsumer
      */
     public IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest>
-    getTransformer() {
+            getTransformer ()
+    {
         return this.transformer;
     }
 

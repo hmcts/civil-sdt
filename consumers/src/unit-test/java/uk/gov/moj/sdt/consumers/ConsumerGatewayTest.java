@@ -1,44 +1,4 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id$
- * $LastChangedRevision$
- * $LastChangedDate$
- * $LastChangedBy$ */
-
 package uk.gov.moj.sdt.consumers;
-
-import java.math.BigInteger;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Qualifier;
+import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -59,29 +19,36 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQuer
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
+import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
- * Test class for the submit query consumer.
+ * Test class for the consumer gateway.
  *
- * @author Amit Nigam
+ * @author Mark Dathorne
  */
 @ExtendWith(MockitoExtension.class)
-class SubmitQueryConsumerTest extends ConsumerTestBase {
+class ConsumerGatewayTest extends ConsumerTestBase {
 
     /**
      * Consumer transformer for submit query.
      */
     @Mock
-    IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest>
-            mockTransformer;
+    protected IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> mockTransformer;
 
     /**
      * Mock Client instance.
@@ -89,10 +56,21 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
     @Mock
     ITargetAppInternalEndpointPortType mockClient;
 
+    /**
+     * Mock Individual Request Consumer.
+     */
+    @Mock
+    IIndividualRequestConsumer individualRequestConsumer;
+
+    /**
+     * Mock Soap Fault.
+     */
     @Mock
     SOAPFault soapFault;
 
-    SubmitQueryConsumer submitQueryConsumer;
+    ConsumerGateway consumerGateway;
+
+    SubQueryConsumer submitQueryConsumer;
 
     /**
      * Method to do any pre-test set-up.
@@ -107,25 +85,29 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
 
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
+
+        consumerGateway = new ConsumerGateway(individualRequestConsumer, submitQueryConsumer);
+        consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
+        consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
     }
 
     @Test
-    void getClient() {
-        final String targetApplicationCode = "";
-        final String serviceType = "";
-        final String webServiceEndPoint = "";
-        final long connectionTimeOut = 0L;
-        final long receiveTimeOut = 0L;
-        ITargetAppInternalEndpointPortType portType = submitQueryConsumer.getClient(targetApplicationCode,
-                serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
-        assertNotNull(portType);
+    void shouldProcessAndGetNotNullIndividualRequest() {
+        consumerGateway.individualRequest(createIndividualRequest(),
+                CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        assertNotNull(consumerGateway.getIndividualRequestConsumer());
+    }
+
+    @Test
+    void shouldGetNotNullIndividualRequest() {
+        assertNotNull(consumerGateway.getIndividualRequestConsumer());
     }
 
     /**
      * Test to verify submit query consumer does throw expected exception.
      */
     @Test
-    void testSubmitQueryRequestTimeout() {
+    void shouldFailWithTimeoutException() {
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
 
         final WebServiceException wsException = new WebServiceException();
@@ -134,7 +116,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
 
         TimeoutException timeoutException = assertThrows(TimeoutException.class, () ->
-                this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
+                this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
 
         assertEquals("TIMEOUT_ERROR", timeoutException.getErrorCode());
         assertEquals("Read time out error sending [null]", timeoutException.getErrorDescription());
@@ -147,7 +129,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
      * @throws SOAPException exception
      */
     @Test
-    void testSubmitQueryRequestSoapFault() throws SOAPException {
+    void shouldGetSoapFaultExceptionOnSubmitQuery() throws SOAPException {
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
 
         final WebServiceException wsException = new WebServiceException();
@@ -159,7 +141,8 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
 
         SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () ->
-            this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
+            this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT)
+        );
 
         assertEquals("SOAP_FAULT", soapFaultException.getErrorCode());
         assertNull(soapFaultException.getErrorDescription());
@@ -170,7 +153,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
      * Test to verify submit query consumer does throw expected exception.
      */
     @Test
-    void testSubmitQueryRequestOutage() {
+    void shouldGetOutageExceptionOnSubmitQuery() {
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
 
         final WebServiceException wsException = new WebServiceException();
@@ -179,7 +162,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
 
         OutageException outageException = assertThrows(OutageException.class, () ->
-            this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
+                this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
 
         assertEquals("OUTAGE_ERROR", outageException.getErrorCode());
         assertNull(outageException.getErrorDescription());
@@ -189,7 +172,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
      * Test method for successful processing of submit query.
      */
     @Test
-    void testSubmitQuerySuccess() {
+    void shouldSuccesssfullySubmitQuery() {
         final SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
 
         when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
@@ -197,15 +180,15 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         mockTransformer.transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
         doAnswer ((Answer<Void>) invocation -> {
-            ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount (BigInteger.valueOf(1));
-            final StatusType statusType = new StatusType ();
-            statusType.setCode (StatusCodeType.OK);
+            ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount(BigInteger.valueOf(1));
+            final StatusType statusType = new StatusType();
+            statusType.setCode(StatusCodeType.OK);
             ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus (statusType);
             // required to be null for a void method
             return null;
         }).when(mockTransformer).transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
-        this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        this.consumerGateway.submitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
         verify(mockTransformer).transformDomainToJaxb(any());
         verify(mockClient).submitQuery(any());
@@ -222,11 +205,10 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
      */
     protected class SubQueryConsumer extends SubmitQueryConsumer
     {
-
-        public SubQueryConsumer(@Qualifier("SubmitQueryConsumerTransformer")
-                                    IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
+        public SubQueryConsumer(IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
             super(transformer);
         }
+
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.
@@ -239,7 +221,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
          * @return the target application end point port bean i.e. the client interface.
          */
         @Override
-        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
+        public ITargetAppInternalEndpointPortType getClient (final String targetApplicationCode,
                                                              final String serviceType, final String webServiceEndPoint,
                                                              final long connectionTimeOut, final long receiveTimeOut) {
             return mockClient;
