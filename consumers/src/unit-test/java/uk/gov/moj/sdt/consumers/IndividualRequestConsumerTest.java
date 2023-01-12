@@ -38,6 +38,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -61,8 +62,11 @@ import javax.xml.ws.soap.SOAPFaultException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -114,7 +118,10 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        individualRequestConsumer = new IndConsumerGateway();
+        IndividualRequestConsumer consumer = new IndividualRequestConsumer();
+        consumer.setTransformer(mockTransformer);
+        individualRequestConsumer =  Mockito.spy(consumer);
+
         individualRequestConsumer.setTransformer(mockTransformer);
         individualRequestConsumer.setRethrowOnFailureToConnect(true);
 
@@ -129,6 +136,9 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         final String webServiceEndPoint = "";
         final long connectionTimeOut = 0L;
         final long receiveTimeOut = 0L;
+        doReturn(mockClient).when(individualRequestConsumer)
+            .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
+
         ITargetAppInternalEndpointPortType portType = individualRequestConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
         assertNotNull(portType);
@@ -159,6 +169,9 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
             return null;
         }).when(mockTransformer).transformJaxbToDomain(individualResponseType, individualRequest);
 
+        doReturn(mockClient).when(individualRequestConsumer)
+            .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
+
         individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
                 RECEIVE_TIME_OUT);
 
@@ -181,6 +194,9 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         wsException.initCause (new ConnectException("Server down error"));
 
         when(mockClient.submitIndividual(individualRequestType)).thenThrow (wsException);
+
+        doReturn(mockClient).when(individualRequestConsumer)
+            .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
         try {
             this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
@@ -208,6 +224,9 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         wsException.initCause(new SocketTimeoutException("Timed out waiting for response"));
 
         when(mockClient.submitIndividual(individualRequestType)).thenThrow(wsException);
+
+        doReturn(mockClient).when(individualRequestConsumer)
+            .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
         try {
             this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
@@ -240,6 +259,8 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         wsException.initCause(new SOAPFaultException(soapFault));
 
         when(mockClient.submitIndividual(individualRequestType)).thenThrow(wsException);
+        doReturn(mockClient).when(individualRequestConsumer)
+            .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
         try {
             this.individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
@@ -290,31 +311,6 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         responseType.setStatus(status);
 
         return responseType;
-    }
-
-    /**
-     * Need to extend the consumer class under test for overriding base class methods
-     * of the getClient as it is abstract method.
-     */
-    protected class IndConsumerGateway extends IndividualRequestConsumer
-    {
-        /**
-         * Get the client for the specified target application. If the client is not cached already, a new client
-         * connection is created otherwise the already cached client is returned.
-         *
-         * @param targetApplicationCode the target application code
-         * @param serviceType the service type associated with the target application code
-         * @param webServiceEndPoint the Web Service End Point URL
-         * @param connectionTimeOut the connection time out value
-         * @param receiveTimeOut the acknowledgement time out value
-         * @return the target application end point port bean i.e. the client interface.
-         */
-        @Override
-        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
-                                                             final String serviceType, final String webServiceEndPoint,
-                                                             final long connectionTimeOut, final long receiveTimeOut) {
-            return mockClient;
-        }
     }
 
 }
