@@ -67,6 +67,10 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
      */
     private UpdateItemTransformer updateItemTransformer;
 
+    private static final String FOUND_CORRECT_REQUEST_STATUS = "Found correct request status";
+    private static final String FOUND_CORRECT_SDT_REQUEST_ID = "Found correct sdt request id";
+    private static final String MCOL_12200202_121212 = "MCOL-12200202-121212";
+
     /**
      * Set up variables for the test.
      */
@@ -90,7 +94,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     @Test
     void testTransformJaxbToDomainResubmitMessage() {
         // Set up the jaxb object to transform
-        final String sdtRequestId = "MCOL-12200202-121212";
+        final String sdtRequestId = MCOL_12200202_121212;
         final UpdateRequestType updateRequestType = new UpdateRequestType();
         final HeaderType headerType = new HeaderType();
         headerType.setSdtRequestId(sdtRequestId);
@@ -103,9 +107,9 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain(updateRequestType);
 
         assertNotNull(domainObject);
-        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), "Found correct sdt request id");
-        assertEquals(UpdateStatusCodeType.RESUBMIT_MESSAGE.value(), domainObject.getRequestStatus(),
-                "Found correct request status");
+        assertEquals(domainObject.getSdtRequestReference(), sdtRequestId, FOUND_CORRECT_SDT_REQUEST_ID);
+        assertEquals(UpdateStatusCodeType.RESUBMIT_MESSAGE.value(),
+                domainObject.getRequestStatus(), FOUND_CORRECT_REQUEST_STATUS);
     }
 
     /**
@@ -115,7 +119,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     @Test
     void testTransformJaxbToDomainAccepted() {
         // Set up the jaxb object to transform
-        final String sdtRequestId = "MCOL-12200202-121212";
+        final String sdtRequestId = MCOL_12200202_121212;
         final UpdateRequestType updateRequestType = new UpdateRequestType();
         final HeaderType headerType = new HeaderType();
         headerType.setSdtRequestId(sdtRequestId);
@@ -128,9 +132,9 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain(updateRequestType);
 
         assertNotNull(domainObject);
-        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), "Found correct sdt request id");
+        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
         assertEquals(UpdateStatusCodeType.ACCEPTED.value(), domainObject.getRequestStatus(),
-                "Found correct request status");
+                FOUND_CORRECT_REQUEST_STATUS);
     }
 
     /**
@@ -140,7 +144,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     @Test
     void testTransformJaxbToDomainRejected() {
         // Set up the jaxb object to transform
-        final String sdtRequestId = "MCOL-12200202-121212";
+        final String sdtRequestId = MCOL_12200202_121212;
         final String errorText = "MCOL has Failed to process the request";
         final UpdateRequestType updateRequestType = new UpdateRequestType();
         final HeaderType headerType = new HeaderType();
@@ -160,10 +164,9 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IErrorLog errorLog = domainObject.getErrorLog();
 
         assertNotNull(domainObject);
-        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(),
-                "Found correct sdt request id");
+        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
         assertEquals(UpdateStatusCodeType.REJECTED.value(), domainObject.getRequestStatus(),
-                "Found correct request status");
+                FOUND_CORRECT_REQUEST_STATUS);
         assertEquals("FAILURE", errorLog.getErrorCode(), "Found correct error code");
         assertEquals(errorText, errorLog.getErrorText(), "Found correct error text");
     }

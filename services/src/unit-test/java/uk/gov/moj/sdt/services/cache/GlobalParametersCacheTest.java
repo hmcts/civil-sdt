@@ -30,11 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import org.easymock.EasyMock;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
@@ -42,12 +42,24 @@ import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Test class for global parameters cache.
  *
  * @author d130680
  */
-public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
+
+    /**
+     * Generic dao.
+     */
+    @Mock
+    private IGenericDao mockGenericDao;
 
     /**
      * Global parameters cache.
@@ -55,117 +67,107 @@ public class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
     private GlobalParametersCache cache;
 
     /**
-     * Management bean holding cache information.
-     */
-    private ISdtManagementMBean managementMBean;
-
-    /**
-     * Generic dao.
-     */
-    private IGenericDao mockGenericDao;
-
-    /**
      * Dao query results.
      */
     private GlobalParameter[] result;
 
+    private static final String PARAM_1 = "param1";
+    private static final String PARAM_2 = "param2";
+    private static final String PARAM_3 = "param3";
+    private static final String PARAMETER_1 = "parameter 1";
+
+
     /**
      * Setup mock objects and inject DAO dependencies into our class.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
         cache = new GlobalParametersCache();
-        mockGenericDao = EasyMock.createMock(IGenericDao.class);
         cache.setGenericDao(mockGenericDao);
-        managementMBean = new SdtManagementMBean();
+
+        ISdtManagementMBean managementMBean = new SdtManagementMBean();
         cache.setManagementMBean(managementMBean);
 
         // Setup some results
         result = new GlobalParameter[3];
         result[0] = new GlobalParameter();
-        result[0].setName("param1");
+        result[0].setName(PARAM_1);
         result[0].setValue("one");
-        result[0].setDescription("parameter 1");
+        result[0].setDescription(PARAMETER_1);
         result[1] = new GlobalParameter();
-        result[1].setName("param2");
+        result[1].setName(PARAM_2);
         result[1].setValue("two");
         result[1].setDescription("parameter 2");
         result[2] = new GlobalParameter();
-        result[2].setName("param3");
+        result[2].setName(PARAM_3);
         result[2].setValue("three");
         result[2].setDescription("parameter 3");
-
     }
 
     /**
      * Test the getValue method.
      */
     @Test
-    public void testGetErrorMessage() {
+    void testGetErrorMessage() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IGlobalParameter.class)).andReturn(result);
-        EasyMock.replay(mockGenericDao);
+        when(mockGenericDao.query(IGlobalParameter.class)).thenReturn(result);
 
         // Get some values
-        IGlobalParameter param = cache.getValue(IGlobalParameter.class, "param1");
-        Assert.assertEquals(param.getName(), "param1");
-        Assert.assertEquals(param.getValue(), "one");
-        Assert.assertEquals(param.getDescription(), "parameter 1");
+        IGlobalParameter param = cache.getValue(IGlobalParameter.class, PARAM_1);
+        assertEquals(PARAM_1, param.getName());
+        assertEquals("one", param.getValue());
+        assertEquals(PARAMETER_1, param.getDescription());
 
-        param = cache.getValue(IGlobalParameter.class, "param3");
-        Assert.assertEquals(param.getName(), "param3");
-        Assert.assertEquals(param.getValue(), "three");
-        Assert.assertEquals(param.getDescription(), "parameter 3");
+        param = cache.getValue(IGlobalParameter.class, PARAM_3);
+        assertEquals(PARAM_3, param.getName());
+        assertEquals("three", param.getValue());
+        assertEquals("parameter 3", param.getDescription());
 
-        param = cache.getValue(IGlobalParameter.class, "param2");
-        Assert.assertEquals(param.getName(), "param2");
-        Assert.assertEquals(param.getValue(), "two");
-        Assert.assertEquals(param.getDescription(), "parameter 2");
+        param = cache.getValue(IGlobalParameter.class, PARAM_2);
+        assertEquals(PARAM_2, param.getName());
+        assertEquals("two", param.getValue());
+        assertEquals("parameter 2", param.getDescription());
 
-        EasyMock.verify(mockGenericDao);
-
+        verify(mockGenericDao).query(IGlobalParameter.class);
     }
 
     /**
      * Test key not found.
      */
     @Test
-    public void testParamNotFound() {
+    void testParamNotFound() {
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IGlobalParameter.class)).andReturn(result);
-        EasyMock.replay(mockGenericDao);
+        when(mockGenericDao.query(IGlobalParameter.class)).thenReturn(result);
 
         // Get some values
         final IGlobalParameter param = cache.getValue(IGlobalParameter.class, "dont_exist");
-        Assert.assertNull(param);
+        assertNull(param);
 
-        EasyMock.verify(mockGenericDao);
-
+        verify(mockGenericDao).query(IGlobalParameter.class);
     }
 
     /**
      * Test uncache works.
      */
     @Test
-    public void testUncache() {
+    void testUncache() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IGlobalParameter.class)).andReturn(result);
-        EasyMock.replay(mockGenericDao);
+        when(mockGenericDao.query(IGlobalParameter.class)).thenReturn(result);
 
         // Get some values to prove the cache is not empty
-        final IGlobalParameter param = cache.getValue(IGlobalParameter.class, "param1");
-        Assert.assertEquals(param.getName(), "param1");
-        Assert.assertEquals(param.getValue(), "one");
-        Assert.assertEquals(param.getDescription(), "parameter 1");
+        final IGlobalParameter param = cache.getValue(IGlobalParameter.class, PARAM_1);
+        assertEquals(PARAM_1, param.getName());
+        assertEquals("one", param.getValue());
+        assertEquals(PARAMETER_1, param.getDescription());
 
         cache.uncache();
 
-        Assert.assertEquals(cache.getGlobalParameters().size(), 0);
+        assertEquals(0, cache.getGlobalParameters().size());
 
-        EasyMock.verify(mockGenericDao);
-
+        verify(mockGenericDao).query(IGlobalParameter.class);
     }
 
 }

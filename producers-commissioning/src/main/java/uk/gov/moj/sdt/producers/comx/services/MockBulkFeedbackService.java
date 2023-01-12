@@ -62,17 +62,16 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
     private Map<String, BulkFeedbackFactory> bulkFeedbackFactoryMap;
 
     @Override
-    public IBulkSubmission getBulkFeedback (final IBulkFeedbackRequest bulkFeedbackRequest)
-    {
-        LOGGER.debug ("getBulkFeedback for customer [" + bulkFeedbackRequest.getBulkCustomer ().getSdtCustomerId () +
-                "]");
+    public IBulkSubmission getBulkFeedback(final IBulkFeedbackRequest bulkFeedbackRequest) {
+
+        LOGGER.debug ("getBulkFeedback for customer [{}]", bulkFeedbackRequest.getBulkCustomer().getSdtCustomerId());
 
         // Determine which feedback sample to return based on the SDT bulk reference
         final String sdtBulkReference = bulkFeedbackRequest.getSdtBulkReference ();
         final BulkFeedbackFactory bulkFeedbackFactory = bulkFeedbackFactoryMap.get (sdtBulkReference);
 
-        // Set the target response map in threadlocal for the outbound interceptor to pick up
-        SdtContext.getContext ().setTargetApplicationRespMap (bulkFeedbackFactory.getTargetResponseMap ());
+        // Set the target response map in thread local for the outbound interceptor to pick up
+        SdtContext.getContext().setTargetApplicationRespMap (bulkFeedbackFactory.getTargetResponseMap());
 
         return populateBulkSubmission (bulkFeedbackFactory, sdtBulkReference);
     }
@@ -84,9 +83,8 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
      * @param sdtBulkReference sdt bulk reference
      * @return populate bulk submission
      */
-    private IBulkSubmission populateBulkSubmission (final BulkFeedbackFactory bulkFeedbackFactory,
-                                                    final String sdtBulkReference)
-    {
+    private IBulkSubmission populateBulkSubmission(final BulkFeedbackFactory bulkFeedbackFactory,
+                                                    final String sdtBulkReference) {
         final IBulkSubmission bulkSubmission = bulkFeedbackFactory.getBulkSubmission ();
         bulkSubmission.setSdtBulkReference (sdtBulkReference);
 
@@ -98,8 +96,7 @@ public class MockBulkFeedbackService implements IBulkFeedbackService
      * 
      * @param bulkFeedbackFactoryMap bulk feedback factory map
      */
-    public void setBulkFeedbackFactoryMap (final Map<String, BulkFeedbackFactory> bulkFeedbackFactoryMap)
-    {
+    public void setBulkFeedbackFactoryMap(final Map<String, BulkFeedbackFactory> bulkFeedbackFactoryMap) {
         this.bulkFeedbackFactoryMap = bulkFeedbackFactoryMap;
     }
 }
