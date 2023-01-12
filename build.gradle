@@ -674,24 +674,6 @@ task dependencyCheck(dependsOn: dependencyCheckAnalyze)
 configurations { codacy }
 
 dependencies {
-  implementation project(':consumers')
-  implementation project(':dao')
-  implementation project(':dao-api')
-  implementation project(':domain')
-  implementation project(':handlers')
-  implementation project(':handlers-api')
-  implementation project(':interceptors')
-  implementation project(':producers')
-  implementation project(':producers-api')
-  implementation project(':producers-commissioning')
-  implementation project(':services')
-  implementation project(':services-api')
-  implementation project(':transformers')
-  implementation project(':utils')
-  implementation project(':validators')
-}
-
-dependencies {
   codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
