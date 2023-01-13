@@ -641,11 +641,24 @@ bootJar {
   }
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   archiveName = 'civil-sdt.jar'
-  from {
-    subprojects.collect { it.sourceSets.main.output }
-  }
 }
 
+dependencies {
+  implementation project(':consumers')
+  implementation project(':dao')
+  implementation project(':dao-api')
+  implementation project(':domain')
+  implementation project(':handlers')
+  implementation project(':handlers-api')
+  implementation project(':interceptors')
+  implementation project(':producers')
+  implementation project(':producers-api')
+  implementation project(':services')
+  implementation project(':services-api')
+  implementation project(':transformers')
+  implementation project(':utils')
+  implementation project(':validators')
+}
 
 
 task codeCoverageReport(type: JacocoReport, dependsOn: [allprojects*.test, allprojects*.jacocoTestReport]) {
