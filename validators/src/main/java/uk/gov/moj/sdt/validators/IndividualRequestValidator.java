@@ -33,12 +33,17 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
 
@@ -47,16 +52,24 @@ import uk.gov.moj.sdt.validators.api.IIndividualRequestValidator;
  *
  * @author Saurabh Agarwal
  */
+@Component("IndividualRequestValidator")
 public class IndividualRequestValidator extends AbstractSdtValidator implements IIndividualRequestValidator {
     /**
      * Individual request dao.
      */
     private IIndividualRequestDao individualRequestDao;
 
-    /**
-     * No-argument Constructor.
-     */
-    public IndividualRequestValidator() {
+    @Autowired
+    public IndividualRequestValidator(@Qualifier("BulkCustomerDao")
+                                          IBulkCustomerDao bulkCustomerDao,
+                                      @Qualifier("GlobalParametersCache")
+                                          ICacheable globalParameterCache,
+                                      @Qualifier("ErrorMessagesCache")
+                                          ICacheable errorMessagesCache,
+                                      @Qualifier("IndividualRequestDao")
+                                          IIndividualRequestDao individualRequestDao) {
+        super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
+        this.individualRequestDao = individualRequestDao;
     }
 
     @Override

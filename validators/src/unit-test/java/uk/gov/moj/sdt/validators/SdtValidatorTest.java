@@ -30,15 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -51,6 +49,9 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.DuplicateUserRequestIdentifierException;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test Class for SDT Validator.
@@ -95,9 +96,9 @@ public class SdtValidatorTest extends AbstractSdtUnitTestBase {
         mockErrorMessagesCache = EasyMock.createMock(ICacheable.class);
         mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
 
-        validator = new BulkSubmissionValidator();
-        validator.setErrorMessagesCache(mockErrorMessagesCache);
-        validator.setGlobalParameterCache(mockGlobalParameterCache);
+        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        IBulkSubmissionDao bulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
+        validator = new BulkSubmissionValidator(mockIBulkCustomerDao, mockGlobalParameterCache, mockErrorMessagesCache, bulkSubmissionDao);
 
         result = new ErrorMessage[7];
         result[0] = new ErrorMessage();

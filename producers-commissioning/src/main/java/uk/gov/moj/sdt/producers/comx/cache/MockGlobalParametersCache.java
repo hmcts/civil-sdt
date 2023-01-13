@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,13 +23,14 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.producers.comx.cache;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
@@ -38,17 +39,18 @@ import uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache;
 
 /**
  * Mock implementation of the GlobalParametersCache.
- * 
+ *
  * @author d130680
- * 
+ *
  */
+@Component("MockGlobalParametersCache")
 public class MockGlobalParametersCache implements ICacheable, IGlobalParametersCache
 {
 
     @SuppressWarnings ("unchecked")
     @Override
-    public <DomainType extends IDomainObject> DomainType
-            getValue (final Class<DomainType> domainType, final String key)
+    public <D extends IDomainObject> D
+            getValue (final Class<D> domainType, final String key)
     {
 
         if (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ().equals (key))
@@ -57,7 +59,7 @@ public class MockGlobalParametersCache implements ICacheable, IGlobalParametersC
             globalParameter.setName (IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name ());
             globalParameter.setValue ("90");
 
-            return (DomainType) globalParameter;
+            return (D) globalParameter;
         }
         if (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ().equals (key))
         {
@@ -65,7 +67,7 @@ public class MockGlobalParametersCache implements ICacheable, IGlobalParametersC
             globalParameter.setName (IGlobalParameter.ParameterKey.CONTACT_DETAILS.name ());
             globalParameter.setValue ("TBD");
 
-            return (DomainType) globalParameter;
+            return (D) globalParameter;
         }
 
         return null;

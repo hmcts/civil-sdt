@@ -33,8 +33,12 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
 
@@ -43,11 +47,18 @@ import uk.gov.moj.sdt.validators.api.IBulkCustomerValidator;
  *
  * @author Simon Holmes
  */
+@Component("BulkCustomerValidator")
 public class BulkCustomerValidator extends AbstractSdtValidator implements IBulkCustomerValidator {
     /**
      * No-argument Constructor.
      */
-    public BulkCustomerValidator() {
+    public BulkCustomerValidator(@Qualifier("BulkCustomerDao")
+                                     IBulkCustomerDao bulkCustomerDao,
+                                 @Qualifier("GlobalParametersCache")
+                                     ICacheable globalParameterCache,
+                                 @Qualifier("ErrorMessagesCache")
+                                     ICacheable errorMessagesCache) {
+        super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     @Override

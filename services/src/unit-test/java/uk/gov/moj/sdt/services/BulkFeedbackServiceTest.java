@@ -30,24 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.easymock.EasyMock;
-
-import java.time.LocalDateTime;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -71,6 +59,17 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Test class for BulkSubmissionService.
@@ -128,10 +127,8 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        bulkFeedbackService = new BulkFeedbackService();
 
         mockBulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
-        bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
 
         mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
 
@@ -144,7 +141,8 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameterData);
         replay(mockGlobalParameterCache);
 
-        bulkFeedbackService.setGlobalParametersCache(mockGlobalParameterCache);
+        bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
+
         dataRetentionPeriod = 90;
 
         // create a bulk customer
@@ -166,9 +164,9 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     public void testGetBulkFeedback() throws IOException {
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
-        addValidIndividualRequest(bulkSubmission, "ICustReq124", IndividualRequestStatus.RECEIVED.getStatus());
-        addValidIndividualRequest(bulkSubmission, "ICustReq125", IndividualRequestStatus.REJECTED.getStatus());
-        addValidIndividualRequest(bulkSubmission, "ICustReq126", IndividualRequestStatus.RECEIVED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq124", RECEIVED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq125", REJECTED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq126", RECEIVED.getStatus());
 
         LOGGER.debug("Size of Individual Requests in Bulk Submission is " +
                 bulkSubmission.getIndividualRequests().size());
@@ -238,7 +236,7 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
                 .setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference("ICustReq123");
         individualRequest.setId(1L);
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
 
         bulkSubmission.addIndividualRequest(individualRequest);
 
@@ -259,7 +257,7 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setCustomerRequestReference(customerReference);
         individualRequest.setId(1L);
         individualRequest.setRequestStatus(status);
-        if (IndividualRequestStatus.REJECTED.getStatus().equals(status)) {
+        if (REJECTED.getStatus().equals(status)) {
             final IErrorLog errorLog =
                     new ErrorLog(IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
                             "Duplicate Unique Request Identifier submitted {0}");

@@ -30,21 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.mbeans;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-
-import java.time.LocalDateTime;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.util.ReflectionUtils;
-
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -52,6 +44,14 @@ import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Test class for the SdtManagementMBean.
@@ -134,7 +134,14 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        sdtManagementMBean = new SdtManagementMBean();
+        DefaultMessageListenerContainer messageListenerContainer = EasyMock.createMock(DefaultMessageListenerContainer.class);
+        IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
+        IMessagingUtility messagingUtility  = EasyMock.createMock(IMessagingUtility.class);
+        ITargetApplicationSubmissionService targetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
+        sdtManagementMBean = new SdtManagementMBean(messageListenerContainer,
+                                                    individualRequestDao,
+                                                    messagingUtility,
+                                                    targetAppSubmissionService);
 
         // Instantiate all the mocked objects and set them up in the MBean
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
@@ -309,7 +316,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(invalidSdtReqReference,
-                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+                        FORWARDED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);
 
@@ -335,7 +342,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
-                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+                        FORWARDED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);
 
@@ -352,11 +359,11 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_SDT_REQ_REF);
         individualRequest.setDeadLetter(true);
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+        individualRequest.setRequestStatus(FORWARDED.getStatus());
         individualRequest.setForwardingAttempts(3);
 
         Assert.assertEquals("The status is not as expected",
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                FORWARDED.getStatus(),
                 individualRequest.getRequestStatus());
 
         Assert.assertEquals("The forwarding attempts should be greater than zero", 3,
@@ -366,13 +373,13 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
                 individualRequest);
 
         mockTargetAppSubmissionService.processDLQRequest(individualRequest,
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+                FORWARDED.getStatus());
 
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
             public Object answer() throws Throwable {
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0])
-                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+                        .setRequestStatus(FORWARDED.getStatus());
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setDeadLetter(false);
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setUpdatedDate(LocalDateTime.now());
                 // required to be null for a void method
@@ -385,7 +392,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
-                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+                        FORWARDED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);
         EasyMock.verify(mockTargetAppSubmissionService);
@@ -403,11 +410,11 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_SDT_REQ_REF);
         individualRequest.setDeadLetter(true);
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+        individualRequest.setRequestStatus(FORWARDED.getStatus());
         individualRequest.setForwardingAttempts(3);
 
         Assert.assertEquals("The status is not as expected",
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                FORWARDED.getStatus(),
                 individualRequest.getRequestStatus());
 
         Assert.assertEquals("The forwarding attempts should be greater than zero", 3,
@@ -417,13 +424,13 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
                 individualRequest);
 
         mockTargetAppSubmissionService.processDLQRequest(individualRequest,
-                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+                REJECTED.getStatus());
 
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
             public Object answer() throws Throwable {
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0])
-                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+                        .setRequestStatus(REJECTED.getStatus());
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setDeadLetter(false);
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setUpdatedDate(LocalDateTime.now());
                 // required to be null for a void method
@@ -436,7 +443,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
-                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+                        REJECTED.getStatus());
 
         EasyMock.verify(mockIndividualRequestDao);
         EasyMock.verify(mockTargetAppSubmissionService);

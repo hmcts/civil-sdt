@@ -30,20 +30,18 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import java.io.Serializable;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import uk.gov.moj.sdt.services.TargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+
+import java.io.Serializable;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
 
 /**
  * Test class for Message reader implementation.
@@ -76,8 +74,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageSuccess() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb();
-        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
+        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         // Create the actual message to send.
         final ISdtMessage sdtMessage = new SdtMessage();
@@ -113,8 +110,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageDataAccessException() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb();
-        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
+        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         // Create the actual message to send.
         final ISdtMessage sdtMessage = new SdtMessage();
@@ -155,8 +151,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageInvalidObject() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb();
-        individualRequestMdb.setTargetAppSubmissionService(mockTargetSubmissionService);
+        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         final Message message = EasyMock.createMock(Message.class);
 

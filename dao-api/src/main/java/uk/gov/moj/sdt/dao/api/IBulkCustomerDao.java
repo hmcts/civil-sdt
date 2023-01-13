@@ -41,11 +41,11 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
  */
 public interface IBulkCustomerDao extends IGenericDao {
     /**
-     * Retrieve a {@link IBulkCustomer} object from Hibernate matching the given SDT ID.
+     * Retrieve a {@link IBulkCustomer} object from JPA matching the given SDT ID.
      *
      * @param sdtCustomerId the SDT ID to match when retrieving the bulk customer.
      * @return the bulk customer matching the given SDT ID.
-     * @throws DataAccessException Hibernate exception
+     * @throws DataAccessException JPA exception
      */
     IBulkCustomer getBulkCustomerBySdtId(final long sdtCustomerId) throws DataAccessException;
 }

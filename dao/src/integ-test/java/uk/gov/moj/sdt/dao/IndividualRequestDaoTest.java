@@ -30,39 +30,42 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.time.DateUtils;
-
-import java.time.LocalDateTime;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.TestConfig;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Test class for the Individual Request Dao.
  *
  * @author Son Loi
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@ActiveProfiles("integ")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/IndividualRequestDaoTest.sql"})
 public class IndividualRequestDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
@@ -73,6 +76,10 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
      * *Individual Request DAO.
      */
     private IIndividualRequestDao individualRequestDao;
+
+    private IBulkCustomerDao iBulkCustomerDao;
+
+    private IBulkSubmissionDao iBulkSubmissionDao;
 
     /**
      * Bulk Customer to use for the test.
@@ -94,13 +101,12 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
+        individualRequestDao = (IIndividualRequestDao) this.applicationContext.getBean("IndividualRequestDao");
+        iBulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
+        iBulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
-        individualRequestDao =
-                (IIndividualRequestDao) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.dao.api.IIndividualRequestDao");
-        bulkSubmission = individualRequestDao.fetch(IBulkSubmission.class, 10710);
-        bulkCustomer = individualRequestDao.fetch(BulkCustomer.class, 10711);
+        bulkSubmission = iBulkSubmissionDao.fetch(BulkSubmission.class, 10710);
+        bulkCustomer = iBulkCustomerDao.fetch(BulkCustomer.class, 10711);
         dataRetentionPeriod = 90;
     }
 
@@ -112,8 +118,7 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
 
         final String sdtRequestReference = "SDT_REQ_TEST_1";
         // There should already be a record in the DB loaded as part of the test
-        final IIndividualRequest individualRequest =
-                individualRequestDao.getRequestBySdtReference(sdtRequestReference);
+        final IIndividualRequest individualRequest = individualRequestDao.getRequestBySdtReference(sdtRequestReference);
 
         Assert.assertNotNull(individualRequest);
         Assert.assertEquals(sdtRequestReference, individualRequest.getSdtRequestReference());
@@ -161,10 +166,7 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final String customerRequestReference = "customer request reference 1";
 
         createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays((dataRetentionPeriod + 1) * -1));
-
-        final IIndividualRequest individualRequest =
-                individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
-
+        IIndividualRequest individualRequest = individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
         Assert.assertNull(individualRequest);
 
     }

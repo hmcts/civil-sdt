@@ -35,36 +35,62 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Error log.
  *
  * @author d130680
  */
+@Table(name = "ERROR_LOGS")
+@Entity
 public class ErrorLog extends AbstractDomainObject implements IErrorLog {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "err_log_seq")
+    @Column(name = "ERROR_LOG_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
+
     /**
      * Individual request, null for error raised on bulk file.
      */
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = IndividualRequest.class)
+    @JoinColumn(name="INDIVIDUAL_REQUEST_ID")
     private IIndividualRequest individualRequest;
 
     /**
      * Date record was created.
      */
+    @Column(name = "CREATED_DATE")
     private LocalDateTime createdDate;
 
     /**
      * Date record was updated.
      */
+    @Column(name = "UPDATED_DATE")
     private LocalDateTime updatedDate;
 
     /**
      * The error code.
      */
+    @Column(name = "ERROR_CODE")
     private String errorCode;
 
     /**
      * The error text.
      */
+    @Column(name = "ERROR_TEXT")
     private String errorText;
 
     /**
@@ -133,6 +159,21 @@ public class ErrorLog extends AbstractDomainObject implements IErrorLog {
     @Override
     public void setErrorCode(final String errorCode) {
         this.errorCode = errorCode;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

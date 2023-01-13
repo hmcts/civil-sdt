@@ -33,15 +33,25 @@ package uk.gov.moj.sdt.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.IUpdateRequestService;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE;
 
 /**
  * Service class implementing the IUpdateRequestService.
  *
  * @author Manoj Kulkarni
  */
+@Component("UpdateRequestService")
 public class UpdateRequestService extends AbstractSdtService implements IUpdateRequestService {
 
     /**
@@ -54,6 +64,17 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
      */
     private IMessagingUtility messagingUtility;
 
+    @Autowired
+    public UpdateRequestService(@Qualifier("IndividualRequestDao")
+                                    IIndividualRequestDao individualRequestDao,
+                                @Qualifier("IndividualResponseXmlParser")
+                                    GenericXmlParser individualResponseXmlParser,
+                                @Qualifier("MessagingUtility")
+                                    IMessagingUtility messagingUtility) {
+        super(individualRequestDao, individualResponseXmlParser);
+        this.messagingUtility = messagingUtility;
+    }
+
     @Override
     public void updateIndividualRequest(final IIndividualRequest individualRequestParam) {
         // Look for the individual request matching this unique request reference.
@@ -64,7 +85,7 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
         if (individualRequest != null) {
 
             // Resubmit message to target application by enqueuing it.
-            if (IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus().equals(
+            if (RESUBMIT_MESSAGE.getStatus().equals(
                     individualRequestParam.getRequestStatus())) {
                 individualRequest.resetForwardingAttempts();
                 getMessagingUtility().enqueueRequest(individualRequest);
@@ -72,10 +93,10 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
 
             // Refresh the individual request from the database with the status and the error code
             // from the target application.
-            if (IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus().equals(
+            if (REJECTED.getStatus().equals(
                     individualRequestParam.getRequestStatus())) {
                 individualRequest.markRequestAsRejected(individualRequestParam.getErrorLog());
-            } else if (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus().equals(
+            } else if (ACCEPTED.getStatus().equals(
                     individualRequestParam.getRequestStatus())) {
                 individualRequest.markRequestAsAccepted();
             }

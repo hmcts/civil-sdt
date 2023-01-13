@@ -1,9 +1,5 @@
 package uk.gov.moj.sdt.consumers;
 
-import java.math.BigInteger;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +19,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQuer
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
+import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
@@ -34,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the consumer gateway.
@@ -81,13 +80,13 @@ class ConsumerGatewayTest extends ConsumerTestBase {
     public void setUpLocalTests() {
         MockitoAnnotations.openMocks(this);
 
-        submitQueryConsumer = new SubQueryConsumer();
+        submitQueryConsumer = new SubQueryConsumer(mockTransformer);
         submitQueryConsumer.setTransformer(mockTransformer);
 
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
 
-        consumerGateway = new ConsumerGateway();
+        consumerGateway = new ConsumerGateway(individualRequestConsumer, submitQueryConsumer);
         consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
         consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
     }
@@ -206,6 +205,10 @@ class ConsumerGatewayTest extends ConsumerTestBase {
      */
     protected class SubQueryConsumer extends SubmitQueryConsumer
     {
+        public SubQueryConsumer(IConsumerTransformer<SubmitQueryResponseType, SubmitQueryRequestType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
+            super(transformer);
+        }
+
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.

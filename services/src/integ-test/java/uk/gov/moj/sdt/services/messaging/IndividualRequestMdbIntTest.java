@@ -30,54 +30,44 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.TestConfig;
+
+import java.io.IOException;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.
  *
  * @author Manoj Kulkarni
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
-        "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@ActiveProfiles("integ")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/IndividualRequestMdbIntTest.sql"})
 public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
     /**
      * Setup the test.
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-
         // Write a Message to the MDB
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("SDT_REQ_TEST_1");
         sdtMessage.setMessageSentTimestamp(System.currentTimeMillis());
         sdtMessage.setEnqueueLoggingId(1);
-        final IMessageWriter messageWriter =
-                (IMessageWriter) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.messaging.api.IMessageWriter");
+        final IMessageWriter messageWriter = (IMessageWriter) this.applicationContext.getBean("MessageWriter");
         messageWriter.queueMessage(sdtMessage, "MCOLS", false);
     }
 

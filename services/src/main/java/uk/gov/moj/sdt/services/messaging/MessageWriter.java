@@ -34,10 +34,11 @@ package uk.gov.moj.sdt.services.messaging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.UncategorizedJmsException;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
-import uk.gov.moj.sdt.services.messaging.asb.MessageSender;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
@@ -50,7 +51,7 @@ import java.util.Map;
  *
  * @author Manoj Kulkarni
  */
-@Component
+@Component("MessageWriter")
 public class MessageWriter implements IMessageWriter {
     /**
      * Logger object.
@@ -60,7 +61,7 @@ public class MessageWriter implements IMessageWriter {
     /**
      * Default suffix for DLQ name.
      */
-    private static final String DLQ_SUFFIX = ".DLQ";
+    private static final String DLQ_SUFFIX = "/$deadletterqueue";
 
     /**
      * The last id used for a queued message.
@@ -70,20 +71,25 @@ public class MessageWriter implements IMessageWriter {
     /**
      * The JmsTemplate object from Spring framework.
      */
-    private final MessageSender messageSender;
+    private final JmsTemplate jmsTemplate;
 
     private final QueueConfig queueConfig;
 
+
+    /**
+     * Creates a message sender with the JmsTemplate.
+     *
+     * @param jmsTemplate The JMS template
+     */
     @Autowired
-    public MessageWriter(MessageSender messageSender,
+    public MessageWriter(final JmsTemplate jmsTemplate,
                          QueueConfig queueConfig) {
-        this.messageSender = messageSender;
+        this.jmsTemplate = jmsTemplate;
         this.queueConfig = queueConfig;
     }
 
     @Override
-    public void queueMessage(final ISdtMessage sdtMessage,
-                             final String targetAppCode, final boolean deadLetter) {
+    public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode, final boolean deadLetter) {
 
         // Check the target application code is valid and return queue name.
         final String queueName = getQueueName(targetAppCode, deadLetter);
@@ -107,19 +113,17 @@ public class MessageWriter implements IMessageWriter {
                     detail.toString());
         }
 
-        try
-        {
-            this.messageSender.sendMessage(queueName, sdtMessage);
-        }
-        catch (final Exception e)
-        {
+        try {
+
+            this.jmsTemplate.convertAndSend(queueName, sdtMessage);
+        } catch (final UncategorizedJmsException e) {
             // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
             // periodically check the database and requeue any messages that are stuck on a state indicating that they
             // have not been sent to the case management system.
-            LOGGER.error ("Failed to connect to the queue [" + queueName +
-                              "] while queueing message request reference [" + sdtMessage.getSdtRequestReference () + "]", e);
-        }
+            LOGGER.error("Failed to connect to the ActiveMQ queue [" + queueName +
+                    "] while queueing message request reference [" + sdtMessage.getSdtRequestReference() + "]", e);
 
+        }
     }
 
     /**
@@ -136,7 +140,7 @@ public class MessageWriter implements IMessageWriter {
      * @return map containing the target application to queue name mapping.
      */
     private Map<String, String> getQueueNameMap() {
-        return queueConfig.getQueueConfig();
+        return queueConfig.getTargetAppQueue();
     }
 
     /**
@@ -144,7 +148,7 @@ public class MessageWriter implements IMessageWriter {
      *                     with the key as the the target application code and value as the queue name
      */
     public void setQueueNameMap(final Map<String, String> queueNameMap) {
-        this.queueConfig.setQueueConfig(queueNameMap);
+        queueConfig.setTargetAppQueue(queueNameMap);
     }
 
     /**

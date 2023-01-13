@@ -42,10 +42,10 @@ public interface ICacheable {
     /**
      * Gets the value associated with the parameter from the cache.
      *
-     * @param <DomainType> of entity to be retrieved.
+     * @param <D> of entity to be retrieved.
      * @param domainType   of entity to load.
      * @param key          the keyword identifying the cached parameter.
-     * @return DomainType instance retrieved.
+     * @return D instance retrieved.
      */
-    <DomainType extends IDomainObject> DomainType getValue(final Class<DomainType> domainType, final String key);
+    <D extends IDomainObject> D getValue(final Class<D> domainType, final String key);
 }

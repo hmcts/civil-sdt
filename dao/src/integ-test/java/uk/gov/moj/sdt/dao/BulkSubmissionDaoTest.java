@@ -30,38 +30,42 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import java.util.Date;
-
-import org.apache.commons.lang.time.DateUtils;
-
-import java.time.LocalDateTime;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
+import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.TestConfig;
+
+import java.time.LocalDateTime;
+import javax.persistence.NoResultException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test class for the Bulk Submissions Dao.
  *
  * @author Manoj Kulkarni
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@ActiveProfiles("integ")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/BulkSubmissionDaoTest.sql"})
 public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
@@ -73,15 +77,18 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      */
     private IBulkSubmissionDao bulkSubmissionDao;
 
+    private IBulkCustomerDao bulkCustomerDao;
+    private ITargetApplicationDao targetApplicationDao;
+
     /**
      * Bulk Customer to use for the test.
      */
-    private IBulkCustomer bulkCustomer;
+    private BulkCustomer bulkCustomer;
 
     /**
      * Target Application to use.
      */
-    private ITargetApplication targetApplication;
+    private TargetApplication targetApplication;
 
     /**
      * Data retention period.
@@ -92,18 +99,16 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      * SDT Bulk Reference.
      */
     private String sdtBulkReference;
-
-    /**
-     * Setup the test.
-     */
+        /**
+         * Setup the test.
+         */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-
-        bulkSubmissionDao =
-                (IBulkSubmissionDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IBulkSubmissionDao");
-        bulkCustomer = bulkSubmissionDao.fetch(IBulkCustomer.class, 10711);
-        targetApplication = bulkSubmissionDao.fetch(ITargetApplication.class, 10713L);
+        bulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
+        bulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
+        targetApplicationDao = this.applicationContext.getBean(ITargetApplicationDao.class);
+        bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, 10711);
+        targetApplication = targetApplicationDao.fetch(TargetApplication.class, 10713L);
         dataRetentionPeriod = 90;
         sdtBulkReference = "MCOL-10012013010101-100000009";
     }
@@ -113,7 +118,6 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testInsert() {
-
         final IBulkSubmission bulkSubmission = new BulkSubmission();
 
         bulkSubmission.setBulkCustomer(bulkCustomer);
@@ -168,11 +172,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     @Test
     public void testGetBulkSubmissionBySdtBulkRefNotFound() {
         final String sbr = "NO_SUCH_ID";
-        final IBulkSubmission submission =
-                bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod);
-
-        Assert.assertNull(submission);
-
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod));
     }
 
     /**
@@ -216,10 +216,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         createBulkSubmission(customerReference,
                              LocalDateTime.now().minusDays(dataRetentionPeriod + 1),
                              sdtBulkReference);
-        final IBulkSubmission bulkSubmission =
-                bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
-        Assert.assertNull(bulkSubmission);
-
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod));
     }
 
     /**
@@ -230,7 +227,7 @@ public class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      * @param sbr               sdt bulk reference
      */
     private void createBulkSubmission(final String customerReference, final LocalDateTime date, final String sbr) {
-        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        final BulkSubmission bulkSubmission = new BulkSubmission();
 
         bulkSubmission.setBulkCustomer(bulkCustomer);
         bulkSubmission.setTargetApplication(targetApplication);

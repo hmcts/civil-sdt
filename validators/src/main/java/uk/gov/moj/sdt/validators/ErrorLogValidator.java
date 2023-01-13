@@ -30,7 +30,12 @@
  * $LastChangedBy: kulkarnim $ */
 package uk.gov.moj.sdt.validators;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IErrorLogValidator;
 
@@ -39,12 +44,20 @@ import uk.gov.moj.sdt.validators.api.IErrorLogValidator;
  *
  * @author Son Loi
  */
+@Component("ErrorLogValidator")
 public class ErrorLogValidator extends AbstractSdtValidator implements IErrorLogValidator {
 
     /**
      * No-argument Constructor.
      */
-    public ErrorLogValidator() {
+    @Autowired
+    public ErrorLogValidator(@Qualifier("BulkCustomerDao")
+                                 IBulkCustomerDao bulkCustomerDao,
+                             @Qualifier("GlobalParametersCache")
+                                 ICacheable globalParameterCache,
+                             @Qualifier("ErrorMessagesCache")
+                                 ICacheable errorMessagesCache) {
+        super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     @Override

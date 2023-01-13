@@ -30,15 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.api.IMessageDrivenBean;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
@@ -46,6 +44,10 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.LoggingContext;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
 
 /**
  * Implementation of the IMessageReader interface.
@@ -55,6 +57,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  * @author Manoj Kulkarni
  */
 @Transactional(propagation = Propagation.REQUIRES_NEW)
+@Component("IndividualRequestMdb")
 public class IndividualRequestMdb implements IMessageDrivenBean {
     /**
      * Logger for logging messages.
@@ -65,6 +68,12 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
      * Target Application Submission Service.
      */
     private ITargetApplicationSubmissionService targetAppSubmissionService;
+
+    @Autowired
+    public IndividualRequestMdb(@Qualifier("TargetApplicationSubmissionService")
+                                    ITargetApplicationSubmissionService targetAppSubmissionService) {
+        this.targetAppSubmissionService = targetAppSubmissionService;
+    }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
  * $LastChangedRevision: 16414 $
  * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
@@ -57,7 +57,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 /**
  * Test class for end to end web service tests..
- * 
+ *
  * @param <JaxbRequestType>
  *            the type of the JAXB top level object to create.
  * @param <EndpointPortType>
@@ -98,7 +98,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
      * Turn the XML file for this test into a JAXB object tree. The expected XML
      * lives in the same package as the test with the name: <class name>.<method
      * name>.request.xml.
-     * 
+     *
      * @return the JAXB object loaded with XML associated with this test class.
      */
     @SuppressWarnings ("unchecked")
@@ -143,7 +143,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
      * Turn the JAXB object tree into an XML string and check that it is what we
      * expected for this test. The expected XML lives in the same package as the
      * test with the name: <class name>.<method name>.response.xml.
-     * 
+     *
      * @param response
      *            the JAXB object returned by the web service.
      * @return the XML corresponding to the given JAXB object tree.
@@ -225,7 +225,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
     /**
      * Utility to remove carriage return (\r), linefeeds (\n) and tabs (\t) otherwise the
      * test for equality does not work.
-     * 
+     *
      * @param xml
      *            the XML to remove text from.
      * @return the modified XML.
@@ -270,7 +270,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
     /**
      * Utility to remove the variant text to allow non variant text to be
      * matched.
-     * 
+     *
      * @param xml
      *            the XML to remove text from.
      * @param tag
@@ -298,7 +298,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 
     /**
      * Call the required web service for this test.
-     * 
+     *
      * @param request
      *            A request JAXB object tree.
      * @return a response JAXB object.
@@ -308,7 +308,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
     /**
      * Wrap the JAXB object in a JAXB context object so that when it is marshalled it has an @XmlRootElement and does
      * not throw an exception.
-     * 
+     *
      * @param response
      *            A request response JAXB object tree.
      * @return a wrapped response JAXB object.
@@ -317,16 +317,14 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType>
 
     /**
      * Return a client to call SDT's external endpoint. The client is customised with endpoint url and timeout values.
-     * 
+     *
      * @return client for SDT's external endpoint.
      */
     protected ISdtEndpointPortType getSdtEndpointClient ()
     {
 
         // Get the SOAP proxy client.
-        ISdtEndpointPortType client =
-                (ISdtEndpointPortType) SpringApplicationContext
-                        .getBean ("uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType");
+        ISdtEndpointPortType client = (ISdtEndpointPortType) SpringApplicationContext.getBean ("ISdtEndpointPortType");
 
         Client clientProxy = ClientProxy.getClient (client);
 

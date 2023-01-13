@@ -30,23 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.ws.WebServiceException;
-
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.hibernate.criterion.Criterion;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -75,6 +65,18 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+import javax.xml.ws.WebServiceException;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Test class for TargetApplicationSubmissionService.
@@ -122,29 +124,24 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      */
     @Before
     public void setUp() {
-        targetAppSubmissionService = new TargetApplicationSubmissionService();
 
         // Instantiate all the mocked objects and set them in the target application submission service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
-        targetAppSubmissionService.setIndividualRequestDao(mockIndividualRequestDao);
-
         mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
-
-        targetAppSubmissionService.setRequestConsumer(mockConsumerGateway);
-
         mockCacheable = EasyMock.createMock(ICacheable.class);
-        targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
-
         mockMessageWriter = EasyMock.createMock(IMessageWriter.class);
-        targetAppSubmissionService.setMessageWriter(mockMessageWriter);
-
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
-        targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
 
-        targetAppSubmissionService.setIndividualResponseXmlParser(genericParser);
+        targetAppSubmissionService = new TargetApplicationSubmissionService(mockIndividualRequestDao,
+                                                                            genericParser,
+                                                                            mockConsumerGateway,
+                                                                            mockMessageWriter);
+        targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
+        targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
+
     }
 
     /**
@@ -202,9 +199,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
-        EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+        EasyMock.expect(this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         mockIndividualRequestDao.persist(bulkSubmission);
         EasyMock.expectLastCall();
@@ -290,8 +285,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         indRequests.add(individualRequest);
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
                 Long.valueOf(indRequests.size()));
 
         EasyMock.replay(mockIndividualRequestDao);
@@ -530,7 +524,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         EasyMock.verify(mockCacheable);
 
         Assert.assertEquals("Individual Request status not as expected",
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                FORWARDED.getStatus(),
                 individualRequest.getRequestStatus());
 
         Assert.assertNull("Bulk submission completed date should not be populated", individualRequest
@@ -583,7 +577,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
             @Override
             public Object answer() throws Throwable {
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0])
-                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+                        .setRequestStatus(REJECTED.getStatus());
                 // required to be null for a void method
                 return null;
             }
@@ -595,8 +589,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         mockIndividualRequestDao.persist(bulkSubmission);
         EasyMock.expectLastCall();
@@ -638,7 +631,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         individualRequest.setSdtRequestReference(sdtRequestRef);
         this.setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+        individualRequest.setRequestStatus(FORWARDED.getStatus());
 
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
@@ -663,7 +656,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
                 new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
 
         individualRequest.setErrorLog(errorLog);
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+        individualRequest.setRequestStatus(REJECTED.getStatus());
 
         this.mockIndividualRequestDao.persist(individualRequest);
         EasyMock.expectLastCall();
@@ -671,8 +664,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         mockIndividualRequestDao.persist(bulkSubmission);
         EasyMock.expectLastCall();
@@ -712,9 +704,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         individualRequest.setSdtRequestReference(sdtRequestRef);
         this.setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
 
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+        individualRequest.setRequestStatus(FORWARDED.getStatus());
 
         this.mockIndividualRequestDao.persist(individualRequest);
         EasyMock.expectLastCall();
@@ -728,7 +720,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         Assert.assertEquals("Individual Request should not be marked as dead letter", false,
                 individualRequest.isDeadLetter());
         Assert.assertEquals("Individual Request status is not FORWARDED",
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                FORWARDED.getStatus(),
                 individualRequest.getRequestStatus());
 
     }

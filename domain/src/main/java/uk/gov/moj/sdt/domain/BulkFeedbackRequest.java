@@ -41,6 +41,10 @@ import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
  */
 public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFeedbackRequest {
 
+    private long id;
+
+    private int version;
+
     /**
      * Bulk Customer.
      */
@@ -69,6 +73,21 @@ public class BulkFeedbackRequest extends AbstractDomainObject implements IBulkFe
     @Override
     public void setSdtBulkReference(final String sdtBulkReference) {
         this.sdtBulkReference = sdtBulkReference;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

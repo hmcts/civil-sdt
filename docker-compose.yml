@@ -22,6 +22,9 @@ services:
       - LOGBACK_REQUIRE_THREAD
       - LOGBACK_REQUIRE_ALERT_LEVEL=false
       - LOGBACK_REQUIRE_ERROR_CODE=false
+      - SDT_DB_HOST=civil-sdt-database
+      - SDT_DB_USERNAME=std_user
+      - SDT_DB_PASSWORD=std_pass
     ports:
       - $SERVER_PORT:$SERVER_PORT
     depends_on:
@@ -40,6 +43,7 @@ services:
     environment:
       - SDT_DB_USERNAME=std_user
       - SDT_DB_PASSWORD=std_pass
+      - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 5455:5432
     volumes:

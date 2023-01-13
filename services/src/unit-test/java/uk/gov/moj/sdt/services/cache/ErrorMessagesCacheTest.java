@@ -30,19 +30,22 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import static org.junit.Assert.fail;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import static org.junit.Assert.fail;
 
 /**
  * Test class for error messages cache.
@@ -76,11 +79,16 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        cache = new ErrorMessagesCache();
+        DefaultMessageListenerContainer messageListenerContainer = EasyMock.createMock(DefaultMessageListenerContainer.class);
+        IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
+        IMessagingUtility messagingUtility  = EasyMock.createMock(IMessagingUtility.class);
+        ITargetApplicationSubmissionService targetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
         mockGenericDao = EasyMock.createMock(IGenericDao.class);
-        cache.setGenericDao(mockGenericDao);
-        managementMBean = new SdtManagementMBean();
-        cache.setManagementMBean(managementMBean);
+        managementMBean = new SdtManagementMBean(messageListenerContainer,
+                                                 individualRequestDao,
+                                                 messagingUtility,
+                                                 targetAppSubmissionService);
+        cache = new ErrorMessagesCache(managementMBean, mockGenericDao);
 
         // Setup some results
         result = new ErrorMessage[3];
@@ -103,7 +111,7 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     public void testGetErrorMessage() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(ErrorMessage.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         // Get some values
@@ -130,7 +138,7 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     public void testKeyNotFound() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(ErrorMessage.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         IErrorMessage errorMessage = null;
@@ -153,7 +161,7 @@ public class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     public void testUncache() {
 
         // Activate the mock generic dao
-        EasyMock.expect(mockGenericDao.query(IErrorMessage.class)).andReturn(result);
+        EasyMock.expect(mockGenericDao.query(ErrorMessage.class)).andReturn(result);
         EasyMock.replay(mockGenericDao);
 
         // Get some values to prove the cache is not empty

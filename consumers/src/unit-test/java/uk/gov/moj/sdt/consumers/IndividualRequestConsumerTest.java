@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -114,7 +115,7 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
     public void setUpLocalTests() {
         MockitoAnnotations.openMocks(this);
 
-        individualRequestConsumer = new IndConsumerGateway();
+        individualRequestConsumer = new IndConsumerGateway(mockTransformer);
         individualRequestConsumer.setTransformer(mockTransformer);
         individualRequestConsumer.setRethrowOnFailureToConnect(true);
 
@@ -299,6 +300,11 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
      */
     protected class IndConsumerGateway extends IndividualRequestConsumer
     {
+
+        public IndConsumerGateway(@Qualifier("IndividualRequestConsumerTransformer")
+                                      IConsumerTransformer<IndividualResponseType, IndividualRequestType, IIndividualRequest, IIndividualRequest> transformer) {
+            super(transformer);
+        }
         /**
          * Get the client for the specified target application. If the client is not cached already, a new client
          * connection is created otherwise the already cached client is returned.

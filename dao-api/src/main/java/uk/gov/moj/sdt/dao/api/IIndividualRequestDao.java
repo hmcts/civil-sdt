@@ -51,7 +51,7 @@ public interface IIndividualRequestDao extends IGenericDao {
      * @param customerReference customer reference
      * @param dataRetention     the data retention period to use
      * @return null if the individual request is unique or the non unique individual request object
-     * @throws DataAccessException Hibernate exception
+     * @throws DataAccessException JPA exception
      */
     IIndividualRequest getIndividualRequest(final IBulkCustomer bulkCustomer, final String customerReference,
                                             final int dataRetention) throws DataAccessException;
@@ -61,7 +61,7 @@ public interface IIndividualRequestDao extends IGenericDao {
      *
      * @param sdtReferenceId the unique SDT reference Id
      * @return the Individual Request object associated with the Sdt reference Id.
-     * @throws DataAccessException Hibernate exception
+     * @throws DataAccessException JPA exception
      */
     IIndividualRequest getRequestBySdtReference(final String sdtReferenceId) throws DataAccessException;
 
@@ -74,7 +74,7 @@ public interface IIndividualRequestDao extends IGenericDao {
      *
      * @param maxAllowedAttempts - the maximum number of forwarding attempts allowed.
      * @return list of individual requests excluding any dead letter requests.
-     * @throws DataAccessException hibernate exception
+     * @throws DataAccessException JPA exception
      */
     List<IIndividualRequest> getPendingIndividualRequests(final int maxAllowedAttempts) throws DataAccessException;
 
@@ -89,7 +89,7 @@ public interface IIndividualRequestDao extends IGenericDao {
      * @param minimumAgeInMinutes - the minimum number of minutes since a message was updated before it will be
      *                            requeued.
      * @return list of individual requests excluding the dead letter requests.
-     * @throws DataAccessException hibernate exception
+     * @throws DataAccessException JPA exception
      */
     List<IIndividualRequest> getStaleIndividualRequests(final int minimumAgeInMinutes) throws DataAccessException;
 }

@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -35,13 +35,15 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 
 /**
  * @author D303894
- * 
+ *
  *         This class generates the bulk SDT reference number for the SDT commissioning application
  */
+@Component("MockSdtBulkReferenceGenerator")
 public class MockSdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
 {
 
@@ -67,7 +69,7 @@ public class MockSdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
 
     /**
      * Get the next available index so that we can use the available hard coded bulk ids in a round robin fashion.
-     * 
+     *
      * @return the current index of bulk id array to be selected.
      */
     private int getCurrIndexToSelect ()
@@ -83,7 +85,7 @@ public class MockSdtBulkReferenceGenerator implements ISdtBulkReferenceGenerator
 
     /**
      * Generate the commissioning system bulk reference.
-     * 
+     *
      * @param targetApplication the target application for the bulk request submission
      * @param bulkId the unique bulk id number
      * @return the full SDT bulk reference number formatted as per the specifications

@@ -41,6 +41,12 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.AWAITING_DATA;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * Unit tests for {@link IndividualRequest}.
  *
@@ -67,7 +73,7 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
     public void testIncrementForwardingAttempts() {
         individualRequest.incrementForwardingAttempts();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.FORWARDED.getStatus(),
+        Assert.assertEquals("Status is incorrect", FORWARDED.getStatus(),
                 individualRequest.getRequestStatus());
         Assert.assertEquals("Forwarding attempt count is incorrect", 1, individualRequest.getForwardingAttempts());
         Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
@@ -96,7 +102,7 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
     public void testMarkRequestAsInitiallyAccepted() {
         individualRequest.markRequestAsInitiallyAccepted();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus(),
+        Assert.assertEquals("Status is incorrect", INITIALLY_ACCEPTED.getStatus(),
                 individualRequest.getRequestStatus());
         Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
         Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
@@ -110,7 +116,7 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
     public void testMarkRequestAsAwaitingData() {
         individualRequest.markRequestAsAwaitingData();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.AWAITING_DATA.getStatus(),
+        Assert.assertEquals("Status is incorrect", AWAITING_DATA.getStatus(),
                 individualRequest.getRequestStatus());
         Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
         Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
@@ -125,7 +131,7 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
         final IErrorLog errorLog = new ErrorLog();
         individualRequest.markRequestAsRejected(errorLog);
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.REJECTED.getStatus(),
+        Assert.assertEquals("Status is incorrect", REJECTED.getStatus(),
                 individualRequest.getRequestStatus());
         Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
         Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
@@ -142,7 +148,7 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
     public void testResetForwardingAttempts() {
         individualRequest.resetForwardingAttempts();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.RECEIVED.getStatus(),
+        Assert.assertEquals("Status is incorrect", RECEIVED.getStatus(),
                 individualRequest.getRequestStatus());
         Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
         Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
@@ -154,10 +160,10 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void testIsEnqueueable() {
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
         Assert.assertTrue("Request should be enqueueable", individualRequest.isEnqueueable());
 
-        individualRequest.setRequestStatus(IndividualRequestStatus.FORWARDED.getStatus());
+        individualRequest.setRequestStatus(FORWARDED.getStatus());
         Assert.assertFalse("Request should not be enqueueable", individualRequest.isEnqueueable());
     }
 

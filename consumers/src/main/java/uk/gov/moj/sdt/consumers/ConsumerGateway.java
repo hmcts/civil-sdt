@@ -30,6 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.consumers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
@@ -43,6 +46,7 @@ import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
  *
  * @author Manoj Kulkarni
  */
+@Component("ConsumerGateway")
 public class ConsumerGateway implements IConsumerGateway {
 
     /**
@@ -54,6 +58,13 @@ public class ConsumerGateway implements IConsumerGateway {
      * The consumer interface for the SubmitQuery.
      */
     private ISubmitQueryConsumer submitQueryConsumer;
+
+    @Autowired
+    public ConsumerGateway(@Qualifier("IndividualRequestConsumer") IIndividualRequestConsumer individualRequestConsumer,
+                           @Qualifier("SubmitQueryConsumer") ISubmitQueryConsumer submitQueryConsumer) {
+        this.individualRequestConsumer = individualRequestConsumer;
+        this.submitQueryConsumer = submitQueryConsumer;
+    }
 
     @Override
     public void individualRequest(final IIndividualRequest individualRequest,

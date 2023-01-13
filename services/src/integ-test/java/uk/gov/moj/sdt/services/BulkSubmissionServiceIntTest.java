@@ -30,25 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import java.time.LocalDateTime;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -61,38 +50,40 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
+import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.TestConfig;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * Implementation of the integration test for BulkSubmissionService.
  *
  * @author Manoj kulkarni
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
-        "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@ActiveProfiles("integ")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/BulkSubmissionServiceIntTest.sql"})
 public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
     /**
      * Test subject.
      */
-    private IBulkSubmissionService bulkSubmissionService;
+    private BulkSubmissionService bulkSubmissionService;
 
     /**
      * Map holding the concurrency information for each thread. This needs to be cleared in the test as the test calls
@@ -108,16 +99,11 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
     @Before
     @SuppressWarnings("unchecked")
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-
-        bulkSubmissionService =
-                (IBulkSubmissionService) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.api.IBulkSubmissionService");
+        bulkSubmissionService = this.applicationContext.getBean(BulkSubmissionService.class);
 
         // Get the concurrency map so we can clear it after test.
-        concurrencyMap =
-                (Map<String, IInFlightMessage>) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.validators.concurrencyMap");
+        concurrencyMap = new HashMap<>();
+        bulkSubmissionService.setConcurrencyMap(concurrencyMap);
 
     }
 
@@ -127,7 +113,6 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback(false)
     public void testSaveSingleSubmission() throws IOException {
         final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testSampleRequest.xml");
         SdtContext.getContext().setRawInXml(rawXml);
@@ -173,7 +158,6 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback(false)
     public void testSaveMultipleSubmissions() throws IOException {
         final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testLargeSampleRequest.xml");
         SdtContext.getContext().setRawInXml(rawXml);
@@ -224,7 +208,6 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback(false)
     public void testConcurrentDuplicateSubmissions() throws IOException {
         final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testLargeSampleRequest.xml");
         SdtContext.getContext().setRawInXml(rawXml);
@@ -264,21 +247,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
             Assert.assertNotNull(request.getRequestPayload());
         }
 
-        try {
-            // Call the bulk submission service for second time without clearing the concurrencyMap from the first call.
-            bulkSubmissionService.saveBulkSubmission(bulkSubmission);
-
-            Assert.fail("Should have thrown exception");
-        } catch (final Throwable e) {
-            if (!(e instanceof CustomerReferenceNotUniqueException) ||
-                    !e.getMessage().matches(
-                            "Failed with code \\[DUP_CUST_FILEID\\]; "
-                                    + "message\\[Duplicate User File Reference 10711 supplied. This was "
-                                    + "previously used to submit a Bulk Request on .*? and "
-                                    + "the SDT Bulk Reference \\S*? was allocated.\\]")) {
-                Assert.fail("Unexpected exception returned\n" + e.getStackTrace());
-            }
-        }
+        assertThrows(CustomerReferenceNotUniqueException.class, () -> bulkSubmissionService.saveBulkSubmission(bulkSubmission));
 
         clearConcurrencyMap(bulkSubmission);
     }

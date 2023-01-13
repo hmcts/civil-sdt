@@ -31,22 +31,23 @@
 
 package uk.gov.moj.sdt.producers.comx.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaQuery;
 
 /**
  * Base class for Mock DAO classes containing helper methods for mock dao sub classes.
@@ -56,6 +57,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
  * @author d130680
  *
  */
+@Component("MockGenericDao")
 public class MockGenericDao implements IGenericDao
 {
     /**
@@ -108,7 +110,7 @@ public class MockGenericDao implements IGenericDao
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType fetch (final Class<DomainType> domainType, final long id)
+    public <D extends IDomainObject> D fetch (final Class<D> domainType, final long id)
         throws DataAccessException
     {
         // Create dummy service request to satisfy logging of outbound request.
@@ -123,11 +125,16 @@ public class MockGenericDao implements IGenericDao
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType[] query (final Class<DomainType> domainType,
-                                                                  final Criterion... restrictions)
+    public <D extends IDomainObject> D[] query (final Class<D> domainType,
+                                                Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
         throws DataAccessException
     {
-        return null;
+        return (D[]) new IDomainObject[0];
+    }
+
+    @Override
+    public <D extends IDomainObject> D[] query(Class<D> domainType) throws DataAccessException {
+        return (D[]) new IDomainObject[0];
     }
 
     @Override
@@ -165,31 +172,28 @@ public class MockGenericDao implements IGenericDao
     }
 
     @Override
-    public <DomainType extends IDomainObject> List<DomainType> queryAsList (final Class<DomainType> domainType,
-                                                                            final Criterion... restrictions)
+    public <D extends IDomainObject> List<D> queryAsList (final Class<D> domainType,
+                                                          Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
     {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public <D extends IDomainObject> D uniqueResult(Class<D> domainType,
+                                                    Supplier<CriteriaQuery<D>> criteriaQuerySupplier) {
         return null;
     }
 
     @Override
-    public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
-                                                                       final Criterion... restrictions)
-    {
-        return null;
-    }
-
-    @Override
-    public <DomainType extends IDomainObject> DomainType uniqueResult (final Class<DomainType> domainType,
-                                                                       final Criteria criteria)
-    {
-        return null;
-    }
-
-    @Override
-    public <DomainType extends IDomainObject> long queryAsCount (final Class<DomainType> domainType,
-                                                                 final Criterion... restrictions)
+    public <D extends IDomainObject> long queryAsCount (final Class<D> domainType,
+                                                        Supplier<CriteriaQuery<D>> criteriaQuerySupplier)
     {
         return 0;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return null;
     }
 
     @Override

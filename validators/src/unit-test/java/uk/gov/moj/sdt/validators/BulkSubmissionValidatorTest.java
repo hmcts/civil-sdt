@@ -31,22 +31,11 @@
 
 package uk.gov.moj.sdt.validators;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.easymock.EasyMock;
-
-import java.time.LocalDateTime;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -62,10 +51,18 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.Utilities;
-import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Tests for {@link BulkSubmissionValidatorTest}.
@@ -160,14 +157,12 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     public void setUpLocalTests() {
 
         // subject of test
-        validator = new BulkSubmissionValidator();
-        validator.setConcurrencyMap(new HashMap<String, IInFlightMessage>());
-
-        // mock BulkCustomer object
         mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-
         globalParameterCache = EasyMock.createMock(ICacheable.class);
-
+        ICacheable errorMessagesCache = EasyMock.createMock(ICacheable.class);
+        IBulkSubmissionDao bulkSubmissionDao  = EasyMock.createMock(IBulkSubmissionDao.class);
+        validator = new BulkSubmissionValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache, bulkSubmissionDao);
+        validator.setConcurrencyMap(new HashMap<>());
     }
 
     /**
@@ -288,7 +283,7 @@ public class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         bulkSubmission.accept(validator, null);
 
         // Check the duplicate individual request has been rejected
-        Assert.assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(), bulkSubmission
+        Assert.assertEquals(REJECTED.getStatus(), bulkSubmission
                 .getIndividualRequests().get(1).getRequestStatus());
 
     }

@@ -33,27 +33,47 @@ package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IServiceType;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Each defined target application will have a set of associated Request Types.
  * E.g. Claim,, Judgment, Warrant, JudgmentWarrant and ClaimUpate.
  *
  * @author d130680
  */
+@Table(name = "SERVICE_TYPES")
+@Entity
 public class ServiceType extends AbstractDomainObject implements IServiceType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ser_typ_seq")
+    @Column(name = "SERVICE_TYPE_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
 
     /**
      * Request type name.
      */
+    @Column(name = "SERVICE_TYPE_NAME")
     private String name;
 
     /**
      * Request type status.¬
      */
+    @Column(name = "SERVICE_TYPE_STATUS")
     private String status;
 
     /**
      * Request type description.
      */
+    @Column(name = "SERVICE_TYPE_DESCRIPTION")
     private String description;
 
     @Override
@@ -84,6 +104,21 @@ public class ServiceType extends AbstractDomainObject implements IServiceType {
     @Override
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

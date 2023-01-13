@@ -30,22 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.easymock.EasyMock;
-
-import java.time.LocalDateTime;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
@@ -75,6 +65,15 @@ import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
 
 /**
  * Test class for BulkSubmissionService.
@@ -142,36 +141,28 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        bulkSubmissionService = new BulkSubmissionService();
 
         mockGenericDao = EasyMock.createMock(IGenericDao.class);
-        bulkSubmissionService.setGenericDao(mockGenericDao);
-
         // This class cannot be easily mocked since it's within a Runnable block so it's been removed for clarity
         // mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
         // bulkSubmissionService.setMessageWriter (mockMessageWriter);
 
         mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        bulkSubmissionService.setBulkCustomerDao(mockBulkCustomerDao);
-
         mockTargetApplicationDao = EasyMock.createMock(ITargetApplicationDao.class);
-        bulkSubmissionService.setTargetApplicationDao(mockTargetApplicationDao);
-
         individualRequestsXmlParser = new IndividualRequestsXmlParser();
-        bulkSubmissionService.setIndividualRequestsXmlparser(individualRequestsXmlParser);
-
         mockSdtBulkReferenceGenerator = EasyMock.createMock(ISdtBulkReferenceGenerator.class);
-        bulkSubmissionService.setSdtBulkReferenceGenerator(mockSdtBulkReferenceGenerator);
-
         mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
-        bulkSubmissionService.setMessagingUtility(mockMessagingUtility);
+        mockErrorMessagesCache = EasyMock.createMock(ICacheable.class);
 
+        bulkSubmissionService = new BulkSubmissionService(mockGenericDao,
+                                                          mockBulkCustomerDao,
+                                                          mockTargetApplicationDao,
+                                                          individualRequestsXmlParser,
+                                                          mockMessagingUtility,
+                                                          mockSdtBulkReferenceGenerator,
+                                                          mockErrorMessagesCache);
         mockConcurrencyMap = EasyMock.createMock(HashMap.class);
         bulkSubmissionService.setConcurrencyMap(mockConcurrencyMap);
-
-        mockErrorMessagesCache = EasyMock.createMock(ICacheable.class);
-        bulkSubmissionService.setErrorMessagesCache(mockErrorMessagesCache);
-
     }
 
     /**
@@ -402,7 +393,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference("ICustReq123");
         individualRequest.setId(1L);
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
 
         bulkSubmission.addIndividualRequest(individualRequest);
 
@@ -419,7 +410,7 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference(customerReference);
         individualRequest.setId(1L);
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
 
         bulkSubmission.addIndividualRequest(individualRequest);
     }

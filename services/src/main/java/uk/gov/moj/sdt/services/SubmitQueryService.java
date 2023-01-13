@@ -31,17 +31,11 @@
 
 package uk.gov.moj.sdt.services;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.ws.WebServiceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -59,11 +53,19 @@ import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.xml.ws.WebServiceException;
+
 /**
  * Implementation class for submit query service.
  *
  * @author d130680
  */
+@Service("SubmitQueryService")
 public class SubmitQueryService implements ISubmitQueryService {
 
     /**
@@ -88,19 +90,40 @@ public class SubmitQueryService implements ISubmitQueryService {
     private ICacheable errorMessagesCache;
 
     /**
-     * Parser for query response.
-     */
-    private GenericXmlParser queryResponseXmlParser;
-
-    /**
      * Parser for query request.
      */
     private GenericXmlParser queryRequestXmlParser;
 
     /**
+     * Parser for query request.
+     */
+    private GenericXmlParser queryResponseXmlParser;
+
+    /**
      * Bulk Customer Dao property.
      */
     private IBulkCustomerDao bulkCustomerDao;
+
+    @Autowired
+    public SubmitQueryService(@Qualifier("ConsumerGateway")
+                                  IConsumerGateway requestConsumer,
+                              @Qualifier("GlobalParametersCache")
+                                  ICacheable globalParametersCache,
+                              @Qualifier("ErrorMessagesCache")
+                                  ICacheable errorMessagesCache,
+                              @Qualifier("SubmitQueryRequestXmlParser")
+                                  GenericXmlParser queryRequestXmlParser,
+                              @Qualifier("SubmitQueryResponseXmlParser")
+                                  GenericXmlParser queryResponseXmlParser,
+                              @Qualifier("BulkCustomerDao")
+                                  IBulkCustomerDao bulkCustomerDao) {
+        this.requestConsumer = requestConsumer;
+        this.globalParametersCache = globalParametersCache;
+        this.errorMessagesCache = errorMessagesCache;
+        this.queryRequestXmlParser = queryRequestXmlParser;
+        this.queryResponseXmlParser = queryResponseXmlParser;
+        this.bulkCustomerDao = bulkCustomerDao;
+    }
 
     /**
      * Place holder object to sync processing.

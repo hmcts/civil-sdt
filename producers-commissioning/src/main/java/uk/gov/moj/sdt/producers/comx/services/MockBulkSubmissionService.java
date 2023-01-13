@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -32,7 +32,7 @@ package uk.gov.moj.sdt.producers.comx.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
@@ -42,10 +42,11 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  * Mock Bulk Submission Service, this class is only here so the commissioning app can start up without throwing an
  * error due to missing implementation. Since we are mocking at DAO level and this class doesn't return anything there
  * is nothing to do.
- * 
+ *
  * @author d130680
- * 
+ *
  */
+@Component("MockBulkSubmissionService")
 public class MockBulkSubmissionService implements IBulkSubmissionService
 {
     /**
@@ -76,7 +77,7 @@ public class MockBulkSubmissionService implements IBulkSubmissionService
 
     /**
      * Set SDT Bulk Reference Generator.
-     * 
+     *
      * @param sdtBulkReferenceGenerator sdt bulk reference generator
      */
     public void setSdtBulkReferenceGenerator (final ISdtBulkReferenceGenerator sdtBulkReferenceGenerator)

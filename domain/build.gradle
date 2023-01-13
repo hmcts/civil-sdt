@@ -1,5 +1,10 @@
 apply plugin: 'info.solidsoft.pitest'
 
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-domin'
+}
+
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
@@ -8,10 +13,6 @@ dependencies {
     implementation project(':utils')
     testImplementation project(":utils").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.integTest.output
-}
-
-jar {
-    baseName = 'civil-sdt-domain'
 }
 
 bootJar {

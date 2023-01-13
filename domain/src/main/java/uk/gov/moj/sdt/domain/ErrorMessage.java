@@ -33,25 +33,46 @@ package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Error message.
  *
  * @author d130680
  */
+@Table(name = "ERROR_MESSAGES")
+@Entity
 public class ErrorMessage extends AbstractDomainObject implements IErrorMessage {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "err_mesg_seq")
+    @Column(name = "ERROR_MESSAGE_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
+
     /**
      * The error code.
      */
+    @Column(name = "ERROR_CODE")
     private String errorCode;
 
     /**
      * The error text.
      */
+    @Column(name = "ERROR_TEXT")
     private String errorText;
 
     /**
      * The error description.
      */
+    @Column(name = "ERROR_DESCRIPTION")
     private String errorDescription;
 
     @Override
@@ -82,6 +103,21 @@ public class ErrorMessage extends AbstractDomainObject implements IErrorMessage 
     @Override
     public void setErrorDescription(final String errorDescription) {
         this.errorDescription = errorDescription;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

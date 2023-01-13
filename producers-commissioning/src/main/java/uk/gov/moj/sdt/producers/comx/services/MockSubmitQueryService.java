@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.producers.comx.services;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
@@ -40,10 +41,11 @@ import uk.gov.moj.sdt.utils.SdtContext;
 /**
  * Implementation for mocking of SDT Submit Query service.
  * This class will provide a static list of responses for submit query.
- * 
+ *
  * @author d130680
- * 
+ *
  */
+@Service("MockSubmitQueryService")
 public class MockSubmitQueryService implements ISubmitQueryService
 {
 
@@ -80,7 +82,7 @@ public class MockSubmitQueryService implements ISubmitQueryService
     /**
      * Write the result to thread local - the result is obtained from the
      * responseContentMap.
-     * 
+     *
      * @param targetAppResponse the target application response
      */
     private void writeToThreadLocal (final String targetAppResponse)
@@ -96,7 +98,7 @@ public class MockSubmitQueryService implements ISubmitQueryService
     /**
      * This method will return the map of the SubmitQuery with the key as
      * the Query Reference.
-     * 
+     *
      * @return the response content map with the key as the criteria type
      */
     public Map<String, SubmitQueryRequest> getResponseContentMap ()
@@ -106,7 +108,7 @@ public class MockSubmitQueryService implements ISubmitQueryService
 
     /**
      * Setter for the response content map.
-     * 
+     *
      * @param responseContentMap the response content map.
      */
     public void setResponseContentMap (final Map<String, SubmitQueryRequest> responseContentMap)

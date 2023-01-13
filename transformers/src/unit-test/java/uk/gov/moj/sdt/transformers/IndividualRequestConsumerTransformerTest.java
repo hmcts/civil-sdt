@@ -57,6 +57,10 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.AWAITING_DATA;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * Unit tests for IndividualRequestConsumerTransformer.
  *
@@ -122,7 +126,7 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus(),
+        Assert.assertEquals("Request Status is incorrect", INITIALLY_ACCEPTED.getStatus(),
                 domain.getRequestStatus());
         Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
     }
@@ -143,7 +147,7 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.AWAITING_DATA.getStatus(),
+        Assert.assertEquals("Request Status is incorrect", AWAITING_DATA.getStatus(),
                 domain.getRequestStatus());
         Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
     }
@@ -171,7 +175,7 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         final IErrorLog errorLog = domain.getErrorLog();
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus(), domain
+        Assert.assertEquals("Request Status is incorrect", REJECTED.getStatus(), domain
                 .getRequestStatus().toString());
         Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
         Assert.assertNotNull("Request completed data should be populated", domain.getCompletedDate());
@@ -203,7 +207,7 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         final IErrorLog errorLog = domain.getErrorLog();
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals("Request Status is incorrect", IndividualRequestStatus.REJECTED.getStatus(), domain
+        Assert.assertEquals("Request Status is incorrect", REJECTED.getStatus(), domain
                 .getRequestStatus().toString());
         Assert.assertNotNull("Request updated data should be populated", domain.getUpdatedDate());
         Assert.assertNotNull("Request completed data should be populated", domain.getCompletedDate());

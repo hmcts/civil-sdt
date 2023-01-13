@@ -36,7 +36,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -45,17 +50,21 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+
 /**
  * Implementation of {@link IBulkSubmissionValidator}.
  *
  * @author Saurabh Agarwal
  */
+@Component("BulkSubmissionValidator")
 public class BulkSubmissionValidator extends AbstractSdtValidator implements IBulkSubmissionValidator {
     /**
      * Bulk submission dao.
@@ -69,10 +78,18 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
      */
     private Map<String, IInFlightMessage> concurrencyMap;
 
-    /**
-     * No-argument Constructor.
-     */
-    public BulkSubmissionValidator() {
+    @Autowired
+    public BulkSubmissionValidator(@Qualifier("BulkCustomerDao")
+                                            IBulkCustomerDao bulkCustomerDao,
+                                        @Qualifier("GlobalParametersCache")
+                                            ICacheable globalParameterCache,
+                                        @Qualifier("ErrorMessagesCache")
+                                            ICacheable errorMessagesCache,
+                                        @Qualifier("BulkSubmissionDao")
+                                           IBulkSubmissionDao bulkSubmissionDao) {
+        super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
+        this.bulkSubmissionDao = bulkSubmissionDao;
+        this.concurrencyMap = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -152,7 +169,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
         long rejectedRequests = 0;
         for (IIndividualRequest individualRequest : individualRequests) {
             if (individualRequest.getRequestStatus().equals(
-                    IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus())) {
+                    REJECTED.getStatus())) {
                 rejectedRequests++;
             }
         }

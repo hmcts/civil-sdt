@@ -45,7 +45,7 @@ public interface ITargetApplicationDao extends IGenericDao {
      *
      * @param targetAppCode the target application code
      * @return the target application
-     * @throws DataAccessException Hibernate exception
+     * @throws DataAccessException JPA exception
      */
     ITargetApplication getTargetApplicationByCode(final String targetAppCode) throws DataAccessException;
 }

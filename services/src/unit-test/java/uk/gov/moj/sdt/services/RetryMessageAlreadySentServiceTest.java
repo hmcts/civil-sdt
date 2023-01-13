@@ -30,16 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -58,6 +52,13 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
 
 /**
  * Test class for the RetryMessageAlreadySentService.
@@ -90,17 +91,15 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      */
     @Before
     public void setUp() {
-        messageTaskService = new RetryMessageAlreadySentService();
+
 
         // Instantiate all the mocked objects and set them in the message task service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
-        messageTaskService.setIndividualRequestDao(mockIndividualRequestDao);
-
         mockCacheable = EasyMock.createMock(ICacheable.class);
-        messageTaskService.setGlobalParametersCache(mockCacheable);
-
         mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
-        messageTaskService.setMessagingUtility(mockMessagingUtility);
+        messageTaskService = new RetryMessageAlreadySentService(mockIndividualRequestDao,
+                                                                mockMessagingUtility,
+                                                                mockCacheable);
 
     }
 
@@ -157,7 +156,7 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
 
         Assert.assertEquals("Forwarding attempts on individual request", 0, individualRequests.get(0)
                 .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
+        Assert.assertEquals("Status set to Receieved", RECEIVED
                 .getStatus(), individualRequests.get(0).getRequestStatus());
 
         Assert.assertTrue("Test completed succesfully", true);
@@ -218,7 +217,7 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
 
         Assert.assertEquals("Forwarding attempts on individual request", 0, individualRequests.get(0)
                 .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
+        Assert.assertEquals("Status set to Receieved", RECEIVED
                 .getStatus(), individualRequests.get(0).getRequestStatus());
 
         Assert.assertTrue("Test completed succesfully", true);
@@ -293,7 +292,7 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
 
         Assert.assertEquals("Forwarding attempts on individual request", 0, returnedListOfRequests.get(0)
                 .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
+        Assert.assertEquals("Status set to Receieved", RECEIVED
                 .getStatus(), returnedListOfRequests.get(0).getRequestStatus());
 
         Assert.assertTrue("Test completed succesfully", true);
@@ -379,7 +378,7 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
 
         Assert.assertEquals("Forwarding attempts on individual request", 0, individualRequests.get(0)
                 .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
+        Assert.assertEquals("Status set to Receieved", RECEIVED
                 .getStatus(), individualRequests.get(0).getRequestStatus());
 
         Assert.assertTrue("Test completed succesfully", true);

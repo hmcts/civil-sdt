@@ -30,19 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.easymock.EasyMock;
-import org.hibernate.criterion.Criterion;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -62,6 +55,16 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE;
 
 /**
  * Test class for Update Request Service.
@@ -95,18 +98,18 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        updateRequestService = new UpdateRequestService();
 
         // Instantiate all the mocked objects and set them in the target application submission service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
-        updateRequestService.setIndividualRequestDao(mockIndividualRequestDao);
 
         mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
-        updateRequestService.setMessagingUtility(mockMessagingUtility);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
-        updateRequestService.setIndividualResponseXmlParser(genericParser);
+        updateRequestService = new UpdateRequestService(mockIndividualRequestDao,
+                                                        genericParser,
+                                                        mockMessagingUtility);
+
     }
 
     /**
@@ -130,8 +133,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         mockIndividualRequestDao.persist(bulkSubmission);
         EasyMock.expectLastCall();
@@ -146,7 +148,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
 
         // CHECKSTYLE:OFF
         Assert.assertEquals("Individual request status is incorrect",
-                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(), individualRequest.getRequestStatus());
+                REJECTED.getStatus(), individualRequest.getRequestStatus());
         Assert.assertNotNull("Individual request should have error", individualRequest.getErrorLog());
         Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
                 .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus());
@@ -177,8 +179,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.expectLastCall();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
         mockIndividualRequestDao.persist(bulkSubmission);
@@ -225,8 +226,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.expectLastCall();
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(0L);
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
         mockIndividualRequestDao.persist(bulkSubmission);
@@ -248,7 +248,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
 
         // CHECKSTYLE:OFF
         Assert.assertEquals("Individual request status is incorrect",
-                IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus(), individualRequest.getRequestStatus());
+                RECEIVED.getStatus(), individualRequest.getRequestStatus());
         Assert.assertNull("Individual request should not have error", individualRequest.getErrorLog());
         Assert.assertEquals("Forwarding attempts should be reset to 0", 0, individualRequest.getForwardingAttempts());
         Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
@@ -307,8 +307,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         indRequests.add(individualRequest);
 
         EasyMock.expect(
-                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IIndividualRequest.class),
-                        EasyMock.isA(Criterion.class), EasyMock.isA(Criterion.class))).andReturn(
+                this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
                 Long.valueOf(indRequests.size()));
 
         EasyMock.replay(mockIndividualRequestDao);
@@ -342,7 +341,7 @@ public class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = new IndividualRequest();
         domainObject.setSdtRequestReference("MCOL_IREQ_0001");
 
-        domainObject.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus());
+        domainObject.setRequestStatus(RESUBMIT_MESSAGE.getStatus());
 
         return domainObject;
     }

@@ -33,10 +33,15 @@ package uk.gov.moj.sdt.validators;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
 
@@ -45,16 +50,24 @@ import uk.gov.moj.sdt.validators.api.IBulkFeedbackRequestValidator;
  *
  * @author d130680
  */
+@Component("BulkFeedbackRequestValidator")
 public class BulkFeedbackRequestValidator extends AbstractSdtValidator implements IBulkFeedbackRequestValidator {
     /**
      * Bulk submission dao.
      */
     private IBulkSubmissionDao bulkSubmissionDao;
 
-    /**
-     * No-argument Constructor.
-     */
-    public BulkFeedbackRequestValidator() {
+    @Autowired
+    public BulkFeedbackRequestValidator(@Qualifier("BulkCustomerDao")
+                                            IBulkCustomerDao bulkCustomerDao,
+                                        @Qualifier("GlobalParametersCache")
+                                            ICacheable globalParameterCache,
+                                        @Qualifier("ErrorMessagesCache")
+                                            ICacheable errorMessagesCache,
+                                        @Qualifier("BulkSubmissionDao")
+                                            IBulkSubmissionDao bulkSubmissionDao) {
+        super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
+        this.bulkSubmissionDao = bulkSubmissionDao;
     }
 
     @Override

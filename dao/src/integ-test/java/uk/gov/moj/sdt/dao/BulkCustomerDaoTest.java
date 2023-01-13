@@ -31,38 +31,55 @@
 package uk.gov.moj.sdt.dao;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
+import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.TestConfig;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  * Test {@link BulkCustomerDao} query methods.
  *
  * @author Robin Compston
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/domain/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@ActiveProfiles("integ")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/BulkCustomerDaoTest.sql"})
+@Transactional
 public class BulkCustomerDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(BulkCustomerDaoTest.class);
-
-    /**
-     * Default constructor for {@link BulkCustomerDaoTest}.
-     */
-    public BulkCustomerDaoTest() {
-        super();
-        DBUnitUtility.loadDatabase(this.getClass(), true);
+    CriteriaBuilder criteriaBuilder;
+    CriteriaQuery<BulkCustomer> criteriaQuery;
+    Root<BulkCustomer> root;
+    @Before
+    public void setup() {
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
+        criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
+        criteriaQuery = criteriaBuilder.createQuery(BulkCustomer.class);
+        root = criteriaQuery.from(BulkCustomer.class);
     }
 
     /**
@@ -70,8 +87,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
      */
     @Test
     public void testGetBulkCustomerBySdtId() {
-        final IBulkCustomerDao bulkCustomersDao =
-                (IBulkCustomerDao) this.applicationContext.getBean("uk.gov.moj.sdt.dao.api.IBulkCustomerDao");
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId(2);
         if (bulkCustomer != null) {
@@ -79,5 +95,82 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
         } else {
             Assert.fail("Could not find bulk customer [" + 2 + "]");
         }
+    }
+
+    @Test
+    public void testFetchBulkCustomerId() {
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
+
+        final IBulkCustomer bulkCustomer = bulkCustomersDao.fetch(IBulkCustomer.class, 10711);
+        if (bulkCustomer != null) {
+            LOGGER.debug("Retrieved bulk customer id [" + bulkCustomer.getId() + "]");
+        } else {
+            Assert.fail("Could not find bulk customer [" + 10711 + "]");
+        }
+    }
+
+    /**
+     * Tests the bulk insert.
+     */
+    @Test
+    public void testBulkInsert() {
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
+
+        final List<BulkCustomer> bulkObjectList = new ArrayList<>();
+        final BulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setSdtCustomerId(456);
+
+        final BulkCustomer bulkCustomer2 = new BulkCustomer();
+        bulkCustomer2.setSdtCustomerId(457);
+
+        bulkObjectList.add(bulkCustomer);
+        bulkObjectList.add(bulkCustomer2);
+
+        bulkCustomersDao.persistBulk(bulkObjectList);
+
+        final List<BulkCustomer> savedBulkObjectList =
+            bulkCustomersDao.queryAsList(BulkCustomer.class, () -> criteriaQuery.select(root).where(createCriteria(456L, 457L)));
+
+        Assert.assertNotNull(savedBulkObjectList);
+        Assert.assertEquals(2, savedBulkObjectList.size());
+        for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
+            Assert.assertNotNull(savedBulkCustomer);
+        }
+
+    }
+
+    /**
+     * Tests the bulk update.
+     */
+    @Test
+    public void testBulkUpdate() {
+        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
+
+        final List<IBulkCustomer> bulkObjectList = new ArrayList<>();
+        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setId(10711L);
+        bulkCustomer.setSdtCustomerId(456);
+
+        bulkObjectList.add(bulkCustomer);
+
+        bulkCustomersDao.persistBulk(bulkObjectList);
+
+        final List<BulkCustomer> savedBulkObjectList =
+            bulkCustomersDao.queryAsList(BulkCustomer.class, () -> criteriaQuery.select(root).where(createCriteria(456L)));
+
+        Assert.assertNotNull(savedBulkObjectList);
+        Assert.assertEquals(1, savedBulkObjectList.size());
+        for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
+            Assert.assertNotNull(savedBulkCustomer);
+            Assert.assertEquals(456, savedBulkCustomer.getSdtCustomerId());
+        }
+    }
+
+    private Predicate createCriteria(long... values) {
+        List<Predicate> predicates = new ArrayList<>();
+        for(long value : values) {
+            predicates.add(criteriaBuilder.equal(root.get("sdtCustomerId"), value));
+        }
+        return criteriaBuilder.or(predicates.toArray(new Predicate[]{}));
     }
 }

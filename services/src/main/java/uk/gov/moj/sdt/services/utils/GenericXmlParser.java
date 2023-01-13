@@ -30,16 +30,15 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.services.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 
 /**
  * This class reads xml and parses it to extract target application specific xml.

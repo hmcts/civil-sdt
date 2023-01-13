@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.transformers;
 
 import java.math.BigInteger;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
@@ -52,13 +53,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  *
  * @author d130680
  */
+@Component("SubmitQueryTransformer")
 public final class SubmitQueryTransformer extends AbstractTransformer implements
         ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> {
-    /**
-     * Private constructor.
-     */
-    private SubmitQueryTransformer() {
-    }
 
     @Override
     public ISubmitQueryRequest transformJaxbToDomain(final SubmitQueryRequestType submitQueryRequestType) {

@@ -101,14 +101,14 @@ public interface IIndividualRequest extends IDomainObject {
      *
      * @return line number
      */
-    int getLineNumber();
+    Integer getLineNumber();
 
     /**
      * Set line number.
      *
      * @param lineNumber line number
      */
-    void setLineNumber(final int lineNumber);
+    void setLineNumber(final Integer lineNumber);
 
     /**
      * Get SDT request reference.

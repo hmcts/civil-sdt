@@ -31,6 +31,8 @@
 package uk.gov.moj.sdt.validators;
 
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 
 /**
@@ -38,6 +40,7 @@ import java.time.LocalDate;
  *
  * @author Simon Holmes
  */
+@Component("DateValidator")
 public final class DateValidator {
 
     /**

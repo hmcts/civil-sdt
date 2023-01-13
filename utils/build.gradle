@@ -1,11 +1,12 @@
 apply plugin: 'info.solidsoft.pitest'
 
-dependencyCheck {
-    suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-utils'
 }
 
-jar {
-    baseName = 'civil-sdt-utils'
+dependencyCheck {
+    suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
 bootJar {

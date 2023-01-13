@@ -56,6 +56,10 @@ public abstract class AbstractCacheControl implements ICacheable {
      */
     private ISdtManagementMBean managementMBean;
 
+    protected AbstractCacheControl(ISdtManagementMBean managementMBean) {
+        this.managementMBean = managementMBean;
+    }
+
     /**
      * Value of the cache count for this {@link AbstractCacheControl} instance need to be uncached.
      */
@@ -65,8 +69,8 @@ public abstract class AbstractCacheControl implements ICacheable {
     @Transactional(propagation = Propagation.REQUIRED)
 
     @SuppressWarnings("squid:S5852")
-    public <DomainType extends IDomainObject> DomainType getValue(final Class<DomainType> domainType,
-                                                                  final String key) {
+    public <D extends IDomainObject> D getValue(final Class<D> domainType,
+                                                final String key) {
         // Should cache be discarded?
         if (this.uncacheRequired()) {
             LOGGER.debug("Uncaching {}", this.getClass().getCanonicalName());
@@ -87,13 +91,13 @@ public abstract class AbstractCacheControl implements ICacheable {
     /**
      * Gets the value associated with the parameter from the cache.
      *
-     * @param <DomainType> of entity to be retrieved.
+     * @param <D> of entity to be retrieved.
      * @param domainType   of entity to load.
      * @param key          key to cached object to be retrieved.
-     * @return DomainType instance retrieved.
+     * @return D instance retrieved.
      */
-    protected abstract <DomainType extends IDomainObject> DomainType getSpecificValue(
-            final Class<DomainType> domainType, final String key);
+    protected abstract <D extends IDomainObject> D getSpecificValue(
+        final Class<D> domainType, final String key);
 
     /**
      * Load the cache with appropriate source data for this cache object. Each implementing class must load its own
