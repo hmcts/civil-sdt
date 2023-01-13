@@ -4,9 +4,9 @@ java:
   ingressHost: ${SERVICE_FQDN}
   environment:
     SDT_DB_HOST: "{{ .Release.Name }}-postgresql"
-    SDT_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
-    SDT_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
-    SDT_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    SDT_DB_NAME: "{{ .Values.postgresql.auth.database}}"
+    SDT_DB_USERNAME: "{{ .Values.postgresql.auth.username}}"
+    SDT_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     SDT_DB_PORT: 5432
     CIVIL_SDT_QUEUE: civil-sdt-in-out
   postgresql:
