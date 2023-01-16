@@ -31,25 +31,23 @@
 
 package uk.gov.moj.sdt.services.messaging;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.messaging.asb.MessageSender;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
-import uk.gov.moj.sdt.services.messaging.asb.MessageSender;
-import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 /**
  * Test class for testing the MessageWriter implementation.
@@ -77,8 +75,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
 
         QueueConfig queueConfig = new QueueConfig();
         Map<String, String> mockedMap = new HashMap<>();
@@ -95,8 +91,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
 
-        messageSender.sendMessage(UNIT_TEST_QUEUE, sdtMessage);
-
         // Send the message.
         try {
             messageWriter.queueMessage(sdtMessage, null, false);
@@ -104,6 +98,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Illegal Argument specified for the target application");
         }
+        verify(messageSender, times(0)).sendMessage(any(), any());
     }
 
     /**
@@ -116,8 +111,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
 
-        messageSender.sendMessage(UNIT_TEST_QUEUE, sdtMessage);
-
         // Send the message.
         try {
             messageWriter.queueMessage(sdtMessage, "UnitTest", false);
@@ -125,6 +118,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Target application code does not have a mapped queue name");
         }
+        verify(messageSender, times(0)).sendMessage(any(), any());
     }
 
     /**
@@ -135,8 +129,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         // Setup finished, now tell the mock what to expect.
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
-
-        messageSender.sendMessage(UNIT_TEST_QUEUE, sdtMessage);
 
         // Send the message.
         try {
@@ -151,7 +143,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             fail("Not Expected to fail");
         }
 
-        verify(messageSender, times(2)).sendMessage(any(), any());
+        verify(messageSender, times(1)).sendMessage(any(), any());
     }
 
     /**
@@ -162,8 +154,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         // Setup finished, now tell the mock what to expect.
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
-
-        messageSender.sendMessage("UnitTestQueue.DLQ", sdtMessage);
 
         // Send the message.
         try {
@@ -178,6 +168,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             fail("Not Expected to fail");
         }
 
-        verify(messageSender, times(2)).sendMessage(any(), any());
+        verify(messageSender, times(1)).sendMessage(any(), any());
     }
 }

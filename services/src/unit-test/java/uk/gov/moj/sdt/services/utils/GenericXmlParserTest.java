@@ -53,15 +53,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GenericXmlParserTest extends AbstractSdtUnitTestBase {
 
     private static final String URL_TARGET_APP = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp";
-    private static final String URL_BULK_FEEDBACK_RESPONSE_SCHEMA =
-            "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema";
+    private static final String URL_BULK_FEEDBACK_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema";
     private static final String URL_INDV_RESPONSE_SCHEMA = URL_TARGET_APP + "/IndvResponseSchema";
     private static final String URL_SUBMIT_QUERY_RESPONSE_SCHEMA = URL_TARGET_APP + "/SubmitQueryResponseSchema";
     private static final String FAILED_TO_FIND_EXPECTED_RESPONSE
             = "Failed to find expected response";
     private static final String TARGET_APP_DETAIL = "targetAppDetail";
 
-    private static final String SRC_UNIT_TEST_RESOURCES = "src/unit-test/resources/";
+    private static final String UNIT_TEST_RESOURCES_PATH = "src/unit-test/resources/";
 
     /**
      * The xml parser instance for testing.
@@ -91,7 +90,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
 
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testSubmitQueryResponse.xml");
+        final String rawXml = Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testSubmitQueryResponse.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -122,7 +121,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml =
-                Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testSubmitQueryResponseNoNamespace.xml");
+                Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testSubmitQueryResponseNoNamespace.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -154,7 +153,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
 
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml =
-                Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testSubmitQueryResponseEmbeddedNamespace.xml");
+                Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testSubmitQueryResponseEmbeddedNamespace.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -185,7 +184,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml =
-                Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testSubmitQueryResponseEmbeddedDefaultNamespace.xml");
+                Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testSubmitQueryResponseEmbeddedDefaultNamespace.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -217,7 +216,7 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml =
-                Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testSubmitQueryResponseMultipleResult.xml");
+                Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testSubmitQueryResponseMultipleResult.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -242,13 +241,12 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
-                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA, URL_BULK_FEEDBACK_RESPONSE_SCHEMA);
 
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
 
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testIndividualResponseRejected.xml");
+        final String rawXml = Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testIndividualResponseRejected.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -270,13 +268,12 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
-                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA, URL_BULK_FEEDBACK_RESPONSE_SCHEMA);
 
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
 
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testIndividualResponse.xml");
+        final String rawXml = Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testIndividualResponse.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -301,13 +298,12 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
-                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA, URL_BULK_FEEDBACK_RESPONSE_SCHEMA);
 
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
 
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testIndividualResponseEmptyDetail.xml");
+        final String rawXml = Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testIndividualResponseEmptyDetail.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
@@ -329,15 +325,13 @@ class GenericXmlParserTest extends AbstractSdtUnitTestBase {
 
         genericXmlParser.setEnclosingTag(TARGET_APP_DETAIL);
         final Map<String, String> replacementNamespaces = new HashMap<>();
-        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA,
-                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
-        replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema",
-                "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
+        replacementNamespaces.put(URL_INDV_RESPONSE_SCHEMA, URL_BULK_FEEDBACK_RESPONSE_SCHEMA);
+        replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/IndividualUpdateRequestSchema", URL_BULK_FEEDBACK_RESPONSE_SCHEMA);
 
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
 
         // Load xml into SdtContext as if the inbound interceptor had run.
-        final String rawXml = Utilities.getRawXml(SRC_UNIT_TEST_RESOURCES, "testIndividualUpdateRequest.xml");
+        final String rawXml = Utilities.getRawXml(UNIT_TEST_RESOURCES_PATH, "testIndividualUpdateRequest.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 

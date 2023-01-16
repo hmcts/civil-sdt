@@ -30,14 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -46,6 +43,12 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for error messages cache.
@@ -81,12 +84,10 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-         MockitoAnnotations.openMocks(this);
-
         cache = new ErrorMessagesCache();
         cache.setGenericDao(mockGenericDao);
 
-        ISdtManagementMBean managementMBean = new SdtManagementMBean();
+        ISdtManagementMBean managementMBean = Mockito.mock(ISdtManagementMBean.class);
         cache.setManagementMBean(managementMBean);
 
         // Setup some results

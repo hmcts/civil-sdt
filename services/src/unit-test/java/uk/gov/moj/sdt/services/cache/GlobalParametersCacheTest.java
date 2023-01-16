@@ -34,6 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.GlobalParameter;
@@ -86,7 +87,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         cache = new GlobalParametersCache();
         cache.setGenericDao(mockGenericDao);
 
-        ISdtManagementMBean managementMBean = new SdtManagementMBean();
+        ISdtManagementMBean managementMBean = Mockito.mock(ISdtManagementMBean.class);
         cache.setManagementMBean(managementMBean);
 
         // Setup some results

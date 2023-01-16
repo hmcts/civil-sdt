@@ -30,11 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.hibernate.criterion.Criterion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +37,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -63,11 +57,17 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -107,9 +107,9 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
             "Bulk submission updated date should be populated";
     private static final String INDIVIDUAL_REQUEST_STATUS_IS_INCORRECT = "Individual request status is incorrect";
 
-    private static final String MCOL_IREQ_0001 = "MCOL_IREQ_0001";
+    private static final String SDT_REQUEST_REF = "MCOL_IREQ_0001";
 
-    private static final String RESPONSE = "response";
+    private static final String DUMMY_TARGET_RESP = "response";
 
     /**
      * Method to do any pre-test set-up.
@@ -117,8 +117,6 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         updateRequestService = new UpdateRequestService();
 
         // Instantiate all the mocked objects and set them in the target application submission service
@@ -155,7 +153,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         mockIndividualRequestDao.persist(bulkSubmission);
 
         // Setup dummy target response
-        SdtContext.getContext().setRawInXml(RESPONSE);
+        SdtContext.getContext().setRawInXml(DUMMY_TARGET_RESP);
 
         this.updateRequestService.updateIndividualRequest(individualRequestParam);
         verify(mockIndividualRequestDao).queryAsCount(same(IIndividualRequest.class),
@@ -195,7 +193,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         mockIndividualRequestDao.persist(bulkSubmission);
 
         // Setup dummy target response
-        SdtContext.getContext().setRawInXml(RESPONSE);
+        SdtContext.getContext().setRawInXml(DUMMY_TARGET_RESP);
 
         this.updateRequestService.updateIndividualRequest(individualRequestParam);
         verify(mockIndividualRequestDao).queryAsCount(same(IIndividualRequest.class),
@@ -237,7 +235,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         this.mockMessagingUtility.enqueueRequest(individualRequest);
 
         // Setup dummy target response
-        SdtContext.getContext().setRawInXml(RESPONSE);
+        SdtContext.getContext().setRawInXml(DUMMY_TARGET_RESP);
 
         this.updateRequestService.updateIndividualRequest(individualRequestParam);
         verify(mockIndividualRequestDao).queryAsCount(same(IIndividualRequest.class),
@@ -302,7 +300,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
                         isA(Criterion.class), isA(Criterion.class))).thenReturn(Long.valueOf(indRequests.size()));
 
         // Setup dummy target response
-        SdtContext.getContext().setRawInXml(RESPONSE);
+        SdtContext.getContext().setRawInXml(DUMMY_TARGET_RESP);
 
         this.updateRequestService.updateIndividualRequest(individualRequestParam);
         verify(mockIndividualRequestDao).queryAsCount(same(IIndividualRequest.class),
@@ -315,7 +313,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
      */
     private IIndividualRequest getRejectedIndividualRequestFromTargetApp() {
         final IIndividualRequest domainObject = new IndividualRequest();
-        domainObject.setSdtRequestReference(MCOL_IREQ_0001);
+        domainObject.setSdtRequestReference(SDT_REQUEST_REF);
 
         final IErrorLog errorLog = new ErrorLog("INVALID_NAME", "Invalid name");
         domainObject.markRequestAsRejected(errorLog);
@@ -328,7 +326,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
      */
     private IIndividualRequest getResubmitMessageIndividualRequestFromTargetApp() {
         final IIndividualRequest domainObject = new IndividualRequest();
-        domainObject.setSdtRequestReference(MCOL_IREQ_0001);
+        domainObject.setSdtRequestReference(SDT_REQUEST_REF);
 
         domainObject.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus());
 
@@ -340,7 +338,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
      */
     private IIndividualRequest getAcceptedIndividualRequestFromTargetApp() {
         final IIndividualRequest domainObject = new IndividualRequest();
-        domainObject.setSdtRequestReference(MCOL_IREQ_0001);
+        domainObject.setSdtRequestReference(SDT_REQUEST_REF);
 
         domainObject.markRequestAsAccepted();
 

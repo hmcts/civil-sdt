@@ -145,8 +145,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         bulkSubmissionService = new BulkSubmissionService();
         bulkSubmissionService.setGenericDao(mockGenericDao);
 
@@ -174,14 +172,13 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     void testSaveBulkSubmission() throws IOException {
         SdtContext.getContext().setRawInXml(Utilities.getRawXml(PATH_TEST_RESOURCES, "testXMLValid2.xml"));
 
-        // Activate Mock Generic Dao
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission();
-        mockGenericDao.persist(bulkSubmission);
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
         when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
+        // Activate Mock Generic Dao
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission();
         when(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).thenReturn(bulkSubmission.getBulkCustomer());
 
         final String key =
@@ -201,7 +198,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
         // Verify the Mock
-        verify(mockGenericDao, times(2)).persist(any());
+        verify(mockGenericDao, times(1)).persist(bulkSubmission);
 
         assertTrue(true, "Expected to pass");
     }
@@ -222,7 +219,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         addValidIndividualRequest(bulkSubmission, "ICustReq124");
         addValidIndividualRequest(bulkSubmission, "ICustReq125");
 
-        mockGenericDao.persist(bulkSubmission);
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
@@ -247,7 +243,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
         // Verify the Mock
-        verify(mockGenericDao, times(2)).persist(bulkSubmission);
+        verify(mockGenericDao, times(1)).persist(bulkSubmission);
 
         assertTrue(true, "Expected to pass");
     }

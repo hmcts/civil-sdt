@@ -30,12 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.transformers;
 
-import java.lang.reflect.Constructor;
-
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -47,6 +44,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
+
+import java.lang.reflect.Constructor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -69,7 +68,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
 
     private static final String FOUND_CORRECT_REQUEST_STATUS = "Found correct request status";
     private static final String FOUND_CORRECT_SDT_REQUEST_ID = "Found correct sdt request id";
-    private static final String MCOL_12200202_121212 = "MCOL-12200202-121212";
+    private static final String SDT_REQUEST_ID = "MCOL-12200202-121212";
 
     /**
      * Set up variables for the test.
@@ -94,10 +93,9 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     @Test
     void testTransformJaxbToDomainResubmitMessage() {
         // Set up the jaxb object to transform
-        final String sdtRequestId = MCOL_12200202_121212;
         final UpdateRequestType updateRequestType = new UpdateRequestType();
         final HeaderType headerType = new HeaderType();
-        headerType.setSdtRequestId(sdtRequestId);
+        headerType.setSdtRequestId(SDT_REQUEST_ID);
         updateRequestType.setHeader(headerType);
 
         final UpdateStatusType status = new UpdateStatusType();
@@ -107,7 +105,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain(updateRequestType);
 
         assertNotNull(domainObject);
-        assertEquals(domainObject.getSdtRequestReference(), sdtRequestId, FOUND_CORRECT_SDT_REQUEST_ID);
+        assertEquals(SDT_REQUEST_ID, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
         assertEquals(UpdateStatusCodeType.RESUBMIT_MESSAGE.value(),
                 domainObject.getRequestStatus(), FOUND_CORRECT_REQUEST_STATUS);
     }
@@ -119,10 +117,9 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     @Test
     void testTransformJaxbToDomainAccepted() {
         // Set up the jaxb object to transform
-        final String sdtRequestId = MCOL_12200202_121212;
         final UpdateRequestType updateRequestType = new UpdateRequestType();
         final HeaderType headerType = new HeaderType();
-        headerType.setSdtRequestId(sdtRequestId);
+        headerType.setSdtRequestId(SDT_REQUEST_ID);
         updateRequestType.setHeader(headerType);
 
         final UpdateStatusType status = new UpdateStatusType();
@@ -132,7 +129,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest domainObject = updateItemTransformer.transformJaxbToDomain(updateRequestType);
 
         assertNotNull(domainObject);
-        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
+        assertEquals(SDT_REQUEST_ID, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
         assertEquals(UpdateStatusCodeType.ACCEPTED.value(), domainObject.getRequestStatus(),
                 FOUND_CORRECT_REQUEST_STATUS);
     }
@@ -144,12 +141,11 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
     @Test
     void testTransformJaxbToDomainRejected() {
         // Set up the jaxb object to transform
-        final String sdtRequestId = MCOL_12200202_121212;
         final String errorText = "MCOL has Failed to process the request";
         final UpdateRequestType updateRequestType = new UpdateRequestType();
         final HeaderType headerType = new HeaderType();
         final ErrorType errorType = new ErrorType();
-        headerType.setSdtRequestId(sdtRequestId);
+        headerType.setSdtRequestId(SDT_REQUEST_ID);
         updateRequestType.setHeader(headerType);
 
         final UpdateStatusType status = new UpdateStatusType();
@@ -164,7 +160,7 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
         final IErrorLog errorLog = domainObject.getErrorLog();
 
         assertNotNull(domainObject);
-        assertEquals(sdtRequestId, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
+        assertEquals(SDT_REQUEST_ID, domainObject.getSdtRequestReference(), FOUND_CORRECT_SDT_REQUEST_ID);
         assertEquals(UpdateStatusCodeType.REJECTED.value(), domainObject.getRequestStatus(),
                 FOUND_CORRECT_REQUEST_STATUS);
         assertEquals("FAILURE", errorLog.getErrorCode(), "Found correct error code");

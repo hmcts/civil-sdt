@@ -30,16 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -60,10 +54,17 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the RetryMessageAlreadySentService.
@@ -96,8 +97,8 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
     private RetryMessageAlreadySentService messageTaskService;
 
     private static final String MAX_FORWARDING_ATTEMPTS = "MAX_FORWARDING_ATTEMPTS";
-    private static final String TEST_1 = "TEST_1";
-    private static final String TEST_2 = "TEST_2";
+    private static final String SDT_REQUEST_REF = "TEST_1";
+    private static final String DEAD_LETTER_SDT_REQUEST_REF = "TEST_2";
     private static final String FORWARDED = "Forwarded";
     private static final String FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST = "Forwarding attempts on individual request";
     private static final String TEST_COMPLETED_SUCCESSFULLY = "Test completed successfully";
@@ -109,8 +110,6 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         messageTaskService = new RetryMessageAlreadySentService();
 
         // Instantiate all the mocked objects and set them in the message task service
@@ -127,12 +126,11 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void queuePendingMessageMaxForwardingAttempts() {
-        final String sdtRequestRef = TEST_1;
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestStatus(FORWARDED);
         individualRequest.setForwardingAttempts(3);
@@ -180,12 +178,11 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void queuePendingMessageExceededForwardingAttempts() {
-        final String sdtRequestRef = TEST_1;
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestStatus(FORWARDED);
         individualRequest.setForwardingAttempts(5);
@@ -236,18 +233,16 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void queuePendingDLQMessageExceededForwardingAttempts() {
-        final String sdtRequestRef = TEST_1;
-        final String dlqSdtRequestRef = TEST_2;
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestStatus(FORWARDED);
         individualRequest.setForwardingAttempts(5);
 
         final IIndividualRequest dlqIndividualRequest = new IndividualRequest();
-        dlqIndividualRequest.setSdtRequestReference(dlqSdtRequestRef);
+        dlqIndividualRequest.setSdtRequestReference(DEAD_LETTER_SDT_REQUEST_REF);
         setUpIndividualRequest(dlqIndividualRequest);
         dlqIndividualRequest.setRequestStatus(FORWARDED);
         dlqIndividualRequest.setForwardingAttempts(5);
@@ -327,7 +322,7 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void queuePendingMessageForwardingAttemptsNotAvailable() {
-        final String sdtRequestRef = TEST_1;
+        final String sdtRequestRef = SDT_REQUEST_REF;
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object

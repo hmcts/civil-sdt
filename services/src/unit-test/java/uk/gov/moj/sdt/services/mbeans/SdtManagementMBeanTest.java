@@ -30,22 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.mbeans;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.util.ReflectionUtils;
-
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -54,9 +46,20 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the SdtManagementMBean.
@@ -150,8 +153,6 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         sdtManagementMBean = new SdtManagementMBean();
 
         // Instantiate all the mocked objects and set them up in the MBean
@@ -244,6 +245,8 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
         verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
+        verify(mockIndividualRequestDao, times(0)).persistBulk(anyList());
+        verify(mockMessagingUtility, times(0)).enqueueRequest(any());
 
         assertTrue(true, "Not expected to call the method to requeue requests");
     }
