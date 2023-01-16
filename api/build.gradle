@@ -1,0 +1,294 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.1.4")
+        classpath("net.serenity-bdd:serenity-single-page-report:2.1.4")
+    }
+}
+
+plugins {
+    id "info.solidsoft.pitest" version '1.5.1'
+    id 'au.com.dius.pact' version '4.1.7'
+}
+
+apply from: 'liquibase.gradle'
+apply plugin: 'net.serenity-bdd.aggregator'
+
+description = 'SDT Test Framework'
+
+sourceSets {
+
+    smokeTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/smokeTest/java')
+        }
+    }
+    functionalTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/functionalTest/java')
+        }
+    }
+
+    contractTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/contractTest/java')
+        }
+        resources.srcDir file('src/contractTest/resources')
+    }
+}
+
+apply plugin: 'idea'
+idea {
+    module {
+        testSourceDirs += project.sourceSets.smokeTest.java.srcDirs
+        testSourceDirs += project.sourceSets.smokeTest.resources.srcDirs
+        testSourceDirs += project.sourceSets.functionalTest.java.srcDirs
+        testSourceDirs += project.sourceSets.functionalTest.resources.srcDirs
+        testSourceDirs += project.sourceSets.contractTest.java.srcDirs
+        testSourceDirs += project.sourceSets.contractTest.resources.srcDirs
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.pitest.mode", "reuseReport"
+        property "sonar.pitest.reportsDirectory", "build/reports/pitest"
+    }
+}
+
+def versions = [
+        pitest          : '1.5.1',
+        gradlePitest    : '1.3.0',
+        sonarPitest     : '0.5',
+        lombok          : '1.18.12',
+        pact_version    : '4.1.7',
+        reformS2sClient : '3.1.1',
+        serenity        : '2.2.12',
+        serenityreporter: '2.1.4',
+        serenityCucumber: '1.9.51',
+]
+
+def javaLoggingVersion = '5.1.1'
+
+dependencies {
+    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: javaLoggingVersion
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: javaLoggingVersion
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: javaLoggingVersion
+    compile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3'
+    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.3.6.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.1.2.RELEASE'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compile group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '5.0'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.11'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation 'com.github.hmcts.liquibase:liquibase-core:3.8.2'
+    compile group: 'com.microsoft.azure', name: 'azure-servicebus-spring-boot-starter', version: '2.1.6'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
+    compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
+    implementation "io.github.openfeign:feign-httpclient:10.7.0"
+    compile group: 'io.github.openfeign', name: 'feign-core', version: '10.7.0'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-openfeign-core', version: '2.2.1.RELEASE'
+    compile group: 'org.ff4j', name: 'ff4j-spring-boot-web-api', version: '1.7.1'
+    compile group: 'org.ff4j', name: 'ff4j-web', version: '1.7.1'
+    compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+    compile(group: 'org.postgresql', name: 'postgresql', version: '42.2.25') {
+        exclude(module: 'commons-logging')
+        exclude(module: 'slf4j-simple')
+    }
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+    compile group: 'org.springframework.retry', name: 'spring-retry'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.1.RELEASE'
+
+    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
+    //Added this for spring boot upgrade as swagger was not working with the latest version.
+    compile group: 'org.springframework.plugin', name: 'spring-plugin-core', version: '1.2.0.RELEASE'
+    compile(group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '1.0.4.RELEASE') {
+        exclude(module: 'spring-plugin-core')
+    }
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
+        exclude(module: 'commons-logging')
+    }
+    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.0.4.RELEASE'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.4'
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock'
+    testCompile group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+    testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
+    testCompile 'org.awaitility:awaitility:3.1.6'
+    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.9'
+    testCompile 'org.powermock:powermock-api-mockito2:2.0.9'
+    // smoke
+    smokeTestCompile sourceSets.test.runtimeClasspath
+    // functional
+    functionalTestCompile sourceSets.test.runtimeClasspath
+    // contract
+    contractTestCompile sourceSets.test.runtimeClasspath
+    compile group: 'com.github.mifmif', name: 'generex', version: '1.0.2'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    functionalTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    smokeTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    smokeTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    compile group: 'org.pitest', name: 'pitest', version: versions.pitest
+    compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
+    compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+
+    contractTestCompile group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
+    contractTestCompile group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
+    contractTestCompile group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pact_version
+    contractTestCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    contractTestCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
+    contractTestCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    contractTestCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    contractTestRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+
+    functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
+    functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-cucumber', version: versions.serenityCucumber
+    functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
+    functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+    functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+    functionalTestImplementation group: 'net.serenity-bdd', name: 'serenity-screenplay', version: versions.serenity
+    functionalTestImplementation group: 'io.rest-assured', name: 'xml-path', version: versions.restAssured
+    functionalTestImplementation group: 'io.rest-assured', name: 'json-path', version: versions.restAssured
+}
+
+
+
+
+test {
+    // Base test class for other tests - has no runnable test methods
+    exclude ''
+}
+
+task smokeTest(type: Test, description: 'Runs the smoke tests', group: 'Verification') {
+    testClassesDirs = sourceSets.smokeTest.output.classesDirs
+    classpath = sourceSets.smokeTest.runtimeClasspath
+}
+
+task functionalTest(type: Test, description: 'Runs the functional tests', group: 'Verification') {
+    include "uk/gov/hmcts/*/functional/**"
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+    enableAssertions = true
+    scanForTestClasses = true
+}
+
+// Serenity Reporting
+functionalTest.finalizedBy(aggregate)
+
+project.ext {
+    pactVersion = getCheckedOutGitCommitHash()
+    pacticipant = ''
+    pacticipantVersion = getCheckedOutGitCommitHash()
+}
+
+
+task consumerContractTest(type: Test) {
+    logger.lifecycle("Running consumer contract Tests")
+    useJUnitPlatform()
+    include "uk/gov/hmcts/*/api/controllers/consumer/**"
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+    systemProperty 'pact.rootDir', "pacts"
+    systemProperty 'pact.provider.version', project.pactVersion
+
+}
+
+task providerContractTest(type: Test) {
+    logger.lifecycle("Running provider contract Tests")
+    useJUnitPlatform()
+    include "uk/gov/hmcts/*/api/controllers/provider/**"
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+    systemProperty 'pact.rootDir', "pacts"
+    systemProperty 'pact.verifier.publishResults', System.getProperty('pact.verifier.publishResults')
+    systemProperty 'pact.provider.version', project.pactVersion
+
+}
+
+task runProviderPactVerification(type: Test) {
+    logger.lifecycle("Runs pact provider Tests")
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+}
+
+task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test to broker.', group: 'Verification') {
+    logger.lifecycle("Runs pact consumer Tests")
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+}
+
+runAndPublishConsumerPactTests.dependsOn consumerContractTest
+
+runAndPublishConsumerPactTests.finalizedBy pactPublish
+
+runProviderPactVerification.dependsOn providerContractTest
+
+runProviderPactVerification.finalizedBy pactVerify
+
+serenity {
+    reports = ["single-page-html"]
+}
+
+def getCheckedOutGitCommitHash() {
+    'git rev-parse --verify --short HEAD'.execute().text.trim()
+}
+
+pact {
+    broker {
+        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
+    }
+    publish {
+        pactDirectory = 'api/pacts'
+        tags = [System.getenv("PACT_BRANCH_NAME") ?: 'Dev']
+        version = project.pactVersion
+    }
+
+}
+
+pitest {
+    targetClasses = ['uk.gov.hmcts.*.api.domain.*',
+                     'uk.gov.hmcts.*.api.exception.*',
+                     'uk.gov.hmcts.*.api.logging.*']
+    excludedClasses = ['uk.gov.hmcts.*.api.v1.*',
+                       'uk.gov.hmcts.*.api.configuration.*',
+                       'uk.gov.hmcts.*.api.dto.mapper.*',
+                       'uk.gov.hmcts.*.api.exception.*',
+                       'uk.gov.hmcts.*.api.reports.config.*']
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = 'build/reports/pitest/fastermutationtesting'
+    historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
+    threads = 15
+    testSourceSets = [sourceSets.test]
+    mainSourceSets = [sourceSets.main]
+    fileExtensionsToFilter.addAll('xml', 'json')
+    outputFormats = ['XML', 'HTML', 'CSV']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    maxMutationsPerClass = 15
+    jvmArgs = ['-Xms1G', '-Xmx3G']
+    timestampedReports = false
+    failWhenNoMutations = false
+    detectInlinedCode = true
+}
