@@ -35,6 +35,7 @@
       CVE-2022-41915 https://github.com/netty/netty/security/advisories/GHSA-hh82-3pmq-7frp (netty-codec)
       CVE-2022-46363 https://nvd.nist.gov/vuln/detail/CVE-2022-46363
       CVE-2022-46364 https://nvd.nist.gov/vuln/detail/CVE-2022-46364
+      CVE-2022-45143
     </notes>
     <cve>CVE-2015-3208</cve>
     <cve>CVE-2017-10355</cve>
@@ -52,6 +53,7 @@
     <cve>CVE-2022-41915</cve>
     <cve>CVE-2022-46363</cve>
     <cve>CVE-2022-46364</cve>
+    <cve>CVE-2022-45143</cve>
   </suppress>
   <!--End of temporary suppression section -->
 

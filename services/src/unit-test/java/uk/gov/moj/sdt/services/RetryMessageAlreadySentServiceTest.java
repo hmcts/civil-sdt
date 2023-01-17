@@ -30,16 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.easymock.EasyMock;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -59,25 +54,41 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Test class for the RetryMessageAlreadySentService.
  *
  * @author Manoj Kulkarni
  */
-public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Mocked Individual Request Dao object.
      */
+    @Mock
     private IIndividualRequestDao mockIndividualRequestDao;
 
     /**
      * The mocked ICacheable reference to the global parameters cache.
      */
+    @Mock
     private ICacheable mockCacheable;
 
     /**
      * Mocked messaging utility reference.
      */
+    @Mock
     private IMessagingUtility mockMessagingUtility;
 
     /**
@@ -85,23 +96,28 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      */
     private RetryMessageAlreadySentService messageTaskService;
 
+    private static final String MAX_FORWARDING_ATTEMPTS = "MAX_FORWARDING_ATTEMPTS";
+    private static final String SDT_REQUEST_REF = "TEST_1";
+    private static final String DEAD_LETTER_SDT_REQUEST_REF = "TEST_2";
+    private static final String STATUS_FORWARDED = "Forwarded";
+    private static final String FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST = "Forwarding attempts on individual request";
+    private static final String TEST_COMPLETED_SUCCESSFULLY = "Test completed successfully";
+    private static final String STATUS_SET_TO_RECEIVED = "Status set to Received";
+
     /**
      * Method to do any pre-test set-up.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
         messageTaskService = new RetryMessageAlreadySentService();
 
         // Instantiate all the mocked objects and set them in the message task service
-        mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
         messageTaskService.setIndividualRequestDao(mockIndividualRequestDao);
 
-        mockCacheable = EasyMock.createMock(ICacheable.class);
         messageTaskService.setGlobalParametersCache(mockCacheable);
 
-        mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
         messageTaskService.setMessagingUtility(mockMessagingUtility);
-
     }
 
     /**
@@ -109,59 +125,51 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      * when the forwarding attempts of individual request is same as the max forwarding attempts.
      */
     @Test
-    public void queuePendingMessageMaxForwardingAttempts() {
-        final String sdtRequestRef = "TEST_1";
+    void queuePendingMessageMaxForwardingAttempts() {
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus("Forwarded");
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(3);
 
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> individualRequests = new ArrayList<>();
         individualRequests.add(individualRequest);
 
         final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter();
-        maxForwardingAttemptsParam.setName("MAX_FORWARDING_ATTEMPTS");
+        maxForwardingAttemptsParam.setName(MAX_FORWARDING_ATTEMPTS);
         maxForwardingAttemptsParam.setValue("3");
-        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn(
+        when(this.mockCacheable.getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS)).thenReturn(
                 maxForwardingAttemptsParam);
 
-        final int maxForwardingAttempts = Integer.valueOf(maxForwardingAttemptsParam.getValue());
+        final int maxForwardingAttempts = Integer.parseInt(maxForwardingAttemptsParam.getValue());
 
-        EasyMock.expect(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).andReturn(
+        when(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).thenReturn(
                 individualRequests);
 
         for (IIndividualRequest individualRequestObj : individualRequests) {
             mockMessagingUtility.enqueueRequest(individualRequestObj);
-            EasyMock.expectLastCall();
 
             // Re-set the forwarding attempts on the individual request.
             individualRequestObj.resetForwardingAttempts();
         }
 
         mockIndividualRequestDao.persistBulk(individualRequests);
-        EasyMock.expectLastCall();
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockCacheable);
-        EasyMock.replay(mockMessagingUtility);
 
         this.messageTaskService.queueMessages();
 
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockCacheable);
-        EasyMock.verify(mockMessagingUtility);
+        verify(mockIndividualRequestDao).getPendingIndividualRequests(maxForwardingAttempts);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS);
+        verify(mockMessagingUtility, times(2)).enqueueRequest(any());
 
-        Assert.assertEquals("Forwarding attempts on individual request", 0, individualRequests.get(0)
-                .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
-                .getStatus(), individualRequests.get(0).getRequestStatus());
+        assertEquals(0, individualRequests.get(0)
+                .getForwardingAttempts(), FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST);
+        assertEquals(IIndividualRequest.IndividualRequestStatus.RECEIVED
+                .getStatus(), individualRequests.get(0).getRequestStatus(), STATUS_SET_TO_RECEIVED);
 
-        Assert.assertTrue("Test completed succesfully", true);
-
+        assertTrue(true, TEST_COMPLETED_SUCCESSFULLY);
     }
 
     /**
@@ -169,60 +177,52 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      * when the forwarding attempts of individual request has exceeded the max forwarding attempts.
      */
     @Test
-    public void queuePendingMessageExceededForwardingAttempts() {
-        final String sdtRequestRef = "TEST_1";
+    void queuePendingMessageExceededForwardingAttempts() {
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus("Forwarded");
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(5);
 
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> individualRequests = new ArrayList<>();
         individualRequests.add(individualRequest);
 
         final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter();
-        maxForwardingAttemptsParam.setName("MAX_FORWARDING_ATTEMPTS");
+        maxForwardingAttemptsParam.setName(MAX_FORWARDING_ATTEMPTS);
         maxForwardingAttemptsParam.setValue("3");
-        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn(
+        when(this.mockCacheable.getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS)).thenReturn(
                 maxForwardingAttemptsParam);
 
-        final int maxForwardingAttempts = Integer.valueOf(maxForwardingAttemptsParam.getValue());
+        final int maxForwardingAttempts = Integer.parseInt(maxForwardingAttemptsParam.getValue());
 
-        EasyMock.expect(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).andReturn(
+        when(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).thenReturn(
                 individualRequests);
 
         for (IIndividualRequest individualRequestObj : individualRequests) {
 
             mockMessagingUtility.enqueueRequest(individualRequestObj);
-            EasyMock.expectLastCall();
 
             // Re-set the forwarding attempts on the individual request.
             individualRequestObj.resetForwardingAttempts();
         }
 
         mockIndividualRequestDao.persistBulk(individualRequests);
-        EasyMock.expectLastCall();
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockCacheable);
-        EasyMock.replay(mockMessagingUtility);
 
         this.messageTaskService.queueMessages();
 
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockCacheable);
-        EasyMock.verify(mockMessagingUtility);
+        verify(mockIndividualRequestDao).getPendingIndividualRequests(maxForwardingAttempts);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS);
+        verify(mockMessagingUtility, times(2)).enqueueRequest(any());
 
-        Assert.assertEquals("Forwarding attempts on individual request", 0, individualRequests.get(0)
-                .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
-                .getStatus(), individualRequests.get(0).getRequestStatus());
+        assertEquals(0, individualRequests.get(0)
+                .getForwardingAttempts(), FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST);
+        assertEquals(IIndividualRequest.IndividualRequestStatus.RECEIVED
+                .getStatus(), individualRequests.get(0).getRequestStatus(), STATUS_SET_TO_RECEIVED);
 
-        Assert.assertTrue("Test completed succesfully", true);
-
+        assertTrue(true, TEST_COMPLETED_SUCCESSFULLY);
     }
 
     /**
@@ -232,72 +232,62 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      * flag is ignored and not picked up by the service method.
      */
     @Test
-    public void queuePendingDLQMessageExceededForwardingAttempts() {
-        final String sdtRequestRef = "TEST_1";
-        final String dlqSdtRequestRef = "TEST_2";
+    void queuePendingDLQMessageExceededForwardingAttempts() {
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
-
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus("Forwarded");
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(5);
 
         final IIndividualRequest dlqIndividualRequest = new IndividualRequest();
-        dlqIndividualRequest.setSdtRequestReference(dlqSdtRequestRef);
+        dlqIndividualRequest.setSdtRequestReference(DEAD_LETTER_SDT_REQUEST_REF);
         setUpIndividualRequest(dlqIndividualRequest);
-        dlqIndividualRequest.setRequestStatus("Forwarded");
+        dlqIndividualRequest.setRequestStatus(STATUS_FORWARDED);
         dlqIndividualRequest.setForwardingAttempts(5);
         dlqIndividualRequest.setDeadLetter(true);
 
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> individualRequests = new ArrayList<>();
         individualRequests.add(individualRequest);
         individualRequests.add(dlqIndividualRequest);
 
         final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter();
-        maxForwardingAttemptsParam.setName("MAX_FORWARDING_ATTEMPTS");
+        maxForwardingAttemptsParam.setName(MAX_FORWARDING_ATTEMPTS);
         maxForwardingAttemptsParam.setValue("3");
-        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn(
+        when(this.mockCacheable.getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS)).thenReturn(
                 maxForwardingAttemptsParam);
 
-        final int maxForwardingAttempts = Integer.valueOf(maxForwardingAttemptsParam.getValue());
+        final int maxForwardingAttempts = Integer.parseInt(maxForwardingAttemptsParam.getValue());
 
-        final List<IIndividualRequest> returnedListOfRequests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> returnedListOfRequests = new ArrayList<>();
         returnedListOfRequests.add(individualRequest);
 
-        EasyMock.expect(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).andReturn(
+        when(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).thenReturn(
                 returnedListOfRequests);
 
         for (IIndividualRequest individualRequestObj : returnedListOfRequests) {
 
             mockMessagingUtility.enqueueRequest(individualRequestObj);
-            EasyMock.expectLastCall();
 
             // Re-set the forwarding attempts on the individual request.
             individualRequestObj.resetForwardingAttempts();
         }
 
         mockIndividualRequestDao.persistBulk(returnedListOfRequests);
-        EasyMock.expectLastCall();
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockCacheable);
-        EasyMock.replay(mockMessagingUtility);
 
         this.messageTaskService.queueMessages();
 
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockCacheable);
-        EasyMock.verify(mockMessagingUtility);
+        verify(mockIndividualRequestDao).getPendingIndividualRequests(maxForwardingAttempts);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS);
+        verify(mockMessagingUtility, times(2)).enqueueRequest(any());
 
-        Assert.assertEquals("Forwarding attempts on individual request", 0, returnedListOfRequests.get(0)
-                .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
-                .getStatus(), returnedListOfRequests.get(0).getRequestStatus());
+        assertEquals(0, returnedListOfRequests.get(0)
+                .getForwardingAttempts(), FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST);
+        assertEquals(IIndividualRequest.IndividualRequestStatus.RECEIVED
+                .getStatus(), returnedListOfRequests.get(0).getRequestStatus(), STATUS_SET_TO_RECEIVED);
 
-        Assert.assertTrue("Test completed succesfully", true);
-
+        assertTrue(true, TEST_COMPLETED_SUCCESSFULLY);
     }
 
     /**
@@ -305,28 +295,25 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      * there are no pending messages to return from database.
      */
     @Test
-    public void queuePendingMessageWhenNoMessageFound() {
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest>();
+    void queuePendingMessageWhenNoMessageFound() {
+        final List<IIndividualRequest> individualRequests = new ArrayList<>();
 
         final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter();
-        maxForwardingAttemptsParam.setName("MAX_FORWARDING_ATTEMPTS");
+        maxForwardingAttemptsParam.setName(MAX_FORWARDING_ATTEMPTS);
         maxForwardingAttemptsParam.setValue("3");
-        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn(
+        when(this.mockCacheable.getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS)).thenReturn(
                 maxForwardingAttemptsParam);
 
-        final int maxForwardingAttempts = Integer.valueOf(maxForwardingAttemptsParam.getValue());
+        final int maxForwardingAttempts = Integer.parseInt(maxForwardingAttemptsParam.getValue());
 
-        EasyMock.expect(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).andReturn(
+        when(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).thenReturn(
                 individualRequests);
-
-        EasyMock.replay(mockIndividualRequestDao);
 
         this.messageTaskService.queueMessages();
 
-        EasyMock.verify(mockIndividualRequestDao);
+        verify(mockIndividualRequestDao).getPendingIndividualRequests(maxForwardingAttempts);
 
-        Assert.assertTrue("Method test completed successfully", true);
-
+        assertTrue(true, "Method test completed successfully");
     }
 
     /**
@@ -334,56 +321,47 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
      * when the max forwarding attempts global parameter is not defined in the database.
      */
     @Test
-    public void queuePendingMessageForwardingAttemptsNotAvailable() {
-        final String sdtRequestRef = "TEST_1";
+    void queuePendingMessageForwardingAttemptsNotAvailable() {
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus("Forwarded");
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(3);
 
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> individualRequests = new ArrayList<>();
         individualRequests.add(individualRequest);
 
-        EasyMock.expect(this.mockCacheable.getValue(IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn(
-                null);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS)).thenReturn(null);
 
         final int maxForwardingAttempts = 3;
 
-        EasyMock.expect(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).andReturn(
+        when(mockIndividualRequestDao.getPendingIndividualRequests(maxForwardingAttempts)).thenReturn(
                 individualRequests);
 
         for (IIndividualRequest individualRequestObj : individualRequests) {
             mockMessagingUtility.enqueueRequest(individualRequestObj);
-            EasyMock.expectLastCall();
 
             // Re-set the forwarding attempts on the individual request.
             individualRequestObj.resetForwardingAttempts();
         }
 
         mockIndividualRequestDao.persistBulk(individualRequests);
-        EasyMock.expectLastCall();
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockCacheable);
-        EasyMock.replay(mockMessagingUtility);
 
         this.messageTaskService.queueMessages();
 
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockCacheable);
-        EasyMock.verify(mockMessagingUtility);
+        verify(mockIndividualRequestDao).getPendingIndividualRequests(maxForwardingAttempts);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS);
+        verify(mockMessagingUtility, times(2)).enqueueRequest(any());
 
-        Assert.assertEquals("Forwarding attempts on individual request", 0, individualRequests.get(0)
-                .getForwardingAttempts());
-        Assert.assertEquals("Status set to Receieved", IIndividualRequest.IndividualRequestStatus.RECEIVED
-                .getStatus(), individualRequests.get(0).getRequestStatus());
+        assertEquals(0, individualRequests.get(0)
+                .getForwardingAttempts(), FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST);
+        assertEquals(IIndividualRequest.IndividualRequestStatus.RECEIVED
+                .getStatus(), individualRequests.get(0).getRequestStatus(), STATUS_SET_TO_RECEIVED);
 
-        Assert.assertTrue("Test completed succesfully", true);
-
+        assertTrue(true, TEST_COMPLETED_SUCCESSFULLY);
     }
 
     /**
@@ -399,7 +377,7 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
         targetApp.setId(1L);
         targetApp.setTargetApplicationCode("MCOL");
         targetApp.setTargetApplicationName("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
         final ServiceRouting serviceRouting = new ServiceRouting();
         serviceRouting.setId(1L);
@@ -426,7 +404,7 @@ public class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase 
         bulkSubmission.setCustomerReference("TEST_CUST_REF");
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(1);
-        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> requests = new ArrayList<>();
         requests.add(request);
 
         bulkSubmission.setIndividualRequests(requests);

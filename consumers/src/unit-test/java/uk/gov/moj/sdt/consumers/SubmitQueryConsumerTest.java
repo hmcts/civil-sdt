@@ -44,6 +44,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -61,8 +62,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -98,8 +102,9 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        submitQueryConsumer = new SubQueryConsumer();
-        submitQueryConsumer.setTransformer(mockTransformer);
+        SubmitQueryConsumer consumer = new SubmitQueryConsumer();
+        consumer.setTransformer(mockTransformer);
+        submitQueryConsumer =  Mockito.spy(consumer);
 
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
@@ -112,6 +117,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         final String webServiceEndPoint = "";
         final long connectionTimeOut = 0L;
         final long receiveTimeOut = 0L;
+        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
         ITargetAppInternalEndpointPortType portType = submitQueryConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
         assertNotNull(portType);
@@ -128,6 +134,8 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         wsException.initCause(new SocketTimeoutException("Timed out waiting for response"));
 
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
+
+        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
         TimeoutException timeoutException = assertThrows(TimeoutException.class, () ->
                 this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
@@ -153,6 +161,8 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         wsException.initCause(new SOAPFaultException(soapFault));
 
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
+        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
+
 
         SoapFaultException soapFaultException = assertThrows(SoapFaultException.class, () ->
             this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
@@ -173,6 +183,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         wsException.initCause(new ConnectException());
 
         when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
+        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
         OutageException outageException = assertThrows(OutageException.class, () ->
             this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
@@ -201,6 +212,8 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
             return null;
         }).when(mockTransformer).transformJaxbToDomain(submitQueryResponseType, submitQueryRequest);
 
+        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
+
         this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
         verify(mockTransformer).transformDomainToJaxb(any());
@@ -210,31 +223,6 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
                 submitQueryRequest.getStatus(), "Status code is not equal.");
         assertEquals(submitQueryResponseType.getResultCount().intValue(),
                 submitQueryRequest.getResultCount(), "Result count is not equal.");
-    }
-
-    /**
-     * Need to extend the consumer class under test for overriding base class methods
-     * of the getClient as it is abstract method.
-     */
-    protected class SubQueryConsumer extends SubmitQueryConsumer
-    {
-        /**
-         * Get the client for the specified target application. If the client is not cached already, a new client
-         * connection is created otherwise the already cached client is returned.
-         *
-         * @param targetApplicationCode the target application code
-         * @param serviceType the service type associated with the target application code
-         * @param webServiceEndPoint the Web Service End Point URL
-         * @param connectionTimeOut the connection time out value
-         * @param receiveTimeOut the acknowledgement time out value
-         * @return the target application end point port bean i.e. the client interface.
-         */
-        @Override
-        public ITargetAppInternalEndpointPortType getClient(final String targetApplicationCode,
-                                                             final String serviceType, final String webServiceEndPoint,
-                                                             final long connectionTimeOut, final long receiveTimeOut) {
-            return mockClient;
-        }
     }
 
 }
