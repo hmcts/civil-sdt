@@ -57,6 +57,8 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class MessageWriterTest extends AbstractSdtUnitTestBase {
 
+    private static final String DLQ_QUEUE_NAME = "UnitTestQueue.DLQ";
+
     private static final String UNIT_TEST_QUEUE = "UnitTestQueue";
 
     private static final String UNIT_TEST = "UNITTEST";
@@ -98,7 +100,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Illegal Argument specified for the target application");
         }
-        verify(messageSender, times(0)).sendMessage("UnitTestQueue.DLQ", sdtMessage);
+        verify(messageSender, times(0)).sendMessage(any(), sdtMessage);
     }
 
     /**
@@ -118,7 +120,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Target application code does not have a mapped queue name");
         }
-        verify(messageSender, times(0)).sendMessage("UnitTestQueue.DLQ", sdtMessage);
+        verify(messageSender, times(0)).sendMessage(any(), sdtMessage);
     }
 
     /**
@@ -143,7 +145,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             fail("Not Expected to fail");
         }
 
-        verify(messageSender, times(1)).sendMessage("UnitTestQueue", sdtMessage);
+        verify(messageSender, times(1)).sendMessage(UNIT_TEST_QUEUE, sdtMessage);
     }
 
     /**
@@ -168,6 +170,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             fail("Not Expected to fail");
         }
 
-        verify(messageSender, times(1)).sendMessage("UnitTestQueue.DLQ", sdtMessage);
+        verify(messageSender, times(1)).sendMessage(DLQ_QUEUE_NAME, sdtMessage);
     }
 }
