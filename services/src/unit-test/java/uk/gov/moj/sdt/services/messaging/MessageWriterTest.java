@@ -46,6 +46,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -100,7 +101,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Illegal Argument specified for the target application");
         }
-        verify(messageSender, times(0)).sendMessage(any(), sdtMessage);
+        verify(messageSender, times(0)).sendMessage(any(), eq(sdtMessage));
     }
 
     /**
@@ -120,7 +121,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Target application code does not have a mapped queue name");
         }
-        verify(messageSender, times(0)).sendMessage(any(), sdtMessage);
+        verify(messageSender, times(0)).sendMessage(any(), eq(sdtMessage));
     }
 
     /**
