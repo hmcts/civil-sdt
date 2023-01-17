@@ -127,8 +127,6 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         bulkFeedbackService = new BulkFeedbackService();
 
         bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
