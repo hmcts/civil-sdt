@@ -45,6 +45,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -76,7 +77,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
     private static final String PARAM_2 = "param2";
     private static final String PARAM_3 = "param3";
     private static final String PARAMETER_1 = "parameter 1";
-
+    private ISdtManagementMBean managementMBean;
 
     /**
      * Setup mock objects and inject DAO dependencies into our class.
@@ -87,7 +88,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         cache = new GlobalParametersCache();
         cache.setGenericDao(mockGenericDao);
 
-        ISdtManagementMBean managementMBean = Mockito.mock(ISdtManagementMBean.class);
+        managementMBean = Mockito.mock(ISdtManagementMBean.class);
         cache.setManagementMBean(managementMBean);
 
         // Setup some results
@@ -132,6 +133,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         assertEquals("parameter 2", param.getDescription());
 
         verify(mockGenericDao).query(IGlobalParameter.class);
+        verify(managementMBean, times(3)).getCacheResetControl();
     }
 
     /**
@@ -147,6 +149,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         assertNull(param);
 
         verify(mockGenericDao).query(IGlobalParameter.class);
+        verify(managementMBean).getCacheResetControl();
     }
 
     /**
@@ -169,6 +172,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         assertEquals(0, cache.getGlobalParameters().size());
 
         verify(mockGenericDao).query(IGlobalParameter.class);
+        verify(managementMBean).getCacheResetControl();
     }
 
 }

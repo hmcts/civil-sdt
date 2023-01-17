@@ -98,7 +98,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Illegal Argument specified for the target application");
         }
-        verify(messageSender, times(0)).sendMessage(any(), any());
+        verify(messageSender, times(0)).sendMessage("UnitTestQueue.DLQ", sdtMessage);
     }
 
     /**
@@ -118,7 +118,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Target application code does not have a mapped queue name");
         }
-        verify(messageSender, times(0)).sendMessage(any(), any());
+        verify(messageSender, times(0)).sendMessage("UnitTestQueue.DLQ", sdtMessage);
     }
 
     /**
@@ -143,7 +143,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             fail("Not Expected to fail");
         }
 
-        verify(messageSender, times(1)).sendMessage(any(), any());
+        verify(messageSender, times(1)).sendMessage("UnitTestQueue", sdtMessage);
     }
 
     /**
@@ -168,6 +168,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             fail("Not Expected to fail");
         }
 
-        verify(messageSender, times(1)).sendMessage(any(), any());
+        verify(messageSender, times(1)).sendMessage("UnitTestQueue.DLQ", sdtMessage);
     }
 }

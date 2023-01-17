@@ -47,6 +47,7 @@ import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,6 +79,8 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     private static final String ERROR_DESCRIPTION_2 = "errorDescription 2";
     private static final String ERROR_DESCRIPTION_3 = "errorDescription 3";
 
+    private ISdtManagementMBean managementMBean;
+
     /**
      * Setup mock objects and inject DAO dependencies into our class.
      */
@@ -87,7 +90,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
         cache = new ErrorMessagesCache();
         cache.setGenericDao(mockGenericDao);
 
-        ISdtManagementMBean managementMBean = Mockito.mock(ISdtManagementMBean.class);
+        managementMBean = Mockito.mock(ISdtManagementMBean.class);
         cache.setManagementMBean(managementMBean);
 
         // Setup some results
@@ -126,6 +129,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
         assertEquals(ERROR_DESCRIPTION_2, errorMessage.getErrorDescription());
 
         verify(mockGenericDao).query(IErrorMessage.class);
+        verify(managementMBean, times(3)).getCacheResetControl();
     }
 
     /**
@@ -147,6 +151,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockGenericDao).query(IErrorMessage.class);
+        verify(managementMBean).getCacheResetControl();
     }
 
     /**
@@ -168,5 +173,6 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
         assertEquals(0, cache.getErrorMessages().size());
 
         verify(mockGenericDao).query(IErrorMessage.class);
+        verify(managementMBean).getCacheResetControl();
     }
 }

@@ -99,7 +99,7 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
     private static final String MAX_FORWARDING_ATTEMPTS = "MAX_FORWARDING_ATTEMPTS";
     private static final String SDT_REQUEST_REF = "TEST_1";
     private static final String DEAD_LETTER_SDT_REQUEST_REF = "TEST_2";
-    private static final String FORWARDED = "Forwarded";
+    private static final String STATUS_FORWARDED = "Forwarded";
     private static final String FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST = "Forwarding attempts on individual request";
     private static final String TEST_COMPLETED_SUCCESSFULLY = "Test completed successfully";
     private static final String STATUS_SET_TO_RECEIVED = "Status set to Received";
@@ -132,7 +132,7 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
 
         individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(FORWARDED);
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(3);
 
         final List<IIndividualRequest> individualRequests = new ArrayList<>();
@@ -184,7 +184,7 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
 
         individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(FORWARDED);
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(5);
 
         final List<IIndividualRequest> individualRequests = new ArrayList<>();
@@ -238,13 +238,13 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
         // Set-up the individual request object
         individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(FORWARDED);
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(5);
 
         final IIndividualRequest dlqIndividualRequest = new IndividualRequest();
         dlqIndividualRequest.setSdtRequestReference(DEAD_LETTER_SDT_REQUEST_REF);
         setUpIndividualRequest(dlqIndividualRequest);
-        dlqIndividualRequest.setRequestStatus(FORWARDED);
+        dlqIndividualRequest.setRequestStatus(STATUS_FORWARDED);
         dlqIndividualRequest.setForwardingAttempts(5);
         dlqIndividualRequest.setDeadLetter(true);
 
@@ -322,14 +322,13 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void queuePendingMessageForwardingAttemptsNotAvailable() {
-        final String sdtRequestRef = SDT_REQUEST_REF;
         final IIndividualRequest individualRequest = new IndividualRequest();
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(SDT_REQUEST_REF);
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(FORWARDED);
+        individualRequest.setRequestStatus(STATUS_FORWARDED);
         individualRequest.setForwardingAttempts(3);
 
         final List<IIndividualRequest> individualRequests = new ArrayList<>();
