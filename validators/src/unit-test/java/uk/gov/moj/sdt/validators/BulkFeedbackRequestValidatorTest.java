@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -118,6 +117,12 @@ class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     private IBulkCustomer bulkCustomer;
 
+    @Mock
+    private IBulkCustomerDao bulkCustomerDao;
+
+    @Mock
+    private IBulkSubmissionDao bulkSubmissionDao;
+
     /**
      * Data retention period.
      */
@@ -128,7 +133,10 @@ class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     @Override
     public void setUpLocalTests() {
-        validator = new BulkFeedbackRequestValidator();
+        validator = new BulkFeedbackRequestValidator(bulkCustomerDao,
+                                                     globalParameterCache,
+                                                     errorMessagesCache,
+                                                     bulkSubmissionDao);
 
         // create a bulk customer
         bulkCustomer = new BulkCustomer();
@@ -157,10 +165,7 @@ class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
         globalParameterData.setValue("90");
         when(globalParameterCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).thenReturn(globalParameterData);
-
-        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        IBulkSubmissionDao bulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
-        validator = new BulkFeedbackRequestValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache, bulkSubmissionDao);
+        validator.setGlobalParameterCache(globalParameterCache);
 
         dataRetentionPeriod = 90;
     }

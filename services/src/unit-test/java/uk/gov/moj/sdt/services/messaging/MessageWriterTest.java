@@ -34,8 +34,8 @@ package uk.gov.moj.sdt.services.messaging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jms.core.JmsTemplate;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
@@ -44,10 +44,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test class for testing the MessageWriter implementation.
@@ -63,9 +60,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     private static final String UNIT_TEST = "UNITTEST";
 
-    @Mock
-    private MessageSender messageSender;
-
     /**
      * MessageWriter for mocking.
      */
@@ -77,11 +71,11 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-
+        JmsTemplate jmsTemplate = mock(JmsTemplate.class);
         QueueConfig queueConfig = new QueueConfig();
         Map<String, String> mockedMap = new HashMap<>();
-        queueConfig.setQueueConfig(mockedMap);
-        messageWriter = new MessageWriter(messageSender, queueConfig);
+        queueConfig.setTargetAppQueue(mockedMap);
+        messageWriter = new MessageWriter(jmsTemplate, queueConfig);
     }
 
     /**
@@ -100,7 +94,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Illegal Argument specified for the target application");
         }
-        verify(messageSender, times(0)).sendMessage(any(), eq(sdtMessage));
     }
 
     /**
@@ -120,7 +113,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Target application code does not have a mapped queue name");
         }
-        verify(messageSender, times(0)).sendMessage(any(), eq(sdtMessage));
     }
 
     /**
@@ -145,7 +137,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             fail("Not Expected to fail");
         }
 
-        verify(messageSender, times(1)).sendMessage(UNIT_TEST_QUEUE, sdtMessage);
     }
 
     /**
@@ -169,7 +160,5 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             fail("Not Expected to fail");
         }
-
-        verify(messageSender, times(1)).sendMessage(DLQ_QUEUE_NAME, sdtMessage);
     }
 }

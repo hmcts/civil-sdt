@@ -30,19 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -66,6 +58,11 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -128,8 +125,6 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUp() {
 
-        bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
-
         final IGlobalParameter globalParameterData = new GlobalParameter();
         globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
         globalParameterData.setValue("90");
@@ -156,9 +151,9 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     void testGetBulkFeedback() {
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
-        addValidIndividualRequest(bulkSubmission, "ICustReq124", RECEIVED.getStatus());
-        addValidIndividualRequest(bulkSubmission, "ICustReq125", REJECTED.getStatus());
-        addValidIndividualRequest(bulkSubmission, "ICustReq126", RECEIVED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq124", IndividualRequestStatus.RECEIVED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq125", IndividualRequestStatus.REJECTED.getStatus());
+        addValidIndividualRequest(bulkSubmission, "ICustReq126", IndividualRequestStatus.RECEIVED.getStatus());
 
         // Tell the mock dao to return this request
         when(mockBulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod))
@@ -221,7 +216,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
                 .setCreatedDate(LocalDateTime.now());
         individualRequest.setCustomerRequestReference("ICustReq123");
         individualRequest.setId(1L);
-        individualRequest.setRequestStatus(RECEIVED.getStatus());
+        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
 
         bulkSubmission.addIndividualRequest(individualRequest);
 
@@ -242,7 +237,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setCustomerRequestReference(customerReference);
         individualRequest.setId(1L);
         individualRequest.setRequestStatus(status);
-        if (REJECTED.getStatus().equals(status)) {
+        if (IndividualRequestStatus.REJECTED.getStatus().equals(status)) {
             final IErrorLog errorLog =
                     new ErrorLog(IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
                             "Duplicate Unique Request Identifier submitted {0}");

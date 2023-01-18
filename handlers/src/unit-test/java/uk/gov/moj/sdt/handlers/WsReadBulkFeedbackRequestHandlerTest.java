@@ -30,13 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.handlers;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Set;
-
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,6 +51,12 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
+
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -100,8 +99,6 @@ class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
      */
     @Override
     public void setUpLocalTests() {
-        wsReadBulkFeedbackReqHandler = new WsReadBulkFeedbackRequestHandler();
-
         Constructor<BulkFeedbackTransformer> c;
         try {
             // Make the constructor visible so we can get a new instance of it.

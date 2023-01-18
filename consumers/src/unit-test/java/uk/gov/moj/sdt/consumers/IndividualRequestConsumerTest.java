@@ -31,9 +31,6 @@
 
 package uk.gov.moj.sdt.consumers;
 
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +38,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -55,6 +51,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequest
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
@@ -68,8 +66,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the individual request consumer.
@@ -119,8 +117,7 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        IndividualRequestConsumer consumer = new IndividualRequestConsumer();
-        consumer.setTransformer(mockTransformer);
+        IndividualRequestConsumer consumer = new IndividualRequestConsumer(mockTransformer);
         individualRequestConsumer =  Mockito.spy(consumer);
 
         individualRequestConsumer.setTransformer(mockTransformer);

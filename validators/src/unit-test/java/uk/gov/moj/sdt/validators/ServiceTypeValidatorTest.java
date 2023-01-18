@@ -34,7 +34,9 @@ package uk.gov.moj.sdt.validators;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
@@ -50,6 +52,13 @@ class ServiceTypeValidatorTest extends AbstractValidatorUnitTest {
      * Test subject.
      */
     private ServiceTypeValidator validator;
+    @Mock
+    IBulkCustomerDao bulkCustomerDao;
+    @Mock
+    ICacheable globalParameterCache;
+
+    @Mock
+    ICacheable errorMessagesCache;
 
     /**
      * Setup of the Validator and Domain class instance.
@@ -57,11 +66,7 @@ class ServiceTypeValidatorTest extends AbstractValidatorUnitTest {
     @BeforeEach
     public void setUpLocalTests() {
         // subject of test
-
-        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        ICacheable globalParameterCache = EasyMock.createMock(ICacheable.class);
-        ICacheable errorMessagesCache = EasyMock.createMock(ICacheable.class);
-        validator = new ServiceTypeValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
+        validator = new ServiceTypeValidator(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**

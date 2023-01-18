@@ -37,12 +37,10 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
@@ -62,7 +60,7 @@ import static org.mockito.Mockito.when;
 class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     @Mock
-    GenericDao mockServiceRequestDao;
+    ServiceRequestDao mockServiceRequestDao;
 
     /**
      * Error message returned when a fault occurs.
@@ -78,9 +76,8 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Test
     void testHandleMessage() {
         SdtContext.getContext().setServiceRequestId(1L);
-        ServiceRequestDao serviceRequestDao = EasyMock.mock(ServiceRequestDao.class);
         final SoapMessage soapMessage = getDummySoapMessageWithFault();
-        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(serviceRequestDao);
+        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockServiceRequestDao);
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
         mockServiceRequestDao.persist(serviceRequest);

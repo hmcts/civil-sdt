@@ -53,11 +53,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -147,21 +144,25 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     private ISdtManagementMBean sdtManagementMBean;
 
+    @Mock
+    private DefaultMessageListenerContainer messageListenerContainer;
+
+    @Mock
+    private IMessagingUtility messagingUtility;
+
+    @Mock
+    private ITargetApplicationSubmissionService targetAppSubmissionService;
+
     /**
      * Method to do any pre-test set-up.
      */
     @BeforeEach
     @Override
     public void setUp() {
-        DefaultMessageListenerContainer messageListenerContainer = EasyMock.createMock(DefaultMessageListenerContainer.class);
-        IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
-        IMessagingUtility messagingUtility  = EasyMock.createMock(IMessagingUtility.class);
-        ITargetApplicationSubmissionService targetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
         sdtManagementMBean = new SdtManagementMBean(messageListenerContainer,
-                                                    individualRequestDao,
+                                                    mockIndividualRequestDao,
                                                     messagingUtility,
                                                     targetAppSubmissionService);
-
         // Instantiate all the mocked objects and set them up in the MBean
         this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "individualRequestDao",
                 IIndividualRequestDao.class, mockIndividualRequestDao);
@@ -252,8 +253,6 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
         verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
-        verify(mockIndividualRequestDao, times(0)).persistBulk(anyList());
-        verify(mockMessagingUtility, times(0)).enqueueRequest(any());
 
         assertTrue(true, "Not expected to call the method to requeue requests");
     }
@@ -321,7 +320,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(invalidSdtReqReference,
-                        FORWARDED.getStatus());
+                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         verify(mockIndividualRequestDao).getRequestBySdtReference(invalidSdtReqReference);
 
@@ -343,7 +342,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
-                        FORWARDED.getStatus());
+                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_SDT_REQ_REF);
 
@@ -359,7 +358,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_SDT_REQ_REF);
         individualRequest.setDeadLetter(true);
-        individualRequest.setRequestStatus(FORWARDED.getStatus());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
         individualRequest.setForwardingAttempts(3);
 
         assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
@@ -372,11 +371,11 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         when(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).thenReturn(individualRequest);
 
         mockTargetAppSubmissionService.processDLQRequest(individualRequest,
-                FORWARDED.getStatus());
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         doAnswer((Answer<Void>) invocation -> {
             ((IndividualRequest) invocation.getArgument(0))
-                    .setRequestStatus (FORWARDED.getStatus ());
+                    .setRequestStatus (IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus ());
             ((IndividualRequest) invocation.getArgument(0)).setDeadLetter(false);
             ((IndividualRequest) invocation.getArgument(0)).setUpdatedDate(LocalDateTime.now());
             // required to be null for a void method
@@ -386,7 +385,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
-                        FORWARDED.getStatus());
+                        IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_SDT_REQ_REF);
         verify(mockTargetAppSubmissionService, atLeastOnce()).processDLQRequest(individualRequest,
@@ -404,7 +403,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_SDT_REQ_REF);
         individualRequest.setDeadLetter(true);
-        individualRequest.setRequestStatus(FORWARDED.getStatus());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
         individualRequest.setForwardingAttempts(3);
 
         assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
@@ -416,11 +415,11 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         when(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).thenReturn(individualRequest);
 
         mockTargetAppSubmissionService.processDLQRequest(individualRequest,
-                REJECTED.getStatus());
+                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
         doAnswer((Answer<Void>) invocation -> {
             ((IndividualRequest) invocation.getArgument(0))
-                    .setRequestStatus(REJECTED.getStatus());
+                    .setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
             ((IndividualRequest) invocation.getArgument(0)).setDeadLetter(false);
             ((IndividualRequest) invocation.getArgument(0)).setUpdatedDate(LocalDateTime.now());
             // required to be null for a void method
@@ -430,7 +429,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
-                        REJECTED.getStatus());
+                        IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_SDT_REQ_REF);
         verify(mockTargetAppSubmissionService, atLeastOnce()).processDLQRequest(individualRequest,

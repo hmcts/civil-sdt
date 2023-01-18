@@ -46,8 +46,8 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -112,7 +112,7 @@ class BulkCustomerValidatorTest {
      */
     @BeforeEach
     public void setUp() {
-        validator = new BulkCustomerValidator();
+        validator = new BulkCustomerValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
 
         bulkCustomer = new BulkCustomer();
 
@@ -128,9 +128,6 @@ class BulkCustomerValidatorTest {
         errorMessage.setErrorText("The Bulk Customer organisation does not have an SDT Customer ID set up. "
                 + "Please contact {1} for assistance.");
         validator.setErrorMessagesCache(errorMessagesCache);
-
-        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        validator = new BulkCustomerValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**

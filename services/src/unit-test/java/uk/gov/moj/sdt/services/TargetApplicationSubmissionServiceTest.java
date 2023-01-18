@@ -74,10 +74,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 import javax.xml.ws.WebServiceException;
 
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
-
 /**
  * Test class for TargetApplicationSubmissionService.
  *
@@ -199,7 +195,8 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
-        EasyMock.expect(this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(0L);
+        EasyMock.expect(this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(
+            Supplier.class))).andReturn(0L);
 
         mockIndividualRequestDao.persist(bulkSubmission);
         EasyMock.expectLastCall();
@@ -524,7 +521,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         EasyMock.verify(mockCacheable);
 
         Assert.assertEquals("Individual Request status not as expected",
-                FORWARDED.getStatus(),
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
                 individualRequest.getRequestStatus());
 
         Assert.assertNull("Bulk submission completed date should not be populated", individualRequest
@@ -577,7 +574,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
             @Override
             public Object answer() throws Throwable {
                 ((IndividualRequest) EasyMock.getCurrentArguments()[0])
-                        .setRequestStatus(REJECTED.getStatus());
+                        .setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
                 // required to be null for a void method
                 return null;
             }
@@ -631,7 +628,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         individualRequest.setSdtRequestReference(sdtRequestRef);
         this.setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(FORWARDED.getStatus());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
@@ -656,7 +653,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
                 new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
 
         individualRequest.setErrorLog(errorLog);
-        individualRequest.setRequestStatus(REJECTED.getStatus());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
         this.mockIndividualRequestDao.persist(individualRequest);
         EasyMock.expectLastCall();
@@ -704,9 +701,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         individualRequest.setSdtRequestReference(sdtRequestRef);
         this.setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestStatus(RECEIVED.getStatus());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
 
-        individualRequest.setRequestStatus(FORWARDED.getStatus());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         this.mockIndividualRequestDao.persist(individualRequest);
         EasyMock.expectLastCall();
@@ -720,7 +717,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         Assert.assertEquals("Individual Request should not be marked as dead letter", false,
                 individualRequest.isDeadLetter());
         Assert.assertEquals("Individual Request status is not FORWARDED",
-                FORWARDED.getStatus(),
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
                 individualRequest.getRequestStatus());
 
     }

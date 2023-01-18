@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -51,6 +52,7 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Tests for {@link IndividualRequestValidatorTest}.
@@ -109,6 +111,12 @@ class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     private static final int DATA_RETENTION_PERIOD = 90;
 
+    @Mock
+    private IBulkCustomerDao bulkCustomerDao;
+
+    @Mock
+    private IIndividualRequestDao individualRequestDao;
+
     /**
      * Setup of the Validator and Domain class instance.
      */
@@ -141,7 +149,7 @@ class IndividualRequestValidatorTest extends AbstractValidatorUnitTest {
         errorMessage = new ErrorMessage();
         errorMessage.setErrorCode(IErrorMessage.ErrorCode.DUP_CUST_REQID.name());
         errorMessage.setErrorText("Duplicate Unique Request Identifier submitted {0}.");
-        validator.setErrorMessagesCache(errorMessagesCache);
+        validator = new IndividualRequestValidator(bulkCustomerDao, globalParameterCache, errorMessagesCache, individualRequestDao);
     }
 
     /**

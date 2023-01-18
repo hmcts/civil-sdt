@@ -50,6 +50,9 @@ import uk.gov.moj.sdt.validators.exception.DuplicateUserRequestIdentifierExcepti
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
@@ -101,13 +104,22 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
      */
     private IGlobalParameter globalParam;
 
+    @Mock
+    private IBulkCustomerDao bulkCustomerDao;
+
+    @Mock
+    private IBulkSubmissionDao bulkSubmissionDao;
+
     /**
      * Set up test artefact.
      */
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        validator = new BulkSubmissionValidator();
+        validator = new BulkSubmissionValidator(bulkCustomerDao,
+                                                mockGlobalParameterCache,
+                                                mockErrorMessagesCache,
+                                                bulkSubmissionDao);
         validator.setErrorMessagesCache(mockErrorMessagesCache);
         validator.setGlobalParameterCache(mockGlobalParameterCache);
 

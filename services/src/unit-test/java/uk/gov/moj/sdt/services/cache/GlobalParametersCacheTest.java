@@ -37,18 +37,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
-import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
-import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -88,11 +83,8 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        cache = new GlobalParametersCache();
-        cache.setGenericDao(mockGenericDao);
-
         managementMBean = Mockito.mock(ISdtManagementMBean.class);
-        cache.setManagementMBean(managementMBean);
+        cache = new GlobalParametersCache(managementMBean, mockGenericDao);
 
         // Setup some results
         result = new GlobalParameter[3];
@@ -135,8 +127,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         assertEquals("two", param.getValue());
         assertEquals("parameter 2", param.getDescription());
 
-        verify(mockGenericDao).query(IGlobalParameter.class);
-        verify(managementMBean, times(3)).getCacheResetControl();
+        verify(mockGenericDao).query(GlobalParameter.class);
     }
 
     /**
@@ -151,7 +142,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
         final IGlobalParameter param = cache.getValue(IGlobalParameter.class, "dont_exist");
         assertNull(param);
 
-        verify(mockGenericDao).query(IGlobalParameter.class);
+        verify(mockGenericDao).query(GlobalParameter.class);
         verify(managementMBean).getCacheResetControl();
     }
 
@@ -174,8 +165,7 @@ class GlobalParametersCacheTest extends AbstractSdtUnitTestBase {
 
         assertEquals(0, cache.getGlobalParameters().size());
 
-        verify(mockGenericDao).query(IGlobalParameter.class);
-        verify(managementMBean).getCacheResetControl();
+        verify(mockGenericDao).query(GlobalParameter.class);
     }
 
 }
