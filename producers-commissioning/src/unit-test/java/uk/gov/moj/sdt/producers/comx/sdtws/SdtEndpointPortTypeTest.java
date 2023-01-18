@@ -21,7 +21,7 @@ package uk.gov.moj.sdt.producers.comx.sdtws;
  * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
  * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
  * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
+ * not limited to, procurement of substitute goods or services; loss of use, data, or profits
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
@@ -31,14 +31,18 @@ package uk.gov.moj.sdt.producers.comx.sdtws;
  * $LastChangedDate$
  * $LastChangedBy$ */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
@@ -62,8 +66,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d276205
  * 
  */
-public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
-{
+@ExtendWith(MockitoExtension.class)
+class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
     /**
      * Test subject.
@@ -73,167 +77,144 @@ public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
     /**
      * Mocked IWsCreateBulkRequestHandler instance.
      */
+    @Mock
     private IWsCreateBulkRequestHandler mockCreateBulkRequestHandler;
 
     /**
      * Mocked IWsReadBulkRequestHandler instance.
      */
+    @Mock
     private IWsReadBulkRequestHandler mockBulkRequestHandler;
 
     /**
      * Mocked IWsReadSubmitQueryHandler instance.
      */
+    @Mock
     private IWsReadSubmitQueryHandler mockSubmitQueryHandler;
 
     /**
      * Constant for commissioning SDT service.
      */
     private static final String SDT_COMX_SERVICE = "SDT Commissioning";
+    private static final String RESPONSE_EXPECTED = "Response expected";
+    private static final String RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN = "Runtime exception should have been thrown";
+
+
+    private static final String SDT_SYSTEM_COMPONENT_ERROR =
+            "A SDT system component error has occurred. Please contact the SDT support team for assistance";
 
     /**
      * Set up common for all tests.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp ()
     {
-        portType = new SdtEndpointPortType ();
-
-        mockCreateBulkRequestHandler = EasyMock.createMock (IWsCreateBulkRequestHandler.class);
-        portType.setWsCreateBulkRequestHandler (mockCreateBulkRequestHandler);
-
-        mockBulkRequestHandler = EasyMock.createMock (IWsReadBulkRequestHandler.class);
-        portType.setWsReadBulkRequestHandler (mockBulkRequestHandler);
-
-        mockSubmitQueryHandler = EasyMock.createMock (IWsReadSubmitQueryHandler.class);
-        portType.setWsReadSubmitQueryHandler (mockSubmitQueryHandler);
+        portType = new SdtEndpointPortType();
+        portType.setWsCreateBulkRequestHandler(mockCreateBulkRequestHandler);
+        portType.setWsReadBulkRequestHandler(mockBulkRequestHandler);
+        portType.setWsReadSubmitQueryHandler(mockSubmitQueryHandler);
     }
 
     /**
      * Test submit bulk method completes successfully.
      */
     @Test
-    public void testSubmitBulkSuccess ()
-    {
-        final BulkResponseType dummyResponse = createBulkResponse ();
-        final BulkRequestType dummyRequest = createBulkRequest ();
+    void testSubmitBulkSuccess() {
+        final BulkResponseType dummyResponse = createBulkResponse();
+        final BulkRequestType dummyRequest = createBulkRequest();
 
-        EasyMock.expect (mockCreateBulkRequestHandler.submitBulk (dummyRequest)).andReturn (dummyResponse);
-        EasyMock.replay (mockCreateBulkRequestHandler);
+        when(mockCreateBulkRequestHandler.submitBulk(dummyRequest)).thenReturn(dummyResponse);
 
         final BulkResponseType response = portType.submitBulk (dummyRequest);
 
-        EasyMock.verify (mockCreateBulkRequestHandler);
-        assertNotNull ("Response expected", response);
-        assertEquals (SDT_COMX_SERVICE, response.getSdtService ());
+        verify(mockCreateBulkRequestHandler).submitBulk(dummyRequest);
+        assertNotNull(response, RESPONSE_EXPECTED);
+        assertEquals(SDT_COMX_SERVICE, response.getSdtService());
     }
 
     /**
      * Test submit bulk method handles exceptions successfully.
      */
     @Test
-    public void testSubmitBulkException ()
-    {
-        EasyMock.expect (mockCreateBulkRequestHandler.submitBulk (EasyMock.anyObject (BulkRequestType.class)))
-                .andThrow (new RuntimeException ("test"));
-        EasyMock.replay (mockCreateBulkRequestHandler);
+    void testSubmitBulkException() {
+        when(mockCreateBulkRequestHandler.submitBulk(any(BulkRequestType.class)))
+                .thenThrow(new RuntimeException ("test"));
 
-        try
-        {
-            portType.submitBulk (createBulkRequest ());
-            fail ("Runtime exception should have been thrown");
-        }
-        catch (final RuntimeException re)
-        {
-            assertEquals ("",
-                    "A SDT system component error has occurred. Please contact the SDT support team for assistance",
-                    re.getMessage ());
+        try {
+            portType.submitBulk(createBulkRequest());
+            fail(RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
+        } catch (final RuntimeException re) {
+            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
-        EasyMock.verify (mockCreateBulkRequestHandler);
+        verify(mockCreateBulkRequestHandler).submitBulk(any(BulkRequestType.class));
     }
 
     /**
      * Test bulk feedback method completes successfully.
      */
     @Test
-    public void testBulkFeedbackSuccess ()
-    {
-        EasyMock.expect (mockBulkRequestHandler.getBulkFeedback (EasyMock.anyObject (BulkFeedbackRequestType.class)))
-                .andReturn (createBulkFeedbackResponse ());
-        EasyMock.replay (mockBulkRequestHandler);
+    void testBulkFeedbackSuccess() {
+        when(mockBulkRequestHandler.getBulkFeedback(any(BulkFeedbackRequestType.class)))
+                .thenReturn(createBulkFeedbackResponse());
 
-        final BulkFeedbackResponseType response = portType.getBulkFeedback (createBulkFeedbackRequestType ());
+        final BulkFeedbackResponseType response = portType.getBulkFeedback(createBulkFeedbackRequestType ());
 
-        assertNotNull ("Response expected", response);
-        assertEquals (SDT_COMX_SERVICE, response.getBulkRequestStatus ().getSdtService ());
-        EasyMock.verify (mockBulkRequestHandler);
+        assertNotNull(response, RESPONSE_EXPECTED);
+        assertEquals (SDT_COMX_SERVICE, response.getBulkRequestStatus().getSdtService());
+        verify(mockBulkRequestHandler).getBulkFeedback(any(BulkFeedbackRequestType.class));
     }
 
     /**
      * Test bulk feedback method handles exceptions successfully.
      */
     @Test
-    public void testBulkFeedbackException ()
-    {
-        EasyMock.expect (mockBulkRequestHandler.getBulkFeedback (EasyMock.anyObject (BulkFeedbackRequestType.class)))
-                .andThrow (new RuntimeException ("test"));
-        EasyMock.replay (mockBulkRequestHandler);
+    void testBulkFeedbackException() {
+        when(mockBulkRequestHandler.getBulkFeedback(any(BulkFeedbackRequestType.class)))
+                .thenThrow (new RuntimeException("test"));
 
-        try
-        {
-            portType.getBulkFeedback (createBulkFeedbackRequestType ());
-            fail ("Runtime exception should have been thrown");
-        }
-        catch (final RuntimeException re)
-        {
-            assertEquals ("",
-                    "A SDT system component error has occurred. Please contact the SDT support team for assistance",
-                    re.getMessage ());
+        try {
+            portType.getBulkFeedback (createBulkFeedbackRequestType());
+            fail (RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
+        } catch (final RuntimeException re) {
+            assertEquals (SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
-        EasyMock.verify (mockBulkRequestHandler);
+        verify (mockBulkRequestHandler).getBulkFeedback(any(BulkFeedbackRequestType.class));
     }
 
     /**
      * Test submit query method completes successfully.
      */
     @Test
-    public void testSubmitQuerySuccess ()
-    {
-        EasyMock.expect (mockSubmitQueryHandler.submitQuery (EasyMock.anyObject (SubmitQueryRequestType.class)))
-                .andReturn (createSubmitQueryResponse ());
-        EasyMock.replay (mockSubmitQueryHandler);
+    void testSubmitQuerySuccess() {
+        when(mockSubmitQueryHandler.submitQuery(any(SubmitQueryRequestType.class)))
+                .thenReturn(createSubmitQueryResponse());
 
-        final SubmitQueryResponseType response = portType.submitQuery (createsubmitQueryRequestType ());
+        final SubmitQueryResponseType response = portType.submitQuery (createsubmitQueryRequestType());
 
-        assertNotNull ("Response expected", response);
-        assertEquals (SDT_COMX_SERVICE, response.getSdtService ());
-        EasyMock.verify (mockSubmitQueryHandler);
+        assertNotNull(response, RESPONSE_EXPECTED);
+        assertEquals(SDT_COMX_SERVICE, response.getSdtService());
+        verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));
     }
 
     /**
      * Test submit query method handles exceptions successfully.
      */
     @Test
-    public void testSubmitQueryException ()
-    {
-        EasyMock.expect (mockSubmitQueryHandler.submitQuery (EasyMock.anyObject (SubmitQueryRequestType.class)))
-                .andThrow (new RuntimeException ("test"));
-        EasyMock.replay (mockSubmitQueryHandler);
+    void testSubmitQueryException() {
+        when(mockSubmitQueryHandler.submitQuery(any(SubmitQueryRequestType.class)))
+                .thenThrow(new RuntimeException ("test"));
 
-        try
-        {
-            portType.submitQuery (createsubmitQueryRequestType ());
-            fail ("Runtime exception should have been thrown");
-        }
-        catch (final RuntimeException re)
-        {
-            assertEquals ("",
-                    "A SDT system component error has occurred. Please contact the SDT support team for assistance",
-                    re.getMessage ());
+        try {
+            portType.submitQuery (createsubmitQueryRequestType());
+            fail (RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN);
+        } catch (final RuntimeException re) {
+            assertEquals(SDT_SYSTEM_COMPONENT_ERROR, re.getMessage());
         }
 
-        EasyMock.verify (mockSubmitQueryHandler);
+        verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));
     }
 
     /**
@@ -241,17 +222,16 @@ public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * 
      * @return dummy request.
      */
-    private BulkRequestType createBulkRequest ()
-    {
-        final BulkRequestType request = new BulkRequestType ();
+    private BulkRequestType createBulkRequest() {
+        final BulkRequestType request = new BulkRequestType();
 
-        final HeaderType header = new HeaderType ();
-        header.setCustomerReference ("1");
-        header.setRequestCount (1);
-        header.setSdtCustomerId (12345678);
-        header.setTargetApplicationId ("mcol");
+        final HeaderType header = new HeaderType();
+        header.setCustomerReference("1");
+        header.setRequestCount(1);
+        header.setSdtCustomerId(12345678);
+        header.setTargetApplicationId("mcol");
 
-        request.setHeader (header);
+        request.setHeader(header);
         return request;
     }
 
@@ -260,13 +240,13 @@ public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * 
      * @return dummy response.
      */
-    private BulkResponseType createBulkResponse ()
-    {
-        final BulkResponseType response = new BulkResponseType ();
+    private BulkResponseType createBulkResponse() {
 
-        final StatusType statusType = new StatusType ();
-        statusType.setCode (StatusCodeType.OK);
-        response.setStatus (statusType);
+        final BulkResponseType response = new BulkResponseType();
+
+        final StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.OK);
+        response.setStatus(statusType);
         return response;
     }
 
@@ -275,16 +255,15 @@ public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * 
      * @return dummy request.
      */
-    private BulkFeedbackRequestType createBulkFeedbackRequestType ()
-    {
-        final BulkFeedbackRequestType request = new BulkFeedbackRequestType ();
+    private BulkFeedbackRequestType createBulkFeedbackRequestType() {
+        final BulkFeedbackRequestType request = new BulkFeedbackRequestType();
 
         final uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType header =
-                new uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType ();
-        header.setSdtBulkReference ("123");
-        header.setSdtCustomerId (12345678);
+                new uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType();
+        header.setSdtBulkReference("123");
+        header.setSdtCustomerId(12345678);
 
-        request.setHeader (header);
+        request.setHeader(header);
         return request;
     }
 
@@ -293,24 +272,23 @@ public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * 
      * @return dummy response.
      */
-    private BulkFeedbackResponseType createBulkFeedbackResponse ()
-    {
-        final BulkFeedbackResponseType response = new BulkFeedbackResponseType ();
+    private BulkFeedbackResponseType createBulkFeedbackResponse() {
+        final BulkFeedbackResponseType response = new BulkFeedbackResponseType();
 
-        final StatusType statusType = new StatusType ();
-        statusType.setCode (StatusCodeType.OK);
+        final StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.OK);
 
-        final BulkRequestStatusType bulkRequestStatus = new BulkRequestStatusType ();
-        bulkRequestStatus.setCustomerReference ("123");
-        bulkRequestStatus.setRequestCount (0L);
-        bulkRequestStatus.setSdtBulkReference ("123");
-        bulkRequestStatus.setStatus (statusType);
+        final BulkRequestStatusType bulkRequestStatus = new BulkRequestStatusType();
+        bulkRequestStatus.setCustomerReference("123");
+        bulkRequestStatus.setRequestCount(0L);
+        bulkRequestStatus.setSdtBulkReference("123");
+        bulkRequestStatus.setStatus(statusType);
 
-        final BulkStatusType bulkStatusType = new BulkStatusType ();
-        bulkStatusType.setCode (BulkStatusCodeType.COMPLETED);
-        bulkRequestStatus.setBulkStatus (bulkStatusType);
+        final BulkStatusType bulkStatusType = new BulkStatusType();
+        bulkStatusType.setCode(BulkStatusCodeType.COMPLETED);
+        bulkRequestStatus.setBulkStatus(bulkStatusType);
 
-        response.setBulkRequestStatus (bulkRequestStatus);
+        response.setBulkRequestStatus(bulkRequestStatus);
         return response;
     }
 
@@ -319,16 +297,15 @@ public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * 
      * @return dummy request.
      */
-    private SubmitQueryRequestType createsubmitQueryRequestType ()
-    {
+    private SubmitQueryRequestType createsubmitQueryRequestType() {
         final SubmitQueryRequestType request = new SubmitQueryRequestType ();
 
         final uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType header =
-                new uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType ();
-        header.setTargetApplicationId ("mcol");
-        header.setSdtCustomerId (12345678);
+                new uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.HeaderType();
+        header.setTargetApplicationId("mcol");
+        header.setSdtCustomerId(12345678);
 
-        request.setHeader (header);
+        request.setHeader(header);
         return request;
     }
 
@@ -337,15 +314,14 @@ public class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase
      * 
      * @return dummy response.
      */
-    private SubmitQueryResponseType createSubmitQueryResponse ()
-    {
-        final SubmitQueryResponseType response = new SubmitQueryResponseType ();
+    private SubmitQueryResponseType createSubmitQueryResponse() {
+        final SubmitQueryResponseType response = new SubmitQueryResponseType();
 
-        final StatusType statusType = new StatusType ();
-        statusType.setCode (StatusCodeType.OK);
+        final StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.OK);
 
-        response.setSdtCustomerId (123);
-        response.setStatus (statusType);
+        response.setSdtCustomerId(123);
+        response.setStatus(statusType);
         return response;
     }
 

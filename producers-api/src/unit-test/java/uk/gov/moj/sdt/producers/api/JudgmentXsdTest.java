@@ -30,8 +30,7 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.producers.api;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
 
 /**
@@ -40,8 +39,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtXmlTestBase;
  * @author Saurabh Agarwal
  * 
  */
-public class JudgmentXsdTest extends AbstractSdtXmlTestBase
-{
+class JudgmentXsdTest extends AbstractSdtXmlTestBase {
+
     /**
      * The name of the xsd.
      */
@@ -66,8 +65,7 @@ public class JudgmentXsdTest extends AbstractSdtXmlTestBase
      * Tests XML file is valid.
      */
     @Test
-    public void testValidXml ()
-    {
+    void testValidXml() {
         final String condition = "Valid";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         this.validateXsd (xmlPath, XSD_PATH, null);
@@ -81,8 +79,7 @@ public class JudgmentXsdTest extends AbstractSdtXmlTestBase
      * 3. A legal costs fee.
      */
     @Test
-    public void testValidJudByAdmAfterPAXml ()
-    {
+    void testValidJudByAdmAfterPAXml() {
         final String condition = "ValidAdmissionAfterPA";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         this.validateXsd (xmlPath, XSD_PATH, null);
@@ -92,8 +89,7 @@ public class JudgmentXsdTest extends AbstractSdtXmlTestBase
      * Tests that expected errors are reported for missing mandatory fields.
      */
     @Test
-    public void testInvalidXmlMandatoryMissing ()
-    {
+    void testInvalidXmlMandatoryMissing() {
         final String condition = "MandatoryMissing";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;
@@ -105,8 +101,7 @@ public class JudgmentXsdTest extends AbstractSdtXmlTestBase
      * {@inheritDoc}
      */
     @Test
-    public void testInvalidXmlIncorrectFormat ()
-    {
+    void testInvalidXmlIncorrectFormat() {
         final String condition = "IncorrectFormat";
         final String xmlPath = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.XML_FILE_SUFFIX;
         final String errorFilePathname = XML_DIR + XSD_NAME + condition + AbstractSdtXmlTestBase.ERROR_FILE_SUFFIX;

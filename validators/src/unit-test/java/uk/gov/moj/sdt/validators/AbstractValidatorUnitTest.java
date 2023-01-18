@@ -46,6 +46,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
  *
  * @author d276205
  */
+
 public abstract class AbstractValidatorUnitTest extends AbstractSdtUnitTestBase {
     /**
      * create a bulk customer.
