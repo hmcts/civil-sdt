@@ -34,21 +34,22 @@ package uk.gov.moj.sdt.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link BulkCustomer}.
  *
  * @author d276205
  */
-public class BulkCustomerTest extends AbstractSdtUnitTestBase {
+class BulkCustomerTest extends AbstractSdtUnitTestBase {
     /**
      * Test subject.
      */
@@ -57,7 +58,8 @@ public class BulkCustomerTest extends AbstractSdtUnitTestBase {
     /**
      * Set up test data.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
         bulkCustomer = new BulkCustomer();
         final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
@@ -75,11 +77,9 @@ public class BulkCustomerTest extends AbstractSdtUnitTestBase {
      * Tests that hasAccess() method works correctly.
      */
     @Test
-    public void testHasAccess() {
-        Assert.assertTrue("Customer should have access",
-                          bulkCustomer.hasAccess("YES"));
-        Assert.assertFalse("Customer should not have access",
-                           bulkCustomer.hasAccess("NO"));
+    void testHasAccess() {
+        assertTrue(bulkCustomer.hasAccess("YES"), "Customer should have access");
+        assertFalse(bulkCustomer.hasAccess("NO"), "Customer should not have access");
     }
 
 }

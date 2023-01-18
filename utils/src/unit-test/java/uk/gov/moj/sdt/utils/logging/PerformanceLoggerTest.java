@@ -37,32 +37,28 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Class to test performance logging.
  *
  * @author Robin Compston.
  */
-public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
+class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
     /**
      * Pathname of performance log file.
      */
     private static final String PERFORMANCE_LOG_PATH = "../logs/sdt.performance.log";
 
-    /**
-     * File for performance log.
-     */
-    private File performanceLogFile;
-
     @Override
     protected void setUpLocalTests() throws Exception {
-        // Clear performance log.
-        performanceLogFile = new File(PERFORMANCE_LOG_PATH);
+
+        File performanceLogFile = new File(PERFORMANCE_LOG_PATH);
         if (performanceLogFile.exists()) {
             FileChannel outChan;
             try {
@@ -70,17 +66,16 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
                 outChan.truncate(0);
                 outChan.close();
             } catch (final Exception e) {
-                Assert.fail(e.getStackTrace().toString());
+                fail(e.getMessage());
             }
         }
-
     }
 
     /**
      * Test writing of a performance message to performance log.
      */
     @Test
-    public void testPerformanceMessage() {
+    void testPerformanceMessage() {
         // Setup SDT context for logging.
         SdtContext.getContext().getLoggingContext().setLoggingFlags(Integer.MAX_VALUE);
         SdtContext.getContext().getLoggingContext().setMajorLoggingId(987);
@@ -110,9 +105,9 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
             // Match it against the result of all previous match replacements.
             final Matcher matcher = pattern.matcher(text);
 
-            Assert.assertTrue("Failed to find message [" + contents + "] in performance log", matcher.find());
+            assertTrue(matcher.find(), "Failed to find message [" + contents + "] in performance log");
         } catch (final Exception e) {
-            Assert.fail("Failed to find contents [" + contents + "] in performance log.");
+            fail("Failed to find contents [" + contents + "] in performance log.");
         }
     }
 }

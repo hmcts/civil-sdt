@@ -30,12 +30,19 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.easymock.EasyMock;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -60,27 +67,29 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for BulkSubmissionService.
  *
  * @author Sally Vonka
  */
-public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
+
     /**
-     * Logger for debugging.
+     * Bulk Submission DAO property for looking up the bulk submission object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackServiceTest.class);
+    @Mock
+    private IBulkSubmissionDao mockBulkSubmissionDao;
+
+    /**
+     * Global parameter cache to retrieve data retention period.
+     */
+    @Mock
+    private ICacheable mockGlobalParameterCache;
 
     /**
      * Bulk Feedback Service for testing.
@@ -88,18 +97,8 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     private BulkFeedbackService bulkFeedbackService;
 
     /**
-     * Bulk Submission DAO property for looking up the bulk submission object.
-     */
-    private IBulkSubmissionDao mockBulkSubmissionDao;
-    /**
-     * Global parameter cache to retrieve data retention period.
-     */
-    private ICacheable mockGlobalParameterCache;
-
-    /**
      * The IBulkFeedbackRequest.
      */
-
     private IBulkFeedbackRequest bulkFeedbackRequest;
 
     /**
@@ -125,21 +124,17 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Setup of the mock dao and injection of other objects.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
 
-        mockBulkSubmissionDao = EasyMock.createMock(IBulkSubmissionDao.class);
-
-        mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
+        bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
 
         final IGlobalParameter globalParameterData = new GlobalParameter();
         globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
         globalParameterData.setValue("90");
-        mockGlobalParameterCache = EasyMock.createMock(ICacheable.class);
-        expect(
-                mockGlobalParameterCache.getValue(IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).andReturn(globalParameterData);
-        replay(mockGlobalParameterCache);
+        when(mockGlobalParameterCache.getValue(IGlobalParameter.class,
+                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).thenReturn(globalParameterData);
 
         bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
 
@@ -157,34 +152,24 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
     }
 
-    /**
-     * @throws IOException if there is any issue
-     */
     @Test
-    public void testGetBulkFeedback() throws IOException {
+    void testGetBulkFeedback() {
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
         addValidIndividualRequest(bulkSubmission, "ICustReq124", RECEIVED.getStatus());
         addValidIndividualRequest(bulkSubmission, "ICustReq125", REJECTED.getStatus());
         addValidIndividualRequest(bulkSubmission, "ICustReq126", RECEIVED.getStatus());
 
-        LOGGER.debug("Size of Individual Requests in Bulk Submission is " +
-                bulkSubmission.getIndividualRequests().size());
-
         // Tell the mock dao to return this request
-        expect(mockBulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod))
-                .andReturn(bulkSubmission);
-        replay(mockBulkSubmissionDao);
+        when(mockBulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod))
+                .thenReturn(bulkSubmission);
         bulkFeedbackService.getBulkFeedback(bulkFeedbackRequest);
 
         final Map<String, String> targetApplicationRespMap = SdtContext.getContext().getTargetApplicationRespMap();
 
-        LOGGER.debug("Size of Individual Requests in SDT context is " + targetApplicationRespMap.size());
+        assertEquals(3, targetApplicationRespMap.size());
 
-        Assert.assertTrue(targetApplicationRespMap.size() == 3);
-
-        EasyMock.verify(mockBulkSubmissionDao);
-
+        verify(mockBulkSubmissionDao).getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod);
     }
 
     /**
@@ -192,7 +177,7 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
      */
     private IBulkSubmission createBulkSubmission() {
         final IBulkSubmission bulkSubmission = new BulkSubmission();
-        final IBulkCustomer bulkCustomer = new BulkCustomer();
+        final IBulkCustomer iBulkCustomer = new BulkCustomer();
         final ITargetApplication targetApp = new TargetApplication();
 
         targetApp.setId(1L);
@@ -218,10 +203,10 @@ public class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
 
         bulkSubmission.setTargetApplication(targetApp);
 
-        bulkCustomer.setId(1L);
-        bulkCustomer.setSdtCustomerId(10L);
+        iBulkCustomer.setId(1L);
+        iBulkCustomer.setSdtCustomerId(10L);
 
-        bulkSubmission.setBulkCustomer(bulkCustomer);
+        bulkSubmission.setBulkCustomer(iBulkCustomer);
 
         bulkSubmission.setCreatedDate(LocalDateTime.now());
         bulkSubmission.setCustomerReference("TEST_CUST_REF");

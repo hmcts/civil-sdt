@@ -30,11 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.mbeans;
 
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.util.ReflectionUtils;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -50,15 +51,42 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the SdtManagementMBean.
  *
  * @author Manoj Kulkarni
  */
-public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
+
+    /**
+     * Mock Individual Request Dao to perform operations on the individual request object.
+     */
+    @Mock
+    private IIndividualRequestDao mockIndividualRequestDao;
+
+    /**
+     * This mock messaging utility reference for testing.
+     */
+    @Mock
+    private IMessagingUtility mockMessagingUtility;
+
+    /**
+     * This mock variable holding the target application submission service.
+     */
+    @Mock
+    private ITargetApplicationSubmissionService mockTargetAppSubmissionService;
+
     /**
      * Success message to return after successfully processing the SDT individual request.
      */
@@ -104,6 +132,11 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     private static final String TEST_SDT_REQ_REF = "Sdt_Req_Test";
 
+    private static final String EXPECTED_AN_ERROR_MESSAGE = "Expected an error message.";
+
+    private static final String RETURN_MESSAGE_SHOULD_HAVE_BEEN_AN_ERROR =
+            "The return message should have been an error";
+
     /**
      * Number of minutes to check that the request is not gone stale.
      */
@@ -115,24 +148,10 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
     private ISdtManagementMBean sdtManagementMBean;
 
     /**
-     * Mock Individual Request Dao to perform operations on the individual request object.
-     */
-    private IIndividualRequestDao mockIndividualRequestDao;
-
-    /**
-     * This mock messaging utility reference for testing.
-     */
-    private IMessagingUtility mockMessagingUtility;
-
-    /**
-     * This mock variable holding the target application submission service.
-     */
-    private ITargetApplicationSubmissionService mockTargetAppSubmissionService;
-
-    /**
      * Method to do any pre-test set-up.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
         DefaultMessageListenerContainer messageListenerContainer = EasyMock.createMock(DefaultMessageListenerContainer.class);
         IIndividualRequestDao individualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
@@ -144,32 +163,28 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
                                                     targetAppSubmissionService);
 
         // Instantiate all the mocked objects and set them up in the MBean
-        mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
         this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "individualRequestDao",
                 IIndividualRequestDao.class, mockIndividualRequestDao);
 
-        mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
         this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "messagingUtility",
                 IMessagingUtility.class, mockMessagingUtility);
 
-        mockTargetAppSubmissionService = EasyMock.createMock(ITargetApplicationSubmissionService.class);
         this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "targetAppSubmissionService",
                 ITargetApplicationSubmissionService.class, mockTargetAppSubmissionService);
-
     }
 
     /**
      * Test method for the uncache method.
      */
     @Test
-    public void uncacheTest() {
-        Assert.assertEquals("The cache re-set counter should be zero.", 0,
-                this.sdtManagementMBean.getCacheResetControl());
+    void uncacheTest() {
+        assertEquals(0, this.sdtManagementMBean.getCacheResetControl(),
+                "The cache re-set counter should be zero.");
 
         this.sdtManagementMBean.uncache();
 
-        Assert.assertEquals("The cache re-set counter should be incremented.", 1,
-                this.sdtManagementMBean.getCacheResetControl());
+        assertEquals(1, this.sdtManagementMBean.getCacheResetControl(),
+                "The cache re-set counter should be incremented.");
     }
 
     /**
@@ -177,11 +192,11 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * messsage listener container is not set then it returns an appropriate message.
      */
     @Test
-    public void setMdbPoolSizeUnknownMessageContainer() {
+    void setMdbPoolSizeUnknownMessageContainer() {
         final String returnVal = this.sdtManagementMBean.setMdbPoolSize(TEST_QUEUE_NAME, TEST_POOL_SIZE);
 
-        Assert.assertEquals("The return message should have been an error", "mdb pool [" + TEST_QUEUE_NAME +
-                "] not found", returnVal);
+        assertEquals("mdb pool [" + TEST_QUEUE_NAME + "] not found", returnVal,
+                RETURN_MESSAGE_SHOULD_HAVE_BEEN_AN_ERROR);
     }
 
     /**
@@ -189,7 +204,7 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * pool size is invalid, an appropriate error message is returned.
      */
     @Test
-    public void setMdbPoolSizePoolSizeInvalid() {
+    void setMdbPoolSizePoolSizeInvalid() {
         final DefaultMessageListenerContainer messageListenerContainer = new DefaultMessageListenerContainer();
         messageListenerContainer.setDestinationName(TEST_QUEUE_NAME);
 
@@ -197,20 +212,20 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         String returnVal = this.sdtManagementMBean.setMdbPoolSize(TEST_QUEUE_NAME, TEST_POOL_SIZE + 41);
 
-        Assert.assertEquals("The return message should have been an error",
-                "MDB pool size can only be set between 1 and 50.", returnVal);
+        assertEquals("MDB pool size can only be set between 1 and 50.", returnVal,
+                RETURN_MESSAGE_SHOULD_HAVE_BEEN_AN_ERROR);
 
         returnVal = this.sdtManagementMBean.setMdbPoolSize(TEST_QUEUE_NAME, TEST_POOL_SIZE - 10);
 
-        Assert.assertEquals("The return message should have been an error",
-                "MDB pool size can only be set between 1 and 50.", returnVal);
+        assertEquals("MDB pool size can only be set between 1 and 50.", returnVal,
+                RETURN_MESSAGE_SHOULD_HAVE_BEEN_AN_ERROR);
     }
 
     /**
      * Test method for setMdbPoolSize. A test for the positive conditions scenario.
      */
     @Test
-    public void setMdbPoolSize() {
+    void setMdbPoolSize() {
         final DefaultMessageListenerContainer messageListenerContainer = new DefaultMessageListenerContainer();
         messageListenerContainer.setDestinationName(TEST_QUEUE_NAME);
 
@@ -218,12 +233,11 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         final String returnVal = this.sdtManagementMBean.setMdbPoolSize(TEST_QUEUE_NAME, TEST_POOL_SIZE);
 
-        Assert.assertEquals("The return message is incorrect", "mdb pool [" + TEST_QUEUE_NAME +
-                "] size changed from 1 to " + TEST_POOL_SIZE, returnVal);
+        assertEquals("mdb pool [" + TEST_QUEUE_NAME + "] size changed from 1 to " + TEST_POOL_SIZE, returnVal,
+                "The return message is incorrect");
 
-        Assert.assertEquals("The message listener container max concurrent pool size should have been changed", 10,
-                messageListenerContainer.getMaxConcurrentConsumers());
-
+        assertEquals(10, messageListenerContainer.getMaxConcurrentConsumers(),
+                "The message listener container max concurrent pool size should have been changed");
     }
 
     /**
@@ -231,18 +245,17 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * where there are no old individual requests to process.
      */
     @Test
-    public void requeueOldRequestsNotFound() {
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest>();
-        EasyMock.expect(mockIndividualRequestDao.getStaleIndividualRequests(TEST_STALE_DURATION)).andReturn(
-                individualRequests);
-
-        EasyMock.replay(mockIndividualRequestDao);
+    void requeueOldRequestsNotFound() {
+        final List<IIndividualRequest> individualRequests = new ArrayList<>();
+        when(mockIndividualRequestDao.getStaleIndividualRequests(TEST_STALE_DURATION)).thenReturn(individualRequests);
 
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
-        EasyMock.verify(mockIndividualRequestDao);
+        verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
+        verify(mockIndividualRequestDao, times(0)).persistBulk(anyList());
+        verify(mockMessagingUtility, times(0)).enqueueRequest(any());
 
-        Assert.assertTrue("Not expected to call the method to requeue requests", true);
+        assertTrue(true, "Not expected to call the method to requeue requests");
     }
 
     /**
@@ -250,34 +263,28 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * where there are some old individual requests to process.
      */
     @Test
-    public void requeueOldRequests() {
+    void requeueOldRequests() {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference("SDT_REQ_1");
         individualRequest.setForwardingAttempts(3);
-        final List<IIndividualRequest> individualRequests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> individualRequests = new ArrayList<>();
         individualRequests.add(individualRequest);
 
-        EasyMock.expect(mockIndividualRequestDao.getStaleIndividualRequests(TEST_STALE_DURATION)).andReturn(
+        when(mockIndividualRequestDao.getStaleIndividualRequests(TEST_STALE_DURATION)).thenReturn(
                 individualRequests);
 
         mockMessagingUtility.enqueueRequest(individualRequest);
-        EasyMock.expectLastCall();
 
         individualRequest.resetForwardingAttempts();
 
         mockIndividualRequestDao.persistBulk(individualRequests);
-        EasyMock.expectLastCall();
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockMessagingUtility);
 
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockMessagingUtility);
+        verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
+        verify(mockMessagingUtility, atLeastOnce()).enqueueRequest(individualRequest);
 
-        Assert.assertTrue("All tests passed", true);
-
+        assertTrue(true, "All tests passed");
     }
 
     /**
@@ -285,10 +292,10 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * the Sdt Request Reference and the Request Status.
      */
     @Test
-    public void processDLQRequestWithNullParams() {
+    void processDLQRequestWithNullParams() {
         final String returnVal = this.sdtManagementMBean.processDlqRequest(null, null);
 
-        Assert.assertEquals("Expected an error message.", MANDATORY_PARAMETERS_ERR_MSG, returnVal);
+        assertEquals(MANDATORY_PARAMETERS_ERR_MSG, returnVal, EXPECTED_AN_ERROR_MESSAGE);
     }
 
     /**
@@ -296,10 +303,10 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * the Sdt Request Reference and Invalid value for the Request Status.
      */
     @Test
-    public void processDLQRequestWithInvalidStatus() {
+    void processDLQRequestWithInvalidStatus() {
         final String returnVal = this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF, "RECEIVED");
 
-        Assert.assertEquals("Expected an error message.", INVALID_PARAM_VALUES_MSG, returnVal);
+        assertEquals(INVALID_PARAM_VALUES_MSG, returnVal, EXPECTED_AN_ERROR_MESSAGE);
     }
 
     /**
@@ -307,21 +314,18 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * Sdt Request Reference such that does not exist in database.
      */
     @Test
-    public void processDLQRequestWithInvalidSdtRequest() {
+    void processDLQRequestWithInvalidSdtRequest() {
         final String invalidSdtReqReference = "INVALID_SDT_REQ_REF";
 
-        EasyMock.expect(mockIndividualRequestDao.getRequestBySdtReference(invalidSdtReqReference)).andReturn(null);
-
-        EasyMock.replay(mockIndividualRequestDao);
+        when(mockIndividualRequestDao.getRequestBySdtReference(invalidSdtReqReference)).thenReturn(null);
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(invalidSdtReqReference,
                         FORWARDED.getStatus());
 
-        EasyMock.verify(mockIndividualRequestDao);
+        verify(mockIndividualRequestDao).getRequestBySdtReference(invalidSdtReqReference);
 
-        Assert.assertEquals("Expected an error message.", INVALID_SDT_REQUEST_REF_MSG, returnVal);
-
+        assertEquals(INVALID_SDT_REQUEST_REF_MSG, returnVal, EXPECTED_AN_ERROR_MESSAGE);
     }
 
     /**
@@ -330,24 +334,20 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * false.
      */
     @Test
-    public void processDLQRequestNotOnDLQ() {
+    void processDLQRequestNotOnDLQ() {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_SDT_REQ_REF);
         individualRequest.setDeadLetter(false);
 
-        EasyMock.expect(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).andReturn(
-                individualRequest);
-
-        EasyMock.replay(mockIndividualRequestDao);
+        when(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).thenReturn(individualRequest);
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
                         FORWARDED.getStatus());
 
-        EasyMock.verify(mockIndividualRequestDao);
+        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_SDT_REQ_REF);
 
-        Assert.assertEquals("Expected an error message.", SDT_REQUEST_NOT_ON_DLQ_MSG, returnVal);
-
+        assertEquals(SDT_REQUEST_NOT_ON_DLQ_MSG, returnVal, EXPECTED_AN_ERROR_MESSAGE);
     }
 
     /**
@@ -355,50 +355,44 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * for an valid Individual Request to Forwarded.
      */
     @Test
-    public void processDLQRequestForwarded() {
+    void processDLQRequestForwarded() {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_SDT_REQ_REF);
         individualRequest.setDeadLetter(true);
         individualRequest.setRequestStatus(FORWARDED.getStatus());
         individualRequest.setForwardingAttempts(3);
 
-        Assert.assertEquals("The status is not as expected",
-                FORWARDED.getStatus(),
-                individualRequest.getRequestStatus());
+        assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                individualRequest.getRequestStatus(),
+                "The status is not as expected");
 
-        Assert.assertEquals("The forwarding attempts should be greater than zero", 3,
-                individualRequest.getForwardingAttempts());
+        assertEquals(3, individualRequest.getForwardingAttempts(),
+                "The forwarding attempts should be greater than zero");
 
-        EasyMock.expect(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).andReturn(
-                individualRequest);
+        when(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).thenReturn(individualRequest);
 
         mockTargetAppSubmissionService.processDLQRequest(individualRequest,
                 FORWARDED.getStatus());
 
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
-            @Override
-            public Object answer() throws Throwable {
-                ((IndividualRequest) EasyMock.getCurrentArguments()[0])
-                        .setRequestStatus(FORWARDED.getStatus());
-                ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setDeadLetter(false);
-                ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setUpdatedDate(LocalDateTime.now());
-                // required to be null for a void method
-                return null;
-            }
-        });
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockTargetAppSubmissionService);
+        doAnswer((Answer<Void>) invocation -> {
+            ((IndividualRequest) invocation.getArgument(0))
+                    .setRequestStatus (FORWARDED.getStatus ());
+            ((IndividualRequest) invocation.getArgument(0)).setDeadLetter(false);
+            ((IndividualRequest) invocation.getArgument(0)).setUpdatedDate(LocalDateTime.now());
+            // required to be null for a void method
+            return null;
+        }).when(mockTargetAppSubmissionService).processDLQRequest(individualRequest,
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
                         FORWARDED.getStatus());
 
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockTargetAppSubmissionService);
+        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_SDT_REQ_REF);
+        verify(mockTargetAppSubmissionService, atLeastOnce()).processDLQRequest(individualRequest,
+                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
 
-        Assert.assertEquals("The return value is OK", OK_MESSAGE, returnVal);
-
+        assertEquals(OK_MESSAGE, returnVal, "The return value is OK");
     }
 
     /**
@@ -406,50 +400,43 @@ public class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      * for an valid Individual Request to Rejected.
      */
     @Test
-    public void processDLQRequestRejected() {
+    void processDLQRequestRejected() {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_SDT_REQ_REF);
         individualRequest.setDeadLetter(true);
         individualRequest.setRequestStatus(FORWARDED.getStatus());
         individualRequest.setForwardingAttempts(3);
 
-        Assert.assertEquals("The status is not as expected",
-                FORWARDED.getStatus(),
-                individualRequest.getRequestStatus());
+        assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+                individualRequest.getRequestStatus(), "The status is not as expected");
 
-        Assert.assertEquals("The forwarding attempts should be greater than zero", 3,
-                individualRequest.getForwardingAttempts());
+        assertEquals(3, individualRequest.getForwardingAttempts(),
+                "The forwarding attempts should be greater than zero");
 
-        EasyMock.expect(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).andReturn(
-                individualRequest);
+        when(mockIndividualRequestDao.getRequestBySdtReference(TEST_SDT_REQ_REF)).thenReturn(individualRequest);
 
         mockTargetAppSubmissionService.processDLQRequest(individualRequest,
                 REJECTED.getStatus());
 
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
-            @Override
-            public Object answer() throws Throwable {
-                ((IndividualRequest) EasyMock.getCurrentArguments()[0])
-                        .setRequestStatus(REJECTED.getStatus());
-                ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setDeadLetter(false);
-                ((IndividualRequest) EasyMock.getCurrentArguments()[0]).setUpdatedDate(LocalDateTime.now());
-                // required to be null for a void method
-                return null;
-            }
-        });
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockTargetAppSubmissionService);
+        doAnswer((Answer<Void>) invocation -> {
+            ((IndividualRequest) invocation.getArgument(0))
+                    .setRequestStatus(REJECTED.getStatus());
+            ((IndividualRequest) invocation.getArgument(0)).setDeadLetter(false);
+            ((IndividualRequest) invocation.getArgument(0)).setUpdatedDate(LocalDateTime.now());
+            // required to be null for a void method
+            return null;
+        }).when(mockTargetAppSubmissionService).processDLQRequest(individualRequest,
+                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
         final String returnVal =
                 this.sdtManagementMBean.processDlqRequest(TEST_SDT_REQ_REF,
                         REJECTED.getStatus());
 
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockTargetAppSubmissionService);
+        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_SDT_REQ_REF);
+        verify(mockTargetAppSubmissionService, atLeastOnce()).processDLQRequest(individualRequest,
+                IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
-        Assert.assertEquals("The return value is OK", OK_MESSAGE, returnVal);
-
+        assertEquals(OK_MESSAGE, returnVal, "The return value is OK");
     }
 
     /**

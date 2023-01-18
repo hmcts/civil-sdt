@@ -25,6 +25,6 @@ bootJar {
     enabled = false
 }
 
-sonarqube {
-  skipProject = true
+test {
+    useJUnitPlatform()
 }

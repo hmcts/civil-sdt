@@ -12,3 +12,7 @@ dependencyCheck {
 bootJar {
     enabled = false
 }
+
+test {
+    useJUnitPlatform()
+}

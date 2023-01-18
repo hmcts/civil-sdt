@@ -30,12 +30,21 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.easymock.EasyMock;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
@@ -66,103 +75,92 @@ import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for BulkSubmissionService.
  *
  * @author Manoj Kulkarni
  */
-public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
+
     /**
-     * Logger for debugging.
+     * Bulk Customer dao.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionServiceTest.class);
+    @Mock
+    private IBulkCustomerDao mockBulkCustomerDao;
+
+    /**
+     * Target Application dao.
+     */
+    @Mock
+    private ITargetApplicationDao mockTargetApplicationDao;
+
+    /**
+     * SDT Bulk Reference Generator.
+     */
+    @Mock
+    private ISdtBulkReferenceGenerator mockSdtBulkReferenceGenerator;
+
+    /**
+     * Messaging Utility reference.
+     */
+    @Mock
+    private IMessagingUtility mockMessagingUtility;
+
+    /**
+     *
+     */
+    @Mock
+    private Map<String, IInFlightMessage> mockConcurrencyMap;
+
+    /**
+     *
+     */
+    @Mock
+    private ICacheable mockErrorMessagesCache;
+
+    /**
+     * Generic dao.
+     */
+    @Mock
+    private IGenericDao mockGenericDao;
 
     /**
      * Bulk Submission Service for testing.
      */
     private BulkSubmissionService bulkSubmissionService;
 
-    /**
-     * Generic dao.
-     */
-    private IGenericDao mockGenericDao;
-
-    /**
-     * Message writer for queueing messages to the messaging server.
-     */
-    // private IMessageWriter mockMessageWriter;
-
-    /**
-     * Individual requests xml parser for parsing the xml requests.
-     */
-    private IndividualRequestsXmlParser individualRequestsXmlParser;
-
-    /**
-     * Bulk Customer dao.
-     */
-    private IBulkCustomerDao mockBulkCustomerDao;
-
-    /**
-     * Target Application dao.
-     */
-    private ITargetApplicationDao mockTargetApplicationDao;
-
-    /**
-     * SDT Bulk Reference Generator.
-     */
-    private ISdtBulkReferenceGenerator mockSdtBulkReferenceGenerator;
-
-    /**
-     * Messaging Utility reference.
-     */
-    private IMessagingUtility mockMessagingUtility;
-
-    /**
-     *
-     */
-    private Map<String, IInFlightMessage> mockConcurrencyMap;
-
-    /**
-     *
-     */
-    private ICacheable mockErrorMessagesCache;
+    private static final String PATH_TEST_RESOURCES = "src/unit-test/resources/";
 
     /**
      * Setup of the mock dao and injection of other objects.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
+        bulkSubmissionService = new BulkSubmissionService();
+        bulkSubmissionService.setGenericDao(mockGenericDao);
 
-        mockGenericDao = EasyMock.createMock(IGenericDao.class);
-        // This class cannot be easily mocked since it's within a Runnable block so it's been removed for clarity
-        // mockMessageWriter = EasyMock.createMock (IMessageWriter.class);
-        // bulkSubmissionService.setMessageWriter (mockMessageWriter);
+        bulkSubmissionService.setBulkCustomerDao(mockBulkCustomerDao);
+        bulkSubmissionService.setTargetApplicationDao(mockTargetApplicationDao);
 
-        mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        mockTargetApplicationDao = EasyMock.createMock(ITargetApplicationDao.class);
-        individualRequestsXmlParser = new IndividualRequestsXmlParser();
-        mockSdtBulkReferenceGenerator = EasyMock.createMock(ISdtBulkReferenceGenerator.class);
-        mockMessagingUtility = EasyMock.createMock(IMessagingUtility.class);
-        mockErrorMessagesCache = EasyMock.createMock(ICacheable.class);
+        IndividualRequestsXmlParser individualRequestsXmlParser = new IndividualRequestsXmlParser();
+        bulkSubmissionService.setIndividualRequestsXmlparser(individualRequestsXmlParser);
 
-        bulkSubmissionService = new BulkSubmissionService(mockGenericDao,
-                                                          mockBulkCustomerDao,
-                                                          mockTargetApplicationDao,
-                                                          individualRequestsXmlParser,
-                                                          mockMessagingUtility,
-                                                          mockSdtBulkReferenceGenerator,
-                                                          mockErrorMessagesCache);
-        mockConcurrencyMap = EasyMock.createMock(HashMap.class);
+        bulkSubmissionService.setSdtBulkReferenceGenerator(mockSdtBulkReferenceGenerator);
+
+        bulkSubmissionService.setMessagingUtility(mockMessagingUtility);
+
         bulkSubmissionService.setConcurrencyMap(mockConcurrencyMap);
+
+        bulkSubmissionService.setErrorMessagesCache(mockErrorMessagesCache);
     }
 
     /**
@@ -171,36 +169,27 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      * @throws IOException if there is any error in reading the file.
      */
     @Test
-    public void testSaveBulkSubmission() throws IOException {
-        SdtContext.getContext().setRawInXml(Utilities.getRawXml("src/unit-test/resources/", "testXMLValid2.xml"));
+    void testSaveBulkSubmission() throws IOException {
+        SdtContext.getContext().setRawInXml(Utilities.getRawXml(PATH_TEST_RESOURCES, "testXMLValid2.xml"));
 
-        // Activate Mock Generic Dao
-        final IBulkSubmission bulkSubmission = this.createBulkSubmission();
-        mockGenericDao.persist(bulkSubmission);
-        EasyMock.expectLastCall();
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        EasyMock.expect(mockGenericDao.fetch(IServiceRequest.class, 1)).andReturn(serviceRequest);
+        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
-        // Replay the EasyMock
-        EasyMock.replay(mockGenericDao);
-
-        EasyMock.expect(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).andReturn(bulkSubmission.getBulkCustomer());
-
-        EasyMock.replay(mockBulkCustomerDao);
+        // Activate Mock Generic Dao
+        final IBulkSubmission bulkSubmission = this.createBulkSubmission();
+        when(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).thenReturn(bulkSubmission.getBulkCustomer());
 
         final String key =
                 bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
 
         // Setup concurrency map as if validator had done it.
         IInFlightMessage inFlightMessage = new InFlightMessage();
-        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        inFlightMessage.setCompetingThreads(new HashMap<>());
         inFlightMessage.getCompetingThreads().put(Thread.currentThread(), Thread.currentThread());
 
-        EasyMock.expect(mockConcurrencyMap.get(key)).andReturn(inFlightMessage);
-        EasyMock.expect(mockConcurrencyMap.put(key, inFlightMessage)).andReturn(inFlightMessage);
-        EasyMock.replay(mockConcurrencyMap);
+        when(mockConcurrencyMap.get(key)).thenReturn(inFlightMessage);
 
         // Put a dummy value into the SdtContext
         SdtContext.getContext().setServiceRequestId(1L);
@@ -208,13 +197,10 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
-        LOGGER.debug("bulkSubmission[" + bulkSubmission + "]");
-
         // Verify the Mock
-        EasyMock.verify(mockGenericDao);
+        verify(mockGenericDao, times(1)).persist(bulkSubmission);
 
-        Assert.assertTrue("Expected to pass", true);
-
+        assertTrue(true, "Expected to pass");
     }
 
     /**
@@ -224,8 +210,8 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      * @throws IOException if there is any issue
      */
     @Test
-    public void testSubmissionWithMultipleRequests() throws IOException {
-        final String rawXml = Utilities.getRawXml("src/unit-test/resources/", "testXMLValid3.xml");
+    void testSubmissionWithMultipleRequests() throws IOException {
+        final String rawXml = Utilities.getRawXml(PATH_TEST_RESOURCES, "testXMLValid3.xml");
         SdtContext.getContext().setRawInXml(rawXml);
 
         // Activate Mock Generic Dao
@@ -233,34 +219,22 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         addValidIndividualRequest(bulkSubmission, "ICustReq124");
         addValidIndividualRequest(bulkSubmission, "ICustReq125");
 
-        LOGGER.debug("Size of Individual Requests in Bulk Submission is " +
-                bulkSubmission.getIndividualRequests().size());
-
-        mockGenericDao.persist(bulkSubmission);
-        EasyMock.expectLastCall();
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        EasyMock.expect(mockGenericDao.fetch(IServiceRequest.class, 1)).andReturn(serviceRequest);
+        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
-        // Replay the EasyMock
-        EasyMock.replay(mockGenericDao);
-
-        EasyMock.expect(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).andReturn(bulkSubmission.getBulkCustomer());
-
-        EasyMock.replay(mockBulkCustomerDao);
+        when(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).thenReturn(bulkSubmission.getBulkCustomer());
 
         final String key =
                 bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
 
         // Setup concurrency map as if validator had done it.
         IInFlightMessage inFlightMessage = new InFlightMessage();
-        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        inFlightMessage.setCompetingThreads(new HashMap<>());
         inFlightMessage.getCompetingThreads().put(Thread.currentThread(), Thread.currentThread());
 
-        EasyMock.expect(mockConcurrencyMap.get(key)).andReturn(inFlightMessage);
-        EasyMock.expect(mockConcurrencyMap.put(key, inFlightMessage)).andReturn(inFlightMessage);
-        EasyMock.replay(mockConcurrencyMap);
+        when(mockConcurrencyMap.get(key)).thenReturn(inFlightMessage);
 
         // Put a dummy value into the SdtContext
         SdtContext.getContext().setServiceRequestId(1L);
@@ -269,9 +243,9 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
         // Verify the Mock
-        EasyMock.verify(mockGenericDao);
+        verify(mockGenericDao, times(1)).persist(bulkSubmission);
 
-        Assert.assertTrue("Expected to pass", true);
+        assertTrue(true, "Expected to pass");
     }
 
     /**
@@ -281,8 +255,8 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      * @throws IOException if there is any issue
      */
     @Test
-    public void testSubmissionWithConcurrenyIssue() throws IOException {
-        final String rawXml = Utilities.getRawXml("src/unit-test/resources/", "testXMLValid3.xml");
+    void testSubmissionWithConcurrenyIssue() throws IOException {
+        final String rawXml = Utilities.getRawXml(PATH_TEST_RESOURCES, "testXMLValid3.xml");
         SdtContext.getContext().setRawInXml(rawXml);
 
         // Activate Mock Generic Dao
@@ -290,22 +264,13 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         addValidIndividualRequest(bulkSubmission, "ICustReq124");
         addValidIndividualRequest(bulkSubmission, "ICustReq125");
 
-        LOGGER.debug("Size of Individual Requests in Bulk Submission is " +
-                bulkSubmission.getIndividualRequests().size());
-
         mockGenericDao.persist(bulkSubmission);
-        EasyMock.expectLastCall();
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        EasyMock.expect(mockGenericDao.fetch(IServiceRequest.class, 1)).andReturn(serviceRequest);
+        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
-        // Replay the EasyMock
-        EasyMock.replay(mockGenericDao);
-
-        EasyMock.expect(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).andReturn(bulkSubmission.getBulkCustomer());
-
-        EasyMock.replay(mockBulkCustomerDao);
+        when(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).thenReturn(bulkSubmission.getBulkCustomer());
 
         final String key =
                 bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
@@ -313,22 +278,19 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Setup concurrency map as if validator had done it.
         IInFlightMessage inFlightMessage = new InFlightMessage();
         inFlightMessage.setSdtBulkReference("SDTBULKREFERENCE");
-        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        inFlightMessage.setCompetingThreads(new HashMap<>());
         inFlightMessage.getCompetingThreads().put(Thread.currentThread(), Thread.currentThread());
 
-        EasyMock.expect(mockConcurrencyMap.get(key)).andReturn(inFlightMessage);
-        EasyMock.expect(mockConcurrencyMap.put(key, inFlightMessage)).andReturn(inFlightMessage);
-        EasyMock.replay(mockConcurrencyMap);
+        when(mockConcurrencyMap.get(key)).thenReturn(inFlightMessage);
 
         final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString();
         final IErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setErrorCode(errorCodeStr);
-        errorMessage.setErrorDescription("Some Discription");
+        errorMessage.setErrorDescription("Some Description");
         errorMessage.setErrorText("Some Text");
 
-        EasyMock.expect(mockErrorMessagesCache.getValue(IErrorMessage.class, errorCodeStr)).andReturn(errorMessage);
+        when(mockErrorMessagesCache.getValue(IErrorMessage.class, errorCodeStr)).thenReturn(errorMessage);
 
-        EasyMock.replay(mockErrorMessagesCache);
         // Put a dummy value into the SdtContext
         SdtContext.getContext().setServiceRequestId(1L);
 
@@ -336,11 +298,11 @@ public class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
             // Call the bulk submission service
             bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
-            Assert.fail("Should have thrown exception");
-        } catch (final Throwable e) {
+            fail("Should have thrown exception");
+        } catch (final Exception e) {
             if (!(e instanceof CustomerReferenceNotUniqueException) ||
                     !e.getMessage().equals("Failed with code [DUP_CUST_FILEID]; message[Some Text]")) {
-                Assert.fail("Unexpected exception returned" + e.getStackTrace());
+                fail("Unexpected exception returned" + e.getStackTrace());
             }
         }
     }

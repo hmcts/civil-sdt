@@ -31,9 +31,10 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.easymock.EasyMock;
-import org.junit.Test;
-import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
@@ -43,7 +44,8 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
  * @author d120520
  */
 
-public class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
+@ExtendWith(MockitoExtension.class)
+class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Test subject.
      */
@@ -52,7 +54,8 @@ public class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Setup of the Validator and Domain class instance.
      */
-    public void setUpLocalTests() {
+    @BeforeEach
+    public void setUp() {
         // subject of test
         IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
         ICacheable globalParameterCache = EasyMock.createMock(ICacheable.class);

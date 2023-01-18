@@ -34,23 +34,24 @@ package uk.gov.moj.sdt.utils.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * A base test class that compares XML file output.
  *
  * @author Robin Compston
  */
-public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
+class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
     /**
      * Test the extraction of single namespace values.
      */
     @Test
-    public void testSingleNamespace() {
+    void testSingleNamespace() {
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 
@@ -74,18 +75,18 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces(xml, null);
 
-        Assert.assertEquals("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                map.get("xsi"));
-        Assert.assertEquals("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
-                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE));
-        Assert.assertEquals("Incorrect number of namespaces", 2, map.size());
+        assertEquals("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get("xsi"), "Missing namespace");
+        assertEquals("xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE), "Missing namespace");
+        assertEquals(2, map.size(), "Incorrect number of namespaces");
     }
 
     /**
      * Test the extraction of single namespace values with embedded comments in XML.
      */
     @Test
-    public void testComments() {
+    void testComments() {
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 
@@ -109,18 +110,18 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces(xml, null);
 
-        Assert.assertEquals("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                map.get("xsi"));
-        Assert.assertEquals("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
-                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE));
-        Assert.assertEquals("Incorrect number of namespaces", 2, map.size());
+        assertEquals("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get("xsi"), "Missing namespace");
+        assertEquals("xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE), "Missing namespace");
+        assertEquals(2, map.size(), "Incorrect number of namespaces");
     }
 
     /**
      * Test the extraction of multiple namespace values.
      */
     @Test
-    public void testMultipleNamespace() {
+    void testMultipleNamespace() {
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 
@@ -145,20 +146,20 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final Map<String, String> map = XmlNamespaceUtils.extractAllNamespaces(xml, null);
 
-        Assert.assertEquals("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                map.get("xsi"));
-        Assert.assertEquals("Missing namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
-                map.get("aop"));
-        Assert.assertEquals("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
-                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE));
-        Assert.assertEquals("Incorrect number of namespaces", 3, map.size());
+        assertEquals("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get("xsi"), "Missing namespace");
+        assertEquals("xmlns:aop=\"http://www.springframework.org/schema/aop\"",
+                map.get("aop"), "Missing namespace");
+        assertEquals("xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE), "Missing namespace");
+        assertEquals(3, map.size(), "Incorrect number of namespaces");
     }
 
     /**
      * Test the application of a single namespace to xml fragment.
      */
     @Test
-    public void testMatchingSingleNamespace() {
+    void testMatchingSingleNamespace() {
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 
@@ -192,18 +193,18 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                         "       <xsi:some-other-tag some-attribute=\"some value\">" + "       </xsi:some-other-tag>" +
                         "   </xsi:some-tag>", allNamespaces);
 
-        Assert.assertEquals("Missing namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                map.get("xsi"));
-        Assert.assertEquals("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
-                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE));
-        Assert.assertEquals("Incorrect number of namespaces matching fragment", 2, map.size());
+        assertEquals("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get("xsi"), "Missing namespace");
+        assertEquals("xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE), "Missing namespace");
+        assertEquals(2, map.size(), "Incorrect number of namespaces matching fragment");
     }
 
     /**
      * Test the application of multiple namespaces to xml fragment.
      */
     @Test
-    public void testMatchingMultipleNamespace() {
+    void testMatchingMultipleNamespace() {
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 
@@ -240,13 +241,13 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                         "       <aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>" +
                         "   </xsi:some-tag>", allNamespaces);
 
-        Assert.assertEquals("Missing fragment namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                map.get("xsi"));
-        Assert.assertEquals("Missing fragment namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
-                map.get("aop"));
-        Assert.assertEquals("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
-                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE));
-        Assert.assertEquals("Incorrect number of namespaces matching fragment", 3, map.size());
+        assertEquals("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get("xsi"), "Missing fragment namespace");
+        assertEquals("xmlns:aop=\"http://www.springframework.org/schema/aop\"",
+                map.get("aop"), "Missing fragment namespace");
+        assertEquals("xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE), "Missing namespace");
+        assertEquals(3, map.size(), "Incorrect number of namespaces matching fragment");
     }
 
     /**
@@ -254,7 +255,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * namespaces.
      */
     @Test
-    public void testCommentsWithColons() {
+    void testCommentsWithColons() {
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 
@@ -291,20 +292,20 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                         "<aop:some-other-tag some-attribute=\"some value\">" + "       </aop:some-other-tag>" +
                         "   </xsi:some-tag>", allNamespaces);
 
-        Assert.assertEquals("Missing fragment namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                map.get("xsi"));
-        Assert.assertEquals("Missing fragment namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
-                map.get("aop"));
-        Assert.assertEquals("Missing namespace", "xmlns=\"http://www.springframework.org/schema/beans\"",
-                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE));
-        Assert.assertEquals("Incorrect number of namespaces matching fragment", 3, map.size());
+        assertEquals("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                map.get("xsi"), "Missing fragment namespace");
+        assertEquals("xmlns:aop=\"http://www.springframework.org/schema/aop\"",
+                map.get("aop"), "Missing fragment namespace");
+        assertEquals("xmlns=\"http://www.springframework.org/schema/beans\"",
+                map.get(XmlNamespaceUtils.DEFAULT_NAMESPACE), "Missing namespace");
+        assertEquals(3, map.size(), "Incorrect number of namespaces matching fragment");
     }
 
     /**
      * Test the reporting of a missing namespace.
      */
     @Test
-    public void testMissingNamespace() {
+    void testMissingNamespace() {
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 
@@ -338,12 +339,10 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                             "       <aop:some-other-tag some-attribute=\"some value\">" +
                             "       </aop:some-other-tag>" + "   </xsi:some-tag>", allNamespaces);
 
-            Assert.fail("Failed to throw expected RuntimeException due to missing tag namespace.");
+            fail("Failed to throw expected RuntimeException due to missing tag namespace.");
         } catch (final RuntimeException e) {
-            Assert.assertEquals("Unrecognised exception message:", e.getMessage(),
-                    // CHECKSTYLE:OFF
-                    "Namespace [aop] missing from incoming raw xml[   <xsi:some-tag some-attribute=\"some value\">       <aop:some-other-tag some-attribute=\"some value\"/>       <aop:some-other-tag some-attribute=\"some value\">       </aop:some-other-tag>   </xsi:some-tag>]");
-            // CHECKSTYLE:ON
+            assertEquals("Namespace [aop] missing from incoming raw xml[   <xsi:some-tag some-attribute=\"some value\">       <aop:some-other-tag some-attribute=\"some value\"/>       <aop:some-other-tag some-attribute=\"some value\">       </aop:some-other-tag>   </xsi:some-tag>]",
+                    e.getMessage(), "Unrecognised exception message:");
         }
     }
 
@@ -351,32 +350,32 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * Test the combining of individual namespaces.
      */
     @Test
-    public void testCombinedNamespace() {
-        final Map<String, String> map1 = new HashMap<String, String>();
-        final Map<String, String> map2 = new HashMap<String, String>();
+    void testCombinedNamespace() {
+        final Map<String, String> map1 = new HashMap<>();
+        final Map<String, String> map2 = new HashMap<>();
 
         // Setup individual maps.
         map1.put("xsi", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
         map2.put("xsi", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
         map2.put("aop", "xmlns:aop=\"http://www.springframework.org/schema/aop\"");
 
-        Map<String, String> combinedMap = new HashMap<String, String>();
+        Map<String, String> combinedMap = new HashMap<>();
         // Combine together the two maps.
         combinedMap = XmlNamespaceUtils.combineNamespaces(map1, combinedMap);
         combinedMap = XmlNamespaceUtils.combineNamespaces(map2, combinedMap);
 
-        Assert.assertEquals("Missing combined namespace", "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                combinedMap.get("xsi"));
-        Assert.assertEquals("Missing combined namespace", "xmlns:aop=\"http://www.springframework.org/schema/aop\"",
-                combinedMap.get("aop"));
-        Assert.assertEquals("Incorrect number of namespaces matching fragment", combinedMap.size(), 2);
+        assertEquals("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                combinedMap.get("xsi"), "Missing combined namespace");
+        assertEquals("xmlns:aop=\"http://www.springframework.org/schema/aop\"",
+                combinedMap.get("aop"), "Missing combined namespace");
+        assertEquals(2, combinedMap.size(), "Incorrect number of namespaces matching fragment");
     }
 
     /**
      * Test addition of namespace to xml.
      */
     @Test
-    public void testAddNamespaces() {
+    void testAddNamespaces() {
 
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -428,8 +427,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "   <xsi:some-tag xmlns=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" some-attribute=\"some value\">       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\"/>       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\">       </aop:some-other-tag>   </xsi:some-tag>";
         // CHECKSTYLE:ON
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
-
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -437,8 +435,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * the bulkRequest tag should be added to the mcolClaim tag.
      */
     @Test
-    public void testDefaultNamespace() {
-        // CHECKSTYLE:OFF
+    void testDefaultNamespace() {
 
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<soap:Envelope " +
@@ -496,7 +493,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "    </soap:Body>" + "</soap:Envelope> ";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -539,7 +536,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "                            <flag xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</flag>" +
                 "                            <name xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Joe Doe</name>" +
                 "                        </clm:sotSignature>" + "                    </mcolClaim>";
-        // CHECKSTYLE:ON
 
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
@@ -554,7 +550,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "                    <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">" +
                         "                        <clm:claimantReference xmlns:clm=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Custref000001</clm:claimantReference>" +
@@ -591,10 +586,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                         "                            <name xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Joe Doe</name>" +
                         "                        </clm:sotSignature>" + "                    </mcolClaim>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
-
-        // CHECKSTYLE:ON
-
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -603,8 +595,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * without a default namespace ('name') to which it should not be added.
      */
     @Test
-    public void testDefaultNamespaceTopLevelTagOnly() {
-        // CHECKSTYLE:OFF
+    void testDefaultNamespaceTopLevelTagOnly() {
 
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -652,7 +643,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "      </requests>" + "    </bulkRequest>" + "  </soap:Body>" + "</soap:Envelope> ";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -694,8 +685,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "              <bas:flag>true</bas:flag>" + "              <bas:name>richard</bas:name>" +
                 "            </cla:sotSignature>" + "          </mcolClaim>";
 
-        // CHECKSTYLE:ON
-
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
 
@@ -709,14 +698,10 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "          <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">                        <cla:claimantReference xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Style02</cla:claimantReference>                        <claimant xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <name>Mr John Wayne</name>              <address>                <line1>Address 1</line1>                <line2>Address 2</line2>                                <line3>Address 3</line3>                                <line4>Address 4</line4>                                <postcode>KT22 7LP</postcode>              </address>            </claimant>            <cla:defendant1 xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <cla:name xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Mr Bruce Willis</cla:name>              <cla:address xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                <line1 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 1</line1>                <line2 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 2</line2>                                <line3 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 3</line3>                                <line4 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 4</line4>                <postcode xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</postcode>              </cla:address>            </cla:defendant1>                        <defendant2 xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <name>Mrs Helen Mirram</name>              <address>                <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 11</bas:line1>                <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 21</bas:line2>                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 31</bas:line3>                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 41</bas:line4>                <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>              </address>            </defendant2>            <cla:sendParticularsSeparately xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">true</cla:sendParticularsSeparately>            <cla:reserveRightToClaimInterest xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">false</cla:reserveRightToClaimInterest>            <cla:claimAmount xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">450000</cla:claimAmount>                        <cla:solicitorCost xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">4000</cla:solicitorCost>                        <cla:particulars xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">testing 123</cla:particulars>            <cla:sotSignature xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>              <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">richard</bas:name>            </cla:sotSignature>          </mcolClaim>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
-
-        // CHECKSTYLE:ON
-
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -725,8 +710,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * providing a second unprefixed tag without a default namespace ('name') to which it should not be added.
      */
     @Test
-    public void testMultipleDefaultNamespaceTopLevelTagOnly() {
-        // CHECKSTYLE:OFF
+    void testMultipleDefaultNamespaceTopLevelTagOnly() {
 
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -808,7 +792,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "      </requests>" + "    </bulkRequest>" + "  </soap:Body>" + "</soap:Envelope> ";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -850,8 +834,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "              <bas:flag>true</bas:flag>" + "              <bas:name>richard</bas:name>" +
                 "            </cla:sotSignature>" + "          </mcolClaim>";
 
-        // CHECKSTYLE:ON
-
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
 
@@ -865,13 +847,10 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "          <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">                        <cla:claimantReference xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Style02</cla:claimantReference>                        <claimant xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <name>Mr John Wayne</name>              <address>                <line1>Address 1</line1>                <line2>Address 2</line2>                                <line3>Address 3</line3>                                <line4>Address 4</line4>                                <postcode>KT22 7LP</postcode>              </address>            </claimant>            <cla:defendant1 xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <cla:name xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Mr Bruce Willis</cla:name>              <cla:address xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                <line1 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 1</line1>                <line2 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 2</line2>                                <line3 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 3</line3>                                <line4 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 4</line4>                <postcode xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</postcode>              </cla:address>            </cla:defendant1>                        <defendant2 xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <name>Mrs Helen Mirram</name>              <address>                <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 11</bas:line1>                <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 21</bas:line2>                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 31</bas:line3>                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 41</bas:line4>                <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>              </address>            </defendant2>            <cla:sendParticularsSeparately xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">true</cla:sendParticularsSeparately>            <cla:reserveRightToClaimInterest xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">false</cla:reserveRightToClaimInterest>            <cla:claimAmount xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">450000</cla:claimAmount>                        <cla:solicitorCost xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">4000</cla:solicitorCost>                        <cla:particulars xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">testing 123</cla:particulars>            <cla:sotSignature xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>              <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">richard</bas:name>            </cla:sotSignature>          </mcolClaim>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
-
-        // CHECKSTYLE:ON
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -879,8 +858,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * comment.
      */
     @Test
-    public void testCommentBeforeNonGeneric() {
-        // CHECKSTYLE:OFF
+    void testCommentBeforeNonGeneric() {
 
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -950,7 +928,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "    </soap:Body>" + "</soap:Envelope>";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -1009,8 +987,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "                            <bas:name>richard</bas:name>" +
                 "                        </cla:sotSignature>" + "                    </mcolClaim>";
 
-        // CHECKSTYLE:ON
-
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
 
@@ -1024,13 +1000,10 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "                                        <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">                                                <cla:claimantReference xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Style02</cla:claimantReference>                                                <claimant                            xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                            <name>Mr John Wayne</name>                            <address>                                <line1>Address 1</line1>                                <line2>Address 2</line2>                                                                <line3>Address 3</line3>                                                                <line4>Address 4</line4>                                                                <postcode>KT22 7LP</postcode>                            </address>                        </claimant>                        <cla:defendant1 xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                            <cla:name xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Mr Bruce Willis</cla:name>                            <cla:address xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                                <line1                                    xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 1</line1>                                <line2                                    xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 2</line2>                                                                <line3                                    xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 3</line3>                                                                <line4                                    xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 4</line4>                                <postcode                                    xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</postcode>                            </cla:address>                        </cla:defendant1>                                                <defendant2                            xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                            <name>Mrs Helen Mirram</name>                            <address>                                <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 11</bas:line1>                                <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 21</bas:line2>                                                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 31</bas:line3>                                                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 41</bas:line4>                                <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                            </address>                        </defendant2>                        <cla:sendParticularsSeparately xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">true</cla:sendParticularsSeparately>                        <cla:reserveRightToClaimInterest xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">false</cla:reserveRightToClaimInterest>                        <cla:claimAmount xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">450000</cla:claimAmount>                                                <cla:solicitorCost xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">4000</cla:solicitorCost>                                                <cla:particulars xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">testing 123</cla:particulars>                        <cla:sotSignature xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                            <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>                            <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">richard</bas:name>                        </cla:sotSignature>                    </mcolClaim>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
-
-        // CHECKSTYLE:ON
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -1038,8 +1011,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * definition. The default namespace is being added for the sake of tags lower down which lack their own prefixes.
      */
     @Test
-    public void testPrefixNamespaceAlreadyPresent() {
-        // CHECKSTYLE:OFF
+    void testPrefixNamespaceAlreadyPresent() {
 
         // Define text raw xml.
         String xml = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" " +
@@ -1097,7 +1069,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "      </bul:bulkRequest>" + "   </soap:Body>" + "</soap:Envelope>";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -1145,8 +1117,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "                     <bas:name>JB</bas:name>" + "                  </sotSignature>" +
                 "               </bul:mcolClaim>";
 
-        // CHECKSTYLE:ON
-
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
 
@@ -1160,13 +1130,10 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "               <bul:mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\" xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">               <claimantReference>HOPA99</claimantReference>                  <claimant>                     <name>Test Claimant Name</name>                     <address>                        <line1>Chaucer House</line1>                        <line2>The Office Park</line2>                                                <line3>Leatherhead</line3>                                                <line4>Surrey</line4>                                                <postcode>KT22 7LP</postcode>                     </address>                  </claimant>                  <defendant1>                     <name>claimantCorrespondence name</name>                     <address>                        <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Keats House</bas:line1>                        <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">The Office Park</bas:line2>                                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Leatherhead</bas:line3>                                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Surrey</bas:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant1>                                    <defendant2>                     <name>claimantCorrespondence name2</name>                     <address>                        <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Keats House</bas:line1>                        <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">The Office Park</bas:line2>                                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Leatherhead</bas:line3>                                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Surrey</bas:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant2>                  <sendParticularsSeparately>true</sendParticularsSeparately>                  <reserveRightToClaimInterest>true</reserveRightToClaimInterest>                                    <interest>                     <dailyAmount>200</dailyAmount>                     <owedDate>2013-10-01</owedDate>                     <claimDate>2014-02-17</claimDate>                     <claimAmountInterestBase>100</claimAmountInterestBase>                  </interest>                  <claimAmount>204600</claimAmount>                                                      <particulars>Rent Owed to Landlord</particulars>                  <sotSignature>                     <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>                     <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">JB</bas:name>                  </sotSignature>               </bul:mcolClaim>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
-
-        // CHECKSTYLE:ON
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -1174,9 +1141,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * definition. Nothing is added.
      */
     @Test
-    public void testDefaultNamespaceAlreadyPresent() {
-        // CHECKSTYLE:OFF
-
+    void testDefaultNamespaceAlreadyPresent() {
         // Define text raw xml.
         String xml = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" " +
                 "xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"" +
@@ -1234,7 +1199,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "      </bul:bulkRequest>" + "   </soap:Body>" + "</soap:Envelope>";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -1290,8 +1255,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                         "                     <bas:name>JB</bas:name>" + "                  </sotSignature>" +
                         "               </bul:mcolClaim>";
 
-        // CHECKSTYLE:ON
-
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
 
@@ -1305,21 +1268,18 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "               <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">               <claimantReference>HOPA99</claimantReference>                  <claimant>                     <name>Test Claimant Name</name>                     <address>                        <line1>Chaucer House</line1>                        <line2>The Office Park</line2>                                                <line3>Leatherhead</line3>                                                <line4>Surrey</line4>                                                <postcode>KT22 7LP</postcode>                     </address>                  </claimant>                  <defendant1>                     <name>claimantCorrespondence name</name>                     <address>                        <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Keats House</bas:line1>                        <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">The Office Park</bas:line2>                                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Leatherhead</bas:line3>                                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Surrey</bas:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant1>                                    <defendant2>                     <name>claimantCorrespondence name2</name>                     <address>                        <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Keats House</bas:line1>                        <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">The Office Park</bas:line2>                                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Leatherhead</bas:line3>                                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Surrey</bas:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant2>                  <sendParticularsSeparately>true</sendParticularsSeparately>                  <reserveRightToClaimInterest>true</reserveRightToClaimInterest>                                    <interest>                     <dailyAmount>200</dailyAmount>                     <owedDate>2013-10-01</owedDate>                     <claimDate>2014-02-17</claimDate>                     <claimAmountInterestBase>100</claimAmountInterestBase>                  </interest>                  <claimAmount>204600</claimAmount>                                                      <particulars>Rent Owed to Landlord</particulars>                  <sotSignature>                     <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>                     <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">JB</bas:name>                  </sotSignature>               </bul:mcolClaim>";
-        // CHECKSTYLE:ON
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
-     * Test handling ofaddition of default namespace when tag already has its own default namespace
+     * Test handling of addition of default namespace when tag already has its own default namespace
      * definition, and the tag concerned has an apostrophe in the text.
      */
     @Test
-    public void testDefaultNamespaceAlreadyPresentWithApostrophe() {
-        // CHECKSTYLE:OFF
+    void testDefaultNamespaceAlreadyPresentWithApostrophe() {
 
         // Define text raw xml.
         String xml = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" " +
@@ -1387,7 +1347,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "      </bul:bulkRequest>" + "   </soap:Body>" + "</soap:Envelope>";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -1450,8 +1410,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                         "                     <bas:name>JB</bas:name>" + "                  </sotSignature>" +
                         "               </mcolClaim>";
 
-        // CHECKSTYLE:ON
-
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
 
@@ -1465,12 +1423,10 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "               <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">               <claimantReference>HOPA99</claimantReference>                  <claimant>                     <name>Test Claimant Name</name>                     <address>                        <line1>Chaucer House</line1>                        <line2>The Office Park</line2>                                                <line3>Leatherhead</line3>                                                <line4>Surrey</line4>                                                <postcode>KT22 7LP</postcode>                     </address>                  </claimant>                  <defendant1>                     <name>claimantCorrespondence name</name>                     <address>                                                                          <ns3:line1 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</ns3:line1>                                                 <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</bas:line2>                                                 <ns3:line3 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\"> KING'S LYNN</ns3:line3>                                                 <ns3:line4 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Someword KING'S LYNN</ns3:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant1>                                    <defendant2>                     <name>claimantCorrespondence name2</name>                     <address>                                                                                                   <line1 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KING'S LYNN</line1>                                                 <ns3:line2 xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">'KING'S LYN'N'</ns3:line2>                                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Leatherhead</bas:line3>                                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Surrey</bas:line4>                        <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>                     </address>                  </defendant2>                  <sendParticularsSeparately>true</sendParticularsSeparately>                  <reserveRightToClaimInterest>true</reserveRightToClaimInterest>                                    <interest>                     <dailyAmount>200</dailyAmount>                     <owedDate>2013-10-01</owedDate>                     <claimDate>2014-02-17</claimDate>                     <claimAmountInterestBase>100</claimAmountInterestBase>                  </interest>                  <claimAmount>204600</claimAmount>                                                      <particulars>Rent Owed to Landlord</particulars>                  <sotSignature>                     <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>                     <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">JB</bas:name>                  </sotSignature>               </mcolClaim>";
-        // CHECKSTYLE:ON
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -1479,7 +1435,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * default embedded namespace which must be translated.
      */
     @Test
-    public void testDefaultNamespaceTranslateDefaultEmbedded() {
+    void testDefaultNamespaceTranslateDefaultEmbedded() {
         // CHECKSTYLE:OFF
 
         // Define text raw xml.
@@ -1530,7 +1486,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "      </requests>" + "    </bulkRequest>" + "  </soap:Body>" + "</soap:Envelope> ";
 
         // Setup translation from SDT to MCOL namespace for non-generic
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -1573,8 +1529,6 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "              <bas:flag>true</bas:flag>" + "              <bas:name>richard</bas:name>" +
                 "            </cla:sotSignature>" + "          </mcolClaim>";
 
-        // CHECKSTYLE:ON
-
         // Get rid of comments to simplify subsequent processing.
         xmlFragment = XmlNamespaceUtils.removeComments(xmlFragment);
 
@@ -1588,20 +1542,17 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "          <mcolClaim xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\">                        <cla:claimantReference xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Style01</cla:claimantReference>                        <claimant xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <name>Mr John Wayne</name>              <address>                <line1>Address 1</line1>                <line2>Address 2</line2>                                <line3>Address 3</line3>                                <line4>Address 4</line4>                                <postcode>KT22 7LP</postcode>              </address>            </claimant>            <cla:defendant1 xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <cla:name xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">Mr Bruce Willis</cla:name>              <cla:address xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">                <line1 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 1</line1>                <line2 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 2</line2>                                <line3 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 3</line3>                                <line4 xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 4</line4>                <postcode xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</postcode>              </cla:address>            </cla:defendant1>                        <defendant2 xmlns=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <name>Mrs Helen Mirram</name>              <address>                <bas:line1 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 11</bas:line1>                <bas:line2 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 21</bas:line2>                                <bas:line3 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 31</bas:line3>                                <bas:line4 xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">Addy 41</bas:line4>                <bas:postcode xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">KT22 7LP</bas:postcode>              </address>            </defendant2>            <cla:sendParticularsSeparately xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">true</cla:sendParticularsSeparately>            <cla:reserveRightToClaimInterest xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">false</cla:reserveRightToClaimInterest>            <cla:claimAmount xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">450000</cla:claimAmount>                        <cla:solicitorCost xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">4000</cla:solicitorCost>                        <cla:particulars xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">testing 123</cla:particulars>            <cla:sotSignature xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\">              <bas:flag xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">true</bas:flag>              <bas:name xmlns:bas=\"http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema\">richard</bas:name>            </cla:sotSignature>          </mcolClaim>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
-
-        // CHECKSTYLE:ON
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
      * Test addition of namespace to xml.
      */
     @Test
-    public void testAddNamespacesSingleQuote() {
+    void testAddNamespacesSingleQuote() {
 
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -1648,19 +1599,17 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "   <xsi:some-tag xmlns=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" some-attribute=\"some value\">       <aop:some-other-tag xmlns:aop='http://www.springframework.org/schema/aop' some-attribute=\"some value\"/>       <aop:some-other-tag xmlns:aop='http://www.springframework.org/schema/aop' some-attribute=\"some value\">       </aop:some-other-tag>   </xsi:some-tag>";
-        // CHECKSTYLE:ON
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
      * Test addition of namespace to xml which already has namespaces present. These must be removed first.
      */
     @Test
-    public void testAddNamespacesAlreadyPresentNoSpaces() {
+    void testAddNamespacesAlreadyPresentNoSpaces() {
 
         // Define text raw xml.
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -1708,12 +1657,10 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "   <xsi:some-tag xmlns=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\"/>       <aop:some-other-tag xmlns:aop=\"http://www.springframework.org/schema/aop\" some-attribute=\"some value\">       </aop:some-other-tag>   </xsi:some-tag>";
-        // CHECKSTYLE:ON
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -1721,7 +1668,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * attributes on request.
      */
     @Test
-    public void testAddNamespacesAlreadyPresentNoAttributes() {
+    void testAddNamespacesAlreadyPresentNoAttributes() {
         // Define text raw xml.
         String xml = "<bul:bulkRequest xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"" +
                 "    xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\" " +
@@ -1775,7 +1722,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "<cla1:paidInFullDate xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/" +
                 "ClaimStatusUpdateSchema\">2012-01-01</cla1:paidInFullDate>" + "</bul:mcolClaimStatusUpdate>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -1783,7 +1730,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * attributes on request.
      */
     @Test
-    public void testAddNamespacesAlreadyPresentAndAttributes() {
+    void testAddNamespacesAlreadyPresentAndAttributes() {
         // Define text raw xml.
         String xml = "<bul:bulkRequest xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"" +
                 "    xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\" " +
@@ -1840,7 +1787,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
                 "xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">" +
                 "2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>";
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 
     /**
@@ -1848,7 +1795,7 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
      * attributes on request and an awkward space.
      */
     @Test
-    public void testAddNamespacesAlreadyPresentAndAttributesWithSpace() {
+    void testAddNamespacesAlreadyPresentAndAttributesWithSpace() {
         // Define text raw xml.
         String xml = "<bul:bulkRequest xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\"" +
                 "    xmlns:cla=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema\" " +
@@ -1894,11 +1841,9 @@ public class XmlNamespaceUtilsTest extends AbstractSdtUnitTestBase {
 
         final String result = XmlNamespaceUtils.addNamespaces(xmlFragment, matched);
 
-        // CHECKSTYLE:OFF
         final String expected =
                 "       <bul:mcolClaimStatusUpdate xmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema\" somAttribute=\"abcd\" >  <cla1:claimNumber xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim123</cla1:claimNumber><cla1:defendantId xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationType xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDate xmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>";
-        // CHECKSTYLE:ON
 
-        Assert.assertEquals("Generated xml fragment is incorrect", expected, result);
+        assertEquals(expected, result, "Generated xml fragment is incorrect");
     }
 }
