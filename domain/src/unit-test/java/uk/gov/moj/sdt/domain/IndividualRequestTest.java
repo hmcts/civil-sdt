@@ -31,9 +31,9 @@
 
 package uk.gov.moj.sdt.domain;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -41,21 +41,32 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+
 /**
  * Unit tests for {@link IndividualRequest}.
  *
  * @author Saurabh Agarwal
  */
+@DisplayName("Writing Individual Request Tests")
 public class IndividualRequestTest extends AbstractSdtUnitTestBase {
     /**
      * Test subject.
      */
     private IIndividualRequest individualRequest;
 
+    private static final String FORWARDING_ATTEMPT_COUNT_MESSAGE = "Forwarding attempt count is incorrect";
+    private static final String STATUS_IS_INCORRECT_MESSAGE = "Status is incorrect";
     /**
      * Set up test data.
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() {
         individualRequest = new IndividualRequest();
     }
@@ -64,13 +75,14 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      * Tests that forwarding attempts is incremented correctly.
      */
     @Test
+    @DisplayName("Test Increment Forwarding Attempts")
     public void testIncrementForwardingAttempts() {
         individualRequest.incrementForwardingAttempts();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.FORWARDED.getStatus(),
-                individualRequest.getRequestStatus());
-        Assert.assertEquals("Forwarding attempt count is incorrect", 1, individualRequest.getForwardingAttempts());
-        Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
+        assertEquals(IndividualRequestStatus.FORWARDED.getStatus(),
+                individualRequest.getRequestStatus(),STATUS_IS_INCORRECT_MESSAGE);
+        assertEquals(1, individualRequest.getForwardingAttempts(), FORWARDING_ATTEMPT_COUNT_MESSAGE);
+        assertNotNull(individualRequest.getUpdatedDate(),"Updated date should be populated");
 
     }
 
@@ -78,14 +90,15 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      * Tests that request is marked as accepted correctly.
      */
     @Test
+    @DisplayName("Test Mark Request As Accepted")
     public void testMarkRequestAsAccepted() {
         individualRequest.markRequestAsAccepted();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.ACCEPTED.getStatus(),
-                individualRequest.getRequestStatus());
-        Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
-        Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
-        Assert.assertNotNull("Completed date should be populated", individualRequest.getCompletedDate());
+        assertEquals(IndividualRequestStatus.ACCEPTED.getStatus(),
+                individualRequest.getRequestStatus(),STATUS_IS_INCORRECT_MESSAGE);
+        assertEquals(0, individualRequest.getForwardingAttempts(),FORWARDING_ATTEMPT_COUNT_MESSAGE);
+        assertNotNull(individualRequest.getUpdatedDate(),"Updated date should not be null");
+        assertNotNull(individualRequest.getCompletedDate(),"Completed date should be populated");
 
     }
 
@@ -93,13 +106,14 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      * Tests that request is marked as initially accepted correctly.
      */
     @Test
+    @DisplayName("Test Mark Request As Initially Accepted")
     public void testMarkRequestAsInitiallyAccepted() {
         individualRequest.markRequestAsInitiallyAccepted();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus(),
-                individualRequest.getRequestStatus());
-        Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
-        Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
+        assertEquals(IndividualRequestStatus.INITIALLY_ACCEPTED.getStatus(),
+                individualRequest.getRequestStatus(),STATUS_IS_INCORRECT_MESSAGE);
+        assertEquals(0, individualRequest.getForwardingAttempts(),FORWARDING_ATTEMPT_COUNT_MESSAGE);
+        assertNotNull(individualRequest.getUpdatedDate(),"Updated date shouldn't be populated");
 
     }
 
@@ -107,13 +121,14 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      * Tests that request is marked as awaiting data correctly.
      */
     @Test
+    @DisplayName("Test Mark Request As Awaiting Data")
     public void testMarkRequestAsAwaitingData() {
         individualRequest.markRequestAsAwaitingData();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.AWAITING_DATA.getStatus(),
-                individualRequest.getRequestStatus());
-        Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
-        Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
+        assertEquals(IndividualRequestStatus.AWAITING_DATA.getStatus(),
+                individualRequest.getRequestStatus(),STATUS_IS_INCORRECT_MESSAGE);
+        assertEquals(0, individualRequest.getForwardingAttempts(),FORWARDING_ATTEMPT_COUNT_MESSAGE);
+        assertNotNull(individualRequest.getUpdatedDate(),"Updated date should be populated and not null");
 
     }
 
@@ -121,31 +136,51 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      * Tests that request is marked as rejected correctly.
      */
     @Test
+    @DisplayName("Test Mark Request As Rejected")
     public void testMarkRequestAsRejected() {
         final IErrorLog errorLog = new ErrorLog();
         individualRequest.markRequestAsRejected(errorLog);
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.REJECTED.getStatus(),
-                individualRequest.getRequestStatus());
-        Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
-        Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
-        Assert.assertNotNull("Completed date should be populated", individualRequest.getCompletedDate());
-        Assert.assertEquals("Error log should be populated", errorLog, individualRequest.getErrorLog());
-        Assert.assertEquals("Individual request should be associated with error log", individualRequest,
-                errorLog.getIndividualRequest());
+        assertEquals(IndividualRequestStatus.REJECTED.getStatus(),
+                individualRequest.getRequestStatus(),STATUS_IS_INCORRECT_MESSAGE);
+        assertEquals(0, individualRequest.getForwardingAttempts(),FORWARDING_ATTEMPT_COUNT_MESSAGE);
+        assertNotNull(individualRequest.getUpdatedDate(),"Request Updated date should be populated");
+        assertNotNull(individualRequest.getCompletedDate(),"Completed date should be populated");
+        assertEquals(errorLog, individualRequest.getErrorLog(),"Error log should be populated");
+        assertEquals(individualRequest,errorLog.getIndividualRequest(),"Individual request should be associated with error log");
+    }
+
+    @Test
+    @DisplayName("Test Mark Request As Rejected")
+    public void testMarkRequestAsRejectedErrorLog() {
+
+        individualRequest.markRequestAsRejected(null);
+        assertNull(individualRequest.getErrorLog(),"Error log should be null");
+
+    }
+
+    @Test
+    @DisplayName("Test Individual Request Reference")
+    public void testIndividualRequestReference() {
+
+        individualRequest.setSdtBulkReference("REF0202");
+        assertEquals(individualRequest.getSdtBulkReference(),"REF0202", "reference should be set");
+        assertNull(individualRequest.getErrorLog(),"Error log should be null");
+
     }
 
     /**
      * Tests that forward attempt is reset correctly.
      */
     @Test
+    @DisplayName("Test Reset Forwarding Attempts")
     public void testResetForwardingAttempts() {
         individualRequest.resetForwardingAttempts();
 
-        Assert.assertEquals("Status is incorrect", IndividualRequestStatus.RECEIVED.getStatus(),
-                individualRequest.getRequestStatus());
-        Assert.assertEquals("Forwarding attempt count is incorrect", 0, individualRequest.getForwardingAttempts());
-        Assert.assertNotNull("Updated date should be populated", individualRequest.getUpdatedDate());
+        assertEquals(IndividualRequestStatus.RECEIVED.getStatus(),
+                individualRequest.getRequestStatus(),STATUS_IS_INCORRECT_MESSAGE);
+        assertEquals(0, individualRequest.getForwardingAttempts(),FORWARDING_ATTEMPT_COUNT_MESSAGE);
+        assertNotNull(individualRequest.getUpdatedDate(),"IndividualRequest Updated date should be populated");
 
     }
 
@@ -153,18 +188,20 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      * Tests that check for enqueuing request correct.
      */
     @Test
+    @DisplayName("Test Is Enqueue-able")
     public void testIsEnqueueable() {
         individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
-        Assert.assertTrue("Request should be enqueueable", individualRequest.isEnqueueable());
+        assertTrue(individualRequest.isEnqueueable(),"Request should be enqueue-able");
 
         individualRequest.setRequestStatus(IndividualRequestStatus.FORWARDED.getStatus());
-        Assert.assertFalse("Request should not be enqueueable", individualRequest.isEnqueueable());
+        assertFalse(individualRequest.isEnqueueable(),"Request should not be enqueue-able");
     }
 
     /**
      * Tests that request reference is populated correctly.
      */
     @Test
+    @DisplayName("Test Populate Sdt Request Reference")
     public void testPopulateSdtRequestReference() {
         final IBulkSubmission bulkSubmission = new BulkSubmission();
         bulkSubmission.setSdtBulkReference("BULK-REF");
@@ -173,7 +210,19 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
         individualRequest.setLineNumber(1);
         individualRequest.populateReferences();
 
-        Assert.assertEquals("Request reference is incorrect", "BULK-REF-0000001",
-                individualRequest.getSdtRequestReference());
+        assertEquals( "BULK-REF-0000001",
+                individualRequest.getSdtRequestReference(),"Request reference is incorrect");
+        assertEquals( "BULK-REF",
+                      individualRequest.getSdtBulkReference(),"Request reference is incorrect");
     }
+
+
+
+    @Test
+    @DisplayName("Test Request toString")
+    public void testIndividualRequestToString(){
+
+        assertNotNull(individualRequest.toString(),"Object to string should be populated");
+    }
+
 }

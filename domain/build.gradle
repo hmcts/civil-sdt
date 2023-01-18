@@ -17,3 +17,7 @@ jar {
 bootJar {
     enabled = false
 }
+
+test {
+  useJUnitPlatform()
+}
