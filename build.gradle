@@ -584,7 +584,6 @@ sonarqube {
   properties {
     property "sonar.projectName", "Reform :: civil-sdt"
     property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt"
-    property 'sonar.coverage.exclusions', "**/**"
     property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
   }
 }
