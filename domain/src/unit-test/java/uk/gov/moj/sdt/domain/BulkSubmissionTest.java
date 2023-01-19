@@ -72,7 +72,7 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         //then
 
             assertNotNull(bulkSubmission.getServiceRequest(),"Should return a ServiceRequest object");
-            assertNotNull(bulkSubmission.hasError(),"Error code should be set");
+            assertNotNull(bulkSubmission.getErrorCode(),"Error code should be set");
             assertNotEquals(
                 bulkSubmission.getSubmissionStatus(),
                 IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus()
