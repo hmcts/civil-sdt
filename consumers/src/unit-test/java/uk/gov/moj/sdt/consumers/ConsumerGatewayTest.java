@@ -1,9 +1,5 @@
 package uk.gov.moj.sdt.consumers;
 
-import java.math.BigInteger;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +19,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQuer
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
+import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
@@ -40,6 +39,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for the consumer gateway.
@@ -83,13 +83,13 @@ class ConsumerGatewayTest extends ConsumerTestBase {
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        SubmitQueryConsumer consumer = new SubmitQueryConsumer();
+        SubmitQueryConsumer consumer = new SubmitQueryConsumer(mockTransformer);
         consumer.setTransformer(mockTransformer);
         submitQueryConsumer =  Mockito.spy(consumer);
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
 
-        consumerGateway = new ConsumerGateway();
+        consumerGateway = new ConsumerGateway(individualRequestConsumer, submitQueryConsumer);
         consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
         consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
     }

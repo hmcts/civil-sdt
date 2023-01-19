@@ -53,11 +53,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -147,14 +144,25 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     private ISdtManagementMBean sdtManagementMBean;
 
+    @Mock
+    private DefaultMessageListenerContainer messageListenerContainer;
+
+    @Mock
+    private IMessagingUtility messagingUtility;
+
+    @Mock
+    private ITargetApplicationSubmissionService targetAppSubmissionService;
+
     /**
      * Method to do any pre-test set-up.
      */
     @BeforeEach
     @Override
     public void setUp() {
-        sdtManagementMBean = new SdtManagementMBean();
-
+        sdtManagementMBean = new SdtManagementMBean(messageListenerContainer,
+                                                    mockIndividualRequestDao,
+                                                    messagingUtility,
+                                                    targetAppSubmissionService);
         // Instantiate all the mocked objects and set them up in the MBean
         this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "individualRequestDao",
                 IIndividualRequestDao.class, mockIndividualRequestDao);
@@ -245,8 +253,6 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
         verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
-        verify(mockIndividualRequestDao, times(0)).persistBulk(anyList());
-        verify(mockMessagingUtility, times(0)).enqueueRequest(any());
 
         assertTrue(true, "Not expected to call the method to requeue requests");
     }

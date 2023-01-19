@@ -30,15 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -51,6 +49,9 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.DuplicateUserRequestIdentifierException;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -103,13 +104,22 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
      */
     private IGlobalParameter globalParam;
 
+    @Mock
+    private IBulkCustomerDao bulkCustomerDao;
+
+    @Mock
+    private IBulkSubmissionDao bulkSubmissionDao;
+
     /**
      * Set up test artefact.
      */
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        validator = new BulkSubmissionValidator();
+        validator = new BulkSubmissionValidator(bulkCustomerDao,
+                                                mockGlobalParameterCache,
+                                                mockErrorMessagesCache,
+                                                bulkSubmissionDao);
         validator.setErrorMessagesCache(mockErrorMessagesCache);
         validator.setGlobalParameterCache(mockGlobalParameterCache);
 

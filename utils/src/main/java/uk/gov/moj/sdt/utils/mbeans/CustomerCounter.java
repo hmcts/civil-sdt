@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.utils.mbeans;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import java.util.Map;
  *
  * @author Robin Compston
  */
+@Component("CustomerCounter")
 public final class CustomerCounter implements ICustomerCounter {
     /**
      * Map of unique bulk customers seen by system.

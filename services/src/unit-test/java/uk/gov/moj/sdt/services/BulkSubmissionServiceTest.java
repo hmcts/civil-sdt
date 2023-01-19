@@ -30,21 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
@@ -75,9 +65,15 @@ import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -145,22 +141,16 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        bulkSubmissionService = new BulkSubmissionService();
-        bulkSubmissionService.setGenericDao(mockGenericDao);
-
-        bulkSubmissionService.setBulkCustomerDao(mockBulkCustomerDao);
-        bulkSubmissionService.setTargetApplicationDao(mockTargetApplicationDao);
-
         IndividualRequestsXmlParser individualRequestsXmlParser = new IndividualRequestsXmlParser();
-        bulkSubmissionService.setIndividualRequestsXmlparser(individualRequestsXmlParser);
 
-        bulkSubmissionService.setSdtBulkReferenceGenerator(mockSdtBulkReferenceGenerator);
-
-        bulkSubmissionService.setMessagingUtility(mockMessagingUtility);
-
+        bulkSubmissionService = new BulkSubmissionService(mockGenericDao,
+                                                          mockBulkCustomerDao,
+                                                          mockTargetApplicationDao,
+                                                          individualRequestsXmlParser,
+                                                          mockMessagingUtility,
+                                                          mockSdtBulkReferenceGenerator,
+                                                          mockErrorMessagesCache);
         bulkSubmissionService.setConcurrencyMap(mockConcurrencyMap);
-
-        bulkSubmissionService.setErrorMessagesCache(mockErrorMessagesCache);
     }
 
     /**

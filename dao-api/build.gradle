@@ -1,5 +1,10 @@
 apply plugin: 'info.solidsoft.pitest'
 
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-dao-api'
+}
+
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
@@ -14,10 +19,10 @@ dependencies {
     testImplementation project(":utils").sourceSets.integTest.output
 }
 
-jar {
-    baseName = 'civil-sdt-dao-api'
-}
-
 bootJar {
     enabled = false
+}
+
+sonarqube {
+  skipProject = true
 }

@@ -31,17 +31,10 @@
 
 package uk.gov.moj.sdt.validators;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -61,6 +54,11 @@ import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -68,6 +66,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Tests for {@link BulkSubmissionValidatorTest}.
@@ -169,7 +168,10 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
     @Override
     public void setUpLocalTests() {
         // subject of test
-        validator = new BulkSubmissionValidator();
+        validator = new BulkSubmissionValidator(mockIBulkCustomerDao,
+                                                globalParameterCache,
+                                                errorMessagesCache,
+                                                mockIBulkSubmissionDao);
         validator.setConcurrencyMap(new HashMap<>());
     }
 
@@ -279,7 +281,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         bulkSubmission.accept(validator, null);
 
         // Check the duplicate individual request has been rejected
-        assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(), bulkSubmission
+        assertEquals(REJECTED.getStatus(), bulkSubmission
                 .getIndividualRequests().get(1).getRequestStatus());
     }
 

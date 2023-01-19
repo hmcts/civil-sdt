@@ -34,8 +34,11 @@ package uk.gov.moj.sdt.validators;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
 /**
  * Tests for {@link TargetApplicationValidatorTest}.
@@ -50,13 +53,21 @@ class TargetApplicationValidatorTest extends AbstractValidatorUnitTest {
      */
     private TargetApplicationValidator validator;
 
+    @Mock
+    IBulkCustomerDao bulkCustomerDao;
+    @Mock
+    ICacheable globalParameterCache;
+
+    @Mock
+    ICacheable errorMessagesCache;
+
     /**
      * Setup of the Validator and Domain class instance.
      */
     @BeforeEach
     public void setUpLocalTests() {
         // subject of test
-        validator = new TargetApplicationValidator();
+        validator = new TargetApplicationValidator(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**

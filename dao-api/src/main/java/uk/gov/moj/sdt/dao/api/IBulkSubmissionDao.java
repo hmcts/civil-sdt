@@ -49,7 +49,7 @@ public interface IBulkSubmissionDao extends IGenericDao {
      * @param customerReference customer reference
      * @param dataRetention     the data retention period to use
      * @return null if the bulk submission is unique or the non unique bulk submission object
-     * @throws DataAccessException Hibernate exception
+     * @throws DataAccessException JPA exception
      */
     IBulkSubmission getBulkSubmission(final IBulkCustomer bulkCustomer, final String customerReference,
                                       final int dataRetention) throws DataAccessException;
@@ -62,7 +62,7 @@ public interface IBulkSubmissionDao extends IGenericDao {
      * @param sdtBulkReference sdt bulk reference
      * @param dataRetention    the data retention period to use
      * @return null if the bulk submission is unique or the non unique bulk submission object
-     * @throws DataAccessException Hibernate exception
+     * @throws DataAccessException JPA exception
      */
     IBulkSubmission getBulkSubmissionBySdtRef(final IBulkCustomer bulkCustomer, final String sdtBulkReference,
                                               final int dataRetention) throws DataAccessException;

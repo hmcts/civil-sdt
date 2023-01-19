@@ -35,6 +35,9 @@ import java.util.GregorianCalendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  * @author d130680
  */
 @Transactional(propagation = Propagation.REQUIRED)
+@Component("WsReadSubmitQueryHandler")
 public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsReadSubmitQueryHandler {
     /**
      * Logger object.
@@ -75,6 +79,15 @@ public class WsReadSubmitQueryHandler extends AbstractWsHandler implements IWsRe
     private ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> transformer;
 
     // CHECKSTYLE:ON
+
+    @Autowired
+    public WsReadSubmitQueryHandler(@Qualifier("SubmitQueryService")
+                                                ISubmitQueryService submitQueryService,
+                                    @Qualifier("SubmitQueryTransformer")
+                                        ITransformer<SubmitQueryRequestType, SubmitQueryResponseType, ISubmitQueryRequest, ISubmitQueryRequest> transformer) {
+        this.submitQueryService = submitQueryService;
+        this.transformer = transformer;
+    }
 
     @Override
     public SubmitQueryResponseType submitQuery(final SubmitQueryRequestType submitQueryRequestType) {

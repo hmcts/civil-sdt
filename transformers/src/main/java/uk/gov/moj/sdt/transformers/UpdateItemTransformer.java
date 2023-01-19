@@ -30,11 +30,11 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.transformers;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
@@ -45,11 +45,14 @@ import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RESUBMIT_MESSAGE;
+
 /**
  * Maps UpdateItem JAXB object tree to domain object and vice-versa.
  *
  * @author Manoj Kulkarni
  */
+@Component("UpdateItemTransformer")
 public class UpdateItemTransformer extends AbstractTransformer implements
     ITransformer<UpdateRequestType, UpdateResponseType, IIndividualRequest, IIndividualRequest> {
     @Override
@@ -68,7 +71,7 @@ public class UpdateItemTransformer extends AbstractTransformer implements
         } else if (UpdateStatusCodeType.ACCEPTED.equals(statusCode)) {
             individualRequest.markRequestAsAccepted();
         } else if (UpdateStatusCodeType.RESUBMIT_MESSAGE.equals(statusCode)) {
-            individualRequest.setRequestStatus(IndividualRequestStatus.RESUBMIT_MESSAGE.getStatus());
+            individualRequest.setRequestStatus(RESUBMIT_MESSAGE.getStatus());
         }
 
         return individualRequest;

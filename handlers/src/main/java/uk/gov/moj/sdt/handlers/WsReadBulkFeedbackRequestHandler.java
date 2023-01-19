@@ -34,6 +34,9 @@ import java.util.GregorianCalendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusT
  * @author d301488
  */
 @Transactional(propagation = Propagation.REQUIRED)
+@Component("WsReadBulkFeedbackRequestHandler")
 public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implements IWsReadBulkRequestHandler {
     /**
      * Logger object.
@@ -73,6 +77,15 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
      */
     private ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
             IBulkFeedbackRequest, IBulkSubmission> transformer;
+
+    @Autowired
+    public WsReadBulkFeedbackRequestHandler(@Qualifier("BulkFeedbackService")
+                                                    IBulkFeedbackService bulkFeedbackService,
+                                            @Qualifier("BulkFeedbackTransformer")
+                                                ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission> transformer) {
+        this.bulkFeedbackService = bulkFeedbackService;
+        this.transformer = transformer;
+    }
 
     @Override
     public BulkFeedbackResponseType getBulkFeedback(final BulkFeedbackRequestType bulkFeedbackRequest) {

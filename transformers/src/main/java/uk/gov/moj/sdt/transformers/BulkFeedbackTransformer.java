@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.transformers;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -60,13 +61,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponsesType;
  *
  * @author d130680
  */
+@Component("BulkFeedbackTransformer")
 public final class BulkFeedbackTransformer extends AbstractTransformer implements
         ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission> {
-    /**
-     * Private constructor.
-     */
-    private BulkFeedbackTransformer() {
-    }
 
     @Override
     public IBulkFeedbackRequest transformJaxbToDomain(final BulkFeedbackRequestType bulkFeedbackRequest) {

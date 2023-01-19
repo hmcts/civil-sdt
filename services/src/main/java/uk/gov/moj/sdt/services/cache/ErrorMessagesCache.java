@@ -30,23 +30,28 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.cache.AbstractCacheControl;
 import uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A cache of all the error messages.
  *
  * @author d301488/Robin Compston
  */
+@Component("ErrorMessagesCache")
 public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMessagesCache {
     /**
      * Logger object.
@@ -63,6 +68,13 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
      */
     private IGenericDao genericDao;
 
+    @Autowired
+    public ErrorMessagesCache(@Qualifier("SdtManagementMBean") ISdtManagementMBean managementMBean,
+                              @Qualifier("ErrorMessageDao") IGenericDao genericDao) {
+        super(managementMBean);
+        this.genericDao = genericDao;
+    }
+
     /**
      * Get the map holding cached values.
      *
@@ -73,8 +85,8 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
     }
 
     @Override
-    protected <DomainType extends IDomainObject> DomainType getSpecificValue(final Class<DomainType> domainType,
-                                                                             final String errorMessageCode) {
+    protected <D extends IDomainObject> D getSpecificValue(final Class<D> domainType,
+                                                           final String errorMessageCode) {
         // Assume map is uninitialised if empty.
         if (this.getErrorMessages().isEmpty()) {
             loadCache();
@@ -91,7 +103,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
             throw new IllegalStateException("Error message with key [" + errorMessageCode + "] not found.");
         }
 
-        DomainType domainObject = null;
+        D domainObject = null;
 
         // Double check that the expected class matches the retrieved class.
         if (domainType.isAssignableFrom(someObject.getClass())) {
@@ -115,7 +127,7 @@ public class ErrorMessagesCache extends AbstractCacheControl implements IErrorMe
                 LOGGER.info("Loading error messages into cache.");
 
                 // Retrieve all rows from error messages table.
-                final IErrorMessage[] result = genericDao.query(IErrorMessage.class);
+                final IErrorMessage[] result = genericDao.query(ErrorMessage.class);
 
                 for (IErrorMessage errorMessage : result) {
                     // Add all retrieved messages to a map, keyed by the Error Code.

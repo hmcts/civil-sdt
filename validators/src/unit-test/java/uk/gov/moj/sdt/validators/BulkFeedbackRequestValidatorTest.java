@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -117,6 +117,12 @@ class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     private IBulkCustomer bulkCustomer;
 
+    @Mock
+    private IBulkCustomerDao bulkCustomerDao;
+
+    @Mock
+    private IBulkSubmissionDao bulkSubmissionDao;
+
     /**
      * Data retention period.
      */
@@ -127,7 +133,10 @@ class BulkFeedbackRequestValidatorTest extends AbstractValidatorUnitTest {
      */
     @Override
     public void setUpLocalTests() {
-        validator = new BulkFeedbackRequestValidator();
+        validator = new BulkFeedbackRequestValidator(bulkCustomerDao,
+                                                     globalParameterCache,
+                                                     errorMessagesCache,
+                                                     bulkSubmissionDao);
 
         // create a bulk customer
         bulkCustomer = new BulkCustomer();

@@ -31,17 +31,11 @@
 
 package uk.gov.moj.sdt.validators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
@@ -51,6 +45,11 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link SubmitQueryRequestValidatorTest}.
@@ -104,16 +103,15 @@ class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
     @Mock
     private ICacheable errorMessagesCache;
 
+    @Mock
+    private IBulkCustomerDao bulkCustomerDao;
+
     /**
      * Setup of the Validator and Domain class instance.
      */
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        // subject of test
-        validator = new SubmitQueryRequestValidator();
-
-        // domain objects
         bulkCustomer = createCustomer(createBulkCustomerApplications("PCOL"));
 
         submitQueryRequest = new SubmitQueryRequest();
@@ -123,7 +121,7 @@ class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
         globalParameter = new GlobalParameter();
         globalParameter.setName(IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
         globalParameter.setValue(contact);
-        validator.setGlobalParameterCache(globalParameterCache);
+        validator= new SubmitQueryRequestValidator(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**
@@ -150,7 +148,6 @@ class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
                     .thenReturn(errorMessage);
             validator.setErrorMessagesCache(errorMessagesCache);
 
-            // inject the bulk customer into the validator
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
             submitQueryRequest.accept(validator, null);
@@ -172,12 +169,10 @@ class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
     @Test
     void testCustomerHasAccess() {
 
-        // set up QueryRequest to use PCOL as the application, to match the customer application list.
         submitQueryRequest.setTargetApplication(createTargetApp("PCOL"));
         // set up the mock objects
         when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
 
-        // inject the bulk customer into the validator
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
         submitQueryRequest.accept(validator, null);

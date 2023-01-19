@@ -43,6 +43,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
 
 /**
  * Unit tests for {@link IndividualRequest}.
@@ -81,7 +83,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     @Test
     void testIncrementForwardingAttempts() {
         individualRequest.incrementForwardingAttempts();
-        assertsCommon(IndividualRequestStatus.FORWARDED, 1);
+        assertsCommon(FORWARDED, 1);
     }
 
     /**
@@ -138,7 +140,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     void testResetForwardingAttempts() {
         individualRequest.resetForwardingAttempts();
 
-        assertsCommon(IndividualRequestStatus.RECEIVED, 0);
+        assertsCommon(RECEIVED, 0);
     }
 
     /**
@@ -146,10 +148,10 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testIsEnqueueable() {
-        individualRequest.setRequestStatus(IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestStatus(RECEIVED.getStatus());
         assertTrue(individualRequest.isEnqueueable(), "Request should be enqueueable");
 
-        individualRequest.setRequestStatus(IndividualRequestStatus.FORWARDED.getStatus());
+        individualRequest.setRequestStatus(FORWARDED.getStatus());
         assertFalse(individualRequest.isEnqueueable(), "Request should not be enqueueable");
     }
 

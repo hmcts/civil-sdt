@@ -35,12 +35,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
@@ -87,11 +85,9 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        cache = new ErrorMessagesCache();
-        cache.setGenericDao(mockGenericDao);
-
         managementMBean = Mockito.mock(ISdtManagementMBean.class);
-        cache.setManagementMBean(managementMBean);
+        cache = new ErrorMessagesCache(managementMBean, mockGenericDao);
+
 
         // Setup some results
         result = new ErrorMessage[3];
@@ -113,7 +109,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     void testGetErrorMessage() {
 
         // Activate the mock generic dao
-        when(mockGenericDao.query(IErrorMessage.class)).thenReturn(result);
+        when(mockGenericDao.query(ErrorMessage.class)).thenReturn(result);
 
         // Get some values
         IErrorMessage errorMessage = cache.getValue(IErrorMessage.class, "1");
@@ -128,7 +124,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
         assertEquals("2", errorMessage.getErrorCode());
         assertEquals(ERROR_DESCRIPTION_2, errorMessage.getErrorDescription());
 
-        verify(mockGenericDao).query(IErrorMessage.class);
+        verify(mockGenericDao).query(ErrorMessage.class);
         verify(managementMBean, times(3)).getCacheResetControl();
     }
 
@@ -139,7 +135,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     void testKeyNotFound() {
 
         // Activate the mock generic dao
-        when(mockGenericDao.query(IErrorMessage.class)).thenReturn(result);
+        when(mockGenericDao.query(ErrorMessage.class)).thenReturn(result);
 
         IErrorMessage errorMessage = null;
         try {
@@ -150,7 +146,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
             assertNull(errorMessage);
         }
 
-        verify(mockGenericDao).query(IErrorMessage.class);
+        verify(mockGenericDao).query(ErrorMessage.class);
         verify(managementMBean).getCacheResetControl();
     }
 
@@ -161,7 +157,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
     void testUncache() {
 
         // Activate the mock generic dao
-        when(mockGenericDao.query(IErrorMessage.class)).thenReturn(result);
+        when(mockGenericDao.query(ErrorMessage.class)).thenReturn(result);
 
         // Get some values to prove the cache is not empty
         final IErrorMessage errorMessage = cache.getValue(IErrorMessage.class, "1");
@@ -172,7 +168,7 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
 
         assertEquals(0, cache.getErrorMessages().size());
 
-        verify(mockGenericDao).query(IErrorMessage.class);
+        verify(mockGenericDao).query(ErrorMessage.class);
         verify(managementMBean).getCacheResetControl();
     }
 }

@@ -110,14 +110,9 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        messageTaskService = new RetryMessageAlreadySentService();
-
-        // Instantiate all the mocked objects and set them in the message task service
-        messageTaskService.setIndividualRequestDao(mockIndividualRequestDao);
-
-        messageTaskService.setGlobalParametersCache(mockCacheable);
-
-        messageTaskService.setMessagingUtility(mockMessagingUtility);
+        messageTaskService = new RetryMessageAlreadySentService(mockIndividualRequestDao,
+                                                                mockMessagingUtility,
+                                                                mockCacheable);
     }
 
     /**

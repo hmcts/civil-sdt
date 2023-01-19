@@ -30,19 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -66,6 +58,11 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -127,9 +124,6 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        bulkFeedbackService = new BulkFeedbackService();
-
-        bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
 
         final IGlobalParameter globalParameterData = new GlobalParameter();
         globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
@@ -137,7 +131,8 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         when(mockGlobalParameterCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).thenReturn(globalParameterData);
 
-        bulkFeedbackService.setGlobalParametersCache(mockGlobalParameterCache);
+        bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
+
         dataRetentionPeriod = 90;
 
         // create a bulk customer
