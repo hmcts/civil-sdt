@@ -66,6 +66,7 @@ public class ServiceRequestTest extends AbstractSdtUnitTestBase {
         serviceRequest.setRequestType("ReqType");
         serviceRequest.setRequestPayload("PayLoad");
         serviceRequest.setRequestDateTime(LocalDateTime.now());
+        serviceRequest.setId(1L);
     }
 
 
@@ -83,6 +84,7 @@ public class ServiceRequestTest extends AbstractSdtUnitTestBase {
         assertNotNull(serviceRequest.getRequestType(),"Request Type should be populated");
         assertNotNull(serviceRequest.getRequestPayload(),"Request Pay Load should be populated");
         assertNotNull(serviceRequest.getRequestDateTime(),"Request Date Time should be populated");
+        assertNotNull(serviceRequest.getId());
     }
 
 }

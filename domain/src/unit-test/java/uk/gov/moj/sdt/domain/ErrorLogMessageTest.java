@@ -77,7 +77,7 @@ public class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
         errorMessage.setErrorText("The Customer does not have an SDT Customer ID set up. "
                                       + "Please contact {1} for assistance.");
         errorMessage.setErrorDescription("Error occurred due to no SDT Customer ID set");
-
+        errorMessage.setId(1L);
     }
 
 
@@ -99,6 +99,7 @@ public class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
         assertTrue(actualErrorMessage.contains(expectedErrorMessage),"Should contain something");
         assertNotNull(errorMessage,"ErrorMessage should be populated");
         assertNotNull(errorMessage.toString(),"ErrorMessage toString should be populated");
+        assertNotNull(errorMessage.getId());
     }
 
 }

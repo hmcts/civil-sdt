@@ -40,9 +40,7 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
@@ -60,6 +58,9 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission = new BulkSubmission();
         bulkSubmission.setErrorCode("ERROR");
         bulkSubmission.setServiceRequest(mockServiceRequest);
+        bulkSubmission.setId(1L);
+        bulkSubmission.setPayload("Payload");
+        bulkSubmission.setErrorText("This is an Error");
 
     }
         @DisplayName("Test Bulk Submission")
@@ -79,6 +80,8 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
             );
 
         assertEquals(bulkSubmission.getSubmissionStatus(),"Validated");
+        assertNotNull(bulkSubmission.getErrorText());
+        assertTrue(bulkSubmission.hasError());
 
         }
 
@@ -91,7 +94,28 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.markAsValidated();
         //then
         assertNotEquals(bulkSubmission.getSubmissionStatus(),"Validated");
+        assertEquals(bulkSubmission.getPayload(),"Payload");
 
+    }
+
+    @DisplayName("Test Bulk Submission toString")
+    @Test
+    public void testBulkSubmissionToString(){
+        assertNotNull(bulkSubmission.toString(), "Should contain something");
+        assertEquals(bulkSubmission.getPayload(),"Payload");
+    }
+
+    @DisplayName("Test Bulk Submission getId")
+    @Test
+    public void testBulkSubmissionGetId(){
+        assertNotNull(bulkSubmission.getId());
+    }
+
+    @DisplayName("Test Bulk Submission hasError")
+    @Test
+    public void testBulkSubmissionHasError(){
+        bulkSubmission.setErrorCode(null);
+        assertFalse(bulkSubmission.hasError());
     }
 
 }

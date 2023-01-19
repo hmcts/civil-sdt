@@ -120,4 +120,13 @@ public class BulkCustomerTest extends AbstractSdtUnitTestBase {
         assertEquals("HibernateProxy", new BulkCustomer().getHashId(mockHibernateProxy));
     }
 
+    @Test
+    @DisplayName("Test Get Bulk Customer Application")
+    public void testBulkCustomerApplication(){
+        String expected ="YES";
+        IBulkCustomerApplication actual = bulkCustomer.getBulkCustomerApplication(expected);
+        assertNotNull(actual);
+        assertNull(bulkCustomer.getBulkCustomerApplication("NO"));
+    }
+
 }

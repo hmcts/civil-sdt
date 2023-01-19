@@ -90,7 +90,7 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
         assertEquals(IndividualRequestStatus.FORWARDED.getStatus(),
                 individualRequest.getRequestStatus(),STATUS_IS_INCORRECT_MESSAGE);
         assertEquals(1, individualRequest.getForwardingAttempts(), FORWARDING_ATTEMPT_COUNT_MESSAGE);
-        assertNotNull(individualRequest.getUpdatedDate(),"Updated date should be populated");
+        assertNotNull(individualRequest.getUpdatedDate(),UPDATED_DATE_SHOULD_BE_POPULATED);
 
     }
 
@@ -231,6 +231,13 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
     public void testIndividualRequestToString(){
 
         assertNotNull(individualRequest.toString(),"Object to string should be populated");
+    }
+
+    @Test
+    @DisplayName("Test Request Interneral System Error")
+    public void testIndividualRequestSystemError(){
+    individualRequest.setInternalSystemError("Internal System Error");
+        assertNotNull(individualRequest.getInternalSystemError(),"Internal System error should be populated");
     }
 
 }
