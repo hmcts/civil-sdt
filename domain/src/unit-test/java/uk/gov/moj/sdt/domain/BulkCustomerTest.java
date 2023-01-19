@@ -41,6 +41,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import org.mockito.Mockito;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -48,12 +50,14 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Unit tests for {@link BulkCustomer}.
  *
  * @author d276205
  */
-@DisplayName("Bulk Customer Test")
 public class BulkCustomerTest extends AbstractSdtUnitTestBase {
     /**
      * Test subject.

@@ -31,16 +31,12 @@
 
 package uk.gov.moj.sdt.transformers;
 
-import java.util.List;
-
-import java.time.LocalDateTime;
-
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
 import uk.gov.moj.sdt.utils.Utilities;
@@ -52,18 +48,19 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+
 /**
  * Maps bulk request JAXB object tree to domain object tree and vice versa.
  *
  * @author d130680
  */
+@Component("BulkRequestTransformer")
 public final class BulkRequestTransformer extends AbstractTransformer implements
         ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> {
-    /**
-     * Private constructor.
-     */
-    private BulkRequestTransformer() {
-    }
 
     /**
      * Maps the header to a Bulk Customer object.
@@ -98,7 +95,7 @@ public final class BulkRequestTransformer extends AbstractTransformer implements
 
             individualRequest.setLineNumber(lineNumber++);
 
-            individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
+            individualRequest.setRequestStatus(RECEIVED.getStatus());
 
             individualRequest.setRequestType(request.getRequestType());
 

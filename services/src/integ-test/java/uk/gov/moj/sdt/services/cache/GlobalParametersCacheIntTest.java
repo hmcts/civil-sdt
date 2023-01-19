@@ -30,41 +30,35 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.cache;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.TestConfig;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Integration test for the Global Parameters Cache.
  *
  * @author Manoj Kulkarni
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
-        "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@ActiveProfiles("integ")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/GlobalParametersCacheIntTest.sql"})
 public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
     /**
      * Test subject.
@@ -76,10 +70,7 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-        globalParameterCache =
-                (ICacheable) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache");
+        globalParameterCache = (ICacheable) this.applicationContext.getBean("GlobalParametersCache");
 
     }
 
@@ -129,14 +120,11 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
                 IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name(), "90", globalParameter.getValue());
 
         // Do uncache operation.
-        final ISdtManagementMBean sdtManagementMBean =
-                (ISdtManagementMBean) SpringApplicationContext
-                        .getBean("uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean");
+        final ISdtManagementMBean sdtManagementMBean = (ISdtManagementMBean) SpringApplicationContext.getBean("SdtManagementMBean");
         sdtManagementMBean.uncache();
 
         // Change the value in the database.
-        final IGenericDao genericDao =
-                (IGenericDao) SpringApplicationContext.getBean("uk.gov.moj.sdt.dao.api.IGenericDao");
+        final IGenericDao genericDao = (IGenericDao) SpringApplicationContext.getBean("GlobalParametersDao");
         globalParameter.setValue("91");
         genericDao.persist(globalParameter);
 

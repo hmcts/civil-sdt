@@ -30,8 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test class for Server Host Name.
@@ -47,7 +48,7 @@ public class ServerHostNameTest {
     public void testGetServerHostName() {
         final String hostName = ServerHostName.getHostName();
 
-        Assert.assertNotNull(hostName);
+        assertNotNull(hostName);
     }
 
 }

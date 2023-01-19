@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,11 +44,12 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
 
 /**
  * Unit tests for {@link IndividualRequest}.
@@ -60,15 +63,24 @@ public class IndividualRequestTest extends AbstractSdtUnitTestBase {
      */
     private IIndividualRequest individualRequest;
 
-    private static final String FORWARDING_ATTEMPT_COUNT_MESSAGE = "Forwarding attempt count is incorrect";
-    private static final String STATUS_IS_INCORRECT_MESSAGE = "Status is incorrect";
+    private static final String STATUS_IS_INCORRECT = "Status is incorrect";
+    private static final String FORWARDING_ATTEMPT_COUNT_IS_INCORRECT = "Forwarding attempt count is incorrect";
+    private static final String UPDATED_DATE_SHOULD_BE_POPULATED = "Updated date should be populated";
+
     /**
      * Set up test data.
      */
-    @Override
     @BeforeEach
+    @Override
     public void setUp() {
         individualRequest = new IndividualRequest();
+    }
+
+    private void assertsCommon(IndividualRequestStatus expectedStatus, Integer expectedForwardingAttempts) {
+        assertEquals(expectedStatus.getStatus(), individualRequest.getRequestStatus(), STATUS_IS_INCORRECT);
+        assertEquals(expectedForwardingAttempts, individualRequest.getForwardingAttempts(),
+                FORWARDING_ATTEMPT_COUNT_IS_INCORRECT);
+        assertNotNull(individualRequest.getUpdatedDate(), UPDATED_DATE_SHOULD_BE_POPULATED);
     }
 
     /**

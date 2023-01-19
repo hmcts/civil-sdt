@@ -30,24 +30,18 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.moj.sdt.consumers.config.ConsumersTestConfig;
+import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.ServiceRouting;
 import uk.gov.moj.sdt.domain.ServiceType;
@@ -58,28 +52,29 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.TestConfig;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
  *
  * @author Manoj kulkarni
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/uk/gov/moj/sdt/services/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/cache/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/utils/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/mbeans/spring.context.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.hibernate.test.xml",
-        "classpath:/uk/gov/moj/sdt/services/messaging/spring.context.test.xml",
-        "classpath*:/uk/gov/moj/sdt/dao/**/spring*.xml",
-        "classpath:/uk/gov/moj/sdt/consumers/spring.context.integ.test.xml",
-        "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/interceptors/**/spring*.xml",
-        "classpath*:/uk/gov/moj/sdt/validators/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml"})
+@ActiveProfiles("integ")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConsumersTestConfig.class, DaoTestConfig.class})
+@Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/SubmitQueryServiceIntTest.sql"})
 public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
 
     /**
@@ -97,11 +92,7 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
      */
     @Before
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-
-        submitQueryService =
-                (SubmitQueryService) this.applicationContext
-                        .getBean("uk.gov.moj.sdt.services.api.ISubmitQueryService");
+        submitQueryService = (SubmitQueryService) this.applicationContext.getBean("SubmitQueryService");
     }
 
     /**
@@ -110,7 +101,6 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
      * @throws IOException if there is any error reading from the test file.
      */
     @Test
-    @Rollback(false)
     public void updateRequestSoapError() throws IOException {
         final String rawXml = Utilities.getRawXml("src/integ-test/resources/", "testSampleErrorRequest.xml");
         SdtContext.getContext().setRawInXml(rawXml);

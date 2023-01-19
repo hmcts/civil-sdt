@@ -38,26 +38,48 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * Target Application that the Bulk Customer has been set up to submit messages to.
  *
  * @author d130680
  */
+@Table(name = "TARGET_APPLICATIONS")
+@Entity
 public class TargetApplication extends AbstractDomainObject implements ITargetApplication {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tar_app_seq")
+    @Column(name ="TARGET_APPLICATION_ID")
+    private long id;
+
+    @Column(name ="VERSION_NUMBER")
+    private int version;
+
     /**
      * A collection of all service types that can be used with this target application.
      */
+    @OneToMany(mappedBy = "targetApplication", orphanRemoval = true, cascade = {CascadeType.ALL}, targetEntity = ServiceRouting.class)
     private Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
     /**
      * Target application code.
      */
+    @Column(name ="TARGET_APPLICATION_CODE")
     private String targetApplicationCode;
 
     /**
      * Target application name.
      */
+    @Column(name ="TARGET_APPLICATION_NAME")
     private String targetApplicationName;
 
     @Override
@@ -100,6 +122,21 @@ public class TargetApplication extends AbstractDomainObject implements ITargetAp
             }
         }
         return null;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.utils.transaction.synchronizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -46,6 +47,7 @@ import java.util.List;
  *
  * @author Manoj Kulkarni
  */
+@Component("MessageSynchronizer")
 public class MessageSynchronizer extends TransactionSynchronizationAdapter implements IMessageSynchronizer {
     /**
      * Logger object.

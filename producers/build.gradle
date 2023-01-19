@@ -1,5 +1,10 @@
 apply plugin: 'info.solidsoft.pitest'
 
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-producers'
+}
+
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
@@ -23,10 +28,10 @@ dependencies {
     testImplementation project(":handlers-api").sourceSets.integTest.output
 }
 
-jar {
-    baseName = 'civil-sdt-producers'
-}
-
 bootJar {
     enabled = false
+}
+
+test {
+    useJUnitPlatform()
 }

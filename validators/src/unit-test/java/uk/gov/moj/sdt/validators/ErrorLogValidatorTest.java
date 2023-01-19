@@ -31,9 +31,14 @@
 
 package uk.gov.moj.sdt.validators;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 
 /**
  * Tests for {@link ErrorLogValidatorTest}.
@@ -41,18 +46,28 @@ import uk.gov.moj.sdt.domain.ErrorLog;
  * @author d120520
  */
 
-public class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
+@ExtendWith(MockitoExtension.class)
+class ErrorLogValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Test subject.
      */
     private ErrorLogValidator validator;
 
+    @Mock
+    IBulkCustomerDao bulkCustomerDao;
+    @Mock
+    ICacheable globalParameterCache;
+
+    @Mock
+    ICacheable errorMessagesCache;
+
     /**
      * Setup of the Validator and Domain class instance.
      */
-    public void setUpLocalTests() {
+    @BeforeEach
+    public void setUp() {
         // subject of test
-        validator = new ErrorLogValidator();
+        validator = new ErrorLogValidator(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**

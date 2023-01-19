@@ -33,12 +33,14 @@ package uk.gov.moj.sdt.domain.api;
 
 import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
 
+import java.io.Serializable;
+
 /**
  * Marker interface for domain objects.
  *
  * @author Robin Compston
  */
-public interface IDomainObject extends IVisitable {
+public interface IDomainObject extends IVisitable, Serializable {
     /**
      * Get primary key.
      *

@@ -40,6 +40,7 @@ import org.apache.cxf.wsdl.interceptors.DocLiteralInInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
@@ -50,6 +51,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  *
  * @author Robin Compston
  */
+@Component("SdtUnmarshallInterceptor")
 public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor {
     /**
      * Logger object.

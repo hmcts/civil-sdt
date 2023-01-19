@@ -30,28 +30,35 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.enricher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.utils.SdtContext;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.utils.SdtContext;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
  * Bulk feedback enricher used to enrich outbound messages for get bulk feedback.
  *
  * @author d130680
  */
+@Component("BulkFeedbackEnricher")
 public class BulkFeedbackEnricher extends AbstractSdtEnricher {
     /**
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(BulkFeedbackEnricher.class);
+
+    public BulkFeedbackEnricher() {
+        setParentTag("bulkFeedbackResponse");
+        setInsertionTag("responses");
+    }
 
     @Override
     public String enrichXml(final String message) {
@@ -98,9 +105,9 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher {
             // optional namespace prefix and the responseDetail start tag
             // optional namespace prefix and the status start tag
             //
-            // Capture: 
-            // entire response start tag (1), 
-            // request id value (2), 
+            // Capture:
+            // entire response start tag (1),
+            // request id value (2),
             // responseDetail namespace prefix (3),
             // responseDetail (4)
             // status namespace plus opening tag (without attributes) (5)
@@ -199,15 +206,13 @@ public class BulkFeedbackEnricher extends AbstractSdtEnricher {
                             + "requestId=[\"\'][ \\w]*?[\"\']>\\s*<[\\S:&&[^!>/]]*?"
                             + "responseDetail/>\\s*<[\\S:&&[^!>/]]*?status code=[\"\']([ \\w]+)[\"\']");
             matcher = pattern.matcher(newXml);
-            if (matcher.find()) {
+            if (matcher.find() && !matcher.group(1).equals(REJECTED.getStatus())) {
                 // Use the captured status code to ignore rejected responses which do not need to be enhanced.
-                if (!matcher.group(1).equals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus())) {
-                    // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
-                    LOGGER.error("Detected unenriched response tag[{}] within bulk feedback response XML.",
-                            matcher.group());
-                    throw new UnsupportedOperationException("Detected unenriched response tag[" + matcher.group() +
-                            "] within bulk feedback response XML.");
-                }
+                // We found a response that has not been enriched. Failure to find matching request in outgoing XML.
+                LOGGER.error("Detected unenriched response tag[{}] within bulk feedback response XML.",
+                             matcher.group());
+                throw new UnsupportedOperationException("Detected unenriched response tag[" + matcher.group() +
+                                                            "] within bulk feedback response XML.");
             }
 
             if (LOGGER.isDebugEnabled()) {
