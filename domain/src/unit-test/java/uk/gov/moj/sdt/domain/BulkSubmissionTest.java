@@ -49,6 +49,7 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
 
     private IServiceRequest mockServiceRequest;
 
+    private  final String PAYLOAD = "Payload";
 
     @BeforeEach
     @Override
@@ -59,7 +60,7 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setErrorCode("ERROR");
         bulkSubmission.setServiceRequest(mockServiceRequest);
         bulkSubmission.setId(1L);
-        bulkSubmission.setPayload("Payload");
+        bulkSubmission.setPayload(PAYLOAD);
         bulkSubmission.setErrorText("This is an Error");
 
     }
@@ -94,7 +95,7 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.markAsValidated();
         //then
         assertNotEquals(bulkSubmission.getSubmissionStatus(),"Validated");
-        assertEquals(bulkSubmission.getPayload(),"Payload");
+        assertEquals(bulkSubmission.getPayload(),PAYLOAD);
 
     }
 
@@ -102,7 +103,7 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
     @Test
     public void testBulkSubmissionToString(){
         assertNotNull(bulkSubmission.toString(), "Should contain something");
-        assertEquals(bulkSubmission.getPayload(),"Payload");
+        assertEquals(bulkSubmission.getPayload(),PAYLOAD);
     }
 
     @DisplayName("Test Bulk Submission getId")
