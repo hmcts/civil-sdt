@@ -39,39 +39,38 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Global Parameter Test")
-public class GlobalParameterTest extends AbstractSdtUnitTestBase{
+class GlobalParameterTest extends AbstractSdtUnitTestBase {
 
-        /**
-         * Test subject.
-         */
+    /**
+     * Test subject.
+     */
 
-        private IGlobalParameter globalParameter;
+    private IGlobalParameter globalParameter;
 
-        /**
-         * Set up test data.
-         */
-        @BeforeEach
-        @Override
-        public void setUp() {
-            globalParameter = new GlobalParameter();
-            globalParameter.setId(1L);
-            globalParameter.setDescription("Request delay for each individual");
-            globalParameter.setName("MCOL_INDV_REQ_DELAY");
-            globalParameter.setValue("10");
-        }
+    /**
+     * Set up test data.
+     */
+    @BeforeEach
+    @Override
+    public void setUp() {
+        globalParameter = new GlobalParameter();
+        globalParameter.setId(1L);
+        globalParameter.setDescription("Request delay for each individual");
+        globalParameter.setName("MCOL_INDV_REQ_DELAY");
+        globalParameter.setValue("10");
+    }
 
     @Test
     @DisplayName("Test Global Parameter")
-    public void testGlobalParameter() {
-            String expected = "MCOL_INDV_REQ_DELAY";
-            String actual = globalParameter.toString();
-            assertTrue(actual.contains(expected),"Should contain something");
+    void testGlobalParameter() {
+        String expected = "MCOL_INDV_REQ_DELAY";
+        String actual = globalParameter.toString();
+        assertTrue(actual.contains(expected), "Should contain something");
     }
 }

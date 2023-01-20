@@ -36,19 +36,18 @@
  */
 package uk.gov.moj.sdt.domain;
 
-    import org.junit.jupiter.api.BeforeEach;
-    import org.junit.jupiter.api.DisplayName;
-    import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-    import uk.gov.moj.sdt.domain.api.*;
-    import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-
-    import static org.junit.jupiter.api.Assertions.assertEquals;
-    import static org.junit.jupiter.api.Assertions.assertTrue;
-    import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Service Type Test")
-public class ServiceTypeTest extends AbstractSdtUnitTestBase {
+class ServiceTypeTest extends AbstractSdtUnitTestBase {
 
 
     private IServiceType serviceType;
@@ -70,7 +69,7 @@ public class ServiceTypeTest extends AbstractSdtUnitTestBase {
 
     @DisplayName("Test Service Type")
     @Test
-    public void testServiceType(){
+    void testServiceType(){
 
         String EXPECTED = "TestType";
         String actual = serviceType.toString();

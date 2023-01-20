@@ -39,25 +39,25 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import static org.mockito.Mockito.when;
-
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 
-public class TargetApplicationTest extends AbstractSdtUnitTestBase{
+class TargetApplicationTest extends AbstractSdtUnitTestBase{
 
     private ITargetApplication targetApplication;
 
@@ -87,7 +87,7 @@ public class TargetApplicationTest extends AbstractSdtUnitTestBase{
 
     @DisplayName("Test Target Application")
     @Test
-    public void testTargetApplicationToString(){
+    void testTargetApplicationToString(){
 
         String expected = "mcol";
         String actual = targetApplication.toString();
@@ -97,7 +97,7 @@ public class TargetApplicationTest extends AbstractSdtUnitTestBase{
 
     @DisplayName("Test Get Service Routings")
     @Test
-    public void testGetServiceRoutings(){
+    void testGetServiceRoutings(){
 
         //given
          serviceRoutings.add(serviceRouting);

@@ -39,13 +39,12 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 
-import uk.gov.moj.sdt.domain.api.*;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BulkFeedbackRequestTest {
+class BulkFeedbackRequestTest {
 
     IBulkFeedbackRequest bulkFeedbackRequest;
 
@@ -58,7 +57,7 @@ public class BulkFeedbackRequestTest {
 
     @Test
     @DisplayName("Test Bulk Feedback Request toString")
-    public void testBulkFeedbackRequest() {
+    void testBulkFeedbackRequest() {
         String expected = "BULRef:1234";
         String actual = bulkFeedbackRequest.toString();
 

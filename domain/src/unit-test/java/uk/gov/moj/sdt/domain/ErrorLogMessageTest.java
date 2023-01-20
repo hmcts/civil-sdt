@@ -31,10 +31,9 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
@@ -51,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Ollie Smith
  */
 @DisplayName("Error Log and Error Message Test")
-public class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
+class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
     /**
      * Test subject.
      */
@@ -83,7 +82,7 @@ public class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
 
     @Test
     @DisplayName("Test Error Log")
-    public void testErrorLog() {
+    void testErrorLog() {
         String expectedErrorLog = "The Bulk Customer does not have an SDT ID set";
         String actualErrorLog = errorLog.toString();
         assertTrue(actualErrorLog.contains(expectedErrorLog),"Should contain something");
@@ -93,7 +92,7 @@ public class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
 
     @Test
     @DisplayName("Test Error Message")
-    public void testErrorMessage() {
+    void testErrorMessage() {
         String expectedErrorMessage = "Error occurred due to no SDT Customer ID set";
         String actualErrorMessage = errorMessage.toString();
         assertTrue(actualErrorMessage.contains(expectedErrorMessage),"Should contain something");

@@ -31,26 +31,24 @@
 
 package uk.gov.moj.sdt.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-
 import org.mockito.Mockito;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.HashSet;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -58,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author d276205
  */
-public class BulkCustomerTest extends AbstractSdtUnitTestBase {
+class BulkCustomerTest extends AbstractSdtUnitTestBase {
     /**
      * Test subject.
      */
@@ -87,35 +85,35 @@ public class BulkCustomerTest extends AbstractSdtUnitTestBase {
      */
     @Test
     @DisplayName("Test Has Access")
-    public void testHasAccess() {
+    void testHasAccess() {
         assertTrue(bulkCustomer.hasAccess("YES"),"Customer should have access");
         assertFalse(bulkCustomer.hasAccess("NO"),"Customer should not have access");
     }
 
     @Test
     @DisplayName("Test Bulk Customer")
-    public void testIBulkCustomer(){
+    void testIBulkCustomer(){
         assertNotNull(bulkCustomer,"BulkCustomer Object should be populated");
         assertNotNull(bulkCustomer.toString(),"Object toString should be populated");
     }
 
     @Test
     @DisplayName("Test Get Bulk Customer Applications")
-    public void testBulkCustomerApplications(){
+    void testBulkCustomerApplications(){
         assertNotNull(bulkCustomer.getBulkCustomerApplications(),"Bulk Customer Applications should be populated");
         assertNull(bulkCustomer.getBulkCustomerApplication("Test"));
     }
 
     @Test
     @DisplayName("Test Abstract Domain Object for Persistent Collection type")
-    public void testGetHashIdForPersistentCollection() {
+    void testGetHashIdForPersistentCollection() {
         PersistentCollection mockPersistentCollection = Mockito.mock(PersistentCollection.class);
         assertEquals("PersistentCollection", new BulkCustomer().getHashId(mockPersistentCollection));
     }
 
     @Test
     @DisplayName("Test Abstract Domain Object for Hibernate Proxy type")
-    public void testGetHashIdForHibernateProxy() {
+    void testGetHashIdForHibernateProxy() {
         HibernateProxy mockHibernateProxy = Mockito.mock(HibernateProxy.class);
         assertEquals("HibernateProxy", new BulkCustomer().getHashId(mockHibernateProxy));
     }

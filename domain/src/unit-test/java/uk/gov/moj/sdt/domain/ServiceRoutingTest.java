@@ -39,13 +39,12 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ServiceRoutingTest extends AbstractSdtUnitTestBase{
+class ServiceRoutingTest extends AbstractSdtUnitTestBase{
 
 
     private IServiceRouting serviceRouting;
@@ -60,7 +59,7 @@ public class ServiceRoutingTest extends AbstractSdtUnitTestBase{
 
     @Test
     @DisplayName("Test Service Routing toString")
-    public void testServiceRoutingToString() {
+    void testServiceRoutingToString() {
         String expected = "mcol";
         String actual = serviceRouting.toString();
         assertTrue(actual.contains(expected),"Should contain something");

@@ -41,18 +41,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DisplayName("Submit Query Request Test")
-public class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
+class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
 
 
     @Mock
@@ -84,9 +86,7 @@ public class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
 
     @DisplayName("Test Submit Query Request")
     @Test
-    public void testSubmitQueryRequest(){
-        submitQueryRequest.setErrorLog(mockErrorLog);
-
+    void testSubmitQueryRequest(){submitQueryRequest.setErrorLog(mockErrorLog);
         assertNotNull(submitQueryRequest,"BulkCustomer Object should be populated");
         assertNotNull(submitQueryRequest.toString(),"Object toString should be populated");
         assertEquals(submitQueryRequest.getTargetApplicationResponse(),"mcol","TargetResponse is not equal");

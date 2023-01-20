@@ -41,9 +41,12 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
+class BulkSubmissionTest extends AbstractSdtUnitTestBase {
 
     private IBulkSubmission bulkSubmission;
 
@@ -64,31 +67,32 @@ public class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setErrorText("This is an Error");
 
     }
-        @DisplayName("Test Bulk Submission")
-        @Test
-        public void testBulkSubmission(){
+
+    @DisplayName("Test Bulk Submission")
+    @Test
+    void testBulkSubmission() {
         //given
-            bulkSubmission.setSubmissionStatus("Uploaded");
+        bulkSubmission.setSubmissionStatus("Uploaded");
         //when
         bulkSubmission.markAsValidated();
         //then
 
-            assertNotNull(bulkSubmission.getServiceRequest(),"Should return a ServiceRequest object");
-            assertNotNull(bulkSubmission.getErrorCode(),"Error code should be set");
-            assertNotEquals(
-                bulkSubmission.getSubmissionStatus(),
-                IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus()
-            );
+        assertNotNull(bulkSubmission.getServiceRequest(), "Should return a ServiceRequest object");
+        assertNotNull(bulkSubmission.getErrorCode(), "Error code should be set");
+        assertNotEquals(
+            bulkSubmission.getSubmissionStatus(),
+            IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus()
+        );
 
-        assertEquals(bulkSubmission.getSubmissionStatus(),"Validated");
-        assertNotNull(bulkSubmission.getErrorText());
+        assertEquals(bulkSubmission.getSubmissionStatus(), "Validated");
+assertNotNull(bulkSubmission.getErrorText());
         assertTrue(bulkSubmission.hasError());
 
         }
 
     @DisplayName("Test Bulk Submission Status")
     @Test
-    public void testBulkSubmissionStatus(){
+    void testBulkSubmissionStatus(){
         //given
         bulkSubmission.setSubmissionStatus("Completed");
         //when

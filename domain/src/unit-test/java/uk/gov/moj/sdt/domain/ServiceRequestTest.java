@@ -39,16 +39,16 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Service Request Test")
-public class ServiceRequestTest extends AbstractSdtUnitTestBase {
+class ServiceRequestTest extends AbstractSdtUnitTestBase {
 
     /**
      * Set up test data.
@@ -72,18 +72,18 @@ public class ServiceRequestTest extends AbstractSdtUnitTestBase {
 
     @DisplayName("Test Service Request")
     @Test
-    public void testServiceRequest(){
+    void testServiceRequest() {
 
         String expected = "BulkRef01";
         String actual = serviceRequest.toString();
-        assertTrue(actual.contains(expected),"Should contain something");
+        assertTrue(actual.contains(expected), "Should contain something");
 
-        assertNotNull(serviceRequest,"ServiceRequest Object should be populated");
-        assertNotNull(serviceRequest.getBulkCustomerId(),"BulkCustomerId should be populated");
-        assertNotNull(serviceRequest.getBulkReference(),"Bulk Reference should be populated");
-        assertNotNull(serviceRequest.getRequestType(),"Request Type should be populated");
-        assertNotNull(serviceRequest.getRequestPayload(),"Request Pay Load should be populated");
-        assertNotNull(serviceRequest.getRequestDateTime(),"Request Date Time should be populated");
+        assertNotNull(serviceRequest, "ServiceRequest Object should be populated");
+        assertNotNull(serviceRequest.getBulkCustomerId(), "BulkCustomerId should be populated");
+        assertNotNull(serviceRequest.getBulkReference(), "Bulk Reference should be populated");
+        assertNotNull(serviceRequest.getRequestType(), "Request Type should be populated");
+        assertNotNull(serviceRequest.getRequestPayload(), "Request Pay Load should be populated");
+        assertNotNull(serviceRequest.getRequestDateTime(), "Request Date Time should be populated");
         assertNotNull(serviceRequest.getId());
     }
 

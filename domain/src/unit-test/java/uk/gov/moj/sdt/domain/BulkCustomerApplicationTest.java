@@ -31,15 +31,14 @@
 
 package uk.gov.moj.sdt.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit tests for {@link BulkCustomerApplication}.
@@ -47,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Ollie Smith
  */
 @DisplayName("Bulk Customer Application Test")
-public class BulkCustomerApplicationTest extends AbstractSdtUnitTestBase {
+class BulkCustomerApplicationTest extends AbstractSdtUnitTestBase {
     /**
      * Test subject.
      */
@@ -73,7 +72,7 @@ public class BulkCustomerApplicationTest extends AbstractSdtUnitTestBase {
      */
     @Test
     @DisplayName("Test Bulk Customer Application")
-    public void testBulkCustomerApplication() {
+    void testBulkCustomerApplication() {
         assertNotNull(bulkCustomerApplication.getBulkCustomer(),"BulkCustomer Object should be populated");
         assertNotNull(bulkCustomerApplication.toString(),"Object toString should be populated");
         assertNotNull(bulkCustomerApplication.getId());
