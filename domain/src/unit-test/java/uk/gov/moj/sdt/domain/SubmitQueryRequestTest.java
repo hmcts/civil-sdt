@@ -49,9 +49,9 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DisplayName("Submit Query Request Test")
 class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {

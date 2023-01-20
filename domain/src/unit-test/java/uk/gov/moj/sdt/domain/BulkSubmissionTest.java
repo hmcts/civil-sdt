@@ -40,10 +40,11 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class BulkSubmissionTest extends AbstractSdtUnitTestBase {
@@ -85,7 +86,7 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         );
 
         assertEquals(bulkSubmission.getSubmissionStatus(), "Validated");
-assertNotNull(bulkSubmission.getErrorText());
+        assertNotNull(bulkSubmission.getErrorText());
         assertTrue(bulkSubmission.hasError());
 
         }
