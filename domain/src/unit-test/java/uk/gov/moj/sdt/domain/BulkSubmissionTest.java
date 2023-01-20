@@ -106,20 +106,20 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
 
     @DisplayName("Test Bulk Submission toString")
     @Test
-    public void testBulkSubmissionToString(){
+    void testBulkSubmissionToString(){
         assertNotNull(bulkSubmission.toString(), "Should contain something");
         assertEquals(bulkSubmission.getPayload(),PAYLOAD);
     }
 
     @DisplayName("Test Bulk Submission getId")
     @Test
-    public void testBulkSubmissionGetId(){
+    void testBulkSubmissionGetId(){
         assertNotNull(bulkSubmission.getId());
     }
 
     @DisplayName("Test Bulk Submission hasError")
     @Test
-    public void testBulkSubmissionHasError(){
+    void testBulkSubmissionHasError(){
         bulkSubmission.setErrorCode(null);
         assertFalse(bulkSubmission.hasError());
     }

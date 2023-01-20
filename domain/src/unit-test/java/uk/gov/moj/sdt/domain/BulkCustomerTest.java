@@ -120,7 +120,7 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
 
     @Test
     @DisplayName("Test Get Bulk Customer Application")
-    public void testBulkCustomerApplication(){
+    void testBulkCustomerApplication(){
         String expected ="YES";
         IBulkCustomerApplication actual = bulkCustomer.getBulkCustomerApplication(expected);
         assertNotNull(actual);
