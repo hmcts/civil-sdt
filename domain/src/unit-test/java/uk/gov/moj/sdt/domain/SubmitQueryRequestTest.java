@@ -107,7 +107,7 @@ class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
 
     @DisplayName("Test Submit Query Request Error Reject")
     @Test
-    public void testSubmitQueryRequestErrorReject(){
+    void testSubmitQueryRequestErrorReject(){
 
         submitQueryRequest.reject(mockErrorLog);
         assertTrue(submitQueryRequest.hasError(),"error log should not exist");
