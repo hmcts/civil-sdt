@@ -263,7 +263,7 @@ allprojects {
     testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
     testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
     testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
-    testImplementation "com.github.hmcts:fortify-client:1.2.0:all"
+    testImplementation "com.github.hmcts:fortify-client:1.2.2:all"
     testImplementation libraries.junit5
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
       exclude group: 'junit', module: 'junit'
