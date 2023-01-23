@@ -212,7 +212,7 @@ allprojects {
     testImplementation ("org.springframework.boot:spring-boot-starter-test"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.14.1'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
@@ -437,7 +437,7 @@ subprojects { subproject ->
     testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
     testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
     testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
-    testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+    testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.14.1'
     testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.4'
     testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
