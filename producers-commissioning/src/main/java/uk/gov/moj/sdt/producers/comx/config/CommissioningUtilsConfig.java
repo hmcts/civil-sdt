@@ -11,7 +11,7 @@ import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 @Configuration
 public class CommissioningUtilsConfig {
     @Bean
-    @Qualifier("MockSdtBulkReferenceGenerator")
+    @Qualifier("SdtBulkReferenceGenerator")
     public ISdtBulkReferenceGenerator sdtBulkReferenceGenerator() {
         return new MockSdtBulkReferenceGenerator();
     }

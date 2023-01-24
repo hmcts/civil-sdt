@@ -13,7 +13,7 @@ import java.util.List;
 @Configuration
 public class CommissioningDaoConfig {
     @Bean
-    @Qualifier("MockBulkCustomerDao")
+    @Qualifier("BulkCustomerDao")
     public IBulkCustomerDao bulkCustomerDao() {
         MockBulkCustomerDao bulkCustomerDao = new MockBulkCustomerDao();
         List<String> targetAppCodes = List.of("MCOL");
@@ -28,7 +28,7 @@ public class CommissioningDaoConfig {
     }
 
     @Bean
-    @Qualifier("MockBulkSubmissionDao")
+    @Qualifier("BulkSubmissionDao")
     public IBulkSubmissionDao bulkSubmissionDao() {
         MockBulkSubmissionDao bulkSubmissionDao = new MockBulkSubmissionDao();
         List<String> bulkReferenceList = List.of("MCOL_20130722000000_A00000001",
@@ -40,13 +40,13 @@ public class CommissioningDaoConfig {
     }
 
     @Bean
-    @Qualifier("MockIndividualRequestDao")
+    @Qualifier("IndividualRequestDao")
     public IIndividualRequestDao individualRequestDao() {
         return new MockIndividualRequestDao();
     }
 
     @Bean
-    @Qualifier("MockTargetApplicationDao")
+    @Qualifier("TargetApplicationDao")
     public ITargetApplicationDao targetApplicationDao() {
         return new MockTargetApplicationDao();
     }

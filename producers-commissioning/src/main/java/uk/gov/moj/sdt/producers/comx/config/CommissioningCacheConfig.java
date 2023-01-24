@@ -13,13 +13,13 @@ import uk.gov.moj.sdt.services.cache.api.IGlobalParametersCache;
 @Configuration
 public class CommissioningCacheConfig {
     @Bean
-    @Qualifier("MockGlobalParametersCache")
+    @Qualifier("GlobalParametersCache")
     public IGlobalParametersCache globalParametersCache() {
         return new MockGlobalParametersCache();
     }
 
     @Bean
-    @Qualifier("MockErrorMessagesCache")
+    @Qualifier("ErrorMessagesCache")
     public IErrorMessagesCache errorMessagesCache() {
         return new MockErrorMessagesCache();
     }

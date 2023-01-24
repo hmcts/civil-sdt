@@ -35,7 +35,7 @@ import static uk.gov.moj.sdt.producers.comx.config.submitquery.CommissioningSubm
 @Configuration
 public class CommissioningServicesConfig {
     @Bean
-    @Qualifier("MockSubmitQueryService")
+    @Qualifier("SubmitQueryService")
     public ISubmitQueryService submitQueryService() {
         MockSubmitQueryService submitQueryService = new MockSubmitQueryService();
         Map<String, SubmitQueryRequest> responseContentMap = new HashMap<>();
@@ -52,7 +52,7 @@ public class CommissioningServicesConfig {
     }
 
     @Bean
-    @Qualifier("MockBulkSubmissionService")
+    @Qualifier("BulkSubmissionService")
     public IBulkSubmissionService bulkSubmissionService(@Qualifier("SdtBulkReferenceGenerator")
                                                         ISdtBulkReferenceGenerator sdtBulkReferenceGenerator) {
         MockBulkSubmissionService mockBulkSubmissionService = new MockBulkSubmissionService();
@@ -61,7 +61,7 @@ public class CommissioningServicesConfig {
     }
 
     @Bean
-    @Qualifier("MockBulkFeedbackService")
+    @Qualifier("BulkFeedbackService")
     public IBulkFeedbackService bulkFeedbackService() throws InvocationTargetException, IllegalAccessException {
         MockBulkFeedbackService mockBulkFeedbackService = new MockBulkFeedbackService();
         Map<String, BulkFeedbackFactory> bulkFeedbackFactoryMap = new HashMap<>();
@@ -82,7 +82,7 @@ public class CommissioningServicesConfig {
     }
 
     @Bean
-    @Qualifier("MockUpdateRequestService")
+    @Qualifier("UpdateRequestService")
     public IUpdateRequestService updateRequestService() {
         return new MockUpdateRequestService();
     }
