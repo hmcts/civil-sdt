@@ -32,14 +32,12 @@ package uk.gov.moj.sdt.utils.web.filter;
 
 import java.io.IOException;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -136,6 +134,26 @@ class ContextCleanupFilterTest extends AbstractSdtUnitTestBase {
 
         // Add code to verify that the entities in SdtContext are removed.
         assertNull(SdtContext.getContext().getRawInXml(), "Sdt Context expected to be cleaned up");
+    }
+
+
+    @Test
+    void initAndDestroyTest() throws ServletException {
+        //given
+        FilterConfig filterConfigMock = Mockito.mock(FilterConfig.class);
+
+        //when
+            Filter contextCleanupFilterMock = Mockito.mock(ContextCleanupFilter.class);
+        try {
+            contextCleanupFilterMock.init(filterConfigMock);
+        } catch (ServletException e) {
+            assertNull(e,"Exception should not be thrown for this test");
+        }
+        contextCleanupFilterMock.destroy();
+
+        //then
+        verify(contextCleanupFilterMock).init(filterConfigMock);
+        verify(contextCleanupFilterMock).destroy();
     }
 
 }
