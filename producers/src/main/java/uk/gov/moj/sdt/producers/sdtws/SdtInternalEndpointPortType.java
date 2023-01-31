@@ -35,6 +35,8 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
@@ -47,6 +49,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
  * @author Manoj Kulkarni
  */
 // CHECKSTYLE:OFF
+@Service("ISdtInternalEndpointPortType")
 @WebService(serviceName = "SdtInternalEndpoint", portName = "SdtInternalEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint", wsdlLocation = "wsdl/SdtInternalEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType")
 // CHECKSTYLE:ON
 public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType {
@@ -59,6 +62,10 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
      * Update item handler for handling individual request update.
      */
     private IWsUpdateItemHandler updateItemHandler;
+
+    public SdtInternalEndpointPortType(@Qualifier("WsUpdateItemHandler") IWsUpdateItemHandler updateItemHandler) {
+        setUpdateItemHandler(updateItemHandler);
+    }
 
     @Override
     public UpdateResponseType updateItem(final UpdateRequestType updateRequest) {
