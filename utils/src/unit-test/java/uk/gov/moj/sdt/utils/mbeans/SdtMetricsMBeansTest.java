@@ -66,14 +66,6 @@ class SdtMetricsMBeansTest{
     }
 
     @Test
-    void sdtMBeanTest(){
-        //given/when
-        sdtMetricsMBean = new SdtMetricsMBean(customerCounterMock);
-        //then
-        assertNotNull(sdtMetricsMBean,OBJECT_SHOULD_BE_CREATED);
-    }
-
-    @Test
     void sdtMBeanCreateTest(){
         //given/when
         sdtMetricsMBean = new SdtMetricsMBean();

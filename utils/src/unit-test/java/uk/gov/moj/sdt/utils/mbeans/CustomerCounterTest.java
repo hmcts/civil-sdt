@@ -37,28 +37,27 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerCounterTest {
 
-    @Mock
-ICustomerCounter customerCounter;
+    private static final String BULK_CUSTOMER = "bulk_customer";
+
+    ICustomerCounter customerCounter;
 
 
     @BeforeEach
     public void setUp() {
         customerCounter = new CustomerCounter();
-        SdtMetricsMBean.getMetrics().upActiveBulkCustomers();
     }
 
 
     @Test
-    void updateBulkCustomerCountTest(){
-        SdtMetricsMBean.getMetrics().upActiveBulkCustomers();
-
-        customerCounter.updateBulkCustomerCount(null);
-
-        verify(customerCounter).updateBulkCustomerCount(null);
+    void updateBulkCustomerCountTest() {
+        customerCounter.updateBulkCustomerCount(BULK_CUSTOMER);
+        assertEquals(1, SdtMetricsMBean.getMetrics().getActiveBulkCustomers());
     }
 }
