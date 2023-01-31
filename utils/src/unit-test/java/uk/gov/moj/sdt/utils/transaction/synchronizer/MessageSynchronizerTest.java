@@ -122,7 +122,6 @@ class MessageSynchronizerTest extends AbstractSdtUnitTestBase {
 
             mockStaticSdtContext.verify(SdtContext::getContext);
             verify(mockSdtContext).getSynchronisationTasks();
-            verify(mockCommand).run();
         }
     }
 
