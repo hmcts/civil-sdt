@@ -288,7 +288,7 @@ public final class PerformanceLogger {
      * @param in             the input String.
      * @param left           pad left or lad right.
      * @param padChar        the character with which to left pad the String.
-     * @param requiredLength the required length of he output String
+     * @param requiredLength the required length of the output String
      * @return the padded input String.
      */
     public static String pad(final String in, final boolean left, final String padChar, final int requiredLength) {

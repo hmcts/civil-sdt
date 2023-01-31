@@ -36,9 +36,7 @@ import java.util.List;
 
 import java.time.LocalDateTime;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -52,14 +50,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestsType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit tests for BulkRequestTransformer.
  *
  * @author d130680
  */
-public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
+class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Bulk request transformer.
      */
@@ -85,7 +84,7 @@ public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
      * Test the transformation from jaxb to domain object.
      */
     @Test
-    public void testTransformJaxbToDomain() {
+    void testTransformJaxbToDomain() {
         // Set up the jaxb object to transform
         final BulkRequestType jaxb = new BulkRequestType();
         final long sdtCustomerId = 123;
@@ -118,12 +117,10 @@ public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
         final IBulkSubmission domain = transformer.transformJaxbToDomain(jaxb);
 
         // Test the jaxb object has been transformed to a domain object
-        Assert.assertEquals("SDT Customer ID does not match", sdtCustomerId, domain.getBulkCustomer()
-                .getSdtCustomerId());
-        Assert.assertEquals("Target Application ID does not match", targetApplicationId, domain
-                .getTargetApplication().getTargetApplicationCode());
-        Assert.assertEquals("Individual request list size does not match", requestsType.getRequest().size(), domain
-                .getIndividualRequests().size());
+        assertEquals(sdtCustomerId, domain.getBulkCustomer().getSdtCustomerId(), "SDT Customer ID does not match");
+        assertEquals(targetApplicationId, domain.getTargetApplication().getTargetApplicationCode(), "Target Application ID does not match");
+        assertEquals(requestsType.getRequest().size(), domain.getIndividualRequests().size(),
+                "Individual request list size does not match");
 
         int index = 0;
         for (RequestItemType item : requestsType.getRequest()) {
@@ -154,14 +151,14 @@ public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
      * @param row      record number
      */
     private void verify(final RequestItemType expected, final IIndividualRequest actual, final int row) {
-        Assert.assertNotNull(actual.getBulkSubmission());
-        Assert.assertEquals("Customer reference does not match",
-                RECEIVED.getStatus(), actual.getRequestStatus());
-        Assert.assertEquals("Request id for individual request " + row + " does not match", expected.getRequestId(),
-                actual.getCustomerRequestReference());
-        Assert.assertEquals("Line number for individual request " + row + " does not match", Integer.valueOf(row),
-                actual.getLineNumber());
-        Assert.assertEquals("Request type mismatch", expected.getRequestType(), actual.getRequestType());
+        assertNotNull(actual.getBulkSubmission());
+        assertEquals(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus(), actual.getRequestStatus(),
+                "Customer reference does not match");
+        assertEquals(expected.getRequestId(), actual.getCustomerRequestReference(),
+                "Request id for individual request " + row + " does not match");
+        assertEquals(row, actual.getLineNumber(),
+                "Line number for individual request " + row + " does not match");
+        assertEquals(expected.getRequestType(), actual.getRequestType(), "Request type mismatch");
     }
 
     /**
@@ -214,15 +211,15 @@ public class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
 
         final BulkResponseType jaxb = transformer.transformDomainToJaxb(domain);
 
-        Assert.assertEquals("The Sdt Bulk Reference is as expected", domain.getSdtBulkReference(),
-                jaxb.getSdtBulkReference());
-        Assert.assertEquals("The customer reference is as expected", domain.getCustomerReference(),
-                jaxb.getCustomerReference());
-        Assert.assertEquals("The Sdt Service is as expected", AbstractTransformer.SDT_SERVICE, jaxb.getSdtService());
-        Assert.assertEquals("The number of requests are as expected", jaxb.getRequestCount(),
-                domain.getNumberOfRequest());
-        Assert.assertNotNull("The submitted date is found", jaxb.getSubmittedDate());
+        assertEquals(domain.getSdtBulkReference(),
+                jaxb.getSdtBulkReference(), "The Sdt Bulk Reference is as expected");
+        assertEquals(domain.getCustomerReference(), jaxb.getCustomerReference(),
+                "The customer reference is as expected");
+        assertEquals(AbstractTransformer.SDT_SERVICE, jaxb.getSdtService(), "The Sdt Service is as expected");
+        assertEquals(jaxb.getRequestCount(), domain.getNumberOfRequest(),
+                "The number of requests are as expected");
+        assertNotNull(jaxb.getSubmittedDate(), "The submitted date is found");
 
-        Assert.assertEquals("The status code is as expected", jaxb.getStatus().getCode().value(), "Ok");
+        assertEquals(jaxb.getStatus().getCode().value(), "Ok", "The status code is as expected");
     }
 }

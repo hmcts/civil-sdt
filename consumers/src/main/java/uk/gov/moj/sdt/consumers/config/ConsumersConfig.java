@@ -1,7 +1,7 @@
 package uk.gov.moj.sdt.consumers.config;
 
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.ext.logging.LoggingFeature;
+import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;

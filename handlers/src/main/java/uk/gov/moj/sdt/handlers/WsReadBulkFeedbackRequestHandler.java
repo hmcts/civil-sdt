@@ -90,8 +90,9 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
     @Override
     public BulkFeedbackResponseType getBulkFeedback(final BulkFeedbackRequestType bulkFeedbackRequest) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Bulk feedback started for customer[" + bulkFeedbackRequest.getHeader().getSdtCustomerId() +
-                    "], customer reference[" + bulkFeedbackRequest.getHeader().getSdtBulkReference() + "]");
+            LOGGER.info("Bulk feedback started for customer[{}], customer reference[{}]",
+                    bulkFeedbackRequest.getHeader().getSdtCustomerId(),
+                    bulkFeedbackRequest.getHeader().getSdtBulkReference());
         }
 
         // Update mbean stats.
@@ -129,9 +130,9 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
             handleBusinessException(be, response.getBulkRequestStatus());
         } finally {
             if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Bulk feedback completed for customer[" +
-                        bulkFeedbackRequest.getHeader().getSdtCustomerId() + "], customer reference[" +
-                        bulkFeedbackRequest.getHeader().getSdtBulkReference() + "]");
+                LOGGER.info("Bulk feedback completed for customer[{}], customer reference[{}]",
+                        bulkFeedbackRequest.getHeader().getSdtCustomerId(),
+                        bulkFeedbackRequest.getHeader().getSdtBulkReference());
             }
 
             // Measure total time spent in use case.
@@ -195,8 +196,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
      *
      * @param transformer the transformer to be associated with this class.
      */
-    public void
-    setTransformer(final ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
+    public void setTransformer(final ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
             IBulkFeedbackRequest, IBulkSubmission> transformer) {
         this.transformer = transformer;
     }

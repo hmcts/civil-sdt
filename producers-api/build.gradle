@@ -2,6 +2,11 @@ apply plugin: 'info.solidsoft.pitest'
 
 sourceSets.main.java.srcDirs += "src-gen/main/java"
 
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-producers-api'
+}
+
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
@@ -16,14 +21,10 @@ dependencies {
     testImplementation project(":utils").sourceSets.integTest.output
 }
 
-jar {
-    baseName = 'civil-sdt-producers-api'
-}
-
 bootJar {
     enabled = false
 }
 
-sonarqube {
-  skipProject = true
+test {
+    useJUnitPlatform()
 }

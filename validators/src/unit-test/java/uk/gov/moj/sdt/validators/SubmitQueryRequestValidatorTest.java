@@ -31,15 +31,11 @@
 
 package uk.gov.moj.sdt.validators;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-
-import org.easymock.EasyMock;
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
@@ -50,17 +46,19 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Tests for {@link SubmitQueryRequestValidatorTest}.
  *
  * @author d120520
  */
 
-public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitQueryRequestValidatorTest.class);
+@ExtendWith(MockitoExtension.class)
+class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
 
     /**
      * SubmitQueryRequestValidator.
@@ -80,11 +78,13 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
     /**
      * IBulkCustomerDao.
      */
+    @Mock
     private IBulkCustomerDao mockIBulkCustomerDao;
 
     /**
      * Parameter cache.
      */
+    @Mock
     private ICacheable globalParameterCache;
 
     /**
@@ -100,67 +100,64 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
     /**
      * Error messages cache.
      */
+    @Mock
     private ICacheable errorMessagesCache;
 
-    /**
-     * Error message.
-     */
-    private IErrorMessage errorMessage;
+    @Mock
+    private IBulkCustomerDao bulkCustomerDao;
 
+    /**
+     * Setup of the Validator and Domain class instance.
+     */
+    @BeforeEach
+    @Override
     public void setUpLocalTests() {
         bulkCustomer = createCustomer(createBulkCustomerApplications("PCOL"));
 
         submitQueryRequest = new SubmitQueryRequest();
         submitQueryRequest.setBulkCustomer(bulkCustomer);
 
-        mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-
+        // Set up Global parameters cache
         globalParameter = new GlobalParameter();
         globalParameter.setName(IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
         globalParameter.setValue(contact);
-        globalParameterCache = EasyMock.createMock(ICacheable.class);
-        expect(
-                globalParameterCache.getValue(IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.CONTACT_DETAILS.name())).andReturn(globalParameter);
-        replay(globalParameterCache);
-
-        IBulkCustomerDao mockIBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        validator = new SubmitQueryRequestValidator(mockIBulkCustomerDao, globalParameterCache, errorMessagesCache);
+        validator= new SubmitQueryRequestValidator(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     /**
      * test the scenario where the customer does not have access to the target application.
      */
     @Test
-    public void testCustomerDoesNotHaveAccess() {
+    void testCustomerDoesNotHaveAccess() {
+        when(globalParameterCache.getValue(IGlobalParameter.class,
+                IGlobalParameter.ParameterKey.CONTACT_DETAILS.name())).thenReturn(globalParameter);
+
         final String mcolCode = "MCOL CODE";
         try {
 
             submitQueryRequest.setTargetApplication(createTargetApp(mcolCode));
-            expect(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).andReturn(bulkCustomer);
-            replay(mockIBulkCustomerDao);
+            // set up the mock objects
+            when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
 
-            errorMessage = new ErrorMessage();
+            // Set up Error messages cache
+            IErrorMessage errorMessage = new ErrorMessage();
             errorMessage.setErrorCode(IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
             errorMessage.setErrorText("The Bulk Customer organisation is not setup to send Service "
                     + "Request messages to the {0}. Please contact {1} for assistance.");
-            errorMessagesCache = EasyMock.createMock(ICacheable.class);
-            expect(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.CUST_NOT_SETUP.name()))
-                    .andReturn(errorMessage);
-            replay(errorMessagesCache);
+            when(errorMessagesCache.getValue(IErrorMessage.class, IErrorMessage.ErrorCode.CUST_NOT_SETUP.name()))
+                    .thenReturn(errorMessage);
             validator.setErrorMessagesCache(errorMessagesCache);
 
             validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
             submitQueryRequest.accept(validator, null);
-            Assert.fail("Test failed to throw CustomerNotSetupException ");
+            fail("Test failed to throw CustomerNotSetupException ");
 
         } catch (final CustomerNotSetupException e) {
-            LOGGER.debug(e.getMessage().toString());
-            EasyMock.verify(mockIBulkCustomerDao);
+            verify(mockIBulkCustomerDao).getBulkCustomerBySdtId(12345L);
 
-            Assert.assertEquals(e.getErrorCode(), IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
-            Assert.assertEquals(e.getErrorDescription(),
+            assertEquals(e.getErrorCode(), IErrorMessage.ErrorCode.CUST_NOT_SETUP.name());
+            assertEquals(e.getErrorDescription(),
                     "The Bulk Customer organisation is not setup to send Service Request messages to the " + mcolCode +
                             ". Please contact " + contact + " for assistance.");
         }
@@ -170,11 +167,11 @@ public class SubmitQueryRequestValidatorTest extends AbstractValidatorUnitTest {
      * test the scenario where the customer has access to the target application.
      */
     @Test
-    public void testCustomerHasAccess() {
+    void testCustomerHasAccess() {
 
         submitQueryRequest.setTargetApplication(createTargetApp("PCOL"));
-        expect(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).andReturn(bulkCustomer);
-        replay(mockIBulkCustomerDao);
+        // set up the mock objects
+        when(mockIBulkCustomerDao.getBulkCustomerBySdtId(12345L)).thenReturn(bulkCustomer);
 
         validator.setBulkCustomerDao(mockIBulkCustomerDao);
 
