@@ -33,9 +33,6 @@ package uk.gov.moj.sdt.utils.mbeans;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
