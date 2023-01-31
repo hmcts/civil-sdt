@@ -1,7 +1,6 @@
 package uk.gov.moj.sdt.producers.sdtws.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +13,8 @@ import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.SdtInternalEndpointPortType;
-import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType;
 
@@ -24,7 +23,6 @@ import java.util.Map;
 
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
-@EnableAutoConfiguration
 public class ProducersConfig {
 
     @Bean
@@ -48,10 +46,10 @@ public class ProducersConfig {
 
     @Bean
     @Qualifier("sdtProducersMetrics")
-    public MBeanExporter mBeanExporterProducerMetrics() {
+    public MBeanExporter mBeanExporterProducerMetrics(ISdtMetricsMBean sdtMetricsMBean) {
         MBeanExporter mBeanExporter = new MBeanExporter();
         Map<String, Object> beans = new HashMap<>();
-        beans.put("bean:name=sdtProducersMetrics", SdtMetricsMBean.getMetrics());
+        beans.put("bean:name=sdtProducersMetrics", sdtMetricsMBean);
         mBeanExporter.setBeans(beans);
         MethodNameBasedMBeanInfoAssembler methodNameBasedMBeanInfoAssembler = new MethodNameBasedMBeanInfoAssembler();
         methodNameBasedMBeanInfoAssembler.setManagedMethods(
