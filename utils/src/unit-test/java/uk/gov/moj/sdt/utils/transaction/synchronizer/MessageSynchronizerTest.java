@@ -1,94 +1,187 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.transaction.synchronizer;
 
-
-import org.junit.Before;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockedStatic;
-
-import org.mockito.Spy;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
-import org.springframework.transaction.support.TransactionSynchronizationManager;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.Mockito.verify;
+import static ch.qos.logback.classic.Level.DEBUG;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.transaction.support.TransactionSynchronization.STATUS_COMMITTED;
+import static org.springframework.transaction.support.TransactionSynchronization.STATUS_ROLLED_BACK;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageSynchronizerTest {
+class MessageSynchronizerTest extends AbstractSdtUnitTestBase {
+
+    private static final String RUNNABLES_NULL_OR_EMPTY = "The 'runnables' collection should neither be null nor empty";
 
     @Mock
-    private Runnable command;
+    private Runnable mockCommand;
 
     @Mock
-    private SdtContext sdtContext;
+    private SdtContext mockSdtContext;
 
-    @Spy
-    private MessageSynchronizer execute;
+    /** Class being tested. */
+    private MessageSynchronizer messageSynchronizer;
 
-    @Mock
-    TransactionSynchronizationManager transactionSynchronizationManager;
+    @Override
+    public void setUpLocalTests() {
+        messageSynchronizer = new MessageSynchronizer();
+    }
 
-    @Before
-    public void setUp() {
-        transactionSynchronizationManager = Mockito.mock(TransactionSynchronizationManager.class);
-        MessageSynchronizer messageSynchronizer = Mockito.spy(MessageSynchronizer.class);
-        SdtContext sdtContextMock = Mockito.spy(SdtContext.class);
+    @Test
+    void testInactiveTransaction() {
+        try (
+            MockedStatic<TransactionSynchronizationManager> mockStaticTransactionSynchronizationManager
+                = Mockito.mockStatic(TransactionSynchronizationManager.class)
+        ) {
+            mockStaticTransactionSynchronizationManager.when(TransactionSynchronizationManager::isSynchronizationActive).thenReturn(false);
 
-        try (MockedStatic<SdtContext> sdtContextMockedStatic = Mockito.mockStatic(SdtContext.class)) {
-            sdtContextMockedStatic.when(SdtContext::getContext).thenReturn(sdtContextMock);
+            messageSynchronizer.synchronizeTask(mockCommand);
+
+            verify(mockCommand).run();
         }
     }
 
+    @Test
+    void testActiveTransaction() {
+        try (
+            // Set up static mocked objects for use when static methods are called
+            MockedStatic<TransactionSynchronizationManager> mockStaticTransactionSynchronizationManager
+                = Mockito.mockStatic(TransactionSynchronizationManager.class);
+            MockedStatic<SdtContext> mockStaticSdtContext
+                = Mockito.mockStatic(SdtContext.class)
+        ) {
+            mockStaticTransactionSynchronizationManager.when(TransactionSynchronizationManager::isSynchronizationActive).thenReturn(true);
+            mockStaticSdtContext.when(SdtContext::getContext).thenReturn(mockSdtContext);
+            when(mockSdtContext.addSynchronisationTask(mockCommand)).thenReturn(true);
+
+            // Call synchronizeTask() so both it and the execute() method can be covered in one go
+            messageSynchronizer.synchronizeTask(mockCommand);
+
+            mockStaticTransactionSynchronizationManager.verify(TransactionSynchronizationManager::isSynchronizationActive);
+            mockStaticSdtContext.verify(SdtContext::getContext);
+            verify(mockSdtContext).addSynchronisationTask(mockCommand);
+            mockStaticTransactionSynchronizationManager.verify(() -> TransactionSynchronizationManager.registerSynchronization(any()));
+        }
+    }
 
     @Test
-    void execute_inactive_transaction() {
-        // given
+    void testActiveTransactionNotInitialised() {
+        try (
+            MockedStatic<TransactionSynchronizationManager> mockStaticTransactionSynchronizationManager
+                = Mockito.mockStatic(TransactionSynchronizationManager.class);
+            MockedStatic<SdtContext> mockStaticSdtContext
+                = Mockito.mockStatic(SdtContext.class)
+        ) {
+            mockStaticTransactionSynchronizationManager.when(TransactionSynchronizationManager::isSynchronizationActive).thenReturn(true);
+            mockStaticSdtContext.when(SdtContext::getContext).thenReturn(mockSdtContext);
+            when(mockSdtContext.addSynchronisationTask(mockCommand)).thenReturn(false);
 
-        try (MockedStatic<TransactionSynchronizationManager> transactionSynchronizationManagerMock = Mockito.mockStatic(
-            TransactionSynchronizationManager.class)) {
-            transactionSynchronizationManagerMock.when(TransactionSynchronizationManager::isSynchronizationActive).thenReturn(
-                false);
-        }
-            // when
-            execute.execute(command);
+            messageSynchronizer.synchronizeTask(mockCommand);
 
-            // then
-            verify(sdtContext, never()).addSynchronisationTask(command);
-            verify(command).run();
+            mockStaticTransactionSynchronizationManager.verify(TransactionSynchronizationManager::isSynchronizationActive);
+            mockStaticSdtContext.verify(SdtContext::getContext);
+            verify(mockSdtContext).addSynchronisationTask(mockCommand);
+            mockStaticTransactionSynchronizationManager.verify(() -> TransactionSynchronizationManager.registerSynchronization(any()), never());
         }
+    }
+
+    @Test
+    void testAfterCommit() {
+        // This test also covers the constructor and run method for the private ExecuteRunnable inner class
+
+        try (
+            MockedStatic<SdtContext> mockStaticSdtContext
+                = Mockito.mockStatic(SdtContext.class)
+        ) {
+            List<Runnable> runnableList = new ArrayList<>();
+            runnableList.add(mockCommand);
+
+            mockStaticSdtContext.when(SdtContext::getContext).thenReturn(mockSdtContext);
+            when(mockSdtContext.getSynchronisationTasks()).thenReturn(runnableList);
+
+            messageSynchronizer.afterCommit();
+
+            mockStaticSdtContext.verify(SdtContext::getContext);
+            verify(mockSdtContext).getSynchronisationTasks();
+            verify(mockCommand).run();
+        }
+    }
+
+    @Test
+    void testAfterCommitEmptyList() {
+        // This test also covers the constructor for the private ExecuteRunnable inner class.  Unable to cover null
+        // runnable list path of constructor as use of UnmodifiableList prevents it being called with a null list.
+
+        try (
+            MockedStatic<SdtContext> mockStaticSdtContext
+                = Mockito.mockStatic(SdtContext.class)
+        ) {
+            List<Runnable> emptyRunnableList = new ArrayList<>();
+
+            mockStaticSdtContext.when(SdtContext::getContext).thenReturn(mockSdtContext);
+            when(mockSdtContext.getSynchronisationTasks()).thenReturn(emptyRunnableList);
+
+            try{
+                messageSynchronizer.afterCommit();
+                fail("Expected an IllegalArgumentException to be thrown");
+            } catch (IllegalArgumentException e) {
+                assertEquals(RUNNABLES_NULL_OR_EMPTY, e.getMessage(), "IllegalArgumentException has unexpected message");
+            }
+
+            mockStaticSdtContext.verify(SdtContext::getContext);
+            verify(mockSdtContext).getSynchronisationTasks();
+        }
+    }
+
+    private void assertAfterCompletion(int transactionStatus, String expectedMessage) {
+        // Get logger for class being tested
+        Logger logger = (Logger) LoggerFactory.getLogger(MessageSynchronizer.class);
+
+        // Set logging level to debug so that afterCompletion logging is captured
+        logger.setLevel(DEBUG);
+
+        // Create appender and add to logger
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        logger.addAppender(listAppender);
+
+        messageSynchronizer.afterCompletion(transactionStatus);
+
+        // Check first (and only) entry in log output
+        List<ILoggingEvent> logList = listAppender.list;
+        assertEquals(expectedMessage, logList.get(0).getFormattedMessage());
+
+        // Tidy up
+        logger.detachAndStopAllAppenders();
+    }
+
+    @Test
+    void testAfterCompletionCommitted() {
+        assertAfterCompletion(STATUS_COMMITTED, "Transaction completed with status Committed");
+    }
+
+    @Test
+    void testAfterCompletionRollback() {
+        assertAfterCompletion(STATUS_ROLLED_BACK, "Transaction completed with status Rollback");
+    }
 }
 
