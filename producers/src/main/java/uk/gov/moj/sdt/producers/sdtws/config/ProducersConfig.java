@@ -13,8 +13,8 @@ import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.SdtInternalEndpointPortType;
+import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
-import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType;
 
@@ -46,10 +46,10 @@ public class ProducersConfig {
 
     @Bean
     @Qualifier("sdtProducersMetrics")
-    public MBeanExporter mBeanExporterProducerMetrics(ISdtMetricsMBean sdtMetricsMBean) {
+    public MBeanExporter mBeanExporterProducerMetrics() {
         MBeanExporter mBeanExporter = new MBeanExporter();
         Map<String, Object> beans = new HashMap<>();
-        beans.put("bean:name=sdtProducersMetrics", sdtMetricsMBean);
+        beans.put("bean:name=sdtProducersMetrics", SdtMetricsMBean.getMetrics());
         mBeanExporter.setBeans(beans);
         MethodNameBasedMBeanInfoAssembler methodNameBasedMBeanInfoAssembler = new MethodNameBasedMBeanInfoAssembler();
         methodNameBasedMBeanInfoAssembler.setManagedMethods(
