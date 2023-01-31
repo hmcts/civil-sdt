@@ -30,23 +30,23 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.mbeans;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
 
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
-public class CustomerCounterTest {
+class CustomerCounterTest {
 
     @Mock
 ICustomerCounter customerCounter;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         customerCounter = new CustomerCounter();
         SdtMetricsMBean.getMetrics().upActiveBulkCustomers();

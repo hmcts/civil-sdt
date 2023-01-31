@@ -40,10 +40,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
 
 @ExtendWith(MockitoExtension.class)
-public class NonVisitableTreeWalkerTest {
+class NonVisitableTreeWalkerTest {
 
     @Test
-    public void testWalkTreeExceptionThrown() {
+    void testWalkTreeExceptionThrown() {
         //create mock object for IVisitable interface
         IVisitable mockTarget = Mockito.mock(IVisitable.class);
 

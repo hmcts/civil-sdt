@@ -39,11 +39,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class TreeTest {
+class TreeTest {
 
 
     @Test
-    public void testGetRoot() {
+    void testGetRoot() {
         Tree tree = new Tree();
         Object expected = new Object();
         tree.setRoot(expected);
@@ -51,7 +51,7 @@ public class TreeTest {
     }
 
     @Test
-    public void testSetRoot() {
+    void testSetRoot() {
         Tree tree = Mockito.spy(Tree.class);
         Object expected = new Object();
         tree.setRoot(expected);
@@ -59,7 +59,7 @@ public class TreeTest {
     }
 
     @Test
-    public void testGetParent() {
+    void testGetParent() {
         Tree tree = new Tree();
         Object expected = new Object();
         tree.setParent(expected);
@@ -67,7 +67,7 @@ public class TreeTest {
     }
 
     @Test
-    public void testSetParent() {
+    void testSetParent() {
         Tree tree = Mockito.spy(Tree.class);
         Object expected = new Object();
         tree.setParent(expected);

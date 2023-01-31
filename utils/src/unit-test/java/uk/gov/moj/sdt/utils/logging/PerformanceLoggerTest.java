@@ -47,6 +47,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 
 import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -83,7 +84,6 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
     }
 
 
-
     /**
      * Test writing of a performance message to performance log.
      */
@@ -98,7 +98,7 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
 
         // Validate the test.
         this.checkLogContents("active flags=1111111111111111, logging point=0000000000000001, "
-                + "reference=987: Hullo - Detail");
+                                  + "reference=987: Hullo - Detail");
     }
 
     /**
@@ -110,7 +110,7 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
     private void checkLogContents(final String contents) {
         // Check correct message is in log.
 
-        try (Scanner scan = new Scanner(new File(PERFORMANCE_LOG_PATH))){
+        try (Scanner scan = new Scanner(new File(PERFORMANCE_LOG_PATH))) {
             final String text = scan.useDelimiter("\\A").next();
 
             // Build a search pattern with this request id. Allow for any order of requestId and requestType
@@ -128,45 +128,43 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    void checkStringFormatTest(){
+    void checkStringFormatTest() {
         //given
 
         //when
-            String outCome = PerformanceLogger.format(FORMAT_STRINGLINE_TEST);
+        String outCome = PerformanceLogger.format(FORMAT_STRINGLINE_TEST);
 
         //then
-            assertNotNull(outCome);
-        }
-
-        @Test
-        void isPerformanceEnabledTrueTest(){
-            //given
-            loggingContext = new LoggingContext();
-            loggingContext.setLoggingFlags(1);
-            sdtContext = SdtContext.getContext();
-            sdtContext.setLoggingContext(loggingContext);
-            //when
-            PerformanceLogger.log(this.getClass(),1l,"TestMessage","TestDetails");
-            boolean isEnabled = PerformanceLogger.isPerformanceEnabled(1L);
-
-            //then
-            assertNotNull(isEnabled);
-        }
-
-        @Test
-        void isPerformanceEnabledFalseTest(){
-            //given
-            loggingContext = new LoggingContext();
-            loggingContext.setLoggingFlags(0);
-            sdtContext = SdtContext.getContext();
-            sdtContext.setLoggingContext(loggingContext);
-            //when
-            PerformanceLogger.log(this.getClass(),1l,"TestMessage","TestDetails");
-            boolean isEnabled = PerformanceLogger.isPerformanceEnabled(0);
-
-            //then
-            assertNotNull(isEnabled);
-        }
-
-
+        assertNotNull(outCome);
     }
+
+    @Test
+    void isPerformanceEnabledTrueTest() {
+        //given
+        loggingContext = new LoggingContext();
+        loggingContext.setLoggingFlags(1);
+        sdtContext = SdtContext.getContext();
+        sdtContext.setLoggingContext(loggingContext);
+        //when
+        PerformanceLogger.log(this.getClass(), 1l, "TestMessage", "TestDetails");
+        boolean isEnabled = PerformanceLogger.isPerformanceEnabled(1L);
+
+        //then
+        assertTrue(isEnabled);
+    }
+
+    @Test
+    void isPerformanceEnabledFalseTest() {
+        //given
+        loggingContext = new LoggingContext();
+        loggingContext.setLoggingFlags(0);
+        sdtContext = SdtContext.getContext();
+        sdtContext.setLoggingContext(loggingContext);
+        //when
+        PerformanceLogger.log(this.getClass(), 1l, "TestMessage", "TestDetails");
+        boolean isEnabled = PerformanceLogger.isPerformanceEnabled(0);
+
+        //then
+        assertFalse(isEnabled);
+    }
+}

@@ -43,23 +43,23 @@ import uk.gov.moj.sdt.utils.visitor.api.IVisitable;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-    public class VisitableTreeWalkerTest {
+class VisitableTreeWalkerTest {
 
     @Mock
     IVisitable mockTarget;
 
 
     @Test
-    public void testWalkTreeExceptionThrown() {
-            //create mock object for IVisitable interface
-            mockTarget = Mockito.mock(IVisitable.class);
+    void testWalkTreeExceptionThrown() {
+        //create mock object for IVisitable interface
+        mockTarget = Mockito.mock(IVisitable.class);
 
-           try{
-               //call the walk method
-               VisitableTreeWalker.walk(mockTarget, "test visitor suffix");
-           }catch(UnsupportedOperationException e){
-               assertTrue(true, "Exception thrown");
-           }
+        try {
+            //call the walk method
+            VisitableTreeWalker.walk(mockTarget, "test visitor suffix");
+        } catch (UnsupportedOperationException e) {
+            assertTrue(true, "Exception thrown");
         }
     }
+}
 

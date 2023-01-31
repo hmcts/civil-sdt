@@ -48,7 +48,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class SdtMetricsMBeansTest{
+class SdtMetricsMBeansTest{
 
     static final String OBJECT_SHOULD_BE_CREATED = "Object should be created";
     @Mock
@@ -82,7 +82,7 @@ public class SdtMetricsMBeansTest{
     }
 
     @Test
-    public void testReset() {
+    void testReset() {
         //Given
         sdtMetricsMBean = Mockito.spy(SdtMetricsMBean.class);
         sdtMetricsMBean.upRequestQueueLength();

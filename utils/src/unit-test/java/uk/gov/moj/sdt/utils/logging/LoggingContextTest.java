@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
 
-public class LoggingContextTest {
+class LoggingContextTest {
 
     ILoggingContext loggingContext;
     @BeforeEach
@@ -58,7 +58,7 @@ public class LoggingContextTest {
         //when
         loggingContext.setMinorLoggingId(1L);
         //then
-        assertEquals(loggingContext.getMinorLoggingId(),1L);
+        assertEquals(1L, loggingContext.getMinorLoggingId());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class LoggingContextTest {
         //when
         loggingContext.setMajorLoggingId(1L);
         //then
-        assertEquals(loggingContext.getMajorLoggingId(),1L);
+        assertEquals(1L, loggingContext.getMajorLoggingId());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class LoggingContextTest {
         loggingContext.setMinorLoggingId(1L);
         loggingContext.setMajorLoggingId(2L);
         //then
-        assertEquals(loggingContext.getLoggingId(),"2.1");
+        assertEquals("2.1", loggingContext.getLoggingId());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class LoggingContextTest {
         loggingContext.setMinorLoggingId(0L);
         loggingContext.setMajorLoggingId(2L);
         //then
-        assertEquals(loggingContext.getLoggingId(),"2");
+        assertEquals("2", loggingContext.getLoggingId());
     }
 
     @Test
@@ -105,6 +105,6 @@ public class LoggingContextTest {
         loggingContext.setMajorLoggingId(2L);
 
         //then
-        assertNotNull(LoggingContext.getNextLoggingId());
+        assertEquals(1L, LoggingContext.getNextLoggingId());
     }
 }
