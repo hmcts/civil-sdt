@@ -35,6 +35,7 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
@@ -62,6 +63,11 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
      * Update item handler for handling individual request update.
      */
     private IWsUpdateItemHandler updateItemHandler;
+
+    @Autowired
+    public SdtInternalEndpointPortType(@Qualifier("WsUpdateItemHandler") IWsUpdateItemHandler updateItemHandler) {
+        setUpdateItemHandler(updateItemHandler);
+    }
 
     @Override
     public UpdateResponseType updateItem(final UpdateRequestType updateRequest) {

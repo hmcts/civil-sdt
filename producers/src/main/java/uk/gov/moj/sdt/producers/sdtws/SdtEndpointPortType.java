@@ -36,6 +36,7 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
@@ -81,13 +82,14 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      */
     private IWsReadSubmitQueryHandler wsReadSubmitQueryHandler;
 
-//    public SdtEndpointPortType(@Qualifier("WsCreateBulkRequestHandler") IWsCreateBulkRequestHandler wsCreateBulkRequestHandler,
-//                               @Qualifier("WsReadBulkFeedbackRequestHandler") IWsReadBulkRequestHandler wsReadBulkRequestHandler,
-//                               @Qualifier("WsReadSubmitQueryHandler") IWsReadSubmitQueryHandler wsReadSubmitQueryHandler) {
-//        setWsCreateBulkRequestHandler(wsCreateBulkRequestHandler);
-//        setWsReadBulkRequestHandler(wsReadBulkRequestHandler);
-//        setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
-//    }
+    @Autowired
+    public SdtEndpointPortType(@Qualifier("WsCreateBulkRequestHandler") IWsCreateBulkRequestHandler wsCreateBulkRequestHandler,
+                               @Qualifier("WsReadBulkFeedbackRequestHandler") IWsReadBulkRequestHandler wsReadBulkRequestHandler,
+                               @Qualifier("WsReadSubmitQueryHandler") IWsReadSubmitQueryHandler wsReadSubmitQueryHandler) {
+        setWsCreateBulkRequestHandler(wsCreateBulkRequestHandler);
+        setWsReadBulkRequestHandler(wsReadBulkRequestHandler);
+        setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
+    }
 
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequest) {
