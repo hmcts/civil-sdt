@@ -258,6 +258,8 @@ allprojects {
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
 
     implementation group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version: cxfVersion
+    implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http-jetty', version: cxfVersion
+//    implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: cxfVersion
 
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
@@ -392,9 +394,9 @@ subprojects { subproject ->
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
 
-//    implementation group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: cxfVersion
-//    implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version: cxfVersion
+    implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http-jetty', version: cxfVersion
+//    implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: cxfVersion
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion

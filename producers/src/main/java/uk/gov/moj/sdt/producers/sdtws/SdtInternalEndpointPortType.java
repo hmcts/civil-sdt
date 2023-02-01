@@ -63,10 +63,6 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
      */
     private IWsUpdateItemHandler updateItemHandler;
 
-    public SdtInternalEndpointPortType(@Qualifier("WsUpdateItemHandler") IWsUpdateItemHandler updateItemHandler) {
-        setUpdateItemHandler(updateItemHandler);
-    }
-
     @Override
     public UpdateResponseType updateItem(final UpdateRequestType updateRequest) {
         if (LOGGER.isDebugEnabled()) {

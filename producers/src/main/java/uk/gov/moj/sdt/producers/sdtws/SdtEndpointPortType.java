@@ -81,13 +81,13 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      */
     private IWsReadSubmitQueryHandler wsReadSubmitQueryHandler;
 
-    public SdtEndpointPortType(@Qualifier("WsCreateBulkRequestHandler") IWsCreateBulkRequestHandler wsCreateBulkRequestHandler,
-                               @Qualifier("WsReadBulkFeedbackRequestHandler") IWsReadBulkRequestHandler wsReadBulkRequestHandler,
-                               @Qualifier("WsReadSubmitQueryHandler") IWsReadSubmitQueryHandler wsReadSubmitQueryHandler) {
-        setWsCreateBulkRequestHandler(wsCreateBulkRequestHandler);
-        setWsReadBulkRequestHandler(wsReadBulkRequestHandler);
-        setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
-    }
+//    public SdtEndpointPortType(@Qualifier("WsCreateBulkRequestHandler") IWsCreateBulkRequestHandler wsCreateBulkRequestHandler,
+//                               @Qualifier("WsReadBulkFeedbackRequestHandler") IWsReadBulkRequestHandler wsReadBulkRequestHandler,
+//                               @Qualifier("WsReadSubmitQueryHandler") IWsReadSubmitQueryHandler wsReadSubmitQueryHandler) {
+//        setWsCreateBulkRequestHandler(wsCreateBulkRequestHandler);
+//        setWsReadBulkRequestHandler(wsReadBulkRequestHandler);
+//        setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
+//    }
 
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequest) {

@@ -17,6 +17,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
+import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
+import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
+import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
@@ -82,6 +86,21 @@ public class CxfConfig {
     @Qualifier("ISdtEndpointPortType")
     private SdtEndpointPortType sdtEndpointPortType;
 
+    @Qualifier("WsUpdateItemHandler")
+    private IWsUpdateItemHandler updateItemHandler;
+
+    @Autowired
+    @Qualifier("WsCreateBulkRequestHandler")
+    private IWsCreateBulkRequestHandler wsCreateBulkRequestHandler;
+
+    @Autowired
+    @Qualifier("WsReadBulkFeedbackRequestHandler")
+    private IWsReadBulkRequestHandler wsReadBulkRequestHandler;
+
+    @Autowired
+    @Qualifier("WsReadSubmitQueryHandler")
+    private IWsReadSubmitQueryHandler wsReadSubmitQueryHandler;
+
     @Bean
     public ServletRegistrationBean<CXFServlet> dispatcherServlet() {
         return new ServletRegistrationBean<CXFServlet>(new CXFServlet(), "/service/*");
@@ -140,24 +159,24 @@ public class CxfConfig {
         return endpoint;
     }
 
-    @Bean
-    public Endpoint sdtInternalEndpoint() {
-        EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
-        endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
-                                                      xmlInboundInterceptor,
-                                                      sdtUnmarshallInterceptor));
-
-        endpoint.setOutInterceptors(Lists.newArrayList(performanceLoggerOutboundInterceptor));
-
-        endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
-        List<LoggingFeature> features = new ArrayList<>();
-        features.add(new LoggingFeature());
-        endpoint.setFeatures(features);
-
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("schema-validation-enabled", false);
-        endpoint.setProperties(properties);
-        endpoint.publish("/sdtinternalapi");
-        return endpoint;
-    }
+//    @Bean
+//    public Endpoint sdtInternalEndpoint() {
+//        EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
+//        endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
+//                                                      xmlInboundInterceptor,
+//                                                      sdtUnmarshallInterceptor));
+//
+//        endpoint.setOutInterceptors(Lists.newArrayList(performanceLoggerOutboundInterceptor));
+//
+//        endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
+//        List<LoggingFeature> features = new ArrayList<>();
+//        features.add(new LoggingFeature());
+//        endpoint.setFeatures(features);
+//
+//        Map<String, Object> properties = new HashMap<>();
+//        properties.put("schema-validation-enabled", false);
+//        endpoint.setProperties(properties);
+//        endpoint.publish("/sdtinternalapi");
+//        return endpoint;
+//    }
 }
