@@ -33,8 +33,6 @@ package uk.gov.moj.sdt.utils.mbeans;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
@@ -412,12 +410,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
      * Utility class for counting unique customers.
      */
     private ICustomerCounter customerCounter;
-
-    @Autowired
-    public SdtMetricsMBean(@Qualifier("CustomerCounter")
-                               ICustomerCounter customerCounter) {
-        this.customerCounter = customerCounter;
-    }
 
     /**
      * Constructor for {@link SdtMetricsMBean}. This called by Spring and should become the bean that all subsequent
@@ -1570,7 +1562,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
             // Keep caller happy with throw away metrics - these stats will be lost - Spring not yet inititalised.
             final SdtMetricsMBean sdtMetricsMBean = new SdtMetricsMBean(true);
             sdtMetricsMBean.setCustomerCounter(new CustomerCounter());
-            return sdtMetricsMBean;
+            SdtMetricsMBean.thisBean = sdtMetricsMBean;
         }
 
         return SdtMetricsMBean.thisBean;
