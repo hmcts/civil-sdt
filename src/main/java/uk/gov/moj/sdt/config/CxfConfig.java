@@ -9,14 +9,12 @@ import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletPath;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
@@ -83,14 +81,8 @@ public class CxfConfig {
     private SdtEndpointPortType sdtEndpointPortType;
 
     @Bean
-    public ServletRegistrationBean<CXFServlet> dispatcherServlet() {
-        return new ServletRegistrationBean<CXFServlet>(new CXFServlet(), "/service/*");
-    }
-
-    @Bean
-    @Primary
-    public DispatcherServletPath dispatcherServletPathProvider() {
-        return () -> "/";
+    public ServletRegistrationBean<CXFServlet> cxfServlet() {
+        return new ServletRegistrationBean<CXFServlet>(new CXFServlet(), "/producers/service/*");
     }
 
     @Bean(name = Bus.DEFAULT_BUS_ID)
