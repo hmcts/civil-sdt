@@ -43,7 +43,7 @@ public class CxfConfig {
 
     @Bean
     public ServletRegistrationBean<CXFServlet> cxfServlet() {
-        return new ServletRegistrationBean<CXFServlet>(new CXFServlet(), "/producers/service/*");
+        return new ServletRegistrationBean<>(new CXFServlet(), "/producers/service/*");
     }
 
     @Bean(name = Bus.DEFAULT_BUS_ID)
