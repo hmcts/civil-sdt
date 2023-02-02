@@ -6,7 +6,6 @@ import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -42,44 +41,6 @@ import javax.xml.ws.Endpoint;
 @Import(ProducersConfig.class)
 public class CxfConfig {
 
-    @Autowired
-    private PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor;
-
-    @Autowired
-    private XmlInboundInterceptor xmlInboundInterceptor;
-
-    @Autowired
-    private SdtUnmarshallInterceptor sdtUnmarshallInterceptor;
-
-    @Autowired
-    private ServiceRequestInboundInterceptor serviceRequestInboundInterceptor;
-
-    @Autowired
-    private CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor;
-
-    @Autowired
-    private XmlOutboundInterceptor xmlOutboundInterceptor;
-
-    @Autowired
-    private ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor;
-
-    @Autowired
-    private PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor;
-
-    @Autowired
-    private CacheEndOutboundInterceptor cacheEndOutboundInterceptor;
-
-    @Autowired
-    private FaultOutboundInterceptor faultOutboundInterceptor;
-
-    @Autowired
-    @Qualifier("ISdtInternalEndpointPortType")
-    private SdtInternalEndpointPortType sdtInternalEndpointPortType;
-
-    @Autowired
-    @Qualifier("ISdtEndpointPortType")
-    private SdtEndpointPortType sdtEndpointPortType;
-
     @Bean
     public ServletRegistrationBean<CXFServlet> cxfServlet() {
         return new ServletRegistrationBean<CXFServlet>(new CXFServlet(), "/producers/service/*");
@@ -100,7 +61,18 @@ public class CxfConfig {
     }
 
     @Bean
-    public Endpoint sdtEndpoint() {
+    public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
+                                SdtEndpointPortType sdtEndpointPortType,
+                                ServiceRequestInboundInterceptor serviceRequestInboundInterceptor,
+                                PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
+                                XmlInboundInterceptor xmlInboundInterceptor,
+                                SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
+                                PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
+                                CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
+                                XmlOutboundInterceptor xmlOutboundInterceptor,
+                                ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor,
+                                CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
+                                FaultOutboundInterceptor faultOutboundInterceptor) {
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
         endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
                                                 xmlInboundInterceptor,
@@ -133,7 +105,13 @@ public class CxfConfig {
     }
 
     @Bean
-    public Endpoint sdtInternalEndpoint() {
+    public Endpoint sdtInternalEndpoint(@Qualifier("ISdtInternalEndpointPortType")
+                                            SdtInternalEndpointPortType sdtInternalEndpointPortType,
+                                        PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
+                                        XmlInboundInterceptor xmlInboundInterceptor,
+                                        SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
+                                        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
+                                        FaultOutboundInterceptor faultOutboundInterceptor) {
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
         endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
                                                       xmlInboundInterceptor,

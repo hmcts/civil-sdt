@@ -114,9 +114,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         try {
             response = wsCreateBulkRequestHandler.submitBulk(bulkRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
             handleThrowable(throwable);
         }
@@ -161,9 +159,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         try {
             response = wsReadBulkRequestHandler.getBulkFeedback(bulkFeedbackRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
             handleThrowable(throwable);
         }
@@ -215,9 +211,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         try {
             response = wsReadSubmitQueryHandler.submitQuery(submitQueryRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
             handleThrowable(throwable);
         }

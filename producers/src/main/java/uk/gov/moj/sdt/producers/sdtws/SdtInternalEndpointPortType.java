@@ -96,9 +96,7 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
         try {
             response = updateItemHandler.updateItem(updateRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
             handleThrowable(throwable);
         }
