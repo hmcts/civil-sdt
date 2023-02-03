@@ -31,45 +31,38 @@
 
 package uk.gov.moj.sdt.consumers;
 
-import java.math.BigInteger;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Test class for the submit query consumer.
@@ -226,4 +219,46 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
                 submitQueryRequest.getResultCount(), "Result count is not equal.");
     }
 
+    /**
+     * Test to verify transformer correctly set in setUpLocalTests().
+     */
+    @Test
+    void getTransformer() {
+        assertNotNull(submitQueryConsumer.getTransformer());
+    }
+
+    /**
+     * Test to verify submitQueryConsumer.createTargetAppEndPoint() returns null as intended.
+     */
+    @Test
+    void createTargetAppEndPoint() {
+        ITargetAppInternalEndpointPortType targetAppInternalEndpointPortType = submitQueryConsumer.createTargetAppEndPoint();
+        assertNull(targetAppInternalEndpointPortType);
+    }
+
+    /**
+     * Test to verify submit query consumer does throw expected exception.
+     * Handles the final else statement of AbstractWsConsumer.handleClientErrors
+     */
+    @Test
+    void testSubmitQueryRequestOtherException() {
+        when(mockTransformer.transformDomainToJaxb(submitQueryRequest)).thenReturn(submitQueryRequestType);
+        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
+            mockStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
+                .thenReturn(true);
+        }
+
+        final WebServiceException wsException = new WebServiceException();
+        wsException.initCause(new OutageException("MISC_OUTAGE", "Misc outage exception"));
+
+        when(mockClient.submitQuery(submitQueryRequestType)).thenThrow(wsException);
+
+        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
+
+        WebServiceException webServiceException = assertThrows(WebServiceException.class, () ->
+            this.submitQueryConsumer.processSubmitQuery(submitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT));
+
+        assertEquals("The following exception occured [MISC_OUTAGE] message[Misc outage exception]", webServiceException.getCause().getMessage());
+        assertNotNull(webServiceException.getCause());
+    }
 }
