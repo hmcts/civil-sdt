@@ -93,7 +93,7 @@ task sdtEndpointDistWsdl2Java(type: JavaExec) {
   ]
 }
 
-compileJava {
+processResources {
   build.dependsOn 'sdtEndPointWsdl2Java'
   build.dependsOn 'sdtInternalEndpointWsdl2Java'
   build.dependsOn 'targetAppInternalEndpointWsdl2Java'
