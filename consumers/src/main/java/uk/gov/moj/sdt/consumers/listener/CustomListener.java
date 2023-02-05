@@ -9,8 +9,7 @@ import javax.servlet.ServletContextListener;
 public class CustomListener implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomListener.class);
-
-
+    
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         LOGGER.info("CustomListener is initialized");

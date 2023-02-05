@@ -116,7 +116,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         }
         catch (Exception throwable)
         {
-            handleThrowable(throwable);
+            handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
@@ -161,7 +161,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         }
         catch (Exception throwable)
         {
-            handleThrowable(throwable);
+            handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
@@ -213,7 +213,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         }
         catch (Exception throwable)
         {
-            handleThrowable(throwable);
+            handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
@@ -239,7 +239,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      *
      * @param throwable exception to be handled
      */
-    private void handleThrowable(final Throwable throwable) {
+    private void handleException(final Throwable throwable) {
         LOGGER.error("Unexpected error - ", throwable);
 
         throw new RuntimeException(

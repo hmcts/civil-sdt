@@ -188,7 +188,13 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
         RequestItemType dest = new RequestItemType();
         dest.setRequestId(source.getRequestId());
         dest.setRequestType(source.getRequestType());
-        dest.setAny(source.getAny());
+        dest.setMcolClaim(source.getMcolClaim());
+        dest.setMcolWarrant(source.getMcolWarrant());
+        dest.setMcolBreathingSpace(source.getMcolBreathingSpace());
+        dest.setMcolJudgment(source.getMcolJudgment());
+        dest.setMcolClaimStatusUpdate(source.getMcolClaimStatusUpdate());
+        dest.setMcolSetAside(source.getMcolSetAside());
+        dest.setMcolJudgmentWarrant(source.getMcolJudgmentWarrant());
         return dest;
     }
 
