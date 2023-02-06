@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +53,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import static org.junit.Assert.*;
 
 /**
  * Test {@link BulkCustomerDao} query methods.
@@ -90,9 +91,9 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId(2);
         if (bulkCustomer != null) {
-            LOGGER.debug("Retrieved bulk customer id [" + bulkCustomer.getId() + "]");
+            LOGGER.debug("Retrieved bulk customer id [{}]", bulkCustomer.getId());
         } else {
-            Assert.fail("Could not find bulk customer [" + 2 + "]");
+            fail("Could not find bulk customer [" + 2 + "]");
         }
     }
 
@@ -102,9 +103,9 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.fetch(IBulkCustomer.class, 10711);
         if (bulkCustomer != null) {
-            LOGGER.debug("Retrieved bulk customer id [" + bulkCustomer.getId() + "]");
+            LOGGER.debug("Retrieved bulk customer id [{}]", bulkCustomer.getId());
         } else {
-            Assert.fail("Could not find bulk customer [" + 10711 + "]");
+            fail("Could not find bulk customer [" + 10711 + "]");
         }
     }
 
@@ -130,10 +131,10 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
         final List<BulkCustomer> savedBulkObjectList =
             bulkCustomersDao.queryAsList(BulkCustomer.class, () -> criteriaQuery.select(root).where(createCriteria(456L, 457L)));
 
-        Assert.assertNotNull(savedBulkObjectList);
-        Assert.assertEquals(2, savedBulkObjectList.size());
+        assertNotNull(savedBulkObjectList);
+        assertEquals(2, savedBulkObjectList.size());
         for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
-            Assert.assertNotNull(savedBulkCustomer);
+            assertNotNull(savedBulkCustomer);
         }
 
     }
@@ -157,11 +158,11 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
         final List<BulkCustomer> savedBulkObjectList =
             bulkCustomersDao.queryAsList(BulkCustomer.class, () -> criteriaQuery.select(root).where(createCriteria(456L)));
 
-        Assert.assertNotNull(savedBulkObjectList);
-        Assert.assertEquals(1, savedBulkObjectList.size());
+        assertNotNull(savedBulkObjectList);
+        assertEquals(1, savedBulkObjectList.size());
         for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
-            Assert.assertNotNull(savedBulkCustomer);
-            Assert.assertEquals(456, savedBulkCustomer.getSdtCustomerId());
+            assertNotNull(savedBulkCustomer);
+            assertEquals(456, savedBulkCustomer.getSdtCustomerId());
         }
     }
 
