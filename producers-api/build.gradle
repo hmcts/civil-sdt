@@ -29,9 +29,6 @@ test {
     useJUnitPlatform()
 }
 
-ext.cxfVersion = "3.5.4"
-ext.jaxwsVersion = "2.3.1"
-
 configurations {
   wsdl2java
 }
@@ -82,19 +79,7 @@ task targetAppInternalEndpointWsdl2Java(type: JavaExec) {
   ]
 }
 
-task sdtEndpointDistWsdl2Java(type: JavaExec) {
-  main = "org.apache.cxf.tools.wsdlto.WSDLToJava"
-  classpath = configurations.wsdl2java
-  args = [
-    "-d", "src-gen/main/java",
-    "-fe", "jaxws21",
-    "-b", "${projectDir}/${wsdlXsdResourcesDir}/jaxb-bindings.xml",
-    "${projectDir}/${wsdlXsdResourcesDir}/wsdl/SdtEndpointDist.wsdl"
-  ]
-}
-
 compileJava.dependsOn 'sdtEndPointWsdl2Java'
 compileJava.dependsOn 'sdtInternalEndpointWsdl2Java'
 compileJava.dependsOn 'targetAppInternalEndpointWsdl2Java'
-compileJava.dependsOn 'sdtEndpointDistWsdl2Java'
 
