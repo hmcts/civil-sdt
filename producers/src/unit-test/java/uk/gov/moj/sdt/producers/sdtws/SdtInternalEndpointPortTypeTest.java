@@ -75,8 +75,7 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        portType = new SdtInternalEndpointPortType();
-        portType.setUpdateItemHandler(mockUpdateItemHandler);
+        portType = new SdtInternalEndpointPortType(mockUpdateItemHandler);
     }
 
     /**
