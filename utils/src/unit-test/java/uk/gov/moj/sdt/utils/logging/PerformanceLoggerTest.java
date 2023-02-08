@@ -32,17 +32,25 @@ package uk.gov.moj.sdt.utils.logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
 import java.nio.channels.FileChannel;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
+import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Class to test performance logging.
@@ -55,21 +63,26 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
      */
     private static final String PERFORMANCE_LOG_PATH = "../logs/sdt.performance.log";
 
+    private static final String FORMAT_STRINGLINE_TEST = " this is a \n linefeed test";
+
+    ILoggingContext loggingContext;
+
+    private SdtContext sdtContext;
+
     @Override
-    protected void setUpLocalTests() throws Exception {
+    protected void setUpLocalTests() {
 
         File performanceLogFile = new File(PERFORMANCE_LOG_PATH);
         if (performanceLogFile.exists()) {
-            FileChannel outChan;
-            try {
-                outChan = new FileOutputStream(performanceLogFile, true).getChannel();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(performanceLogFile, true)) {
+                FileChannel outChan = fileOutputStream.getChannel();
                 outChan.truncate(0);
-                outChan.close();
             } catch (final Exception e) {
                 fail(e.getMessage());
             }
         }
     }
+
 
     /**
      * Test writing of a performance message to performance log.
@@ -85,7 +98,7 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
 
         // Validate the test.
         this.checkLogContents("active flags=1111111111111111, logging point=0000000000000001, "
-                + "reference=987: Hullo - Detail");
+                                  + "reference=987: Hullo - Detail");
     }
 
     /**
@@ -93,10 +106,12 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
      *
      * @param contents contents to search for in the log file.
      */
+
     private void checkLogContents(final String contents) {
         // Check correct message is in log.
-        try {
-            final String text = new Scanner(new File(PERFORMANCE_LOG_PATH)).useDelimiter("\\A").next();
+
+        try (Scanner scan = new Scanner(new File(PERFORMANCE_LOG_PATH))) {
+            final String text = scan.useDelimiter("\\A").next();
 
             // Build a search pattern with this request id. Allow for any order of requestId and requestType
             // attributes.
@@ -109,5 +124,47 @@ class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
         } catch (final Exception e) {
             fail("Failed to find contents [" + contents + "] in performance log.");
         }
+
+    }
+
+    @Test
+    void checkStringFormatTest() {
+        //given
+
+        //when
+        String outCome = PerformanceLogger.format(FORMAT_STRINGLINE_TEST);
+
+        //then
+        assertNotNull(outCome);
+    }
+
+    @Test
+    void isPerformanceEnabledTrueTest() {
+        //given
+        loggingContext = new LoggingContext();
+        loggingContext.setLoggingFlags(1);
+        sdtContext = SdtContext.getContext();
+        sdtContext.setLoggingContext(loggingContext);
+        //when
+        PerformanceLogger.log(this.getClass(), 1l, "TestMessage", "TestDetails");
+        boolean isEnabled = PerformanceLogger.isPerformanceEnabled(1L);
+
+        //then
+        assertTrue(isEnabled);
+    }
+
+    @Test
+    void isPerformanceEnabledFalseTest() {
+        //given
+        loggingContext = new LoggingContext();
+        loggingContext.setLoggingFlags(0);
+        sdtContext = SdtContext.getContext();
+        sdtContext.setLoggingContext(loggingContext);
+        //when
+        PerformanceLogger.log(this.getClass(), 1l, "TestMessage", "TestDetails");
+        boolean isEnabled = PerformanceLogger.isPerformanceEnabled(0);
+
+        //then
+        assertFalse(isEnabled);
     }
 }

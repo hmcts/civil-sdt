@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -95,6 +96,7 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         this.bulkSubmissionService = bulkSubmissionService;
         this.bulkSubmissionValidator = bulkSubmissionValidator;
         this.transformer = transformer;
+        this.concurrencyMap = new HashMap<>();
     }
 
     /**
