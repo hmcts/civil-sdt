@@ -30,11 +30,16 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.utils;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;import java.io.IOException;
@@ -43,14 +48,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static ch.qos.logback.classic.Level.DEBUG;
+import static ch.qos.logback.classic.Level.ERROR;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for the IndividualRequestsXmlParser.
@@ -88,6 +88,13 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void getIndividualRequestsRawXmlMap() throws Exception {
+        Logger logger = (Logger) LoggerFactory.getLogger(IndividualRequestsXmlParser.class);
+        logger.setLevel(ERROR);
+
+        // Create appender and add to logger
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        logger.addAppender(listAppender);
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml = Utilities.getRawXml("src/unit-test/resources/", "testXMLValid.xml");
 
@@ -116,6 +123,8 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
         // Now call the parser to add the xml fragments into the payload of the individual reauests.
         this.individualRequestsXmlParser.populateRawRequest(requests);
 
+        List<ILoggingEvent> logList = listAppender.list;
+        logger.detachAndStopAllAppenders();
         // CHECKSTYLE:OFF
         assertEquals(
                 "<bul:mcolClaimStatusUpdatexmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"><cla1:claimNumberxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim123</cla1:claimNumber><cla1:defendantIdxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationTypexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDatexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
@@ -130,6 +139,11 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
                 requests.get(2).getRequestPayload().replaceAll("\\s+", ""),
                 "Failed to find correct payload for request 3");
         // CHECKSTYLE:ON
+
+
+        assertFalse(verifyLog(logList,"Started parsing raw xml to extract payload for"));
+        assertFalse(verifyLog(logList,"Found match: requestId"));
+        assertFalse(verifyLog(logList,"Raw XML enhanced with namespaces"));
     }
 
     /**
@@ -140,6 +154,16 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
     @Test
     @Timeout(30000)
     void testParserPerformance() throws IOException {
+        Logger logger = (Logger) LoggerFactory.getLogger(IndividualRequestsXmlParser.class);
+
+        // Set logging level to debug so that afterCompletion logging is captured
+        logger.setLevel(DEBUG);
+
+        // Create appender and add to logger
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        logger.addAppender(listAppender);
+
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml = Utilities.getRawXml("src/unit-test/resources/", "testLargeBulkRequest.xml");
 
@@ -167,6 +191,23 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
             assertNotNull(request.getRequestPayload(),
                     "Payload should have been populated in request#" + requestIndex);
         }
+
+        List<ILoggingEvent> logList = listAppender.list;
+        logger.detachAndStopAllAppenders();
+
+        assertTrue(verifyLog(logList,"Started parsing raw xml to extract payload for"));
+        assertTrue(verifyLog(logList,"Found match: requestId"));
+        assertTrue(verifyLog(logList,"Raw XML enhanced with namespaces"));
+    }
+
+    private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
+        boolean verifyLog = false;
+        for (ILoggingEvent log : logList) {
+            if (log.getMessage().contains(message)) {
+                verifyLog = true;
+            }
+        }
+        return verifyLog;
     }
 
 }

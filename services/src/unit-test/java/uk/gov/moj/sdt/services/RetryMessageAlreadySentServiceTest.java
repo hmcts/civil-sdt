@@ -1,33 +1,3 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -62,9 +32,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Test class for the RetryMessageAlreadySentService.
@@ -103,6 +71,9 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
     private static final String FORWARDING_ATTEMPTS_ON_INDIVIDUAL_REQUEST = "Forwarding attempts on individual request";
     private static final String TEST_COMPLETED_SUCCESSFULLY = "Test completed successfully";
     private static final String STATUS_SET_TO_RECEIVED = "Status set to Received";
+
+    private static final String INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY =
+        "The setIndividualRequestDao should be set correctly";
 
     /**
      * Method to do any pre-test set-up.
@@ -405,6 +376,39 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setIndividualRequests(requests);
 
         request.setBulkSubmission(bulkSubmission);
+    }
+
+    @Test
+    public void setIndividualRequestDaoTest() throws Exception {
+
+        messageTaskService.setIndividualRequestDao(mockIndividualRequestDao);
+
+        Object result = this.getAccessibleField(RetryMessageAlreadySentService.class, "individualRequestDao",
+                                                IIndividualRequestDao.class, messageTaskService);
+
+        assertEquals(mockIndividualRequestDao, result, INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY);
+    }
+
+    @Test
+    public void setMessagingUtilityTest() throws Exception {
+
+        messageTaskService.setMessagingUtility(mockMessagingUtility);
+
+        Object result = this.getAccessibleField(RetryMessageAlreadySentService.class, "messagingUtility",
+                                                IMessagingUtility.class, messageTaskService);
+
+        assertEquals(mockMessagingUtility, result, INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY);
+    }
+
+    @Test
+    public void setGlobalParametersCacheTest() throws Exception {
+
+        messageTaskService.setGlobalParametersCache(mockCacheable);
+
+        Object result = this.getAccessibleField(RetryMessageAlreadySentService.class, "globalParametersCache",
+                                                ICacheable.class, messageTaskService);
+
+        assertEquals(mockCacheable, result, INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY);
     }
 
 }
