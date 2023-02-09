@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Instant;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
@@ -19,14 +16,14 @@ public class SdtMessageTest {
         SdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference(TEST_REFERENCE);
 
-        assertEquals(sdtMessage.getSdtRequestReference(),TEST_REFERENCE);
+        assertEquals(TEST_REFERENCE, sdtMessage.getSdtRequestReference());
     }
     @Test
     void getMessageSentTimestampTest(){
         SdtMessage sdtMessage = new SdtMessage();
-        sdtMessage.setMessageSentTimestamp(Instant.now().getEpochSecond());
+        sdtMessage.setMessageSentTimestamp(1L);
 
-        assertNotNull(sdtMessage.getMessageSentTimestamp());
+        assertEquals(sdtMessage.getMessageSentTimestamp(),1L);
     }
 
     @Test
@@ -34,7 +31,7 @@ public class SdtMessageTest {
         SdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setEnqueueLoggingId(1L);
 
-        assertNotNull(sdtMessage.getEnqueueLoggingId());
+        assertEquals(sdtMessage.getEnqueueLoggingId(),1L);
     }
 
 

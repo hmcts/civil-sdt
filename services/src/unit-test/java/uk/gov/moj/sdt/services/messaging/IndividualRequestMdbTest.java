@@ -115,20 +115,20 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
     public void readMessageJMSExceptionTest() throws JMSException {
         individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
-        // Create the spy message to send
-        ISdtMessage sdtMessageMock = mock(SdtMessage.class);
-
         // Wrap the message in the ObjectMessage
-        final ObjectMessage objMessage = mock(ObjectMessage.class);
+        final ObjectMessage objMessageMock = mock(ObjectMessage.class);
+
+        doThrow(new JMSException("JMS error occurred")).when(objMessageMock).getObject();
 
         try {
-            when(sdtMessageMock.getSdtRequestReference()).thenThrow(new JMSException("JMS error occurred"));
-            individualRequestMdb.readMessage(objMessage);
-            fail("JMS was expected to be thrown");
-        } catch (final RuntimeException e) {
+            individualRequestMdb.readMessage(objMessageMock);
+            fail("Exception should be thrown");
+        } catch (final Exception e) {
             assertTrue(true,"Expected to throw the exception");
         }
     }
+
+
 
     /**
      * Test method to test the scenario where the message is some other object other than

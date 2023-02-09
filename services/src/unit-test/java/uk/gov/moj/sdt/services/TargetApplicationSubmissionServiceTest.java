@@ -52,12 +52,20 @@ import javax.xml.ws.WebServiceException;
 
 import static ch.qos.logback.classic.Level.DEBUG;
 import static ch.qos.logback.classic.Level.ERROR;
-import static org.mockito.ArgumentMatchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.doThrow;
 
 /**
  * Test class for TargetApplicationSubmissionService.
@@ -112,6 +120,8 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     private static final String FORWARDED = "Forwarded";
 
     private static final String MCOL_INDV_REQ_DELAY = "MCOL_INDV_REQ_DELAY";
+
+    private static final String TWELVE_THOUSAND = "12000";
 
     /**
      * Method to do any pre-test set-up.
@@ -181,7 +191,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
                 receiveTimeOutParam);
 
@@ -261,7 +271,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
             receiveTimeOutParam);
 
@@ -327,7 +337,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
                 receiveTimeOutParam);
 
@@ -415,7 +425,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
                 receiveTimeOutParam);
 
@@ -452,7 +462,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         List<ILoggingEvent> logList = listAppender.list;
 
-        assertNotNull(logList.size()>0);
+        assertFalse(logList.isEmpty());
 
         logger.detachAndStopAllAppenders();
 
@@ -496,7 +506,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
                 receiveTimeOutParam);
 
@@ -515,7 +525,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         List<ILoggingEvent> logList = listAppender.list;
 
-        assertNotNull(logList.size()>0);
+        assertFalse(logList.isEmpty());
 
         logger.detachAndStopAllAppenders();
 
@@ -558,7 +568,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
                 receiveTimeOutParam);
 
@@ -580,7 +590,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         List<ILoggingEvent> logList = listAppender.list;
 
-        assertNotNull(logList.size()>0);
+        assertFalse(logList.isEmpty());
 
         logger.detachAndStopAllAppenders();
 
@@ -628,7 +638,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
                 receiveTimeOutParam);
 
@@ -657,7 +667,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         List<ILoggingEvent> logList = listAppender.list;
 
-        assertNotNull(logList.size()>0);
+        assertFalse(logList.isEmpty());
 
         logger.detachAndStopAllAppenders();
         verify(mockIndividualRequestDao).persist(bulkSubmission);
@@ -728,7 +738,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         List<ILoggingEvent> logList = listAppender.list;
 
-        assertNotNull(logList.size()>0);
+        assertFalse(logList.isEmpty());
 
         logger.detachAndStopAllAppenders();
 
@@ -750,9 +760,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     @Test
     public void processDlqRequestForwarded() {
 
-        Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
-        logger.setLevel(DEBUG);
-
         final String requestStatus = FORWARDED;
         final String sdtRequestRef = "TEST_2";
         final IIndividualRequest individualRequest = new IndividualRequest();
@@ -769,17 +776,8 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         verify(mockIndividualRequestDao).persist(individualRequest);
 
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
-
         this.targetAppSubmissionService.processDLQRequest(individualRequest, requestStatus);
 
-        List<ILoggingEvent> logList = listAppender.list;
-
-        assertNotNull(logList.size()>0);
-
-        logger.detachAndStopAllAppenders();
 
         assertEquals( false,
                 individualRequest.isDeadLetter(),"Individual Request should not be marked as dead letter");
@@ -801,7 +799,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         targetApp.setId(1L);
         targetApp.setTargetApplicationCode("MCOL");
         targetApp.setTargetApplicationName("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
         final ServiceRouting serviceRouting = new ServiceRouting();
         serviceRouting.setId(1L);
@@ -828,7 +826,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         bulkSubmission.setCustomerReference("TEST_CUST_REF");
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(1);
-        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> requests = new ArrayList<>();
         requests.add(request);
 
         bulkSubmission.setIndividualRequests(requests);
@@ -839,13 +837,13 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
     @Test
     void testSetIndividualRequestDaoConsumerWriter(){
-        IIndividualRequestDao mockIndividualRequestDao = mock(IndividualRequestDao.class);
-        IConsumerGateway mockConsumerGateway = mock(ConsumerGateway.class);
+        IIndividualRequestDao individualRequestDaoMock = mock(IndividualRequestDao.class);
+        IConsumerGateway consumerGatewayMock = mock(ConsumerGateway.class);
         IMessageWriter mockIMessageWriter = mock(MessageWriter.class);
 
         targetAppSubmissionService.setMessageWriter(mockIMessageWriter);
-        targetAppSubmissionService.setRequestConsumer(mockConsumerGateway);
-        targetAppSubmissionService.setIndividualRequestDao(mockIndividualRequestDao);
+        targetAppSubmissionService.setRequestConsumer(consumerGatewayMock);
+        targetAppSubmissionService.setIndividualRequestDao(individualRequestDaoMock);
 
         assertNotNull(targetAppSubmissionService.getIndividualRequestDao(),"Object should have been populated");
     }

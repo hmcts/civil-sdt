@@ -21,6 +21,7 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
     @Mock
     IGenericDao genericDaoMock;
 
+    private static final String FOUR_CHARACTERS_ONLY ="The target application length is expected to be 4 characters.";
 
     ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
     @BeforeEach
@@ -46,7 +47,7 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
                 sdtBulkReferenceGenerator.getSdtBulkReference(null);
         }catch(IllegalArgumentException ex){
 
-            assertEquals(ex.getMessage(),"The target application length is expected to be 4 characters.");
+            assertEquals(FOUR_CHARACTERS_ONLY, ex.getMessage());
         }
 
     }
@@ -58,7 +59,7 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
              sdtBulkReferenceGenerator.getSdtBulkReference("over4Characters");
         }catch(IllegalArgumentException ex){
 
-            assertEquals(ex.getMessage(),"The target application length is expected to be 4 characters.");
+            assertEquals(FOUR_CHARACTERS_ONLY, ex.getMessage());
         }
     }
 
