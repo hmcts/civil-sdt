@@ -17,6 +17,7 @@ plugins {
   id "com.jfrog.bintray" version "1.8.5" apply false
   id "info.solidsoft.pitest" version '1.5.1' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
+  id 'jacoco-report-aggregation'
 }
 
 group = 'uk.gov.hmcts.civil.sdt'
@@ -414,6 +415,8 @@ subprojects { subproject ->
     }
 
     implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.1'
+
     /*
     Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
     a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  This dependency can be removed
@@ -582,8 +585,9 @@ subprojects { subproject ->
     }
   }
 
-  test.finalizedBy jacocoTestReport
-  check.dependsOn jacocoTestReport
+  tasks.named('check') {
+    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
+  }
 }
 // end::subprojects[]
 
