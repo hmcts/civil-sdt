@@ -64,6 +64,9 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer 
     @Column(name = "VERSION_NUMBER")
     private int version;
 
+    @Column(name = "READY_FOR_ALTERNATE_SERVICE")
+    private Boolean readyForAlternateService;
+
     /**
      * The bulk customer applications that this customer can work with.e.g. 'MCOL'.
      */
@@ -131,6 +134,14 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer 
     @Override
     public int getVersion() {
         return version;
+    }
+
+    public Boolean getReadyForAlternateService() {
+        return readyForAlternateService;
+    }
+
+    public void setReadyForAlternateService(Boolean readyForAlternateService) {
+        this.readyForAlternateService = readyForAlternateService;
     }
 
     @Override
