@@ -26,14 +26,14 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
     ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
     @BeforeEach
     @Override
-    public void setUp(){
+    public void setUp() {
 
         sdtBulkReferenceGenerator = new SdtBulkReferenceGenerator(genericDaoMock);
 
     }
 
     @Test
-    void testGetSdtBulkReferenceGenerator(){
+    void testGetSdtBulkReferenceGenerator() {
 
         String generatedRef = sdtBulkReferenceGenerator.getSdtBulkReference("MCOL");
 
@@ -41,7 +41,7 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
     }
 
     @Test
-    void testGetSdtBulkReferenceGeneratorIllegalArgumentException(){
+    void testGetSdtBulkReferenceGeneratorIllegalArgumentException() {
 
         try {
                 sdtBulkReferenceGenerator.getSdtBulkReference(null);
@@ -53,7 +53,7 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
     }
 
     @Test
-    void testGetSdtBulkReferenceGeneratorTargetLengthIllegalArgumentException(){
+    void testGetSdtBulkReferenceGeneratorTargetLengthIllegalArgumentException() {
 
         try {
              sdtBulkReferenceGenerator.getSdtBulkReference("over4Characters");
@@ -64,7 +64,8 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
     }
 
     @Test
-    void testSetGenericDao(){
+    void testSetGenericDao() {
+
         IGenericDao mockGenericDao = mock(GenericDao.class);
         SdtBulkReferenceGenerator sdtBulkReferenceGeneratorObj = new SdtBulkReferenceGenerator(mockGenericDao);
         sdtBulkReferenceGeneratorObj.setGenericDao(mockGenericDao);

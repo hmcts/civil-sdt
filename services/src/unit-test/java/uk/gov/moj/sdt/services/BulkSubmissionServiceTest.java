@@ -1,11 +1,15 @@
 package uk.gov.moj.sdt.services;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.dao.BulkCustomerDao;
 import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.dao.TargetApplicationDao;
@@ -20,8 +24,15 @@ import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.ServiceRouting;
 import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 import uk.gov.moj.sdt.services.utils.MessagingUtility;
@@ -38,19 +49,21 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static ch.qos.logback.classic.Level.DEBUG;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import org.slf4j.LoggerFactory;
-import static ch.qos.logback.classic.Level.DEBUG;
 
 /**
  * Test class for BulkSubmissionService.
@@ -111,7 +124,9 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     private static final String TEST_XML_VALID_2 = "testXMLValid2.xml";
 
-    private static final String EXPECTED_TO_PASS = "Expected to pass";
+    private static final String TEST_XML_VALID_3 = "testXMLValid3.xml";
+
+    private static final String TARGET_APPLICATION_FOUND = "Target Application found {}";
 
     /**
      * Setup of the mock dao and injection of other objects.
@@ -167,14 +182,16 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         // Verify the Mock
         verify(mockGenericDao).persist(bulkSubmission);
+        verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
+        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
+        verify(mockConcurrencyMap).get(key);
 
-        assertTrue(true, EXPECTED_TO_PASS);
     }
 
     @Test
-    void testSaveBulkSubmissionWithDebug() throws IOException {
+    void testSaveBulkSubmissionWithTargetApplicationSet() throws IOException {
+
         SdtContext.getContext().setRawInXml(Utilities.getRawXml(PATH_TEST_RESOURCES, TEST_XML_VALID_2));
-        ITargetApplication targetApplication = new TargetApplication();
 
         Logger logger = (Logger) LoggerFactory.getLogger(BulkSubmissionService.class);
 
@@ -207,42 +224,37 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Put a dummy value into the SdtContext
         SdtContext.getContext().setServiceRequestId(1L);
 
+        ITargetApplication targetApplication = new TargetApplication();
         when(mockTargetApplicationDao.getTargetApplicationByCode(anyString())).thenReturn(targetApplication);
 
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
-
         List<ILoggingEvent> logList = listAppender.list;
-
-        assertNotNull(logList.get(0).getFormattedMessage());
+        //Check Debug Logging
+        assertTrue(verifyLog(logList,TARGET_APPLICATION_FOUND));
 
         logger.detachAndStopAllAppenders();
+
         // Verify the Mock
         verify(mockGenericDao).persist(bulkSubmission);
-
-        assertTrue(true, EXPECTED_TO_PASS);
+        verify(mockTargetApplicationDao).getTargetApplicationByCode(anyString());
+        verify(mockConcurrencyMap).get(key);
+        verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
+        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
     }
 
 
 
    @Test
-    void testSaveBulkSubmissionTargetFound() throws IOException {
+    void testSaveBulkSubmissionTargetFoundIsEnqueueableSetToFalse() throws IOException {
+
         SdtContext.getContext().setRawInXml(Utilities.getRawXml(PATH_TEST_RESOURCES, TEST_XML_VALID_2));
         ITargetApplication targetApplication = new TargetApplication();
         IIndividualRequest individualRequestMock = mock(IIndividualRequest.class);
 
         List<IIndividualRequest> individualRequests = new ArrayList<>();
         individualRequests.add(individualRequestMock);
-        Logger logger = (Logger) LoggerFactory.getLogger(BulkSubmissionService.class);
-
-        // Set logging level to debug so that afterCompletion logging is captured
-        logger.setLevel(DEBUG);
-
-        // Create appender and add to logger
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
@@ -271,14 +283,15 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(individualRequestMock.getRequestStatus()).thenReturn("Rejected");
 
         when(individualRequestMock.isEnqueueable()).thenReturn(false);
+
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
-        List<ILoggingEvent> logList = listAppender.list;
-
-        assertTrue(verifyLog(logList,"Target Application found {}"));
-
-        logger.detachAndStopAllAppenders();
+        verify(mockTargetApplicationDao).getTargetApplicationByCode(anyString());
+        verify(mockConcurrencyMap).get(key);
+        verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
+        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
+        verify(individualRequestMock).getRequestStatus();
     }
 
 
@@ -290,7 +303,8 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testSubmissionWithMultipleRequests() throws IOException {
-        final String rawXml = Utilities.getRawXml(PATH_TEST_RESOURCES, TEST_XML_VALID_2);
+
+        final String rawXml = Utilities.getRawXml(PATH_TEST_RESOURCES, TEST_XML_VALID_3);
         SdtContext.getContext().setRawInXml(rawXml);
 
         // Activate Mock Generic Dao
@@ -323,8 +337,9 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         // Verify the Mock
         verify(mockGenericDao).persist(bulkSubmission);
-
-        assertTrue(true, EXPECTED_TO_PASS);
+        verify(mockConcurrencyMap).get(key);
+        verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
+        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
     }
 
     /**
@@ -335,7 +350,8 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testSubmissionWithConcurrenyIssue() throws IOException {
-        final String rawXml = Utilities.getRawXml(PATH_TEST_RESOURCES, TEST_XML_VALID_2);
+
+        final String rawXml = Utilities.getRawXml(PATH_TEST_RESOURCES, TEST_XML_VALID_3);
         SdtContext.getContext().setRawInXml(rawXml);
 
         // Activate Mock Generic Dao
@@ -390,6 +406,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
      * @return Bulk Submission object for the testing.
      */
     private IBulkSubmission createBulkSubmission() {
+
         final IBulkSubmission bulkSubmission = new BulkSubmission();
         final IBulkCustomer bulkCustomer = new BulkCustomer();
         final ITargetApplication targetApp = new TargetApplication();
@@ -458,91 +475,93 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
 
     @Test
-    public void setErrorMessagesCacheTest() throws Exception {
-        IGenericDao genericDaoMock = mock(GenericDao.class);
-        IBulkCustomerDao bulkCustomerDaoMock = mock(BulkCustomerDao.class);
-        ITargetApplicationDao targetApplicationDaoMock = mock(TargetApplicationDao.class);
-        IndividualRequestsXmlParser individualRequestsXmlParserMock = mock(IndividualRequestsXmlParser.class);
-        IMessagingUtility messagingUtility = mock(MessagingUtility.class);
-        ISdtBulkReferenceGenerator sdtBulkReferenceGeneratorMock = mock(SdtBulkReferenceGenerator.class);
-        ICacheable errorMessagesCache = Mockito.mock(ICacheable.class);
+    public void setErrorMessagesCacheTest() throws IllegalAccessException, NoSuchFieldException {
 
+        ICacheable errorMessagesCacheMock = Mockito.mock(ICacheable.class);
 
-        BulkSubmissionService bulkSubmission = new BulkSubmissionService(
-            genericDaoMock,bulkCustomerDaoMock, targetApplicationDaoMock,individualRequestsXmlParserMock,
-            messagingUtility,sdtBulkReferenceGeneratorMock,errorMessagesCache);
-
-
-        bulkSubmission.setErrorMessagesCache(errorMessagesCache);
+        bulkSubmissionService.setErrorMessagesCache(errorMessagesCacheMock);
 
         Field errorMessagesCacheField = BulkSubmissionService.class.getDeclaredField("errorMessagesCache");
-        errorMessagesCacheField.setAccessible(true);
-        ICacheable result = (ICacheable) errorMessagesCacheField.get(bulkSubmission);
 
-        assertEquals(errorMessagesCache, result, "The errorMessagesCache should be set correctly");
+        errorMessagesCacheField.setAccessible(true);
+
+        ICacheable result = (ICacheable) errorMessagesCacheField.get(bulkSubmissionService);
+
+        assertEquals(errorMessagesCacheMock, result, "The errorMessagesCache should be set to the expected object");
     }
 
 
     @Test
-    public void setMockSdtBulkReferenceGeneratorTest() throws Exception {
+    public void setMockSdtBulkReferenceGeneratorTest() {
 
-        bulkSubmissionService.setSdtBulkReferenceGenerator(mockSdtBulkReferenceGenerator);
+        ISdtBulkReferenceGenerator sdtBulkReferenceGeneratorMock = mock(SdtBulkReferenceGenerator.class);
+
+        bulkSubmissionService.setSdtBulkReferenceGenerator(sdtBulkReferenceGeneratorMock);
 
         Object result = this.getAccessibleField(BulkSubmissionService.class,"sdtBulkReferenceGenerator",
                                                 SdtBulkReferenceGenerator.class,bulkSubmissionService);
 
-        assertEquals(mockSdtBulkReferenceGenerator, result, "The sdtBulkReferenceGenerator should be set correctly");
+        assertEquals(sdtBulkReferenceGeneratorMock, result, "The sdtBulkReferenceGenerator should be set to the object");
     }
 
     @Test
-    public void setTargetApplicationDaoTest(){
+    public void setTargetApplicationDaoTest() {
 
-        bulkSubmissionService.setTargetApplicationDao(mockTargetApplicationDao);
+        ITargetApplicationDao targetApplicationDaoMock =mock(TargetApplicationDao.class);
+
+        bulkSubmissionService.setTargetApplicationDao(targetApplicationDaoMock);
 
         ITargetApplicationDao result = bulkSubmissionService.getTargetApplicationDao();
 
-        assertEquals(mockTargetApplicationDao, result, "The TargetApplication should be set correctly");
+        assertEquals(targetApplicationDaoMock, result, "The TargetApplicationDao should be set to the expected object");
     }
 
     @Test
-    public void setIndividualRequestXmlParserTest(){
+    public void setIndividualRequestXmlParserTest() {
 
         IndividualRequestsXmlParser individualRequestsXmlParserMock = mock(IndividualRequestsXmlParser.class);
+
         bulkSubmissionService.setIndividualRequestsXmlparser(individualRequestsXmlParserMock);
 
         IndividualRequestsXmlParser result = bulkSubmissionService.getIndividualRequestsXmlParser();
 
-        assertEquals(individualRequestsXmlParserMock, result, "The TargetApplication should be set correctly");
+        assertEquals(individualRequestsXmlParserMock, result, "The individualRequestsXmlParser was not set to the expected object.");
     }
 
     @Test
-    public void setMessagingUtilityTest(){
+    public void setMessagingUtilityTest() {
 
-        bulkSubmissionService.setMessagingUtility(mockMessagingUtility);
+        IMessagingUtility messagingUtilityMock = mock(MessagingUtility.class);
+
+        bulkSubmissionService.setMessagingUtility(messagingUtilityMock);
 
         IMessagingUtility result = bulkSubmissionService.getMessagingUtility();
 
-        assertEquals(mockMessagingUtility, result, "The MessageUtility should be set correctly");
+        assertEquals(messagingUtilityMock, result, "The MessagingUtility was not set to the expected object.");
     }
 
     @Test
-    public void setGenericDaoTest(){
+    public void setGenericDaoTest() {
 
-        bulkSubmissionService.setGenericDao(mockGenericDao);
+        IGenericDao genericDaoMock = mock(GenericDao.class);
+
+        bulkSubmissionService.setGenericDao(genericDaoMock);
 
         IGenericDao result = bulkSubmissionService.getGenericDao();
 
-        assertEquals(mockGenericDao, result, "The GenericDao should be set correctly");
+        assertEquals(genericDaoMock, result, "The GenericDao was not set to the expected object.");
     }
 
     @Test
-    public void setBulkCustomerDaoTest(){
+    public void setBulkCustomerDaoTest() {
 
-        bulkSubmissionService.setBulkCustomerDao(mockBulkCustomerDao);
+        IBulkCustomerDao bulkCustomerDaoMock = mock(BulkCustomerDao.class);
+
+        bulkSubmissionService.setBulkCustomerDao(bulkCustomerDaoMock);
 
         IBulkCustomerDao result = bulkSubmissionService.getBulkCustomerDao();
 
-        assertEquals(mockBulkCustomerDao, result, "The GenericDao should be set correctly");
+        assertEquals(bulkCustomerDaoMock, result, "The BulkCustomerDao was not set to the expected object.");
     }
 
 
@@ -557,6 +576,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         for (ILoggingEvent log : logList)
             if (log.getMessage().contains(message)) {
                 verifyLog = true;
+                break;
             }
         return verifyLog;
     }

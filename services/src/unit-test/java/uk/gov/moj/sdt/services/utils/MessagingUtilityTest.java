@@ -4,12 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.messaging.MessageWriter;
-
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
@@ -17,15 +16,18 @@ import uk.gov.moj.sdt.utils.transaction.synchronizer.MessageSynchronizer;
 import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
 
     @BeforeEach
     @Override
-    public void setUp(){
+    public void setUp() {
     }
 
     @Test
@@ -62,7 +64,7 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
 
 
     @Test
-    void testMessageSynchronizer(){
+    void testMessageSynchronizer() {
         IMessageWriter messagingWriter = mock(MessageWriter.class);
         IMessageSynchronizer messageSynchronizer = mock(MessageSynchronizer.class);
         MessagingUtility messagingUtility = new MessagingUtility(messagingWriter,messageSynchronizer);
@@ -70,11 +72,11 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
         messagingUtility.setMessageSynchronizer(messageSynchronizer);
 
         assertNotNull(messagingUtility.getMessageSynchronizer(),"should have returned MessageSync");
-
     }
 
     @Test
-    void testMessageWriter(){
+    void testMessageWriter() {
+
         IMessageWriter messagingWriter = mock(MessageWriter.class);
         IMessageSynchronizer messageSynchronizer = mock(MessageSynchronizer.class);
         MessagingUtility messagingUtility = new MessagingUtility(messagingWriter,messageSynchronizer);
@@ -82,7 +84,6 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
         messagingUtility.setMessageWriter(messagingWriter);
 
         assertNotNull(messagingUtility.getMessageWriter(),"should have returned MessageWriter");
-
     }
 
 }

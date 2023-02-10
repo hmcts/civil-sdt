@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import uk.gov.moj.sdt.dao.BulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
@@ -22,12 +22,12 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-
+import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -37,7 +37,12 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+;
+;
 
 /**
  * Test class for BulkSubmissionService.
@@ -89,6 +94,10 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
      */
     private int dataRetentionPeriod;
 
+    private static final String DAO_SHOULD_BE_SET_TO_OBJET = "Dao should be set to object";
+
+    private static final String CACHE_OBJECT_SHOULD_BE_SET = "GlobalParameterCache should be set to object";
+
     /**
      * Setup of the mock dao and injection of other objects.
      */
@@ -119,7 +128,6 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         when(mockGlobalParameterCache.getValue(IGlobalParameter.class,
                                                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).thenReturn(globalParameterData);
         bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
-        bulkFeedbackService.setBulkSubmissionDao(mockBulkSubmissionDao);
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
@@ -222,21 +230,29 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    void testSetBulkSubmissionDao(){
-        BulkFeedbackService bulkFeedbackServiceMock = mock(BulkFeedbackService.class);
+    void testSetBulkSubmissionDao() {
 
-        bulkFeedbackServiceMock.setBulkSubmissionDao(mockBulkSubmissionDao);
+        IBulkFeedbackService bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
+        IBulkSubmissionDao bulkSubmissionDaoMock = mock(BulkSubmissionDao.class);
+        ((BulkFeedbackService) bulkFeedbackService).setBulkSubmissionDao(bulkSubmissionDaoMock);
 
-        verify(bulkFeedbackServiceMock).setBulkSubmissionDao(mockBulkSubmissionDao);
+        Object result = this.getAccessibleField(BulkFeedbackService.class, "bulkSubmissionDao",
+                                                IBulkSubmissionDao.class, bulkFeedbackService);
+
+        assertEquals(bulkSubmissionDaoMock, result, DAO_SHOULD_BE_SET_TO_OBJET);
     }
 
     @Test
-    void testSetGlobalParametersCache(){
-        BulkFeedbackService bulkFeedbackServiceMock = mock(BulkFeedbackService.class);
+    void testSetGlobalParametersCache() {
 
-        bulkFeedbackServiceMock.setGlobalParametersCache(mockGlobalParameterCache);
+        IBulkFeedbackService bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
+        ICacheable globalParameterCacheMock = mock(ICacheable.class);
+        ((BulkFeedbackService) bulkFeedbackService).setGlobalParametersCache(globalParameterCacheMock);
 
-        verify(bulkFeedbackServiceMock).setGlobalParametersCache(mockGlobalParameterCache);
+        Object result = this.getAccessibleField(BulkFeedbackService.class, "globalParametersCache",
+                                                ICacheable.class, bulkFeedbackService);
+
+        assertEquals(globalParameterCacheMock, result, CACHE_OBJECT_SHOULD_BE_SET);
     }
 
 }
