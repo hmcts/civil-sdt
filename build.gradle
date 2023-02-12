@@ -599,9 +599,8 @@ subprojects { subproject ->
     }
   }
 
-  tasks.named('check') {
-    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
-  }
+  test.finalizedBy jacocoTestReport
+  check.dependsOn jacocoTestReport
 }
 // end::subprojects[]
 
