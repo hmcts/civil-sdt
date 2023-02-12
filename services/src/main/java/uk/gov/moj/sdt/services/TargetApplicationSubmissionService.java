@@ -94,6 +94,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     private IConsumerGateway requestConsumer;
 
     /**
+     * The consumer gateway that will perform the call to the cmc target application
+     * web service.
+     */
+    private IConsumerGateway cmcRequestConsumer;
+
+    /**
      * The ICacheable reference to the global parameters cache.
      */
     @Lazy
@@ -121,11 +127,14 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                                   GenericXmlParser individualResponseXmlParser,
                                               @Qualifier("ConsumerGateway")
                                                   IConsumerGateway requestConsumer,
+                                              @Qualifier("ConsumerGateway")
+                                                  IConsumerGateway cmcRequestConsumer,
                                               @Qualifier("MessageWriter")
                                                   IMessageWriter messageWriter) {
         super(individualRequestDao, individualResponseXmlParser);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
+        this.cmcRequestConsumer = cmcRequestConsumer;
         this.messageWriter = messageWriter;
     }
 
@@ -323,7 +332,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             connectionTimeOut = Long.valueOf(connectionTimeOutParam.getValue());
         }
 
-        this.getRequestConsumer().individualRequest(individualRequest, connectionTimeOut, requestTimeOut);
+        this.getRequestConsumer(individualRequest).individualRequest(individualRequest, connectionTimeOut, requestTimeOut);
     }
 
     /**
@@ -382,17 +391,15 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * @return the request consumer.
      */
-    private IConsumerGateway getRequestConsumer() {
+    private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
+        if (isCCDReference(individualRequest)) {
+            return cmcRequestConsumer;
+        }
         return requestConsumer;
     }
 
-    /**
-     * Sets the consumer gateway.
-     *
-     * @param requestConsumer the request consumer.
-     */
-    public void setRequestConsumer(final IConsumerGateway requestConsumer) {
-        this.requestConsumer = requestConsumer;
+    private boolean isCCDReference(IIndividualRequest individualRequest) {
+        return false;
     }
 
     /**

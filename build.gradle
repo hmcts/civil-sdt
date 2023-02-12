@@ -135,6 +135,10 @@ dependencyCheck {
 }
 
 ext {
+  set('springCloudVersion', "2022.0.0")
+}
+
+ext {
   lombokVersion = '1.18.24'
   feignJackson = '11.6'
   groovyVersion = '3.0.13!!'
@@ -145,7 +149,6 @@ ext {
   postgresqlVersion = '42.5.1'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
-  springCloudVersion = '2022.0.0'
   tomcatVersion = '9.0.68'
   cxfVersion = '3.5.4'
   jaxwsVersion = "2.3.1"
@@ -262,6 +265,7 @@ allprojects {
     implementation group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http-jetty', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: cxfVersion
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
@@ -359,6 +363,17 @@ subprojects { subproject ->
     endToEndTestImplementation.extendsFrom runtimeOnly
   }
 
+  dependencyManagement {
+    imports {
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+  }
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+
   dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
       rules.all { ComponentSelection selection ->
@@ -415,7 +430,6 @@ subprojects { subproject ->
     }
 
     implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.1'
 
     /*
     Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
@@ -423,7 +437,7 @@ subprojects { subproject ->
     when the bug is fixed.
     */
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
-
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion

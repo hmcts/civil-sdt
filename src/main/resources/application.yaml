@@ -63,3 +63,14 @@ sdt:
           receiveTimeout: ${RECEIVE_TIMEOUT:30000}
           idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
           idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: BASIC
+      postFeignClient:
+        loggerLevel: FULL
