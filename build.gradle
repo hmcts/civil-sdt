@@ -683,7 +683,7 @@ cucumberReports {
 }
 
 pitest {
-    targetClasses = []
+    targetClasses = ['uk.gov.moj.sdt.validators.*']
     excludedClasses = []
     enableDefaultIncrementalAnalysis = true
     historyInputLocation = 'build/reports/pitest/fastermutationtesting'
