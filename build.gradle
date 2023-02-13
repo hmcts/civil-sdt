@@ -17,6 +17,7 @@ plugins {
   id "com.jfrog.bintray" version "1.8.5" apply false
   id "info.solidsoft.pitest" version '1.5.1' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
+  id "info.solidsoft.pitest" version '1.5.1'
 }
 
 group = 'uk.gov.hmcts.civil.sdt'
