@@ -38,6 +38,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
+import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -60,6 +61,10 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import javax.xml.ws.WebServiceException;
 
+import static uk.gov.moj.sdt.domain.RequestType.CLAIM_STATUS_UPDATE;
+import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
+import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT_WARRANT;
+import static uk.gov.moj.sdt.domain.RequestType.WARRANT;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -177,6 +182,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
                 this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
 
+            } catch (final InvalidRequestTypeException irte) {
+                LOGGER.error("Exception calling target application for SDT reference [" +
+                                 individualRequest.getSdtRequestReference() + "] - " + irte.getMessage());
+
+                updateRequestRejected(individualRequest);
+                updateCompletedRequest(individualRequest);
             }
         } else {
             LOGGER.error("SDT Reference " + sdtRequestReference +
@@ -393,9 +404,20 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
         if (isCCDReference(individualRequest)) {
+            if (!isValidRequestType(individualRequest)) {
+                throw new InvalidRequestTypeException(individualRequest.getRequestType());
+            }
             return cmcRequestConsumer;
         }
         return requestConsumer;
+    }
+
+    private boolean isValidRequestType(IIndividualRequest individualRequest) {
+        String requestType = individualRequest.getRequestType();
+        return JUDGMENT.getRequestType().equalsIgnoreCase(requestType)
+            || WARRANT.getRequestType().equalsIgnoreCase(requestType)
+            || CLAIM_STATUS_UPDATE.getRequestType().equalsIgnoreCase(requestType)
+            || JUDGMENT_WARRANT.getRequestType().equalsIgnoreCase(requestType);
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
