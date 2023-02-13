@@ -449,6 +449,8 @@ subprojects { subproject ->
       property "sonar.sources", "src"
       property "sonar.tests", "src"
       property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
+      property "sonar.pitest.mode", "reuseReport"
+      property "sonar.pitest.reportsDirectory", "build/reports/pitest"
     }
   }
 
