@@ -1,6 +1,7 @@
 package uk.gov.moj.sdt.cmc.consumers.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,5 +21,14 @@ public interface CmcApi {
         @RequestHeader(AUTHORIZATION) String authorisation,
         @RequestHeader("ServiceAuthorzation") String serviceAuthorization,
         @RequestBody IIndividualRequest individualRequest
+    );
+
+    @GetMapping("/claimDefences")
+    Object claimDefences(
+            @RequestHeader(AUTHORIZATION) String authorisation,
+            @RequestHeader("ServiceAuthorzation") String serviceAuthorization,
+            @RequestHeader("idAmId") String idAmId,
+            @RequestHeader("fromDateTime") String fromDateTime,
+            @RequestHeader("toDateTime") String toDateTime
     );
 }
