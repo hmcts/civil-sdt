@@ -1,18 +1,23 @@
 package uk.gov.moj.sdt.services.messaging;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
-@Component
-@Data
-@EnableConfigurationProperties
-@ConfigurationProperties(prefix = "jms.servicebus.internal")
+@Configuration
+@ConfigurationProperties(prefix = "spring.jms.servicebus.internal")
 public class QueueConfig {
 
-    private Map<String, String> queueConfig;
+    private Map<String, String> targetAppQueue = new HashMap<>();
+
+    public Map<String, String> getTargetAppQueue() {
+        return targetAppQueue;
+    }
+
+    public void setTargetAppQueue(Map<String, String> targetAppQueue) {
+         this.targetAppQueue = targetAppQueue;
+    }
 }

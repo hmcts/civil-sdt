@@ -35,25 +35,51 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Bulk customer application.
  *
  * @author d130680
  */
+@Table(name = "BULK_CUSTOMER_APPLICATIONS")
+@Entity
 public class BulkCustomerApplication extends AbstractDomainObject implements IBulkCustomerApplication {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bulk_cust_app_seq")
+    @Column(name = "BULK_CUSTOMER_APPLICATIONS_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
+
     /**
      * Bulk customer.
      */
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = BulkCustomer.class)
+    @JoinColumn(name="BULK_CUSTOMER_ID")
     private IBulkCustomer bulkCustomer;
 
     /**
      * Target Application that the Bulk Customer has been set up to submit messages to.
      */
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = TargetApplication.class)
+    @JoinColumn(name="TARGET_APPLICATION_ID")
     private ITargetApplication targetApplication;
 
     /**
      * Customer application id.
      */
+    @Column(name = "CUSTOMER_APPLICATION_ID")
     private String customerApplicationId;
 
     @Override
@@ -84,6 +110,21 @@ public class BulkCustomerApplication extends AbstractDomainObject implements IBu
     @Override
     public void setCustomerApplicationId(final String customerApplicationId) {
         this.customerApplicationId = customerApplicationId;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

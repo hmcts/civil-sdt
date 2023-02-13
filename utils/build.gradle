@@ -1,13 +1,18 @@
 apply plugin: 'info.solidsoft.pitest'
 
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-utils'
+}
+
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
-jar {
-    baseName = 'civil-sdt-utils'
-}
-
 bootJar {
     enabled = false
+}
+
+test {
+    useJUnitPlatform()
 }

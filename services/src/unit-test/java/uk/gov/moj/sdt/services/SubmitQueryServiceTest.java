@@ -31,17 +31,11 @@
 
 package uk.gov.moj.sdt.services;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.ws.WebServiceException;
-
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -67,6 +61,10 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.xml.ws.WebServiceException;
 
 /**
  * Test class for SubmitQueryService.
@@ -104,27 +102,25 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
      */
     @Before
     public void setUp() {
-        submitQueryService = new SubmitQueryService();
 
         // Instantiate all the mocked objects and set them in the target
 
         mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
-        submitQueryService.setRequestConsumer(mockConsumerGateway);
-
         mockGlobalParamCache = EasyMock.createMock(ICacheable.class);
-        submitQueryService.setGlobalParametersCache(mockGlobalParamCache);
-
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
-        submitQueryService.setErrorMessagesCache(mockErrorMsgCacheable);
-
         mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
 
-        submitQueryService.setQueryRequestXmlParser(genericParser);
-        submitQueryService.setQueryResponseXmlParser(genericParser);
+        submitQueryService = new SubmitQueryService(mockConsumerGateway,
+                                                    mockGlobalParamCache,
+                                                    mockErrorMsgCacheable,
+                                                    genericParser,
+                                                    genericParser,
+                                                    mockBulkCustomerDao);
+        submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
+
     }
 
     /**

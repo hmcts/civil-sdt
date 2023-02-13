@@ -34,6 +34,9 @@ import java.util.GregorianCalendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkRequestStatusT
  * @author d301488
  */
 @Transactional(propagation = Propagation.REQUIRED)
+@Component("WsReadBulkFeedbackRequestHandler")
 public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implements IWsReadBulkRequestHandler {
     /**
      * Logger object.
@@ -74,11 +78,21 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
     private ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
             IBulkFeedbackRequest, IBulkSubmission> transformer;
 
+    @Autowired
+    public WsReadBulkFeedbackRequestHandler(@Qualifier("BulkFeedbackService")
+                                                    IBulkFeedbackService bulkFeedbackService,
+                                            @Qualifier("BulkFeedbackTransformer")
+                                                ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType, IBulkFeedbackRequest, IBulkSubmission> transformer) {
+        this.bulkFeedbackService = bulkFeedbackService;
+        this.transformer = transformer;
+    }
+
     @Override
     public BulkFeedbackResponseType getBulkFeedback(final BulkFeedbackRequestType bulkFeedbackRequest) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Bulk feedback started for customer[" + bulkFeedbackRequest.getHeader().getSdtCustomerId() +
-                    "], customer reference[" + bulkFeedbackRequest.getHeader().getSdtBulkReference() + "]");
+            LOGGER.info("Bulk feedback started for customer[{}], customer reference[{}]",
+                    bulkFeedbackRequest.getHeader().getSdtCustomerId(),
+                    bulkFeedbackRequest.getHeader().getSdtBulkReference());
         }
 
         // Update mbean stats.
@@ -116,9 +130,9 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
             handleBusinessException(be, response.getBulkRequestStatus());
         } finally {
             if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("Bulk feedback completed for customer[" +
-                        bulkFeedbackRequest.getHeader().getSdtCustomerId() + "], customer reference[" +
-                        bulkFeedbackRequest.getHeader().getSdtBulkReference() + "]");
+                LOGGER.info("Bulk feedback completed for customer[{}], customer reference[{}]",
+                        bulkFeedbackRequest.getHeader().getSdtCustomerId(),
+                        bulkFeedbackRequest.getHeader().getSdtBulkReference());
             }
 
             // Measure total time spent in use case.
@@ -182,8 +196,7 @@ public class WsReadBulkFeedbackRequestHandler extends AbstractWsHandler implemen
      *
      * @param transformer the transformer to be associated with this class.
      */
-    public void
-    setTransformer(final ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
+    public void setTransformer(final ITransformer<BulkFeedbackRequestType, BulkFeedbackResponseType,
             IBulkFeedbackRequest, IBulkSubmission> transformer) {
         this.transformer = transformer;
     }

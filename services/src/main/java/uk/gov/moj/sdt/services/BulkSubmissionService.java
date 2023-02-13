@@ -30,15 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
@@ -59,12 +56,19 @@ import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
  * to do the tasks related to bulk submission.
  *
  * @author Manoj Kulkarni
  */
+@Component("BulkSubmissionService")
 public class BulkSubmissionService implements IBulkSubmissionService {
     /**
      * Logger for debugging.
@@ -100,6 +104,30 @@ public class BulkSubmissionService implements IBulkSubmissionService {
      * SDT Bulk reference generator.
      */
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
+
+    @Autowired
+    public BulkSubmissionService(@Qualifier("ServiceRequestDao")
+                                     IGenericDao genericDao,
+                                 @Qualifier("BulkCustomerDao")
+                                     IBulkCustomerDao bulkCustomerDao,
+                                 @Qualifier("TargetApplicationDao")
+                                     ITargetApplicationDao targetApplicationDao,
+                                 @Qualifier("IndividualRequestsXmlParser")
+                                     IndividualRequestsXmlParser individualRequestsXmlParser,
+                                 IMessagingUtility messagingUtility,
+                                 @Qualifier("SdtBulkReferenceGenerator")
+                                     ISdtBulkReferenceGenerator sdtBulkReferenceGenerator,
+                                 @Qualifier("ErrorMessagesCache")
+                                     ICacheable errorMessagesCache) {
+        this.genericDao = genericDao;
+        this.bulkCustomerDao = bulkCustomerDao;
+        this.targetApplicationDao = targetApplicationDao;
+        this.individualRequestsXmlParser = individualRequestsXmlParser;
+        this.messagingUtility = messagingUtility;
+        this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
+        this.errorMessagesCache = errorMessagesCache;
+        this.concurrencyMap = new ConcurrentHashMap<>();
+    }
 
     /**
      * The concurrencyMap to hold bulk reference keyed on sdtCustId + custRef. This is used to prevent the customer
@@ -176,8 +204,12 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         bulkSubmission.setBulkCustomer(bulkCustomer);
 
         // Set the SDT Bulk Reference
-        bulkSubmission.setSdtBulkReference(sdtBulkReferenceGenerator.getSdtBulkReference(bulkSubmission
-                .getTargetApplication().getTargetApplicationCode()));
+        if (!StringUtils.hasText(bulkSubmission.getSdtBulkReference())) {
+            bulkSubmission.setSdtBulkReference(sdtBulkReferenceGenerator
+                                                   .getSdtBulkReference(bulkSubmission
+                                                                            .getTargetApplication()
+                                                                            .getTargetApplicationCode()));
+        }
 
         // Store this in the context for the sake of the outbound interceptor.
         SdtContext.getContext().setSubmitBulkReference(bulkSubmission.getSdtBulkReference());

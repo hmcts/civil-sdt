@@ -33,25 +33,46 @@ package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Global parameters.
  *
  * @author d130680
  */
+@Table(name = "GLOBAL_PARAMETERS")
+@Entity
 public class GlobalParameter extends AbstractDomainObject implements IGlobalParameter {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "glb_par_seq")
+    @Column(name = "GLOBAL_PARAMETER_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
+
     /**
      * Parameter Name.
      */
+    @Column(name = "PARAMETER_NAME")
     private String name;
 
     /**
      * Parameter value.
      */
+    @Column(name = "PARAMETER_VALUE")
     private String value;
 
     /**
      * Parameter description.
      */
+    @Column(name = "PARAMETER_DESCRIPTION")
     private String description;
 
     @Override
@@ -82,6 +103,21 @@ public class GlobalParameter extends AbstractDomainObject implements IGlobalPara
     @Override
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

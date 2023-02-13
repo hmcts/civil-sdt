@@ -36,6 +36,14 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * Bulk Customer Information manually set up and maintained
@@ -43,16 +51,29 @@ import java.util.Set;
  *
  * @author d130680
  */
+@Table(name = "BULK_CUSTOMERS")
+@Entity
 public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bulk_cust_seq")
+    @Column(name = "BULK_CUSTOMER_ID")
+    private long id;
+
+    @Column(name = "VERSION_NUMBER")
+    private int version;
 
     /**
      * The bulk customer applications that this customer can work with.e.g. 'MCOL'.
      */
+    @OneToMany(mappedBy = "bulkCustomer", orphanRemoval = true, targetEntity = BulkCustomerApplication.class, cascade = {CascadeType.ALL})
     private Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
 
     /**
      * This is a manually allocated and maintained value.
      */
+    @Column(name = "SDT_CUSTOMER_ID")
     private long sdtCustomerId;
 
     @Override
@@ -95,6 +116,21 @@ public class BulkCustomer extends AbstractDomainObject implements IBulkCustomer 
             }
         }
         return null;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override

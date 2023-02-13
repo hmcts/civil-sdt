@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id: $
  * $LastChangedRevision: $
  * $LastChangedDate: $
@@ -31,21 +31,22 @@
 
 package uk.gov.moj.sdt.producers.comx.dao;
 
-import java.util.List;
-
-import java.time.LocalDateTime;
-
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * Mock Bulk Submission DAO class used in commissioning project.
- * 
+ *
  * @author d130680
- * 
+ *
  */
+@Component("MockBulkSubmissionDao")
 public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmissionDao
 {
 
@@ -81,7 +82,7 @@ public class MockBulkSubmissionDao extends MockGenericDao implements IBulkSubmis
 
     /**
      * Set the bulk reference list.
-     * 
+     *
      * @param bulkReferenceList bulk reference list
      */
     public void setBulkReferenceList (final List<String> bulkReferenceList)

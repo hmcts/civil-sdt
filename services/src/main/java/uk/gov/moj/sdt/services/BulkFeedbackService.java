@@ -35,6 +35,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
@@ -50,6 +53,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
  *
  * @author d130680
  */
+@Service("BulkFeedbackService")
 public class BulkFeedbackService implements IBulkFeedbackService {
 
     /**
@@ -60,6 +64,13 @@ public class BulkFeedbackService implements IBulkFeedbackService {
      * Global parameter cache to retrieve data retention period.
      */
     private ICacheable globalParametersCache;
+
+    @Autowired
+    public BulkFeedbackService(@Qualifier("BulkSubmissionDao") IBulkSubmissionDao bulkSubmissionDao,
+                               @Qualifier("GlobalParametersCache") ICacheable globalParametersCache) {
+        this.bulkSubmissionDao = bulkSubmissionDao;
+        this.globalParametersCache = globalParametersCache;
+    }
 
     @Override
     public IBulkSubmission getBulkFeedback(final IBulkFeedbackRequest bulkFeedbackRequest) {

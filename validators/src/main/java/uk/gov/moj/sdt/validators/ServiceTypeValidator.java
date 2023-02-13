@@ -30,7 +30,12 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.validators;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IServiceTypeValidator;
 
@@ -39,11 +44,18 @@ import uk.gov.moj.sdt.validators.api.IServiceTypeValidator;
  *
  * @author Saurabh Agarwal
  */
+@Component("ServiceTypeValidator")
 public class ServiceTypeValidator extends AbstractSdtValidator implements IServiceTypeValidator {
-    /**
-     * No-argument Constructor.
-     */
-    public ServiceTypeValidator() {
+
+
+    @Autowired
+    public ServiceTypeValidator(@Qualifier("BulkCustomerDao")
+                                    IBulkCustomerDao bulkCustomerDao,
+                                @Qualifier("GlobalParametersCache")
+                                    ICacheable globalParameterCache,
+                                @Qualifier("ErrorMessagesCache")
+                                    ICacheable errorMessagesCache) {
+        super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     @Override

@@ -32,10 +32,14 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +64,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
  * @author d276205
  */
 @Transactional(propagation = Propagation.REQUIRED)
+@Component("WsCreateBulkRequestHandler")
 public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWsCreateBulkRequestHandler {
     /**
      * Logger object.
@@ -80,6 +85,19 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      * The transformer associated with this handler.
      */
     private ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer;
+
+    @Autowired
+    public WsCreateBulkRequestHandler(@Qualifier("BulkSubmissionService")
+                                              IBulkSubmissionService bulkSubmissionService,
+                                      @Qualifier("BulkSubmissionValidator")
+                                          IBulkSubmissionValidator bulkSubmissionValidator,
+                                      @Qualifier("BulkRequestTransformer")
+                                              ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer) {
+        this.bulkSubmissionService = bulkSubmissionService;
+        this.bulkSubmissionValidator = bulkSubmissionValidator;
+        this.transformer = transformer;
+        this.concurrencyMap = new HashMap<>();
+    }
 
     /**
      * The concurrencyMap to hold sdtCustId+custRef and BulkRef. This is used to prevent the customer sending two

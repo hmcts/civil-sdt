@@ -47,16 +47,6 @@ import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
 public abstract class AbstractDomainObject implements IDomainObject, IVisitable {
 
     /**
-     * Primary key.
-     */
-    private Long id;
-
-    /**
-     * Hibernate version number.
-     */
-    private int version;
-
-    /**
      * Constructor for {@link AbstractDomainObject}.
      */
     protected AbstractDomainObject() {
@@ -67,21 +57,6 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable 
         if (SdtMetricsMBean.getMetrics() != null) {
             SdtMetricsMBean.getMetrics().upDomainObjectsCount();
         }
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public int getVersion() {
-        return version;
     }
 
     @Override
@@ -109,6 +84,21 @@ public abstract class AbstractDomainObject implements IDomainObject, IVisitable 
                     + Integer.toHexString(object.hashCode());
         }
     }
+
+    @Override
+    public Long getId() {
+        return null;
+    }
+
+    @Override
+    public void setId(final Long id) {
+    }
+
+    @Override
+    public int getVersion() {
+        return 0;
+    }
+
 
     @Override
     public String toString() {

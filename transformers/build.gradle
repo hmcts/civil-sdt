@@ -1,5 +1,10 @@
 apply plugin: 'info.solidsoft.pitest'
 
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-transformers'
+}
+
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
@@ -17,10 +22,10 @@ dependencies {
     testImplementation project(":utils").sourceSets.integTest.output
 }
 
-jar {
-    baseName = 'civil-sdt-transformers'
-}
-
 bootJar {
     enabled = false
+}
+
+test {
+    useJUnitPlatform()
 }

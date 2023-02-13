@@ -32,55 +32,63 @@ package uk.gov.moj.sdt.utils.logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
 import java.nio.channels.FileChannel;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Class to test performance logging.
  *
  * @author Robin Compston.
  */
-public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
+class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
     /**
      * Pathname of performance log file.
      */
     private static final String PERFORMANCE_LOG_PATH = "../logs/sdt.performance.log";
 
-    /**
-     * File for performance log.
-     */
-    private File performanceLogFile;
+    private static final String FORMAT_STRINGLINE_TEST = " this is a \n linefeed test";
+
+    ILoggingContext loggingContext;
+
+    private SdtContext sdtContext;
 
     @Override
-    protected void setUpLocalTests() throws Exception {
-        // Clear performance log.
-        performanceLogFile = new File(PERFORMANCE_LOG_PATH);
+    protected void setUpLocalTests() {
+
+        File performanceLogFile = new File(PERFORMANCE_LOG_PATH);
         if (performanceLogFile.exists()) {
-            FileChannel outChan;
-            try {
-                outChan = new FileOutputStream(performanceLogFile, true).getChannel();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(performanceLogFile, true)) {
+                FileChannel outChan = fileOutputStream.getChannel();
                 outChan.truncate(0);
-                outChan.close();
             } catch (final Exception e) {
-                Assert.fail(e.getStackTrace().toString());
+                fail(e.getMessage());
             }
         }
-
     }
+
 
     /**
      * Test writing of a performance message to performance log.
      */
     @Test
-    public void testPerformanceMessage() {
+    void testPerformanceMessage() {
         // Setup SDT context for logging.
         SdtContext.getContext().getLoggingContext().setLoggingFlags(Integer.MAX_VALUE);
         SdtContext.getContext().getLoggingContext().setMajorLoggingId(987);
@@ -90,7 +98,7 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
 
         // Validate the test.
         this.checkLogContents("active flags=1111111111111111, logging point=0000000000000001, "
-                + "reference=987: Hullo - Detail");
+                                  + "reference=987: Hullo - Detail");
     }
 
     /**
@@ -98,10 +106,12 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
      *
      * @param contents contents to search for in the log file.
      */
+
     private void checkLogContents(final String contents) {
         // Check correct message is in log.
-        try {
-            final String text = new Scanner(new File(PERFORMANCE_LOG_PATH)).useDelimiter("\\A").next();
+
+        try (Scanner scan = new Scanner(new File(PERFORMANCE_LOG_PATH))) {
+            final String text = scan.useDelimiter("\\A").next();
 
             // Build a search pattern with this request id. Allow for any order of requestId and requestType
             // attributes.
@@ -110,9 +120,51 @@ public class PerformanceLoggerTest extends AbstractSdtUnitTestBase {
             // Match it against the result of all previous match replacements.
             final Matcher matcher = pattern.matcher(text);
 
-            Assert.assertTrue("Failed to find message [" + contents + "] in performance log", matcher.find());
+            assertTrue(matcher.find(), "Failed to find message [" + contents + "] in performance log");
         } catch (final Exception e) {
-            Assert.fail("Failed to find contents [" + contents + "] in performance log.");
+            fail("Failed to find contents [" + contents + "] in performance log.");
         }
+
+    }
+
+    @Test
+    void checkStringFormatTest() {
+        //given
+
+        //when
+        String outCome = PerformanceLogger.format(FORMAT_STRINGLINE_TEST);
+
+        //then
+        assertNotNull(outCome);
+    }
+
+    @Test
+    void isPerformanceEnabledTrueTest() {
+        //given
+        loggingContext = new LoggingContext();
+        loggingContext.setLoggingFlags(1);
+        sdtContext = SdtContext.getContext();
+        sdtContext.setLoggingContext(loggingContext);
+        //when
+        PerformanceLogger.log(this.getClass(), 1l, "TestMessage", "TestDetails");
+        boolean isEnabled = PerformanceLogger.isPerformanceEnabled(1L);
+
+        //then
+        assertTrue(isEnabled);
+    }
+
+    @Test
+    void isPerformanceEnabledFalseTest() {
+        //given
+        loggingContext = new LoggingContext();
+        loggingContext.setLoggingFlags(0);
+        sdtContext = SdtContext.getContext();
+        sdtContext.setLoggingContext(loggingContext);
+        //when
+        PerformanceLogger.log(this.getClass(), 1l, "TestMessage", "TestDetails");
+        boolean isEnabled = PerformanceLogger.isPerformanceEnabled(0);
+
+        //then
+        assertFalse(isEnabled);
     }
 }

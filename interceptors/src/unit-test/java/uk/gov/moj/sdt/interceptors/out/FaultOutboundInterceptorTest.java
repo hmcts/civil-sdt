@@ -29,37 +29,66 @@
  * $LastChangedDate: $
  * $LastChangedBy: $ */
 /**
- * Test this class handles faults correctlty.
+ * Test this class handles faults correctly.
  */
 package uk.gov.moj.sdt.interceptors.out;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
-import org.easymock.EasyMock;
-import org.junit.Test;
-
-import uk.gov.moj.sdt.dao.GenericDao;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Test that faults are correctly intercepted.
  *
  * @author d195274
  */
-public class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
+@ExtendWith(MockitoExtension.class)
+class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
+
+    @Mock
+    ServiceRequestDao mockServiceRequestDao;
+
     /**
      * Error message returned when a fault occurs.
      */
-    private final String errorMessage = "A SDT system component error " +
+    private static final String ERROR_MESSAGE = "A SDT system component error " +
             "has occurred. Please contact the SDT support team for assistance";
+
+    /**
+     * Test method for
+     * {@link uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor
+     * #handleMessage(org.apache.cxf.binding.soap.SoapMessage)}.
+     */
+    @Test
+    void testHandleMessage() {
+        SdtContext.getContext().setServiceRequestId(1L);
+        final SoapMessage soapMessage = getDummySoapMessageWithFault();
+        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockServiceRequestDao);
+        final ServiceRequest serviceRequest = new ServiceRequest();
+        when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
+        mockServiceRequestDao.persist(serviceRequest);
+        faultOutboundInterceptor.setServiceRequestDao(mockServiceRequestDao);
+
+        assertNull(serviceRequest.getResponseDateTime());
+        assertNull(serviceRequest.getResponsePayload());
+        faultOutboundInterceptor.handleMessage(soapMessage);
+        assertNotNull(serviceRequest.getResponseDateTime());
+        assertTrue(serviceRequest.getResponsePayload().contains(ERROR_MESSAGE));
+    }
 
     /**
      * Builds a dummy soap message.
@@ -71,46 +100,10 @@ public class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     private SoapMessage getDummySoapMessageWithFault() {
         final SoapMessage soapMessage = new SoapMessage(new MessageImpl());
         soapMessage.setExchange(new ExchangeImpl());
-        final Fault fault = new Fault(new RuntimeException(errorMessage
+        final Fault fault = new Fault(new RuntimeException(ERROR_MESSAGE
         ));
         soapMessage.setContent(Exception.class, fault);
         return soapMessage;
-    }
-
-    /**
-     * Build a mocked dao.
-     *
-     * @param serviceRequest possible superfluous object.
-     * @return the mocked dao.
-     */
-    private GenericDao getMockedGenericDao(final ServiceRequest serviceRequest) {
-        final GenericDao mockServiceRequestDao = EasyMock
-                .createNiceMock(GenericDao.class);
-        EasyMock.expect(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).andReturn(serviceRequest);
-        mockServiceRequestDao.persist(serviceRequest);
-        EasyMock.expectLastCall();
-        EasyMock.replay(mockServiceRequestDao);
-        return mockServiceRequestDao;
-    }
-
-    /**
-     * Test method for
-     * {@link uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor
-     * #handleMessage(org.apache.cxf.binding.soap.SoapMessage)}.
-     */
-    @Test
-    public void testHandleMessage() {
-        SdtContext.getContext().setServiceRequestId(1L);
-        final SoapMessage soapMessage = getDummySoapMessageWithFault();
-        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor();
-        final ServiceRequest serviceRequest = new ServiceRequest();
-        faultOutboundInterceptor.setServiceRequestDao(getMockedGenericDao(serviceRequest));
-        assertNull(serviceRequest.getResponseDateTime());
-        assertNull(serviceRequest.getResponsePayload());
-        faultOutboundInterceptor.handleMessage(soapMessage);
-        assertNotNull(serviceRequest.getResponseDateTime());
-        assertTrue(serviceRequest.getResponsePayload().contains(errorMessage));
-
     }
 
 }

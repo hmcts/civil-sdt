@@ -33,9 +33,9 @@ package uk.gov.moj.sdt.interceptors.in;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.LoggingContext;
@@ -48,6 +48,7 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
  *
  * @author Robin Compston
  */
+@Component("PerformanceLoggerInboundInterceptor")
 public class PerformanceLoggerInboundInterceptor extends AbstractSdtInterceptor {
 
     /**

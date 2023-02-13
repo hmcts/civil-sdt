@@ -30,10 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
@@ -47,6 +44,10 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.DuplicateUserRequestIdentifierException;
 import uk.gov.moj.sdt.validators.exception.InvalidBulkReferenceException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for validators providing common methods.
@@ -68,6 +69,17 @@ public abstract class AbstractSdtValidator extends AbstractDomainObjectVisitor {
      * Error messages cache.
      */
     private ICacheable errorMessagesCache;
+
+    protected AbstractSdtValidator(@Qualifier("BulkCustomerDao")
+                                    IBulkCustomerDao bulkCustomerDao,
+                                @Qualifier("GlobalParametersCache")
+                                    ICacheable globalParameterCache,
+                                @Qualifier("ErrorMessagesCache")
+                                    ICacheable errorMessagesCache) {
+        this.bulkCustomerDao = bulkCustomerDao;
+        this.globalParameterCache = globalParameterCache;
+        this.errorMessagesCache = errorMessagesCache;
+    }
 
     /**
      * Check that the bulk customer exists has access to the target application.

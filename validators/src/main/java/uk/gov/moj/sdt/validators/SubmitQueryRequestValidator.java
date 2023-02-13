@@ -30,7 +30,12 @@
  * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.validators;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator;
 
@@ -39,11 +44,17 @@ import uk.gov.moj.sdt.validators.api.ISubmitQueryRequestValidator;
  *
  * @author d130680
  */
+@Component("SubmitQueryRequestValidator")
 public class SubmitQueryRequestValidator extends AbstractSdtValidator implements ISubmitQueryRequestValidator {
-    /**
-     * No-argument Constructor.
-     */
-    public SubmitQueryRequestValidator() {
+
+    @Autowired
+    public SubmitQueryRequestValidator(@Qualifier("BulkCustomerDao")
+                                           IBulkCustomerDao bulkCustomerDao,
+                                       @Qualifier("GlobalParametersCache")
+                                           ICacheable globalParameterCache,
+                                       @Qualifier("ErrorMessagesCache")
+                                           ICacheable errorMessagesCache) {
+        super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
     }
 
     @Override

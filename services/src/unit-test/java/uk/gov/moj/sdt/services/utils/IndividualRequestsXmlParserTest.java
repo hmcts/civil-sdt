@@ -30,34 +30,36 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.utils;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.Utilities;import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.Utilities;
-
 /**
  * Test class for the IndividualRequestsXmlParser.
  *
  * @author D303894
  */
-public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger instance.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndividualRequestsXmlParserTest.class);
+class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
+
+    private static final String FORWARDED = "Forwarded";
 
     /**
      * The individual request xml parser instance for testing.
@@ -67,11 +69,12 @@ public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
     /**
      * Set up the classes and data required for testing.
      */
-    @Before
+    @BeforeEach
+    @Override
     public void setUp() {
         this.individualRequestsXmlParser = new IndividualRequestsXmlParser();
 
-        final Map<String, String> replacementNamespaces = new HashMap<String, String>();
+        final Map<String, String> replacementNamespaces = new HashMap<>();
         replacementNamespaces.put("http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema",
                 "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema");
 
@@ -84,27 +87,27 @@ public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
      * @throws Exception if there is any IO problems
      */
     @Test
-    public void getIndividualRequestsRawXmlMap() throws Exception {
+    void getIndividualRequestsRawXmlMap() throws Exception {
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml = Utilities.getRawXml("src/unit-test/resources/", "testXMLValid.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
-        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> requests = new ArrayList<>();
 
         // Create array list of individual requests as if these had been created by CXF in parsing the inbound SOAP
         // message and then transformed into domain objects.
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setCustomerRequestReference("1");
-        individualRequest.setRequestStatus("Forwarded");
+        individualRequest.setRequestStatus(FORWARDED);
 
         final IIndividualRequest individualRequest2 = new IndividualRequest();
         individualRequest2.setCustomerRequestReference("2");
-        individualRequest2.setRequestStatus("Forwarded");
+        individualRequest2.setRequestStatus(FORWARDED);
 
         final IIndividualRequest individualRequest3 = new IndividualRequest();
         individualRequest3.setCustomerRequestReference("3");
-        individualRequest3.setRequestStatus("Forwarded");
+        individualRequest3.setRequestStatus(FORWARDED);
 
         requests.add(individualRequest);
         requests.add(individualRequest2);
@@ -114,18 +117,18 @@ public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
         this.individualRequestsXmlParser.populateRawRequest(requests);
 
         // CHECKSTYLE:OFF
-        Assert.assertEquals(
-                "Failed to find correct payload for request 1",
+        assertEquals(
                 "<bul:mcolClaimStatusUpdatexmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"><cla1:claimNumberxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim123</cla1:claimNumber><cla1:defendantIdxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationTypexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDatexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
-                requests.get(0).getRequestPayload().replaceAll("\\s+", ""));
-        Assert.assertEquals(
-                "Failed to find correct payload for request 2",
+                requests.get(0).getRequestPayload().replaceAll("\\s+", ""),
+                "Failed to find correct payload for request 1");
+        assertEquals(
                 "<bul:mcolClaimStatusUpdatexmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"><cla1:claimNumberxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim124</cla1:claimNumber><cla1:defendantIdxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationTypexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDatexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-02-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
-                requests.get(1).getRequestPayload().replaceAll("\\s+", ""));
-        Assert.assertEquals(
-                "Failed to find correct payload for request 3",
+                requests.get(1).getRequestPayload().replaceAll("\\s+", ""),
+                "Failed to find correct payload for request 2");
+        assertEquals(
                 "<bul:mcolClaimxmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"><cla1:claimNumberxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim125</cla1:claimNumber><cla1:defendantIdxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationTypexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDatexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-03-01</cla1:paidInFullDate></bul:mcolClaim>",
-                requests.get(2).getRequestPayload().replaceAll("\\s+", ""));
+                requests.get(2).getRequestPayload().replaceAll("\\s+", ""),
+                "Failed to find correct payload for request 3");
         // CHECKSTYLE:ON
     }
 
@@ -134,14 +137,15 @@ public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
      *
      * @throws IOException if unable to read file.
      */
-    @Test(timeout = 30000)
-    public void testParserPerformance() throws IOException {
+    @Test
+    @Timeout(30000)
+    void testParserPerformance() throws IOException {
         // Load xml into SdtContext as if the inbound interceptor had run.
         final String rawXml = Utilities.getRawXml("src/unit-test/resources/", "testLargeBulkRequest.xml");
 
         SdtContext.getContext().setRawInXml(rawXml);
 
-        final List<IIndividualRequest> requests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> requests = new ArrayList<>();
 
         // Create array list of individual requests as if these had been created by CXF in parsing the inbound SOAP
         // message and then transformed into domain objects.
@@ -149,23 +153,19 @@ public class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
 
             final IIndividualRequest individualRequest = new IndividualRequest();
             individualRequest.setCustomerRequestReference("Req0-" + i);
-            individualRequest.setRequestStatus("Forwarded");
+            individualRequest.setRequestStatus(FORWARDED);
             requests.add(individualRequest);
 
         }
 
-        LOGGER.info("Start parsing for " + requests.size() + " requests");
-
         // Now call the parser to add the xml fragments into the payload of the individual requests.
         this.individualRequestsXmlParser.populateRawRequest(requests);
-
-        LOGGER.info("Completed parsing for " + requests.size() + " requests");
 
         int requestIndex = 0;
         for (IIndividualRequest request : requests) {
             requestIndex++;
-            Assert.assertNotNull("Payload should have been populated in request#" + requestIndex,
-                    request.getRequestPayload());
+            assertNotNull(request.getRequestPayload(),
+                    "Payload should have been populated in request#" + requestIndex);
         }
     }
 

@@ -1,5 +1,10 @@
 apply plugin: 'info.solidsoft.pitest'
 
+jar {
+  enabled = true
+  archiveBaseName = 'civil-sdt-handlers-api'
+}
+
 dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
@@ -20,10 +25,10 @@ dependencies {
     testImplementation project(":validators").sourceSets.integTest.output
 }
 
-jar {
-    baseName = 'civil-sdt-handlers-api'
-}
-
 bootJar {
     enabled = false
+}
+
+sonarqube {
+  skipProject = true
 }
