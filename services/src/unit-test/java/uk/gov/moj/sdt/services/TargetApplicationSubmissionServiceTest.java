@@ -100,6 +100,8 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      */
     private IConsumerGateway mockConsumerGateway;
 
+    private IConsumerGateway cmcMockConsumerGateway;
+
     /**
      * The mocked ICacheable reference to the global parameters cache.
      */
@@ -124,6 +126,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Instantiate all the mocked objects and set them in the target application submission service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
         mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
+        cmcMockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
         mockCacheable = EasyMock.createMock(ICacheable.class);
         mockMessageWriter = EasyMock.createMock(IMessageWriter.class);
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
@@ -134,6 +137,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         targetAppSubmissionService = new TargetApplicationSubmissionService(mockIndividualRequestDao,
                                                                             genericParser,
                                                                             mockConsumerGateway,
+                                                                            cmcMockConsumerGateway,
                                                                             mockMessageWriter);
         targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
         targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
