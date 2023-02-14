@@ -56,6 +56,7 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
@@ -421,7 +422,9 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
-        return false;
+//        individualRequest.getBulkSubmission().getSdtBulkReference()
+
+        return CCDReferenceValidator.isValidCCDReference("");
     }
 
     /**
