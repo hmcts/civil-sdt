@@ -2,10 +2,10 @@ package uk.gov.moj.sdt.domain;
 
 public enum RequestType {
 
-    BREATHINGSPACE("mcolBreathingSpace"),
+    BREATHING_SPACE("mcolBreathingSpace"),
     CLAIM("mcolClaim"),
     CLAIM_STATUS_UPDATE("mcolClaimStatusUpdate"),
-    DEFENCECRITERIA("mcolDefenceCriteria"),
+    DEFENCE_CRITERIA("mcolDefenceCriteria"),
     JUDGMENT("mcolJudgment"),
     JUDGMENT_WARRANT("mcolJudgmentWarrant"),
     WARRANT("mcolWarrant");
