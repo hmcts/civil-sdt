@@ -9,6 +9,5 @@ def component = "sdt"
 withPipeline(type, product, component) {
   enableAksStagingDeployment()
   disableLegacyDeployment()
-  nonServiceApp()
   enableMutationTest()
 }
