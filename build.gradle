@@ -372,6 +372,12 @@ subprojects { subproject ->
       }
     }
   }
+  
+   def versions = [
+        pitest          : '1.5.1',
+        gradlePitest    : '1.3.0',
+        sonarPitest     : '0.5'
+  ]
 
   dependencies {
     // Add azure service bus
@@ -480,12 +486,6 @@ subprojects { subproject ->
             property "sonar.pitest.reportsDirectory", "build/reports/pitest"
         }
     }
-  
-  def versions = [
-        pitest          : '1.5.1',
-        gradlePitest    : '1.3.0',
-        sonarPitest     : '0.5'
-]
 
   // from https://github.com/junit-team/junit5/issues/1024'
   afterEvaluate {
