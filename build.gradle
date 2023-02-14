@@ -466,9 +466,9 @@ subprojects { subproject ->
     tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
     */
     testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
-    compile group: 'org.pitest', name: 'pitest', version: versions.pitest
-    compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
-    compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
+    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.6'
+    testImplementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', version: '0.5'
   }
     
      sonarqube {
