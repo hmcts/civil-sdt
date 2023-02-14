@@ -41,9 +41,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-;
-;
-
 /**
  * Test class for BulkSubmissionService.
  *
@@ -94,7 +91,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
      */
     private int dataRetentionPeriod;
 
-    private static final String DAO_SHOULD_BE_SET_TO_OBJET = "Dao should be set to object";
+    private static final String DAO_SHOULD_BE_SET_TO_OBJECT = "Dao should be set to object";
 
     private static final String CACHE_OBJECT_SHOULD_BE_SET = "GlobalParameterCache should be set to object";
 
@@ -239,7 +236,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         Object result = this.getAccessibleField(BulkFeedbackService.class, "bulkSubmissionDao",
                                                 IBulkSubmissionDao.class, bulkFeedbackService);
 
-        assertEquals(bulkSubmissionDaoMock, result, DAO_SHOULD_BE_SET_TO_OBJET);
+        assertEquals(bulkSubmissionDaoMock, result, DAO_SHOULD_BE_SET_TO_OBJECT);
     }
 
     @Test
