@@ -21,7 +21,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test {@link TargetApplicationDao} query methods.
@@ -59,11 +59,8 @@ class TargetApplicationDaoTest {
         final ITargetApplicationDao targetApplicationDao = SpringApplicationContext.getBean(ITargetApplicationDao.class);
 
         final ITargetApplication targetApplication = targetApplicationDao.getTargetApplicationByCode(EXISTING_TARGET_APPLICATION_CODE);
-        if (targetApplication != null) {
-            LOGGER.debug("Retrieved target application for code [{}]", targetApplication.getTargetApplicationCode());
-        } else {
-            fail("Could not find target application with code [" + EXISTING_TARGET_APPLICATION_CODE + "]");
-        }
+        assertNotNull(targetApplication,
+                "Could not find target application with code [" + EXISTING_TARGET_APPLICATION_CODE + "]");
     }
 
     @Test
@@ -71,10 +68,7 @@ class TargetApplicationDaoTest {
         final ITargetApplicationDao targetApplicationDao = SpringApplicationContext.getBean(ITargetApplicationDao.class);
 
         final ITargetApplication targetApplication = targetApplicationDao.getTargetApplicationByCode(NON_EXISTENT_TARGET_APPLICATION_CODE);
-        if (targetApplication == null) {
-            LOGGER.debug("No target application found for code [{}]", NON_EXISTENT_TARGET_APPLICATION_CODE);
-        } else {
-            fail("Found target application with code [" + NON_EXISTENT_TARGET_APPLICATION_CODE + "]");
-        }
+        assertNull(targetApplication,
+                "Found target application with code [" + NON_EXISTENT_TARGET_APPLICATION_CODE + "]");
     }
 }
