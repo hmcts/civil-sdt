@@ -9,7 +9,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
-public class MockClaimDefencesServiceTest extends AbstractSdtUnitTestBase {
+class MockClaimDefencesServiceTest extends AbstractSdtUnitTestBase {
 
     private MockClaimDefencesService mockClaimDefencesService;
 
