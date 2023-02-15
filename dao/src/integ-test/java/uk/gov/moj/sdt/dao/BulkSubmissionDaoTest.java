@@ -52,7 +52,9 @@ import uk.gov.moj.sdt.test.utils.TestConfig;
 import java.time.LocalDateTime;
 import javax.persistence.NoResultException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test class for the Bulk Submissions Dao.
