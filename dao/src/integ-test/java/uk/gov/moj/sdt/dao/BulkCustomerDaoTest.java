@@ -30,15 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.config.DaoTestConfig;
@@ -54,7 +52,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test {@link BulkCustomerDao} query methods.
@@ -62,7 +60,6 @@ import static org.junit.Assert.*;
  * @author Robin Compston
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/BulkCustomerDaoTest.sql"})
 @Transactional
@@ -74,7 +71,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
     CriteriaBuilder criteriaBuilder;
     CriteriaQuery<BulkCustomer> criteriaQuery;
     Root<BulkCustomer> root;
-    @Before
+    @BeforeEach
     public void setup() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
         criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
