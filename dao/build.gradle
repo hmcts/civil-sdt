@@ -26,6 +26,7 @@ bootJar {
     enabled = false
 }
 
-test {
+tasks.withType(Test) {
     useJUnitPlatform()
 }
+

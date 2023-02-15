@@ -63,7 +63,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/BulkCustomerDaoTest.sql"})
 @Transactional
-public class BulkCustomerDaoTest extends AbstractIntegrationTest {
+class BulkCustomerDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
@@ -83,7 +83,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
      * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
      */
     @Test
-    public void testGetBulkCustomerBySdtId() {
+    void testGetBulkCustomerBySdtId() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId(2);
@@ -95,7 +95,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void testFetchBulkCustomerId() {
+    void testFetchBulkCustomerId() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.fetch(IBulkCustomer.class, 10711);
@@ -110,7 +110,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
      * Tests the bulk insert.
      */
     @Test
-    public void testBulkInsert() {
+    void testBulkInsert() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final List<BulkCustomer> bulkObjectList = new ArrayList<>();
@@ -140,7 +140,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
      * Tests the bulk update.
      */
     @Test
-    public void testBulkUpdate() {
+    void testBulkUpdate() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final List<IBulkCustomer> bulkObjectList = new ArrayList<>();

@@ -3,8 +3,6 @@ package uk.gov.moj.sdt.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -14,6 +12,7 @@ import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
 import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 
@@ -33,18 +32,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/TargetApplicationDaoTest.sql"})
 @Transactional
-class TargetApplicationDaoTest {
+class TargetApplicationDaoTest extends AbstractIntegrationTest {
 
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TargetApplicationDaoTest.class);
     CriteriaBuilder criteriaBuilder;
     CriteriaQuery<TargetApplication> criteriaQuery;
     Root<TargetApplication> root;
 
-    private static final String EXISTING_TARGET_APPLICATION_CODE = "1104";
-    private static final String NON_EXISTENT_TARGET_APPLICATION_CODE = "AX04";
+    private static final String EXISTING_TARGET_APPLICATION_CODE = "MCOL";
+    private static final String NON_EXISTENT_TARGET_APPLICATION_CODE = "UNKNOWN";
 
     @BeforeEach
     public void setup() {

@@ -30,18 +30,14 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
-import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.GlobalParameter;
@@ -55,7 +51,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test {@link GenericDao} CRUD methods.
@@ -63,10 +59,9 @@ import static org.junit.Assert.assertNotNull;
  * @author Robin Compston
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/GenericDaoTest.sql"})
-public class GenericDaoTest extends AbstractIntegrationTest {
+class GenericDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
@@ -76,7 +71,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
     CriteriaQuery<BulkCustomer> criteriaQuery;
     Root<BulkCustomer> root;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
         criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
@@ -88,7 +83,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
      */
     @Test
-    public void testFetch() {
+    void testFetch() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final long id = 10711;
@@ -100,7 +95,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      * Tests query.
      */
     @Test
-    public void testQuery() {
+    void testQuery() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer[] bulkCustomers =
@@ -112,9 +107,9 @@ public class GenericDaoTest extends AbstractIntegrationTest {
         if (bulkCustomers.length == 1) {
             // User found
             final IBulkCustomer bulkCustomer = bulkCustomers[0];
-            LOGGER.debug("sdtCustomerId = " + bulkCustomer.getSdtCustomerId());
+            LOGGER.debug("sdtCustomerId = {}", bulkCustomer.getSdtCustomerId());
         } else {
-            Assert.fail("Cannot find customer with customer id[2]");
+            fail("Cannot find customer with customer id[2]");
         }
     }
 
@@ -122,7 +117,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      * Test method for query as count.
      */
     @Test
-    public void testQueryAsCount() {
+    void testQueryAsCount() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final long customerCount = bulkCustomersDao.queryAsCount(BulkCustomer.class, () -> {
@@ -131,7 +126,7 @@ public class GenericDaoTest extends AbstractIntegrationTest {
         });
 
         if (customerCount == 1) {
-            Assert.assertTrue("Found expected number of rows", true);
+            assertTrue( true, "Found expected number of rows");
         }
     }
 
@@ -139,19 +134,19 @@ public class GenericDaoTest extends AbstractIntegrationTest {
      * Tests the global parameter.
      */
     @Test
-    public void testGlobalParametersQuery() {
+    void testGlobalParametersQuery() {
         final GlobalParametersDao genericDao = this.applicationContext.getBean(GlobalParametersDao.class);
-        CriteriaBuilder criteriaBuilder = genericDao.getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<GlobalParameter> criteriaQuery = criteriaBuilder.createQuery(GlobalParameter.class);
-        Root<GlobalParameter> root = criteriaQuery.from(GlobalParameter.class);
+        CriteriaBuilder criteriaBuilderLocal = genericDao.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<GlobalParameter> criteriaQueryLocal = criteriaBuilderLocal.createQuery(GlobalParameter.class);
+        Root<GlobalParameter> rootLocal = criteriaQueryLocal.from(GlobalParameter.class);
 
-        final IGlobalParameter[] globalParameters = (IGlobalParameter[]) genericDao.query(GlobalParameter.class,
-                                                                                          () -> criteriaQuery.select(root));
+        final IGlobalParameter[] globalParameters = genericDao.query(GlobalParameter.class,
+                                                         () -> criteriaQueryLocal.select(rootLocal));
 
         if (globalParameters.length == 2) {
             // Found the global parameters
             for (IGlobalParameter globalParam : globalParameters) {
-                LOGGER.debug("GlobalParam =" + globalParam.getName() + ":" + globalParam.getValue());
+                LOGGER.debug("GlobalParam ={}:{}", globalParam.getName(), globalParam.getValue());
             }
         }
     }
