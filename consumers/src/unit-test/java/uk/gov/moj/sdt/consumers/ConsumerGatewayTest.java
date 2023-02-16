@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.ICmcResponse;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -36,10 +38,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Test class for the consumer gateway.
@@ -60,6 +60,12 @@ class ConsumerGatewayTest extends ConsumerTestBase {
      */
     @Mock
     ITargetAppInternalEndpointPortType mockClient;
+
+    /**
+     * Mock CMC Request.
+     */
+    @Mock
+    ICmcRequest mockCmcRequest;
 
     /**
      * Mock Individual Request Consumer.
@@ -93,6 +99,13 @@ class ConsumerGatewayTest extends ConsumerTestBase {
         consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
         consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
     }
+
+    @Test
+    void shouldProcessDefaultRequestAndNotGetNull() {
+        ICmcResponse response =  consumerGateway.processRequest(mockCmcRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        assertNotNull(response);
+    }
+
 
     @Test
     void shouldProcessAndGetNotNullIndividualRequest() {

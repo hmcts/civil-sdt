@@ -2,6 +2,7 @@ package uk.gov.moj.sdt.cmc.consumers.api;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 @Component
@@ -27,9 +28,7 @@ public class CmcApiFallback implements CmcApi {
     @Override
     public Object claimDefences(String authorisation,
                                 String serviceAuthorization,
-                                String idAmId,
-                                String fromDateTime,
-                                String toDateTime) {
-        return claimDefences.claimDefences(idAmId, fromDateTime, toDateTime);
+                                ICmcRequest cmcRequest) {
+        return claimDefences.claimDefences(cmcRequest);
     }
 }

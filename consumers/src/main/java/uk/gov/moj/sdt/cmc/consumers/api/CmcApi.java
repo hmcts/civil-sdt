@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CmcConfig;
+import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -27,8 +28,6 @@ public interface CmcApi {
     Object claimDefences(
             @RequestHeader(AUTHORIZATION) String authorisation,
             @RequestHeader("ServiceAuthorzation") String serviceAuthorization,
-            @RequestHeader("idAmId") String idAmId,
-            @RequestHeader("fromDateTime") String fromDateTime,
-            @RequestHeader("toDateTime") String toDateTime
+            @RequestHeader("cmcRequest") ICmcRequest cmcRequest
     );
 }

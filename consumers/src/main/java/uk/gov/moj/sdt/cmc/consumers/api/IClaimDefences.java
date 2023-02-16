@@ -1,6 +1,8 @@
 package uk.gov.moj.sdt.cmc.consumers.api;
 
+import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
+
 public interface IClaimDefences {
 
-    Object claimDefences(String idAmId, String fromDateTime, String toDateTime);
+    Object claimDefences(ICmcRequest cmcRequest);
 }

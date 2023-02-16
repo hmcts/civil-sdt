@@ -30,6 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.consumers.api;
 
+import uk.gov.moj.sdt.cmc.consumers.model.CmcResponse;
+import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.ICmcResponse;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -65,5 +68,20 @@ public interface IConsumerGateway {
     void submitQuery(ISubmitQueryRequest submitQueryRequest,
                      final long connectionTimeOut, final long receiveTimeOut)
             throws OutageException, TimeoutException;
+
+
+    /**
+     * @param cmcRequest generic cmc submission request.
+     * @param connectionTimeOut the connection timeout parameter value.
+     * @param receiveTimeOut    the receive timeout parameter value.
+     * @throws OutageException  if the target server is un-reachable.
+     * @throws TimeoutException if the target server response cannot be obtained within the
+     *                          timeout period.
+     */
+    default ICmcResponse processRequest(ICmcRequest cmcRequest, final long connectionTimeOut, final long receiveTimeOut)
+            throws OutageException, TimeoutException {
+        return new CmcResponse();
+    }
+
 
 }
