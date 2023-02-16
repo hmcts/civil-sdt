@@ -18,7 +18,16 @@ public interface CmcApi {
     @PostMapping("/breathingSpace")
     Object breathingSpace(
         @RequestHeader(AUTHORIZATION) String authorisation,
-        @RequestHeader("ServiceAuthorzation") String serviceAuthorization,
+        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
         @RequestBody IIndividualRequest individualRequest
+    );
+
+    @PostMapping("/claimStatusUpdate")
+    Object claimStatusUpdate(
+        @RequestHeader(AUTHORIZATION) String authorisation,
+        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+        @RequestHeader("idAmId") String idAmId,
+        @RequestHeader("sdtRequestId") String sdtRequestId,
+        @RequestBody ClaimStatusUpdate claimStatusUpdateObj
     );
 }

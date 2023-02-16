@@ -9,8 +9,12 @@ public class CmcApiFallback implements CmcApi {
 
     private IBreathingSpace breathingSpace;
 
-    public CmcApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpace breathingSpace) {
+    private IClaimStatusUpdate claimStatusUpdateService;
+
+    public CmcApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpace breathingSpace,
+                          @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdateService) {
         this.breathingSpace = breathingSpace;
+        this.claimStatusUpdateService = claimStatusUpdateService;
     }
 
     @Override
@@ -18,5 +22,12 @@ public class CmcApiFallback implements CmcApi {
                                  String serviceAuthorization,
                                  IIndividualRequest individualRequest) {
         return breathingSpace.breathingSpace(individualRequest);
+    }
+
+    @Override
+    public Object claimStatusUpdate(String authorisation,
+                                  String serviceAuthorization,
+                                  String idAmId, String sdtRequestId, ClaimStatusUpdate claimStatusUpdateObj) {
+        return claimStatusUpdateService.claimStatusUpdate(claimStatusUpdateObj, idAmId, sdtRequestId);
     }
 }
