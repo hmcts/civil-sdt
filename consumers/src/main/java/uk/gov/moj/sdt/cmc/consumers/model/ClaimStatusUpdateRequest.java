@@ -1,7 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import uk.gov.moj.sdt.domain.RequestType;
 

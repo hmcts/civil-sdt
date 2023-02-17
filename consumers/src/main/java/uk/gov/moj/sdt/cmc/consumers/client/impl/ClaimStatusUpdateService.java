@@ -6,7 +6,7 @@ import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.api.CmcApi;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 
-@Service("ClaimStatusUpdate")
+@Service("ClaimStatusUpdateService")
 public class ClaimStatusUpdateService implements IClaimStatusUpdate {
 
     private CmcApi cmcApi;

@@ -57,15 +57,12 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.CCDReferenceValidator;
+import uk.gov.moj.sdt.validators.RequestTypeValidator;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import javax.xml.ws.WebServiceException;
 
-import static uk.gov.moj.sdt.domain.RequestType.CLAIM_STATUS_UPDATE;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT_WARRANT;
-import static uk.gov.moj.sdt.domain.RequestType.WARRANT;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -404,25 +401,13 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * @return the request consumer.
      */
     private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
-        if (isCCDReference(individualRequest)) {
-            if (!isValidRequestType(individualRequest)) {
+        if (CCDReferenceValidator.isValidCCDReference("")) {
+            if (!RequestTypeValidator.isValidRequestType(individualRequest.getRequestType())) {
                 throw new InvalidRequestTypeException(individualRequest.getRequestType());
             }
             return cmcRequestConsumer;
         }
         return requestConsumer;
-    }
-
-    private boolean isValidRequestType(IIndividualRequest individualRequest) {
-        String requestType = individualRequest.getRequestType();
-        return JUDGMENT.getRequestType().equalsIgnoreCase(requestType)
-            || WARRANT.getRequestType().equalsIgnoreCase(requestType)
-            || CLAIM_STATUS_UPDATE.getRequestType().equalsIgnoreCase(requestType)
-            || JUDGMENT_WARRANT.getRequestType().equalsIgnoreCase(requestType);
-    }
-
-    private boolean isCCDReference(IIndividualRequest individualRequest) {
-        return CCDReferenceValidator.isValidCCDReference("");
     }
 
     /**
