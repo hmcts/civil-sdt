@@ -331,7 +331,10 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         if (isCCDReference(individualRequest)) {
             // TODO: Populate request from individual request?!!
-            ClaimDefencesRequest claimDefencesRequest = new ClaimDefencesRequest();
+            String idAmId = "123456791";
+            String fromDateTime = LocalDateTime.now().toString();
+            String toDateTime = LocalDateTime.now().plusDays(15).toString();
+            ClaimDefencesRequest claimDefencesRequest = new ClaimDefencesRequest(idAmId, fromDateTime, toDateTime);
             cmcRequestConsumer.processRequest(claimDefencesRequest, connectionTimeOut, requestTimeOut);
         } else {
             requestConsumer.individualRequest(individualRequest, connectionTimeOut, requestTimeOut);
@@ -394,7 +397,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
-        return false;
+        return true;
     }
 
     /**
