@@ -1,9 +1,8 @@
 package uk.gov.moj.sdt.services;
 
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import ch.qos.logback.classic.Logger;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,24 +15,8 @@ import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.dao.IndividualRequestDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.ErrorMessage;
-import uk.gov.moj.sdt.domain.GlobalParameter;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.ServiceRouting;
-import uk.gov.moj.sdt.domain.ServiceType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IServiceRouting;
-import uk.gov.moj.sdt.domain.api.IServiceType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.*;
+import uk.gov.moj.sdt.domain.api.*;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
@@ -42,30 +25,30 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
+import javax.xml.ws.WebServiceException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import javax.xml.ws.WebServiceException;
 
 import static ch.qos.logback.classic.Level.DEBUG;
 import static ch.qos.logback.classic.Level.ERROR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for TargetApplicationSubmissionService.
@@ -101,6 +84,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     /**
      * Mocked message writer reference.
      */
+    @Mock
     private IMessageWriter mockMessageWriter;
 
     /**
@@ -123,19 +107,14 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
     private static final String TWELVE_THOUSAND = "12000";
 
+    private static String DELAY_REQUEST_PROCESSING = "Delay request processing for 10 milliseconds";
+
     /**
      * Method to do any pre-test set-up.
      */
     @BeforeEach
     @Override
     public void setUp() {
-
-        // Instantiate all the mocked objects and set them in the target application submission service
-        mockIndividualRequestDao = mock(IIndividualRequestDao.class);
-        mockConsumerGateway = mock(IConsumerGateway.class);
-        mockCacheable = mock(ICacheable.class);
-        mockMessageWriter = mock(IMessageWriter.class);
-        mockErrorMsgCacheable = mock(ICacheable.class);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
@@ -196,11 +175,11 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
                 receiveTimeOutParam);
 
         this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
-        doAnswer(invocation -> {
-            IndividualRequest argument = invocation.getArgument(0);
-            argument.setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
-            return null;
-        }).when(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
+       // doAnswer(invocation -> {
+        //    IndividualRequest argument = invocation.getArgument(0);
+        //    argument.setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
+       //     return null;
+       // }).when(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
@@ -216,9 +195,10 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         List<ILoggingEvent> logList = listAppender.list;
 
-        assertNotNull(logList.get(0).getFormattedMessage());
-
         logger.detachAndStopAllAppenders();
+
+        //Check that DEBUG logging is occurring
+        assertTrue(verifyLog(logList, DELAY_REQUEST_PROCESSING));
 
         // Verify the Mock
         verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
@@ -234,7 +214,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
     @Test
     public void processRequestToSubmitAllSuccessLogSetToError() {
-        final String sdtRequestRef = TEST_1;
+
         final IIndividualRequest individualRequest = new IndividualRequest();
         Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
 
@@ -248,11 +228,11 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         // Set-up the individual request object
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(TEST_1);
         individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
 
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
             individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
@@ -289,7 +269,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Setup dummy target response
         SdtContext.getContext().setRawInXml("response");
 
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -854,6 +834,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         for (ILoggingEvent log : logList) {
             if (log.getMessage().contains(message.toString())) {
                 verifyLog = true;
+                break;
             }
         }
         return verifyLog;

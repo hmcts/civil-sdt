@@ -32,7 +32,10 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 /**
  * Test class for the RetryMessageAlreadySentService.
@@ -379,36 +382,39 @@ class RetryMessageAlreadySentServiceTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    public void setIndividualRequestDaoTest() throws Exception {
+    public void setIndividualRequestDaoTest() {
 
-        messageTaskService.setIndividualRequestDao(mockIndividualRequestDao);
+        IIndividualRequestDao individualRequestDaoMock = mock(IIndividualRequestDao.class);
+        messageTaskService.setIndividualRequestDao(individualRequestDaoMock);
 
         Object result = this.getAccessibleField(RetryMessageAlreadySentService.class, "individualRequestDao",
                                                 IIndividualRequestDao.class, messageTaskService);
 
-        assertEquals(mockIndividualRequestDao, result, INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY);
+        assertEquals(individualRequestDaoMock, result, INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY);
     }
 
     @Test
-    public void setMessagingUtilityTest() throws Exception {
+    public void setMessagingUtilityTest() {
 
-        messageTaskService.setMessagingUtility(mockMessagingUtility);
+        IMessagingUtility messagingUtilityMock = mock(IMessagingUtility.class);
+        messageTaskService.setMessagingUtility(messagingUtilityMock);
 
         Object result = this.getAccessibleField(RetryMessageAlreadySentService.class, "messagingUtility",
                                                 IMessagingUtility.class, messageTaskService);
 
-        assertEquals(mockMessagingUtility, result, INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY);
+        assertEquals(messagingUtilityMock, result, "MessagingUtility should be correctly set");
     }
 
     @Test
-    public void setGlobalParametersCacheTest() throws Exception {
+    public void setGlobalParametersCacheTest() {
 
-        messageTaskService.setGlobalParametersCache(mockCacheable);
+        ICacheable globalParametersCacheMock = mock(ICacheable.class);
+        messageTaskService.setGlobalParametersCache(globalParametersCacheMock);
 
         Object result = this.getAccessibleField(RetryMessageAlreadySentService.class, "globalParametersCache",
                                                 ICacheable.class, messageTaskService);
 
-        assertEquals(mockCacheable, result, INDIVIDUAL_REQUEST_DAO_SHOULD_BE_SET_CORRECTLY);
+        assertEquals(globalParametersCacheMock, result, "GlobalParameters should be correctly set");
     }
 
 }

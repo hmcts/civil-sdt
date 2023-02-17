@@ -1,8 +1,11 @@
 
 package uk.gov.moj.sdt.services;
 
-import org.junit.jupiter.api.Test;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,18 +36,20 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
+import javax.xml.ws.WebServiceException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.xml.ws.WebServiceException;
-
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 
 import static ch.qos.logback.classic.Level.DEBUG;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -104,16 +109,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                                                     genericParser,
                                                     genericParser,
                                                     mockBulkCustomerDao);
-        submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
-
-        //To cover code coverage
-        submitQueryService.setErrorMessagesCache(mockErrorMsgCacheable);
-        submitQueryService.setGlobalParametersCache(mockGlobalParamCache);
-        submitQueryService.setQueryResponseXmlParser(genericParser);
-        submitQueryService.setQueryRequestXmlParser(genericParser);
-        submitQueryService.setRequestConsumer(mockConsumerGateway);
-
-
     }
 
     /**
@@ -150,7 +145,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                 contactDetails);
 
         final TimeoutException timeoutEx = new TimeoutException("TIMEOUT_ERROR", "Timeout occurred");
-        mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
 
         doThrow(timeoutEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
@@ -165,9 +159,14 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         SdtContext.getContext().setRawInXml("criteria");
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        assertEquals( null, SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
-        assertTrue(true,"Expected to pass");
+        assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+
     }
 
     /**
@@ -204,7 +203,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                 contactDetails);
 
         final OutageException outageEx = new OutageException("OUTAGE_ERROR", "Server unavailable.");
-        mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
 
         doThrow(outageEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
@@ -219,9 +217,14 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         SdtContext.getContext().setRawInXml("criteria");
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        assertEquals(null, SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "TAR_APP_ERROR");
 
-        assertTrue(true,"Expected to pass");
+        assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
     }
 
     /**
@@ -272,8 +275,12 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
 
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
-        assertTrue(true,"Expected to pass");
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "SDT_INT_ERR");
 
         assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
                 .getErrorText());
@@ -282,7 +289,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Unit test method to test web service exception.
      */
-   @Test
+    @Test
     public void testSubmitQueryRequestForWebServiceException() {
         final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
 
@@ -325,6 +332,11 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         SdtContext.getContext().setRawInXml("criteria");
         this.submitQueryService.submitQuery(submitQueryRequest);
 
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "SDT_INT_ERR");
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
         assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
 
@@ -357,7 +369,11 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         SdtContext.getContext().setRawInXml("criteria");
         this.submitQueryService.submitQuery(submitQueryRequest);
 
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "TAR_APP_BUSY");
+
         assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+
     }
 
     /**
@@ -410,14 +426,15 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         logger.detachAndStopAllAppenders();
 
+
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
     }
-
-
-
-
-
 
     /**
      * Set up a valid submit query request object.
@@ -472,6 +489,78 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
     }
 
+    @Test
+    public void setBulkCustomerDaoTest(){
+
+        IBulkCustomerDao bulkCustomerDaoMock = mock(IBulkCustomerDao.class);
+        submitQueryService.setBulkCustomerDao(bulkCustomerDaoMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "bulkCustomerDao",
+                                                IBulkCustomerDao.class, submitQueryService);
+
+        assertEquals(bulkCustomerDaoMock, result, "bulkCustomerDao should be correctly set");
+    }
+
+    @Test
+    public void setErrorMessageCacheableTest(){
+
+        ICacheable errorMsgCacheableMock = mock(ICacheable.class);
+        submitQueryService.setErrorMessagesCache(errorMsgCacheableMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "errorMessagesCache",
+                                                ICacheable.class, submitQueryService);
+
+        assertEquals(errorMsgCacheableMock, result, "ErrorMsgCacheable should be correctly set");
+    }
+
+    @Test
+    public void setGlobalParametersCacheTest(){
+
+        ICacheable globalParametersCacheMock = mock(ICacheable.class);
+        submitQueryService.setGlobalParametersCache(globalParametersCacheMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "globalParametersCache",
+                                                ICacheable.class, submitQueryService);
+
+        assertEquals(globalParametersCacheMock, result, "GlobalParameters should be correctly set");
+    }
+
+    @Test
+    public void setQueryResponseXmlParserTest(){
+
+        GenericXmlParser genericResponseXmlParserMock = mock(GenericXmlParser.class);
+        submitQueryService.setQueryResponseXmlParser(genericResponseXmlParserMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "queryResponseXmlParser",
+                                                GenericXmlParser.class, submitQueryService);
+
+        assertEquals(genericResponseXmlParserMock, result, "genericXmlParser should be correctly set");
+    }
+
+    @Test
+    public void setQueryRequestXmlParserTest(){
+
+        GenericXmlParser genericRequestXmlParserMock = mock(GenericXmlParser.class);
+        submitQueryService.setQueryRequestXmlParser(genericRequestXmlParserMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "queryRequestXmlParser",
+                                                GenericXmlParser.class, submitQueryService);
+
+        assertEquals(genericRequestXmlParserMock, result, "genericXmlParser should be correctly set");
+    }
+
+    @Test
+    public void setRequestConsumerTest(){
+
+        IConsumerGateway consumerGatewayMock = mock(IConsumerGateway.class);
+        submitQueryService.setRequestConsumer(consumerGatewayMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "requestConsumer",
+                                                IConsumerGateway.class, submitQueryService);
+
+        assertEquals(consumerGatewayMock, result, "consumerGateway should be correctly set");
+    }
+
     /**
      * Method to search for message within the Log list
      * @param logList
@@ -483,6 +572,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         for (ILoggingEvent log : logList) {
             if (log.getMessage().contains(message.toString())) {
                 verifyLog = true;
+                break;
             }
         }
         return verifyLog;
