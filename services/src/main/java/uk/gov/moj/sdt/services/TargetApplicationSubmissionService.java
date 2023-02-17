@@ -133,7 +133,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                                   GenericXmlParser individualResponseXmlParser,
                                               @Qualifier("ConsumerGateway")
                                                   IConsumerGateway requestConsumer,
-                                              @Qualifier("ConsumerGateway")
+                                              @Qualifier("CmcConsumerGateway")
                                                   IConsumerGateway cmcRequestConsumer,
                                               @Qualifier("MessageWriter")
                                                   IMessageWriter messageWriter) {
