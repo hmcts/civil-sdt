@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.api.ClaimStatusUpdate;
+import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.api.CmcApi;
 import uk.gov.moj.sdt.cmc.consumers.client.impl.ClaimStatusUpdateService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
@@ -18,25 +18,26 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
+public class ClaimStatusUpdateRequestServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     private CmcApi cmcApi;
 
     private ClaimStatusUpdateService claimStatusUpdateService;
 
-    private ClaimStatusUpdate claimStatusUpdateObj;
+    private ClaimStatusUpdateRequest claimStatusUpdateRequestObj;
 
     private final Object OBJECT = new Object();
     @BeforeEach
     @Override
     public void setUp() {
         claimStatusUpdateService = new ClaimStatusUpdateService(cmcApi);
-        claimStatusUpdateObj = new ClaimStatusUpdate();
-        claimStatusUpdateObj.setUpdateType("WD");
-        claimStatusUpdateObj.setCaseManRef("CaseManRef0101");
-        claimStatusUpdateObj.setPaidInFullDate("01/10/2021");
-        claimStatusUpdateObj.setRespondantId("1");
-        claimStatusUpdateObj.setSection38Compliancy(true);
+        claimStatusUpdateRequestObj = new ClaimStatusUpdateRequest(
+            "CaseManRef0101",
+            "1",
+            "WD",
+            "01/10/2021",
+            true
+        );
 
         when(cmcApi.claimStatusUpdate(anyString(), anyString(), anyString(), anyString(), any())).thenReturn(OBJECT);
         }
@@ -46,7 +47,7 @@ public class ClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
         String idAmId ="1L";
         String sdtRequestId ="";
 
-        Object returnValue = claimStatusUpdateService.claimStatusUpdate(claimStatusUpdateObj, idAmId, sdtRequestId);
+        Object returnValue = claimStatusUpdateService.claimStatusUpdate(claimStatusUpdateRequestObj, idAmId, sdtRequestId);
 
         assertNotNull(returnValue);
         assertEquals(OBJECT, returnValue);

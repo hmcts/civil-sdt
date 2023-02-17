@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CmcConfig;
 import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -28,6 +29,6 @@ public interface CmcApi {
         @RequestHeader("ServiceAuthorization") String serviceAuthorization,
         @RequestHeader("idAmId") String idAmId,
         @RequestHeader("sdtRequestId") String sdtRequestId,
-        @RequestBody ClaimStatusUpdate claimStatusUpdateObj
+        @RequestBody ClaimStatusUpdateRequest claimStatusUpdateRequestObj
     );
 }

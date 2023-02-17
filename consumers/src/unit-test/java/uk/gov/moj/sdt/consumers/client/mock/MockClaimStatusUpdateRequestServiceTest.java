@@ -4,18 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.api.ClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.client.mock.MockClaimStatusUpdateService;
+import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
-public class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
+public class MockClaimStatusUpdateRequestServiceTest extends AbstractSdtUnitTestBase {
 
     private MockClaimStatusUpdateService mockClaimStatusUpdateService;
 
-    private ClaimStatusUpdate claimStatusUpdateObj;
+    private ClaimStatusUpdateRequest claimStatusUpdateRequestObj;
 
     @BeforeEach
     @Override
@@ -23,12 +23,13 @@ public class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
 
         mockClaimStatusUpdateService = new MockClaimStatusUpdateService();
 
-        claimStatusUpdateObj = new ClaimStatusUpdate();
-        claimStatusUpdateObj.setUpdateType("WD");
-        claimStatusUpdateObj.setCaseManRef("CaseManRef0101");
-        claimStatusUpdateObj.setPaidInFullDate("01/10/2021");
-        claimStatusUpdateObj.setRespondantId("1");
-        claimStatusUpdateObj.setSection38Compliancy(true);
+        claimStatusUpdateRequestObj = new ClaimStatusUpdateRequest(
+            "CaseManRef0101",
+            "1",
+            "WD",
+            "01/10/2021",
+            true
+        );
     }
 
     @Test
@@ -36,7 +37,7 @@ public class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
         final String idAmId = "";
         final String sdtRequestId = "";
 
-        Object returnValue = mockClaimStatusUpdateService.claimStatusUpdate(claimStatusUpdateObj, idAmId, sdtRequestId);
+        Object returnValue = mockClaimStatusUpdateService.claimStatusUpdate(claimStatusUpdateRequestObj, idAmId, sdtRequestId);
 
         assertNull(returnValue);
     }
