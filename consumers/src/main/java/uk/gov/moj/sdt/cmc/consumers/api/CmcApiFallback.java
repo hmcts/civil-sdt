@@ -25,15 +25,16 @@ public class CmcApiFallback implements CmcApi {
 
     @Override
     public void breathingSpace(String authorisation,
-                               String serviceAuthorization,
-                               BreathingSpaceRequest breathingSpaceRequest) {
+                                 String serviceAuthorization,
+                                 BreathingSpaceRequest breathingSpaceRequest) {
         breathingSpace.breathingSpace(breathingSpaceRequest);
     }
 
     @Override
     public Object claimStatusUpdate(String authorisation,
-                                  String serviceAuthorization,
-                                  String idAmId, String sdtRequestId, ClaimStatusUpdateRequest claimStatusUpdateRequestObj) {
+                                    String serviceAuthorization,
+                                    String idAmId, String sdtRequestId,
+                                    ClaimStatusUpdateRequest claimStatusUpdateRequestObj) {
         return claimStatusUpdateService.claimStatusUpdate(claimStatusUpdateRequestObj, idAmId, sdtRequestId);
     }
 
