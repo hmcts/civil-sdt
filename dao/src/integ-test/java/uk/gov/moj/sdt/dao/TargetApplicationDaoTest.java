@@ -59,8 +59,8 @@ class TargetApplicationDaoTest extends AbstractIntegrationTest {
         assertNotNull(targetApplication,
                 "Could not find target application with code [" + EXISTING_TARGET_APPLICATION_CODE + "]");
         assertEquals(EXISTING_TARGET_APPLICATION_CODE, targetApplication.getTargetApplicationCode(),
-                "Incorrect target application - code is <" + targetApplication.getTargetApplicationCode()
-                        + "> when should be <" + EXISTING_TARGET_APPLICATION_CODE + ">");
+                "Incorrect target application - code is [" + targetApplication.getTargetApplicationCode()
+                        + "] when should be [" + EXISTING_TARGET_APPLICATION_CODE + "]");
     }
 
     @Test

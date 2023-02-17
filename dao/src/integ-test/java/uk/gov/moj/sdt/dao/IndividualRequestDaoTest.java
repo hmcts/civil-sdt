@@ -54,6 +54,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -194,7 +195,7 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final List<IIndividualRequest> individualRequests = individualRequestDao.getPendingIndividualRequests(3);
 
         assertNotNull(individualRequests);
-        assertTrue(!individualRequests.isEmpty(), "Pending individual requests found");
+        assertFalse(individualRequests.isEmpty(), "Pending individual requests not found");
         assertEquals(1, individualRequests.size(), "The pending requests size is not correct");
     }
 
@@ -206,7 +207,7 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final List<IIndividualRequest> individualRequests = individualRequestDao.getPendingIndividualRequests(4);
 
         assertNotNull(individualRequests);
-        assertTrue(individualRequests.isEmpty(), "Pending individual requests not found");
+        assertTrue(individualRequests.isEmpty(), "Pending individual requests found");
     }
 
     /**
