@@ -82,6 +82,8 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
      */
     private IConsumerGateway mockConsumerGateway;
 
+    private IConsumerGateway mockCmcConsumerGateway;
+
     /**
      * The mocked ICacheable reference for global parameters cache.
      */
@@ -106,6 +108,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         // Instantiate all the mocked objects and set them in the target
 
         mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
+        mockCmcConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
         mockGlobalParamCache = EasyMock.createMock(ICacheable.class);
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
         mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
@@ -114,6 +117,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         genericParser.setEnclosingTag("targetAppDetail");
 
         submitQueryService = new SubmitQueryService(mockConsumerGateway,
+                                                    mockCmcConsumerGateway,
                                                     mockGlobalParamCache,
                                                     mockErrorMsgCacheable,
                                                     genericParser,

@@ -52,6 +52,7 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -78,6 +79,8 @@ public class SubmitQueryService implements ISubmitQueryService {
      * web service.
      */
     private IConsumerGateway requestConsumer;
+
+    private IConsumerGateway cmcRequestConsumer;
 
     /**
      * The ICacheable reference to the global parameters cache.
@@ -107,6 +110,8 @@ public class SubmitQueryService implements ISubmitQueryService {
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
+                              @Qualifier("CmcConsumerGateway")
+                              IConsumerGateway cmcRequestConsumer,
                               @Qualifier("GlobalParametersCache")
                                   ICacheable globalParametersCache,
                               @Qualifier("ErrorMessagesCache")
@@ -118,6 +123,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                               @Qualifier("BulkCustomerDao")
                                   IBulkCustomerDao bulkCustomerDao) {
         this.requestConsumer = requestConsumer;
+        this.cmcRequestConsumer = cmcRequestConsumer;
         this.globalParametersCache = globalParametersCache;
         this.errorMessagesCache = errorMessagesCache;
         this.queryRequestXmlParser = queryRequestXmlParser;
@@ -423,7 +429,14 @@ public class SubmitQueryService implements ISubmitQueryService {
 
         LOGGER.debug("Send submit query request to target application");
 
-        this.requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        getRequestConsumer(submitQueryRequest).submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+    }
+
+    private IConsumerGateway getRequestConsumer(ISubmitQueryRequest submitQueryRequest) {
+        if (CCDReferenceValidator.isValidCCDReference("")) {
+            return cmcRequestConsumer;
+        }
+        return requestConsumer;
     }
 
     /**

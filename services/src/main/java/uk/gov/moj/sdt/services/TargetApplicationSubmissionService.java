@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import uk.gov.moj.sdt.cmc.consumers.model.ClaimDefencesRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -338,16 +337,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             connectionTimeOut = Long.parseLong(connectionTimeOutParam.getValue());
         }
 
-        if (isCCDReference(individualRequest)) {
-            // TODO: Populate request from individual request?!!
-            String idAmId = "123456791";
-            String fromDateTime = LocalDateTime.now().toString();
-            String toDateTime = LocalDateTime.now().plusDays(15).toString();
-            ClaimDefencesRequest claimDefencesRequest = new ClaimDefencesRequest(idAmId, fromDateTime, toDateTime);
-            cmcRequestConsumer.processRequest(claimDefencesRequest, connectionTimeOut, requestTimeOut);
-        } else {
-            requestConsumer.individualRequest(individualRequest, connectionTimeOut, requestTimeOut);
-        }
+        getRequestConsumer(individualRequest).individualRequest(individualRequest, connectionTimeOut, requestTimeOut);
     }
 
     /**

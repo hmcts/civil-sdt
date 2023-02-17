@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
@@ -24,11 +25,15 @@ public class CmcConsumerGateway implements IConsumerGateway {
     private IBreathingSpace breathingSpace;
     private IClaimStatusUpdate claimStatusUpdate;
 
+    private IClaimDefences claimDefences;
+
     @Autowired
     public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
-                              @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate) {
+                              @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
+                              @Qualifier("ClaimStatusUpdateService") IClaimDefences claimDefences) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
+        this.claimDefences = claimDefences;
     }
 
     @Override
@@ -52,6 +57,7 @@ public class CmcConsumerGateway implements IConsumerGateway {
         LOGGER.debug("Submitting query to target application[{}], for customer[{}]",
                      submitQueryRequest.getTargetApplication().getTargetApplicationCode(),
                      submitQueryRequest.getBulkCustomer().getSdtCustomerId());
+        claimDefences.claimDefences("", "");
     }
 
 }

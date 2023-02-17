@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.model.ClaimDefencesRequest;
-import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -23,11 +21,9 @@ class MockClaimDefencesServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void getClient() {
-        final String idAmId = "";
         final String fromDateTime = "";
         final String toDateTime = "";
-        ICmcRequest cmcRequest = new ClaimDefencesRequest(idAmId, fromDateTime, toDateTime);
-        Object returnValue = mockClaimDefencesService.claimDefences(cmcRequest);
+        Object returnValue = mockClaimDefencesService.claimDefences(fromDateTime, toDateTime);
         assertNull(returnValue);
     }
 

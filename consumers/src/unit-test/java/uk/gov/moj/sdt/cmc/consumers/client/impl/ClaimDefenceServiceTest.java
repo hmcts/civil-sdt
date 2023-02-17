@@ -6,13 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.CmcApi;
-import uk.gov.moj.sdt.cmc.consumers.model.ClaimDefencesRequest;
-import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -30,18 +27,15 @@ public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUp() {
         claimDefencesService = new ClaimDefencesService(cmcApi);
-        when(cmcApi.claimDefences(anyString(), anyString(), any()))
+        when(cmcApi.claimDefences(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(OBJECT);
     }
 
     @Test
     void getClient() {
-        String idAmId = "";
         String fromDateTime = "";
         String toDateTime = "";
-        ICmcRequest cmcRequest = new ClaimDefencesRequest(idAmId, fromDateTime, toDateTime);
-
-        Object returnValue = claimDefencesService.claimDefences(cmcRequest);
+        Object returnValue = claimDefencesService.claimDefences(fromDateTime, toDateTime);
         assertNotNull(returnValue);
         assertEquals(OBJECT, returnValue);
     }

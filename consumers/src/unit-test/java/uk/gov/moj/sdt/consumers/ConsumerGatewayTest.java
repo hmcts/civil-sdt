@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.ICmcResponse;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -62,12 +61,6 @@ class ConsumerGatewayTest extends ConsumerTestBase {
     ITargetAppInternalEndpointPortType mockClient;
 
     /**
-     * Mock CMC Request.
-     */
-    @Mock
-    ICmcRequest mockCmcRequest;
-
-    /**
      * Mock Individual Request Consumer.
      */
     @Mock
@@ -98,12 +91,6 @@ class ConsumerGatewayTest extends ConsumerTestBase {
         consumerGateway = new ConsumerGateway(individualRequestConsumer, submitQueryConsumer);
         consumerGateway.setIndividualRequestConsumer(individualRequestConsumer);
         consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
-    }
-
-    @Test
-    void shouldProcessDefaultRequestAndNotGetNull() {
-        ICmcResponse response =  consumerGateway.processRequest(mockCmcRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        assertNotNull(response);
     }
 
 
