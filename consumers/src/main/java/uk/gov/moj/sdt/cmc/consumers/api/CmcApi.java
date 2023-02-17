@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CmcConfig;
 import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -18,10 +19,19 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public interface CmcApi {
 
     @PostMapping("/breathingSpace")
-    Object breathingSpace(
+    void breathingSpace(
         @RequestHeader(AUTHORIZATION) String authorisation,
-        @RequestHeader("ServiceAuthorzation") String serviceAuthorization,
-        @RequestBody IIndividualRequest individualRequest
+        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+        @RequestBody BreathingSpaceRequest breathingSpaceRequest
+    );
+
+    @PostMapping("/claimStatusUpdate")
+    Object claimStatusUpdate(
+        @RequestHeader(AUTHORIZATION) String authorisation,
+        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+        @RequestHeader("idAmId") String idAmId,
+        @RequestHeader("sdtRequestId") String sdtRequestId,
+        @RequestBody ClaimStatusUpdateRequest claimStatusUpdateRequestObj
     );
 
     @GetMapping("/claimDefences")

@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimDefencesRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
+import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -56,6 +57,8 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.validators.CCDReferenceValidator;
+import uk.gov.moj.sdt.validators.RequestTypeValidator;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
@@ -128,7 +131,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                                   GenericXmlParser individualResponseXmlParser,
                                               @Qualifier("ConsumerGateway")
                                                   IConsumerGateway requestConsumer,
-                                              @Qualifier("ConsumerGateway")
+                                              @Qualifier("CmcConsumerGateway")
                                                   IConsumerGateway cmcRequestConsumer,
                                               @Qualifier("MessageWriter")
                                                   IMessageWriter messageWriter) {
@@ -177,6 +180,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
                 this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
 
+            } catch (final InvalidRequestTypeException irte) {
+                LOGGER.error("Exception calling target application for SDT reference [" +
+                                 individualRequest.getSdtRequestReference() + "] - " + irte.getMessage());
+
+                updateRequestRejected(individualRequest);
+                updateCompletedRequest(individualRequest);
             }
         } else {
             LOGGER.error("SDT Reference {} read from message queue not found in database for individual request.",
@@ -396,8 +405,17 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         this.individualRequestDao = individualRequestDao;
     }
 
-    private boolean isCCDReference(IIndividualRequest individualRequest) {
-        return true;
+    /**
+     * @return the request consumer.
+     */
+    private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
+        if (CCDReferenceValidator.isValidCCDReference("")) {
+            if (!RequestTypeValidator.isValidRequestType(individualRequest.getRequestType())) {
+                throw new InvalidRequestTypeException(individualRequest.getRequestType());
+            }
+            return cmcRequestConsumer;
+        }
+        return requestConsumer;
     }
 
     /**
