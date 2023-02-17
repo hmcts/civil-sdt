@@ -37,7 +37,6 @@ public class CmcConsumerGateway implements IConsumerGateway {
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
         if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
-            individualRequest.getRequestPayload();
             ClaimStatusUpdateRequest claimStatusUpdateRequest = null;
             claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest, "", "");
         } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
