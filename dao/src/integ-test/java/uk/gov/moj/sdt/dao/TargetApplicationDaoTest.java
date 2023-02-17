@@ -20,6 +20,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -57,6 +58,9 @@ class TargetApplicationDaoTest extends AbstractIntegrationTest {
         final ITargetApplication targetApplication = targetApplicationDao.getTargetApplicationByCode(EXISTING_TARGET_APPLICATION_CODE);
         assertNotNull(targetApplication,
                 "Could not find target application with code [" + EXISTING_TARGET_APPLICATION_CODE + "]");
+        assertEquals(EXISTING_TARGET_APPLICATION_CODE, targetApplication.getTargetApplicationCode(),
+                "Incorrect target application - code is <" + targetApplication.getTargetApplicationCode()
+                        + "> when should be <" + EXISTING_TARGET_APPLICATION_CODE + ">");
     }
 
     @Test

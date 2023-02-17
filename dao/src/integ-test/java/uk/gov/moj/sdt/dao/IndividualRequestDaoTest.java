@@ -194,7 +194,7 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final List<IIndividualRequest> individualRequests = individualRequestDao.getPendingIndividualRequests(3);
 
         assertNotNull(individualRequests);
-        assertTrue(individualRequests.isEmpty(), "Pending individual requests found");
+        assertTrue(!individualRequests.isEmpty(), "Pending individual requests found");
         assertEquals(1, individualRequests.size(), "The pending requests size is not correct");
     }
 
