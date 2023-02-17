@@ -6,14 +6,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.CmcApi;
-import uk.gov.moj.sdt.cmc.consumers.model.CmcRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.ClaimDefencesRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.ICmcRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
@@ -38,7 +39,7 @@ public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
         String idAmId = "";
         String fromDateTime = "";
         String toDateTime = "";
-        ICmcRequest cmcRequest = new CmcRequest(idAmId, fromDateTime, toDateTime);
+        ICmcRequest cmcRequest = new ClaimDefencesRequest(idAmId, fromDateTime, toDateTime);
 
         Object returnValue = claimDefencesService.claimDefences(cmcRequest);
         assertNotNull(returnValue);
