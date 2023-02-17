@@ -422,8 +422,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
-//        individualRequest.getBulkSubmission().getSdtBulkReference()
-
         return CCDReferenceValidator.isValidCCDReference("");
     }
 

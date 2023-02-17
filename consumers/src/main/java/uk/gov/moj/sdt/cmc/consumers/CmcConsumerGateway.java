@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -29,7 +30,8 @@ public class CmcConsumerGateway implements IConsumerGateway {
                                   long connectionTimeOut,
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
-        breathingSpace.breathingSpace(individualRequest);
+        BreathingSpaceRequest request = new BreathingSpaceRequest("", "", "");
+        breathingSpace.breathingSpace(request);
     }
 
     @Override

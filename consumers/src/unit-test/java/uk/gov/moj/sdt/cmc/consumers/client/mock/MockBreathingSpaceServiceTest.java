@@ -4,10 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,8 +22,7 @@ public class MockBreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void getClient() {
-        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        Object returnValue = mockBreathingSpaceService.breathingSpace(individualRequest);
-        assertNull(returnValue);
+        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
+        mockBreathingSpaceService.breathingSpace(breathingSpaceRequest);
     }
 }
