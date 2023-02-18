@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CmcConfig;
-import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 

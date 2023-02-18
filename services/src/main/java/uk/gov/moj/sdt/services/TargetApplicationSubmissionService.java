@@ -30,6 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -57,10 +63,6 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.CCDReferenceValidator;
-
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
-import javax.xml.ws.WebServiceException;
 
 import static uk.gov.moj.sdt.domain.RequestType.CLAIM_STATUS_UPDATE;
 import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
@@ -422,7 +424,15 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
-        return CCDReferenceValidator.isValidCCDReference("");
+        String claimNumber = "";
+        try {
+            BreathingSpaceRequest breathingSpaceRequest = XmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
+                                                                                         BreathingSpaceRequest.class);
+            claimNumber = breathingSpaceRequest.getCaseManRef();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return CCDReferenceValidator.isValidCCDReference(claimNumber);
     }
 
     /**

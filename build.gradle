@@ -221,6 +221,7 @@ allprojects {
     }
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
 
@@ -387,6 +388,7 @@ subprojects { subproject ->
     }
   }
 
+  // subprojects
   dependencies {
     // Add azure service bus
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
@@ -430,6 +432,7 @@ subprojects { subproject ->
     }
 
     implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
 
     /*
     Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains

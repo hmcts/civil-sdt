@@ -1,12 +1,14 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -20,9 +22,13 @@ public class CmcConsumerGateway implements IConsumerGateway {
 
     private IBreathingSpace breathingSpace;
 
+    private XmlToObject xmlToObject;
+
     @Autowired
-    public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace) {
+    public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
+                              XmlToObject xmlToObject) {
         this.breathingSpace = breathingSpace;
+        this.xmlToObject = xmlToObject;
     }
 
     @Override
@@ -30,8 +36,13 @@ public class CmcConsumerGateway implements IConsumerGateway {
                                   long connectionTimeOut,
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
-        BreathingSpaceRequest request = new BreathingSpaceRequest("", "", "");
-        breathingSpace.breathingSpace(request);
+        try {
+            BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
+                                                                           BreathingSpaceRequest.class);
+            breathingSpace.breathingSpace(request);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
