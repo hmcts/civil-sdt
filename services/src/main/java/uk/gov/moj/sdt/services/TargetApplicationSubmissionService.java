@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import javax.xml.ws.WebServiceException;
@@ -41,8 +40,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.xml.XmlReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -79,6 +77,8 @@ import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStat
 @Service("TargetApplicationSubmissionService")
 public class TargetApplicationSubmissionService extends AbstractSdtService implements
         ITargetApplicationSubmissionService {
+
+    private static final String CLAIM_NUMBER = "claimNumber";
 
     /**
      * Logger object.
@@ -424,14 +424,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
-        String claimNumber = "";
-        try {
-            BreathingSpaceRequest breathingSpaceRequest = XmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
-                                                                                         BreathingSpaceRequest.class);
-            claimNumber = breathingSpaceRequest.getCaseManRef();
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
+        String claimNumber = XmlReader.getElementValue(individualRequest.getRequestPayload(), CLAIM_NUMBER);
         return CCDReferenceValidator.isValidCCDReference(claimNumber);
     }
 
