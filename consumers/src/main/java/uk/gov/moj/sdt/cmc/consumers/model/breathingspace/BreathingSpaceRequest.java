@@ -12,7 +12,7 @@ import uk.gov.moj.sdt.cmc.consumers.model.CMCRequest;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BreathingSpaceRequest implements CMCRequest {
+public class BreathingSpaceRequest extends CMCRequest {
 
     private String requestType;
 
