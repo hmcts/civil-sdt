@@ -14,6 +14,8 @@ class XmlToObjectTest extends BaseXmlTest {
 
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
 
+    private XmlToObject xmlToObject = new XmlToObject();
+
     @BeforeEach
     public void setup() {
     }
@@ -21,21 +23,21 @@ class XmlToObjectTest extends BaseXmlTest {
     @Test
     void shouldConvertBreathingSpaceRequestToString() throws IOException {
         String xmlContent = readXmlAsString(BREATHING_SPACE);
-        String request = XmlToObject.convertXmlToJson(xmlContent);
+        String request = xmlToObject.convertXmlToJson(xmlContent);
         assertNotNull(request);
     }
 
     @Test
     void shouldConvertBreathingSpaceRequest() throws IOException {
         String xmlContent = readXmlAsString(BREATHING_SPACE);
-        BreathingSpaceRequest request = XmlToObject.convertXmlToObject(xmlContent, BreathingSpaceRequest.class);
+        BreathingSpaceRequest request = xmlToObject.convertXmlToObject(xmlContent, BreathingSpaceRequest.class);
         assertNotNull(request);
     }
 
     @Test
     void shouldConvertBreathingSpaceRequestAndConvertToJson() throws IOException {
         String xmlContent = readXmlAsString(BREATHING_SPACE);
-        BreathingSpaceRequest request = XmlToObject.convertXmlToObject(xmlContent, BreathingSpaceRequest.class);
+        BreathingSpaceRequest request = xmlToObject.convertXmlToObject(xmlContent, BreathingSpaceRequest.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(request);
         assertNotNull(jsonString);
