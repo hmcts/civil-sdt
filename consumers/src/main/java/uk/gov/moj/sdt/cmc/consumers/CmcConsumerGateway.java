@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
-import uk.gov.moj.sdt.cmc.consumers.model.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -27,13 +28,17 @@ public class CmcConsumerGateway implements IConsumerGateway {
 
     private IClaimDefences claimDefences;
 
+    private XmlToObject xmlToObject;
+
     @Autowired
     public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
-                              @Qualifier("ClaimStatusUpdateService") IClaimDefences claimDefences) {
+                              @Qualifier("ClaimStatusUpdateService") IClaimDefences claimDefences,
+                              XmlToObject xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
         this.claimDefences = claimDefences;
+        this.xmlToObject = xmlToObject;
     }
 
     @Override
@@ -41,13 +46,18 @@ public class CmcConsumerGateway implements IConsumerGateway {
                                   long connectionTimeOut,
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
-        if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
-            ClaimStatusUpdateRequest claimStatusUpdateRequest = null;
-            claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest, "", "");
-        } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
-            BreathingSpaceRequest request = new BreathingSpaceRequest("", "", "");
-            breathingSpace.breathingSpace(request);
+        try {
+            if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
+                ClaimStatusUpdateRequest claimStatusUpdateRequest = null;
+                claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest, "", "");
+            } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
+                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), BreathingSpaceRequest.class);
+                breathingSpace.breathingSpace(request);
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
+
     }
 
     @Override
