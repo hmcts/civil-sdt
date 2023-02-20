@@ -30,6 +30,9 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import uk.gov.moj.sdt.cmc.consumers.xml.XmlReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -59,10 +63,6 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 import uk.gov.moj.sdt.validators.RequestTypeValidator;
 
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
-import javax.xml.ws.WebServiceException;
-
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -74,6 +74,8 @@ import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStat
 @Service("TargetApplicationSubmissionService")
 public class TargetApplicationSubmissionService extends AbstractSdtService implements
         ITargetApplicationSubmissionService {
+
+    private static final String CLAIM_NUMBER = "claimNumber";
 
     /**
      * Logger object.
@@ -101,6 +103,10 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * web service.
      */
     private IConsumerGateway cmcRequestConsumer;
+
+    private CCDReferenceValidator ccdReferenceValidator;
+
+    private  XmlReader xmlReader;
 
     /**
      * The ICacheable reference to the global parameters cache.
@@ -133,12 +139,16 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                               @Qualifier("CmcConsumerGateway")
                                                   IConsumerGateway cmcRequestConsumer,
                                               @Qualifier("MessageWriter")
-                                                  IMessageWriter messageWriter) {
+                                                  IMessageWriter messageWriter,
+                                              CCDReferenceValidator ccdReferenceValidator,
+                                              XmlReader xmlReader) {
         super(individualRequestDao, individualResponseXmlParser);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.messageWriter = messageWriter;
+        this.ccdReferenceValidator =ccdReferenceValidator;
+        this.xmlReader = xmlReader;
     }
 
     @Override
@@ -401,13 +411,19 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * @return the request consumer.
      */
     private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
-        if (CCDReferenceValidator.isValidCCDReference("")) {
+        if (isCCDReference(individualRequest)) {
             if (!RequestTypeValidator.isValidRequestType(individualRequest.getRequestType())) {
                 throw new InvalidRequestTypeException(individualRequest.getRequestType());
             }
             return cmcRequestConsumer;
         }
         return requestConsumer;
+    }
+
+
+    private boolean isCCDReference(IIndividualRequest individualRequest) {
+        String claimNumber = xmlReader.getElementValue(individualRequest.getRequestPayload(), CLAIM_NUMBER);
+        return ccdReferenceValidator.isValidCCDReference(claimNumber);
     }
 
     /**
