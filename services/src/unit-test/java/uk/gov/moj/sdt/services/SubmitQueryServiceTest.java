@@ -65,6 +65,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.ws.WebServiceException;
+import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
 /**
  * Test class for SubmitQueryService.
@@ -99,6 +100,8 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
      */
     private IBulkCustomerDao mockBulkCustomerDao;
 
+    private CCDReferenceValidator ccdReferenceValidator;
+
     /**
      * Method to do any pre-test set-up.
      */
@@ -112,6 +115,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         mockGlobalParamCache = EasyMock.createMock(ICacheable.class);
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
         mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
+        ccdReferenceValidator = EasyMock.createMock(CCDReferenceValidator.class);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
@@ -122,7 +126,8 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                                                     mockErrorMsgCacheable,
                                                     genericParser,
                                                     genericParser,
-                                                    mockBulkCustomerDao);
+                                                    mockBulkCustomerDao,
+                                                    ccdReferenceValidator);
         submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
 
     }

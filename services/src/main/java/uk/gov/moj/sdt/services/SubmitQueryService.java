@@ -107,6 +107,8 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private IBulkCustomerDao bulkCustomerDao;
 
+    private CCDReferenceValidator ccdReferenceValidator;
+
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
@@ -121,7 +123,8 @@ public class SubmitQueryService implements ISubmitQueryService {
                               @Qualifier("SubmitQueryResponseXmlParser")
                                   GenericXmlParser queryResponseXmlParser,
                               @Qualifier("BulkCustomerDao")
-                                  IBulkCustomerDao bulkCustomerDao) {
+                                  IBulkCustomerDao bulkCustomerDao,
+                              CCDReferenceValidator ccdReferenceValidator) {
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.globalParametersCache = globalParametersCache;
@@ -129,6 +132,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         this.queryRequestXmlParser = queryRequestXmlParser;
         this.queryResponseXmlParser = queryResponseXmlParser;
         this.bulkCustomerDao = bulkCustomerDao;
+        this.ccdReferenceValidator = ccdReferenceValidator;
     }
 
     /**
@@ -433,7 +437,7 @@ public class SubmitQueryService implements ISubmitQueryService {
     }
 
     private IConsumerGateway getRequestConsumer(ISubmitQueryRequest submitQueryRequest) {
-        if (CCDReferenceValidator.isValidCCDReference("")) {
+        if (ccdReferenceValidator.isValidCCDReference("")) {
             return cmcRequestConsumer;
         }
         return requestConsumer;
