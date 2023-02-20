@@ -150,7 +150,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.messageWriter = messageWriter;
-        this.ccdReferenceValidator =ccdReferenceValidator;
+        this.ccdReferenceValidator = ccdReferenceValidator;
         this.xmlReader = xmlReader;
     }
 
