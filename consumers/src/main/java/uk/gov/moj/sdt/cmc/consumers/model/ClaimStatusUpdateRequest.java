@@ -28,6 +28,6 @@ public class ClaimStatusUpdateRequest extends CMCRequest {
         this.updateType = updateType;
         this.paidInFullDate = paidInFullDate;
         this.section38Compliancy = section38Compliancy;
-        setRequestType(RequestType.CLAIM_STATUS_UPDATE);
+        setRequestTypeName(RequestType.CLAIM_STATUS_UPDATE);
     }
 }
