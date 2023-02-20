@@ -33,7 +33,7 @@ public class CmcConsumerGateway implements IConsumerGateway {
     @Autowired
     public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
-                              @Qualifier("ClaimStatusUpdateService") IClaimDefences claimDefences,
+                              @Qualifier("ClaimDefencesService") IClaimDefences claimDefences,
                               XmlToObject xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
