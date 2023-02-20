@@ -107,6 +107,10 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private IConsumerGateway cmcRequestConsumer;
 
+    private CCDReferenceValidator ccdReferenceValidator;
+
+    private  XmlReader xmlReader;
+
     /**
      * The ICacheable reference to the global parameters cache.
      */
@@ -138,12 +142,16 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                               @Qualifier("ConsumerGateway")
                                                   IConsumerGateway cmcRequestConsumer,
                                               @Qualifier("MessageWriter")
-                                                  IMessageWriter messageWriter) {
+                                                  IMessageWriter messageWriter,
+                                              CCDReferenceValidator ccdReferenceValidator,
+                                              XmlReader xmlReader) {
         super(individualRequestDao, individualResponseXmlParser);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.messageWriter = messageWriter;
+        this.ccdReferenceValidator =ccdReferenceValidator;
+        this.xmlReader = xmlReader;
     }
 
     @Override
@@ -424,8 +432,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
-        String claimNumber = XmlReader.getElementValue(individualRequest.getRequestPayload(), CLAIM_NUMBER);
-        return CCDReferenceValidator.isValidCCDReference(claimNumber);
+        String claimNumber = xmlReader.getElementValue(individualRequest.getRequestPayload(), CLAIM_NUMBER);
+        return ccdReferenceValidator.isValidCCDReference(claimNumber);
     }
 
     /**

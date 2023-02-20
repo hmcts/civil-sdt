@@ -20,7 +20,8 @@ class XmlReaderTest extends BaseXmlTest {
     @Test
     void shouldConvertBreathingSpaceRequestToString() throws IOException {
         String xmlContent = readXmlAsString(BREATHING_SPACE);
-        String claimNumberValue = XmlReader.getElementValue(xmlContent, "claimNumber");
+        XmlReader xmlReader = new XmlReader();
+        String claimNumberValue = xmlReader.getElementValue(xmlContent, "claimNumber");
         assertNotNull(claimNumberValue);
         assertEquals("H0PR0001", claimNumberValue);
     }

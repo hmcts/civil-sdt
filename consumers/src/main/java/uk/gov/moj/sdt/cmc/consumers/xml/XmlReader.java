@@ -7,14 +7,13 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-public final class XmlReader {
+@Component
+public class XmlReader {
 
-    private XmlReader() {
-    }
-
-    public static String getElementValue(String xmlContent, String xmlNodeName) {
+    public String getElementValue(String xmlContent, String xmlNodeName) {
         try {
             XmlMapper xmlMapper = new XmlMapper();
             ObjectNode dataInstance = xmlMapper.readValue(xmlContent.getBytes(), ObjectNode.class);
@@ -25,7 +24,7 @@ public final class XmlReader {
         return "";
     }
 
-    private static String getValuesInObject(ObjectNode jsonObject, String key) {
+    private String getValuesInObject(ObjectNode jsonObject, String key) {
         Iterator<Map.Entry<String, JsonNode>> iterator = jsonObject.fields();
         while(iterator.hasNext()) {
             Map.Entry<String, JsonNode> entrySet = iterator.next();
