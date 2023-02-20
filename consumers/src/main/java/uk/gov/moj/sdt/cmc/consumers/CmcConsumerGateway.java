@@ -28,17 +28,13 @@ public class CmcConsumerGateway implements IConsumerGateway {
 
     private IClaimDefences claimDefences;
 
-    private XmlToObject xmlToObject;
-
     @Autowired
     public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
-                              @Qualifier("ClaimDefencesService") IClaimDefences claimDefences,
-                              XmlToObject xmlToObject) {
+                              @Qualifier("ClaimDefencesService") IClaimDefences claimDefences) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
         this.claimDefences = claimDefences;
-        this.xmlToObject = xmlToObject;
     }
 
     @Override
@@ -51,7 +47,7 @@ public class CmcConsumerGateway implements IConsumerGateway {
                 ClaimStatusUpdateRequest claimStatusUpdateRequest = null;
                 claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest, "", "");
             } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
-                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), BreathingSpaceRequest.class);
+                BreathingSpaceRequest request = XmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), BreathingSpaceRequest.class);
                 breathingSpace.breathingSpace(request);
             }
         } catch (Exception e) {
