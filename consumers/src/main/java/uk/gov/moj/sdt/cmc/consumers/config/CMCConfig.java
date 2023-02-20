@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableFeignClients
-public class CmcConfig {
+public class CMCConfig {
 }

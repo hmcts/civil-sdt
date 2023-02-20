@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -15,17 +16,17 @@ import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 
-@Component("CmcConsumerGateway")
-public class CmcConsumerGateway implements IConsumerGateway {
+@Component("CMCConsumerGateway")
+public class CMCConsumerGateway implements IConsumerGateway {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmcConsumerGateway.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
 
     private IBreathingSpace breathingSpace;
 
     private XmlToObject xmlToObject;
 
     @Autowired
-    public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
+    public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               XmlToObject xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.xmlToObject = xmlToObject;
@@ -41,7 +42,7 @@ public class CmcConsumerGateway implements IConsumerGateway {
                                                                            BreathingSpaceRequest.class);
             breathingSpace.breathingSpace(request);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CMCException(e.getMessage(), e);
         }
     }
 
