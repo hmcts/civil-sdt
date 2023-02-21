@@ -63,6 +63,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
+import static uk.gov.moj.sdt.domain.RequestType.BREATHING_SPACE;
 import static uk.gov.moj.sdt.domain.RequestType.CLAIM_STATUS_UPDATE;
 import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
 import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT_WARRANT;
@@ -429,7 +430,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         return JUDGMENT.getRequestType().equalsIgnoreCase(requestType)
             || WARRANT.getRequestType().equalsIgnoreCase(requestType)
             || CLAIM_STATUS_UPDATE.getRequestType().equalsIgnoreCase(requestType)
-            || JUDGMENT_WARRANT.getRequestType().equalsIgnoreCase(requestType);
+            || JUDGMENT_WARRANT.getRequestType().equalsIgnoreCase(requestType)
+            || BREATHING_SPACE.getRequestType().equalsIgnoreCase(requestType);
     }
 
     private boolean isCCDReference(IIndividualRequest individualRequest) {
