@@ -34,7 +34,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5432}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
-    username: ${SDT_DB_USERNAME:postgres}
+    username: ${SDT_DB_USERNAME:civil_sdt}
     password: ${SDT_DB_PASSWORD:test}
     hikari:
       minimumIdle: ${SDT_DB_MIN_IDLE:2}
@@ -44,10 +44,20 @@ spring:
       connectionTimeout: 60000
   jpa:
     database: postgresql
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_versioned_data: true
+          batch_size: 100
+        temp:
+          use_jdbc_metadata_defaults: false
+
   flyway:
     ignore-missing-migrations: 'true'
     baseline-version: '0001'
-    out-of-order: 'true'
+    out-of-order: 'false'
     baseline-on-migrate: 'true'
 
 azure:
