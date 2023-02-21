@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -14,30 +15,35 @@ import org.springframework.stereotype.Component;
 public class XmlElementValueReader {
 
     public String getElementValue(String xmlContent, String xmlNodeName) {
+        JsonNode entityNode = null;
         try {
             XmlMapper xmlMapper = new XmlMapper();
-            ObjectNode dataInstance = xmlMapper.readValue(xmlContent.getBytes(), ObjectNode.class);
-            return getValuesInObject(dataInstance, xmlNodeName);
+            JsonNode jsonNode = xmlMapper.readValue(xmlContent.getBytes(), JsonNode.class);
+            entityNode = getValuesInObject(jsonNode, xmlNodeName);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        return "";
+        return entityNode != null ? entityNode.textValue() : "";
     }
 
-    private String getValuesInObject(ObjectNode jsonObject, String key) {
-        Iterator<Map.Entry<String, JsonNode>> iterator = jsonObject.fields();
-        while(iterator.hasNext()) {
-            Map.Entry<String, JsonNode> entrySet = iterator.next();
-            JsonNode valueNode = entrySet.getValue();
-            String currentKey = entrySet.getKey();
-            if (currentKey.equals(key)) {
-                return valueNode.textValue();
-            }
-
-            if (valueNode instanceof ObjectNode) {
-                return getValuesInObject((ObjectNode) valueNode, key);
+    private JsonNode getValuesInObject(JsonNode node, String entityName) {
+        if (node == null) {
+            return null;
+        }
+        if (node.has(entityName)) {
+            return node.get(entityName);
+        }
+        if (!node.isContainerNode()) {
+            return null;
+        }
+        for (JsonNode child : node) {
+            if (child.isContainerNode()) {
+                JsonNode childResult = getValuesInObject(child, entityName);
+                if (childResult != null && !childResult.isMissingNode()) {
+                    return childResult;
+                }
             }
         }
-        return "";
+        return null;
     }
 }

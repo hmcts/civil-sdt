@@ -13,6 +13,8 @@ class XmlReaderTest extends BaseXmlTest {
 
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
 
+    private static final String CLAIM_DEFENCES = "ClaimDefences.xml";
+
     @BeforeEach
     public void setup() {
     }
@@ -24,6 +26,15 @@ class XmlReaderTest extends BaseXmlTest {
         String claimNumberValue = xmlReader.getElementValue(xmlContent, "claimNumber");
         assertNotNull(claimNumberValue);
         assertEquals("H0PR0001", claimNumberValue);
+    }
+
+    @Test
+    void findFromDateFromClaimDefencesXmlString() throws IOException {
+        String xmlContent = readXmlAsString(CLAIM_DEFENCES);
+        XmlElementValueReader xmlReader = new XmlElementValueReader();
+        String fromDate = xmlReader.getElementValue(xmlContent, "fromDate");
+        assertNotNull(fromDate);
+        assertEquals("2009-12-01", fromDate);
     }
 
 }
