@@ -30,16 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -51,11 +48,16 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test class for the Individual Request Dao.
@@ -63,10 +65,9 @@ import java.util.List;
  * @author Son Loi
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/IndividualRequestDaoTest.sql"})
-public class IndividualRequestDaoTest extends AbstractIntegrationTest {
+class IndividualRequestDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
@@ -76,10 +77,6 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
      * *Individual Request DAO.
      */
     private IIndividualRequestDao individualRequestDao;
-
-    private IBulkCustomerDao iBulkCustomerDao;
-
-    private IBulkSubmissionDao iBulkSubmissionDao;
 
     /**
      * Bulk Customer to use for the test.
@@ -99,11 +96,11 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
     /**
      * Setup the test.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         individualRequestDao = (IIndividualRequestDao) this.applicationContext.getBean("IndividualRequestDao");
-        iBulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
-        iBulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
+        IBulkSubmissionDao iBulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
+        IBulkCustomerDao iBulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         bulkSubmission = iBulkSubmissionDao.fetch(BulkSubmission.class, 10710);
         bulkCustomer = iBulkCustomerDao.fetch(BulkCustomer.class, 10711);
@@ -114,111 +111,103 @@ public class IndividualRequestDaoTest extends AbstractIntegrationTest {
      * Test the retrieval of an Individual Request by SDT Request Reference.
      */
     @Test
-    public void testGetRequestBySdtReference() {
+    void testGetRequestBySdtReference() {
 
         final String sdtRequestReference = "SDT_REQ_TEST_1";
         // There should already be a record in the DB loaded as part of the test
         final IIndividualRequest individualRequest = individualRequestDao.getRequestBySdtReference(sdtRequestReference);
 
-        Assert.assertNotNull(individualRequest);
-        Assert.assertEquals(sdtRequestReference, individualRequest.getSdtRequestReference());
-
+        assertNotNull(individualRequest);
+        assertEquals(sdtRequestReference, individualRequest.getSdtRequestReference());
     }
 
     /**
      * Test the upper limit of the data retention period, i.e. today
      */
     @Test
-    public void testGetIndividualRequestUpper() {
+    void testGetIndividualRequestUpper() {
         final String customerRequestReference = "customer request reference 1";
 
         createIndividualRequest(customerRequestReference, LocalDateTime.now());
 
         final IIndividualRequest individualRequest =
                 individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
-        Assert.assertNotNull(individualRequest);
-        Assert.assertEquals(individualRequest.getCustomerRequestReference(), customerRequestReference);
-
+        assertNotNull(individualRequest);
+        assertEquals(individualRequest.getCustomerRequestReference(), customerRequestReference);
     }
 
     /**
      * Test the upper limit of the data retention period, i.e. 90 days ago.
      */
     @Test
-    public void testGetBulkSubmissionLower() {
+    void testGetBulkSubmissionLower() {
         final String customerRequestReference = "customer request reference 2";
         // Set the created date to be 90 days ago
 
-        createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays(dataRetentionPeriod * -1));
+        createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays(dataRetentionPeriod * -1L));
         final IIndividualRequest individualRequest =
                 individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
 
-        Assert.assertNotNull(individualRequest);
-        Assert.assertEquals(individualRequest.getCustomerRequestReference(), customerRequestReference);
-
+        assertNotNull(individualRequest);
+        assertEquals(individualRequest.getCustomerRequestReference(), customerRequestReference);
     }
 
     /**
      * Test with an individual request past 90 days ago and use an old customer reference.
      */
     @Test
-    public void testGetIndividualRequestPastRetention() {
+    void testGetIndividualRequestPastRetention() {
         final String customerRequestReference = "customer request reference 1";
 
-        createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays((dataRetentionPeriod + 1) * -1));
+        createIndividualRequest(customerRequestReference, LocalDateTime.now().plusDays((dataRetentionPeriod + 1) * -1L));
         IIndividualRequest individualRequest = individualRequestDao.getIndividualRequest(bulkCustomer, customerRequestReference, dataRetentionPeriod);
-        Assert.assertNull(individualRequest);
-
+        assertNull(individualRequest);
     }
 
     /**
      * Test stale individual request updated 1 day ago.
      */
     @Test
-    public void testStaleIndividualRequestWithDeadLetter() {
+    void testStaleIndividualRequestWithDeadLetter() {
         // Get requests that have been updated more than 12 hrs ago.
         final List<IIndividualRequest> individualRequests = individualRequestDao.getStaleIndividualRequests(720);
 
-        Assert.assertNotNull(individualRequests);
-
-        Assert.assertEquals("The individual requests size is not correct", 2, individualRequests.size());
-
+        assertNotNull(individualRequests);
+        assertEquals(2, individualRequests.size(), "The individual requests size is not correct");
     }
 
     /**
      * Test get individual request not found.
      */
     @Test
-    public void testGetBulkSubmissionNotFound() {
-
+    void testGetBulkSubmissionNotFound() {
         final IIndividualRequest individualRequest =
                 individualRequestDao.getIndividualRequest(bulkCustomer, "NOT_FOUND", dataRetentionPeriod);
 
-        Assert.assertNull(individualRequest);
-
+        assertNull(individualRequest);
     }
 
     /**
      * Test where pending individual requests are found.
      */
     @Test
-    public void getPendingIndividualRequestsFound() {
+    void getPendingIndividualRequestsFound() {
         final List<IIndividualRequest> individualRequests = individualRequestDao.getPendingIndividualRequests(3);
 
-        Assert.assertNotNull(individualRequests);
-        Assert.assertTrue("Pending individual requests found", individualRequests.size() > 0);
-        Assert.assertEquals("The pending requests size is not correct", 1, individualRequests.size());
+        assertNotNull(individualRequests);
+        assertFalse(individualRequests.isEmpty(), "Pending individual requests not found");
+        assertEquals(1, individualRequests.size(), "The pending requests size is not correct");
     }
 
     /**
      * Test where pending individual requests are not found.
      */
     @Test
-    public void getPendingIndividualRequestsNotFound() {
+    void getPendingIndividualRequestsNotFound() {
         final List<IIndividualRequest> individualRequests = individualRequestDao.getPendingIndividualRequests(4);
 
-        Assert.assertNotNull(individualRequests);
-        Assert.assertTrue("Pending individual requests not found", individualRequests.size() == 0);
+        assertNotNull(individualRequests);
+        assertTrue(individualRequests.isEmpty(), "Pending individual requests found");
     }
 
     /**
