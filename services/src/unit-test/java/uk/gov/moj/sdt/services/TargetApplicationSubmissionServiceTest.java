@@ -44,7 +44,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlReader;
+import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -121,7 +121,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
      */
     private ICacheable mockErrorMsgCacheable;
 
-    private XmlReader xmlReader;
+    private XmlElementValueReader xmlReader;
 
     private CCDReferenceValidator ccdReferenceValidator;
 
@@ -139,7 +139,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         mockMessageWriter = EasyMock.createMock(IMessageWriter.class);
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
         ccdReferenceValidator = EasyMock.createMock(CCDReferenceValidator.class);
-        xmlReader = EasyMock.createMock(XmlReader.class);
+        xmlReader = EasyMock.createMock(XmlElementValueReader.class);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");

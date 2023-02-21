@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class XmlReader {
+public class XmlElementValueReader {
 
     public String getElementValue(String xmlContent, String xmlNodeName) {
         try {

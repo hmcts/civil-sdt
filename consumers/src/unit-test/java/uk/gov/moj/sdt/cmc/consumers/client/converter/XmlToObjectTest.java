@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,7 +14,7 @@ class XmlToObjectTest extends BaseXmlTest {
 
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
 
-    private XmlToObject xmlToObject = new XmlToObject();
+    private XmlToObjectConverter xmlToObject = new XmlToObjectConverter();
 
     @BeforeEach
     public void setup() {

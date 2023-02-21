@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
@@ -32,7 +32,7 @@ class CMCConsumerGatewayTest {
 
     private CMCConsumerGateway cmcConsumerGateway;
 
-    private XmlToObject xmlToObject;
+    private XmlToObjectConverter xmlToObject;
 
     private IBreathingSpace breathingSpace;
 
@@ -40,7 +40,7 @@ class CMCConsumerGatewayTest {
 
     @BeforeEach
     public void setUpLocalTests() {
-        xmlToObject = mock(XmlToObject.class);
+        xmlToObject = mock(XmlToObjectConverter.class);
         breathingSpace = mock(IBreathingSpace.class);
         individualRequest = mock(IIndividualRequest.class);
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, xmlToObject);

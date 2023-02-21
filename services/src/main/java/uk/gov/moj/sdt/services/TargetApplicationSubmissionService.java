@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlReader;
+import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -109,7 +109,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
     private CCDReferenceValidator ccdReferenceValidator;
 
-    private  XmlReader xmlReader;
+    private XmlElementValueReader xmlReader;
 
     /**
      * The ICacheable reference to the global parameters cache.
@@ -144,7 +144,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                               @Qualifier("MessageWriter")
                                                   IMessageWriter messageWriter,
                                               CCDReferenceValidator ccdReferenceValidator,
-                                              XmlReader xmlReader) {
+                                              XmlElementValueReader xmlReader) {
         super(individualRequestDao, individualResponseXmlParser);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;

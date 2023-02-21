@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
@@ -23,11 +23,11 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private IBreathingSpace breathingSpace;
 
-    private XmlToObject xmlToObject;
+    private XmlToObjectConverter xmlToObject;
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
-                              XmlToObject xmlToObject) {
+                              XmlToObjectConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.xmlToObject = xmlToObject;
     }
