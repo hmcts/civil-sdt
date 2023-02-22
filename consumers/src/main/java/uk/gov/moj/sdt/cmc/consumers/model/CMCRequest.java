@@ -3,13 +3,13 @@ package uk.gov.moj.sdt.cmc.consumers.model;
 import uk.gov.moj.sdt.domain.RequestType;
 
 public abstract class CMCRequest {
-    private RequestType requestType;
+    private RequestType requestTypeName;
 
-    public RequestType getRequestType() {
-        return requestType;
+    public RequestType getRequestTypeName() {
+        return requestTypeName;
     }
 
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
+    public void setRequestTypeName(RequestType requestTypeName) {
+        this.requestTypeName = requestTypeName;
     }
 }
