@@ -1,12 +1,12 @@
 package uk.gov.moj.sdt.cmc.consumers.model.breathingspace;
 
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
 @ToString
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BreathingSpace {
 
     private String claimNumber;
@@ -14,4 +14,28 @@ public class BreathingSpace {
     private String defendantId;
 
     private String breathingSpaceNotificationType;
+
+    public void setClaimNumber(String claimNumber) {
+        this.claimNumber = claimNumber;
+    }
+
+    public void setDefendantId(String defendantId) {
+        this.defendantId = defendantId;
+    }
+
+    public void setBreathingSpaceNotificationType(String breathingSpaceNotificationType) {
+        this.breathingSpaceNotificationType = breathingSpaceNotificationType;
+    }
+
+    public String getCaseManRef() {
+        return claimNumber;
+    }
+
+    public String getRespondentId() {
+        return defendantId;
+    }
+
+    public String getBsType() {
+        return breathingSpaceNotificationType;
+    }
 }

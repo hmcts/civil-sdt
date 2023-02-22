@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpace;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,9 +30,9 @@ public class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void getClient() {
-        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
+        BreathingSpace breathingSpaceRequest = mock(BreathingSpace.class);
         breathingSpaceService.breathingSpace(breathingSpaceRequest);
-        verify(cmcApi).breathingSpace(anyString(), anyString(), any(BreathingSpaceRequest.class));
+        verify(cmcApi).breathingSpace(anyString(), anyString(), any(BreathingSpace.class));
     }
 
 }

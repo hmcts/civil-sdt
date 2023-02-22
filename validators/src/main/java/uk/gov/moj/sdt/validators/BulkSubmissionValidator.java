@@ -86,10 +86,12 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
                                         @Qualifier("ErrorMessagesCache")
                                             ICacheable errorMessagesCache,
                                         @Qualifier("BulkSubmissionDao")
-                                           IBulkSubmissionDao bulkSubmissionDao) {
+                                           IBulkSubmissionDao bulkSubmissionDao,
+                                   @Qualifier("concurrentMap")
+                                           Map<String, IInFlightMessage> concurrentMap) {
         super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
         this.bulkSubmissionDao = bulkSubmissionDao;
-        this.concurrencyMap = new ConcurrentHashMap<>();
+        this.concurrencyMap = concurrentMap;
     }
 
     @Override
@@ -184,15 +186,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             bulkSubmission.setErrorText(getErrorMessage(replacements, IErrorMessage.ErrorCode.NO_VALID_REQS));
             bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus());
         }
-    }
-
-    /**
-     * Set concurrency map.
-     *
-     * @param concurrencyMap map holding in flight bulk requests.
-     */
-    public void setConcurrencyMap(final Map<String, IInFlightMessage> concurrencyMap) {
-        this.concurrencyMap = concurrencyMap;
     }
 
     /**

@@ -52,6 +52,7 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
@@ -118,7 +119,9 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                                  @Qualifier("SdtBulkReferenceGenerator")
                                      ISdtBulkReferenceGenerator sdtBulkReferenceGenerator,
                                  @Qualifier("ErrorMessagesCache")
-                                     ICacheable errorMessagesCache) {
+                                     ICacheable errorMessagesCache,
+                                 @Qualifier("concurrentMap")
+                                         Map<String, IInFlightMessage> concurrentMap) {
         this.genericDao = genericDao;
         this.bulkCustomerDao = bulkCustomerDao;
         this.targetApplicationDao = targetApplicationDao;
@@ -126,7 +129,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         this.messagingUtility = messagingUtility;
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
         this.errorMessagesCache = errorMessagesCache;
-        this.concurrencyMap = new ConcurrentHashMap<>();
+        this.concurrencyMap = concurrentMap;
     }
 
     /**
