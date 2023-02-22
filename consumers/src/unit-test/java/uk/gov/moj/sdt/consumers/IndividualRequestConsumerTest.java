@@ -35,6 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -44,7 +45,7 @@ import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
-import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -125,9 +126,6 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
 
         individualRequest = this.createIndividualRequest();
         individualRequestType = this.createRequestType(individualRequest);
-
-        // Setup SDT context for logging.
-        SdtContext.getContext().getLoggingContext().setLoggingFlags(Integer.MAX_VALUE);
     }
 
     @Test
@@ -173,8 +171,12 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         doReturn(mockClient).when(individualRequestConsumer)
             .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
-        individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
-                RECEIVE_TIME_OUT);
+        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
+            mockStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
+                .thenReturn(true);
+            individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
+                                                               RECEIVE_TIME_OUT);
+        }
 
         verify(mockTransformer, atLeastOnce()).transformJaxbToDomain(individualResponseType, individualRequest);
         verify(mockTransformer).transformDomainToJaxb(individualRequest);
@@ -224,8 +226,8 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
     {
         when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        wsException.initCause (new ConnectException("Server down error"));
+        final WebServiceException wsException = mock(WebServiceException.class);
+        when(wsException.getCause()).thenReturn(new ConnectException("Server down error"));
 
         when(mockClient.submitIndividual(individualRequestType)).thenThrow (wsException);
 
@@ -254,7 +256,7 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
      * Using Future to cancel out of the Thread.sleep loop for coverage
      */
     @Test
-    void processIndividualRequestOutageReattemptLoop() throws SOAPException, InterruptedException {
+    void processIndividualRequestOutageReattemptLoop() {
         when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
 
         final WebServiceException wsException = new WebServiceException ();
@@ -275,7 +277,7 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
                                                                      RECEIVE_TIME_OUT)
         );
         try {
-            future.get(CONNECTION_TIME_OUT / 2, TimeUnit.MILLISECONDS);
+            future.get(CONNECTION_TIME_OUT / 4, TimeUnit.MILLISECONDS);
         } catch (Exception  e) {
             future.cancel(true);
         } finally {
@@ -295,7 +297,6 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
 
         verify(mockTransformer, times(2)).transformDomainToJaxb(individualRequest);
         verify(mockClient, times(3)).submitIndividual(individualRequestType);
-        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
     }
 
     /**
@@ -413,10 +414,10 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         final CreateStatusType status = new CreateStatusType();
         status.setCode(CreateStatusCodeType.ACCEPTED);
 
-        ErrorType mockError = new ErrorType();
-        mockError.setCode("MOCK_CODE");
-        mockError.setDescription("MOCK DESCRIPTION");
-        status.setError(mockError);
+        ErrorType errorType = new ErrorType();
+        errorType.setCode("MOCK_CODE");
+        errorType.setDescription("MOCK DESCRIPTION");
+        status.setError(errorType);
 
         responseType.setStatus(status);
 
