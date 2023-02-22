@@ -101,8 +101,7 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
                                                                                        createDatePredicate(criteriaBuilder, root, dataRetention)
                                                                                    ));
 
-
-        return typedQuery.getSingleResult();
+        return typedQuery.getResultStream().findFirst().orElse(null);
     }
 
     @Override
@@ -129,6 +128,6 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
                                                                                        sdtBulkRefPredicate,
                                                                                        createDatePredicate(criteriaBuilder, root, dataRetention)
                                                                                    ));
-        return typedQuery.getSingleResult();
+        return typedQuery.getResultStream().findFirst().orElse(null);
     }
 }

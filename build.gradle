@@ -135,10 +135,6 @@ dependencyCheck {
 }
 
 ext {
-  set('springCloudVersion', "2021.0.5")
-}
-
-ext {
   lombokVersion = '1.18.24'
   feignJackson = '11.6'
   groovyVersion = '3.0.13!!'
@@ -149,6 +145,7 @@ ext {
   postgresqlVersion = '42.5.1'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
+  springCloudVersion = '2021.0.5'
   tomcatVersion = '9.0.68'
   cxfVersion = '3.5.4'
   jaxwsVersion = "2.3.1"

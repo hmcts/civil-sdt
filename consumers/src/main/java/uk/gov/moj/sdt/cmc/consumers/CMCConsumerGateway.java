@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
+import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
@@ -17,20 +18,20 @@ import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 
-@Component("CmcConsumerGateway")
-public class CmcConsumerGateway implements IConsumerGateway {
+@Component("CMCConsumerGateway")
+public class CMCConsumerGateway implements IConsumerGateway {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmcConsumerGateway.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
 
     private IBreathingSpace breathingSpace;
     private IClaimStatusUpdate claimStatusUpdate;
 
-    private XmlToObject xmlToObject;
+    private XmlToObjectConverter xmlToObject;
 
     @Autowired
-    public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
+    public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
-                              XmlToObject xmlToObject) {
+                              XmlToObjectConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
         this.xmlToObject = xmlToObject;
@@ -50,7 +51,7 @@ public class CmcConsumerGateway implements IConsumerGateway {
                 breathingSpace.breathingSpace(request);
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            throw new CMCException(e.getMessage(), e);
         }
 
     }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.api.CmcApi;
+import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
 
     @Mock
-    private CmcApi cmcApi;
+    private CMCApi cmcApi;
 
     private BreathingSpaceService breathingSpaceService;
 

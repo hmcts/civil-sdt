@@ -2,7 +2,7 @@ package uk.gov.moj.sdt.cmc.consumers.client.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.moj.sdt.cmc.consumers.api.CmcApi;
+import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 
@@ -10,10 +10,10 @@ import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 @Service("BreathingSpaceService")
 public class BreathingSpaceService implements IBreathingSpace {
 
-    private CmcApi cmcApi;
+    private CMCApi cmcApi;
 
     @Autowired
-    public BreathingSpaceService(CmcApi cmcApi) {
+    public BreathingSpaceService(CMCApi cmcApi) {
         this.cmcApi = cmcApi;
     }
 
