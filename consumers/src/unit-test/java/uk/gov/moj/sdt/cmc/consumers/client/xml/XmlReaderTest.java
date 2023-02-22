@@ -1,15 +1,9 @@
 package uk.gov.moj.sdt.cmc.consumers.client.xml;
 
-import java.io.IOException;
-
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlReader;
+import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -17,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class XmlReaderTest extends BaseXmlTest {
 
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
+
     private static final String CLAIM_DEFENCES = "ClaimDefences.xml";
 
     @BeforeEach
@@ -24,38 +19,29 @@ class XmlReaderTest extends BaseXmlTest {
     }
 
     @Test
-    void shouldConvertBreathingSpaceRequestToString() throws IOException {
+    void shouldConvertBreathingSpaceRequestToString() {
         String xmlContent = readXmlAsString(BREATHING_SPACE);
-        XmlReader xmlReader = new XmlReader();
+        XmlElementValueReader xmlReader = new XmlElementValueReader();
         String claimNumberValue = xmlReader.getElementValue(xmlContent, "claimNumber");
         assertNotNull(claimNumberValue);
         assertEquals("H0PR0001", claimNumberValue);
     }
 
     @Test
-    void shouldExtractValuesFromClaimDefencesRequestXml() throws IOException {
-        String fromDate = null;
-        String toDate = null;
-
+    void findValuesFromClaimDefencesXmlString() {
         String xmlContent = readXmlAsString(CLAIM_DEFENCES);
-
-        String jsonContent = XmlToObject.convertXmlToJson(xmlContent);
-        JSONParser jsonParser = new JSONParser();
-        try {
-            Object obj = jsonParser.parse(jsonContent);
-            JSONObject claimDefencesObject = (JSONObject) obj;
-            JSONObject criteriaObject = (JSONObject) claimDefencesObject.get("criteria");
-            JSONObject criterionObject = (JSONObject) criteriaObject.get("criterion");
-            JSONObject mcolDefenceCriteriaObject = (JSONObject) criterionObject.get("mcolDefenceCriteria");
-            fromDate = (String) mcolDefenceCriteriaObject.get("fromDate");
-            toDate = (String) mcolDefenceCriteriaObject.get("toDate");
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-
+        XmlElementValueReader xmlReader = new XmlElementValueReader();
+        String sdtCustomerId = xmlReader.getElementValue(xmlContent, "sdtCustomerId");
+        String targetApplicationId = xmlReader.getElementValue(xmlContent, "targetApplicationId");
+        String fromDate = xmlReader.getElementValue(xmlContent, "fromDate");
+        String toDate = xmlReader.getElementValue(xmlContent, "toDate");
+        assertNotNull(sdtCustomerId);
+        assertEquals("12345678", sdtCustomerId);
+        assertNotNull(targetApplicationId);
+        assertEquals("mcol", targetApplicationId);
         assertNotNull(fromDate);
-        assertNotNull(toDate);
         assertEquals("2009-12-01", fromDate);
+        assertNotNull(toDate);
         assertEquals("2009-12-02", toDate);
     }
 
