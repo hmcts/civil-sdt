@@ -35,6 +35,9 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
@@ -47,6 +50,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
  * @author Manoj Kulkarni
  */
 // CHECKSTYLE:OFF
+@Service("ISdtInternalEndpointPortType")
 @WebService(serviceName = "SdtInternalEndpoint", portName = "SdtInternalEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtInternalEndpoint", wsdlLocation = "wsdl/SdtInternalEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType")
 // CHECKSTYLE:ON
 public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType {
@@ -59,6 +63,11 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
      * Update item handler for handling individual request update.
      */
     private IWsUpdateItemHandler updateItemHandler;
+
+    @Autowired
+    public SdtInternalEndpointPortType(@Qualifier("WsUpdateItemHandler") IWsUpdateItemHandler updateItemHandler) {
+        setUpdateItemHandler(updateItemHandler);
+    }
 
     @Override
     public UpdateResponseType updateItem(final UpdateRequestType updateRequest) {
@@ -87,11 +96,9 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
         try {
             response = updateItemHandler.updateItem(updateRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
-            handleThrowable(throwable);
+            handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
@@ -116,7 +123,7 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
      *
      * @param throwable exception to be handled
      */
-    private void handleThrowable(final Throwable throwable) {
+    private void handleException(final Throwable throwable) {
         LOGGER.error("Unexpected error - ", throwable);
 
         throw new RuntimeException(

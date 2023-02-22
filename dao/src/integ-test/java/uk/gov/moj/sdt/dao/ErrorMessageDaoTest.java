@@ -30,16 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
@@ -50,16 +47,17 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Test {@link ErrorMessageDao} query methods.
  *
  * @author Robin Compston
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/ErrorMessageDaoTest.sql"})
-public class ErrorMessageDaoTest extends AbstractIntegrationTest {
+class ErrorMessageDaoTest extends AbstractIntegrationTest {
 
     /**
      * Logger object.
@@ -70,7 +68,7 @@ public class ErrorMessageDaoTest extends AbstractIntegrationTest {
     CriteriaQuery<ErrorMessage> criteriaQuery;
     Root<ErrorMessage> root;
 
-    @Before
+    @BeforeEach
     public void setup() {
         final ErrorMessageDao bulkCustomersDao = this.applicationContext.getBean(ErrorMessageDao.class);
         criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
@@ -79,13 +77,13 @@ public class ErrorMessageDaoTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void testGetAllErrorMessages() {
+    void testGetAllErrorMessages() {
         final ErrorMessageDao genericDao =  this.applicationContext.getBean(ErrorMessageDao.class);
 
         final IDomainObject[] errorMessages = genericDao.query(ErrorMessage.class, () -> criteriaQuery.select(root));
 
-        LOGGER.debug("Retrieved " + errorMessages.length + " error message(s).");
+        LOGGER.debug("Retrieved {} error message(s).", errorMessages.length);
 
-        Assert.assertEquals(2, errorMessages.length);
+        assertEquals(2, errorMessages.length);
     }
 }
