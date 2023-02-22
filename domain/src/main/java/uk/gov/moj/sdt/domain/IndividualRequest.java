@@ -31,7 +31,10 @@
 
 package uk.gov.moj.sdt.domain;
 
+import javax.persistence.Lob;
+import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -100,6 +103,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * For warrant requests this will be the date of issue.
      * If the request was not successfully processed this field will be blank. Formatted as DDMMYYYY.
      */
+    @Transient
     private LocalDateTime issuedDate;
 
     /**
@@ -150,20 +154,23 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * Target Application Response for Individual Request processing.
      */
     @Column(name = "TARGET_APPLICATION_RESPONSE")
-    private String targetApplicationResponse;
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    private byte[] targetApplicationResponse;
 
     /**
      * Error log.
      */
-    @OneToOne(cascade = CascadeType.ALL, targetEntity= ErrorLog.class)
-    @JoinColumn(name="ERROR_LOG_ID")
+    @Transient
     private IErrorLog errorLog;
 
     /**
      * XML request payload.
      */
     @Column(name = "INDIVIDUAL_PAYLOAD")
-    private String requestPayload;
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    private byte[] requestPayload;
 
     /**
      * Internal system error.
@@ -276,12 +283,12 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     @Override
     public String getRequestPayload() {
-        return requestPayload;
+        return requestPayload == null ? null : new String(requestPayload);
     }
 
     @Override
     public void setRequestPayload(final String requestPayload) {
-        this.requestPayload = requestPayload;
+        this.requestPayload = requestPayload == null ? null : requestPayload.getBytes();
     }
 
     @Override
@@ -296,12 +303,12 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
 
     @Override
     public String getTargetApplicationResponse() {
-        return targetApplicationResponse;
+        return targetApplicationResponse == null ? null : new String(targetApplicationResponse);
     }
 
     @Override
     public void setTargetApplicationResponse(final String targetApplicationResponse) {
-        this.targetApplicationResponse = targetApplicationResponse;
+        this.targetApplicationResponse = targetApplicationResponse == null ? null : targetApplicationResponse.getBytes();
     }
 
     @Override
