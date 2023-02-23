@@ -33,8 +33,6 @@ package uk.gov.moj.sdt.interceptors.in;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -51,7 +49,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
  *
  * @author Robin Compston
  */
-@Component("XmlInboundInterceptor")
 public class XmlInboundInterceptor extends AbstractSdtInterceptor {
     /**
      * Test interceptor to prove concept.

@@ -11,6 +11,7 @@ import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -20,6 +21,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
+import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
@@ -62,7 +67,16 @@ public class CxfConfig {
 
     @Bean
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
-                                SdtEndpointPortType sdtEndpointPortType, ServiceRequestDao serviceRequestDao) {
+                                    SdtEndpointPortType sdtEndpointPortType,
+                                ServiceRequestDao serviceRequestDao,
+                                @Qualifier("SubmitQueryEnricher")
+                                    SubmitQueryEnricher submitQueryEnricher,
+                                @Qualifier("BulkFeedbackEnricher")
+                                    BulkFeedbackEnricher bulkFeedbackEnricher,
+                                @Qualifier("SubmitQueryRequestEnricher")
+                                    GenericEnricher submitQueryRequestEnricher,
+                                @Qualifier("IndividualRequestEnricher")
+                                    GenericEnricher individualRequestEnricher) {
         ServiceRequestInboundInterceptor serviceRequestInboundInterceptor = new ServiceRequestInboundInterceptor(serviceRequestDao);
         PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
         XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
@@ -74,7 +88,15 @@ public class CxfConfig {
                                                 sdtUnmarshallInterceptor,
                                                 serviceRequestInboundInterceptor));
         CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
+
         XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
+        List<AbstractSdtEnricher> enricherList = new ArrayList<>();
+        enricherList.add(submitQueryEnricher);
+        enricherList.add(bulkFeedbackEnricher);
+        enricherList.add(submitQueryRequestEnricher);
+        enricherList.add(individualRequestEnricher);
+        xmlOutboundInterceptor.setEnricherList(enricherList);
+
         ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor = new ServiceRequestOutboundInterceptor(serviceRequestDao);
         CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
         FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(serviceRequestDao);
