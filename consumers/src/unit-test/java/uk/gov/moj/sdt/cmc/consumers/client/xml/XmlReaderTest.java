@@ -1,6 +1,5 @@
 package uk.gov.moj.sdt.cmc.consumers.client.xml;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
@@ -13,10 +12,6 @@ class XmlReaderTest extends BaseXmlTest {
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
 
     private static final String CLAIM_DEFENCES = "ClaimDefences.xml";
-
-    @BeforeEach
-    public void setup() {
-    }
 
     @Test
     void shouldConvertBreathingSpaceRequestToString() {
