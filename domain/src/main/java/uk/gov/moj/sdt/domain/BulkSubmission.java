@@ -31,6 +31,8 @@
 
 package uk.gov.moj.sdt.domain;
 
+import javax.persistence.Lob;
+import org.hibernate.annotations.Type;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
@@ -144,8 +146,10 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
     /**
      * XML payload.
      */
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "BULK_PAYLOAD")
-    private String payload;
+    private byte[] payload;
 
     /**
      * List of individual requests.
@@ -259,12 +263,12 @@ public class BulkSubmission extends AbstractDomainObject implements IBulkSubmiss
 
     @Override
     public String getPayload() {
-        return payload;
+        return payload == null ? null : new String(payload);
     }
 
     @Override
     public void setPayload(final String payload) {
-        this.payload = payload;
+        this.payload = payload == null ? null : payload.getBytes();
     }
 
     @Override

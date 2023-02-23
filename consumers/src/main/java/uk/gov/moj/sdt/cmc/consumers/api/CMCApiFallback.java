@@ -6,20 +6,18 @@ import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 
 @Component
-public class CmcApiFallback implements CmcApi {
+public class CMCApiFallback implements CMCApi {
 
     private IBreathingSpace breathingSpace;
-
     private IClaimDefences claimDefences;
+    private IClaimStatusUpdate claimStatusUpdate;
 
-    private IClaimStatusUpdate claimStatusUpdateService;
-
-    public CmcApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpace breathingSpace,
+    public CMCApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpace breathingSpace,
                           @Qualifier("MockClaimDefencesService") IClaimDefences claimDefences,
-                          @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdateService) {
+                          @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate) {
         this.breathingSpace = breathingSpace;
         this.claimDefences = claimDefences;
-        this.claimStatusUpdateService = claimStatusUpdateService;
+        this.claimStatusUpdate = claimStatusUpdate;
     }
 
     @Override
@@ -34,7 +32,7 @@ public class CmcApiFallback implements CmcApi {
                                     String serviceAuthorization,
                                     String idAmId, String sdtRequestId,
                                     ClaimStatusUpdateRequest claimStatusUpdateRequestObj) {
-        return claimStatusUpdateService.claimStatusUpdate(claimStatusUpdateRequestObj, idAmId, sdtRequestId);
+        return claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequestObj, idAmId, sdtRequestId);
     }
 
     @Override

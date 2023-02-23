@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
-import uk.gov.moj.sdt.cmc.consumers.api.CmcApi;
 import uk.gov.moj.sdt.cmc.consumers.client.impl.ClaimStatusUpdateService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ClaimStatusUpdateRequestServiceTest extends AbstractSdtUnitTestBase {
     @Mock
-    private CmcApi cmcApi;
+    private CMCApi cmcApi;
 
     private ClaimStatusUpdateService claimStatusUpdateService;
 

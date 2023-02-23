@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObject;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
+import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
@@ -19,23 +21,26 @@ import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 
-@Component("CmcConsumerGateway")
-public class CmcConsumerGateway implements IConsumerGateway {
+@Component("CMCConsumerGateway")
+public class CMCConsumerGateway implements IConsumerGateway {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmcConsumerGateway.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
 
     private IBreathingSpace breathingSpace;
     private IClaimStatusUpdate claimStatusUpdate;
-
     private IClaimDefences claimDefences;
 
+    private XmlToObjectConverter xmlToObject;
+
     @Autowired
-    public CmcConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
+    public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
-                              @Qualifier("ClaimDefencesService") IClaimDefences claimDefences) {
+                              @Qualifier("ClaimDefencesService") IClaimDefences claimDefences,
+                              XmlToObjectConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
         this.claimDefences = claimDefences;
+        this.xmlToObject = xmlToObject;
     }
 
     @Override
@@ -48,13 +53,13 @@ public class CmcConsumerGateway implements IConsumerGateway {
                 ClaimStatusUpdateRequest claimStatusUpdateRequest = null;
                 claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest, "", "");
             } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
-                BreathingSpaceRequest request = XmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), BreathingSpaceRequest.class);
+                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
+                        BreathingSpaceRequest.class);
                 breathingSpace.breathingSpace(request);
             }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new CMCException(e.getMessage(), e);
         }
-
     }
 
     @Override
@@ -75,7 +80,7 @@ public class CmcConsumerGateway implements IConsumerGateway {
     private String[] getClaimDefencesFields(ISubmitQueryRequest submitQueryRequest) {
         String xmlContent = null;
         try {
-            xmlContent = XmlToObject.convertObjectToXml(submitQueryRequest);
+            xmlContent = xmlToObject.convertObjectToXml(submitQueryRequest);
         } catch (Exception e) {
             throw new RuntimeException("Unable to extract xml content from submitQueryRequest");
         }
