@@ -52,7 +52,6 @@ import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -107,8 +106,6 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private IBulkCustomerDao bulkCustomerDao;
 
-    private CCDReferenceValidator ccdReferenceValidator;
-
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
@@ -123,8 +120,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                               @Qualifier("SubmitQueryResponseXmlParser")
                                   GenericXmlParser queryResponseXmlParser,
                               @Qualifier("BulkCustomerDao")
-                                  IBulkCustomerDao bulkCustomerDao,
-                              CCDReferenceValidator ccdReferenceValidator) {
+                                  IBulkCustomerDao bulkCustomerDao) {
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.globalParametersCache = globalParametersCache;
@@ -132,7 +128,6 @@ public class SubmitQueryService implements ISubmitQueryService {
         this.queryRequestXmlParser = queryRequestXmlParser;
         this.queryResponseXmlParser = queryResponseXmlParser;
         this.bulkCustomerDao = bulkCustomerDao;
-        this.ccdReferenceValidator = ccdReferenceValidator;
     }
 
     /**
@@ -143,7 +138,7 @@ public class SubmitQueryService implements ISubmitQueryService {
     /**
      * threshold for incoming requests for each target application.
      */
-    private Map<String, Integer> concurrentRequestsInProgress = new HashMap<String, Integer>();
+    private Map<String, Integer> concurrentRequestsInProgress = new HashMap<>();
 
     @Override
     public void submitQuery(final ISubmitQueryRequest submitQueryRequest) {
@@ -236,7 +231,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                 this.getErrorMessagesCache().getValue(IErrorMessage.class,
                         IErrorMessage.ErrorCode.TAR_APP_ERROR.name());
 
-        final List<String> replacements = new ArrayList<String>();
+        final List<String> replacements = new ArrayList<>();
         replacements.add(getContactDetails());
         final String errorText = MessageFormat.format(errorMessageParam.getErrorText(), replacements.toArray());
 
@@ -253,10 +248,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         final IGlobalParameter globalParameter =
                 globalParametersCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
-        final String contactDetails = globalParameter.getValue();
-
-        return contactDetails;
-
+        return globalParameter.getValue();
     }
 
     /**
@@ -269,7 +261,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                 this.getErrorMessagesCache().getValue(IErrorMessage.class,
                         IErrorMessage.ErrorCode.SDT_INT_ERR.name());
 
-        final List<String> replacements = new ArrayList<String>();
+        final List<String> replacements = new ArrayList<>();
         replacements.add(getContactDetails());
         final String errorText = MessageFormat.format(errorMessageParam.getErrorText(), replacements.toArray());
 
@@ -329,15 +321,15 @@ public class SubmitQueryService implements ISubmitQueryService {
             this.concurrentRequestsInProgress.put(targetAppCode, requestsInProgress + 1);
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Increment concurrent requests. Current requests in progress [" +
-                        concurrentRequestsInProgress.size() + "]");
+                LOGGER.debug("Increment concurrent requests. Current requests in progress [{}]",
+                        concurrentRequestsInProgress.size());
             }
         } else
         // reject request
         {
             maxReached = true;
-            LOGGER.warn("Threshold reached for target app [" + targetAppCode + "] - in progress [" +
-                    requestsInProgress + "] max allowed [" + maxConcurrentQueryRequests + "]");
+            LOGGER.warn("Threshold reached for target app [{}] - in progress [{}] max allowed [{}]",
+                    targetAppCode, requestsInProgress, maxConcurrentQueryRequests);
         }
 
         return maxReached;
@@ -362,8 +354,8 @@ public class SubmitQueryService implements ISubmitQueryService {
         // Clear out xml to prevent enrichment
         SdtContext.getContext().setRawOutXml(null);
 
-        LOGGER.error("Request rejected for customer[" + submitQueryRequest.getBulkCustomer().getSdtCustomerId() +
-                "] with error [" + errorLog + "]");
+        LOGGER.error("Request rejected for customer[{}] with error [{}]",
+                submitQueryRequest.getBulkCustomer().getSdtCustomerId(), errorLog);
     }
 
     /**
@@ -424,23 +416,19 @@ public class SubmitQueryService implements ISubmitQueryService {
         long connectionTimeOut = 0;
 
         if (requestTimeOutParam != null) {
-            requestTimeOut = Long.valueOf(requestTimeOutParam.getValue());
+            requestTimeOut = Long.parseLong(requestTimeOutParam.getValue());
         }
 
         if (connectionTimeOutParam != null) {
-            connectionTimeOut = Long.valueOf(connectionTimeOutParam.getValue());
+            connectionTimeOut = Long.parseLong(connectionTimeOutParam.getValue());
         }
 
         LOGGER.debug("Send submit query request to target application");
 
-        getRequestConsumer(submitQueryRequest).submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
-    }
+        // Make 2 calls and summarise the results.
+        requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
-    private IConsumerGateway getRequestConsumer(ISubmitQueryRequest submitQueryRequest) {
-        if (ccdReferenceValidator.isValidCCDReference("")) {
-            return cmcRequestConsumer;
-        }
-        return requestConsumer;
+        cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
     }
 
     /**

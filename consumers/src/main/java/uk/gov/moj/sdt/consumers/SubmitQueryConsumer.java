@@ -31,7 +31,10 @@
 
 package uk.gov.moj.sdt.consumers;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.xml.ws.WebServiceException;
 
@@ -93,6 +96,47 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
                         receiveTimeOut);
 
         this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
+    }
+
+    /* (non-Javadoc)
+     *
+     * @see
+     * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
+     * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest) */
+    //@Override
+    public void processSubmitQuery(final List<ISubmitQueryRequest> listSubmitQueryRequest, final long connectionTimeOut,
+                                   final long receiveTimeOut) throws OutageException, TimeoutException {
+
+        List<SubmitQueryResponseType> listResponseTypes = new ArrayList<>();
+
+        for (ISubmitQueryRequest submitQueryRequest :  listSubmitQueryRequest) {
+            // Transform domain object to web service object
+            final SubmitQueryRequestType submitQueryRequestType =
+                    this.transformer.transformDomainToJaxb(submitQueryRequest);
+
+            // Process and call the end point web service
+            final SubmitQueryResponseType responseType =
+                    this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
+                            receiveTimeOut);
+
+            listResponseTypes.add(responseType);
+        }
+
+        SubmitQueryResponseType responseType = concatenateResponseTypes(listResponseTypes);
+
+      //  this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
+
+    }
+
+    public SubmitQueryResponseType concatenateResponseTypes(List<SubmitQueryResponseType> listResponseTypes) {
+        SubmitQueryResponseType responseTypeSum = new SubmitQueryResponseType();
+        BigInteger sumResultCount = BigInteger.ZERO;
+
+        for (SubmitQueryResponseType responseType : listResponseTypes) {
+            sumResultCount.add(responseType.getResultCount());
+        }
+        responseTypeSum.setResultCount(sumResultCount);
+        return responseTypeSum;
     }
 
     /**
