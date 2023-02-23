@@ -1,8 +1,9 @@
 package uk.gov.moj.sdt.cmc.consumers.api;
 
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 
 public interface IBreathingSpace {
 
-    void breathingSpace(BreathingSpace breathingSpace);
+    BreathingSpaceResponse breathingSpace(BreathingSpaceRequest breathingSpaceRequest);
 }

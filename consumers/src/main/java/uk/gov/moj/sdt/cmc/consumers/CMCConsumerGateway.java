@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -38,8 +38,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
         try {
-            BreathingSpace request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
-                                                                    BreathingSpace.class);
+            BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
+                                                                           BreathingSpaceRequest.class);
             breathingSpace.breathingSpace(request);
         } catch (IOException e) {
             throw new CMCException(e.getMessage(), e);

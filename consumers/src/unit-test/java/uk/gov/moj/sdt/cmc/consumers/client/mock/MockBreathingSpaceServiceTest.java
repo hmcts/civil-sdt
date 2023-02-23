@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.mockito.Mockito.mock;
@@ -22,7 +22,7 @@ public class MockBreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void getClient() {
-        BreathingSpace breathingSpaceRequest = mock(BreathingSpace.class);
+        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         mockBreathingSpaceService.breathingSpace(breathingSpaceRequest);
     }
 }

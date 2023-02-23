@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -30,14 +30,14 @@ class XmlToObjectTest extends BaseXmlTest {
     @Test
     void shouldConvertBreathingSpaceRequest() throws IOException {
         String xmlContent = readXmlAsString(BREATHING_SPACE);
-        BreathingSpace request = xmlToObject.convertXmlToObject(xmlContent, BreathingSpace.class);
+        BreathingSpaceRequest request = xmlToObject.convertXmlToObject(xmlContent, BreathingSpaceRequest.class);
         assertNotNull(request);
     }
 
     @Test
     void shouldConvertBreathingSpaceRequestAndConvertToJson() throws IOException {
         String xmlContent = readXmlAsString(BREATHING_SPACE);
-        BreathingSpace request = xmlToObject.convertXmlToObject(xmlContent, BreathingSpace.class);
+        BreathingSpaceRequest request = xmlToObject.convertXmlToObject(xmlContent, BreathingSpaceRequest.class);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(request);
         assertNotNull(jsonString);
