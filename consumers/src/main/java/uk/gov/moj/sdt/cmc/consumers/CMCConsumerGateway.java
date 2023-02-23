@@ -9,7 +9,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
-import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.claimStatusUpdate.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -44,8 +44,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         LOGGER.debug("Invoke cmc target application service for individual request");
         try {
             if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
-                ClaimStatusUpdateRequest claimStatusUpdateRequest = null;
-                claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest, "", "");
+                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), ClaimStatusUpdateRequest.class);
+                claimStatusUpdate.claimStatusUpdate(request);
             } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), BreathingSpaceRequest.class);
                 breathingSpace.breathingSpace(request);

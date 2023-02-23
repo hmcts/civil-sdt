@@ -1,35 +1,28 @@
-package uk.gov.moj.sdt.consumers.client.mock;
+package uk.gov.moj.sdt.cmc.consumers.client.mock;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.client.mock.MockClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.model.claimStatusUpdate.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import static org.mockito.Mockito.mock;
+
 @ExtendWith(MockitoExtension.class)
-public class MockClaimStatusUpdateRequestServiceTest extends AbstractSdtUnitTestBase {
+public class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
 
     private MockClaimStatusUpdateService mockClaimStatusUpdateService;
-
-    private ClaimStatusUpdateRequest claimStatusUpdateRequestObj;
 
     @BeforeEach
     @Override
     public void setUp() {
-
         mockClaimStatusUpdateService = new MockClaimStatusUpdateService();
-
     }
 
     @Test
     void getClient() {
-        final String idAmId = "";
-        final String sdtRequestId = "";
-
-        //Object returnValue = mockClaimStatusUpdateService.claimStatusUpdate(claimStatusUpdateRequestObj, idAmId, sdtRequestId);
-
-       // assertNull(returnValue);
+        ClaimStatusUpdateRequest claimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
+        mockClaimStatusUpdateService.claimStatusUpdate(claimStatusUpdateRequest);
     }
 }
