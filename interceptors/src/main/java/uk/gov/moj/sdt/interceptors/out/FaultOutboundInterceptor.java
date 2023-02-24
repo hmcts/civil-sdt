@@ -37,11 +37,8 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
@@ -53,7 +50,6 @@ import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
  *
  * @author Robin Compston
  */
-@Component("FaultOutboundInterceptor")
 public class FaultOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Logger object.
@@ -63,7 +59,6 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Test interceptor to prove concept.
      */
-    @Autowired
     public FaultOutboundInterceptor(ServiceRequestDao serviceRequestDao) {
         super(Phase.MARSHAL);
         setServiceRequestDao(serviceRequestDao);

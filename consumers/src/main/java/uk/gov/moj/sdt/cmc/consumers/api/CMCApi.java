@@ -4,12 +4,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CMCConfig;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 
 @FeignClient(name = "civil-api",
     url = "${civil.api.url}",
@@ -18,9 +17,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public interface CMCApi {
 
     @PostMapping("/breathingSpace")
-    void breathingSpace(
-        @RequestHeader(AUTHORIZATION) String authorisation,
-        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+    BreathingSpaceResponse breathingSpace(
         @RequestBody BreathingSpaceRequest breathingSpaceRequest
     );
 

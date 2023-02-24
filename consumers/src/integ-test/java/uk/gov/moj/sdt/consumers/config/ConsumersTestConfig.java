@@ -1,10 +1,13 @@
 package uk.gov.moj.sdt.consumers.config;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -22,36 +25,22 @@ import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
 import uk.gov.moj.sdt.transformers.IndividualRequestConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @ComponentScan("uk.gov.moj.sdt")
 @EnableAutoConfiguration
 @EnableTransactionManagement
 @Configuration
 public class ConsumersTestConfig {
 
-    @Qualifier("XmlOutboundInterceptor")
-    @Autowired
-    private XmlOutboundInterceptor xmlOutboundInterceptor;
 
-    @Qualifier("CacheSetupOutboundInterceptor")
-    @Autowired
-    private CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor;
+    private XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
 
-    @Qualifier("CacheEndOutboundInterceptor")
-    @Autowired
-    private CacheEndOutboundInterceptor cacheEndOutboundInterceptor;
+    private CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
 
-    @Qualifier("XmlInboundInterceptor")
-    @Autowired
-    private XmlInboundInterceptor xmlInboundInterceptor;
+    private CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
 
-    @Qualifier("IndividualRequestConsumerTransformer")
-    @Autowired
-    private IndividualRequestConsumerTransformer transformer;
+    private XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
+
+    private IndividualRequestConsumerTransformer transformer = new IndividualRequestConsumerTransformer();
 
     @Bean
     @Scope("prototype")

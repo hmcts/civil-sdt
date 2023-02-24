@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.services.config;
 
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,6 +19,7 @@ import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 import java.util.HashMap;
 import java.util.Map;
 import javax.jms.ConnectionFactory;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
@@ -124,5 +126,12 @@ public class ServicesConfig {
         );
         genericXmlParser.setReplacementNamespaces(replacementNamespaces);
         return genericXmlParser;
+    }
+
+
+    @Bean
+    @Qualifier("concurrentMap")
+    public Map<String, IInFlightMessage> concurrentMap() {
+        return new ConcurrentHashMap<>();
     }
 }
