@@ -30,16 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.dao;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.config.DaoTestConfig;
@@ -49,12 +46,16 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 /**
  * Test {@link BulkCustomerDao} query methods.
@@ -62,11 +63,10 @@ import javax.persistence.criteria.Root;
  * @author Robin Compston
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/BulkCustomerDaoTest.sql"})
 @Transactional
-public class BulkCustomerDaoTest extends AbstractIntegrationTest {
+class BulkCustomerDaoTest extends AbstractIntegrationTest {
     /**
      * Logger object.
      */
@@ -74,7 +74,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
     CriteriaBuilder criteriaBuilder;
     CriteriaQuery<BulkCustomer> criteriaQuery;
     Root<BulkCustomer> root;
-    @Before
+    @BeforeEach
     public void setup() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
         criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
@@ -86,26 +86,26 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
      * Tests {@link uk.gov.moj.sdt.dao.GenericDao} fetch.
      */
     @Test
-    public void testGetBulkCustomerBySdtId() {
+    void testGetBulkCustomerBySdtId() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.getBulkCustomerBySdtId(2);
         if (bulkCustomer != null) {
-            LOGGER.debug("Retrieved bulk customer id [" + bulkCustomer.getId() + "]");
+            LOGGER.debug("Retrieved bulk customer id [{}]", bulkCustomer.getId());
         } else {
-            Assert.fail("Could not find bulk customer [" + 2 + "]");
+            fail("Could not find bulk customer [" + 2 + "]");
         }
     }
 
     @Test
-    public void testFetchBulkCustomerId() {
+    void testFetchBulkCustomerId() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final IBulkCustomer bulkCustomer = bulkCustomersDao.fetch(IBulkCustomer.class, 10711);
         if (bulkCustomer != null) {
-            LOGGER.debug("Retrieved bulk customer id [" + bulkCustomer.getId() + "]");
+            LOGGER.debug("Retrieved bulk customer id [{}]", bulkCustomer.getId());
         } else {
-            Assert.fail("Could not find bulk customer [" + 10711 + "]");
+            fail("Could not find bulk customer [" + 10711 + "]");
         }
     }
 
@@ -113,7 +113,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
      * Tests the bulk insert.
      */
     @Test
-    public void testBulkInsert() {
+    void testBulkInsert() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final List<BulkCustomer> bulkObjectList = new ArrayList<>();
@@ -131,10 +131,10 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
         final List<BulkCustomer> savedBulkObjectList =
             bulkCustomersDao.queryAsList(BulkCustomer.class, () -> criteriaQuery.select(root).where(createCriteria(456L, 457L)));
 
-        Assert.assertNotNull(savedBulkObjectList);
-        Assert.assertEquals(2, savedBulkObjectList.size());
+        assertNotNull(savedBulkObjectList);
+        assertEquals(2, savedBulkObjectList.size());
         for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
-            Assert.assertNotNull(savedBulkCustomer);
+            assertNotNull(savedBulkCustomer);
         }
 
     }
@@ -143,7 +143,7 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
      * Tests the bulk update.
      */
     @Test
-    public void testBulkUpdate() {
+    void testBulkUpdate() {
         final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
 
         final List<IBulkCustomer> bulkObjectList = new ArrayList<>();
@@ -158,11 +158,11 @@ public class BulkCustomerDaoTest extends AbstractIntegrationTest {
         final List<BulkCustomer> savedBulkObjectList =
             bulkCustomersDao.queryAsList(BulkCustomer.class, () -> criteriaQuery.select(root).where(createCriteria(456L)));
 
-        Assert.assertNotNull(savedBulkObjectList);
-        Assert.assertEquals(1, savedBulkObjectList.size());
+        assertNotNull(savedBulkObjectList);
+        assertEquals(1, savedBulkObjectList.size());
         for (IBulkCustomer savedBulkCustomer : savedBulkObjectList) {
-            Assert.assertNotNull(savedBulkCustomer);
-            Assert.assertEquals(456, savedBulkCustomer.getSdtCustomerId());
+            assertNotNull(savedBulkCustomer);
+            assertEquals(456, savedBulkCustomer.getSdtCustomerId());
         }
     }
 
