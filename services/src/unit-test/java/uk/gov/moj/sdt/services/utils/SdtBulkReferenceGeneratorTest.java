@@ -5,16 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
@@ -36,8 +39,11 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
     void testGetSdtBulkReferenceGenerator() {
 
         String generatedRef = sdtBulkReferenceGenerator.getSdtBulkReference("MCOL");
+        when(genericDaoMock.getNextSequenceValue(anyString())).thenReturn(999L);
 
         assertNotNull(generatedRef);
+        assertTrue(sdtBulkReferenceGenerator.getSdtBulkReference("MCOL").contains("999"));
+        verify(genericDaoMock,times(2)).getNextSequenceValue(anyString());
     }
 
     @Test
@@ -69,8 +75,11 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
         IGenericDao mockGenericDao = mock(GenericDao.class);
         SdtBulkReferenceGenerator sdtBulkReferenceGeneratorObj = new SdtBulkReferenceGenerator(mockGenericDao);
         sdtBulkReferenceGeneratorObj.setGenericDao(mockGenericDao);
+        Object result = this.getAccessibleField(SdtBulkReferenceGenerator.class, "genericDao",
+                                                ISdtBulkReferenceGenerator.class, sdtBulkReferenceGeneratorObj);
 
         assertNotNull(sdtBulkReferenceGeneratorObj,"Object should have been populated");
+        assertEquals(mockGenericDao, result, "GenericDao should be set to an object");
 
     }
 }

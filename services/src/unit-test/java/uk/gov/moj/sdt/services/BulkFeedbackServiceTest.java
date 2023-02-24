@@ -7,27 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.BulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.GlobalParameter;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.ServiceRouting;
-import uk.gov.moj.sdt.domain.ServiceType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.api.IServiceRouting;
-import uk.gov.moj.sdt.domain.api.IServiceType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.*;
+import uk.gov.moj.sdt.domain.api.*;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -114,6 +97,8 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkFeedbackRequest.setId(requestId);
         bulkFeedbackRequest.setSdtBulkReference(reference);
         bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
+
+        bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
     }
 
     @Test
@@ -124,7 +109,6 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         globalParameterData.setValue("90");
         when(mockGlobalParameterCache.getValue(IGlobalParameter.class,
                                                IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).thenReturn(globalParameterData);
-        bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
@@ -228,13 +212,13 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void testSetBulkSubmissionDao() {
-
-        IBulkFeedbackService bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
         IBulkSubmissionDao bulkSubmissionDaoMock = mock(BulkSubmissionDao.class);
-        ((BulkFeedbackService) bulkFeedbackService).setBulkSubmissionDao(bulkSubmissionDaoMock);
+        bulkFeedbackService.setBulkSubmissionDao(bulkSubmissionDaoMock);
 
-        Object result = this.getAccessibleField(BulkFeedbackService.class, "bulkSubmissionDao",
-                                                IBulkSubmissionDao.class, bulkFeedbackService);
+        IBulkSubmissionDao result = (IBulkSubmissionDao) getAccessibleField(BulkFeedbackService.class,
+                                                                            "bulkSubmissionDao",
+                                                                            IBulkSubmissionDao.class,
+                                                                            bulkFeedbackService);
 
         assertEquals(bulkSubmissionDaoMock, result, DAO_SHOULD_BE_SET_TO_OBJECT);
     }
@@ -242,12 +226,13 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
     @Test
     void testSetGlobalParametersCache() {
 
-        IBulkFeedbackService bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
         ICacheable globalParameterCacheMock = mock(ICacheable.class);
-        ((BulkFeedbackService) bulkFeedbackService).setGlobalParametersCache(globalParameterCacheMock);
+        bulkFeedbackService.setGlobalParametersCache(globalParameterCacheMock);
 
-        Object result = this.getAccessibleField(BulkFeedbackService.class, "globalParametersCache",
-                                                ICacheable.class, bulkFeedbackService);
+        ICacheable result = (ICacheable) getAccessibleField(BulkFeedbackService.class,
+                                                            "globalParametersCache",
+                                                            ICacheable.class,
+                                                            bulkFeedbackService);
 
         assertEquals(globalParameterCacheMock, result, CACHE_OBJECT_SHOULD_BE_SET);
     }

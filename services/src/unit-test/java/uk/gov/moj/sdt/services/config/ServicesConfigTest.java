@@ -1,28 +1,25 @@
 package uk.gov.moj.sdt.services.config;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import uk.gov.moj.sdt.services.messaging.QueueConfig;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
 
 import javax.jms.ConnectionFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.gov.moj.sdt.services.messaging.QueueConfig;
-import uk.gov.moj.sdt.services.utils.GenericXmlParser;
-import uk.gov.moj.sdt.services.utils.IndividualRequestsXmlParser;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ServicesConfigTest {
@@ -35,8 +32,14 @@ class ServicesConfigTest {
     private QueueConfig mockQueueConfig;
 @Mock
     private MessageListenerAdapter mockMessageListenerAdaptor;
+@Mock
+    private IndividualRequestsXmlParser mockIndividualRequestXmlParser;
 
     private DefaultMessageListenerContainer defaultMessageListenerContainer;
+
+    public static final String SDT_TARGET_APP_INDV_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema";
+
+    public static final String SDT_BULK_REQUEST_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema";
 
     @Test
     void testMessageListenerContainer(){
@@ -85,7 +88,6 @@ class ServicesConfigTest {
         genericXmlParser = servicesConfig.individualResponseXmlParser();
 
         assertNotNull(genericXmlParser);
-
     }
 
     @Test
@@ -94,8 +96,7 @@ class ServicesConfigTest {
         IndividualRequestsXmlParser genericXmlParser = null;
         ServicesConfig servicesConfig = new ServicesConfig();
         genericXmlParser = servicesConfig.individualRequestsXmlParser();
-
         assertNotNull(genericXmlParser);
-
     }
+
 }

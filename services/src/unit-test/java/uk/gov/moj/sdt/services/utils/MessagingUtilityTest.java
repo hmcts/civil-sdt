@@ -1,21 +1,19 @@
 package uk.gov.moj.sdt.services.utils;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-import uk.gov.moj.sdt.utils.transaction.synchronizer.MessageSynchronizer;
 import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -25,10 +23,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
 
-    @BeforeEach
-    @Override
-    public void setUp() {
-    }
+    @Mock
+    IMessageSynchronizer messageSynchronizer;
+
+    @Mock
+    IMessageWriter messageWriter;
 
     @Test
     public void testEnqueueRequestNew() {
@@ -36,8 +35,6 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         IBulkSubmission bulkSubmission = mock(IBulkSubmission.class);
         ITargetApplication targetApplication = mock(ITargetApplication.class);
-        IMessageSynchronizer messageSynchronizer = mock(IMessageSynchronizer.class);
-        IMessageWriter messageWriter = mock(IMessageWriter.class);
 
         when(individualRequest.getBulkSubmission()).thenReturn(bulkSubmission);
         when(bulkSubmission.getTargetApplication()).thenReturn(targetApplication);
@@ -61,29 +58,24 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
         verify(messageWriter).queueMessage(any(SdtMessage.class), eq("targetAppCode"), eq(false));
     }
 
-
-
     @Test
     void testMessageSynchronizer() {
-        IMessageWriter messagingWriter = mock(MessageWriter.class);
-        IMessageSynchronizer messageSynchronizer = mock(MessageSynchronizer.class);
-        MessagingUtility messagingUtility = new MessagingUtility(messagingWriter,messageSynchronizer);
+
+        MessagingUtility messagingUtility = new MessagingUtility(messageWriter,messageSynchronizer);
 
         messagingUtility.setMessageSynchronizer(messageSynchronizer);
 
-        assertNotNull(messagingUtility.getMessageSynchronizer(),"should have returned MessageSync");
+        assertEquals(messageSynchronizer, messagingUtility.getMessageSynchronizer());
     }
 
     @Test
     void testMessageWriter() {
 
-        IMessageWriter messagingWriter = mock(MessageWriter.class);
-        IMessageSynchronizer messageSynchronizer = mock(MessageSynchronizer.class);
-        MessagingUtility messagingUtility = new MessagingUtility(messagingWriter,messageSynchronizer);
+        MessagingUtility messagingUtility = new MessagingUtility(messageWriter,messageSynchronizer);
 
-        messagingUtility.setMessageWriter(messagingWriter);
+        messagingUtility.setMessageWriter(messageWriter);
 
-        assertNotNull(messagingUtility.getMessageWriter(),"should have returned MessageWriter");
+        assertEquals(messageWriter, messagingUtility.getMessageWriter());
     }
 
 }

@@ -1,25 +1,28 @@
 package uk.gov.moj.sdt.services.messaging;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.services.TargetApplicationSubmissionService;
-
+import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.Serializable;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import java.io.Serializable;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 /**
  * Test class for Message reader implementation.
@@ -47,7 +50,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        mockTargetSubmissionService = mock(TargetApplicationSubmissionService.class);
+        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
     }
 
     /**
@@ -57,7 +60,6 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageSuccessTest() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         // Create the actual message to send.
         final ISdtMessage sdtMessage = new SdtMessage();
@@ -67,11 +69,10 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
         final ObjectMessage objMessage = mock(ObjectMessage.class);
         when(objMessage.getObject()).thenReturn((Serializable) sdtMessage);
 
-        mockTargetSubmissionService.processRequestToSubmit(sdtMessage.getSdtRequestReference());
+        individualRequestMdb.readMessage(objMessage);
 
         verify(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference());
-
-        individualRequestMdb.readMessage(objMessage);
+        verify(objMessage).getObject();
 
         assertTrue(true,TEST_SUCCESSFULLY_COMPLETED);
     }
@@ -84,7 +85,6 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
 
     @Test
     public void readMessageDataAccessExceptionTest() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         // Create the actual message to send
         final ISdtMessage sdtMessage = new SdtMessage();
@@ -104,16 +104,14 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
             assertTrue(true,"Expected to throw the exception");
         }
 
-        Mockito.verify(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference());
-        Mockito.verify(objMessage).getObject();
+        verify(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference());
+        verify(objMessage).getObject();
 
         assertTrue(true,TEST_SUCCESSFULLY_COMPLETED);
     }
 
-
     @Test
     public void readMessageJMSExceptionTest() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         // Wrap the message in the ObjectMessage
         final ObjectMessage objMessageMock = mock(ObjectMessage.class);
@@ -123,12 +121,12 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
         try {
             individualRequestMdb.readMessage(objMessageMock);
             fail("Exception should be thrown");
-        } catch (final Exception e) {
+        } catch (Exception e) {
+            assertEquals(e.getCause().getMessage(),"JMS error occurred");
             assertTrue(true,"Expected to throw the exception");
         }
+        verify(objMessageMock).getObject();
     }
-
-
 
     /**
      * Test method to test the scenario where the message is some other object other than
@@ -138,7 +136,6 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      */
     @Test
     public void readMessageInvalidObject() throws JMSException {
-        individualRequestMdb = new IndividualRequestMdb(mockTargetSubmissionService);
 
         final Message message = mock(Message.class);
 
@@ -149,11 +146,14 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
 
     @Test
     void setMockTargetSubmissionServiceTest(){
-        IndividualRequestMdb individualRequestMdbMock = mock(IndividualRequestMdb.class);
 
-        individualRequestMdbMock.setTargetAppSubmissionService(mockTargetSubmissionService);
+        ITargetApplicationSubmissionService targetApplicationSubmissionServiceMock = mock(ITargetApplicationSubmissionService.class);
+        IndividualRequestMdb individualRequestMdbObj = new IndividualRequestMdb(targetApplicationSubmissionServiceMock);
+        individualRequestMdbObj.setTargetAppSubmissionService(mockTargetSubmissionService);
+        Object result = this.getAccessibleField(IndividualRequestMdb.class, "targetAppSubmissionService",
+                                                ITargetApplicationSubmissionService.class, individualRequestMdbObj);
 
-        verify(individualRequestMdbMock).setTargetAppSubmissionService(mockTargetSubmissionService);
+        assertEquals(mockTargetSubmissionService, result, "TargetSubmissionService should be set to an object");
+
     }
-
 }
