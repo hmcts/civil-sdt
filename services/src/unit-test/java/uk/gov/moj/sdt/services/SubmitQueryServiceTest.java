@@ -126,8 +126,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                                                     mockErrorMsgCacheable,
                                                     genericParser,
                                                     genericParser,
-                                                    mockBulkCustomerDao,
-                                                    ccdReferenceValidator);
+                                                    mockBulkCustomerDao);
         submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
 
     }

@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
  * Implementation of the ConsumerGateway interface.
@@ -83,6 +84,16 @@ public class ConsumerGateway implements IConsumerGateway {
                 connectionTimeOut, receiveTimeOut);
 
     }
+
+//    @Override
+//    public SubmitQueryResponseType getResponseFromSubmitQuery(final ISubmitQueryRequest submitQueryRequest,
+//                                                              final long connectionTimeOut, final long receiveTimeOut)
+//            throws OutageException, TimeoutException {
+//
+//        return this.getSubmitQueryConsumer().getResponseFromSubmitQuery(submitQueryRequest,
+//                connectionTimeOut, receiveTimeOut);
+//
+//    }
 
     /**
      * @return individual request consumer.

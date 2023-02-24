@@ -109,7 +109,7 @@ public class SubmitQueryService implements ISubmitQueryService {
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
-                              @Qualifier("CmcConsumerGateway")
+                              @Qualifier("CMCConsumerGateway")
                               IConsumerGateway cmcRequestConsumer,
                               @Qualifier("GlobalParametersCache")
                                   ICacheable globalParametersCache,
@@ -427,8 +427,9 @@ public class SubmitQueryService implements ISubmitQueryService {
 
         // Make 2 calls and summarise the results.
         requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
-
         cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+//        Object responseType1 = requestConsumer.getResponseFromSubmitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+//        Object responseType2 = cmcRequestConsumer.getResponseFromSubmitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
     }
 
     /**
