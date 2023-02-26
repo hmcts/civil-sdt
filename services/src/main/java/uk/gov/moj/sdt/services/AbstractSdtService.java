@@ -202,7 +202,7 @@ public abstract class AbstractSdtService {
             }
             return true;
         }
-        return true;
+        return false;
     }
 
     private boolean isValidRequestType(IIndividualRequest individualRequest) {
