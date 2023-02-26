@@ -63,11 +63,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
-import static uk.gov.moj.sdt.domain.RequestType.BREATHING_SPACE;
-import static uk.gov.moj.sdt.domain.RequestType.CLAIM_STATUS_UPDATE;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT_WARRANT;
-import static uk.gov.moj.sdt.domain.RequestType.WARRANT;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -79,8 +74,6 @@ import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStat
 @Service("TargetApplicationSubmissionService")
 public class TargetApplicationSubmissionService extends AbstractSdtService implements
         ITargetApplicationSubmissionService {
-
-    private static final String CLAIM_NUMBER = "claimNumber";
 
     /**
      * Logger object.
@@ -109,9 +102,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private IConsumerGateway cmcRequestConsumer;
 
-    private CCDReferenceValidator ccdReferenceValidator;
-
-    private XmlElementValueReader xmlReader;
 
     /**
      * The ICacheable reference to the global parameters cache.
@@ -147,13 +137,11 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                                   IMessageWriter messageWriter,
                                               CCDReferenceValidator ccdReferenceValidator,
                                               XmlElementValueReader xmlReader) {
-        super(individualRequestDao, individualResponseXmlParser);
+        super(individualRequestDao, individualResponseXmlParser, xmlReader, ccdReferenceValidator);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.messageWriter = messageWriter;
-        this.ccdReferenceValidator = ccdReferenceValidator;
-        this.xmlReader = xmlReader;
     }
 
     @Override
@@ -420,30 +408,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             return cmcRequestConsumer;
         }
         return requestConsumer;
-    }
-
-    private boolean isCMCRequestType(IIndividualRequest individualRequest) {
-        if (isCCDReference(individualRequest)) {
-            if (!isValidRequestType(individualRequest)) {
-                throw new InvalidRequestTypeException(individualRequest.getRequestType());
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isValidRequestType(IIndividualRequest individualRequest) {
-        String requestType = individualRequest.getRequestType();
-        return JUDGMENT.getRequestType().equalsIgnoreCase(requestType)
-            || WARRANT.getRequestType().equalsIgnoreCase(requestType)
-            || CLAIM_STATUS_UPDATE.getRequestType().equalsIgnoreCase(requestType)
-            || JUDGMENT_WARRANT.getRequestType().equalsIgnoreCase(requestType)
-            || BREATHING_SPACE.getRequestType().equalsIgnoreCase(requestType);
-    }
-
-    private boolean isCCDReference(IIndividualRequest individualRequest) {
-        String claimNumber = xmlReader.getElementValue(individualRequest.getRequestPayload(), CLAIM_NUMBER);
-        return ccdReferenceValidator.isValidCCDReference(claimNumber);
     }
 
     /**

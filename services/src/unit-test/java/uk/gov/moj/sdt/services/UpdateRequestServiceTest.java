@@ -30,11 +30,17 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -54,12 +60,7 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
+import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -91,6 +92,12 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     private IMessagingUtility mockMessagingUtility;
 
+    @Mock
+    private XmlElementValueReader xmlReader;
+
+    @Mock
+    CCDReferenceValidator ccdReferenceValidator;
+
     /**
      * Update Request Service object.
      */
@@ -120,7 +127,9 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         genericParser.setEnclosingTag("targetAppDetail");
         updateRequestService = new UpdateRequestService(mockIndividualRequestDao,
                                                         genericParser,
-                                                        mockMessagingUtility);
+                                                        mockMessagingUtility,
+                                                        ccdReferenceValidator,
+                                                        xmlReader);
 
     }
 
