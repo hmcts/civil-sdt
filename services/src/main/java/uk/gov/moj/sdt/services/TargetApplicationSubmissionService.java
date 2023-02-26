@@ -175,7 +175,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             try {
                 this.sendRequestToTargetApp(individualRequest);
 
-                this.updateCompletedRequest(individualRequest);
+                this.updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
             } catch (final TimeoutException e) {
                 LOGGER.error("Timeout exception for SDT reference [" + individualRequest.getSdtRequestReference() +
                         "]");
@@ -416,13 +416,20 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * @return the request consumer.
      */
     private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
+        if (isCMCRequestType(individualRequest)) {
+            return cmcRequestConsumer;
+        }
+        return requestConsumer;
+    }
+
+    private boolean isCMCRequestType(IIndividualRequest individualRequest) {
         if (isCCDReference(individualRequest)) {
             if (!isValidRequestType(individualRequest)) {
                 throw new InvalidRequestTypeException(individualRequest.getRequestType());
             }
-            return cmcRequestConsumer;
+            return true;
         }
-        return requestConsumer;
+        return false;
     }
 
     private boolean isValidRequestType(IIndividualRequest individualRequest) {

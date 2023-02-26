@@ -10,6 +10,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -40,7 +41,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         try {
             BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
                                                                            BreathingSpaceRequest.class);
-            breathingSpace.breathingSpace(request);
+            BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
+            individualRequest.setRequestStatus(response.getProcessingStatus().name());
         } catch (IOException e) {
             throw new CMCException(e.getMessage(), e);
         }
