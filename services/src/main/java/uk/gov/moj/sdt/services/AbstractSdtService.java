@@ -100,12 +100,12 @@ public abstract class AbstractSdtService {
      */
     protected void updateCompletedRequest(final IIndividualRequest individualRequest,
                                           final boolean populateTargetAppResponse) {
-//        if (populateTargetAppResponse) {
-//            final String targetAppResponse = individualResponseXmlParser.parse();
-//            if (StringUtils.isNotBlank(targetAppResponse)) {
-//                individualRequest.setTargetApplicationResponse(targetAppResponse);
-//            }
-//        }
+        if (populateTargetAppResponse) {
+            final String targetAppResponse = individualResponseXmlParser.parse();
+            if (StringUtils.isNotBlank(targetAppResponse)) {
+                individualRequest.setTargetApplicationResponse(targetAppResponse);
+            }
+        }
 
         // now persist the request.
         this.getIndividualRequestDao().persist(individualRequest);
