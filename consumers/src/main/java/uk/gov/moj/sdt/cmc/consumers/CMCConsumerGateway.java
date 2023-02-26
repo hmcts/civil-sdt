@@ -1,6 +1,5 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                            BreathingSpaceRequest.class);
             BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
             individualRequest.setRequestStatus(response.getProcessingStatus().name());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CMCException(e.getMessage(), e);
         }
     }
