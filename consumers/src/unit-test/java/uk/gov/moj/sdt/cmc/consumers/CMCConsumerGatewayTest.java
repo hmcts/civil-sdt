@@ -4,10 +4,13 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -32,26 +35,30 @@ class CMCConsumerGatewayTest {
 
     private CMCConsumerGateway cmcConsumerGateway;
 
+    @Mock
     private XmlToObjectConverter xmlToObject;
 
+    @Mock
     private IBreathingSpace breathingSpace;
 
+    @Mock
     private IIndividualRequest individualRequest;
 
     @BeforeEach
     public void setUpLocalTests() {
-        xmlToObject = mock(XmlToObjectConverter.class);
-        breathingSpace = mock(IBreathingSpace.class);
-        individualRequest = mock(IIndividualRequest.class);
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, xmlToObject);
         mockXmlToObject();
     }
 
-
     @Test
-    void shouldInvokeBreathingSpace() {
+    void shouldInvokeBreathingSpace() throws Exception {
+        BreathingSpaceResponse response = new BreathingSpaceResponse();
+        response.setProcessingStatus(ProcessingStatus.PROCESSED);
+        when(breathingSpace.breathingSpace(any())).thenReturn(response);
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
         verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(individualRequest).getRequestPayload();
     }
 
     private void mockXmlToObject() {
