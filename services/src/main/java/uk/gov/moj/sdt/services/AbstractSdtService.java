@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
@@ -97,12 +100,12 @@ public abstract class AbstractSdtService {
      */
     protected void updateCompletedRequest(final IIndividualRequest individualRequest,
                                           final boolean populateTargetAppResponse) {
-        if (populateTargetAppResponse) {
-            final String targetAppResponse = individualResponseXmlParser.parse();
-            if (StringUtils.isNotBlank(targetAppResponse)) {
-                individualRequest.setTargetApplicationResponse(targetAppResponse);
-            }
-        }
+//        if (populateTargetAppResponse) {
+//            final String targetAppResponse = individualResponseXmlParser.parse();
+//            if (StringUtils.isNotBlank(targetAppResponse)) {
+//                individualRequest.setTargetApplicationResponse(targetAppResponse);
+//            }
+//        }
 
         // now persist the request.
         this.getIndividualRequestDao().persist(individualRequest);
@@ -112,9 +115,7 @@ public abstract class AbstractSdtService {
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
-        final String[] completeRequestStatus =
-                new String[]{IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus(),
-                        REJECTED.getStatus()};
+        final List<String> completeRequestStatus = Arrays.asList(ACCEPTED.getStatus(), REJECTED.getStatus());
 
 
         final long requestsCount = this.getIndividualRequestDao().queryAsCount(
@@ -179,7 +180,7 @@ public abstract class AbstractSdtService {
     }
 
     private CriteriaQuery<IndividualRequest> createCriteria(IIndividualRequestDao individualRequestDao, String sdtBulkReference,
-                                       String[] completeRequestStatus) {
+                                       List<String> completeRequestStatus) {
         CriteriaBuilder criteriaBuilder = individualRequestDao.getEntityManager().getCriteriaBuilder();
         CriteriaQuery<IndividualRequest> criteriaQuery = criteriaBuilder.createQuery(IndividualRequest.class);
         Root<IndividualRequest> root = criteriaQuery.from(IndividualRequest.class);
