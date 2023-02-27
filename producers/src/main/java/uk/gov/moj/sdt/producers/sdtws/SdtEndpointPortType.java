@@ -36,6 +36,9 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
@@ -55,6 +58,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  */
 
 // CHECKSTYLE:OFF
+@Service("ISdtEndpointPortType")
 @WebService(serviceName = "SdtEndpoint", portName = "SdtEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", wsdlLocation = "wsdl/SdtEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
 // CHECKSTYLE:ON
 public class SdtEndpointPortType implements ISdtEndpointPortType {
@@ -77,6 +81,15 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      * Handles submit query details.
      */
     private IWsReadSubmitQueryHandler wsReadSubmitQueryHandler;
+
+    @Autowired
+    public SdtEndpointPortType(@Qualifier("WsCreateBulkRequestHandler") IWsCreateBulkRequestHandler wsCreateBulkRequestHandler,
+                               @Qualifier("WsReadBulkFeedbackRequestHandler") IWsReadBulkRequestHandler wsReadBulkRequestHandler,
+                               @Qualifier("WsReadSubmitQueryHandler") IWsReadSubmitQueryHandler wsReadSubmitQueryHandler) {
+        setWsCreateBulkRequestHandler(wsCreateBulkRequestHandler);
+        setWsReadBulkRequestHandler(wsReadBulkRequestHandler);
+        setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
+    }
 
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequest) {
@@ -101,11 +114,9 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         try {
             response = wsCreateBulkRequestHandler.submitBulk(bulkRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
-            handleThrowable(throwable);
+            handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
@@ -148,11 +159,9 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         try {
             response = wsReadBulkRequestHandler.getBulkFeedback(bulkFeedbackRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
-            handleThrowable(throwable);
+            handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
@@ -202,11 +211,9 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         try {
             response = wsReadSubmitQueryHandler.submitQuery(submitQueryRequest);
         }
-        // CHECKSTYLE:OFF
-        catch (Throwable throwable)
-        // CHECKSTYLE:ON
+        catch (Exception throwable)
         {
-            handleThrowable(throwable);
+            handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
@@ -232,7 +239,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      *
      * @param throwable exception to be handled
      */
-    private void handleThrowable(final Throwable throwable) {
+    private void handleException(final Throwable throwable) {
         LOGGER.error("Unexpected error - ", throwable);
 
         throw new RuntimeException(

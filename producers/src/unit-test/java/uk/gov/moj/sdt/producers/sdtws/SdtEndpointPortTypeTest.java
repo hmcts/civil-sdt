@@ -101,12 +101,9 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        portType = new SdtEndpointPortType();
-        portType.setWsCreateBulkRequestHandler(mockCreateBulkRequestHandler);
-
-        portType.setWsReadBulkRequestHandler(mockBulkRequestHandler);
-
-        portType.setWsReadSubmitQueryHandler(mockSubmitQueryHandler);
+        portType = new SdtEndpointPortType(mockCreateBulkRequestHandler,
+                                           mockBulkRequestHandler,
+                                           mockSubmitQueryHandler);
     }
 
     /**
