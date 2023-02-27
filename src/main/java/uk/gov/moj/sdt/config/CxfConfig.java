@@ -77,6 +77,7 @@ public class CxfConfig {
                                     GenericEnricher submitQueryRequestEnricher,
                                 @Qualifier("IndividualRequestEnricher")
                                     GenericEnricher individualRequestEnricher) {
+
         ServiceRequestInboundInterceptor serviceRequestInboundInterceptor = new ServiceRequestInboundInterceptor(serviceRequestDao);
         PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
         XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
@@ -129,6 +130,7 @@ public class CxfConfig {
     @Bean
     public Endpoint sdtInternalEndpoint(@Qualifier("ISdtInternalEndpointPortType")
                                             SdtInternalEndpointPortType sdtInternalEndpointPortType, ServiceRequestDao serviceRequestDao) {
+
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
         PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
         XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();

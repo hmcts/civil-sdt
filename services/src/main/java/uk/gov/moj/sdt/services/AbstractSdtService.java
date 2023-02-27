@@ -36,6 +36,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,8 +197,12 @@ public abstract class AbstractSdtService {
     }
 
     protected boolean isCMCRequestType(IIndividualRequest individualRequest) {
+        return isCMCRequestType(individualRequest, false);
+    }
+
+    protected boolean isCMCRequestType(IIndividualRequest individualRequest, boolean throwException) {
         if (isCCDReference(individualRequest)) {
-            if (!isValidRequestType(individualRequest)) {
+            if (!isValidRequestType(individualRequest) && throwException) {
                 throw new InvalidRequestTypeException(individualRequest.getRequestType());
             }
             return true;

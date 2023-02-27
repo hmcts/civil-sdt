@@ -31,17 +31,17 @@
 
 package uk.gov.moj.sdt.domain;
 
-import javax.persistence.Lob;
-import org.hibernate.annotations.Type;
-import uk.gov.moj.sdt.domain.api.IServiceRequest;
-
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 
 /**
  * Audit log for incoming and outgoing request.

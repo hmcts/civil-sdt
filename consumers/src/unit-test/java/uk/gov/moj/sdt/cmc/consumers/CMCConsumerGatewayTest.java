@@ -47,7 +47,7 @@ class CMCConsumerGatewayTest {
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, xmlToObject);
-        mockXmlToObject();
+        setupMockBehaviour();
     }
 
     @Test
@@ -61,7 +61,7 @@ class CMCConsumerGatewayTest {
         verify(individualRequest).getRequestPayload();
     }
 
-    private void mockXmlToObject() {
+    private void setupMockBehaviour() {
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         try {

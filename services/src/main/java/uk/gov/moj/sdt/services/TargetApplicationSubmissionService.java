@@ -188,7 +188,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                  individualRequest.getSdtRequestReference() + "] - " + irte.getMessage());
 
                 updateRequestRejected(individualRequest);
-                updateCompletedRequest(individualRequest);
+                updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
             }
         } else {
             LOGGER.error("SDT Reference " + sdtRequestReference +
@@ -404,7 +404,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * @return the request consumer.
      */
     private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
-        if (isCMCRequestType(individualRequest)) {
+        if (isCMCRequestType(individualRequest, true)) {
             return cmcRequestConsumer;
         }
         return requestConsumer;
