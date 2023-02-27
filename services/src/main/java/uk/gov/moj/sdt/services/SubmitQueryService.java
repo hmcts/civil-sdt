@@ -426,11 +426,11 @@ public class SubmitQueryService implements ISubmitQueryService {
         LOGGER.debug("Send submit query request to target application");
 
         // Make 2 calls and summarise the results.
-        requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+// TODO: uncomment requestConsumer call. Temporary change while testing locally
+//        requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
         cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
-//        Object responseType1 = requestConsumer.getResponseFromSubmitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
-//        Object responseType2 = cmcRequestConsumer.getResponseFromSubmitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
     }
+
 
     /**
      * @return cacheable interface for the error messages cache.

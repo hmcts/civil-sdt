@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 
 
 @Service("ClaimDefencesService")
@@ -17,8 +18,8 @@ public class ClaimDefencesService implements IClaimDefences {
     }
 
     @Override
-    public Object claimDefences(String fromDate,
-                                String toDate) {
+    public ClaimDefencesResponse claimDefences(String fromDate,
+                                               String toDate) {
         return cmcApi.claimDefences("", "",
                                     "",
                                     fromDate,

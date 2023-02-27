@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class MockClaimDefencesServiceTest extends AbstractSdtUnitTestBase {
@@ -24,7 +24,7 @@ class MockClaimDefencesServiceTest extends AbstractSdtUnitTestBase {
         final String fromDateTime = "";
         final String toDateTime = "";
         Object returnValue = mockClaimDefencesService.claimDefences(fromDateTime, toDateTime);
-        assertNull(returnValue);
+        assertNotNull(returnValue);
     }
 
 }

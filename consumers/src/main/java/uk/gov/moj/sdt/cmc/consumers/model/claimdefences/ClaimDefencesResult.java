@@ -1,8 +1,10 @@
 package uk.gov.moj.sdt.cmc.consumers.model.claimdefences;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
 @Setter
 public class ClaimDefencesResult {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CMCConfig;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 
@@ -34,7 +35,7 @@ public interface CMCApi {
     );
 
     @GetMapping("/claimDefences")
-    Object claimDefences(
+    ClaimDefencesResponse claimDefences(
             @RequestHeader(AUTHORIZATION) String authorisation,
             @RequestHeader("ServiceAuthorzation") String serviceAuthorization,
             @RequestHeader("idAmId") String idAmId,

@@ -1,7 +1,7 @@
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema" xmlns:quer="http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema">
-  <soap:Header/>
-  <soap:Body>
-    <sub:submitQueryRequest>
+<sub:mcolDefenceCriteria xmlns:sub="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema"
+                        xmlns:quer="http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema">
+
+  <sub:submitQueryRequest>
       <sub:header>
         <sub:sdtCustomerId>12345678</sub:sdtCustomerId>
         <sub:targetApplicationId>mcol</sub:targetApplicationId>
@@ -16,5 +16,3 @@
         </sub:criterion>
       </sub:criteria>
     </sub:submitQueryRequest>
-  </soap:Body>
-</soap:Envelope>

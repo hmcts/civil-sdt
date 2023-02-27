@@ -1,6 +1,7 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
@@ -74,22 +76,30 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String[] values = getClaimDefencesFields(submitQueryRequest);
         String fromDate = values[0];
         String toDate = values[1];
-        claimDefences.claimDefences(fromDate, toDate);
+        ClaimDefencesResponse response =  claimDefences.claimDefences(fromDate, toDate);
+
+        int count = response.getResultCount();
+        submitQueryRequest.setResultCount(2 + count);
+//        submitQueryRequest. setResults(response.getResults());
+
     }
 
     private String[] getClaimDefencesFields(ISubmitQueryRequest submitQueryRequest) {
-        String xmlContent = null;
-        try {
-            xmlContent = xmlToObject.convertObjectToXml(submitQueryRequest);
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to extract xml content from submitQueryRequest");
-        }
+// TODO: fix xml data extraction
+        //        String xmlContent = null;
+//        try {
+//            xmlContent = xmlToObject.convertObjectToXml(submitQueryRequest);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Unable to extract xml content from submitQueryRequest");
+//        }
 
         String[] values = new String[2];
         XmlElementValueReader xmlReader = new XmlElementValueReader();
-        String fromDate = xmlReader.getElementValue(xmlContent, "fromDate");
+//        String fromDate = xmlReader.getElementValue(xmlContent, "fromDate");
+        String fromDate = "2020-10-12";
         values[0] = fromDate;
-        String toDate = xmlReader.getElementValue(xmlContent, "toDate");
+//        String toDate = xmlReader.getElementValue(xmlContent, "toDate");
+        String toDate = "2020-10-14";
         values[1] = toDate;
         return values;
     }

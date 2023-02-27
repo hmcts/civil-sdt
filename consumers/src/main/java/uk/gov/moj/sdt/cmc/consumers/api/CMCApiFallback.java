@@ -3,6 +3,7 @@ package uk.gov.moj.sdt.cmc.consumers.api;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 
@@ -35,11 +36,11 @@ public class CMCApiFallback implements CMCApi {
     }
 
     @Override
-    public Object claimDefences(String authorisation,
-                                String serviceAuthorization,
-                                String idamId,
-                                String fromDate,
-                                String toDate) {
+    public ClaimDefencesResponse claimDefences(String authorisation,
+                                               String serviceAuthorization,
+                                               String idamId,
+                                               String fromDate,
+                                               String toDate) {
         return claimDefences.claimDefences(fromDate, toDate);
     }
 }

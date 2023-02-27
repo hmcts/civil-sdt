@@ -34,7 +34,6 @@ import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 /**
  * Interface for the consumers implementing the consumer gateway.
@@ -66,18 +65,5 @@ public interface IConsumerGateway {
     void submitQuery(ISubmitQueryRequest submitQueryRequest,
                      final long connectionTimeOut, final long receiveTimeOut)
             throws OutageException, TimeoutException;
-
-    /**
-     * @param submitQueryRequest the submit query request coming from handler.
-     * @param connectionTimeOut the connection timeout parameter value.
-     * @param receiveTimeOut    the receive timeout parameter value.
-     * @throws OutageException  if the target server is un-reachable.
-     * @throws TimeoutException if the target server response cannot be obtained within the
-     *                          timeout period.
-     */
-//    SubmitQueryResponseType getResponseFromSubmitQuery(ISubmitQueryRequest submitQueryRequest,
-//                                                       final long connectionTimeOut, final long receiveTimeOut)
-//            throws OutageException, TimeoutException;
-
 
 }
