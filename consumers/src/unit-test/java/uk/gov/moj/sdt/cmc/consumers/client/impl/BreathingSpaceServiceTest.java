@@ -32,7 +32,7 @@ public class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
     void getClient() {
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         breathingSpaceService.breathingSpace(breathingSpaceRequest);
-        verify(cmcApi).breathingSpace(any(BreathingSpaceRequest.class));
+        verify(cmcApi).breathingSpace(breathingSpaceRequest);
     }
 
 }
