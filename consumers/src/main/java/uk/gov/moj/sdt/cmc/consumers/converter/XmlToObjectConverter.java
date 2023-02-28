@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class XmlToObjectConverter {
 
-    @java.io.Serial
-    private static final long serialVersionUID = -1418833041402993511L;
-
     private XmlMapper xmlMapper = new XmlMapper();
 
     public <T> T convertXmlToObject(String xml,

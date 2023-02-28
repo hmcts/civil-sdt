@@ -59,6 +59,7 @@ class CMCConsumerGatewayTest {
         verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
+        verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
     }
 
     private void setupMockBehaviour() {

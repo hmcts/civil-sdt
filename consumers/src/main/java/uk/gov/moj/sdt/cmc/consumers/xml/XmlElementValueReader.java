@@ -35,13 +35,13 @@ public class XmlElementValueReader {
             return null;
         }
         for (JsonNode child : node) {
-            if (child.isContainerNode()) {
-                JsonNode childResult = getValuesInObject(child, entityName);
-                if (childResult != null && !childResult.isMissingNode()) {
-                    return childResult;
-                }
+            JsonNode childResult = getValuesInObject(child, entityName);
+            if (childResult != null && !childResult.isMissingNode()) {
+                return childResult;
             }
         }
         return null;
     }
+
+
 }
