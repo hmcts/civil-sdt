@@ -30,9 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
-import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,13 +59,11 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.CCDReferenceValidator;
-import uk.gov.moj.sdt.validators.RequestTypeValidator;
 
-import static uk.gov.moj.sdt.domain.RequestType.BREATHING_SPACE;
-import static uk.gov.moj.sdt.domain.RequestType.CLAIM_STATUS_UPDATE;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT_WARRANT;
-import static uk.gov.moj.sdt.domain.RequestType.WARRANT;
+import javax.xml.ws.WebServiceException;
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -110,9 +105,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private IConsumerGateway cmcRequestConsumer;
 
-    private CCDReferenceValidator ccdReferenceValidator;
-
-    private XmlElementValueReader xmlReader;
 
     /**
      * The ICacheable reference to the global parameters cache.
@@ -148,13 +140,11 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                                   IMessageWriter messageWriter,
                                               CCDReferenceValidator ccdReferenceValidator,
                                               XmlElementValueReader xmlReader) {
-        super(individualRequestDao, individualResponseXmlParser);
+        super(individualRequestDao, individualResponseXmlParser, xmlReader, ccdReferenceValidator);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.messageWriter = messageWriter;
-        this.ccdReferenceValidator = ccdReferenceValidator;
-        this.xmlReader = xmlReader;
     }
 
     @Override
@@ -176,7 +166,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             try {
                 this.sendRequestToTargetApp(individualRequest);
 
-                this.updateCompletedRequest(individualRequest);
+                this.updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
             } catch (final TimeoutException e) {
                 LOGGER.error("Timeout exception for SDT reference [" + individualRequest.getSdtRequestReference() +
                         "]");
@@ -417,19 +407,10 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * @return the request consumer.
      */
     private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
-        if (isCCDReference(individualRequest)) {
-            if (!RequestTypeValidator.isValidRequestType(individualRequest.getRequestType())) {
-                throw new InvalidRequestTypeException(individualRequest.getRequestType());
-            }
+        if (isCMCRequestType(individualRequest)) {
             return cmcRequestConsumer;
         }
         return requestConsumer;
-    }
-
-
-    private boolean isCCDReference(IIndividualRequest individualRequest) {
-        String claimNumber = xmlReader.getElementValue(individualRequest.getRequestPayload(), CLAIM_NUMBER);
-        return ccdReferenceValidator.isValidCCDReference(claimNumber);
     }
 
     /**

@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
+import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -119,7 +120,8 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
         validator = new BulkSubmissionValidator(bulkCustomerDao,
                                                 mockGlobalParameterCache,
                                                 mockErrorMessagesCache,
-                                                bulkSubmissionDao);
+                                                bulkSubmissionDao,
+                                                new HashMap<>());
         validator.setErrorMessagesCache(mockErrorMessagesCache);
         validator.setGlobalParameterCache(mockGlobalParameterCache);
 

@@ -60,7 +60,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -118,7 +117,9 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                                  @Qualifier("SdtBulkReferenceGenerator")
                                      ISdtBulkReferenceGenerator sdtBulkReferenceGenerator,
                                  @Qualifier("ErrorMessagesCache")
-                                     ICacheable errorMessagesCache) {
+                                     ICacheable errorMessagesCache,
+                                 @Qualifier("concurrentMap")
+                                         Map<String, IInFlightMessage> concurrentMap) {
         this.genericDao = genericDao;
         this.bulkCustomerDao = bulkCustomerDao;
         this.targetApplicationDao = targetApplicationDao;
@@ -126,7 +127,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         this.messagingUtility = messagingUtility;
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
         this.errorMessagesCache = errorMessagesCache;
-        this.concurrencyMap = new ConcurrentHashMap<>();
+        this.concurrencyMap = concurrentMap;
     }
 
     /**

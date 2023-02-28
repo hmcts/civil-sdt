@@ -9,8 +9,10 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
-import uk.gov.moj.sdt.cmc.consumers.model.claimStatusUpdate.ClaimStatusUpdateRequest;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -43,17 +45,25 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
         try {
-            if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
-                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), ClaimStatusUpdateRequest.class);
-                claimStatusUpdate.claimStatusUpdate(request);
-            } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
-                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), BreathingSpaceRequest.class);
-                breathingSpace.breathingSpace(request);
+            if(RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
+                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(
+                    individualRequest.getRequestPayload(),
+                    BreathingSpaceRequest.class
+                );
+                BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
+                individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            } else if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
+                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(
+                    individualRequest.getRequestPayload(),
+                    ClaimStatusUpdateRequest.class);
+                ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(request);
+
+
+
             }
         } catch (Exception e) {
             throw new CMCException(e.getMessage(), e);
         }
-
     }
 
     @Override

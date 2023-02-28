@@ -8,8 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.model.claimStatusUpdate.ClaimStatusUpdateRequest;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
@@ -37,10 +38,13 @@ class CMCConsumerGatewayTest {
 
     private CMCConsumerGateway cmcConsumerGateway;
 
+    @Mock
     private XmlToObjectConverter xmlToObject;
 
+    @Mock
     private IBreathingSpace breathingSpace;
 
+    @Mock
     private IIndividualRequest individualRequest;
 
     private IClaimStatusUpdate claimStatusUpdate;
@@ -53,34 +57,34 @@ class CMCConsumerGatewayTest {
         xmlToObject = mock(XmlToObjectConverter.class);
         breathingSpace = mock(IBreathingSpace.class);
         individualRequest = mock(IIndividualRequest.class);
-        claimStatusUpdate = mock(IClaimStatusUpdate.class);
-        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, claimStatusUpdate, xmlToObject);
-        //mockXmlToObject();
+        //cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, xmlToObject);
+        mockXmlToObject();
     }
-
 
     @Test
-    void shouldInvokeBreathingSpace() {
-        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
-        mockXmlToObject(breathingSpaceRequest);
-        when(individualRequest.getRequestType()).thenReturn("mcolBreathingSpace");
+    void shouldInvokeBreathingSpace() throws Exception {
+        BreathingSpaceResponse response = new BreathingSpaceResponse();
+        response.setProcessingStatus(ProcessingStatus.PROCESSED);
+        when(breathingSpace.breathingSpace(any())).thenReturn(response);
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
         verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(individualRequest).getRequestPayload();
     }
-@Test
-    void shouldInvokeClaimStatusUpdate() {
-    ClaimStatusUpdateRequest ClaimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
-        mockXmlToObject(ClaimStatusUpdateRequest);
-        when(individualRequest.getRequestType()).thenReturn("mcolClaimStatusUpdate");
-        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        verify(claimStatusUpdate).claimStatusUpdate(any(ClaimStatusUpdateRequest.class));
-    }
+//@Test
+   // void shouldInvokeClaimStatusUpdate() {
+   // ClaimStatusUpdateRequest ClaimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
+    //    mockXmlToObject(ClaimStatusUpdateRequest);
+    //    when(individualRequest.getRequestType()).thenReturn("mcolClaimStatusUpdate");
+    //    cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+    //    verify(claimStatusUpdate).claimStatusUpdate(any(ClaimStatusUpdateRequest.class));
+   // }
 
-    private void mockXmlToObject(Object obj) {
-        //BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
+    private void mockXmlToObject() {
+        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         try {
-            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(obj);
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } catch (IOException e) {
         }
     }

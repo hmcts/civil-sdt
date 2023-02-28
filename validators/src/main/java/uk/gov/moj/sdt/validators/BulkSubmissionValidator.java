@@ -30,14 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -56,6 +48,13 @@ import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -86,10 +85,12 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
                                         @Qualifier("ErrorMessagesCache")
                                             ICacheable errorMessagesCache,
                                         @Qualifier("BulkSubmissionDao")
-                                           IBulkSubmissionDao bulkSubmissionDao) {
+                                           IBulkSubmissionDao bulkSubmissionDao,
+                                   @Qualifier("concurrentMap")
+                                           Map<String, IInFlightMessage> concurrentMap) {
         super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
         this.bulkSubmissionDao = bulkSubmissionDao;
-        this.concurrencyMap = new ConcurrentHashMap<>();
+        this.concurrencyMap = concurrentMap;
     }
 
     @Override
@@ -184,15 +185,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             bulkSubmission.setErrorText(getErrorMessage(replacements, IErrorMessage.ErrorCode.NO_VALID_REQS));
             bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus());
         }
-    }
-
-    /**
-     * Set concurrency map.
-     *
-     * @param concurrencyMap map holding in flight bulk requests.
-     */
-    public void setConcurrencyMap(final Map<String, IInFlightMessage> concurrencyMap) {
-        this.concurrencyMap = concurrencyMap;
     }
 
     /**

@@ -33,9 +33,6 @@ package uk.gov.moj.sdt.interceptors.out;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
@@ -45,12 +42,10 @@ import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
  *
  * @author d195274
  */
-@Component("PerformanceLoggerOutboundInterceptor")
 public class PerformanceLoggerOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Default constructor.
      */
-    @Autowired
     public PerformanceLoggerOutboundInterceptor(ServiceRequestDao serviceRequestDao) {
         super(Phase.PREPARE_SEND_ENDING);
         setServiceRequestDao(serviceRequestDao);
@@ -64,6 +59,10 @@ public class PerformanceLoggerOutboundInterceptor extends AbstractServiceRequest
      */
     public PerformanceLoggerOutboundInterceptor(final String phase) {
         super(phase);
+    }
+
+    public PerformanceLoggerOutboundInterceptor() {
+        super(Phase.PREPARE_SEND_ENDING);
     }
 
     @Override

@@ -2,8 +2,10 @@ package uk.gov.moj.sdt.cmc.consumers.api;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.cmc.consumers.model.claimStatusUpdate.ClaimStatusUpdateRequest;
-import uk.gov.moj.sdt.cmc.consumers.model.breathingspace.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 
 @Component
 public class CMCApiFallback implements CMCApi {
@@ -19,16 +21,12 @@ public class CMCApiFallback implements CMCApi {
     }
 
     @Override
-    public void breathingSpace(String authorisation,
-                                 String serviceAuthorization,
-                                 BreathingSpaceRequest breathingSpaceRequest) {
-        breathingSpace.breathingSpace(breathingSpaceRequest);
+    public BreathingSpaceResponse breathingSpace(BreathingSpaceRequest breathingSpaceRequest) {
+        return this.breathingSpace.breathingSpace(breathingSpaceRequest);
     }
 
     @Override
-    public void claimStatusUpdate(String authorisation,
-                                  String serviceAuthorization,
-                                   ClaimStatusUpdateRequest claimStatusUpdateRequestObj) {
-        claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequestObj);
+    public ClaimStatusUpdateResponse claimStatusUpdate(ClaimStatusUpdateRequest claimStatusUpdateRequest) {
+        return this.claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest);
     }
 }
