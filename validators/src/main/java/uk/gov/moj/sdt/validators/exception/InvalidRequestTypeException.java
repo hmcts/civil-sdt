@@ -2,7 +2,6 @@ package uk.gov.moj.sdt.validators.exception;
 
 public class InvalidRequestTypeException extends AbstractBusinessException {
 
-    @java.io.Serial
     private static final long serialVersionUID = -8123237642014768431L;
 
     public InvalidRequestTypeException(String message, Throwable cause) {
