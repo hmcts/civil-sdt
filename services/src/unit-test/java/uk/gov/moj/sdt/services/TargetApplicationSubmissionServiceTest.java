@@ -792,7 +792,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setSdtRequestReference(sdtRequestRef);
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getRequestType());
+        individualRequest.setRequestType(JUDGMENT.getType());
         individualRequest.setRequestPayload("Test Xml");
         expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
         EasyMock.expectLastCall().times(2);
@@ -871,7 +871,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setSdtRequestReference(sdtRequestRef);
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(CLAIM.getRequestType());
+        individualRequest.setRequestType(CLAIM.getType());
         individualRequest.setRequestPayload("Test Xml");
         expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
         EasyMock.expectLastCall().times(2);
