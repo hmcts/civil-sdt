@@ -35,12 +35,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -60,7 +60,9 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.validators.CCDReferenceValidator;
+import uk.gov.moj.sdt.utils.cmc.CCDReferenceValidator;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -98,6 +100,8 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     CCDReferenceValidator ccdReferenceValidator;
 
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
+
     /**
      * Update Request Service object.
      */
@@ -125,11 +129,12 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         // Instantiate all the mocked objects and set them in the target application submission service
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
+        requestTypeXmlNodeValidator = new RequestTypeXmlNodeValidator(ccdReferenceValidator, xmlReader);
         updateRequestService = new UpdateRequestService(mockIndividualRequestDao,
                                                         genericParser,
                                                         mockMessagingUtility,
-                                                        ccdReferenceValidator,
-                                                        xmlReader);
+                                                        requestTypeXmlNodeValidator
+        );
 
     }
 

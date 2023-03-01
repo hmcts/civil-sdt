@@ -1,4 +1,4 @@
-package uk.gov.moj.sdt.domain;
+package uk.gov.moj.sdt.utils.cmc;
 
 public enum RequestType {
 

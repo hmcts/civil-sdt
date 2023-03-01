@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

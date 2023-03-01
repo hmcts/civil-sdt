@@ -1,4 +1,4 @@
-package uk.gov.moj.sdt.validators;
+package uk.gov.moj.sdt.utils.cmc;
 
 import org.springframework.stereotype.Component;
 

@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.services;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import javax.xml.ws.WebServiceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
-import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -60,8 +58,9 @@ import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
@@ -135,9 +134,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                                   IConsumerGateway cmcRequestConsumer,
                                               @Qualifier("MessageWriter")
                                                   IMessageWriter messageWriter,
-                                              CCDReferenceValidator ccdReferenceValidator,
-                                              XmlElementValueReader xmlReader) {
-        super(individualRequestDao, individualResponseXmlParser, xmlReader, ccdReferenceValidator);
+                                              RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
+        super(individualRequestDao, individualResponseXmlParser, requestTypeXmlNodeValidator);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
@@ -183,7 +181,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
                 this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
 
-            } catch (final InvalidRequestTypeException | CMCException irte) {
+            } catch (final CMCException irte) {
                 LOGGER.error("Exception calling target application for SDT reference [" +
                                  individualRequest.getSdtRequestReference() + "] - " + irte.getMessage());
 

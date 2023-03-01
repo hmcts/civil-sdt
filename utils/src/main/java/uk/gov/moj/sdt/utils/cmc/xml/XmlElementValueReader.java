@@ -1,4 +1,4 @@
-package uk.gov.moj.sdt.cmc.consumers.xml;
+package uk.gov.moj.sdt.utils.cmc.xml;
 
 import java.io.IOException;
 
