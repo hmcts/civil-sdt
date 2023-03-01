@@ -182,8 +182,10 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
 
             } catch (final CMCException irte) {
-                LOGGER.error("Exception calling target application for SDT reference [" +
-                                 individualRequest.getSdtRequestReference() + "] - " + irte.getMessage());
+                String errorMessage = String.format("%s [ %s ] - %s", "Exception calling target application for SDT reference",
+                                                    individualRequest.getSdtRequestReference(),
+                                                    irte.getMessage());
+                LOGGER.error(errorMessage);
 
                 updateRequestRejected(individualRequest);
                 updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
