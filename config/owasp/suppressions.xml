@@ -18,18 +18,22 @@
       CVE-2020-8908
       CVE-2022-40152
       CVE-2022-45143
+      CVE-2022-40152
       CVE-2022-46363
       CVE-2022-46364
       CVE-2022-40152
+      CVE-2022-45688
     </notes>
     <cve>CVE-2016-3094</cve>
     <cve>CVE-2018-10237</cve>
     <cve>CVE-2020-8908</cve>
     <cve>CVE-2022-40152</cve>
     <cve>CVE-2022-45143</cve>
+    <cve>CVE-2022-40152</cve>
     <cve>CVE-2022-46363</cve>
     <cve>CVE-2022-46364</cve>
     <cve>CVE-2022-40152</cve>
+    <cve>CVE-2022-45688</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
