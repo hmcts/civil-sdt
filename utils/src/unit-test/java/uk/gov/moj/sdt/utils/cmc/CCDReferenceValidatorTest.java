@@ -9,7 +9,6 @@ class CCDReferenceValidatorTest {
 
     private CCDReferenceValidator ccdReferenceValidator = new CCDReferenceValidator();
 
-
     @Test
     void shouldReturnTrueWhenValidCCDReferenceIsPassed() {
         boolean value = ccdReferenceValidator.isValidCCDReference("1676030589543579");
