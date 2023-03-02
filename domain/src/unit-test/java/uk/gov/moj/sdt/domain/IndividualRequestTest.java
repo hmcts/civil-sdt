@@ -40,6 +40,8 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -70,6 +72,25 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUp() {
         individualRequest = new IndividualRequest();
+    }
+
+    @Test
+    void testIndividualRequestSetters() {
+        individualRequest.setId(1L);
+        individualRequest.setDeadLetter(true);
+        individualRequest.setCreatedDate(LocalDateTime.now());
+        individualRequest.setRequestType("Request Type");
+        individualRequest.setRequestPayload("Request Payload");
+        individualRequest.setSdtRequestReference("1");
+        individualRequest.setTargetApplicationResponse("Target Application Response");
+
+        assertNotNull(individualRequest.getId());
+        assertTrue(individualRequest.isDeadLetter());
+        assertNotNull(individualRequest.getCreatedDate());
+        assertNotNull(individualRequest.getRequestType());
+        assertNotNull(individualRequest.getRequestPayload());
+        assertNotNull(individualRequest.getSdtRequestReference());
+        assertNotNull(individualRequest.getTargetApplicationResponse());
     }
 
     /**

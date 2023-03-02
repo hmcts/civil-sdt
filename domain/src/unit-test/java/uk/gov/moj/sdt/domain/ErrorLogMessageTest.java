@@ -40,8 +40,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link ErrorLog}.
@@ -99,6 +98,17 @@ class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
         assertNotNull(errorMessage,"ErrorMessage should be populated");
         assertNotNull(errorMessage.toString(),"ErrorMessage toString should be populated");
         assertNotNull(errorMessage.getId());
+    }
+
+    @Test
+    void testErrorLogConstructorWithData() {
+        ErrorLog errorLog2 = new ErrorLog(
+            IErrorMessage.ErrorCode.SDT_INT_ERR.name(),
+            "SDT Internal Error"
+        );
+
+        assertNotNull(errorLog2.getErrorCode());
+        assertNotNull(errorLog2.getErrorText());
     }
 
 }

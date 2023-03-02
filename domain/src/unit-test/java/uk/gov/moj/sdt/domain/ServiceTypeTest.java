@@ -61,6 +61,7 @@ class ServiceTypeTest extends AbstractSdtUnitTestBase {
         serviceType = new ServiceType();
         String TEST_TYPE = "TestType";
         serviceType.setName(TEST_TYPE);
+        serviceType.setId(1L);
         serviceType.setStatus("YES");
         serviceType.setDescription("Description");
 
@@ -75,6 +76,7 @@ class ServiceTypeTest extends AbstractSdtUnitTestBase {
         String actual = serviceType.toString();
         assertNotNull(serviceType,"BulkCustomer Object should be populated");
         assertTrue(actual.contains(EXPECTED),"Should contain something");
+        assertEquals(serviceType.getId(), 1L);
         assertEquals(serviceType.getDescription(),"Description","TargetResponse is not equal");
         assertEquals(serviceType.getStatus(),"YES","Query Reference is not equal");
         assertEquals(serviceType.getName(),EXPECTED,"Query Reference is not equal");

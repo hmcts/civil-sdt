@@ -71,6 +71,7 @@ class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
         submitQueryRequest.setErrorLog(mockErrorLog);
         submitQueryRequest.setCriteriaType("AType");
         submitQueryRequest.setStatus("Uploaded");
+        submitQueryRequest.setResultCount(1);
 
         IServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setBulkCustomerId("1234");
@@ -91,6 +92,7 @@ class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
         assertNotNull(submitQueryRequest.toString(),"Object toString should be populated");
         assertEquals(submitQueryRequest.getTargetApplicationResponse(),"mcol","TargetResponse is not equal");
         assertEquals(submitQueryRequest.getQueryReference(),"Ref","Query Reference is not equal");
+        assertEquals(submitQueryRequest.getResultCount(), 1, "Result Count is not equal");
         assertTrue(submitQueryRequest.hasError(),"error log does exist");
         assertNotNull(submitQueryRequest.getStatus());
         assertNotNull(submitQueryRequest.getCriteriaType());

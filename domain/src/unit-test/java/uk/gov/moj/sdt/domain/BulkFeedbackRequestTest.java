@@ -39,6 +39,8 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -48,10 +50,15 @@ class BulkFeedbackRequestTest {
 
     IBulkFeedbackRequest bulkFeedbackRequest;
 
+    IBulkCustomer mockBulkCustomer;
+
     @BeforeEach
     public void setUp() {
-    bulkFeedbackRequest = new BulkFeedbackRequest();
+        bulkFeedbackRequest = new BulkFeedbackRequest();
+        mockBulkCustomer = Mockito.mock(IBulkCustomer.class);
         bulkFeedbackRequest.setSdtBulkReference("BULRef:1234");
+        bulkFeedbackRequest.setBulkCustomer(mockBulkCustomer);
+        bulkFeedbackRequest.setId(1L);
     }
 
 
@@ -62,6 +69,9 @@ class BulkFeedbackRequestTest {
         String actual = bulkFeedbackRequest.toString();
 
         assertNotNull(bulkFeedbackRequest,"ErrorLog should be populated");
+        assertNotNull(bulkFeedbackRequest.getSdtBulkReference());
+        assertNotNull(bulkFeedbackRequest.getBulkCustomer());
+        assertNotNull(bulkFeedbackRequest.getId());
         assertTrue(actual.contains(expected),"Should contain something");
     }
 }

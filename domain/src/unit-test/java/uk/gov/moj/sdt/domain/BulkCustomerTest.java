@@ -78,6 +78,7 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
         bulkCustomerApplications.add(bulkCustomerApplication);
 
         bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
+        bulkCustomer.setId(1L);
     }
 
     /**
@@ -94,6 +95,7 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
     @DisplayName("Test Bulk Customer")
     void testIBulkCustomer(){
         assertNotNull(bulkCustomer,"BulkCustomer Object should be populated");
+        assertNotNull(bulkCustomer.getId(), "Id should be populated");
         assertNotNull(bulkCustomer.toString(),"Object toString should be populated");
     }
 

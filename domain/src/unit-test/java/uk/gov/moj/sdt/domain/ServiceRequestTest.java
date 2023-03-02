@@ -64,8 +64,11 @@ class ServiceRequestTest extends AbstractSdtUnitTestBase {
         serviceRequest.setBulkCustomerId("1234");
         serviceRequest.setBulkReference("BulkRef01");
         serviceRequest.setRequestType("ReqType");
-        serviceRequest.setRequestPayload("PayLoad");
+        serviceRequest.setRequestPayload("Request Payload");
         serviceRequest.setRequestDateTime(LocalDateTime.now());
+        serviceRequest.setResponseDateTime(LocalDateTime.now());
+        serviceRequest.setResponsePayload("Response Payload");
+        serviceRequest.setServerHostName("SDT_MOCK_HOSTNAME");
         serviceRequest.setId(1L);
     }
 
@@ -82,8 +85,11 @@ class ServiceRequestTest extends AbstractSdtUnitTestBase {
         assertNotNull(serviceRequest.getBulkCustomerId(), "BulkCustomerId should be populated");
         assertNotNull(serviceRequest.getBulkReference(), "Bulk Reference should be populated");
         assertNotNull(serviceRequest.getRequestType(), "Request Type should be populated");
-        assertNotNull(serviceRequest.getRequestPayload(), "Request Pay Load should be populated");
+        assertNotNull(serviceRequest.getRequestPayload(), "Request Payload should be populated");
         assertNotNull(serviceRequest.getRequestDateTime(), "Request Date Time should be populated");
+        assertNotNull(serviceRequest.getResponseDateTime(), "Response Date Time should be populated");
+        assertNotNull(serviceRequest.getResponsePayload(), "Response Payload should be populated");
+        assertNotNull(serviceRequest.getServerHostName(), "Server Host Name should be populated");
         assertNotNull(serviceRequest.getId());
     }
 

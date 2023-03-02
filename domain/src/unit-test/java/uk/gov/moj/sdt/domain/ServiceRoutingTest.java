@@ -39,29 +39,54 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+
+@ExtendWith(MockitoExtension.class)
 class ServiceRoutingTest extends AbstractSdtUnitTestBase{
 
 
     private IServiceRouting serviceRouting;
+
+    @Mock
+    ITargetApplication mockTargetApplication;
+
+    @Mock
+    IServiceType mockServiceType;
 
     @BeforeEach
     @Override
     public void setUp() {
         serviceRouting = new ServiceRouting();
         serviceRouting.setId(1L);
+        serviceRouting.setServiceType(mockServiceType);
+        serviceRouting.setTargetApplication(mockTargetApplication);
         serviceRouting.setWebServiceEndpoint("mcol");
+        when(mockServiceType.toString()).thenReturn("MOCK_SERVICE_TYPE");
+        when(mockTargetApplication.toString()).thenReturn("MOCK_TARGET_APP");
     }
 
     @Test
     @DisplayName("Test Service Routing toString")
     void testServiceRoutingToString() {
-        String expected = "mcol";
+        String expectedWebServiceEndpoint = "mcol";
+        String expectedId = "1";
+        String expectedServiceType = "MOCK_SERVICE_TYPE";
+        String expectedTargetApplication = "MOCK_TARGET_APP";
         String actual = serviceRouting.toString();
-        assertTrue(actual.contains(expected),"Should contain something");
+        assertTrue(actual.contains(expectedWebServiceEndpoint),"Should contain webServiceEndpoint");
+        assertTrue(actual.contains(expectedId),"Should contain Id");
+        assertTrue(actual.contains(expectedServiceType),"Should contain serviceType");
+        assertTrue(actual.contains(expectedTargetApplication),"Should contain targetApplication");
     }
 }
