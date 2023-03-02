@@ -91,6 +91,21 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     private static final String TARGET_APP_TIMEOUT = "TARGET_APP_TIMEOUT";
 
     private static final String TARGET_APP_RESP_TIMEOUT = "TARGET_APP_RESP_TIMEOUT";
+
+    private static final String TWELVE_THOUSAND = "12000";
+
+    private static final String MCOL_MAX_CONCURRENT_QUERY_REQ = "MCOL_MAX_CONCURRENT_QUERY_REQ";
+
+    private static final String CONTACT_DETAILS = "CONTACT_DETAILS";
+
+    private static final String TAR_APP_ERROR = "TAR_APP_ERROR";
+    private static final String TAR_APP_BUSY = "TAR_APP_BUSY";
+
+    private static final String CRITERIA = "criteria";
+
+    private static final String RAW_OUTPUT_XML_SHOULD_BE_NULL = "Raw output xml should be null";
+
+    private static final String SDT_INT_ERR = "SDT_INT_ERR";
     /**
      * Method to do any pre-test set-up.
      */
@@ -128,20 +143,20 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
                 .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        when(mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
                 .thenReturn(maxQueryReq);
 
         final IGlobalParameter contactDetails = new GlobalParameter();
-        contactDetails.setName("CONTACT_DETAILS");
+        contactDetails.setName(CONTACT_DETAILS);
         contactDetails.setValue("SDT Team");
-        when(mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).thenReturn(
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactDetails);
 
         final TimeoutException timeoutEx = new TimeoutException("TIMEOUT_ERROR", "Timeout occurred");
@@ -149,23 +164,23 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         doThrow(timeoutEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("TAR_APP_ERROR");
+        errorMsg.setErrorCode(TAR_APP_ERROR);
         errorMsg.setErrorDescription("Request timed out");
         errorMsg.setErrorText("The system encountered a problem.");
 
-        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "TAR_APP_ERROR")).thenReturn(
+        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, TAR_APP_ERROR)).thenReturn(
                 errorMsg);
 
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
-
-        assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_ERROR);
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
     }
 
@@ -186,20 +201,20 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
                 .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
                 .thenReturn(maxQueryReq);
 
         final IGlobalParameter contactDetails = new GlobalParameter();
-        contactDetails.setName("CONTACT_DETAILS");
+        contactDetails.setName(CONTACT_DETAILS);
         contactDetails.setValue("SDT Team");
-        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).thenReturn(
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactDetails);
 
         final OutageException outageEx = new OutageException("OUTAGE_ERROR", "Server unavailable.");
@@ -207,24 +222,24 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         doThrow(outageEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("TAR_APP_ERROR");
+        errorMsg.setErrorCode(TAR_APP_ERROR);
         errorMsg.setErrorDescription("Server unavailable.");
         errorMsg.setErrorText("The system encountered a problem.");
 
-        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "TAR_APP_ERROR")).thenReturn(
+        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, TAR_APP_ERROR)).thenReturn(
                 errorMsg);
 
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
-        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "TAR_APP_ERROR");
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_ERROR);
 
-        assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
     }
 
     /**
@@ -244,14 +259,14 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
             .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        when(mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
                 .thenReturn(maxQueryReq);
 
         final SoapFaultException soapFaultEx = new SoapFaultException("SOAPFAULT_ERROR", "Soap fault occurred");
@@ -259,28 +274,28 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         doThrow(soapFaultEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("SDT_INT_ERR");
+        errorMsg.setErrorCode(SDT_INT_ERR);
         errorMsg.setErrorDescription("SDT Internal Error.");
         errorMsg.setErrorText("SDT Internal Error, please report to {0}");
-        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, "SDT_INT_ERR")).thenReturn(errorMsg);
+        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, SDT_INT_ERR)).thenReturn(errorMsg);
 
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
-        contactNameParameter.setName("CONTACT_DETAILS");
-        when(mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).thenReturn(
+        contactNameParameter.setName(CONTACT_DETAILS);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactNameParameter);
 
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
-        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "SDT_INT_ERR");
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, SDT_INT_ERR);
 
         assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
                 .getErrorText());
@@ -303,14 +318,14 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
                 .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
                 .thenReturn(maxQueryReq);
 
         final WebServiceException wsException = new WebServiceException("WS_ERROR");
@@ -318,27 +333,27 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         doThrow(wsException).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("SDT_INT_ERR");
+        errorMsg.setErrorCode(SDT_INT_ERR);
         errorMsg.setErrorDescription("SDT Internal Error.");
         errorMsg.setErrorText("SDT Internal Error, please report to {0}");
-        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "SDT_INT_ERR")).thenReturn(errorMsg);
+        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, SDT_INT_ERR)).thenReturn(errorMsg);
 
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
-        contactNameParameter.setName("CONTACT_DETAILS");
-        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).thenReturn(
+        contactNameParameter.setName(CONTACT_DETAILS);
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactNameParameter);
 
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
-        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "SDT_INT_ERR");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, SDT_INT_ERR);
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
-        assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
         assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
                 .getErrorText());
@@ -354,25 +369,25 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         setUpSubmitQueryRequest(submitQueryRequest);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("0");
-        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
                 .thenReturn(maxQueryReq);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("TAR_APP_BUSY");
+        errorMsg.setErrorCode(TAR_APP_BUSY);
         errorMsg.setErrorDescription("Target Application Busy.");
         errorMsg.setErrorText("Target Application Busy.");
-        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, "TAR_APP_BUSY"))
+        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, TAR_APP_BUSY))
                 .thenReturn(errorMsg);
 
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
-        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "TAR_APP_BUSY");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_BUSY);
 
-        assertNull(SdtContext.getContext().getRawOutXml(),"Raw output xml should be null");
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
     }
 
@@ -393,14 +408,14 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue("12000");
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
                 .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        when(mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
                 .thenReturn(maxQueryReq);
 
         doAnswer(invocation -> {
@@ -417,7 +432,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         logger.addAppender(listAppender);
 
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         submitQueryService.submitQuery(submitQueryRequest);
 
         List<ILoggingEvent> logList = listAppender.list;
@@ -431,7 +446,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ");
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
     }

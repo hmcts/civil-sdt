@@ -8,16 +8,21 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.ErrorMessageDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
-import uk.gov.moj.sdt.domain.*;
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.ErrorMessage;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.services.cache.api.IErrorMessagesCache;
 import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
-
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for error messages cache.
@@ -142,8 +147,6 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
         verify(managementMBean).getCacheResetControl();
     }
 
-
-
     @Test
     void testSetGenericDao(){
         SdtManagementMBean mockSdtManagementMBean = mock(SdtManagementMBean.class);
@@ -151,7 +154,10 @@ class ErrorMessagesCacheTest extends AbstractSdtUnitTestBase {
         ErrorMessagesCache errorMessageCache = new ErrorMessagesCache(mockSdtManagementMBean,mockErrorMessageDao);
         errorMessageCache.setGenericDao(mockGenericDao);
 
+        Object genericDaoResult = this.getAccessibleField(ErrorMessagesCache.class, "genericDao",IErrorMessagesCache.class,errorMessageCache);
+
         assertNotNull(errorMessageCache,"Object should have been populated");
+        assertEquals(mockGenericDao, genericDaoResult, "GenericDao should be set to an object");
     }
 
 }

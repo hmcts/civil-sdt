@@ -7,9 +7,25 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.BulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.domain.*;
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.ServiceRouting;
+import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
+import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -201,8 +217,9 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setRequestStatus(status);
         if (IndividualRequestStatus.REJECTED.getStatus().equals(status)) {
             final IErrorLog errorLog =
-                    new ErrorLog(IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
-                            "Duplicate Unique Request Identifier submitted {0}");
+                    new ErrorLog(
+                        IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
+                        "Duplicate Unique Request Identifier submitted {0}");
             individualRequest.setErrorLog(errorLog);
         }
         individualRequest.setTargetApplicationResponse("<response></response>");

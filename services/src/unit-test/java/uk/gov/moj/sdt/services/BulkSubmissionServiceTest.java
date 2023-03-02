@@ -291,6 +291,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockConcurrencyMap).get(key);
         verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
         verify(mockGenericDao).fetch(IServiceRequest.class, 1);
+        verify(individualRequestMock).isEnqueueable();
         verify(individualRequestMock).getRequestStatus();
     }
 

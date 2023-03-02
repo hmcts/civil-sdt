@@ -6,11 +6,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import uk.gov.moj.sdt.services.messaging.api.IMessageDrivenBean;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageListenerConfigTest {
+public class MessageListenerConfigTest extends AbstractSdtUnitTestBase {
 
     @Mock
     private IMessageDrivenBean mockIndividualRequestMdb;
@@ -22,8 +24,10 @@ public class MessageListenerConfigTest {
         MessageListenerConfig messageListenerConfig = new MessageListenerConfig();
 
         MessageListenerAdapter messageListenerAdapter = messageListenerConfig.messageListenerAdapter(mockIndividualRequestMdb);
+        Object messageListenerAdapterResult = getAccessibleField(MessageListenerAdapter.class,
+                                                                 "defaultListenerMethod",IMessageWriter.class,messageListenerAdapter);
 
-        assertNotNull(messageListenerAdapter);
+        assertEquals("readMessage", messageListenerAdapterResult);
 
     }
 }

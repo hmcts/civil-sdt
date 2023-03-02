@@ -42,8 +42,6 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
         when(individualRequest.getSdtRequestReference()).thenReturn("sdtRequestReference");
 
         MessagingUtility messagingUtility = new MessagingUtility(messageWriter,messageSynchronizer);
-        messagingUtility.setMessageSynchronizer(messageSynchronizer);
-        messagingUtility.setMessageWriter(messageWriter);
 
         ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
 
@@ -63,9 +61,11 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
 
         MessagingUtility messagingUtility = new MessagingUtility(messageWriter,messageSynchronizer);
 
-        messagingUtility.setMessageSynchronizer(messageSynchronizer);
+        IMessageSynchronizer mockMessageSynchronizer = mock(IMessageSynchronizer.class);
 
-        assertEquals(messageSynchronizer, messagingUtility.getMessageSynchronizer());
+        messagingUtility.setMessageSynchronizer(mockMessageSynchronizer);
+
+        assertEquals(mockMessageSynchronizer, messagingUtility.getMessageSynchronizer());
     }
 
     @Test
@@ -73,9 +73,11 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
 
         MessagingUtility messagingUtility = new MessagingUtility(messageWriter,messageSynchronizer);
 
-        messagingUtility.setMessageWriter(messageWriter);
+        IMessageWriter mockMessageWriter = mock(IMessageWriter.class);
 
-        assertEquals(messageWriter, messagingUtility.getMessageWriter());
+        messagingUtility.setMessageWriter(mockMessageWriter);
+
+        assertEquals(mockMessageWriter, messagingUtility.getMessageWriter());
     }
 
 }

@@ -26,7 +26,7 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
 
     private static final String FOUR_CHARACTERS_ONLY ="The target application length is expected to be 4 characters.";
 
-    ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
+    SdtBulkReferenceGenerator sdtBulkReferenceGenerator;
     @BeforeEach
     @Override
     public void setUp() {
@@ -38,12 +38,13 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
     @Test
     void testGetSdtBulkReferenceGenerator() {
 
+        when(genericDaoMock.getNextSequenceValue("SDT_REF_SEQ")).thenReturn(999L);
         String generatedRef = sdtBulkReferenceGenerator.getSdtBulkReference("MCOL");
-        when(genericDaoMock.getNextSequenceValue(anyString())).thenReturn(999L);
 
-        assertNotNull(generatedRef);
+        assertTrue(generatedRef.matches("^MCOL-[\\d]{14}-000000999$"), "Reference does not match expected pattern");
         assertTrue(sdtBulkReferenceGenerator.getSdtBulkReference("MCOL").contains("999"));
         verify(genericDaoMock,times(2)).getNextSequenceValue(anyString());
+        verify(genericDaoMock,times(2)).getNextSequenceValue("SDT_REF_SEQ");
     }
 
     @Test

@@ -121,7 +121,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
         try {
             individualRequestMdb.readMessage(objMessageMock);
             fail("Exception should be thrown");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             assertEquals(e.getCause().getMessage(),"JMS error occurred");
             assertTrue(true,"Expected to throw the exception");
         }
