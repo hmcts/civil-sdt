@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,6 +23,8 @@ class XmlToObjectTest extends BaseXmlTest {
         + "\"breathingSpaceNotificationType\":\"BC\"}";
 
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
+
+    private static final String JUDGEMENT = "Judgement.xml";
 
     private XmlToObjectConverter xmlToObject = new XmlToObjectConverter();
 
@@ -55,5 +58,19 @@ class XmlToObjectTest extends BaseXmlTest {
         String jsonString = objectMapper.writeValueAsString(request);
         assertNotNull(jsonString);
         assertEquals(JSON_RESPONSE, jsonString);
+    }
+
+    @Test
+    void shouldConvertJudgementSpaceRequestToString() throws IOException {
+        String xmlContent = readXmlAsString(JUDGEMENT);
+        String request = xmlToObject.convertXmlToJson(xmlContent);
+        assertNotNull(request);
+    }
+
+    @Test
+    void shouldConvertJudgementSpaceRequest() throws IOException {
+        String xmlContent = readXmlAsString(JUDGEMENT);
+        JudgementRequest request = xmlToObject.convertXmlToObject(xmlContent, JudgementRequest.class);
+        assertNotNull(request);
     }
 }
