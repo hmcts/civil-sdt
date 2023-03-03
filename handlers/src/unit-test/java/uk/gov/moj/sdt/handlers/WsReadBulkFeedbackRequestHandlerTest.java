@@ -7,15 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.services.api.IBulkFeedbackService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
-import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
@@ -29,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBase {
+class WsReadBulkFeedbackRequestHandlerTest {
 
     @Mock
     IBulkFeedbackService mockBulkFeedbackService;
@@ -52,21 +49,16 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
     @Mock
     IBulkSubmission mockBulkSubmission;
 
-    @Spy
-    WsReadBulkFeedbackRequestHandler wsReadBulkFeedbackRequestHandler = new WsReadBulkFeedbackRequestHandler(null, null);
-
-    long startingBulkFeedbackCount;
-
-    long startingActiveBulkCustomerCount;
+    WsReadBulkFeedbackRequestHandler wsReadBulkFeedbackRequestHandler;
 
     @BeforeEach
-    @Override
     public void setUp() {
+        wsReadBulkFeedbackRequestHandler = Mockito.spy(new WsReadBulkFeedbackRequestHandler(
+            mockBulkFeedbackService, mockTransformer));
         wsReadBulkFeedbackRequestHandler.setBulkFeedbackService(mockBulkFeedbackService);
         wsReadBulkFeedbackRequestHandler.setTransformer(mockTransformer);
 
-        startingBulkFeedbackCount = getMetricsBulkFeedbackCount();
-        startingActiveBulkCustomerCount = SdtMetricsMBean.getMetrics().getActiveBulkCustomers();
+        SdtMetricsMBean.getMetrics().reset();
 
         when(mockBulkFeedbackRequestType.getHeader()).thenReturn(mockHeader);
         when(mockHeader.getSdtCustomerId()).thenReturn(1L);
@@ -74,7 +66,7 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
     }
 
     @Test
-    public void testGetBulkFeedback() throws Exception {
+    public void testGetBulkFeedback() {
         when(mockTransformer.transformJaxbToDomain(mockBulkFeedbackRequestType)).thenReturn(mockBulkFeedbackRequest);
         when(mockBulkFeedbackService.getBulkFeedback(mockBulkFeedbackRequest)).thenReturn(mockBulkSubmission);
         when(mockTransformer.transformDomainToJaxb(mockBulkSubmission)).thenReturn(mockBulkFeedbackResponseType);
@@ -118,20 +110,9 @@ public class WsReadBulkFeedbackRequestHandlerTest extends AbstractSdtUnitTestBas
     }
 
     private void testMetrics() {
-        long currentBulkFeedbackCount = getMetricsBulkFeedbackCount();
-        long currentActiveBulkCustomerCount = SdtMetricsMBean.getMetrics().getActiveBulkCustomers();
+        String expectedBulkFeedbackCount = "count[1]";
 
-        Assertions.assertTrue(startingBulkFeedbackCount < currentBulkFeedbackCount);
-
-        if (startingActiveBulkCustomerCount == 1) {
-            Assertions.assertEquals(startingActiveBulkCustomerCount, currentActiveBulkCustomerCount);
-        } else {
-            Assertions.assertTrue(startingActiveBulkCustomerCount < currentActiveBulkCustomerCount);
-        }
+        Assertions.assertTrue(SdtMetricsMBean.getMetrics().getBulkFeedbackStats().contains(expectedBulkFeedbackCount));
+        Assertions.assertEquals(1, SdtMetricsMBean.getMetrics().getActiveBulkCustomers());
     }
-
-    private static long getMetricsBulkFeedbackCount() {
-        return (long) ReflectionTestUtils.invokeGetterMethod(SdtMetricsMBean.getMetrics(), "getBulkFeedbackCount");
-    }
-
 }

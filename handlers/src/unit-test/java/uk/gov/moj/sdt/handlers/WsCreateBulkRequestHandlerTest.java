@@ -7,14 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
-import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
@@ -34,7 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class WsCreateBulkRequestHandlerTest extends AbstractSdtUnitTestBase {
+class WsCreateBulkRequestHandlerTest {
 
     @Mock
     IBulkSubmissionService mockBulkSubmissionService;
@@ -60,23 +57,18 @@ public class WsCreateBulkRequestHandlerTest extends AbstractSdtUnitTestBase {
     @Mock
     HeaderType mockHeader;
 
-    @Spy
-    WsCreateBulkRequestHandler wsCreateBulkRequestHandler = new WsCreateBulkRequestHandler(null, null, null);
-
-    long startingBulkSubmitCount;
-
-    long startingActiveBulkCustomerCount;
+    WsCreateBulkRequestHandler wsCreateBulkRequestHandler;
 
     @BeforeEach
-    @Override
     public void setUp() {
+        wsCreateBulkRequestHandler = Mockito.spy(new WsCreateBulkRequestHandler(
+            mockBulkSubmissionService, mockBulkSubmissionValidator, mockTransformer));
         wsCreateBulkRequestHandler.setBulkSubmissionService(mockBulkSubmissionService);
         wsCreateBulkRequestHandler.setBulkSubmissionValidator(mockBulkSubmissionValidator);
         wsCreateBulkRequestHandler.setTransformer(mockTransformer);
         wsCreateBulkRequestHandler.setConcurrencyMap(mockConcurrencyMap);
 
-        startingBulkSubmitCount = getMetricsBulkSubmitCount();
-        startingActiveBulkCustomerCount = SdtMetricsMBean.getMetrics().getActiveBulkCustomers();
+        SdtMetricsMBean.getMetrics().reset();
 
         when(mockBulkRequestType.getHeader()).thenReturn(mockHeader);
         when(mockHeader.getSdtCustomerId()).thenReturn(1L);
@@ -132,20 +124,9 @@ public class WsCreateBulkRequestHandlerTest extends AbstractSdtUnitTestBase {
         testMetrics();
     }
 
-    private static long getMetricsBulkSubmitCount() {
-        return (long) ReflectionTestUtils.invokeGetterMethod(SdtMetricsMBean.getMetrics(), "getBulkSubmitCount");
-    }
-
     private void testMetrics() {
-        long currentBulkSubmitCount = getMetricsBulkSubmitCount();
-        long currentActiveBulkCustomerCount = SdtMetricsMBean.getMetrics().getActiveBulkCustomers();
-
-        Assertions.assertTrue(startingBulkSubmitCount < currentBulkSubmitCount);
-
-        if (startingActiveBulkCustomerCount == 1) {
-            Assertions.assertEquals(startingActiveBulkCustomerCount, currentActiveBulkCustomerCount);
-        } else {
-            Assertions.assertTrue(startingActiveBulkCustomerCount < currentActiveBulkCustomerCount);
-        }
+        String expectedBulkSubmitCount = "count[1]";
+        Assertions.assertTrue(SdtMetricsMBean.getMetrics().getBulkSubmitStats().contains(expectedBulkSubmitCount));
+        Assertions.assertEquals(1, SdtMetricsMBean.getMetrics().getActiveBulkCustomers());
     }
 }

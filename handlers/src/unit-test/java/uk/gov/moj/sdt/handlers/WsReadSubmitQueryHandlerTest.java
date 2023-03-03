@@ -7,14 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.transformers.api.ITransformer;
-import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.visitor.VisitableTreeWalker;
 import uk.gov.moj.sdt.validators.exception.CustomerNotFoundException;
@@ -27,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class WsReadSubmitQueryHandlerTest extends AbstractSdtUnitTestBase {
+class WsReadSubmitQueryHandlerTest {
 
     @Mock
     ISubmitQueryService mockSubmitQueryService;
@@ -47,18 +44,16 @@ public class WsReadSubmitQueryHandlerTest extends AbstractSdtUnitTestBase {
     @Mock
     HeaderType mockHeaderType;
 
-    @Spy
-    WsReadSubmitQueryHandler wsReadSubmitQueryHandler = new WsReadSubmitQueryHandler(null, null);
-
-    long startingSubmitQueryCount;
+    WsReadSubmitQueryHandler wsReadSubmitQueryHandler;
 
     @BeforeEach
-    @Override
     public void setUp() {
+        wsReadSubmitQueryHandler = Mockito.spy(new WsReadSubmitQueryHandler(
+            mockSubmitQueryService, mockTransformer));
         wsReadSubmitQueryHandler.setSubmitQueryService(mockSubmitQueryService);
         wsReadSubmitQueryHandler.setTransformer(mockTransformer);
 
-        startingSubmitQueryCount = getMetricsSubmitQueryCount();
+        SdtMetricsMBean.getMetrics().reset();
 
         when(mockSubmitQueryRequestType.getHeader()).thenReturn(mockHeaderType);
         when(mockHeaderType.getSdtCustomerId()).thenReturn(1L);
@@ -88,9 +83,8 @@ public class WsReadSubmitQueryHandlerTest extends AbstractSdtUnitTestBase {
 
         }
 
-        long currentSubmitQueryCount = getMetricsSubmitQueryCount();
-
-        Assertions.assertTrue(startingSubmitQueryCount < currentSubmitQueryCount);
+        String expectedSubmitQueryCount = "count[1]";
+        Assertions.assertTrue(SdtMetricsMBean.getMetrics().getSubmitQueryStats().contains(expectedSubmitQueryCount));
         Assertions.assertNotNull(result);
         Assertions.assertEquals(mockSubmitQueryResponseType, result);
     }
@@ -112,12 +106,8 @@ public class WsReadSubmitQueryHandlerTest extends AbstractSdtUnitTestBase {
                 any(SubmitQueryResponseType.class)
             );
 
-        long currentSubmitQueryCount = getMetricsSubmitQueryCount();
 
-        Assertions.assertTrue(startingSubmitQueryCount < currentSubmitQueryCount);
-    }
-
-    private static long getMetricsSubmitQueryCount() {
-        return (long) ReflectionTestUtils.invokeGetterMethod(SdtMetricsMBean.getMetrics(), "getSubmitQueryCount");
+        String expectedSubmitQueryCount = "count[1]";
+        Assertions.assertTrue(SdtMetricsMBean.getMetrics().getSubmitQueryStats().contains(expectedSubmitQueryCount));
     }
 }
