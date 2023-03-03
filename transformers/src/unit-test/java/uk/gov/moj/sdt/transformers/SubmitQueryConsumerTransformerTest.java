@@ -33,9 +33,8 @@ package uk.gov.moj.sdt.transformers;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -86,8 +85,8 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
         final ISubmitQueryRequest domain = new SubmitQueryRequest();
 
         transformer.transformJaxbToDomain(jaxb, domain);
-        Assert.assertEquals("Request Status is incorrect", jaxb.getStatus().getCode().value(), domain.getStatus());
-        Assert.assertEquals("Incorrect result count", jaxb.getResultCount().intValue(), domain.getResultCount());
+        Assertions.assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(), "Request Status is incorrect");
+        Assertions.assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(), "Incorrect result count");
     }
 
     /**
@@ -114,9 +113,11 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
 
         final IErrorLog errorLog = domain.getErrorLog();
 
-        Assert.assertEquals("Request Status is incorrect", jaxb.getStatus().getCode().value(), domain.getStatus());
-        Assert.assertEquals("Error description is incorrect", "MCOL has found an error in processing the request",
-                errorLog.getErrorText());
-        Assert.assertEquals("Incorrect result count", jaxb.getResultCount().intValue(), domain.getResultCount());
+        Assertions.assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(),
+                                "Request Status is incorrect");
+        Assertions.assertEquals("MCOL has found an error in processing the request", errorLog.getErrorText(),
+                                "Error description is incorrect");
+        Assertions.assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(),
+                                "Incorrect result count");
     }
 }

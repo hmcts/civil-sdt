@@ -32,9 +32,8 @@ package uk.gov.moj.sdt.transformers;
 
 import java.lang.reflect.Constructor;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
@@ -92,10 +91,10 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase {
         final ISubmitQueryRequest domain = transformer.transformJaxbToDomain(jaxb);
 
         // Test the jaxb object has been transformed domain object
-        Assert.assertEquals("SDT Customer ID does not match", sdtCustomerId, domain.getBulkCustomer()
-                .getSdtCustomerId());
-        Assert.assertEquals("Target Application ID does not match", targetApplicationId, domain
-                .getTargetApplication().getTargetApplicationCode());
+        Assertions.assertEquals(sdtCustomerId, domain.getBulkCustomer().getSdtCustomerId(),
+                                "SDT Customer ID does not match");
+        Assertions.assertEquals(targetApplicationId, domain.getTargetApplication().getTargetApplicationCode(),
+                                "Target Application ID does not match");
 
     }
 
@@ -121,9 +120,9 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase {
         final SubmitQueryResponseType jaxb = transformer.transformDomainToJaxb(domain);
 
         // Test the domain object has been transformed to a jaxb object
-        Assert.assertEquals("SDT Customer ID does not match", sdtCustomerId, jaxb.getSdtCustomerId());
-        Assert.assertEquals("Result count does not match", resultCount, jaxb.getResultCount().longValue());
-        Assert.assertEquals("SDT Service does not match", AbstractTransformer.SDT_SERVICE, jaxb.getSdtService());
-        Assert.assertNotNull("ResultsType should not be null", jaxb.getResults());
+        Assertions.assertEquals(sdtCustomerId, jaxb.getSdtCustomerId(), "SDT Customer ID does not match");
+        Assertions.assertEquals(resultCount, jaxb.getResultCount().longValue(), "Result count does not match");
+        Assertions.assertEquals(AbstractTransformer.SDT_SERVICE, jaxb.getSdtService(), "SDT Service does not match");
+        Assertions.assertNotNull(jaxb.getResults(), "ResultsType should not be null");
     }
 }
