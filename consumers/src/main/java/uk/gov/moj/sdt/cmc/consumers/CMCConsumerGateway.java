@@ -53,10 +53,14 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             } else if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
+                String FORTesting = individualRequest.getRequestPayload().toString();
+               // check the confluance page on the structure to retest will to truncate - cascade service requests table.
+
                 ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(
                     individualRequest.getRequestPayload(),
                     ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(request);
+                individualRequest.setRequestStatus(response.getProcessingStatus().name());
 
 
 
