@@ -17,7 +17,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -163,6 +165,9 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             } catch (final IllegalArgumentException e) {
                 fail(NOT_EXPECTED_TO_FAIL);
             }
+            mockStaticPerformanceLogger.verify(
+                () -> PerformanceLogger.log(any(),eq(PerformanceLogger.LOGGING_POINT_5),
+                                            eq("Enqueue message"), eq("\n\n\tsdt request reference=Test\n")));
         }
     }
 }

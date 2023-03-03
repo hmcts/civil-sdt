@@ -82,7 +82,6 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      *
      * @throws JMSException if any during the test setup
      */
-
     @Test
     public void readMessageDataAccessExceptionTest() throws JMSException {
 
@@ -123,7 +122,6 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
             fail("Exception should be thrown");
         } catch (RuntimeException e) {
             assertEquals(e.getCause().getMessage(),"JMS error occurred");
-            assertTrue(true,"Expected to throw the exception");
         }
         verify(objMessageMock).getObject();
     }
