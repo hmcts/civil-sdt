@@ -20,44 +20,47 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ServicesConfigTest extends AbstractSdtUnitTestBase {
 
+    private static final String FIELD_REPLACEMENT_NAMESPACES = "replacementNamespaces";
+
     @Mock
     private ConnectionFactory mockConnectionFactory;
+
     @Mock
     private PlatformTransactionManager mockPlatformTransactionManager;
+
     @Mock
     private QueueConfig mockQueueConfig;
 
     @Test
-    void testMessageListenerContainer(){
+    void testMessageListenerContainer() {
 
-        //Can create a new actual instance rather then a spy
-        ServicesConfig mockServicesConfig = spy(ServicesConfig.class);
+        ServicesConfig servicesConfig = new ServicesConfig();
         MessageListenerAdapter mockMessageListenerAdaptor = mock(MessageListenerAdapter.class);
         Map<String, String> targetAppQueue = new HashMap<>();
-        targetAppQueue.put("MCOL","MCOL");
+        targetAppQueue.put("MCOL", "MCOL");
 
         when(mockQueueConfig.getTargetAppQueue()).thenReturn(targetAppQueue);
 
-        DefaultMessageListenerContainer defaultMessageListenerContainer = mockServicesConfig.messageListenerContainer(
+        DefaultMessageListenerContainer defaultMessageListenerContainer = servicesConfig.messageListenerContainer(
             mockConnectionFactory, mockPlatformTransactionManager, mockQueueConfig, mockMessageListenerAdaptor);
 
-        verify(mockQueueConfig).getTargetAppQueue();
-        assertEquals(defaultMessageListenerContainer.getActiveConsumerCount(),0);
-        assertEquals(defaultMessageListenerContainer.getCacheLevel(),4);
-        assertEquals(defaultMessageListenerContainer.getMaxConcurrentConsumers(),5);
-        assertEquals(defaultMessageListenerContainer.getIdleConsumerLimit(),5);
-        assertEquals(defaultMessageListenerContainer.getCacheLevel(),4);
-        assertNull(defaultMessageListenerContainer.getSubscriptionName());
-        assertEquals(defaultMessageListenerContainer.getDestinationName(),"MCOL");
         assertNotNull(defaultMessageListenerContainer);
-        assertEquals(defaultMessageListenerContainer.getConnectionFactory(),mockConnectionFactory);
+        assertEquals(0, defaultMessageListenerContainer.getActiveConsumerCount());
+        assertEquals(4, defaultMessageListenerContainer.getCacheLevel());
+        assertEquals(5, defaultMessageListenerContainer.getMaxConcurrentConsumers());
+        assertEquals(5, defaultMessageListenerContainer.getIdleConsumerLimit());
+        assertEquals(4, defaultMessageListenerContainer.getCacheLevel());
+        assertNull(defaultMessageListenerContainer.getSubscriptionName());
+        assertEquals("MCOL", defaultMessageListenerContainer.getDestinationName());
+        assertEquals(mockConnectionFactory, defaultMessageListenerContainer.getConnectionFactory());
+
+        verify(mockQueueConfig).getTargetAppQueue();
     }
 
     @Test
@@ -66,9 +69,12 @@ class ServicesConfigTest extends AbstractSdtUnitTestBase {
         ServicesConfig servicesConfig = new ServicesConfig();
         GenericXmlParser genericXmlParser = servicesConfig.submitQueryResponseXmlParser();
 
+        assertNotNull(genericXmlParser);
+        assertEquals("targetAppDetail", genericXmlParser.getEnclosingTag());
+
         Map<String, String> replacementNamespaces =
             (Map<String, String>) getAccessibleField(GenericXmlParser.class,
-                                                     "replacementNamespaces",
+                                                     FIELD_REPLACEMENT_NAMESPACES,
                                                      Map.class,
                                                      genericXmlParser);
 
@@ -76,39 +82,69 @@ class ServicesConfigTest extends AbstractSdtUnitTestBase {
         assertEquals(1, replacementNamespaces.size());
         assertEquals(ServicesConfig.SUBMIT_QUERY_RESPONSE_SCHEMA,
                      replacementNamespaces.get("http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema"));
-
-    }
-    @Test
-    void testSubmitQueryRequestXmlParser(){
-
-        GenericXmlParser genericXmlParser = null;
-        ServicesConfig servicesConfig = new ServicesConfig();
-        genericXmlParser = servicesConfig.submitQueryRequestXmlParser();
-
-        assertNotNull(genericXmlParser);
-        assertEquals(genericXmlParser.getEnclosingTag(),"criterion");
-
     }
 
     @Test
-    void testIndividualResponseXmlParser(){
+    void testSubmitQueryRequestXmlParser() {
 
-        GenericXmlParser genericXmlParser = null;
         ServicesConfig servicesConfig = new ServicesConfig();
-        genericXmlParser = servicesConfig.individualResponseXmlParser();
+        GenericXmlParser genericXmlParser = servicesConfig.submitQueryRequestXmlParser();
 
         assertNotNull(genericXmlParser);
-        assertEquals(genericXmlParser.getEnclosingTag(),"targetAppDetail");
+        assertEquals("criterion", genericXmlParser.getEnclosingTag());
+
+        Map<String, String> replacementNamespaces =
+            (Map<String, String>) getAccessibleField(GenericXmlParser.class,
+                                                     FIELD_REPLACEMENT_NAMESPACES,
+                                                     Map.class,
+                                                     genericXmlParser);
+
+        assertNotNull(replacementNamespaces);
+        assertEquals(1, replacementNamespaces.size());
+        assertEquals(ServicesConfig.TARGET_APP_SUBMIT_QUERY_REQUEST_SCHEMA,
+                     replacementNamespaces.get(ServicesConfig.SDT_SUBMIT_QUERY_REQUEST_SCHEMA));
     }
 
     @Test
-    void testIndividualRequestsXmlParser(){
+    void testIndividualResponseXmlParser() {
 
-        IndividualRequestsXmlParser genericXmlParser = null;
         ServicesConfig servicesConfig = new ServicesConfig();
-        genericXmlParser = servicesConfig.individualRequestsXmlParser();
+        GenericXmlParser genericXmlParser = servicesConfig.individualResponseXmlParser();
 
         assertNotNull(genericXmlParser);
+        assertEquals("targetAppDetail", genericXmlParser.getEnclosingTag());
+
+        Map<String, String> replacementNamespaces =
+            (Map<String, String>) getAccessibleField(GenericXmlParser.class,
+                                                     FIELD_REPLACEMENT_NAMESPACES,
+                                                     Map.class,
+                                                     genericXmlParser);
+
+        assertNotNull(replacementNamespaces);
+        assertEquals(2, replacementNamespaces.size());
+        assertEquals(ServicesConfig.SDT_BULK_FEEDBACK_RESPONSE_SCHEMA,
+                     replacementNamespaces.get(ServicesConfig.SDT_TARGET_APP_INDV_RESPONSE_SCHEMA));
+        assertEquals(ServicesConfig.SDT_BULK_FEEDBACK_RESPONSE_SCHEMA,
+                     replacementNamespaces.get(ServicesConfig.SDT_INDIVIDUAL_UPDATE_REQUEST_SCHEMA));
     }
 
+    @Test
+    void testIndividualRequestsXmlParser() {
+
+        ServicesConfig servicesConfig = new ServicesConfig();
+        IndividualRequestsXmlParser genericXmlParser = servicesConfig.individualRequestsXmlParser();
+
+        assertNotNull(genericXmlParser);
+
+        Map<String, String> replacementNamespaces =
+            (Map<String, String>) getAccessibleField(IndividualRequestsXmlParser.class,
+                                                     FIELD_REPLACEMENT_NAMESPACES,
+                                                     Map.class,
+                                                     genericXmlParser);
+
+        assertNotNull(replacementNamespaces);
+        assertEquals(1, replacementNamespaces.size());
+        assertEquals(ServicesConfig.SDT_TARGET_APP_INDV_REQUEST_SCHEMA,
+                     replacementNamespaces.get(ServicesConfig.SDT_BULK_REQUEST_SCHEMA));
+    }
 }

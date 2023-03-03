@@ -13,9 +13,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,10 +39,9 @@ public class SdtBulkReferenceGeneratorTest extends AbstractSdtUnitTestBase{
         when(genericDaoMock.getNextSequenceValue("SDT_REF_SEQ")).thenReturn(999L);
         String generatedRef = sdtBulkReferenceGenerator.getSdtBulkReference("MCOL");
 
-        assertTrue(generatedRef.matches("^MCOL-[\\d]{14}-000000999$"), "Reference does not match expected pattern");
-        assertTrue(sdtBulkReferenceGenerator.getSdtBulkReference("MCOL").contains("999"));
-        verify(genericDaoMock,times(2)).getNextSequenceValue(anyString());
-        verify(genericDaoMock,times(2)).getNextSequenceValue("SDT_REF_SEQ");
+        assertTrue(generatedRef.matches("^MCOL-\\d{14}-000000999$"), "Reference does not match expected pattern");
+
+        verify(genericDaoMock).getNextSequenceValue("SDT_REF_SEQ");
     }
 
     @Test
