@@ -21,9 +21,9 @@ public interface CMCApi {
     String SDT_REQUEST_ID = "SDTREQUESTID";
 
     @PostMapping("/breathingSpace")
-    BreathingSpaceResponse breathingSpace(
-        @RequestBody BreathingSpaceRequest breathingSpaceRequest
-    );
+    BreathingSpaceResponse breathingSpace(@RequestHeader(IDAM_ID_HEADER)  String idamId,
+                                          @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
+                                          @RequestBody BreathingSpaceRequest breathingSpaceRequest);
 
 
     @PostMapping("/breathingSpace")

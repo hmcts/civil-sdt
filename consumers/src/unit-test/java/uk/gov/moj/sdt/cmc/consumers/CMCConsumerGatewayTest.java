@@ -58,7 +58,7 @@ class CMCConsumerGatewayTest {
     void shouldInvokeBreathingSpace() throws Exception {
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
-        when(breathingSpace.breathingSpace(any())).thenReturn(response);
+        when(breathingSpace.breathingSpace(anyString(), anyString(), any())).thenReturn(response);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
@@ -68,7 +68,7 @@ class CMCConsumerGatewayTest {
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
+        verify(breathingSpace).breathingSpace(anyString(), anyString(), any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());

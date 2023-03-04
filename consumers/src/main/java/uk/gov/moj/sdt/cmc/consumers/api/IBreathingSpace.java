@@ -5,5 +5,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 
 public interface IBreathingSpace {
 
-    BreathingSpaceResponse breathingSpace(BreathingSpaceRequest breathingSpaceRequest);
+    BreathingSpaceResponse breathingSpace(String idamId,
+                                          String sdtRequestId,
+                                          BreathingSpaceRequest breathingSpaceRequest);
 }

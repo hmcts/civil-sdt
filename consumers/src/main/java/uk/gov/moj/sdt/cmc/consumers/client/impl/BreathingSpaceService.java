@@ -19,7 +19,7 @@ public class BreathingSpaceService implements IBreathingSpace {
     }
 
     @Override
-    public BreathingSpaceResponse breathingSpace(BreathingSpaceRequest breathingSpaceRequest) {
-        return cmcApi.breathingSpace(breathingSpaceRequest);
+    public BreathingSpaceResponse breathingSpace(String idamId, String sdtRequestId, BreathingSpaceRequest breathingSpaceRequest) {
+        return cmcApi.breathingSpace(idamId, sdtRequestId, breathingSpaceRequest);
     }
 }

@@ -21,8 +21,8 @@ public class CMCApiFallback implements CMCApi {
     }
 
     @Override
-    public BreathingSpaceResponse breathingSpace(BreathingSpaceRequest breathingSpaceRequest) {
-        return breathingSpace.breathingSpace(breathingSpaceRequest);
+    public BreathingSpaceResponse breathingSpace(String idamId, String sdtRequestId, BreathingSpaceRequest breathingSpaceRequest) {
+        return breathingSpace.breathingSpace(idamId, sdtRequestId, breathingSpaceRequest);
     }
 
     @Override

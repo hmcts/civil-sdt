@@ -10,7 +10,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 public class MockBreathingSpaceService implements IBreathingSpace {
 
     @Override
-    public BreathingSpaceResponse breathingSpace(BreathingSpaceRequest breathingSpaceRequest) {
+    public BreathingSpaceResponse breathingSpace(String idamId, String sdtRequestId, BreathingSpaceRequest breathingSpaceRequest) {
         BreathingSpaceResponse breathingSpaceResponse = new BreathingSpaceResponse();
         breathingSpaceResponse.setProcessingStatus(ProcessingStatus.QUEUED);
         return breathingSpaceResponse;

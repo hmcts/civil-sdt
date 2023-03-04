@@ -16,6 +16,10 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class MockBreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
 
+    String IDAM_ID_HEADER = "IDAMID";
+
+    String SDT_REQUEST_ID = "SDTREQUESTID";
+
     private MockBreathingSpaceService mockBreathingSpaceService;
 
     @BeforeEach
@@ -27,7 +31,9 @@ class MockBreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
     @Test
     void shouldReturnBreathingSpaceResponse() {
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
-        BreathingSpaceResponse breathingSpaceResponse = mockBreathingSpaceService.breathingSpace(breathingSpaceRequest);
+        BreathingSpaceResponse breathingSpaceResponse = mockBreathingSpaceService.breathingSpace(IDAM_ID_HEADER,
+                                                                                                 SDT_REQUEST_ID,
+                                                                                                 breathingSpaceRequest);
         assertNotNull(breathingSpaceResponse);
         assertEquals(ProcessingStatus.QUEUED, breathingSpaceResponse.getProcessingStatus());
     }
