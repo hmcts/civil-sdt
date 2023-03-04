@@ -63,6 +63,7 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getType());
 
@@ -84,6 +85,7 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         JudgementRequest judgementRequest = mock(JudgementRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
         when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
 
