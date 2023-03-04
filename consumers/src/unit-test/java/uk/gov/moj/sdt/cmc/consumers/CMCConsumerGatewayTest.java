@@ -1,5 +1,7 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.util.Calendar;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,8 +77,8 @@ class CMCConsumerGatewayTest {
     @Test
     void shouldInvokeJudgementRequest() throws Exception {
         JudgementResponse response = new JudgementResponse();
-        response.setJudgmentEnteredDate("");
-        response.setFirstPaymentDate("");
+        response.setJudgmentEnteredDate(Calendar.getInstance().getTime());
+        response.setFirstPaymentDate(Calendar.getInstance().getTime());
         when(judgementService.requestJudgment(anyString(), any(), any())).thenReturn(response);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
