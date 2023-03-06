@@ -53,9 +53,8 @@ public interface ISubmitQueryConsumer {
      * @throws TimeoutException if the target server response cannot be obtained within the
      *                          timeout period.
      */
-    void processSubmitQuery(final ISubmitQueryRequest submitQueryRequest,
-                            final long connectionTimeOut, final long receiveTimeOut)
+    Object processSubmitQuery(final ISubmitQueryRequest submitQueryRequest,
+                              final long connectionTimeOut, final long receiveTimeOut)
             throws OutageException, TimeoutException;
 
 }
-
