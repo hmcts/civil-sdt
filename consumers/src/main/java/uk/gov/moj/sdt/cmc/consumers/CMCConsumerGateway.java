@@ -21,12 +21,12 @@ import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 
+import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
+
 @Component("CMCConsumerGateway")
 public class CMCConsumerGateway implements IConsumerGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
-
-    private static final String CASE_OFF_LINE = "200 Case Is Offline.";
 
     private IBreathingSpace breathingSpace;
 
