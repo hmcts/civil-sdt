@@ -15,9 +15,9 @@ import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 
 @Component("CMCConsumerGateway")
@@ -45,14 +45,14 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
         try {
-            if(RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
+            if(RequestType.BREATHING_SPACE.getType().equals(individualRequest.getRequestType())) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(
                     individualRequest.getRequestPayload(),
                     BreathingSpaceRequest.class
                 );
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
-            } else if (RequestType.CLAIM_STATUS_UPDATE.getRequestType().equals(individualRequest.getRequestType())) {
+            } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(individualRequest.getRequestType())) {
                 String FORTesting = individualRequest.getRequestPayload().toString();
                // check the confluance page on the structure to retest will to truncate - cascade service requests table.
 

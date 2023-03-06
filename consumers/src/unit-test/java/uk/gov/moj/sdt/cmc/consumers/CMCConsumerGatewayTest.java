@@ -1,9 +1,11 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.junit.jupiter.api.Test;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
@@ -13,10 +15,8 @@ import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
-import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-
-import java.io.IOException;
+import uk.gov.moj.sdt.utils.cmc.RequestType;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
@@ -61,7 +61,9 @@ class CMCConsumerGatewayTest {
 
     @BeforeEach
     public void setUpLocalTests() {
-        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, xmlToObject);
+        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
+                                                    claimStatusUpdate,
+                                                    xmlToObject);
     }
 
     @Test
