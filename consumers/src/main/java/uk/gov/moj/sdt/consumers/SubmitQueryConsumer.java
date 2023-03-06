@@ -81,7 +81,7 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
      * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
      * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest) */
     @Override
-    public void processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
+    public Object processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
                                    final long receiveTimeOut) throws OutageException, TimeoutException {
         // Transform domain object to web service object
         final SubmitQueryRequestType submitQueryRequestType =
@@ -90,11 +90,13 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
         // Process and call the end point web service
         LOGGER.debug("processSubmitQuery for {}:{}:{}", submitQueryRequest.getBulkCustomer(),
                 submitQueryRequest.getTargetApplication(), submitQueryRequest.getQueryReference());
-        final SubmitQueryResponseType responseType =
-                this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
+        SubmitQueryResponseType responseType = this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
                         receiveTimeOut);
 
+        // Should we move this?
         this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
+
+        return responseType;
     }
 
     /**

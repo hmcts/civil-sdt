@@ -47,7 +47,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;

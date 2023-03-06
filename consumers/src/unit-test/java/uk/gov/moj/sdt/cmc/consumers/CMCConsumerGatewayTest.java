@@ -11,12 +11,13 @@ import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
+import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +41,9 @@ class CMCConsumerGatewayTest {
     private XmlToObjectConverter xmlToObject;
 
     @Mock
+    private XmlElementValueReader xmlElementValueReader;
+
+    @Mock
     private IBreathingSpace breathingSpace;
 
     @Mock
@@ -54,9 +58,13 @@ class CMCConsumerGatewayTest {
     @Mock
     private BreathingSpaceRequest breathingSpaceRequest;
 
+    @Mock
+    private ResponsesSummaryUtil responsesSummaryUtil;
+
     @BeforeEach
     public void setUpLocalTests() {
-        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, claimStatusUpdate, claimDefences, xmlToObject);
+        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, claimStatusUpdate, claimDefences,
+                xmlToObject, xmlElementValueReader);
     }
 
     @Test

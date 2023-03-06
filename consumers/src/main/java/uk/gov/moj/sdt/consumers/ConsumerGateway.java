@@ -75,13 +75,12 @@ public class ConsumerGateway implements IConsumerGateway {
     }
 
     @Override
-    public void submitQuery(final ISubmitQueryRequest submitQueryRequest,
+    public Object submitQuery(final ISubmitQueryRequest submitQueryRequest,
                             final long connectionTimeOut, final long receiveTimeOut)
             throws OutageException, TimeoutException {
 
-        this.getSubmitQueryConsumer().processSubmitQuery(submitQueryRequest,
+        return this.getSubmitQueryConsumer().processSubmitQuery(submitQueryRequest,
                 connectionTimeOut, receiveTimeOut);
-
     }
 
     /**

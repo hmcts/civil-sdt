@@ -1,6 +1,8 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +36,19 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private XmlToObjectConverter xmlToObject;
 
+    private XmlElementValueReader xmlElementValueReader;
+
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
                               @Qualifier("ClaimDefencesService") IClaimDefences claimDefences,
-                              XmlToObjectConverter xmlToObject) {
+                              XmlToObjectConverter xmlToObject,
+                              XmlElementValueReader xmlElementValueReader) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
         this.claimDefences = claimDefences;
         this.xmlToObject = xmlToObject;
+        this.xmlElementValueReader = xmlElementValueReader;
     }
 
     @Override
@@ -65,7 +71,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
     }
 
     @Override
-    public void submitQuery(ISubmitQueryRequest submitQueryRequest,
+    public Object submitQuery(ISubmitQueryRequest submitQueryRequest,
                             long connectionTimeOut,
                             long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Submitting query to target application[{}], for customer[{}]",
@@ -78,10 +84,12 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String toDate = values[1];
         ClaimDefencesResponse response =  claimDefences.claimDefences(fromDate, toDate);
 
-        int count = response.getResultCount();
-        submitQueryRequest.setResultCount(2 + count);
-//        submitQueryRequest. setResults(response.getResults());
+        List<Object> listObjects = new ArrayList<>();
+        for (Object object : response.getResults()) {
+            listObjects.add(object);
+        }
 
+        return listObjects;
     }
 
     private String[] getClaimDefencesFields(ISubmitQueryRequest submitQueryRequest) {

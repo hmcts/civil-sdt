@@ -62,7 +62,7 @@ public interface IConsumerGateway {
      * @throws TimeoutException if the target server response cannot be obtained within the
      *                          timeout period.
      */
-    void submitQuery(ISubmitQueryRequest submitQueryRequest,
+    Object submitQuery(ISubmitQueryRequest submitQueryRequest,
                      final long connectionTimeOut, final long receiveTimeOut)
             throws OutageException, TimeoutException;
 
