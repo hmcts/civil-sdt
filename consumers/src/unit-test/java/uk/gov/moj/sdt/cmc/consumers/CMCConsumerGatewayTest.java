@@ -49,6 +49,7 @@ class CMCConsumerGatewayTest {
     @Mock
     private IIndividualRequest individualRequest;
 
+    @Mock
     private IClaimStatusUpdate claimStatusUpdate;
 
     @Mock
@@ -60,17 +61,13 @@ class CMCConsumerGatewayTest {
 
     @BeforeEach
     public void setUpLocalTests() {
-        xmlToObject = mock(XmlToObjectConverter.class);
-        breathingSpace = mock(IBreathingSpace.class);
-        individualRequest = mock(IIndividualRequest.class);
-        claimStatusUpdate = mock(IClaimStatusUpdate.class);
-        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, claimStatusUpdate,xmlToObject);
+        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, xmlToObject);
     }
 
     @Test
     void shouldInvokeBreathingSpace() throws IOException {
 
-        mockXmlToObject(BREATHING_SPACE);
+        setupMockBehaviour(BREATHING_SPACE);
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(breathingSpace.breathingSpace(any())).thenReturn(response);
@@ -82,7 +79,7 @@ class CMCConsumerGatewayTest {
     @Test
         void shouldInvokeClaimStatusUpdate() throws IOException {
 
-        mockXmlToObject(CLAIM_STATUS_UPDATE);
+        setupMockBehaviour(CLAIM_STATUS_UPDATE);
         ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(claimStatusUpdate.claimStatusUpdate(any())).thenReturn(response);
@@ -90,9 +87,10 @@ class CMCConsumerGatewayTest {
         //verify(claimStatusUpdate).claimStatusUpdate(any(ClaimStatusUpdateRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
-        }
+        verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
+    }
 
-    private void mockXmlToObject(String testType) {
+    private void setupMockBehaviour(String testType) {
         if(testType.equals(BREATHING_SPACE)){
 
             BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
@@ -112,7 +110,6 @@ class CMCConsumerGatewayTest {
             } catch (IOException e) {
 
             }
-
         }
 
     }

@@ -30,31 +30,24 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.Arrays;
+import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
-import uk.gov.moj.sdt.consumers.exception.InvalidRequestTypeException;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
-import uk.gov.moj.sdt.validators.CCDReferenceValidator;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.Arrays;
-import java.util.List;
-
-import static uk.gov.moj.sdt.domain.RequestType.BREATHING_SPACE;
-import static uk.gov.moj.sdt.domain.RequestType.CLAIM_STATUS_UPDATE;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT_WARRANT;
-import static uk.gov.moj.sdt.domain.RequestType.WARRANT;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -81,19 +74,16 @@ public abstract class AbstractSdtService {
      */
     private GenericXmlParser individualResponseXmlParser;
 
-    private XmlElementValueReader xmlReader;
-    private CCDReferenceValidator ccdReferenceValidator;
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
     protected AbstractSdtService(@Qualifier("IndividualRequestDao")
                                       IIndividualRequestDao individualRequestDao,
                               @Qualifier("IndividualResponseXmlParser")
                                   GenericXmlParser individualResponseXmlParser,
-                                 XmlElementValueReader xmlReader,
-                                 CCDReferenceValidator ccdReferenceValidator) {
+                                 RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
         this.individualRequestDao = individualRequestDao;
         this.individualResponseXmlParser = individualResponseXmlParser;
-        this.xmlReader = xmlReader;
-        this.ccdReferenceValidator = ccdReferenceValidator;
+        this.requestTypeXmlNodeValidator = requestTypeXmlNodeValidator;
     }
 
     /**
@@ -197,28 +187,18 @@ public abstract class AbstractSdtService {
     }
 
     protected boolean isCMCRequestType(IIndividualRequest individualRequest) {
-        if (isCCDReference(individualRequest)) {
-            if (!isValidRequestType(individualRequest)) {
-                throw new InvalidRequestTypeException(individualRequest.getRequestType());
-            }
-            return true;
-        }
-        return false;
+        return isCMCRequestType(individualRequest, false);
     }
 
-    private boolean isValidRequestType(IIndividualRequest individualRequest) {
-        String requestType = individualRequest.getRequestType();
-        return JUDGMENT.getRequestType().equalsIgnoreCase(requestType)
-            || WARRANT.getRequestType().equalsIgnoreCase(requestType)
-            || CLAIM_STATUS_UPDATE.getRequestType().equalsIgnoreCase(requestType)
-            || JUDGMENT_WARRANT.getRequestType().equalsIgnoreCase(requestType)
-            || BREATHING_SPACE.getRequestType().equalsIgnoreCase(requestType);
+    protected boolean isCMCRequestType(IIndividualRequest individualRequest, boolean throwException) {
+        return requestTypeXmlNodeValidator.isCMCRequestType(
+            individualRequest.getRequestType(),
+            individualRequest.getRequestPayload(),
+            CLAIM_NUMBER,
+            throwException
+        );
     }
 
-    private boolean isCCDReference(IIndividualRequest individualRequest) {
-        String claimNumber = xmlReader.getElementValue(individualRequest.getRequestPayload(), CLAIM_NUMBER);
-        return ccdReferenceValidator.isValidCCDReference(claimNumber);
-    }
 
     private CriteriaQuery<IndividualRequest> createCriteria(IIndividualRequestDao individualRequestDao, String sdtBulkReference,
                                        List<String> completeRequestStatus) {

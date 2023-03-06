@@ -35,13 +35,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.IUpdateRequestService;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
-import uk.gov.moj.sdt.validators.CCDReferenceValidator;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
@@ -72,9 +71,8 @@ public class UpdateRequestService extends AbstractSdtService implements IUpdateR
                                     GenericXmlParser individualResponseXmlParser,
                                 @Qualifier("MessagingUtility")
                                     IMessagingUtility messagingUtility,
-                                CCDReferenceValidator ccdReferenceValidator,
-                                XmlElementValueReader xmlReader) {
-        super(individualRequestDao, individualResponseXmlParser, xmlReader, ccdReferenceValidator);
+                                RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
+        super(individualRequestDao, individualResponseXmlParser, requestTypeXmlNodeValidator);
         this.messagingUtility = messagingUtility;
     }
 

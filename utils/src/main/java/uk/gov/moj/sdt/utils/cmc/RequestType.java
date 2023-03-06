@@ -1,4 +1,4 @@
-package uk.gov.moj.sdt.domain;
+package uk.gov.moj.sdt.utils.cmc;
 
 public enum RequestType {
 
@@ -10,14 +10,14 @@ public enum RequestType {
     JUDGMENT_WARRANT("mcolJudgmentWarrant"),
     WARRANT("mcolWarrant");
 
-    private String requestType;
+    private String type;
 
-    RequestType(String requestType) {
-        this.requestType = requestType;
+    RequestType(String type) {
+        this.type = type;
     }
 
-    public String getRequestType() {
-        return requestType;
+    public String getType() {
+        return type;
     }
 
 }

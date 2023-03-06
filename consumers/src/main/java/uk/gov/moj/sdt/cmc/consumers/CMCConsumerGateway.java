@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
@@ -19,6 +18,7 @@ import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 
 @Component("CMCConsumerGateway")
 public class CMCConsumerGateway implements IConsumerGateway {

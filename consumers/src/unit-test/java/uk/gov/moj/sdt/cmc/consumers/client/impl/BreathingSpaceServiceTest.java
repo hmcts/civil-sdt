@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
+class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
 
     @Mock
     private CMCApi cmcApi;
@@ -32,7 +32,7 @@ public class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
     void getClient() {
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         breathingSpaceService.breathingSpace(breathingSpaceRequest);
-        verify(cmcApi).breathingSpace(any(BreathingSpaceRequest.class));
+        verify(cmcApi).breathingSpace(breathingSpaceRequest);
     }
 
 }

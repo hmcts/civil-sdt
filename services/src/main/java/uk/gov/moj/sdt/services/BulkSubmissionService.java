@@ -30,6 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +59,8 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.validators.BulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -104,6 +105,8 @@ public class BulkSubmissionService implements IBulkSubmissionService {
      */
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
 
+    private BulkSubmissionValidator bulkSubmissionValidator;
+
     @Autowired
     public BulkSubmissionService(@Qualifier("ServiceRequestDao")
                                      IGenericDao genericDao,
@@ -118,6 +121,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                                      ISdtBulkReferenceGenerator sdtBulkReferenceGenerator,
                                  @Qualifier("ErrorMessagesCache")
                                      ICacheable errorMessagesCache,
+                                 BulkSubmissionValidator bulkSubmissionValidator,
                                  @Qualifier("concurrentMap")
                                          Map<String, IInFlightMessage> concurrentMap) {
         this.genericDao = genericDao;
@@ -127,6 +131,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         this.messagingUtility = messagingUtility;
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
         this.errorMessagesCache = errorMessagesCache;
+        this.bulkSubmissionValidator = bulkSubmissionValidator;
         this.concurrencyMap = concurrentMap;
     }
 
@@ -144,11 +149,13 @@ public class BulkSubmissionService implements IBulkSubmissionService {
 
     @Override
     public void saveBulkSubmission(final IBulkSubmission bulkSubmission) {
+
         enrich(bulkSubmission);
 
         this.checkConcurrent(bulkSubmission);
 
         enrich(bulkSubmission.getIndividualRequests());
+        bulkSubmissionValidator.validateCMCRequests(bulkSubmission);
 
         // Now persist the bulk submissions.
         getGenericDao().persist(bulkSubmission);

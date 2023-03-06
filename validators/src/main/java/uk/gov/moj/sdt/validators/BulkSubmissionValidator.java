@@ -30,6 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -44,17 +51,12 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.visitor.api.ITree;
 import uk.gov.moj.sdt.validators.api.IBulkSubmissionValidator;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import uk.gov.moj.sdt.validators.exception.InvalidRequestTypeException;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -65,10 +67,15 @@ import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStat
  */
 @Component("BulkSubmissionValidator")
 public class BulkSubmissionValidator extends AbstractSdtValidator implements IBulkSubmissionValidator {
+
+    private static final String CLAIM_NUMBER = "claimNumber";
+
     /**
      * Bulk submission dao.
      */
     private IBulkSubmissionDao bulkSubmissionDao;
+
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
     /**
      * The concurrencyMap to hold in flight message data keyed on sdtCustId + custRef. This is used to prevent the
@@ -86,10 +93,12 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
                                             ICacheable errorMessagesCache,
                                         @Qualifier("BulkSubmissionDao")
                                            IBulkSubmissionDao bulkSubmissionDao,
+                                   RequestTypeXmlNodeValidator requestTypeXmlNodeValidator,
                                    @Qualifier("concurrentMap")
                                            Map<String, IInFlightMessage> concurrentMap) {
         super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
         this.bulkSubmissionDao = bulkSubmissionDao;
+        this.requestTypeXmlNodeValidator = requestTypeXmlNodeValidator;
         this.concurrencyMap = concurrentMap;
     }
 
@@ -166,8 +175,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
     public void checkIndividualRequests(final IBulkSubmission bulkSubmission) {
         // Keep a count of the rejected individual requests
         final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
-        final long numberOfRequests = bulkSubmission.getNumberOfRequest();
-        long rejectedRequests = 0;
+        int rejectedRequests = 0;
         for (IIndividualRequest individualRequest : individualRequests) {
             if (individualRequest.getRequestStatus().equals(
                     REJECTED.getStatus())) {
@@ -175,6 +183,34 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             }
         }
 
+        setErrorLog(bulkSubmission, bulkSubmission.getNumberOfRequest(), rejectedRequests);
+    }
+
+    public void validateCMCRequests(final IBulkSubmission bulkSubmission) {
+        int rejectedRequests = 0;
+        for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests()) {
+            if (requestTypeXmlNodeValidator.isCCDReference(individualRequest.getRequestPayload(), CLAIM_NUMBER)
+                && !requestTypeXmlNodeValidator.isValidRequestType(individualRequest.getRequestType())) {
+                final IErrorLog errorLog =
+                    new ErrorLog(
+                        IErrorMessage.ErrorCode.INVALID_CMC_REQUEST.name(),
+                        "Invalid Request type for CMC " + individualRequest.getRequestType()
+                    );
+                individualRequest.markRequestAsRejected(errorLog);
+                rejectedRequests++;
+            }
+        }
+        long numberOfRequests = bulkSubmission.getNumberOfRequest();
+        setErrorLog(bulkSubmission, numberOfRequests, rejectedRequests);
+        if (rejectedRequests >= numberOfRequests) {
+            throw new InvalidRequestTypeException(
+                IErrorMessage.ErrorCode.INVALID_CMC_REQUEST.name(),
+                "Invalid request type for CMC"
+            );
+        }
+    }
+
+    private void setErrorLog(IBulkSubmission bulkSubmission, long numberOfRequests, long rejectedRequests) {
         // If all the individual requests have been rejected then create an error log
         if (rejectedRequests >= numberOfRequests) {
             final List<String> replacements = new ArrayList<>();

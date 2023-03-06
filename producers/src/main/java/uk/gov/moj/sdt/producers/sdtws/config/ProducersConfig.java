@@ -1,5 +1,8 @@
 package uk.gov.moj.sdt.producers.sdtws.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -10,10 +13,6 @@ import org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssemble
 import org.springframework.jmx.support.RegistrationPolicy;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
-import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
