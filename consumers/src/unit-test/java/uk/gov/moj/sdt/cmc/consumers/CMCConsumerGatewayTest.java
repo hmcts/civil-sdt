@@ -1,7 +1,5 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,9 +50,6 @@ class CMCConsumerGatewayTest {
     @Mock
     private IClaimStatusUpdate claimStatusUpdate;
 
-    @Mock
-    RequestType requestTypeMock;
-
     private static final String BREATHING_SPACE = "breathingSpace";
 
     private static final String CLAIM_STATUS_UPDATE = "claimStatusUpdate";
@@ -67,53 +62,45 @@ class CMCConsumerGatewayTest {
     }
 
     @Test
-    void shouldInvokeBreathingSpace() throws IOException {
+    void shouldInvokeBreathingSpace() throws Exception {
 
         setupMockBehaviour(BREATHING_SPACE);
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(breathingSpace.breathingSpace(any())).thenReturn(response);
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        //verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
-        verify(xmlToObject).convertXmlToObject(anyString(), any());
-        verify(individualRequest).getRequestPayload();
-    }
-    @Test
-        void shouldInvokeClaimStatusUpdate() throws IOException {
-
-        setupMockBehaviour(CLAIM_STATUS_UPDATE);
-        ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
-        response.setProcessingStatus(ProcessingStatus.PROCESSED);
-        when(claimStatusUpdate.claimStatusUpdate(any())).thenReturn(response);
-        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        //verify(claimStatusUpdate).claimStatusUpdate(any(ClaimStatusUpdateRequest.class));
+        verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
     }
 
-    private void setupMockBehaviour(String testType) {
-        if(testType.equals(BREATHING_SPACE)){
+    @Test
+    void shouldInvokeClaimStatusUpdate() throws Exception {
+        setupMockBehaviour(CLAIM_STATUS_UPDATE);
+        ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
+        response.setProcessingStatus(ProcessingStatus.PROCESSED);
+        when(claimStatusUpdate.claimStatusUpdate(any())).thenReturn(response);
 
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        verify(claimStatusUpdate).claimStatusUpdate(any(ClaimStatusUpdateRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(individualRequest).getRequestPayload();
+    }
+
+    private void setupMockBehaviour(String requestType) throws Exception {
+        if (requestType.equals(BREATHING_SPACE)) {
             BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
             when(individualRequest.getRequestPayload()).thenReturn(XML);
-            try {
-                when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
-            } catch (IOException e) {
-            }
-
-        }
-        else if(testType.equals(CLAIM_STATUS_UPDATE)){
-
+            when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getType());
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
+        } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
             ClaimStatusUpdateRequest claimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
             when(individualRequest.getRequestPayload()).thenReturn(XML);
-            try {
-                when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
-            } catch (IOException e) {
-
-            }
+            when(individualRequest.getRequestType()).thenReturn(RequestType.CLAIM_STATUS_UPDATE.getType());
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
         }
-
     }
 
 }

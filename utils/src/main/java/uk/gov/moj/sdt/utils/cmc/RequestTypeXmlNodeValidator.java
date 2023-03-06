@@ -36,11 +36,11 @@ public class RequestTypeXmlNodeValidator {
     }
 
     public boolean isValidRequestType(String requestType) {
-        return JUDGMENT.getType().equalsIgnoreCase(requestType)
+        return requestType != null && (JUDGMENT.getType().equalsIgnoreCase(requestType)
             || WARRANT.getType().equalsIgnoreCase(requestType)
             || CLAIM_STATUS_UPDATE.getType().equalsIgnoreCase(requestType)
             || JUDGMENT_WARRANT.getType().equalsIgnoreCase(requestType)
-            || BREATHING_SPACE.getType().equalsIgnoreCase(requestType);
+            || BREATHING_SPACE.getType().equalsIgnoreCase(requestType));
     }
 
     public boolean isCCDReference(String requestPayload, String xmlNodeName) {

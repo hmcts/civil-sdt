@@ -44,26 +44,20 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long connectionTimeOut,
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
+        String requestType = individualRequest.getRequestType();
         try {
-            if(RequestType.BREATHING_SPACE.getType().equals(individualRequest.getRequestType())) {
+            if(RequestType.BREATHING_SPACE.getType().equals(requestType)) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(
                     individualRequest.getRequestPayload(),
-                    BreathingSpaceRequest.class
-                );
+                    BreathingSpaceRequest.class);
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
-            } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(individualRequest.getRequestType())) {
-                String FORTesting = individualRequest.getRequestPayload().toString();
-               // check the confluance page on the structure to retest will to truncate - cascade service requests table.
-
+            } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {
                 ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(
                     individualRequest.getRequestPayload(),
                     ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
-
-
-
             }
         } catch (Exception e) {
             throw new CMCException(e.getMessage(), e);

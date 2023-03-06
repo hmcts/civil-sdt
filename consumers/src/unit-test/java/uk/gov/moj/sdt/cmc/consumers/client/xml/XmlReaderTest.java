@@ -46,7 +46,7 @@ class XmlReaderTest extends BaseXmlTest {
         XmlElementValueReader xmlReader = new XmlElementValueReader();
         String claimNumberValue = xmlReader.getElementValue(xmlContent, "claimNumber");
         assertNotNull(claimNumberValue);
-        assertEquals("9QZ00007", claimNumberValue);
+        assertEquals("1676030589543579", claimNumberValue);
     }
 
 }
