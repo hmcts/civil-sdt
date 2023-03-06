@@ -63,6 +63,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
+import uk.gov.moj.sdt.validators.BulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 import java.io.IOException;
@@ -116,6 +117,10 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     private Map<String, IInFlightMessage> mockConcurrencyMap;
 
+    @Mock
+    private BulkSubmissionValidator bulkSubmissionValidator;
+
+
     /**
      *
      */
@@ -150,6 +155,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
                                                           mockMessagingUtility,
                                                           mockSdtBulkReferenceGenerator,
                                                           mockErrorMessagesCache,
+                                                          bulkSubmissionValidator,
                                                           mockConcurrencyMap);
     }
 

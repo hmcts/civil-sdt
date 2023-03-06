@@ -37,14 +37,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import javax.xml.ws.WebServiceException;
+
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -73,10 +74,13 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.validators.CCDReferenceValidator;
+import uk.gov.moj.sdt.utils.cmc.CCDReferenceValidator;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.easymock.EasyMock.expect;
-import static uk.gov.moj.sdt.domain.RequestType.JUDGMENT;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
 
 /**
  * Test class for TargetApplicationSubmissionService.
@@ -104,7 +108,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
      */
     private IConsumerGateway mockConsumerGateway;
 
-    private IConsumerGateway cmcMockConsumerGateway;
+    private IConsumerGateway mockCmcConsumerGateway;
 
     /**
      * The mocked ICacheable reference to the global parameters cache.
@@ -121,9 +125,12 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
      */
     private ICacheable mockErrorMsgCacheable;
 
-    private XmlElementValueReader xmlReader;
 
     private CCDReferenceValidator ccdReferenceValidator;
+
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
+
+    private XmlElementValueReader xmlReader;
 
     /**
      * Method to do any pre-test set-up.
@@ -135,12 +142,13 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Instantiate all the mocked objects and set them in the target application submission service
         mockIndividualRequestDao = EasyMock.createMock(IIndividualRequestDao.class);
         mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
-        cmcMockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
+        mockCmcConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
         mockCacheable = EasyMock.createMock(ICacheable.class);
         mockMessageWriter = EasyMock.createMock(IMessageWriter.class);
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
         ccdReferenceValidator = EasyMock.createMock(CCDReferenceValidator.class);
         xmlReader = EasyMock.createMock(XmlElementValueReader.class);
+        requestTypeXmlNodeValidator = new RequestTypeXmlNodeValidator(ccdReferenceValidator, xmlReader);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
@@ -148,10 +156,10 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         targetAppSubmissionService = new TargetApplicationSubmissionService(mockIndividualRequestDao,
                                                                             genericParser,
                                                                             mockConsumerGateway,
-                                                                            cmcMockConsumerGateway,
+                                                                            mockCmcConsumerGateway,
                                                                             mockMessageWriter,
-                                                                            ccdReferenceValidator,
-                                                                            xmlReader);
+                                                                            requestTypeXmlNodeValidator
+        );
         targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
         targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
 
@@ -225,11 +233,20 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Setup dummy target response
         SdtContext.getContext().setRawInXml("response");
 
+        expect(xmlReader.getElementValue(null, "claimNumber")).andReturn("CCD_Reference_number");
+        EasyMock.expectLastCall().times(2);
+        expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(false);
+        EasyMock.expectLastCall().times(2);
+        EasyMock.replay(xmlReader);
+        EasyMock.replay(ccdReferenceValidator);
+
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
         EasyMock.verify(mockIndividualRequestDao);
         EasyMock.verify(mockConsumerGateway);
         EasyMock.verify(mockCacheable);
+        EasyMock.verify(xmlReader);
+        EasyMock.verify(ccdReferenceValidator);
 
         Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
                 .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus());
@@ -255,6 +272,11 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setSdtRequestReference(sdtRequestRef);
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestPayload("Test Xml");
+        expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
+        EasyMock.expectLastCall().times(2);
+        expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(false);
+        EasyMock.expectLastCall().times(2);
 
         expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
@@ -305,6 +327,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.replay(mockIndividualRequestDao);
         EasyMock.replay(mockConsumerGateway);
         EasyMock.replay(mockCacheable);
+        EasyMock.replay(xmlReader);
+        EasyMock.replay(ccdReferenceValidator);
 
         // Setup dummy target response
         SdtContext.getContext().setRawInXml("response");
@@ -314,6 +338,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.verify(mockIndividualRequestDao);
         EasyMock.verify(mockConsumerGateway);
         EasyMock.verify(mockCacheable);
+        EasyMock.verify(ccdReferenceValidator);
+        EasyMock.verify(xmlReader);
 
         Assert.assertTrue("Expected to pass", true);
 
@@ -364,12 +390,11 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         this.mockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
         EasyMock.expectLastCall().andThrow(timeoutEx);
 
-        final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("REQ_NOT_ACK");
-        errorMsg.setErrorDescription("Request not acknowledged");
-        errorMsg.setErrorText("Request Not Acknowledged");
-
-        expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "REQ_NOT_ACK")).andReturn(errorMsg);
+        final IErrorMessage errorMsg = exceptErrorMessage(
+            "REQ_NOT_ACK",
+            "Request not acknowledged",
+            "Request Not Acknowledged"
+        );
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
         final IErrorLog errorLog = new ErrorLog(errorMsg.getErrorCode(), errorMsg.getErrorText());
@@ -559,6 +584,11 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setSdtRequestReference(sdtRequestRef);
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestPayload("Test Xml");
+        expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
+        EasyMock.expectLastCall().times(2);
+        expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(false);
+        EasyMock.expectLastCall().times(2);
 
         expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
                 individualRequest);
@@ -612,6 +642,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.replay(mockConsumerGateway);
         EasyMock.replay(mockCacheable);
         EasyMock.replay(mockErrorMsgCacheable);
+        EasyMock.replay(ccdReferenceValidator);
+        EasyMock.replay(xmlReader);
 
         // Setup dummy response
         SdtContext.getContext().setRawInXml("response");
@@ -622,6 +654,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.verify(mockConsumerGateway);
         EasyMock.verify(mockCacheable);
         EasyMock.verify(mockErrorMsgCacheable);
+        EasyMock.verify(ccdReferenceValidator);
+        EasyMock.verify(xmlReader);
 
         Assert.assertEquals("Bulk submission status is incorrect", IBulkSubmission.BulkRequestStatus.COMPLETED
                 .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus());
@@ -653,15 +687,13 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         expect(this.mockCacheable.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(
                 contactNameParameter);
 
-        final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("CUST_XML_ERR");
-        errorMsg.setErrorDescription("SDT Client Data Error");
-        errorMsg.setErrorText("Individual Request format could not be processed by "
+        final IErrorMessage errorMsg = exceptErrorMessage(
+            "CUST_XML_ERR",
+            "SDT Client Data Error",
+            "Individual Request format could not be processed by "
                 + "the Target Application. Please check the data and resubmit the "
-                + "request, or contact {0} for assistance.");
-
-        expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "CUST_XML_ERR"))
-                .andReturn(errorMsg);
+                + "request, or contact {0} for assistance."
+        );
 
         final String contactName = "Test";
 
@@ -702,6 +734,18 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         Assert.assertEquals("Individual Request should not be marked as dead letter", false,
                 individualRequest.isDeadLetter());
 
+    }
+
+    @NotNull
+    private IErrorMessage exceptErrorMessage(String CUST_XML_ERR, String SDT_Client_Data_Error, String errorText) {
+        final IErrorMessage errorMsg = new ErrorMessage();
+        errorMsg.setErrorCode(CUST_XML_ERR);
+        errorMsg.setErrorDescription(SDT_Client_Data_Error);
+        errorMsg.setErrorText(errorText);
+
+        expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, CUST_XML_ERR))
+                .andReturn(errorMsg);
+        return errorMsg;
     }
 
     /**
@@ -749,11 +793,12 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setSdtRequestReference(sdtRequestRef);
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getRequestType());
+        individualRequest.setRequestType(JUDGMENT.getType());
         individualRequest.setRequestPayload("Test Xml");
         expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
+        EasyMock.expectLastCall().times(2);
         expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(true);
-
+        EasyMock.expectLastCall().times(2);
 
         expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
             individualRequest);
@@ -780,7 +825,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
             receiveTimeOutParam);
 
-        this.cmcMockConsumerGateway.individualRequest(individualRequest, 1000, 12000);
+        this.mockCmcConsumerGateway.individualRequest(individualRequest, 1000, 12000);
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
             public Object answer() throws Throwable {
@@ -802,7 +847,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
             Long.valueOf(indRequests.size()));
 
         EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(cmcMockConsumerGateway);
+        EasyMock.replay(mockCmcConsumerGateway);
         EasyMock.replay(xmlReader);
         EasyMock.replay(ccdReferenceValidator);
         EasyMock.replay(mockCacheable);
@@ -813,11 +858,101 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
         EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(cmcMockConsumerGateway);
+        EasyMock.verify(mockCmcConsumerGateway);
         EasyMock.verify(mockCacheable);
 
         Assert.assertTrue("Expected to pass", true);
 
+    }
+
+    @Test
+    void processCCDReferenceFailsOnUnSupportedRequest() {
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(CLAIM.getType());
+        individualRequest.setRequestPayload("Test Xml");
+        expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
+        EasyMock.expectLastCall().times(2);
+        expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(true);
+        EasyMock.expectLastCall().times(2);
+
+        expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
+            individualRequest);
+
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+        expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
+            individualReqProcessingDelay);
+
+        individualRequest.setRequestStatus("Forwarded");
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
+            connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
+            receiveTimeOutParam);
+
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
+
+        final List<IIndividualRequest> indRequests = new ArrayList<>();
+        indRequests.add(individualRequest);
+
+        expect(
+            this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
+            Long.valueOf(indRequests.size()));
+
+        SdtContext.getContext().setRawInXml("response");
+        final IGlobalParameter contactNameParameter = new GlobalParameter();
+        contactNameParameter.setValue("Tester");
+        contactNameParameter.setName("CONTACT_DETAILS");
+        expect(this.mockCacheable.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(contactNameParameter);
+
+        final IErrorMessage errorMsg = exceptErrorMessage(
+            "CUST_XML_ERR",
+            "SDT Client Data Error",
+            "Exception calling target application for SDT reference"
+        );
+
+        final String contactName = "Test";
+        final IErrorLog errorLog =
+            new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
+
+        individualRequest.setErrorLog(errorLog);
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+
+        this.mockIndividualRequestDao.persist(individualRequest);
+        EasyMock.expectLastCall();
+
+        expect(
+            this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
+            Long.valueOf(indRequests.size()));
+
+        EasyMock.replay(mockIndividualRequestDao);
+        EasyMock.replay(xmlReader);
+        EasyMock.replay(ccdReferenceValidator);
+        EasyMock.replay(mockCacheable);
+        EasyMock.replay(mockErrorMsgCacheable);
+
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
+
+        EasyMock.verify(mockIndividualRequestDao);
+        EasyMock.verify(mockCacheable);
+        EasyMock.verify(mockErrorMsgCacheable);
+        EasyMock.verify(xmlReader);
+        EasyMock.verify(ccdReferenceValidator);
     }
 
     /**

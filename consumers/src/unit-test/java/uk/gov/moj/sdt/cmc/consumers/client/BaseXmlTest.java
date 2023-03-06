@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
-public class BaseXmlTest {
+public abstract class BaseXmlTest {
 
     protected String readXmlAsString(String fileName) {
         StringBuilder sb = new StringBuilder();

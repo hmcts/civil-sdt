@@ -1,9 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +15,14 @@ import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
+import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 
 @Component("CMCConsumerGateway")
 public class CMCConsumerGateway implements IConsumerGateway {
@@ -63,9 +62,10 @@ public class CMCConsumerGateway implements IConsumerGateway {
             } else if (RequestType.BREATHING_SPACE.getRequestType().equals(individualRequest.getRequestType())) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
                         BreathingSpaceRequest.class);
-                breathingSpace.breathingSpace(request);
+                BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
             }
-        } catch (IOException e) {
+            individualRequest.setRequestStatus(response.getProcessingStatus().name());
+        } catch (Exception e) {
             throw new CMCException(e.getMessage(), e);
         }
     }

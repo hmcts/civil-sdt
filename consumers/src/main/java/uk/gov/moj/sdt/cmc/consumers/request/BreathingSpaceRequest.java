@@ -1,12 +1,18 @@
 package uk.gov.moj.sdt.cmc.consumers.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({
+    "bsType",
+    "caseManRef",
+    "respondentId"
+})
 public class BreathingSpaceRequest {
 
     private String claimNumber;
