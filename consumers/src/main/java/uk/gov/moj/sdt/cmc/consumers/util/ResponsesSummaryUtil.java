@@ -1,6 +1,8 @@
 package uk.gov.moj.sdt.cmc.consumers.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.DefendantResponseType;
@@ -21,6 +23,14 @@ import java.util.List;
 @Component
 public class ResponsesSummaryUtil {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResponsesSummaryUtil.class);
+
+    private XmlToObjectConverter xmlToObjectConverter;
+
+    public ResponsesSummaryUtil(XmlToObjectConverter xmlToObjectConverter) {
+        this. xmlToObjectConverter =  xmlToObjectConverter;
+    }
+
     public String getSummaryResults(Object mcolSubmitResponseTypeObject,
                                     Object cmcSubmitResponseTypeObject) {
         // process mcolResults
@@ -29,37 +39,54 @@ public class ResponsesSummaryUtil {
             SubmitQueryResponseType mcolSubmitResponseType = (SubmitQueryResponseType) mcolSubmitResponseTypeObject;
             List<Object> mcolResultObjects = mcolSubmitResponseType.getTargetAppDetail().getAny();
             mcolResultsXml = getMcolResultsXml(mcolResultObjects);
+            LOGGER.debug("mcol Results XML: {}", mcolResultsXml);
         }
 
         String cmcResultsXml = "";
         if (null != cmcSubmitResponseTypeObject) {
             List<Object> cmcResultObjects = (List<Object>) cmcSubmitResponseTypeObject;
             cmcResultsXml = convertToMcolResultsXml(cmcResultObjects);
+            LOGGER.debug("cmc Results XML: {}", cmcResultsXml);
         }
 
+        // Join both results XML
         StringBuilder sbJoin = new StringBuilder().append("<results>")
                 .append(mcolResultsXml)
                 .append(cmcResultsXml).append("</results>");
 
-        String summaryResults = convertToMcolResultsXml(sbJoin.toString());
-        return summaryResults;
+        String summaryResultsXml = convertToMcolResultsXml(sbJoin.toString());
+        LOGGER.debug("summary XML: {}", summaryResultsXml);
+
+        return summaryResultsXml;
     }
 
+    /**
+     * get mcol Results XML from List of mcolResultObjects
+     *
+     * @param mcolResultObjects
+     * @return String xml
+     */
     public String getMcolResultsXml(List<Object> mcolResultObjects) {
         String mcolClaimDefencesObjectXML = "";
         try {
-            mcolClaimDefencesObjectXML = XmlToObjectConverter.convertObjectToXml(mcolResultObjects);
+            mcolClaimDefencesObjectXML = xmlToObjectConverter.convertObjectToXml(mcolResultObjects);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error getting Mcol Results XML", e);
         }
         return mcolClaimDefencesObjectXML;
     }
 
+    /**
+     * convert to Mcol Results XML from List of cmcResultObjects
+     *
+     * @param cmcResultObjects
+     * @return String xml
+    */
     public String convertToMcolResultsXml(List<Object> cmcResultObjects) {
         List<Object> convertedObjects = convertToMcolResultObjects(cmcResultObjects);
         String claimDefencesObjectXML = "";
         try {
-            claimDefencesObjectXML = XmlToObjectConverter.convertObjectToXml(convertedObjects);
+            claimDefencesObjectXML = xmlToObjectConverter.convertObjectToXml(convertedObjects);
             claimDefencesObjectXML = convertToMcolResultsXml(claimDefencesObjectXML);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -86,7 +113,6 @@ public class ResponsesSummaryUtil {
             McolDefenceDetailType defenceDetailType = convertToMcolDefenceDetailType(claimDefencesResult);
             convertedResults.add(defenceDetailType);
         }
-
         return convertedResults;
     }
 
@@ -106,7 +132,6 @@ public class ResponsesSummaryUtil {
         McolDefenceDetailType defenceDetailType = new McolDefenceDetailType();
         defenceDetailType.setClaimNumber(claimDefencesResult.getCaseManRef());
         defenceDetailType.setDefendantResponse(defendantResponseType);
-
 
         return defenceDetailType;
     }

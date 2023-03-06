@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
 import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
@@ -22,13 +23,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class ResponseSummaryUtilTest {
 
     private ResponsesSummaryUtil responsesSummaryUtil;
+    private XmlToObjectConverter xmlToObjectConverter;
+
 
     /**
      * Method to do any pre-test set-up.
      */
     @BeforeEach
     public void setUpLocalTests() {
-        responsesSummaryUtil  = new ResponsesSummaryUtil();
+        responsesSummaryUtil  = new ResponsesSummaryUtil(xmlToObjectConverter);
     }
 
    @Test
