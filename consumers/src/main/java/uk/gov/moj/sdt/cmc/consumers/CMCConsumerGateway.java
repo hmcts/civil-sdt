@@ -19,11 +19,14 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 
 @Component("CMCConsumerGateway")
 public class CMCConsumerGateway implements IConsumerGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
+
+    private static final String CASE_OFF_LINE = "200 Case Is Offline.";
 
     private IBreathingSpace breathingSpace;
 
@@ -61,6 +64,10 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }
         } catch (Exception e) {
+            String message = e.getMessage();
+            if (message != null && message.contains(CASE_OFF_LINE)) {
+                throw new CaseOffLineException(e.getMessage(), e);
+            }
             throw new CMCException(e.getMessage(), e);
         }
     }

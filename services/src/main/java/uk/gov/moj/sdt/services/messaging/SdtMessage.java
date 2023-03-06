@@ -64,6 +64,8 @@ public class SdtMessage implements Serializable, ISdtMessage {
      */
     private long enqueueLoggingId;
 
+    private Boolean caseOffLine;
+
     @Override
     public String getSdtRequestReference() {
         return sdtRequestReference;
@@ -94,9 +96,17 @@ public class SdtMessage implements Serializable, ISdtMessage {
         this.enqueueLoggingId = enqueueLoggingId;
     }
 
+    public Boolean isCaseOffLine() {
+        return caseOffLine;
+    }
+
+    public void setCaseOffLine(Boolean caseOffLine) {
+        this.caseOffLine = caseOffLine;
+    }
+
     @Override
     public String toString() {
         return "SdtMessage [sdtRequestReference=" + sdtRequestReference + ", messageSentTimestamp=" +
-                messageSentTimestamp + ", enqueueLoggingId=" + enqueueLoggingId + "]";
+                messageSentTimestamp + ", enqueueLoggingId=" + enqueueLoggingId + ", caseOffLine=" + caseOffLine + "]";
     }
 }
