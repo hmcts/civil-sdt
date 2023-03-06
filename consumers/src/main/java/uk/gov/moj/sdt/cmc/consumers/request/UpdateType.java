@@ -1,4 +1,8 @@
 package uk.gov.moj.sdt.cmc.consumers.request;
 
-public interface CMCRequest {
+public enum UpdateType {
+
+    MP,
+    WD,
+    DI
 }

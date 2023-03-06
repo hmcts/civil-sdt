@@ -16,8 +16,11 @@ public class ClaimStatusUpdateService implements IClaimStatusUpdate {
     public ClaimStatusUpdateService(CMCApi cmcApi) {
         this.cmcApi = cmcApi;
     }
+
     @Override
-    public ClaimStatusUpdateResponse claimStatusUpdate(ClaimStatusUpdateRequest claimStatusUpdateRequest) {
-        return cmcApi.claimStatusUpdate(claimStatusUpdateRequest);
+    public ClaimStatusUpdateResponse claimStatusUpdate(String idamId,
+                                                       String sdtRequestRef,
+                                                       ClaimStatusUpdateRequest claimStatusUpdateRequest) {
+        return cmcApi.claimStatusUpdate(idamId, sdtRequestRef, claimStatusUpdateRequest);
     }
 }

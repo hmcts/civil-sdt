@@ -10,11 +10,16 @@ import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class ClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
+
+    String IDAM_ID_HEADER = "IDAMID";
+
+    String SDT_REQUEST_ID = "SDTREQUESTID";
 
     @Mock
     private CMCApi cmcApi;
@@ -30,8 +35,8 @@ public class ClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
     @Test
     void getClient() {
         ClaimStatusUpdateRequest claimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
-        claimStatusUpdateService.claimStatusUpdate(claimStatusUpdateRequest);
-        verify(cmcApi).claimStatusUpdate(any(ClaimStatusUpdateRequest.class));
+        claimStatusUpdateService.claimStatusUpdate(IDAM_ID_HEADER, SDT_REQUEST_ID, claimStatusUpdateRequest);
+        verify(cmcApi).claimStatusUpdate(anyString(), anyString(), any(ClaimStatusUpdateRequest.class));
     }
 
 }

@@ -26,7 +26,9 @@ public class CMCApiFallback implements CMCApi {
     }
 
     @Override
-    public ClaimStatusUpdateResponse claimStatusUpdate(ClaimStatusUpdateRequest claimStatusUpdateRequest) {
-        return this.claimStatusUpdate.claimStatusUpdate(claimStatusUpdateRequest);
+    public ClaimStatusUpdateResponse claimStatusUpdate(String idamId,
+                                                       String sdtRequestId,
+                                                       ClaimStatusUpdateRequest claimStatusUpdateRequest) {
+        return this.claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestId, claimStatusUpdateRequest);
     }
 }

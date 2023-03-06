@@ -36,6 +36,8 @@ class CMCConsumerGatewayTest {
 
     private static final String XML = "";
 
+    private static final String SDT_REFERENCE = "MCOL-0000001";
+
     private CMCConsumerGateway cmcConsumerGateway;
 
     @Mock
@@ -80,16 +82,17 @@ class CMCConsumerGatewayTest {
         setupMockBehaviour(CLAIM_STATUS_UPDATE);
         ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
-        when(claimStatusUpdate.claimStatusUpdate(any())).thenReturn(response);
+        when(claimStatusUpdate.claimStatusUpdate(anyString(), anyString(), any())).thenReturn(response);
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(claimStatusUpdate).claimStatusUpdate(any(ClaimStatusUpdateRequest.class));
+        verify(claimStatusUpdate).claimStatusUpdate(anyString(), anyString(), any(ClaimStatusUpdateRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
     }
 
     private void setupMockBehaviour(String requestType) throws Exception {
+        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
         if (requestType.equals(BREATHING_SPACE)) {
             BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
             when(individualRequest.getRequestPayload()).thenReturn(XML);

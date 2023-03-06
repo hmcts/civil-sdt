@@ -9,7 +9,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 @Service("MockClaimStatusUpdateService")
 public class MockClaimStatusUpdateService implements IClaimStatusUpdate {
     @Override
-    public ClaimStatusUpdateResponse claimStatusUpdate(ClaimStatusUpdateRequest claimStatusUpdateRequest) {
+    public ClaimStatusUpdateResponse claimStatusUpdate(String idamId, String sdtRequestRef, ClaimStatusUpdateRequest claimStatusUpdateRequest) {
         ClaimStatusUpdateResponse claimStatusUpdateResponse = new ClaimStatusUpdateResponse();
         claimStatusUpdateResponse.setProcessingStatus(ProcessingStatus.QUEUED);
         return claimStatusUpdateResponse;

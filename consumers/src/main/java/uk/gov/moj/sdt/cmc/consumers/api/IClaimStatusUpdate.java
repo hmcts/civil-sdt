@@ -5,5 +5,5 @@ import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 
 public interface IClaimStatusUpdate {
 
-    ClaimStatusUpdateResponse claimStatusUpdate(ClaimStatusUpdateRequest claimStatusUpdateRequest);
+    ClaimStatusUpdateResponse claimStatusUpdate(String idamId, String sdtRequestRef, ClaimStatusUpdateRequest claimStatusUpdateRequest);
 }

@@ -45,6 +45,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
         String requestType = individualRequest.getRequestType();
+        String sdtRequestReference = individualRequest.getSdtRequestReference();
+        String idamId = ""; // Todo get it from SDTContext
         try {
             if(RequestType.BREATHING_SPACE.getType().equals(requestType)) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(
@@ -56,7 +58,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(
                     individualRequest.getRequestPayload(),
                     ClaimStatusUpdateRequest.class);
-                ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(request);
+                ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }
         } catch (Exception e) {
