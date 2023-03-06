@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
+import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -106,6 +108,8 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private IBulkCustomerDao bulkCustomerDao;
 
+    private ResponsesSummaryUtil responsesSummaryUtil;
+
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
@@ -120,7 +124,8 @@ public class SubmitQueryService implements ISubmitQueryService {
                               @Qualifier("SubmitQueryResponseXmlParser")
                                   GenericXmlParser queryResponseXmlParser,
                               @Qualifier("BulkCustomerDao")
-                                  IBulkCustomerDao bulkCustomerDao) {
+                                  IBulkCustomerDao bulkCustomerDao,
+                              ResponsesSummaryUtil responsesSummaryUtil) {
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
         this.globalParametersCache = globalParametersCache;
@@ -128,6 +133,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         this.queryRequestXmlParser = queryRequestXmlParser;
         this.queryResponseXmlParser = queryResponseXmlParser;
         this.bulkCustomerDao = bulkCustomerDao;
+        this.responsesSummaryUtil = responsesSummaryUtil;
     }
 
     /**
@@ -283,6 +289,8 @@ public class SubmitQueryService implements ISubmitQueryService {
         // Setup raw XML from target application for addition to raw out stream
         // in interceptor.
         SdtContext.getContext().setRawOutXml(targetAppResponse);
+
+        LOGGER.debug("rawOutXml {}", SdtContext.getContext().getRawOutXml());
     }
 
     /**
@@ -425,10 +433,23 @@ public class SubmitQueryService implements ISubmitQueryService {
 
         LOGGER.debug("Send submit query request to target application");
 
-        // Make 2 calls and summarise the results.
+
 // TODO: uncomment requestConsumer call. Temporary change while testing locally
-//        requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
-        cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+//        Object mcolSubmitQueryResponse = requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        Object mcolSubmitQueryResponse = null;
+        Object cmcSubmitQueryResponse = cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+
+        // set results count
+        List<ClaimDefencesResult> claimDefencesResults =  (List<ClaimDefencesResult>) cmcSubmitQueryResponse;
+        submitQueryRequest.setResultCount(submitQueryRequest.getResultCount() + claimDefencesResults.size());
+
+        String summaryResultsXML = responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse, cmcSubmitQueryResponse);
+        // TODO: regular expression replace
+
+        SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
+
+//        cmcRequestConsumer.transformJaxbToDomain(submitQueryResponseType,
+//        final ISubmitQueryRequest submitQueryRequest)
     }
 
 

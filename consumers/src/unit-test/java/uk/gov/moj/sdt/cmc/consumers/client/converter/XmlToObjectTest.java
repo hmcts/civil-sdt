@@ -9,7 +9,6 @@ import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
-import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -67,13 +66,13 @@ class XmlToObjectTest extends BaseXmlTest {
     private ClaimDefencesResponse createClaimDefencesResponse() {
         ClaimDefencesResponse response = new ClaimDefencesResponse();
         ClaimDefencesResult result1 = createClaimDefencesResult("case1", "resp1",
-                "2020-09-20", "2020-09-21", "type1",
+                "2020-09-20", "2020-09-21 11:12:13", "type1",
                 "defence1");
         ClaimDefencesResult result2 = createClaimDefencesResult("case2", "resp2",
-                "2020-09-27", "2020-09-28", "type2",
+                "2020-09-27", "2020-09-28 12:13:!4", "type2",
                 "defence2");
         ClaimDefencesResult result3 = createClaimDefencesResult("case3", "resp3",
-                "2020-09-29", "2020-09-30", "type3",
+                "2020-09-29", "2020-09-30 13:14:15", "type3",
                 "defence2");
         ClaimDefencesResult[] results = new ClaimDefencesResult[3];
         results[0] = result1;
@@ -91,8 +90,5 @@ class XmlToObjectTest extends BaseXmlTest {
         return new ClaimDefencesResult(caseManRef, respondentId, defendantResponseFiledDate,
                 defendantResponseCreatedDate, responseType ,defence);
     }
-
-
-
 
 }
