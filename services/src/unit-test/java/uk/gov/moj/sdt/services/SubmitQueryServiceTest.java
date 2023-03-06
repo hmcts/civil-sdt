@@ -37,7 +37,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -67,7 +66,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.ws.WebServiceException;
-import uk.gov.moj.sdt.validators.CCDReferenceValidator;
 
 /**
  * Test class for SubmitQueryService.
@@ -102,10 +100,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
      */
     private IBulkCustomerDao mockBulkCustomerDao;
 
-    private CCDReferenceValidator ccdReferenceValidator;
-
-    private XmlElementValueReader xmlElementValueReader;
-
     private ResponsesSummaryUtil responsesSummaryUtil;
 
     /**
@@ -121,7 +115,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         mockGlobalParamCache = EasyMock.createMock(ICacheable.class);
         mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
         mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        ccdReferenceValidator = EasyMock.createMock(CCDReferenceValidator.class);
         responsesSummaryUtil = EasyMock.createMock(ResponsesSummaryUtil.class);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
