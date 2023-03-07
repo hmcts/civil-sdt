@@ -9,8 +9,6 @@ import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
