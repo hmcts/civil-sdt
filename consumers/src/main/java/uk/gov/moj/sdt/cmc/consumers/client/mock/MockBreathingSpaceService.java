@@ -1,27 +1,20 @@
-package uk.gov.moj.sdt.cmc.consumers.client.impl;
+package uk.gov.moj.sdt.cmc.consumers.client.mock;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 
-
-@Service("BreathingSpaceService")
-public class BreathingSpaceServiceService implements IBreathingSpaceService {
-
-    private CMCApi cmcApi;
-
-    @Autowired
-    public BreathingSpaceServiceService(CMCApi cmcApi) {
-        this.cmcApi = cmcApi;
-    }
+@Service("MockBreathingSpaceService")
+public class MockBreathingSpaceService implements IBreathingSpaceService {
 
     @Override
     public BreathingSpaceResponse breathingSpace(String idamId,
                                                  String sdtRequestId,
                                                  BreathingSpaceRequest breathingSpaceRequest) {
-        return cmcApi.breathingSpace(idamId, sdtRequestId, breathingSpaceRequest);
+        BreathingSpaceResponse breathingSpaceResponse = new BreathingSpaceResponse();
+        breathingSpaceResponse.setProcessingStatus(ProcessingStatus.QUEUED);
+        return breathingSpaceResponse;
     }
 }

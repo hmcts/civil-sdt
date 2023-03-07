@@ -8,12 +8,12 @@ import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 
 @Service("JudgementRequestService")
-public class JudgementRequestServiceService implements IJudgementService {
+public class JudgementRequestService implements IJudgementService {
 
     private CMCApi cmcApi;
 
     @Autowired
-    public JudgementRequestServiceService(CMCApi cmcApi) {
+    public JudgementRequestService(CMCApi cmcApi) {
         this.cmcApi = cmcApi;
     }
 

@@ -49,24 +49,28 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
         String sdtRequestReference = individualRequest.getSdtRequestReference();
+        String requestType = individualRequest.getRequestType();
         String idamId = ""; // Todo get it from SDTContext
+        String requestPayload = individualRequest.getRequestPayload();
         try {
-            if (RequestType.JUDGMENT.getType().equals(individualRequest.getRequestType())) {
-                JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
+            if (RequestType.JUDGMENT.getType().equals(requestType)) {
+                JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(requestPayload,
                                                                                    JudgementRequest.class);
+
                 JudgementResponse judgementResponse = judgementService.requestJudgment(idamId,
                                                                                        sdtRequestReference,
                                                                                        judgementRequest);
-            } else if (RequestType.BREATHING_SPACE.getType().equals(individualRequest.getRequestType())) {
-                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
+            } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
+                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload,
                                                                                BreathingSpaceRequest.class);
+
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }
         } catch (Exception e) {
             String message = e.getMessage();
             if (message != null && message.contains(CASE_OFF_LINE)) {
-                throw new CaseOffLineException(e.getMessage(), e);
+                throw new CaseOffLineException(message, e);
             }
             throw new CMCException(message, e);
         }

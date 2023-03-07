@@ -12,8 +12,10 @@ import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgmentType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XmlToObjectTest extends BaseXmlTest {
 
@@ -80,8 +82,8 @@ class XmlToObjectTest extends BaseXmlTest {
         assertNotNull(request);
         assertEquals("9QZ00005", request.getCaseManRef());
         assertEquals(JudgmentType.A, request.getJudgmentType());
-        assertEquals(true, request.isSentParticularsSeparately());
-        assertEquals(false, request.isJointJudgment());
+        assertTrue(request.isSentParticularsSeparately());
+        assertFalse(request.isJointJudgment());
         assertNotNull(request.getRespondent1Address());
         assertEquals("defendant1Address line1", request.getRespondent1Address().getAddressLine1());
         assertEquals("defendant1Address line2", request.getRespondent1Address().getAddressLine2());
@@ -100,9 +102,9 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals(99999, request.getInterest());
         assertEquals(5000, request.getSolicitorCost());
         assertEquals(10000000, request.getDeductedAmount());
-        assertEquals(null, request.getClaimAmountAdmitted());
-        assertEquals(null, request.getCourtFee());
-        assertEquals(null, request.getLegalCosts());
+        assertNull(request.getClaimAmountAdmitted());
+        assertNull(request.getCourtFee());
+        assertNull(request.getLegalCosts());
         assertNotNull(request.getPayee());
         assertEquals("payee name", request.getPayee().getName());
         assertNotNull(request.getPayee().getAddress());
@@ -110,7 +112,7 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("payee line2", request.getPayee().getAddress().getAddressLine2());
         assertEquals("payee line3", request.getPayee().getAddress().getAddressLine3());
         assertEquals("payee line4", request.getPayee().getAddress().getAddressLine4());
-        assertEquals(null, request.getPayee().getAddress().getPostTown());
+        assertNull(request.getPayee().getAddress().getPostTown());
         assertEquals("RG42 2DL", request.getPayee().getAddress().getPostCode());
         assertEquals("12345678901234", request.getPayee().getTelephoneNumber());
         assertEquals("payee dx number", request.getPayee().getDxNumber());

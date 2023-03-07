@@ -14,11 +14,11 @@ public class MockJudgementRequestServiceTest {
 
     private static final String SDT_REQUEST_ID = "MCOL-0000000001";
 
-    private MockJudgementServiceRequestService mockJudgmentRequestService;
+    private MockJudgementRequestService mockJudgmentRequestService;
 
     @BeforeEach
     public void setUp() {
-        mockJudgmentRequestService = new MockJudgementServiceRequestService();
+        mockJudgmentRequestService = new MockJudgementRequestService();
     }
 
     @Test

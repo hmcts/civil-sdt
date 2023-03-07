@@ -8,7 +8,7 @@ import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 
 @Service("MockJudgementRequestService")
-public class MockJudgementServiceRequestService implements IJudgementService {
+public class MockJudgementRequestService implements IJudgementService {
 
     @Override
     public JudgementResponse requestJudgment(String idamId,
