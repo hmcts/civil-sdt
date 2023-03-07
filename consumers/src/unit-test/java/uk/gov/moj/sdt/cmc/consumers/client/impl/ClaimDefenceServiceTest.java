@@ -10,6 +10,9 @@ import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -45,14 +48,22 @@ public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
     private ClaimDefencesResponse createClaimDefencesResponse() {
         ClaimDefencesResponse claimDefencesResponse = new ClaimDefencesResponse();
 
-        ClaimDefencesResult result1 = createClaimDefencesResult("case1", "resp1", "2020-11-12",
-                "2020-11-13", "type1", "defence1");
-        ClaimDefencesResult result2 = createClaimDefencesResult("case1", "resp2", "2020-11-13",
-                "2020-11-14", "type2", "defence2");
-        ClaimDefencesResult result3 = createClaimDefencesResult("case1", "resp3", "2020-11-14",
-                "2020-11-15", "type3", "defence3");
-        ClaimDefencesResult result4 = createClaimDefencesResult("case1", "resp4", "2020-11-15",
-                "2020-11-16", "type", "defence4");
+        ClaimDefencesResult result1 = createClaimDefencesResult("case1", "resp1",
+                LocalDate.of(2020,11,12),
+                LocalDateTime.of(2020,11,13,11,20,11),
+                "type1", "defence1");
+        ClaimDefencesResult result2 = createClaimDefencesResult("case1", "resp2",
+                LocalDate.of(2020,11,13),
+                LocalDateTime.of(2020,11,14,11,20,11),
+                 "type2", "defence2");
+        ClaimDefencesResult result3 = createClaimDefencesResult("case1", "resp3",
+                LocalDate.of(2020,11,14),
+                LocalDateTime.of(2020,11,13,11,20,11),
+                "type3", "defence3");
+        ClaimDefencesResult result4 = createClaimDefencesResult("case1", "resp4",
+                LocalDate.of(2020,11,15),
+                LocalDateTime.of(2020,11,16,11,20,11),
+                "type", "defence4");
 
         ClaimDefencesResult[] results = new ClaimDefencesResult[4];
         results[0] = result1;
@@ -67,7 +78,7 @@ public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
     }
 
     private ClaimDefencesResult createClaimDefencesResult(String caseManRef, String respondentId,
-                                                          String defendantResponseFiledDate, String defendantResponseCreatedDate,
+                                                          LocalDate defendantResponseFiledDate, LocalDateTime defendantResponseCreatedDate,
                                                           String responseType, String defence) {
         ClaimDefencesResult claimDefencesResult = new ClaimDefencesResult(caseManRef, respondentId,
                 defendantResponseFiledDate, defendantResponseCreatedDate, responseType, defence);

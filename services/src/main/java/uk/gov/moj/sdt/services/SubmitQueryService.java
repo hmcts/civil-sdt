@@ -437,6 +437,8 @@ public class SubmitQueryService implements ISubmitQueryService {
 // TODO: uncomment requestConsumer call. Temporary change while testing locally
 //        Object mcolSubmitQueryResponse = requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
         Object mcolSubmitQueryResponse = null;
+        // TODO: local testing with 1 mcol Result XML default
+        submitQueryRequest.setResultCount(1);
         Object cmcSubmitQueryResponse = cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
         // set results count

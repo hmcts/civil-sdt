@@ -8,8 +8,10 @@ import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class ResponsesSummaryUtil {
@@ -26,6 +28,20 @@ public class ResponsesSummaryUtil {
                                     Object cmcSubmitResponseTypeObject) {
         // process mcolResults
         String mcolResultsXml = "";
+
+        // TODO: REMOVE - this is for local testing!
+        mcolResultsXml = "<ns3:mcolDefenceDetail xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\">\n" +
+                "               <ns2:claimNumber xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">J0CS0001</ns2:claimNumber>\n" +
+                "               <ns2:defendantResponse defendantId=\"1\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">\n" +
+                "                  <ns2:filedDate>2023-02-28</ns2:filedDate>\n" +
+                "                  <ns2:eventCreatedDateOnMcol>2023-02-28T12:19:39Z</ns2:eventCreatedDateOnMcol>\n" +
+                "                  <ns2:raisedOnMcol>true</ns2:raisedOnMcol>\n" +
+                "                  <ns2:responseType>DE</ns2:responseType>\n" +
+                "                  <ns2:defence>I am completely innocent</ns2:defence>\n" +
+                "               </ns2:defendantResponse>\n" +
+                "            </ns3:mcolDefenceDetail>";
+
+
         if (null != mcolSubmitResponseTypeObject) {
             SubmitQueryResponseType mcolSubmitResponseType = (SubmitQueryResponseType) mcolSubmitResponseTypeObject;
             List<Object> mcolResultObjects = mcolSubmitResponseType.getTargetAppDetail().getAny();
@@ -54,7 +70,7 @@ public class ResponsesSummaryUtil {
     /**
      * get mcol Results XML from List of mcolResultObjects
      *
-     * @param mcolResultObjects
+     * @param mcolResultObjects mcol Result list of objects
      * @return String xml
      */
     public String getMcolResultsXml(List<Object> mcolResultObjects) {
@@ -91,12 +107,16 @@ public class ResponsesSummaryUtil {
 
     public String convertToMcolResultsXml(ClaimDefencesResult result, Integer defendantId) {
         StringBuilder sbXML = new StringBuilder();
+        DateTimeFormatter zdtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'",
+                Locale.ENGLISH);
 
         sbXML.append("<mcolDefenceDetail>")
                 .append("<claimNumber>").append(result.getCaseManRef()).append("</claimNumber>")
                 .append("<defendantResponse defendantId=\"").append(defendantId).append("\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">")
                 .append("<filedDate>").append(result.getDefendantResponseFiledDate()).append("</filedDate>")
-                .append("<eventCreatedDateOnMcol>").append(result.getDefendantResponseCreatedDate()).append("</eventCreatedDateOnMcol>")
+                .append("<eventCreatedDateOnMcol>").append(
+                        result.getDefendantResponseCreatedDate().format(zdtFormatter)
+                ).append("</eventCreatedDateOnMcol>")
                 .append("<raisedOnMcol>").append(false).append("</raisedOnMcol>")
                 .append("<responseType>").append(result.getResponseType()).append("</responseType>")
                 .append("<defence>").append(result.getDefence()).append("</defence>")
