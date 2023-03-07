@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.api.IJudgement;
+import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
+import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
@@ -44,10 +44,10 @@ class CMCConsumerGatewayTest {
     private XmlToObjectConverter xmlToObject;
 
     @Mock
-    private IBreathingSpace breathingSpace;
+    private IBreathingSpaceService breathingSpace;
 
     @Mock
-    private IJudgement judgementService;
+    private IJudgementService judgementService;
 
     @BeforeEach
     public void setUpLocalTests() {
@@ -72,7 +72,8 @@ class CMCConsumerGatewayTest {
         verify(breathingSpace).breathingSpace(anyString(), anyString(), any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
-        verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
+        verify(individualRequest).getSdtRequestReference();
+        verify(individualRequest).getRequestType();
     }
 
     @Test
@@ -94,6 +95,8 @@ class CMCConsumerGatewayTest {
         verify(judgementService).requestJudgment(anyString(), any(), any(JudgementRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getSdtRequestReference();
+        verify(individualRequest).getRequestType();
     }
 
 }

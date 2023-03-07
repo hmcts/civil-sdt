@@ -96,10 +96,12 @@ public class SdtMessage implements Serializable, ISdtMessage {
         this.enqueueLoggingId = enqueueLoggingId;
     }
 
+    @Override
     public Boolean isCaseOffLine() {
         return caseOffLine;
     }
 
+    @Override
     public void setCaseOffLine(Boolean caseOffLine) {
         this.caseOffLine = caseOffLine;
     }

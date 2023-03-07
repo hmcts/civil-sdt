@@ -20,12 +20,12 @@ class MockBreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
 
     String SDT_REQUEST_ID = "SDTREQUESTID";
 
-    private MockBreathingSpaceService mockBreathingSpaceService;
+    private MockBreathingSpaceServiceService mockBreathingSpaceService;
 
     @BeforeEach
     @Override
     public void setUp() {
-        mockBreathingSpaceService = new MockBreathingSpaceService();
+        mockBreathingSpaceService = new MockBreathingSpaceServiceService();
     }
 
     @Test

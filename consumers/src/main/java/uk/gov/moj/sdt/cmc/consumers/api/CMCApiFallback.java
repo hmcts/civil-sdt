@@ -10,12 +10,12 @@ import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 @Component
 public class CMCApiFallback implements CMCApi {
 
-    private IBreathingSpace breathingSpace;
+    private IBreathingSpaceService breathingSpace;
 
-    private IJudgement judgementService;
+    private IJudgementService judgementService;
 
-    public CMCApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpace breathingSpace,
-                          @Qualifier("MockJudgementRequestService") IJudgement judgementService) {
+    public CMCApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpaceService breathingSpace,
+                          @Qualifier("MockJudgementRequestService") IJudgementService judgementService) {
         this.breathingSpace = breathingSpace;
         this.judgementService = judgementService;
     }

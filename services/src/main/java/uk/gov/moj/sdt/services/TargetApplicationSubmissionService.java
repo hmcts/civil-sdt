@@ -191,7 +191,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 updateRequestRejected(individualRequest);
                 updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
             } catch (final CaseOffLineException ce) {
-                String errorMessage = String.format("Case if Offline for Reference [ %s ] - %s - ReQueue Request",
+                String errorMessage = String.format("Case is Offline for Reference [ %s ] - %s - ReQueue Request",
                                                     individualRequest.getSdtRequestReference(),
                                                     ce.getMessage());
                 LOGGER.warn(errorMessage);
@@ -325,7 +325,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * Send the individual request to target application for submission.
      *
      * @param individualRequest the individual request to be sent to target application.
-     * @param caseOffLine
+     * @param caseOffLine       when case is offLine, then invoke mcol service
      * @throws OutageException  when the target web service is not responding.
      * @throws TimeoutException when the target web service does not respond back in time.
      */

@@ -24,4 +24,21 @@ public abstract class BaseXmlTest {
         }
         return sb.toString();
     }
+
+    protected String readFile(String fileName) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            URL breathingSpaceURL = getClass().getClassLoader().getResource(fileName);
+            Reader fileReader = new FileReader(breathingSpaceURL.getPath());
+            BufferedReader bufReader = new BufferedReader(fileReader);
+            String line = bufReader.readLine();
+            while (line != null) {
+                sb.append(line);
+                line = bufReader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
 }

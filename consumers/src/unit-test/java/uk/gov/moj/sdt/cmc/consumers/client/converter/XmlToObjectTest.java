@@ -9,9 +9,11 @@ import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgmentType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class XmlToObjectTest extends BaseXmlTest {
 
@@ -25,6 +27,8 @@ class XmlToObjectTest extends BaseXmlTest {
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
 
     private static final String JUDGEMENT = "Judgement.xml";
+
+    private static final String JUDGEMENT_JSON = "Expected_Judgement.json";
 
     private XmlToObjectConverter xmlToObject = new XmlToObjectConverter();
 
@@ -61,16 +65,71 @@ class XmlToObjectTest extends BaseXmlTest {
     }
 
     @Test
-    void shouldConvertJudgementSpaceRequestToString() throws IOException {
+    void shouldConvertJudgementRequestToString() throws IOException {
         String xmlContent = readXmlAsString(JUDGEMENT);
         String request = xmlToObject.convertXmlToJson(xmlContent);
         assertNotNull(request);
+        String expectedContent = readFile(JUDGEMENT_JSON);
+        assertEquals(expectedContent, request);
     }
 
     @Test
-    void shouldConvertJudgementSpaceRequest() throws IOException {
+    void shouldConvertJudgementRequest() throws IOException {
         String xmlContent = readXmlAsString(JUDGEMENT);
         JudgementRequest request = xmlToObject.convertXmlToObject(xmlContent, JudgementRequest.class);
         assertNotNull(request);
+        assertEquals("9QZ00005", request.getCaseManRef());
+        assertEquals(JudgmentType.A, request.getJudgmentType());
+        assertEquals(true, request.isSentParticularsSeparately());
+        assertEquals(false, request.isJointJudgment());
+        assertNotNull(request.getRespondent1Address());
+        assertEquals("defendant1Address line1", request.getRespondent1Address().getAddressLine1());
+        assertEquals("defendant1Address line2", request.getRespondent1Address().getAddressLine2());
+        assertEquals("defendant1Address line3", request.getRespondent1Address().getAddressLine3());
+        assertEquals("defendant1Address line4", request.getRespondent1Address().getAddressLine4());
+        assertEquals("RG42 2DL", request.getRespondent1Address().getPostCode());
+        assertNull(request.getRespondent1Address().getPostTown());
+        assertNotNull(request.getRespondent1DOB());
+        assertNull(request.getRespondent2Address());
+        assertNull(request.getRespondent2DOB());
+        assertNotNull(request.getPaymentSchedule());
+        assertNull(request.getPaymentSchedule().getPaymentInFullBy());
+        assertNull(request.getPaymentSchedule().getInstallmentAmount());
+        assertNotNull(request.getPaymentSchedule().getImmediatePayment());
+        assertNull(request.getPaymentSchedule().getInstallmentFrequency());
+        assertEquals(99999, request.getInterest());
+        assertEquals(5000, request.getSolicitorCost());
+        assertEquals(10000000, request.getDeductedAmount());
+        assertEquals(null, request.getClaimAmountAdmitted());
+        assertEquals(null, request.getCourtFee());
+        assertEquals(null, request.getLegalCosts());
+        assertNotNull(request.getPayee());
+        assertEquals("payee name", request.getPayee().getName());
+        assertNotNull(request.getPayee().getAddress());
+        assertEquals("payee line1", request.getPayee().getAddress().getAddressLine1());
+        assertEquals("payee line2", request.getPayee().getAddress().getAddressLine2());
+        assertEquals("payee line3", request.getPayee().getAddress().getAddressLine3());
+        assertEquals("payee line4", request.getPayee().getAddress().getAddressLine4());
+        assertEquals(null, request.getPayee().getAddress().getPostTown());
+        assertEquals("RG42 2DL", request.getPayee().getAddress().getPostCode());
+        assertEquals("12345678901234", request.getPayee().getTelephoneNumber());
+        assertEquals("payee dx number", request.getPayee().getDxNumber());
+        assertEquals("payee fx number", request.getPayee().getFaxNumber());
+        assertEquals("payee fx number", request.getPayee().getFaxNumber());
+        assertEquals("payee email", request.getPayee().getEmail());
+        assertEquals("12", request.getPayee().getPcm());
+        assertEquals("payee reference", request.getPayee().getReference());
+        assertEquals("123456789012345678", request.getPayee().getBankAccountNumber());
+        assertEquals("payee bank account holder", request.getPayee().getBankAccountHolder());
+        assertEquals("12345678", request.getPayee().getBankSortCode());
+        assertEquals("payee bank name", request.getPayee().getBankName());
+        assertEquals("payee bank info1", request.getPayee().getBankInfo1());
+        assertEquals("payee bank info2", request.getPayee().getBankInfo2());
+        assertEquals("payee slip code line1", request.getPayee().getSlipCodeline1());
+        assertEquals("payee slip code line2", request.getPayee().getSlipCodeline2());
+        assertEquals("12345678", request.getPayee().getGiroAccountNumber());
+        assertEquals("123456789", request.getPayee().getGiroTransCode1());
+        assertEquals("12", request.getPayee().getGiroTransCode2());
+        assertEquals("sotSignature", request.getSotName());
     }
 }

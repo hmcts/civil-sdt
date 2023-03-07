@@ -5,9 +5,11 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString
+@Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
@@ -43,5 +45,9 @@ public class PaymentSchedule {
 
     public InstalmentFrequencyType getInstallmentFrequency() {
         return instalment != null ? instalment.getFrequency() : null;
+    }
+
+    public ImmediatePaymentType getImmediatePayment() {
+        return immediatePayment;
     }
 }

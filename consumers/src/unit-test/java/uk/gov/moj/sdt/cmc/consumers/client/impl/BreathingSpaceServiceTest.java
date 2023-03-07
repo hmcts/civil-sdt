@@ -23,12 +23,12 @@ class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     private CMCApi cmcApi;
 
-    private BreathingSpaceService breathingSpaceService;
+    private BreathingSpaceServiceService breathingSpaceService;
 
     @BeforeEach
     @Override
     public void setUp() {
-        breathingSpaceService = new BreathingSpaceService(cmcApi);
+        breathingSpaceService = new BreathingSpaceServiceService(cmcApi);
     }
 
     @Test

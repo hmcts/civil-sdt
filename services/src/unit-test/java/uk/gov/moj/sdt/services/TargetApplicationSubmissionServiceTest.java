@@ -981,7 +981,6 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
             individualReqProcessingDelay);
 
-        individualRequest.setRequestStatus("Forwarded");
         this.mockIndividualRequestDao.persist(individualRequest);
         EasyMock.expectLastCall();
 
@@ -1001,9 +1000,6 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.expectLastCall().andAnswer(() -> {
             throw new CaseOffLineException("Case OffLine");
         });
-
-        final List<IIndividualRequest> indRequests = new ArrayList<IIndividualRequest>();
-        indRequests.add(individualRequest);
 
         this.mockMessageWriter.queueMessage(EasyMock.isA(ISdtMessage.class), EasyMock.isA(String.class),
                                             EasyMock.anyBoolean());
@@ -1031,9 +1027,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         EasyMock.verify(mockMessageWriter);
         EasyMock.verify(mockCmcConsumerGateway);
         EasyMock.verify(mockCacheable);
-
-        Assert.assertTrue("Expected to pass", true);
-
+        EasyMock.verify(xmlReader);
+        EasyMock.verify(ccdReferenceValidator);
     }
 
     /**

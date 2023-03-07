@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.api.IJudgement;
+import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
+import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
@@ -28,15 +28,15 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
 
-    private IBreathingSpace breathingSpace;
+    private IBreathingSpaceService breathingSpace;
 
-    private IJudgement judgementService;
+    private IJudgementService judgementService;
 
     private XmlToObjectConverter xmlToObject;
 
     @Autowired
-    public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
-                              @Qualifier("JudgementRequestService") IJudgement judgementService,
+    public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
+                              @Qualifier("JudgementRequestService") IJudgementService judgementService,
                               XmlToObjectConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.judgementService = judgementService;
@@ -55,7 +55,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
                                                                                    JudgementRequest.class);
                 JudgementResponse judgementResponse = judgementService.requestJudgment(idamId,
-                                                                                      sdtRequestReference,
+                                                                                       sdtRequestReference,
                                                                                        judgementRequest);
             } else if (RequestType.BREATHING_SPACE.getType().equals(individualRequest.getRequestType())) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
@@ -68,7 +68,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
             if (message != null && message.contains(CASE_OFF_LINE)) {
                 throw new CaseOffLineException(e.getMessage(), e);
             }
-            throw new CMCException(e.getMessage(), e);
+            throw new CMCException(message, e);
         }
     }
 

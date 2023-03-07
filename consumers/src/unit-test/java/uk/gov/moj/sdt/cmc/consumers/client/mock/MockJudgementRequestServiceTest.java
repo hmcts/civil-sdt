@@ -14,17 +14,17 @@ public class MockJudgementRequestServiceTest {
 
     private static final String SDT_REQUEST_ID = "MCOL-0000000001";
 
-    private MockJudgementRequestService mockBreathingSpaceService;
+    private MockJudgementServiceRequestService mockJudgmentRequestService;
 
     @BeforeEach
     public void setUp() {
-        mockBreathingSpaceService = new MockJudgementRequestService();
+        mockJudgmentRequestService = new MockJudgementServiceRequestService();
     }
 
     @Test
     void shouldReturnJudgementResponse() {
         JudgementRequest judgementRequest = mock(JudgementRequest.class);
-        JudgementResponse judgementResponse = mockBreathingSpaceService.requestJudgment(IDAM_ID, SDT_REQUEST_ID, judgementRequest);
+        JudgementResponse judgementResponse = mockJudgmentRequestService.requestJudgment(IDAM_ID, SDT_REQUEST_ID, judgementRequest);
         assertNotNull(judgementResponse);
         assertNotNull(judgementResponse.getFirstPaymentDate());
         assertNotNull(judgementResponse.getJudgmentEnteredDate());
