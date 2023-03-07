@@ -162,7 +162,6 @@ ext {
 
 ext['jackson.version'] = '2.14.0-rc1'
 
-
 ext.libraries = [
         junit5: [
                 "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
