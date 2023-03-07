@@ -30,12 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.transformers;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ErrorLog;
@@ -51,6 +45,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequest
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.ResponseType;
+
+import java.lang.reflect.Constructor;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -70,17 +69,11 @@ class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests() {
-        Constructor<BulkFeedbackTransformer> c;
-        try {
-            // Make the constructor visible so we can get a new instance of it.
-            c = BulkFeedbackTransformer.class.getDeclaredConstructor();
-            c.setAccessible(true);
-            transformer = c.newInstance();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-
+    public void setUpLocalTests() throws Exception {
+        // Make the constructor visible so we can get a new instance of it.
+        Constructor<BulkFeedbackTransformer> c = BulkFeedbackTransformer.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        transformer = c.newInstance();
     }
 
     /**

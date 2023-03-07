@@ -35,14 +35,17 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.*;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
+
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Unit tests for SubmitQueryConsumerTransformer.
@@ -58,16 +61,12 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests() {
-        Constructor<SubmitQueryConsumerTransformer> c;
-        try {
-            // Make the constructor visible so we can get a new instance of it.
-            c = SubmitQueryConsumerTransformer.class.getDeclaredConstructor();
-            c.setAccessible(true);
-            transformer = c.newInstance();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+    public void setUpLocalTests() throws Exception {
+        // Make the constructor visible so we can get a new instance of it.
+        Constructor<SubmitQueryConsumerTransformer> c
+            = SubmitQueryConsumerTransformer.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        transformer = c.newInstance();
     }
 
     /**
@@ -120,4 +119,30 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
         Assertions.assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(),
                                 "Incorrect result count");
     }
+
+    @Test
+    public void testTransformDomainToJaxb() {
+        final ISubmitQueryRequest domain = new SubmitQueryRequest();
+        final ITargetApplication mockTargetApplication = Mockito.mock(ITargetApplication.class);
+        final IBulkCustomerApplication mockBulkCustomerApplication = Mockito.mock(IBulkCustomerApplication.class);
+        final IBulkCustomer mockBulkCustomer = Mockito.mock(IBulkCustomer.class);
+
+        domain.setTargetApplication(mockTargetApplication);
+        domain.setBulkCustomer(mockBulkCustomer);
+
+        String targetAppCode = "MOCK_APP_CODE";
+        String customerApplicationId = "MOCK_CUSTOMER_APP_ID";
+
+        when(mockTargetApplication.getTargetApplicationCode()).thenReturn(targetAppCode);
+
+        when(mockBulkCustomer.getBulkCustomerApplication(targetAppCode))
+            .thenReturn(mockBulkCustomerApplication);
+
+        when(mockBulkCustomerApplication.getCustomerApplicationId()).thenReturn(customerApplicationId);
+
+        final SubmitQueryRequestType jaxb = transformer.transformDomainToJaxb(domain);
+
+        Assertions.assertEquals(customerApplicationId, jaxb.getHeader().getTargetAppCustomerId(), "targetAppCustomerId is incorrect");
+        Assertions.assertNull(jaxb.getTargetAppDetail().getAny(), "Jaxb targetAppDetail should be empty");
+        }
 }

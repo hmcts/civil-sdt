@@ -74,17 +74,12 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests() {
-        Constructor<IndividualRequestConsumerTransformer> c;
-        try {
-            // Make the constructor visible so we can get a new instance of it.
-            c = IndividualRequestConsumerTransformer.class.getDeclaredConstructor();
-            c.setAccessible(true);
-            transformer = c.newInstance();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-
+    public void setUpLocalTests() throws Exception {
+        // Make the constructor visible so we can get a new instance of it.
+        Constructor<IndividualRequestConsumerTransformer> c
+            = IndividualRequestConsumerTransformer.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        transformer = c.newInstance();
     }
 
     /**
