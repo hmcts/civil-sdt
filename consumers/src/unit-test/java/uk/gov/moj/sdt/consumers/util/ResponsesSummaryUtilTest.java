@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
 import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test class for the consumer gateway.
@@ -25,7 +25,6 @@ class ResponseSummaryUtilTest {
     private ResponsesSummaryUtil responsesSummaryUtil;
     private XmlToObjectConverter xmlToObjectConverter;
 
-
     /**
      * Method to do any pre-test set-up.
      */
@@ -36,15 +35,14 @@ class ResponseSummaryUtilTest {
 
    @Test
    void convertToMcolResultObjectsIsSuccessful() {
-        List<Object> listObjects = createClaimDefencesList();
-        List<Object> listConvertedObjects = responsesSummaryUtil.convertToMcolResultObjects(listObjects);
-        assertFalse(listConvertedObjects.isEmpty());
-        assertEquals(listConvertedObjects.size(), listObjects.size());
-        McolDefenceDetailType detailType = (McolDefenceDetailType) listConvertedObjects.get(0);
-        assertNotNull(detailType.getDefendantResponse());
+        List<ClaimDefencesResult> listObjects = createClaimDefencesList();
+        String xml = responsesSummaryUtil.convertToMcolResultsXml(listObjects);
+        assertFalse(xml.isEmpty());
+        assertTrue(xml.contains("mcolDefenceDetail"));
+        assertTrue(xml.contains("defendantId=\"2\""));
    }
 
-    private List<Object> createClaimDefencesList() {
+    private List<ClaimDefencesResult> createClaimDefencesList() {
         ClaimDefencesResult result1 = createClaimDefencesResult("case11", "resp11",
                 "2021-10-20", "2021-10-21T11:23:34", ResponseType.DE.name(),
                 "defence11");
@@ -58,10 +56,16 @@ class ResponseSummaryUtilTest {
                 "2021-11-02", "2021-11-02T07:15:49", ResponseType.DC.name(),
                 "defence14");
         ClaimDefencesResult result5 = createClaimDefencesResult("case15", "resp15",
+                "2021-11-09", "2021-11-10T13:19:24", ResponseType.DE.name(),
+                "It wasn't me!");
+        ClaimDefencesResult result6 = createClaimDefencesResult("case15", "resp15",
+                "2021-11-09", "2021-11-10T14:19:24", ResponseType.DE.name(),
+                "My name is Shaggy");
+        ClaimDefencesResult result7 = createClaimDefencesResult("case15", "resp15",
                 "2021-11-09", "2021-11-10T15:19:24", ResponseType.DE.name(),
-                "defence15");
+                "And I am Chaka Demus - innocent");
 
-        return List.of(result1, result2, result3, result4, result5);
+        return List.of(result1, result2, result3, result4, result5, result6, result7);
     }
 
     private ClaimDefencesResult createClaimDefencesResult(String caseManRef, String respondentId,

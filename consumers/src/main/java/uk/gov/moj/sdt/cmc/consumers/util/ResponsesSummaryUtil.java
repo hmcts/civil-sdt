@@ -5,19 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.model.DefendantResponseType;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
-import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -44,7 +35,7 @@ public class ResponsesSummaryUtil {
 
         String cmcResultsXml = "";
         if (null != cmcSubmitResponseTypeObject) {
-            List<Object> cmcResultObjects = (List<Object>) cmcSubmitResponseTypeObject;
+            List<ClaimDefencesResult> cmcResultObjects = (List) cmcSubmitResponseTypeObject;
             cmcResultsXml = convertToMcolResultsXml(cmcResultObjects);
             LOGGER.debug("cmc Results XML: {}", cmcResultsXml);
         }
@@ -79,84 +70,49 @@ public class ResponsesSummaryUtil {
     /**
      * convert to Mcol Results XML from List of cmcResultObjects
      *
-     * @param cmcResultObjects
+     * @param cmcResults List
      * @return String xml
     */
-    public String convertToMcolResultsXml(List<Object> cmcResultObjects) {
-        List<Object> convertedObjects = convertToMcolResultObjects(cmcResultObjects);
-        String claimDefencesObjectXML = "";
-        try {
-            claimDefencesObjectXML = xmlToObjectConverter.convertObjectToXml(convertedObjects);
-            claimDefencesObjectXML = convertToMcolResultsXml(claimDefencesObjectXML);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+    public String convertToMcolResultsXml(List<ClaimDefencesResult> cmcResults) {
+        List<String> claimNumbers = new ArrayList<>();
+        StringBuilder claimDefencesObjectXML = new StringBuilder();
+        for (ClaimDefencesResult result : cmcResults) {
+            int defendantId = 1;
+            if (claimNumbers.contains(result.getCaseManRef())) {
+                defendantId = defendantId + 1;
+            } else {
+                claimNumbers.add(result.getCaseManRef());
+            }
+            claimDefencesObjectXML.append(convertToMcolResultsXml(result, defendantId));
         }
-        return claimDefencesObjectXML;
-     }
+
+        return claimDefencesObjectXML.toString();
+    }
+
+    public String convertToMcolResultsXml(ClaimDefencesResult result, Integer defendantId) {
+        StringBuilder sbXML = new StringBuilder();
+
+        sbXML.append("<mcolDefenceDetail>")
+                .append("<claimNumber>").append(result.getCaseManRef()).append("</claimNumber>")
+                .append("<defendantResponse defendantId=\"").append(defendantId).append("\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">")
+                .append("<filedDate>").append(result.getDefendantResponseFiledDate()).append("</filedDate>")
+                .append("<eventCreatedDateOnMcol>").append(result.getDefendantResponseCreatedDate()).append("</eventCreatedDateOnMcol>")
+                .append("<raisedOnMcol>").append(false).append("</raisedOnMcol>")
+                .append("<responseType>").append(result.getResponseType()).append("</responseType>")
+                .append("<defence>").append(result.getDefence()).append("</defence>")
+                .append("</defendantResponse>")
+                .append("</mcolDefenceDetail>");
+
+        return sbXML.toString();
+    }
 
     public String convertToMcolResultsXml(String inXml) {
-        inXml = inXml.replace("<ArrayList>", "");
-        inXml = inXml.replace("</ArrayList>", "");
-        inXml = inXml.replace("<item>", "<ns3:mcolDefenceDetail>");
-        inXml = inXml.replace("</item>", "</ns3:mcolDefenceDetail>");
+        inXml = inXml.replace("<mcolDefenceDetail>", "<ns3:mcolDefenceDetail  xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\">");
+        inXml = inXml.replace("</mcolDefenceDetail>", "</ns3:mcolDefenceDetail>");
         inXml = inXml.replace("<results>", "<qresp:results>");
         inXml = inXml.replace("</results>", "</qresp:results>");
 
         return inXml;
-    }
-
-    public List<Object> convertToMcolResultObjects(List<Object> cmcResultObjects) {
-        List<Object> convertedResults = new ArrayList<>();
-
-        for (Object object :  cmcResultObjects) {
-            ClaimDefencesResult claimDefencesResult = (ClaimDefencesResult) object;
-            McolDefenceDetailType defenceDetailType = convertToMcolDefenceDetailType(claimDefencesResult);
-            convertedResults.add(defenceDetailType);
-        }
-        return convertedResults;
-    }
-
-    public McolDefenceDetailType convertToMcolDefenceDetailType(ClaimDefencesResult claimDefencesResult) {
-
-        DefendantResponseType defendantResponseType = new DefendantResponseType();
-
-        defendantResponseType.setFiledDate(
-                convertLocalDateToCalendar(claimDefencesResult.getDefendantResponseFiledDate()));
-        defendantResponseType.setEventCreatedDateOnMcol(
-                convertLocalDateTimeToCalendar(claimDefencesResult.getDefendantResponseCreatedDate()));
-        defendantResponseType.setRaisedOnMcol(false);
-        defendantResponseType.setResponseType(ResponseType.DE);
-        defendantResponseType.setDefence(claimDefencesResult.getDefence());
-        defendantResponseType.setDefendantId(claimDefencesResult.getRespondentId());
-
-        McolDefenceDetailType defenceDetailType = new McolDefenceDetailType();
-        defenceDetailType.setClaimNumber(claimDefencesResult.getCaseManRef());
-        defenceDetailType.setDefendantResponse(defendantResponseType);
-
-        return defenceDetailType;
-    }
-
-
-    public Calendar convertLocalDateTimeToCalendar(String strDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime localDateTime = LocalDateTime.parse(strDateTime, formatter);
-
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
-    }
-
-    public Calendar convertLocalDateToCalendar(String strDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(strDate, formatter);
-
-        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
     }
 
 }

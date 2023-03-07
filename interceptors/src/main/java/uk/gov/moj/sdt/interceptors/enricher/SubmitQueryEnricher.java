@@ -142,6 +142,4 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
 
     }
 
-
-
 }
