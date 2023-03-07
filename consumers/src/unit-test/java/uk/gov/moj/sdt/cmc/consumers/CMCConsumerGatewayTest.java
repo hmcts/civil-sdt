@@ -1,16 +1,20 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
+import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
@@ -42,31 +46,40 @@ class CMCConsumerGatewayTest {
     @Mock
     private IIndividualRequest individualRequest;
 
+    @Mock
+    private BreathingSpaceRequest breathingSpaceRequest;
+
+    @Mock
+    private IClaimStatusUpdate claimStatusUpdate;
+
+    @Mock
+    private IClaimDefences claimDefences;
+
+    @Mock
+    XmlElementValueReader xmlElementValueReader;
+
     @BeforeEach
     public void setUpLocalTests() {
-        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, xmlToObject);
-        setupMockBehaviour();
+        cmcConsumerGateway = new CMCConsumerGateway(breathingSpace, claimStatusUpdate, claimDefences,
+                xmlToObject, xmlElementValueReader);
     }
 
     @Test
     void shouldInvokeBreathingSpace() throws Exception {
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
+
         when(breathingSpace.breathingSpace(any())).thenReturn(response);
+        when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getRequestType());
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
+
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
         verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
-    }
-
-    private void setupMockBehaviour() {
-        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
-        when(individualRequest.getRequestPayload()).thenReturn(XML);
-        try {
-            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
-        } catch (IOException e) {
-        }
     }
 
 }

@@ -1,8 +1,5 @@
 package uk.gov.moj.sdt.cmc.consumers.client.xml;
 
-import java.io.IOException;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
@@ -15,34 +12,29 @@ class XmlReaderTest extends BaseXmlTest {
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
 
     private static final String CLAIM_DEFENCES = "ClaimDefences.xml";
+    private static final String MCOL_DEFENCE_CRITERIA = "ClaimDefences_McolDefenceCriteria.xml";
 
     @Test
-    void shouldConvertBreathingSpaceRequestToString() throws IOException {
+    void shouldConvertBreathingSpaceRequestToString() {
         readXmlFileAndValidateData(BREATHING_SPACE, "claimNumber", "H0PR0001");
     }
 
     @Test
-    void findFromDateFromClaimDefencesXmlString() throws IOException {
+    void findFromDateFromClaimDefencesXmlString() {
         readXmlFileAndValidateData(CLAIM_DEFENCES, "fromDate", "2009-12-01");
     }
 
-//    @Test
-//    void findValuesFromClaimDefencesXmlString() {
-//        String xmlContent = readXmlAsString(CLAIM_DEFENCES);
-//        XmlElementValueReader xmlReader = new XmlElementValueReader();
-//        String sdtCustomerId = xmlReader.getElementValue(xmlContent, "sdtCustomerId");
-//        String targetApplicationId = xmlReader.getElementValue(xmlContent, "targetApplicationId");
-//        String fromDate = xmlReader.getElementValue(xmlContent, "fromDate");
-//        String toDate = xmlReader.getElementValue(xmlContent, "toDate");
-//        assertNotNull(sdtCustomerId);
-//        assertEquals("12345678", sdtCustomerId);
-//        assertNotNull(targetApplicationId);
-//        assertEquals("mcol", targetApplicationId);
-//        assertNotNull(fromDate);
-//        assertEquals("2009-12-01", fromDate);
-//        assertNotNull(toDate);
-//        assertEquals("2009-12-02", toDate);
-//    }
+    @Test
+    void findValuesFromMcolDefenceCriteriaXmlString() {
+        String xmlContent = readXmlAsString(MCOL_DEFENCE_CRITERIA);
+        XmlElementValueReader xmlReader = new XmlElementValueReader();
+        String fromDate = xmlReader.getElementValue(xmlContent, "fromDate");
+        String toDate = xmlReader.getElementValue(xmlContent, "toDate");
+        assertNotNull(fromDate);
+        assertEquals("2009-12-01T00:00:00", fromDate);
+        assertNotNull(toDate);
+        assertEquals("2009-12-02T00:00:00", toDate);
+    }
 
     private void readXmlFileAndValidateData(String fileName, String xmlNodeName, String expectedValue) {
         String xmlContent = readXmlAsString(fileName);

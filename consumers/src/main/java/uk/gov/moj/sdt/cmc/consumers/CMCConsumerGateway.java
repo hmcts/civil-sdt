@@ -1,6 +1,5 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,9 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.exception.CMCException;
 import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
-import uk.gov.moj.sdt.cmc.consumers.xml.XmlElementValueReader;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -22,7 +19,12 @@ import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component("CMCConsumerGateway")
 public class CMCConsumerGateway implements IConsumerGateway {
@@ -63,8 +65,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
                         BreathingSpaceRequest.class);
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
+                individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }
-            individualRequest.setRequestStatus(response.getProcessingStatus().name());
         } catch (Exception e) {
             throw new CMCException(e.getMessage(), e);
         }
@@ -79,36 +81,25 @@ public class CMCConsumerGateway implements IConsumerGateway {
                      submitQueryRequest.getBulkCustomer().getSdtCustomerId());
 
         // extract fromDate and toDate from submitQueryRequest
-        String[] values = getClaimDefencesFields(submitQueryRequest);
+        String[] values = getClaimDefencesFields();
         String fromDate = values[0];
         String toDate = values[1];
         ClaimDefencesResponse response =  claimDefences.claimDefences(fromDate, toDate);
 
-        List<Object> listObjects = new ArrayList<>();
-        for (Object object : response.getResults()) {
-            listObjects.add(object);
-        }
+        List<Object> listObjects = Arrays.asList(response.getResults());
 
         return listObjects;
     }
 
-    private String[] getClaimDefencesFields(ISubmitQueryRequest submitQueryRequest) {
-// TODO: fix xml data extraction
-        //        String xmlContent = null;
-//        try {
-//            xmlContent = xmlToObject.convertObjectToXml(submitQueryRequest);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Unable to extract xml content from submitQueryRequest");
-//        }
+    private String[] getClaimDefencesFields() {
 
+        // get dates from request defence criteria.
+        String xmlContent = SdtContext.getContext().getRawOutXml();
         String[] values = new String[2];
-        XmlElementValueReader xmlReader = new XmlElementValueReader();
-//        String fromDate = xmlReader.getElementValue(xmlContent, "fromDate");
-        String fromDate = "2020-10-12";
-        values[0] = fromDate;
-//        String toDate = xmlReader.getElementValue(xmlContent, "toDate");
-        String toDate = "2020-10-14";
-        values[1] = toDate;
+
+        values[0] = xmlElementValueReader.getElementValue(xmlContent, "fromDate");
+        values[1] = xmlElementValueReader.getElementValue(xmlContent, "toDate");
+
         return values;
     }
 

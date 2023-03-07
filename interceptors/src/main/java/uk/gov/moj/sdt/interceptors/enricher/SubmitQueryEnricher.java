@@ -67,13 +67,16 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
         // Assume no change to input.
         String newXml = message;
 
+        // TODO: confirm this is the best place to do this.
         newXml = loadSummaryResults(newXml);
 
         // Check to ensure the parent tag can be found in the message.
         if (super.findParentTag(message)) {
             // Remove linefeeds as they stop the regular expression working.
-            newXml = newXml.replace('\n', ' ');
-            newXml = newXml.replace('\r', ' ');
+            if (null != newXml) {
+                newXml = newXml.replace('\n', ' ');
+                newXml = newXml.replace('\r', ' ');
+            }
 
             // Get the system specific response from thread local to inject into the outbound message
             String replacementXml = SdtContext.getContext().getRawOutXml();
@@ -87,7 +90,7 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
             final Matcher matcher = pattern.matcher(newXml);
 
             if (StringUtils.isNotBlank(replacementXml) && matcher.find()) {
-                LOGGER.debug("Found matching group[{}]", matcher.group());
+                if (LOGGER.isDebugEnabled()) LOGGER.debug("Found matching group[{}]", matcher.group());
 
                 // Get the string matching the regular expression.
                 final String singleLineTag = matcher.group();
@@ -125,6 +128,8 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
 
         // Get the system specific response from thread local to inject into the outbound message
         String outXml = newXml;
+
+        // TODO: regular expression replace the existing results node
         String resultsXml = "<qresp:results/>";
 
         String resultsXmlNew = SdtContext.getContext().getClaimDefencesSummaryResultsXml();

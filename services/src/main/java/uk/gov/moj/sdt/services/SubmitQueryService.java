@@ -444,12 +444,9 @@ public class SubmitQueryService implements ISubmitQueryService {
         submitQueryRequest.setResultCount(submitQueryRequest.getResultCount() + claimDefencesResults.size());
 
         String summaryResultsXML = responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse, cmcSubmitQueryResponse);
-        // TODO: regular expression replace
 
+        // Set summary results XML to be picked up later
         SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
-
-//        cmcRequestConsumer.transformJaxbToDomain(submitQueryResponseType,
-//        final ISubmitQueryRequest submitQueryRequest)
     }
 
 
