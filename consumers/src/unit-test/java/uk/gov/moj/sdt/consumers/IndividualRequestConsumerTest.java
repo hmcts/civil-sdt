@@ -35,6 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -44,30 +45,30 @@ import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Test class for the individual request consumer.
@@ -170,8 +171,45 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         doReturn(mockClient).when(individualRequestConsumer)
             .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
+        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
+            mockStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
+                .thenReturn(true);
+            individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
+                                                               RECEIVE_TIME_OUT);
+        }
+
+        verify(mockTransformer, atLeastOnce()).transformJaxbToDomain(individualResponseType, individualRequest);
+        verify(mockTransformer).transformDomainToJaxb(individualRequest);
+        verify(mockClient).submitIndividual(individualRequestType);
+
+        assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+    }
+
+    /**
+     * Test method for successful processing of individual request with an included error.
+     */
+    @Test
+    void processIndividualRequestError() {
+        final IndividualResponseType individualResponseType = generateErrorResponse();
+
+        when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
+
+        when(mockClient.submitIndividual(individualRequestType)).thenReturn(individualResponseType);
+
+        mockTransformer.transformJaxbToDomain(individualResponseType, individualRequest);
+
+        doAnswer((Answer<Void>) invocation -> {
+            ((IndividualRequest) invocation.getArgument(1))
+                .setRequestStatus (IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus ());
+            // required to be null for a void method
+            return null;
+        }).when(mockTransformer).transformJaxbToDomain(individualResponseType, individualRequest);
+
+        doReturn(mockClient).when(individualRequestConsumer)
+            .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
+
         individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
-                RECEIVE_TIME_OUT);
+                                                           RECEIVE_TIME_OUT);
 
         verify(mockTransformer, atLeastOnce()).transformJaxbToDomain(individualResponseType, individualRequest);
         verify(mockTransformer).transformDomainToJaxb(individualRequest);
@@ -188,8 +226,8 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
     {
         when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
 
-        final WebServiceException wsException = new WebServiceException ();
-        wsException.initCause (new ConnectException("Server down error"));
+        final WebServiceException wsException = mock(WebServiceException.class);
+        when(wsException.getCause()).thenReturn(new ConnectException("Server down error"));
 
         when(mockClient.submitIndividual(individualRequestType)).thenThrow (wsException);
 
@@ -209,6 +247,56 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         verify(mockClient).submitIndividual(individualRequestType);
 
         assertTrue(true, TEST_FINISHED_SUCCESSFULLY);
+    }
+
+    /**
+     * Test method for processing of individual request outage error.
+     * Disables rethrowOnFailureToConnect to trigger the second if/else statement in super.handleClientErrors,
+     * this triggers the Thread.sleep loop to keep reattempting handleClientErrors
+     * Using Future to cancel out of the Thread.sleep loop for coverage
+     */
+    @Test
+    void processIndividualRequestOutageReattemptLoop() {
+        when(mockTransformer.transformDomainToJaxb(individualRequest)).thenReturn(individualRequestType);
+
+        final WebServiceException wsException = new WebServiceException ();
+        wsException.initCause (new ConnectException("Server down error"));
+
+        when(mockClient.submitIndividual(individualRequestType)).thenThrow (wsException);
+
+        doReturn(mockClient).when(individualRequestConsumer)
+            .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
+
+        // Disable exception throw to continue past super.handleClientErrors and trigger Thread.sleep
+        individualRequestConsumer.setRethrowOnFailureToConnect(false);
+
+        // Runs the method for half the CONNECTION_TIME_OUT time to trigger InterruptedException on Thread.sleep
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future future = executor.submit(
+            () -> individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
+                                                                     RECEIVE_TIME_OUT)
+        );
+        try {
+            future.get(CONNECTION_TIME_OUT / 4, TimeUnit.MILLISECONDS);
+        } catch (Exception  e) {
+            future.cancel(true);
+        } finally {
+            executor.shutdownNow();
+        }
+
+        // Successfully throw OutageException after reenabling rethrow
+        individualRequestConsumer.setRethrowOnFailureToConnect(true);
+        try {
+            this.individualRequestConsumer.processIndividualRequest (individualRequest, CONNECTION_TIME_OUT,
+                                                                     RECEIVE_TIME_OUT);
+            fail("Expecting an OutageException here.");
+        } catch (final OutageException toe) {
+            assertTrue(true, GOT_THE_EXCEPTION_AS_EXPECTED);
+        }
+
+
+        verify(mockTransformer, times(2)).transformDomainToJaxb(individualRequest);
+        verify(mockClient, times(3)).submitIndividual(individualRequestType);
     }
 
     /**
@@ -305,6 +393,31 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
 
         final CreateStatusType status = new CreateStatusType();
         status.setCode(CreateStatusCodeType.ACCEPTED);
+
+        responseType.setStatus(status);
+
+        return responseType;
+    }
+
+    /**
+     * @return the individual response type
+     */
+    private IndividualResponseType generateErrorResponse() {
+        final IndividualResponseType responseType = new IndividualResponseType();
+
+        final uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.HeaderType headerType =
+            new uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.HeaderType();
+        headerType.setSdtRequestId("Test");
+
+        responseType.setHeader(headerType);
+
+        final CreateStatusType status = new CreateStatusType();
+        status.setCode(CreateStatusCodeType.ACCEPTED);
+
+        ErrorType errorType = new ErrorType();
+        errorType.setCode("MOCK_CODE");
+        errorType.setDescription("MOCK DESCRIPTION");
+        status.setError(errorType);
 
         responseType.setStatus(status);
 

@@ -35,8 +35,10 @@ package uk.gov.moj.sdt.interceptors.out;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -49,72 +51,48 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PipedOutputStream;
+import java.nio.charset.StandardCharsets;
+
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Test that faults are correctly intercepted.
+ * Test class.
  *
  * @author d195274
  */
 @ExtendWith(MockitoExtension.class)
-class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
-
-    @Mock
-    ServiceRequestDao mockServiceRequestDao;
-
-    /**
-     * Error message returned when a fault occurs.
-     */
-    private static final String ERROR_MESSAGE = "A SDT system component error " +
-            "has occurred. Please contact the SDT support team for assistance";
+class CacheEndOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     /**
      * Test method for
-     * {@link uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor
+     * {@link CacheEndOutboundInterceptor
      * #handleMessage(org.apache.cxf.binding.soap.SoapMessage)}.
      */
     @Test
-    void testHandleMessage() {
+    void testHandleMessage() throws IOException {
         SdtContext.getContext().setServiceRequestId(1L);
-        final SoapMessage soapMessage = getDummySoapMessageWithFault();
-        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockServiceRequestDao);
-        final ServiceRequest serviceRequest = new ServiceRequest();
-        when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
-        mockServiceRequestDao.persist(serviceRequest);
-        faultOutboundInterceptor.setServiceRequestDao(mockServiceRequestDao);
+        SoapMessage soapMessage = getDummySoapMessageWithCachedOutputStream();
+        final CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
+        SdtContext.getContext().setOriginalOutputStream(soapMessage.getContent(OutputStream.class));
 
-        assertNull(serviceRequest.getResponseDateTime());
-        assertNull(serviceRequest.getResponsePayload());
-        faultOutboundInterceptor.handleMessage(soapMessage);
-        assertNotNull(serviceRequest.getResponseDateTime());
-        assertTrue(serviceRequest.getResponsePayload().contains(ERROR_MESSAGE));
+        cacheEndOutboundInterceptor.handleMessage(soapMessage);
+
+        Assertions.assertNotNull(soapMessage.getContent(OutputStream.class));
     }
 
     @Test
-    void testHandleMessageLogOutput() {
-        SdtContext.getContext().setServiceRequestId(1L);
-        final SoapMessage soapMessage = getDummySoapMessageWithFault();
-        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockServiceRequestDao);
-        final ServiceRequest serviceRequest = new ServiceRequest();
-        when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
-        mockServiceRequestDao.persist(serviceRequest);
-        faultOutboundInterceptor.setServiceRequestDao(mockServiceRequestDao);
+    void testWrongOutputStreamClass() {
+        final SoapMessage soapMessage = getDummySoapMessageWithIncompatibleOutputStream();
+        final CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
 
-        try (MockedStatic<PerformanceLogger> mockedStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
-            mockedStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong())).thenReturn(true);
+        RuntimeException runtimeException = Assertions.assertThrows(RuntimeException.class, () -> cacheEndOutboundInterceptor.handleMessage(soapMessage));
 
-            faultOutboundInterceptor.handleMessage(soapMessage);
-
-            assertTrue(PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_11));
-            mockedStaticPerformanceLogger.verify(() -> PerformanceLogger.log(
-                any(),
-                anyLong(),
-                anyString(),
-                anyString()
-            ));
-        }
+        Assertions.assertNotNull(runtimeException.getMessage());
     }
 
     /**
@@ -124,12 +102,26 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
      *
      * @return a soap message
      */
-    private SoapMessage getDummySoapMessageWithFault() {
+    private SoapMessage getDummySoapMessageWithCachedOutputStream() throws IOException {
+        SoapMessage soapMessage = new SoapMessage(new MessageImpl());
+        CachedOutputStream cachedOutputStream = new CachedOutputStream();
+        cachedOutputStream.write("<xml>content</xml>".getBytes());
+        soapMessage.setContent(OutputStream.class, cachedOutputStream);
+        return soapMessage;
+    }
+
+    /**
+     * Builds a dummy soap message that does not contain an OutputStream to trigger the RuntimeException throw
+     * <p>
+     * the path to the xml file containing the soap message.
+     *
+     * @return a soap message
+     */
+    private SoapMessage getDummySoapMessageWithIncompatibleOutputStream() {
         final SoapMessage soapMessage = new SoapMessage(new MessageImpl());
         soapMessage.setExchange(new ExchangeImpl());
-        final Fault fault = new Fault(new RuntimeException(ERROR_MESSAGE
-        ));
-        soapMessage.setContent(Exception.class, fault);
+        final OutputStream outputStream = new PipedOutputStream();
+        soapMessage.setContent(OutputStream.class, outputStream);
         return soapMessage;
     }
 
