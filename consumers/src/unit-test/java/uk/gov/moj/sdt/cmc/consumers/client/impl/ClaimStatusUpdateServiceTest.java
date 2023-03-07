@@ -36,7 +36,7 @@ public class ClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
     void getClient() {
         ClaimStatusUpdateRequest claimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
         claimStatusUpdateService.claimStatusUpdate(IDAM_ID_HEADER, SDT_REQUEST_ID, claimStatusUpdateRequest);
-        verify(cmcApi).claimStatusUpdate(anyString(), anyString(), any(ClaimStatusUpdateRequest.class));
+        verify(cmcApi).claimStatusUpdate(IDAM_ID_HEADER, SDT_REQUEST_ID, claimStatusUpdateRequest);
     }
 
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ClaimStatusUpdateResponseTest {
 
@@ -15,6 +16,7 @@ public class ClaimStatusUpdateResponseTest {
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         String json = new ObjectMapper().writeValueAsString(response);
         assertNotNull(json);
+        assertTrue(json.contains("PROCESSED"));
     }
 
     @Test

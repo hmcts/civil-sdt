@@ -62,10 +62,6 @@ import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
-import javax.xml.ws.WebServiceException;
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
-
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -77,8 +73,6 @@ import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStat
 @Service("TargetApplicationSubmissionService")
 public class TargetApplicationSubmissionService extends AbstractSdtService implements
         ITargetApplicationSubmissionService {
-
-    private static final String CLAIM_NUMBER = "claimNumber";
 
     /**
      * Logger object.

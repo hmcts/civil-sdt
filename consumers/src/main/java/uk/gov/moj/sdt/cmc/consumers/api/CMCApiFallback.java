@@ -12,10 +12,10 @@ public class CMCApiFallback implements CMCApi {
 
     private IBreathingSpace breathingSpace;
 
-    private IClaimStatusUpdate claimStatusUpdate;
+    private IClaimStatusUpdateService claimStatusUpdate;
 
     public CMCApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpace breathingSpace,
-                          @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate) {
+                          @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
     }

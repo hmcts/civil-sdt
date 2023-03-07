@@ -9,9 +9,11 @@ import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.UpdateType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XmlToObjectTest extends BaseXmlTest {
 
@@ -25,6 +27,10 @@ class XmlToObjectTest extends BaseXmlTest {
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
 
     private static final String CLAIM_STATUS_UPDATE = "ClaimStatusUpdate.xml";
+
+    private static final String EXPECTED_CLAIM_STATUS = "Expected_ClaimStatusRequest.json";
+
+    private static final String EXPECTED_CLAIM_STATUS_REQUEST = "ExpectedCMC_ClaimStatusRequest.json";
 
     private XmlToObjectConverter xmlToObject = new XmlToObjectConverter();
 
@@ -65,6 +71,8 @@ class XmlToObjectTest extends BaseXmlTest {
         String xmlContent = readXmlAsString(CLAIM_STATUS_UPDATE);
         String request = xmlToObject.convertXmlToJson(xmlContent);
         assertNotNull(request);
+        String expectedValue = readFile(EXPECTED_CLAIM_STATUS);
+        assertEquals(expectedValue, request);
     }
 
     @Test
@@ -72,6 +80,11 @@ class XmlToObjectTest extends BaseXmlTest {
         String xmlContent = readXmlAsString(CLAIM_STATUS_UPDATE);
         ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(xmlContent, ClaimStatusUpdateRequest.class);
         assertNotNull(request);
+        assertEquals("1676030589543579", request.getCaseManRef());
+        assertEquals("1", request.getRespondentId());
+        assertEquals(UpdateType.WD, request.getUpdateType());
+        assertNotNull(request.getPaidInFullDate());
+        assertTrue(request.getSection38Compliancy());
     }
 
     @Test
@@ -81,5 +94,7 @@ class XmlToObjectTest extends BaseXmlTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(request);
         assertNotNull(jsonString);
+        String expectedValue = readFile(EXPECTED_CLAIM_STATUS_REQUEST);
+        assertEquals(expectedValue, jsonString);
     }
 }

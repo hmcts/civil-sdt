@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
@@ -26,13 +26,13 @@ public class CMCConsumerGateway implements IConsumerGateway {
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
 
     private IBreathingSpace breathingSpace;
-    private IClaimStatusUpdate claimStatusUpdate;
+    private IClaimStatusUpdateService claimStatusUpdate;
 
     private XmlToObjectConverter xmlToObject;
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
-                              @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdate claimStatusUpdate,
+                              @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
                               XmlToObjectConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;

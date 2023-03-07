@@ -1,7 +1,5 @@
 package uk.gov.moj.sdt.cmc.consumers.client.xml;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
@@ -23,13 +21,18 @@ class XmlReaderTest extends BaseXmlTest {
     }
 
     @Test
-    void shouldConvertBreathingSpaceRequestToString() throws IOException {
+    void shouldConvertBreathingSpaceRequestToString() {
         readXmlFileAndValidateData(BREATHING_SPACE, "claimNumber", "H0PR0001");
     }
 
     @Test
-    void findFromDateFromClaimDefencesXmlString() throws IOException {
+    void findFromDateFromClaimDefencesXmlString() {
         readXmlFileAndValidateData(CLAIM_DEFENCES, "fromDate", "2009-12-01");
+    }
+
+    @Test
+    void shouldConvertClaimStatusUpdateRequestToString() {
+        readXmlFileAndValidateData(CLAIM_STATUS_UPDATE, "claimNumber", "1676030589543579");
     }
 
     private void readXmlFileAndValidateData(String fileName, String xmlNodeName, String expectedValue) {
@@ -38,15 +41,6 @@ class XmlReaderTest extends BaseXmlTest {
         String returnValue = xmlReader.getElementValue(xmlContent, xmlNodeName);
         assertNotNull(returnValue);
         assertEquals(expectedValue, returnValue);
-    }
-
-    @Test
-    void shouldConvertClaimStatusUpdateRequestToString() throws IOException {
-        String xmlContent = readXmlAsString(CLAIM_STATUS_UPDATE);
-        XmlElementValueReader xmlReader = new XmlElementValueReader();
-        String claimNumberValue = xmlReader.getElementValue(xmlContent, "claimNumber");
-        assertNotNull(claimNumberValue);
-        assertEquals("1676030589543579", claimNumberValue);
     }
 
 }

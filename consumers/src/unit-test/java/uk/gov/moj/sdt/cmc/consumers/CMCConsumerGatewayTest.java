@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
@@ -21,6 +21,8 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
 
 /**
  * Test class for the consumer gateway.
@@ -50,11 +52,8 @@ class CMCConsumerGatewayTest {
     private IIndividualRequest individualRequest;
 
     @Mock
-    private IClaimStatusUpdate claimStatusUpdate;
+    private IClaimStatusUpdateService claimStatusUpdate;
 
-    private static final String BREATHING_SPACE = "breathingSpace";
-
-    private static final String CLAIM_STATUS_UPDATE = "claimStatusUpdate";
 
     @BeforeEach
     public void setUpLocalTests() {
@@ -89,19 +88,20 @@ class CMCConsumerGatewayTest {
         verify(claimStatusUpdate).claimStatusUpdate(anyString(), anyString(), any(ClaimStatusUpdateRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getRequestType();
+        verify(individualRequest).getSdtRequestReference();
+        verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
     }
 
-    private void setupMockBehaviour(String requestType) throws Exception {
+    private void setupMockBehaviour(RequestType requestType) throws Exception {
         when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
+        when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getRequestType()).thenReturn(requestType.getType());
         if (requestType.equals(BREATHING_SPACE)) {
             BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
-            when(individualRequest.getRequestPayload()).thenReturn(XML);
-            when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getType());
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
             ClaimStatusUpdateRequest claimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
-            when(individualRequest.getRequestPayload()).thenReturn(XML);
-            when(individualRequest.getRequestType()).thenReturn(RequestType.CLAIM_STATUS_UPDATE.getType());
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
         }
     }

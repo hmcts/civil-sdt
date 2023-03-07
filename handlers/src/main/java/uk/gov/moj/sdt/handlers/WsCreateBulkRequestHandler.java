@@ -56,10 +56,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Map;
-
 /**
  * Handles bulk submission request flow.
  *
