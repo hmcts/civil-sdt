@@ -90,27 +90,15 @@ public class CMCConsumerGateway implements IConsumerGateway {
                      submitQueryRequest.getTargetApplication().getTargetApplicationCode(),
                      submitQueryRequest.getBulkCustomer().getSdtCustomerId());
 
-        // extract fromDate and toDate from submitQueryRequest
-        String[] values = getClaimDefencesFields();
-        String fromDate = values[0];
-        String toDate = values[1];
+        String xmlContent = SdtContext.getContext().getRawOutXml();
+        String fromDate = xmlElementValueReader.getElementValue(xmlContent, "fromDate");
+        String toDate = xmlElementValueReader.getElementValue(xmlContent, "toDate");
+
         ClaimDefencesResponse response =  claimDefences.claimDefences(fromDate, toDate);
 
         List<Object> listObjects = Arrays.asList(response.getResults());
 
         return listObjects;
-    }
-
-    private String[] getClaimDefencesFields() {
-
-        // get dates from request defence criteria.
-        String xmlContent = SdtContext.getContext().getRawOutXml();
-        String[] values = new String[2];
-
-        values[0] = xmlElementValueReader.getElementValue(xmlContent, "fromDate");
-        values[1] = xmlElementValueReader.getElementValue(xmlContent, "toDate");
-
-        return values;
     }
 
 }
