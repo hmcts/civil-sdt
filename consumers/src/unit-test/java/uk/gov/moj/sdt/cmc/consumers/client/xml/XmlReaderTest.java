@@ -1,7 +1,5 @@
 package uk.gov.moj.sdt.cmc.consumers.client.xml;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
@@ -16,18 +14,25 @@ class XmlReaderTest extends BaseXmlTest {
 
     private static final String CLAIM_DEFENCES = "ClaimDefences.xml";
 
+    private static final String CLAIM_STATUS_UPDATE = "ClaimStatusUpdate.xml";
+
     @BeforeEach
     public void setup() {
     }
 
     @Test
-    void shouldConvertBreathingSpaceRequestToString() throws IOException {
+    void shouldConvertBreathingSpaceRequestToString() {
         readXmlFileAndValidateData(BREATHING_SPACE, "claimNumber", "H0PR0001");
     }
 
     @Test
-    void findFromDateFromClaimDefencesXmlString() throws IOException {
+    void findFromDateFromClaimDefencesXmlString() {
         readXmlFileAndValidateData(CLAIM_DEFENCES, "fromDate", "2009-12-01");
+    }
+
+    @Test
+    void shouldConvertClaimStatusUpdateRequestToString() {
+        readXmlFileAndValidateData(CLAIM_STATUS_UPDATE, "claimNumber", "1676030589543579");
     }
 
     private void readXmlFileAndValidateData(String fileName, String xmlNodeName, String expectedValue) {

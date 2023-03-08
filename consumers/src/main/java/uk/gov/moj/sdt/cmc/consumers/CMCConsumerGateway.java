@@ -6,14 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 
 @Component("CMCConsumerGateway")
@@ -22,13 +26,16 @@ public class CMCConsumerGateway implements IConsumerGateway {
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
 
     private IBreathingSpace breathingSpace;
+    private IClaimStatusUpdateService claimStatusUpdate;
 
     private XmlToObjectConverter xmlToObject;
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
+                              @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
                               XmlToObjectConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
+        this.claimStatusUpdate = claimStatusUpdate;
         this.xmlToObject = xmlToObject;
     }
 
@@ -37,11 +44,23 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long connectionTimeOut,
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
+        String requestType = individualRequest.getRequestType();
+        String sdtRequestReference = individualRequest.getSdtRequestReference();
+        String idamId = ""; // Todo get it from SDTContext
         try {
-            BreathingSpaceRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(),
-                                                                           BreathingSpaceRequest.class);
-            BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
-            individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            if(RequestType.BREATHING_SPACE.getType().equals(requestType)) {
+                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(
+                    individualRequest.getRequestPayload(),
+                    BreathingSpaceRequest.class);
+                BreathingSpaceResponse response = breathingSpace.breathingSpace(request);
+                individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {
+                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(
+                    individualRequest.getRequestPayload(),
+                    ClaimStatusUpdateRequest.class);
+                ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
+                individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            }
         } catch (Exception e) {
             throw new CMCException(e.getMessage(), e);
         }
