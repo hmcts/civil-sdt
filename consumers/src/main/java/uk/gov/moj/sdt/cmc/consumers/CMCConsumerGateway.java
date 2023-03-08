@@ -1,5 +1,8 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
-import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdate;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.model.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
@@ -25,9 +26,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component("CMCConsumerGateway")
 public class CMCConsumerGateway implements IConsumerGateway {

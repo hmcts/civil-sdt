@@ -14,12 +14,13 @@ import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
-import uk.gov.moj.sdt.domain.RequestType;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
@@ -83,7 +84,7 @@ class CMCConsumerGatewayTest {
 
         when(breathingSpace.breathingSpace(any())).thenReturn(response);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
-        when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getRequestType());
+        when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getType());
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
