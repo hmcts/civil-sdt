@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers.client.xml;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
@@ -14,6 +15,12 @@ class XmlReaderTest extends BaseXmlTest {
     private static final String CLAIM_DEFENCES = "ClaimDefences.xml";
     private static final String MCOL_DEFENCE_CRITERIA = "ClaimDefences_McolDefenceCriteria.xml";
 
+    private static final String CLAIM_STATUS_UPDATE = "ClaimStatusUpdate.xml";
+
+    @BeforeEach
+    public void setup() {
+    }
+
     @Test
     void shouldConvertBreathingSpaceRequestToString() {
         readXmlFileAndValidateData(BREATHING_SPACE, "claimNumber", "H0PR0001");
@@ -22,6 +29,11 @@ class XmlReaderTest extends BaseXmlTest {
     @Test
     void findFromDateFromClaimDefencesXmlString() {
         readXmlFileAndValidateData(CLAIM_DEFENCES, "fromDate", "2009-12-01");
+    }
+
+    @Test
+    void shouldConvertClaimStatusUpdateRequestToString() {
+        readXmlFileAndValidateData(CLAIM_STATUS_UPDATE, "claimNumber", "1676030589543579");
     }
 
     @Test
