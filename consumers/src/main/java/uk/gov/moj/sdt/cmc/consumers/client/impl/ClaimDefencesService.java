@@ -22,13 +22,10 @@ public class ClaimDefencesService implements IClaimDefencesService {
                                                String toDate) {
 
         SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
-
-
         ClaimDefencesResponse claimDefencesResponse =  cmcApi.claimDefences("", "",
                                     "",
                                     fromDate,
                                     toDate);
-
         submitQueryResponse.setClaimDefencesResultsCount(claimDefencesResponse.getResultCount());
         submitQueryResponse.setClaimDefencesResults(claimDefencesResponse.getResults());
         return submitQueryResponse;
