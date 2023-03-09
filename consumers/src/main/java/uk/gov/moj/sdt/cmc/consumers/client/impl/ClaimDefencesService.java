@@ -3,12 +3,12 @@ package uk.gov.moj.sdt.cmc.consumers.client.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
-import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
+import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 
-
 @Service("ClaimDefencesService")
-public class ClaimDefencesService implements IClaimDefences {
+public class ClaimDefencesService implements IClaimDefencesService {
 
     private final CMCApi cmcApi;
 
@@ -18,11 +18,19 @@ public class ClaimDefencesService implements IClaimDefences {
     }
 
     @Override
-    public ClaimDefencesResponse claimDefences(String fromDate,
+    public SubmitQueryResponse claimDefences(String fromDate,
                                                String toDate) {
-        return cmcApi.claimDefences("", "",
+
+        SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
+
+
+        ClaimDefencesResponse claimDefencesResponse =  cmcApi.claimDefences("", "",
                                     "",
                                     fromDate,
                                     toDate);
+
+        submitQueryResponse.setClaimDefencesResultsCount(claimDefencesResponse.getResultCount());
+        submitQueryResponse.setClaimDefencesResults(claimDefencesResponse.getResults());
+        return submitQueryResponse;
     }
 }

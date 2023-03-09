@@ -30,6 +30,7 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.consumers.api;
 
+import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -53,8 +54,8 @@ public interface ISubmitQueryConsumer {
      * @throws TimeoutException if the target server response cannot be obtained within the
      *                          timeout period.
      */
-    Object processSubmitQuery(final ISubmitQueryRequest submitQueryRequest,
-                              final long connectionTimeOut, final long receiveTimeOut)
+    SubmitQueryResponse processSubmitQuery(final ISubmitQueryRequest submitQueryRequest,
+                                           final long connectionTimeOut, final long receiveTimeOut)
             throws OutageException, TimeoutException;
 
 }

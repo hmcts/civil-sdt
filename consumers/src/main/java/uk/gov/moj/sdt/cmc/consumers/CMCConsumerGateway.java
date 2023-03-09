@@ -1,18 +1,15 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
+import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
@@ -36,7 +33,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private IClaimStatusUpdateService claimStatusUpdate;
 
-    private IClaimDefences claimDefences;
+    private IClaimDefencesService claimDefences;
 
     private XmlToObjectConverter xmlToObject;
 
@@ -45,7 +42,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
-                              @Qualifier("ClaimDefencesService") IClaimDefences claimDefences,
+                              @Qualifier("ClaimDefencesService") IClaimDefencesService claimDefences,
                               XmlToObjectConverter xmlToObject,
                               XmlElementValueReader xmlElementValueReader) {
         this.breathingSpace = breathingSpace;
@@ -83,7 +80,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
     }
 
     @Override
-    public Object submitQuery(ISubmitQueryRequest submitQueryRequest,
+    public SubmitQueryResponse submitQuery(ISubmitQueryRequest submitQueryRequest,
                             long connectionTimeOut,
                             long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Submitting query to target application[{}], for customer[{}]",
@@ -94,11 +91,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String fromDate = xmlElementValueReader.getElementValue(xmlContent, "fromDate");
         String toDate = xmlElementValueReader.getElementValue(xmlContent, "toDate");
 
-        ClaimDefencesResponse response =  claimDefences.claimDefences(fromDate, toDate);
-
-        List<Object> listObjects = Arrays.asList(response.getResults());
-
-        return listObjects;
+        SubmitQueryResponse response =  claimDefences.claimDefences(fromDate, toDate);
+        return response;
     }
 
 }

@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -81,8 +82,8 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
      * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
      * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest) */
     @Override
-    public Object processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
-                                   final long receiveTimeOut) throws OutageException, TimeoutException {
+    public SubmitQueryResponse processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
+                                                  final long receiveTimeOut) throws OutageException, TimeoutException {
         // Transform domain object to web service object
         final SubmitQueryRequestType submitQueryRequestType =
                 this.transformer.transformDomainToJaxb(submitQueryRequest);
@@ -96,7 +97,10 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
         // Should we move this?
         this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
 
-        return responseType;
+        SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
+        submitQueryResponse.setResponseType(responseType);
+
+        return submitQueryResponse;
     }
 
     /**

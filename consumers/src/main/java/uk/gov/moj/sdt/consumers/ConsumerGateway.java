@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.consumers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.api.IIndividualRequestConsumer;
 import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
@@ -75,8 +76,8 @@ public class ConsumerGateway implements IConsumerGateway {
     }
 
     @Override
-    public Object submitQuery(final ISubmitQueryRequest submitQueryRequest,
-                            final long connectionTimeOut, final long receiveTimeOut)
+    public SubmitQueryResponse submitQuery(final ISubmitQueryRequest submitQueryRequest,
+                                           final long connectionTimeOut, final long receiveTimeOut)
             throws OutageException, TimeoutException {
 
         return this.getSubmitQueryConsumer().processSubmitQuery(submitQueryRequest,

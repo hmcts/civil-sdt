@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
-import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefences;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
@@ -20,7 +20,6 @@ import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
@@ -57,14 +56,16 @@ class CMCConsumerGatewayTest {
     private BreathingSpaceRequest breathingSpaceRequest;
 
     @Mock
-    private IClaimDefences claimDefences;
+    ClaimStatusUpdateRequest claimStatusUpdateRequest;
+
+    @Mock
+    private IClaimDefencesService claimDefences;
 
     @Mock
     XmlElementValueReader xmlElementValueReader;
 
     @Mock
     private IClaimStatusUpdateService claimStatusUpdate;
-
 
     @BeforeEach
     public void setUpLocalTests() {
@@ -117,10 +118,8 @@ class CMCConsumerGatewayTest {
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getRequestType()).thenReturn(requestType.getType());
         if (requestType.equals(BREATHING_SPACE)) {
-            BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
-            ClaimStatusUpdateRequest claimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
         }
     }
