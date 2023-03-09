@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.transformers;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
@@ -45,7 +44,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for SubmitQueryConsumerTransformer.
@@ -80,12 +81,12 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
         final StatusType statusType = new StatusType();
         statusType.setCode(StatusCodeType.OK);
         jaxb.setStatus(statusType);
-        jaxb.setResultCount(new BigInteger("0"));
+        jaxb.setResultCount(BigInteger.ZERO);
         final ISubmitQueryRequest domain = new SubmitQueryRequest();
 
         transformer.transformJaxbToDomain(jaxb, domain);
-        Assertions.assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(), "Request Status is incorrect");
-        Assertions.assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(), "Incorrect result count");
+        assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(), "Request Status is incorrect");
+        assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(), "Incorrect result count");
     }
 
     /**
@@ -112,11 +113,11 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
 
         final IErrorLog errorLog = domain.getErrorLog();
 
-        Assertions.assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(),
+        assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(),
                                 "Request Status is incorrect");
-        Assertions.assertEquals("MCOL has found an error in processing the request", errorLog.getErrorText(),
+        assertEquals("MCOL has found an error in processing the request", errorLog.getErrorText(),
                                 "Error description is incorrect");
-        Assertions.assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(),
+        assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(),
                                 "Incorrect result count");
     }
 
@@ -142,7 +143,7 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
 
         final SubmitQueryRequestType jaxb = transformer.transformDomainToJaxb(domain);
 
-        Assertions.assertEquals(customerApplicationId, jaxb.getHeader().getTargetAppCustomerId(), "targetAppCustomerId is incorrect");
-        Assertions.assertNull(jaxb.getTargetAppDetail().getAny(), "Jaxb targetAppDetail should be empty");
+        assertEquals(customerApplicationId, jaxb.getHeader().getTargetAppCustomerId(), "targetAppCustomerId is incorrect");
+        assertNull(jaxb.getTargetAppDetail().getAny(), "Jaxb targetAppDetail should be empty");
         }
 }

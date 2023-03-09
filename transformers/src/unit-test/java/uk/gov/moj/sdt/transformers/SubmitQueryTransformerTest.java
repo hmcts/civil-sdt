@@ -30,7 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.transformers;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.ErrorLog;
@@ -47,6 +46,9 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestTy
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
 import java.lang.reflect.Constructor;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit tests for SubmitQueryTransformer.
@@ -77,7 +79,7 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase {
 
         // Set up the jaxb object to transform
         final SubmitQueryRequestType jaxb = new SubmitQueryRequestType();
-        final long sdtCustomerId = 123;
+        final long sdtCustomerId = 123L;
         final String targetApplicationId = "mcol";
         CriterionType criterionType = new CriterionType();
         criterionType.setCriteriaType("TEST CRITERIA TYPE");
@@ -95,11 +97,11 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase {
         final ISubmitQueryRequest domain = transformer.transformJaxbToDomain(jaxb);
 
         // Test the jaxb object has been transformed domain object
-        Assertions.assertEquals(sdtCustomerId, domain.getBulkCustomer().getSdtCustomerId(),
+        assertEquals(sdtCustomerId, domain.getBulkCustomer().getSdtCustomerId(),
                                 "SDT Customer ID does not match");
-        Assertions.assertEquals(targetApplicationId, domain.getTargetApplication().getTargetApplicationCode(),
+        assertEquals(targetApplicationId, domain.getTargetApplication().getTargetApplicationCode(),
                                 "Target Application ID does not match");
-        Assertions.assertEquals(criterionType.getCriteriaType(), domain.getCriteriaType(),
+        assertEquals(criterionType.getCriteriaType(), domain.getCriteriaType(),
                                 "Criteria Type does not match");
 
     }
@@ -110,7 +112,7 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase {
     @Test
     public void testTransformDomainToJaxb() {
         // Set up the domain object to transform
-        final int sdtCustomerId = 123;
+        final long sdtCustomerId = 123L;
         final int resultCount = 15;
 
         // Create the domain object
@@ -130,10 +132,10 @@ public class SubmitQueryTransformerTest extends AbstractSdtUnitTestBase {
         final SubmitQueryResponseType jaxb = transformer.transformDomainToJaxb(domain);
 
         // Test the domain object has been transformed to a jaxb object
-        Assertions.assertEquals(sdtCustomerId, jaxb.getSdtCustomerId(), "SDT Customer ID does not match");
-        Assertions.assertEquals(resultCount, jaxb.getResultCount().longValue(), "Result count does not match");
-        Assertions.assertEquals(AbstractTransformer.SDT_SERVICE, jaxb.getSdtService(), "SDT Service does not match");
-        Assertions.assertEquals(StatusCodeType.ERROR, jaxb.getStatus().getCode());
-        Assertions.assertNotNull(jaxb.getResults(), "ResultsType should not be null");
+        assertEquals(sdtCustomerId, jaxb.getSdtCustomerId(), "SDT Customer ID does not match");
+        assertEquals(resultCount, jaxb.getResultCount().longValue(), "Result count does not match");
+        assertEquals(AbstractTransformer.SDT_SERVICE, jaxb.getSdtService(), "SDT Service does not match");
+        assertEquals(StatusCodeType.ERROR, jaxb.getStatus().getCode());
+        assertNotNull(jaxb.getResults(), "ResultsType should not be null");
     }
 }

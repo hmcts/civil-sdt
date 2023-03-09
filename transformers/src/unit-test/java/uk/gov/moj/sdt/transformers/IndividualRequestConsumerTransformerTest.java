@@ -34,7 +34,6 @@ import java.lang.reflect.Constructor;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
@@ -56,6 +55,8 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.AWAITING_DATA;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.INITIALLY_ACCEPTED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
@@ -98,10 +99,10 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assertions.assertEquals(IndividualRequestStatus.ACCEPTED.getStatus(), domain.getRequestStatus(),
+        assertEquals(IndividualRequestStatus.ACCEPTED.getStatus(), domain.getRequestStatus(),
                                 "Request Status is incorrect");
-        Assertions.assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
-        Assertions.assertNotNull(domain.getCompletedDate(), "Request completed data should be populated");
+        assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
+        assertNotNull(domain.getCompletedDate(), "Request completed data should be populated");
     }
 
     /**
@@ -120,9 +121,9 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assertions.assertEquals(INITIALLY_ACCEPTED.getStatus(),domain.getRequestStatus(),
+        assertEquals(INITIALLY_ACCEPTED.getStatus(),domain.getRequestStatus(),
                                 "Request Status is incorrect");
-        Assertions.assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
+        assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
     }
 
     /**
@@ -141,9 +142,9 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         transformer.transformJaxbToDomain(jaxb, domain);
 
         // Test the jaxb object has been transformed to a domain object
-        Assertions.assertEquals(AWAITING_DATA.getStatus(), domain.getRequestStatus(),
+        assertEquals(AWAITING_DATA.getStatus(), domain.getRequestStatus(),
                                 "Request Status is incorrect");
-        Assertions.assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
+        assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
     }
 
     /**
@@ -169,12 +170,12 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         final IErrorLog errorLog = domain.getErrorLog();
 
         // Test the jaxb object has been transformed to a domain object
-        Assertions.assertEquals(REJECTED.getStatus(), domain.getRequestStatus().toString(),
+        assertEquals(REJECTED.getStatus(), domain.getRequestStatus().toString(),
                                 "Request Status is incorrect");
-        Assertions.assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
-        Assertions.assertNotNull(domain.getCompletedDate(), "Request completed data should be populated");
-        Assertions.assertEquals("FAILURE", errorLog.getErrorCode(), "Error code is incorrect");
-        Assertions.assertEquals("MCOL has Failed to process the request", errorLog.getErrorText(),
+        assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
+        assertNotNull(domain.getCompletedDate(), "Request completed data should be populated");
+        assertEquals("FAILURE", errorLog.getErrorCode(), "Error code is incorrect");
+        assertEquals("MCOL has Failed to process the request", errorLog.getErrorText(),
                                 "Error description is incorrect");
     }
 
@@ -201,12 +202,12 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         final IErrorLog errorLog = domain.getErrorLog();
 
         // Test the jaxb object has been transformed to a domain object
-        Assertions.assertEquals(REJECTED.getStatus(), domain.getRequestStatus().toString(),
+        assertEquals(REJECTED.getStatus(), domain.getRequestStatus().toString(),
                                 "Request Status is incorrect");
-        Assertions.assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
-        Assertions.assertNotNull(domain.getCompletedDate(), "Request completed data should be populated");
-        Assertions.assertEquals("ERROR", errorLog.getErrorCode(), "Error code is incorrect");
-        Assertions.assertEquals("MCOL has found an error in processing the request",errorLog.getErrorText(),
+        assertNotNull(domain.getUpdatedDate(), "Request updated data should be populated");
+        assertNotNull(domain.getCompletedDate(), "Request completed data should be populated");
+        assertEquals("ERROR", errorLog.getErrorCode(), "Error code is incorrect");
+        assertEquals("MCOL has found an error in processing the request",errorLog.getErrorText(),
                                 "Error description is incorrect");
     }
 
@@ -236,9 +237,9 @@ public class IndividualRequestConsumerTransformerTest extends AbstractSdtUnitTes
         final HeaderType header = jaxb.getHeader();
 
         // Test the domain object has been transformed to a jaxb object
-        Assertions.assertEquals("MCOL_Request_type", header.getRequestType());
-        Assertions.assertEquals("SDT0001234", header.getSdtRequestId());
-        Assertions.assertEquals("appId", header.getTargetAppCustomerId());
+        assertEquals("MCOL_Request_type", header.getRequestType());
+        assertEquals("SDT0001234", header.getSdtRequestId());
+        assertEquals("appId", header.getTargetAppCustomerId());
 
     }
 
