@@ -1,33 +1,3 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -35,26 +5,27 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.dao.BulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
-import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.ServiceRouting;
-import uk.gov.moj.sdt.domain.ServiceType;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.BulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
-import uk.gov.moj.sdt.domain.api.IServiceRouting;
-import uk.gov.moj.sdt.domain.api.IServiceType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -65,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -118,20 +90,16 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
      */
     private int dataRetentionPeriod;
 
+    private static final String DAO_SHOULD_BE_SET_TO_OBJECT = "Dao should be set to object";
+
+    private static final String CACHE_OBJECT_SHOULD_BE_SET = "GlobalParameterCache should be set to object";
+
     /**
      * Setup of the mock dao and injection of other objects.
      */
     @BeforeEach
     @Override
     public void setUp() {
-
-        final IGlobalParameter globalParameterData = new GlobalParameter();
-        globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
-        globalParameterData.setValue("90");
-        when(mockGlobalParameterCache.getValue(IGlobalParameter.class,
-                        IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).thenReturn(globalParameterData);
-
-        bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
 
         dataRetentionPeriod = 90;
 
@@ -145,10 +113,19 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkFeedbackRequest.setId(requestId);
         bulkFeedbackRequest.setSdtBulkReference(reference);
         bulkFeedbackRequest.setBulkCustomer(bulkCustomer);
+
+        bulkFeedbackService = new BulkFeedbackService(mockBulkSubmissionDao, mockGlobalParameterCache);
     }
 
     @Test
     void testGetBulkFeedback() {
+
+        final IGlobalParameter globalParameterData = new GlobalParameter();
+        globalParameterData.setName(IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
+        globalParameterData.setValue("90");
+        when(mockGlobalParameterCache.getValue(IGlobalParameter.class,
+                                               IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name())).thenReturn(globalParameterData);
+
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
         addValidIndividualRequest(bulkSubmission, "ICustReq124", IndividualRequestStatus.RECEIVED.getStatus());
@@ -165,6 +142,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         assertEquals(3, targetApplicationRespMap.size());
 
         verify(mockBulkSubmissionDao).getBulkSubmissionBySdtRef(bulkCustomer, reference, dataRetentionPeriod);
+
     }
 
     /**
@@ -239,13 +217,41 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setRequestStatus(status);
         if (IndividualRequestStatus.REJECTED.getStatus().equals(status)) {
             final IErrorLog errorLog =
-                    new ErrorLog(IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
-                            "Duplicate Unique Request Identifier submitted {0}");
+                    new ErrorLog(
+                        IErrorMessage.ErrorCode.DUP_CUST_REQID.name(),
+                        "Duplicate Unique Request Identifier submitted {0}");
             individualRequest.setErrorLog(errorLog);
         }
         individualRequest.setTargetApplicationResponse("<response></response>");
 
         bulkSubmission.addIndividualRequest(individualRequest);
+    }
+
+    @Test
+    void testSetBulkSubmissionDao() {
+        IBulkSubmissionDao bulkSubmissionDaoMock = mock(BulkSubmissionDao.class);
+        bulkFeedbackService.setBulkSubmissionDao(bulkSubmissionDaoMock);
+
+        IBulkSubmissionDao result = (IBulkSubmissionDao) getAccessibleField(BulkFeedbackService.class,
+                                                                            "bulkSubmissionDao",
+                                                                            IBulkSubmissionDao.class,
+                                                                            bulkFeedbackService);
+
+        assertEquals(bulkSubmissionDaoMock, result, DAO_SHOULD_BE_SET_TO_OBJECT);
+    }
+
+    @Test
+    void testSetGlobalParametersCache() {
+
+        ICacheable globalParameterCacheMock = mock(ICacheable.class);
+        bulkFeedbackService.setGlobalParametersCache(globalParameterCacheMock);
+
+        ICacheable result = (ICacheable) getAccessibleField(BulkFeedbackService.class,
+                                                            "globalParametersCache",
+                                                            ICacheable.class,
+                                                            bulkFeedbackService);
+
+        assertEquals(globalParameterCacheMock, result, CACHE_OBJECT_SHOULD_BE_SET);
     }
 
 }

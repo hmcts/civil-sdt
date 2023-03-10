@@ -1,50 +1,28 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2012-2014 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
-
 package uk.gov.moj.sdt.services.messaging;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 /**
  * Test class for testing the MessageWriter implementation.
@@ -54,8 +32,6 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class MessageWriterTest extends AbstractSdtUnitTestBase {
 
-    private static final String DLQ_QUEUE_NAME = "UnitTestQueue.DLQ";
-
     private static final String UNIT_TEST_QUEUE = "UnitTestQueue";
 
     private static final String UNIT_TEST = "UNITTEST";
@@ -64,6 +40,10 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
      * MessageWriter for mocking.
      */
     private MessageWriter messageWriter;
+
+    private static final String SUCCESS = "Success";
+
+    private static final String NOT_EXPECTED_TO_FAIL = "Not Expected to fail";
 
     /**
      * Set up the variables.
@@ -132,9 +112,9 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             messageWriter.setQueueNameMap(queueNameMap);
 
             messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
-            assertTrue(true, "Success");
+            assertTrue(true, SUCCESS);
         } catch (final IllegalArgumentException e) {
-            fail("Not Expected to fail");
+            fail(NOT_EXPECTED_TO_FAIL);
         }
 
     }
@@ -144,21 +124,50 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testQueueMessageForDeadLetter() {
-        // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage();
-        sdtMessage.setSdtRequestReference("Test");
+            // Setup finished, now tell the mock what to expect.
+            final ISdtMessage sdtMessage = new SdtMessage();
+            sdtMessage.setSdtRequestReference("Test");
 
-        // Send the message.
-        try {
-            final Map<String, String> queueNameMap = new HashMap<>();
-            queueNameMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
+            // Send the message.
+            try {
+                final Map<String, String> queueNameMap = new HashMap<>();
+                queueNameMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
 
-            messageWriter.setQueueNameMap(queueNameMap);
+                messageWriter.setQueueNameMap(queueNameMap);
 
-            messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
-            assertTrue(true, "Success");
-        } catch (final IllegalArgumentException e) {
-            fail("Not Expected to fail");
+                messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
+                assertTrue(true, SUCCESS);
+            } catch (final IllegalArgumentException e) {
+                fail(NOT_EXPECTED_TO_FAIL);
+            }
+    }
+    @Test
+    void testQueueMessageForDeadLetterPerformanceLogging() {
+
+        try (
+            MockedStatic<PerformanceLogger> mockStaticPerformanceLogger
+                = Mockito.mockStatic(PerformanceLogger.class)
+        ) {
+            when(PerformanceLogger.isPerformanceEnabled(anyLong())).thenReturn(true);
+            // Setup finished, now tell the mock what to expect.
+            final ISdtMessage sdtMessage = new SdtMessage();
+            sdtMessage.setSdtRequestReference("Test");
+
+            // Send the message.
+            try {
+                final Map<String, String> queueNameMap = new HashMap<>();
+                queueNameMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
+
+                messageWriter.setQueueNameMap(queueNameMap);
+
+                messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
+                assertTrue(true, SUCCESS);
+            } catch (final IllegalArgumentException e) {
+                fail(NOT_EXPECTED_TO_FAIL);
+            }
+            mockStaticPerformanceLogger.verify(
+                () -> PerformanceLogger.log(any(),eq(PerformanceLogger.LOGGING_POINT_5),
+                                            eq("Enqueue message"), eq("\n\n\tsdt request reference=Test\n")));
         }
     }
 }
