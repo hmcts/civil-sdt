@@ -21,7 +21,7 @@ class MockClaimDefencesServiceTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    void getClient() {
+    void shouldReturnMockClaimDefencesResponse() {
         final String fromDateTime = "";
         final String toDateTime = "";
         SubmitQueryResponse returnValue = mockClaimDefencesService.claimDefences("", "", "", fromDateTime, toDateTime);
