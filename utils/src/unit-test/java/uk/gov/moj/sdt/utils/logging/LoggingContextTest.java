@@ -30,28 +30,24 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.utils.logging;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.logging.api.ILoggingContext;
 
-class LoggingContextTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class LoggingContextTest extends AbstractSdtUnitTestBase {
 
     ILoggingContext loggingContext;
-    @BeforeEach
+
+    @Override
     public void setUpLocalTests() {
-
         loggingContext = new LoggingContext();
-
     }
 
-
     @Test
-    void setMinorLoggingIdTest(){
+    void setMinorLoggingIdTest() {
 
         //given
 
@@ -62,7 +58,7 @@ class LoggingContextTest {
     }
 
     @Test
-    void setMajorLoggingIdTest(){
+    void setMajorLoggingIdTest() {
 
         //given
 
@@ -73,7 +69,7 @@ class LoggingContextTest {
     }
 
     @Test
-    void getLoggingIdTest(){
+    void getLoggingIdTest() {
 
         //given
 
@@ -85,7 +81,7 @@ class LoggingContextTest {
     }
 
     @Test
-    void getLoggingMajorIdOnlyTest(){
+    void getLoggingMajorIdOnlyTest() {
 
         //given
         //when
@@ -96,15 +92,12 @@ class LoggingContextTest {
     }
 
     @Test
-    void getNextLoggingIdTest(){
+    void getNextLoggingIdTest() {
 
-        //given
-
-        //when
-        loggingContext.setMinorLoggingId(1L);
-        loggingContext.setMajorLoggingId(2L);
-
-        //then
-        assertEquals(1L, LoggingContext.getNextLoggingId());
+        // Threads created by mutation tests cause the static logging id to be incremented more than once.  To
+        // prevent "Test will only pass if mutated" error during mutation test just check that logging id is
+        // incremented by getNextLoggingId() rather than the value returned being equal to an expected value.
+        long loggingId = LoggingContext.getNextLoggingId();
+        assertTrue(LoggingContext.getNextLoggingId() > loggingId, "LoggingId should have been incremented");
     }
 }
