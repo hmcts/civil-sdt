@@ -18,14 +18,12 @@ public class ClaimDefencesService implements IClaimDefencesService {
     }
 
     @Override
-    public SubmitQueryResponse claimDefences(String fromDate,
+    public SubmitQueryResponse claimDefences(String authorization, String serviceAuthorization, String idamId, String fromDate,
                                                String toDate) {
 
         SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
-        ClaimDefencesResponse claimDefencesResponse =  cmcApi.claimDefences("", "",
-                                    "",
-                                    fromDate,
-                                    toDate);
+        ClaimDefencesResponse claimDefencesResponse =  cmcApi.claimDefences(authorization, serviceAuthorization, idamId,
+                                    fromDate, toDate);
         submitQueryResponse.setClaimDefencesResultsCount(claimDefencesResponse.getResultCount());
         submitQueryResponse.setClaimDefencesResults(claimDefencesResponse.getResults());
         return submitQueryResponse;

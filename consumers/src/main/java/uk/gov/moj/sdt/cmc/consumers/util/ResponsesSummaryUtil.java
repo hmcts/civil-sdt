@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
+import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
-import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class ResponsesSummaryUtil {
         this. xmlToObjectConverter =  xmlToObjectConverter;
     }
 
-    public String getSummaryResults(Object mcolSubmitResponseTypeObject,
-                                    Object cmcSubmitResponseTypeObject) {
+    public String getSummaryResults(SubmitQueryResponse mcolSubmitQueryResponse,
+                                    List<ClaimDefencesResult> cmcResults) {
         // process mcolResults
         String mcolResultsXml = "";
 
@@ -41,18 +41,17 @@ public class ResponsesSummaryUtil {
                 "               </ns2:defendantResponse>\n" +
                 "            </ns3:mcolDefenceDetail>";
 
-
-        if (null != mcolSubmitResponseTypeObject) {
-            SubmitQueryResponseType mcolSubmitResponseType = (SubmitQueryResponseType) mcolSubmitResponseTypeObject;
-            List<Object> mcolResultObjects = mcolSubmitResponseType.getTargetAppDetail().getAny();
+        if (null != mcolSubmitQueryResponse && null != mcolSubmitQueryResponse.getResponseType()
+        && null != mcolSubmitQueryResponse.getResponseType().getTargetAppDetail()
+        && null != mcolSubmitQueryResponse.getResponseType().getTargetAppDetail().getAny()) {
+            List<Object> mcolResultObjects = mcolSubmitQueryResponse.getResponseType().getTargetAppDetail().getAny();
             mcolResultsXml = getMcolResultsXml(mcolResultObjects);
             LOGGER.debug("mcol Results XML: {}", mcolResultsXml);
         }
 
         String cmcResultsXml = "";
-        if (null != cmcSubmitResponseTypeObject) {
-            List<ClaimDefencesResult> cmcResultObjects = (List) cmcSubmitResponseTypeObject;
-            cmcResultsXml = convertToMcolResultsXml(cmcResultObjects);
+        if (null != cmcResults) {
+            cmcResultsXml = convertToMcolResultsXml(cmcResults);
             LOGGER.debug("cmc Results XML: {}", cmcResultsXml);
         }
 

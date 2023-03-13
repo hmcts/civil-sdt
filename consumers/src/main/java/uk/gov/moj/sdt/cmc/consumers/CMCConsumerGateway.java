@@ -91,7 +91,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String fromDate = xmlElementValueReader.getElementValue(xmlContent, "fromDate");
         String toDate = xmlElementValueReader.getElementValue(xmlContent, "toDate");
 
-        SubmitQueryResponse response =  claimDefences.claimDefences(fromDate, toDate);
+        // TODO: provide 1st 3 params
+        SubmitQueryResponse response =  claimDefences.claimDefences("", "", "",
+                fromDate, toDate);
         return response;
     }
 

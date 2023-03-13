@@ -39,8 +39,8 @@ public interface CMCApi {
 
     @GetMapping("/claimDefences")
     ClaimDefencesResponse claimDefences(
-        @RequestHeader(AUTHORIZATION) String authorisation,
-        @RequestHeader("ServiceAuthorzation") String serviceAuthorization,
+        @RequestHeader(AUTHORIZATION) String authorization,
+        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
         @RequestHeader("idAmId") String idAmId,
         @RequestHeader("fromDateTime") String fromDateTime,
         @RequestHeader("toDate") String toDate
