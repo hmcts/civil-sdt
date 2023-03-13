@@ -5,7 +5,9 @@
   <!--
   <suppress>
     <notes>False Positives
+    CVE-2022-40705 - see https://github.com/jeremylong/DependencyCheck/issues/5543
     </notes>
+    <cve>CVE-2022-40705</cve>
   </suppress>
   -->
   <!--End of false positives section -->
