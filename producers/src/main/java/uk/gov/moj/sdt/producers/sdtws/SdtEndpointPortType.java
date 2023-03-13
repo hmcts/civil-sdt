@@ -115,9 +115,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         BulkResponseType response = null;
         try {
             response = wsCreateBulkRequestHandler.submitBulk(bulkRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
@@ -160,9 +158,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         BulkFeedbackResponseType response = null;
         try {
             response = wsReadBulkRequestHandler.getBulkFeedback(bulkFeedbackRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
@@ -241,7 +237,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      */
     private void handleException(final Throwable throwable) {
         LOGGER.error("Unexpected error - ", throwable);
-
         throw new RuntimeException(
                 "A SDT system component error has occurred. Please contact the SDT support team for assistance");
     }
@@ -266,10 +261,5 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
     public void setWsReadSubmitQueryHandler(final IWsReadSubmitQueryHandler wsReadSubmitQueryHandler) {
         this.wsReadSubmitQueryHandler = wsReadSubmitQueryHandler;
     }
-
-    public String createClaimsDefenceJSON() {
-        return "{}";
-    }
-
 
 }

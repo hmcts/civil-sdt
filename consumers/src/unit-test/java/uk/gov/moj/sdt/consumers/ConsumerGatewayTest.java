@@ -92,7 +92,6 @@ class ConsumerGatewayTest extends ConsumerTestBase {
         consumerGateway.setSubmitQueryConsumer(submitQueryConsumer);
     }
 
-
     @Test
     void shouldProcessAndGetNotNullIndividualRequest() {
         consumerGateway.individualRequest(createIndividualRequest(),
