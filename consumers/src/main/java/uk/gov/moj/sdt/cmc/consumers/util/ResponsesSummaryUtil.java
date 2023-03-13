@@ -29,18 +29,6 @@ public class ResponsesSummaryUtil {
         // process mcolResults
         String mcolResultsXml = "";
 
-        // TODO: REMOVE - this is for local testing!
-        mcolResultsXml = "<ns3:mcolDefenceDetail xmlns=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryRequestSchema\" xmlns:ns3=\"http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema\">\n" +
-                "               <ns2:claimNumber xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">J0CS0001</ns2:claimNumber>\n" +
-                "               <ns2:defendantResponse defendantId=\"1\" xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">\n" +
-                "                  <ns2:filedDate>2023-02-28</ns2:filedDate>\n" +
-                "                  <ns2:eventCreatedDateOnMcol>2023-02-28T12:19:39Z</ns2:eventCreatedDateOnMcol>\n" +
-                "                  <ns2:raisedOnMcol>true</ns2:raisedOnMcol>\n" +
-                "                  <ns2:responseType>DE</ns2:responseType>\n" +
-                "                  <ns2:defence>I am completely innocent</ns2:defence>\n" +
-                "               </ns2:defendantResponse>\n" +
-                "            </ns3:mcolDefenceDetail>";
-
         if (null != mcolSubmitQueryResponse && null != mcolSubmitQueryResponse.getResponseType()
         && null != mcolSubmitQueryResponse.getResponseType().getTargetAppDetail()
         && null != mcolSubmitQueryResponse.getResponseType().getTargetAppDetail().getAny()) {
