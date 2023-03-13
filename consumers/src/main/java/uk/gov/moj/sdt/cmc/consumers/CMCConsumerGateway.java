@@ -75,9 +75,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {
-                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(
-                    individualRequest.getRequestPayload(),
-                    ClaimStatusUpdateRequest.class);
+                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload,
+                                                                                  ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }

@@ -12,8 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
-import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
+import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
@@ -61,9 +61,6 @@ class CMCConsumerGatewayTest {
     private IJudgementService judgementService;
 
     @Mock
-    private IIndividualRequest individualRequest;
-
-    @Mock
     private IClaimStatusUpdateService claimStatusUpdate;
 
 
@@ -77,13 +74,12 @@ class CMCConsumerGatewayTest {
 
     @Test
     void shouldInvokeBreathingSpace() throws Exception {
-
-        setupMockBehaviour(BREATHING_SPACE);
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(BREATHING_SPACE, individualRequest);
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(breathingSpace.breathingSpace(anyString(), anyString(), any())).thenReturn(response);
 
-        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
@@ -102,7 +98,8 @@ class CMCConsumerGatewayTest {
 
     @Test
     void shouldInvokeClaimStatusUpdate() throws Exception {
-        setupMockBehaviour(CLAIM_STATUS_UPDATE);
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(CLAIM_STATUS_UPDATE, individualRequest);
         ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(claimStatusUpdate.claimStatusUpdate(anyString(), anyString(), any())).thenReturn(response);
@@ -150,7 +147,7 @@ class CMCConsumerGatewayTest {
         return formatter.parse(date);
     }
 
-    private void setupMockBehaviour(RequestType requestType) throws Exception {
+    private void setupMockBehaviour(RequestType requestType, IIndividualRequest individualRequest) throws Exception {
         when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getRequestType()).thenReturn(requestType.getType());
@@ -162,6 +159,5 @@ class CMCConsumerGatewayTest {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
         }
     }
-
 
 }
