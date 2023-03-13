@@ -1,6 +1,10 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
@@ -41,7 +45,7 @@ class CMCConsumerGatewayTest {
     private CMCConsumerGateway cmcConsumerGateway;
 
     @Mock
-    private XmlToObjectConverter xmlToObject;
+    private XmlConverter xmlToObject;
 
     @Mock
     private IBreathingSpaceService breathingSpace;
@@ -80,8 +84,9 @@ class CMCConsumerGatewayTest {
     @Test
     void shouldInvokeJudgementRequest() throws Exception {
         JudgementResponse response = new JudgementResponse();
-        response.setJudgmentEnteredDate(Calendar.getInstance().getTime());
-        response.setFirstPaymentDate(Calendar.getInstance().getTime());
+        Date date = formattedDate();
+        response.setJudgmentEnteredDate(date);
+        response.setFirstPaymentDate(date);
         when(judgementService.requestJudgment(anyString(), any(), any())).thenReturn(response);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
@@ -89,15 +94,24 @@ class CMCConsumerGatewayTest {
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
+        when(xmlToObject.convertObjectToXml(response)).thenReturn("XML");
         when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
         verify(judgementService).requestJudgment(anyString(), any(), any(JudgementRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(xmlToObject).convertObjectToXml(any(JudgementResponse.class));
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).getSdtRequestReference();
         verify(individualRequest).getRequestType();
+        verify(individualRequest).setTargetApplicationResponse(anyString());
+    }
+
+    private Date formattedDate() throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        String date = formatter.format(Calendar.getInstance().getTime());
+        return formatter.parse(date);
     }
 
 }

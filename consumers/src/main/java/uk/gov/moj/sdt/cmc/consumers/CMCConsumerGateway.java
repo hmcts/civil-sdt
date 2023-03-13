@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
@@ -32,12 +32,12 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private IJudgementService judgementService;
 
-    private XmlToObjectConverter xmlToObject;
+    private XmlConverter xmlToObject;
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
                               @Qualifier("JudgementRequestService") IJudgementService judgementService,
-                              XmlToObjectConverter xmlToObject) {
+                              XmlConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.judgementService = judgementService;
         this.xmlToObject = xmlToObject;
@@ -60,6 +60,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 JudgementResponse judgementResponse = judgementService.requestJudgment(idamId,
                                                                                        sdtRequestReference,
                                                                                        judgementRequest);
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse));
             } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload,
                                                                                BreathingSpaceRequest.class);

@@ -1,15 +1,21 @@
 package uk.gov.moj.sdt.cmc.consumers.client.converter;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgmentType;
+import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -32,7 +38,9 @@ class XmlToObjectTest extends BaseXmlTest {
 
     private static final String JUDGEMENT_JSON = "Expected_Judgement.json";
 
-    private XmlToObjectConverter xmlToObject = new XmlToObjectConverter();
+    private static final String EXPECTED_JUDGEMENT_RESPONSE = "Expected_JudgementResponse.xml";
+
+    private XmlConverter xmlToObject = new XmlConverter();
 
     @BeforeEach
     public void setup() {
@@ -133,5 +141,23 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("123456789", request.getPayee().getGiroTransCode1());
         assertEquals("12", request.getPayee().getGiroTransCode2());
         assertEquals("sotSignature", request.getSotName());
+    }
+
+    @Test
+    void shouldConvertJudgementResponseToXml() throws Exception {
+        JudgementResponse response = new JudgementResponse();
+        Date date = formattedDate();
+        response.setFirstPaymentDate(date);
+        response.setJudgmentEnteredDate(date);
+        String xmlContent = xmlToObject.convertObjectToXml(response);
+        assertNotNull(xmlContent);
+        String expectedContent = readFile(EXPECTED_JUDGEMENT_RESPONSE);
+        assertEquals(expectedContent, xmlContent);
+    }
+
+    private Date formattedDate() throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        String date = formatter.format(Calendar.getInstance().getTime());
+        return formatter.parse(date);
     }
 }
