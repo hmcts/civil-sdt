@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -30,6 +33,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private IBreathingSpaceService breathingSpace;
 
+    private IClaimStatusUpdateService claimStatusUpdate;
+
     private IJudgementService judgementService;
 
     private XmlConverter xmlToObject;
@@ -37,9 +42,11 @@ public class CMCConsumerGateway implements IConsumerGateway {
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
                               @Qualifier("JudgementRequestService") IJudgementService judgementService,
+                              @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
                               XmlConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.judgementService = judgementService;
+        this.claimStatusUpdate = claimStatusUpdate;
         this.xmlToObject = xmlToObject;
     }
 
@@ -66,6 +73,12 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                                BreathingSpaceRequest.class);
 
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestReference, request);
+                individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {
+                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(
+                    individualRequest.getRequestPayload(),
+                    ClaimStatusUpdateRequest.class);
+                ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }
         } catch (Exception e) {

@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.UpdateType;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgmentType;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
@@ -33,6 +35,12 @@ class XmlToObjectTest extends BaseXmlTest {
         + "\"breathingSpaceNotificationType\":\"BC\"}";
 
     private static final String BREATHING_SPACE = "BreathingSpace.xml";
+
+    private static final String CLAIM_STATUS_UPDATE = "ClaimStatusUpdate.xml";
+
+    private static final String EXPECTED_CLAIM_STATUS = "Expected_ClaimStatusRequest.json";
+
+    private static final String EXPECTED_CLAIM_STATUS_REQUEST = "ExpectedCMC_ClaimStatusRequest.json";
 
     private static final String JUDGEMENT = "Judgement.xml";
 
@@ -159,5 +167,37 @@ class XmlToObjectTest extends BaseXmlTest {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         String date = formatter.format(Calendar.getInstance().getTime());
         return formatter.parse(date);
+    }
+
+    @Test
+    void shouldConvertClaimStatusUpdateRequestToString() throws IOException {
+        String xmlContent = readXmlAsString(CLAIM_STATUS_UPDATE);
+        String request = xmlToObject.convertXmlToJson(xmlContent);
+        assertNotNull(request);
+        String expectedValue = readFile(EXPECTED_CLAIM_STATUS);
+        assertEquals(expectedValue, request);
+    }
+
+    @Test
+    void shouldConvertClaimStatusUpdateRequest() throws IOException {
+        String xmlContent = readXmlAsString(CLAIM_STATUS_UPDATE);
+        ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(xmlContent, ClaimStatusUpdateRequest.class);
+        assertNotNull(request);
+        assertEquals("1676030589543579", request.getCaseManRef());
+        assertEquals("1", request.getRespondentId());
+        assertEquals(UpdateType.WD, request.getUpdateType());
+        assertNotNull(request.getPaidInFullDate());
+        assertTrue(request.getSection38Compliancy());
+    }
+
+    @Test
+    void shouldConvertClaimStatusUpdateRequestAndConvertToJson() throws IOException {
+        String xmlContent = readXmlAsString(CLAIM_STATUS_UPDATE);
+        ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(xmlContent, ClaimStatusUpdateRequest.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(request);
+        assertNotNull(jsonString);
+        String expectedValue = readFile(EXPECTED_CLAIM_STATUS_REQUEST);
+        assertEquals(expectedValue, jsonString);
     }
 }
