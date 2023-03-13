@@ -22,6 +22,7 @@
       CVE-2022-46364
       CVE-2022-45688
       CVE-2023-24998
+      CVE-2022-40705
     </notes>
     <cve>CVE-2016-3094</cve>
     <cve>CVE-2018-10237</cve>
@@ -32,6 +33,7 @@
     <cve>CVE-2022-46364</cve>
     <cve>CVE-2022-45688</cve>
     <cve>CVE-2023-24998</cve>
+    <cve>CVE-2022-40705</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
