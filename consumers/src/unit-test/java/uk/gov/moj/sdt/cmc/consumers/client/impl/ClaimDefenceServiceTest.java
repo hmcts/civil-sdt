@@ -36,7 +36,7 @@ public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    void getClient() {
+    void shouldReturnClaimDefencesResponse() {
         final ClaimDefencesResponse CLAIM_DEFENCES_RESPONSE = createClaimDefencesResponse();
         final SubmitQueryResponse SUBMIT_QUERY_RESPONSE = createSubmitQueryResponse(CLAIM_DEFENCES_RESPONSE);
         when(cmcApi.claimDefences(anyString(), anyString(), anyString(), anyString(), anyString()))
