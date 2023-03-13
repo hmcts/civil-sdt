@@ -62,7 +62,7 @@ class CMCConsumerGatewayTest {
     private IClaimDefencesService claimDefences;
 
     @Mock
-    XmlElementValueReader xmlElementValueReader;
+    private XmlElementValueReader xmlElementValueReader;
 
     @Mock
     private IClaimStatusUpdateService claimStatusUpdate;
