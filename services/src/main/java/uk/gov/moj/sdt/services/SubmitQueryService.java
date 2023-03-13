@@ -110,6 +110,11 @@ public class SubmitQueryService implements ISubmitQueryService {
 
     private ResponsesSummaryUtil responsesSummaryUtil;
 
+    /**
+     * Place holder object to sync processing.
+     */
+    private Object lock = new Object();
+
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
@@ -137,11 +142,6 @@ public class SubmitQueryService implements ISubmitQueryService {
     }
 
     /**
-     * Place holder object to sync processing.
-     */
-    private Object lock = new Object();
-
-    /**
      * threshold for incoming requests for each target application.
      */
     private Map<String, Integer> concurrentRequestsInProgress = new HashMap<>();
@@ -161,7 +161,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         try {
             this.sendRequestToTargetApp(submitQueryRequest);
 
-            this.updateCompletedRequest(submitQueryRequest);
+            this.updateCompletedRequest();
         } catch (final TimeoutException e) {
             LOGGER.error("Timeout exception for SDT Bulk Customer [" +
                     submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "] ", e.getMessage());
@@ -280,10 +280,8 @@ public class SubmitQueryService implements ISubmitQueryService {
 
     /**
      * Update request when it is processed successfully.
-     *
-     * @param submitQueryRequest submit query request.
      */
-    private void updateCompletedRequest(final ISubmitQueryRequest submitQueryRequest) {
+    private void updateCompletedRequest() {
         final String targetAppResponse = queryResponseXmlParser.parse();
 
         // Setup raw XML from target application for addition to raw out stream
@@ -433,13 +431,15 @@ public class SubmitQueryService implements ISubmitQueryService {
 
         LOGGER.debug("Send submit query request to target application");
 
-        // TODO: deal with mcol request
-        // SubmitQueryResponse mcolSubmitQueryResponse = requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
-        SubmitQueryResponse mcolSubmitQueryResponse = new SubmitQueryResponse();
+        SubmitQueryResponse mcolSubmitQueryResponse = requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
         SubmitQueryResponse cmcSubmitQueryResponse = cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
-        // set results count
-        submitQueryRequest.setResultCount(submitQueryRequest.getResultCount() + cmcSubmitQueryResponse.getClaimDefencesResults().size());
+        // adjust results count
+        if (null != cmcSubmitQueryResponse.getClaimDefencesResults()
+                && !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
+            submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
+                    + cmcSubmitQueryResponse.getClaimDefencesResults().size());
+        }
 
         String summaryResultsXML = responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
                 cmcSubmitQueryResponse.getClaimDefencesResults());
@@ -447,7 +447,6 @@ public class SubmitQueryService implements ISubmitQueryService {
         // Set summary results XML to be picked up later
         SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
     }
-
 
     /**
      * @return cacheable interface for the error messages cache.
