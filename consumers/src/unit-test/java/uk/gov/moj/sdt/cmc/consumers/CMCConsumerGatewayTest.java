@@ -127,7 +127,7 @@ class CMCConsumerGatewayTest {
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
-        when(xmlToObject.convertObjectToXml(response)).thenReturn("XML");
+        when(xmlToObject.convertObjectToXml(response)).thenReturn(XML);
         when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
@@ -138,7 +138,7 @@ class CMCConsumerGatewayTest {
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).getSdtRequestReference();
         verify(individualRequest).getRequestType();
-        verify(individualRequest).setTargetApplicationResponse(anyString());
+        verify(individualRequest).setTargetApplicationResponse(XML);
     }
 
     private Date formattedDate() throws ParseException {
