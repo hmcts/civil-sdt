@@ -105,6 +105,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Method to do any pre-test set-up.
      */
+    @Override
     @Before
     public void setUp() {
 
@@ -169,6 +170,9 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         this.mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
         EasyMock.expectLastCall().andThrow(timeoutEx);
 
+        this.mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
+        EasyMock.expectLastCall().andThrow(timeoutEx);
+
         final IErrorMessage errorMsg = new ErrorMessage();
         errorMsg.setErrorCode("TAR_APP_ERROR");
         errorMsg.setErrorDescription("Request timed out");
@@ -178,6 +182,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                 errorMsg);
 
         EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockCmcConsumerGateway);
         EasyMock.replay(mockGlobalParamCache);
         EasyMock.replay(mockErrorMsgCacheable);
         EasyMock.replay(mockBulkCustomerDao);
@@ -186,6 +191,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         this.submitQueryService.submitQuery(submitQueryRequest);
 
         EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockCmcConsumerGateway);
         EasyMock.verify(mockGlobalParamCache);
         EasyMock.verify(mockErrorMsgCacheable);
         EasyMock.verify(mockBulkCustomerDao);
@@ -232,6 +238,9 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         this.mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
         EasyMock.expectLastCall().andThrow(outageEx);
 
+        this.mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
+        EasyMock.expectLastCall().andThrow(outageEx);
+
         final IErrorMessage errorMsg = new ErrorMessage();
         errorMsg.setErrorCode("TAR_APP_ERROR");
         errorMsg.setErrorDescription("Server unavailable.");
@@ -241,6 +250,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                 errorMsg);
 
         EasyMock.replay(mockConsumerGateway);
+        EasyMock.replay(mockCmcConsumerGateway);
         EasyMock.replay(mockGlobalParamCache);
         EasyMock.replay(mockErrorMsgCacheable);
         EasyMock.replay(mockBulkCustomerDao);
@@ -249,6 +259,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         this.submitQueryService.submitQuery(submitQueryRequest);
 
         EasyMock.verify(mockConsumerGateway);
+        EasyMock.verify(mockCmcConsumerGateway);
         EasyMock.verify(mockGlobalParamCache);
         EasyMock.verify(mockErrorMsgCacheable);
         EasyMock.verify(mockBulkCustomerDao);
@@ -496,7 +507,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         targetApp.setId(1L);
         targetApp.setTargetApplicationCode("MCOL");
         targetApp.setTargetApplicationName("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
         final ServiceRouting serviceRouting = new ServiceRouting();
         serviceRouting.setId(1L);
@@ -512,7 +523,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         serviceRoutings.add(serviceRouting);
         targetApp.setServiceRoutings(serviceRoutings);
 
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication>();
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
         final BulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication();
         bulkCustomerApplication.setBulkCustomer(bulkCustomer);
         bulkCustomerApplication.setTargetApplication(targetApp);
