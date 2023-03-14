@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimRequestService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -26,16 +29,21 @@ public class CMCConsumerGateway implements IConsumerGateway {
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
 
     private IBreathingSpace breathingSpace;
+
     private IClaimStatusUpdateService claimStatusUpdate;
+
+    private IClaimRequestService claimRequestService;
 
     private XmlToObjectConverter xmlToObject;
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpace breathingSpace,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
+                              @Qualifier("ClaimRequestService") IClaimRequestService claimRequestService,
                               XmlToObjectConverter xmlToObject) {
         this.breathingSpace = breathingSpace;
         this.claimStatusUpdate = claimStatusUpdate;
+        this.claimRequestService = claimRequestService;
         this.xmlToObject = xmlToObject;
     }
 
@@ -59,6 +67,10 @@ public class CMCConsumerGateway implements IConsumerGateway {
                     individualRequest.getRequestPayload(),
                     ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
+                individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            } else if (RequestType.CLAIM.getType().equals(requestType)) {
+                ClaimRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), ClaimRequest.class);
+                ClaimResponse response = claimRequestService.claimRequest(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }
         } catch (Exception e) {

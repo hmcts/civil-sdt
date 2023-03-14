@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimRequestService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
@@ -54,11 +55,15 @@ class CMCConsumerGatewayTest {
     @Mock
     private IClaimStatusUpdateService claimStatusUpdate;
 
+    @Mock
+    private IClaimRequestService claimRequestService;
+
 
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
                                                     claimStatusUpdate,
+                                                    claimRequestService,
                                                     xmlToObject);
     }
 

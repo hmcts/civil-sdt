@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CMCConfig;
-import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
-import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 
 
 @FeignClient(name = "civil-api",
@@ -32,4 +34,12 @@ public interface CMCApi {
         @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
         @RequestBody ClaimStatusUpdateRequest claimStatusUpdateRequest
     );
+
+    @PostMapping("/createSDTClaim ")
+    ClaimResponse createSDTClaim(
+        @RequestHeader(IDAM_ID_HEADER)  String idamId,
+        @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
+        @RequestBody ClaimRequest claimRequest
+    );
+
 }
