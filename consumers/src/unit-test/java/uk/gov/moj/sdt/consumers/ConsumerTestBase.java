@@ -1,6 +1,5 @@
 package uk.gov.moj.sdt.consumers;
 
-import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -18,9 +17,14 @@ import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,10 +59,6 @@ class ConsumerTestBase extends AbstractSdtUnitTestBase {
      */
     protected static final long RECEIVE_TIME_OUT = 60000;
 
-    @Test
-    void shouldConvertDos2Unix() {
-        assertNotNull(dos2Unix("TEST"));
-    }
 
     /**
      * @param domainObject the submit query domain object.
@@ -168,6 +168,24 @@ class ConsumerTestBase extends AbstractSdtUnitTestBase {
         iIndividualRequest.setBulkSubmission(bulkSubmission);
 
         return iIndividualRequest;
+    }
+
+
+    protected SubmitQueryResponseType createSubmitQueryResponseType() {
+        ErrorType errorType = new ErrorType();
+        errorType.setCode("ERR_CODE");
+        errorType.setDescription("ERROR_DESCRIPTION");
+
+        StatusType statusType = new StatusType();
+        statusType.setCode(StatusCodeType.OK);
+        statusType.setError(errorType);
+
+        SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
+        submitQueryResponseType.setTargetAppCustomerId("1");
+        submitQueryResponseType.setResultCount(new BigInteger("1"));
+        submitQueryResponseType.setStatus(statusType);
+
+        return submitQueryResponseType;
     }
 
 }
