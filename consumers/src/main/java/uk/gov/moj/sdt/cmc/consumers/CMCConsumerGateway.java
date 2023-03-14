@@ -10,8 +10,8 @@ import uk.gov.moj.sdt.cmc.consumers.api.IClaimRequestService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
-import uk.gov.moj.sdt.cmc.consumers.request.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.claim.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
@@ -71,7 +71,6 @@ public class CMCConsumerGateway implements IConsumerGateway {
             } else if (RequestType.CLAIM.getType().equals(requestType)) {
                 ClaimRequest request = xmlToObject.convertXmlToObject(individualRequest.getRequestPayload(), ClaimRequest.class);
                 ClaimResponse response = claimRequestService.claimRequest(idamId, sdtRequestReference, request);
-                individualRequest.setRequestStatus(response.getProcessingStatus().name());
             }
         } catch (Exception e) {
             throw new CMCException(e.getMessage(), e);

@@ -191,12 +191,13 @@ public abstract class AbstractSdtService {
     }
 
     protected boolean isCMCRequestType(IIndividualRequest individualRequest, boolean throwException) {
-        return requestTypeXmlNodeValidator.isCMCRequestType(
-            individualRequest.getRequestType(),
-            individualRequest.getRequestPayload(),
-            CLAIM_NUMBER,
-            throwException
-        );
+        String requestType = individualRequest.getRequestType();
+        Boolean readyForAlternateSubmission = individualRequest.getBulkSubmission().getBulkCustomer().getReadyForAlternateService();
+        return requestTypeXmlNodeValidator.isCMCClaimRequest(requestType, readyForAlternateSubmission)
+            || requestTypeXmlNodeValidator.isCMCRequestType(requestType,
+                                                            individualRequest.getRequestPayload(),
+                                                            CLAIM_NUMBER,
+                                                            throwException);
     }
 
 
