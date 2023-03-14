@@ -94,16 +94,18 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
     @Test
     @DisplayName("Test Bulk Customer")
     void testIBulkCustomer(){
+        final String hashcode = Integer.toHexString(bulkCustomer.hashCode());
         assertNotNull(bulkCustomer,"BulkCustomer Object should be populated");
-        assertNotNull(bulkCustomer.getId(), "Id should be populated");
-        assertNotNull(bulkCustomer.toString(),"Object toString should be populated");
+        assertEquals(1L, bulkCustomer.getId(), "Id should be populated");
+        assertTrue(bulkCustomer.toString().contains(hashcode),"Object toString should be populated");
     }
 
     @Test
     @DisplayName("Test Get Bulk Customer Applications")
     void testBulkCustomerApplications(){
         assertNotNull(bulkCustomer.getBulkCustomerApplications(),"Bulk Customer Applications should be populated");
-        assertNull(bulkCustomer.getBulkCustomerApplication("Test"));
+        assertEquals(1, bulkCustomer.getBulkCustomerApplications().size(),
+                     "Bulk Customer Applications should be populated");
     }
 
     @Test

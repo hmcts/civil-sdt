@@ -2,14 +2,25 @@ package uk.gov.moj.sdt.domain.visitor;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import uk.gov.moj.sdt.domain.api.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.visitor.Tree;
 
 import static org.junit.Assert.assertThrows;
 
-class AbstractDomainObjectVisitorTest {
+@ExtendWith(MockitoExtension.class)
+class AbstractDomainObjectVisitorTest extends AbstractSdtUnitTestBase {
 
     public AbstractDomainObjectVisitor abstractDomainObjectVisitor;
 
@@ -20,6 +31,7 @@ class AbstractDomainObjectVisitorTest {
     Tree mockTree;
 
     @BeforeEach
+    @Override
     public void setUp() {
         abstractDomainObjectVisitor = new AbstractDomainObjectVisitor() {};
     }
