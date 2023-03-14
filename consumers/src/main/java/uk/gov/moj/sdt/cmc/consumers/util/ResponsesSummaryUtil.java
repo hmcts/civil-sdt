@@ -79,22 +79,26 @@ public class ResponsesSummaryUtil {
     public List<McolDefenceDetailType> convertToMcolResults(List<ClaimDefencesResult> cmcResults) {
         List<McolDefenceDetailType> detailTypes = new ArrayList<>();
         cmcResults.forEach(cmcResult -> {
-            McolDefenceDetailType detailType = new McolDefenceDetailType();
-            DefendantResponseType defendantResponseType = new DefendantResponseType();
-            defendantResponseType.setDefendantId(cmcResult.getRespondentId());
-            defendantResponseType.setResponseType(ResponseType.fromValue(cmcResult.getResponseType()));
-            defendantResponseType.setDefence(cmcResult.getDefence());
-            defendantResponseType.setRaisedOnMcol(false);
-            defendantResponseType.setFiledDate(convertLocalDateToCalendar(cmcResult.getDefendantResponseFiledDate()));
-            defendantResponseType.setEventCreatedDateOnMcol(
-                    convertLocalDateTimeToCalendar(cmcResult.getDefendantResponseCreatedDate()));
-
-            detailType.setClaimNumber(cmcResult.getCaseManRef());
-            detailType.setDefendantResponse(defendantResponseType);
-
+            McolDefenceDetailType detailType = convertToMcolResult(cmcResult);
             detailTypes.add(detailType);
         });
         return detailTypes;
+    }
+
+    public McolDefenceDetailType convertToMcolResult(ClaimDefencesResult cmcResult) {
+        McolDefenceDetailType detailType = new McolDefenceDetailType();
+        DefendantResponseType defendantResponseType = new DefendantResponseType();
+        defendantResponseType.setDefendantId(cmcResult.getRespondentId());
+        defendantResponseType.setResponseType(ResponseType.fromValue(cmcResult.getResponseType()));
+        defendantResponseType.setDefence(cmcResult.getDefence());
+        defendantResponseType.setRaisedOnMcol(false);
+        defendantResponseType.setFiledDate(convertLocalDateToCalendar(cmcResult.getDefendantResponseFiledDate()));
+        defendantResponseType.setEventCreatedDateOnMcol(
+                convertLocalDateTimeToCalendar(cmcResult.getDefendantResponseCreatedDate()));
+
+        detailType.setClaimNumber(cmcResult.getCaseManRef());
+        detailType.setDefendantResponse(defendantResponseType);
+        return detailType;
     }
 
     public Calendar convertLocalDateTimeToCalendar(LocalDateTime localDateTime) {

@@ -55,7 +55,15 @@ public class ClaimDefencesResultsUtil {
         return results;
     }
 
-    private ClaimDefencesResult createClaimDefencesResult(String caseManRef, String respondentId,
+    public ClaimDefencesResult createClaimDefencesResult() {
+        return createClaimDefencesResult("case11", "resp11",
+                LocalDate.of(2021,10,20),
+                LocalDateTime.of(2021,10,21,11,20,11),
+                ResponseType.DE.name(),
+                "defence11");
+    }
+
+    public ClaimDefencesResult createClaimDefencesResult(String caseManRef, String respondentId,
                                                           LocalDate defendantResponseFiledDate,
                                                           LocalDateTime defendantResponseCreatedDate, String responseType,
                                                           String defence) {
