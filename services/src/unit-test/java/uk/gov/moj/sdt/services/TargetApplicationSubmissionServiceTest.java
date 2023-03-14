@@ -1083,5 +1083,4 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         return errorMsg;
     }
 
-
 }
