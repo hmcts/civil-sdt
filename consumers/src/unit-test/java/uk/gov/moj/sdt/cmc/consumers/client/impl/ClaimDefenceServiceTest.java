@@ -9,11 +9,9 @@ import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
 import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
+import uk.gov.moj.sdt.consumers.util.ClaimDefencesResultsUtil;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,35 +58,13 @@ public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
     private ClaimDefencesResponse createClaimDefencesResponse() {
         ClaimDefencesResponse claimDefencesResponse = new ClaimDefencesResponse();
 
-        List<ClaimDefencesResult> results = new ArrayList<>();
-        results.add(createClaimDefencesResult("case1", "resp1",
-                LocalDate.of(2020,11,12),
-                LocalDateTime.of(2020,11,13,11,20,11),
-                "type1", "defence1"));
-        results.add(createClaimDefencesResult("case2", "resp2",
-                LocalDate.of(2020,11,13),
-                LocalDateTime.of(2020,11,14,11,20,11),
-                 "type2", "defence2"));
-        results.add(createClaimDefencesResult("case3", "resp3",
-                LocalDate.of(2020,11,14),
-                LocalDateTime.of(2020,11,13,11,20,11),
-                "type3", "defence3"));
-        results.add(createClaimDefencesResult("case4", "resp4",
-                LocalDate.of(2020,11,15),
-                LocalDateTime.of(2020,11,16,11,20,11),
-                "type", "defence4"));
+        ClaimDefencesResultsUtil resultsUtil = new ClaimDefencesResultsUtil();
+        List<ClaimDefencesResult> results = resultsUtil.createClaimDefencesList();
 
         claimDefencesResponse.setResults(results);
 
         claimDefencesResponse.setResultCount(results.size());
         return claimDefencesResponse;
-    }
-
-    private ClaimDefencesResult createClaimDefencesResult(String caseManRef, String respondentId,
-                                                          LocalDate defendantResponseFiledDate, LocalDateTime defendantResponseCreatedDate,
-                                                          String responseType, String defence) {
-        return new ClaimDefencesResult(caseManRef, respondentId,
-                defendantResponseFiledDate, defendantResponseCreatedDate, responseType, defence);
     }
 
 }
