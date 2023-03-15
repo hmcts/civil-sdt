@@ -60,6 +60,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
@@ -381,7 +382,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
-        verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
         verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
         verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
@@ -967,9 +968,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
         individualRequest.setRequestPayload("Test Xml");
+        individualRequest.getBulkSubmission().getBulkCustomer().setReadyForAlternateService(true);
 
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(
-            individualRequest);
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
         individualReqProcessingDelay.setValue("10");
@@ -1004,6 +1005,58 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         Assert.assertEquals("Individual Request status not as expected",
                             IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
                             individualRequest.getRequestStatus());
+    }
+
+    @Test
+    public void processClaimRequestWhenBulkCustomerReadyForAlternateService() {
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(CLAIM.getType());
+        individualRequest.setRequestPayload("Test Xml");
+        individualRequest.setRequestStatus("Forwarded");
+
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setValue("1000");
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
+        receiveTimeOutParam.setValue("12000");
+
+
+        final List<IIndividualRequest> indRequests = new ArrayList<>();
+        indRequests.add(individualRequest);
+
+        SdtContext.getContext().setRawInXml("response");
+        final IGlobalParameter contactNameParameter = new GlobalParameter();
+        contactNameParameter.setValue("Tester");
+        contactNameParameter.setName("CONTACT_DETAILS");
+
+        final IErrorMessage errorMsg = expectErrorMessage(
+            "CUST_XML_ERR",
+            "SDT Client Data Error",
+            "Exception calling target application for SDT reference"
+        );
+
+        final String contactName = "Test";
+        final IErrorLog errorLog =
+            new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
+
+        individualRequest.setErrorLog(errorLog);
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+
+        this.mockIndividualRequestDao.persist(individualRequest);
+
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+
+        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
     }
 
 
