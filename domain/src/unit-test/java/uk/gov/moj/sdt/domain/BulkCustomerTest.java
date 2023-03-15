@@ -123,6 +123,20 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
+    @DisplayName("Test Abstract Domain Object for other object type")
+    void testGetHashIdForOtherObject() {
+        Object obj = new Object();
+        String expected = obj.getClass().getSimpleName() + "@" + Integer.toHexString(obj.hashCode());
+        assertEquals(expected, new BulkCustomer().getHashId(obj));
+    }
+
+    @Test
+    @DisplayName("Test Abstract Domain Object for a null object")
+    void testGetHashIdForNull() {
+        assertNull(new BulkCustomer().getHashId(null));
+    }
+
+    @Test
     @DisplayName("Test Get Bulk Customer Application")
     void testBulkCustomerApplication(){
         String expected ="YES";
