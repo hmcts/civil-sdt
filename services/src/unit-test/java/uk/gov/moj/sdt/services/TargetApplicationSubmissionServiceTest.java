@@ -64,6 +64,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.times;
@@ -903,6 +904,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         SdtContext.getContext().setRawInXml("response");
 
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
     }
 
     @Test
@@ -920,7 +922,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
 
         individualRequest.setRequestStatus("Forwarded");
-        this.mockIndividualRequestDao.persist(individualRequest);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
@@ -929,8 +930,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
         receiveTimeOutParam.setValue("12000");
-
-        this.mockIndividualRequestDao.persist(individualRequest);
 
         final List<IIndividualRequest> indRequests = new ArrayList<>();
         indRequests.add(individualRequest);
@@ -952,10 +951,12 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         individualRequest.setErrorLog(errorLog);
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
-        this.mockIndividualRequestDao.persist(individualRequest);
 
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+
+        verify(mockConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
     }
 
     @Test
@@ -968,7 +969,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
         individualRequest.setRequestPayload("Test Xml");
-        individualRequest.getBulkSubmission().getBulkCustomer().setReadyForAlternateService(true);
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
@@ -977,8 +977,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
         when(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).thenReturn(
             individualReqProcessingDelay);
-
-        this.mockIndividualRequestDao.persist(individualRequest);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
@@ -1005,6 +1003,8 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         Assert.assertEquals("Individual Request status not as expected",
                             IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
                             individualRequest.getRequestStatus());
+
+        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
     }
 
     @Test
@@ -1017,6 +1017,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestType(CLAIM.getType());
         individualRequest.setRequestPayload("Test Xml");
         individualRequest.setRequestStatus("Forwarded");
+        individualRequest.getBulkSubmission().getBulkCustomer().setReadyForAlternateService(true);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
         individualReqProcessingDelay.setValue("10");
@@ -1051,12 +1052,13 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         individualRequest.setErrorLog(errorLog);
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
-
-        this.mockIndividualRequestDao.persist(individualRequest);
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+        doCallRealMethod().when(requestTypeXmlNodeValidator).isCMCClaimRequest(CLAIM.getType(), true);
 
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
 
         verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
+        verify(requestTypeXmlNodeValidator, times(2)).isCMCClaimRequest(CLAIM.getType(), true);
     }
 
 
