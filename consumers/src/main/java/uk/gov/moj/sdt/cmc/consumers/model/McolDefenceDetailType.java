@@ -1,11 +1,8 @@
 
 package uk.gov.moj.sdt.cmc.consumers.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
 
 /**
  * <p>Java class for mcolDefenceDetailType complex type.
@@ -25,15 +22,13 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "mcolDefenceDetail", propOrder = {
+@XmlRootElement(name = "mcolDefenceDetail")
+@XmlType(propOrder = {
         "claimNumber",
         "defendantResponse"
 })
 public class McolDefenceDetailType {
-    @XmlElement(required = true)
     protected String claimNumber;
-    @XmlElement(required = true)
     protected DefendantResponseType defendantResponse;
 
     /**

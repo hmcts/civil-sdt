@@ -63,7 +63,7 @@ public class McolDefenceDetailTypeUtil {
     @XmlElementDecl(namespace = "http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema", name = "results")
     public JAXBElement<McolDefenceDetailTypes> createMcolDefenceDetailList(McolDefenceDetailTypes value) {
         final QName qnameMcolDefenceDetail = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema",
-                "mcolDefenceDetail");
+                "results");
         return new JAXBElement<>(qnameMcolDefenceDetail, McolDefenceDetailTypes.class, null, value);
     }
 

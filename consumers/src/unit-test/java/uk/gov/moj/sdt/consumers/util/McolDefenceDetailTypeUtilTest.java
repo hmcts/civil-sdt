@@ -87,7 +87,7 @@ class McolDefenceDetailTypeUtilTest {
         String content = stringWriter.toString();
         LOGGER.info("content: {}", content);
         assertNotNull(content);
-        assertTrue(content.contains(":mcolDefenceDetail"));
+        assertTrue(content.contains("mcolDefenceDetail"));
         assertTrue(content.contains("<claimNumber>"));
         assertTrue(content.contains("<defence>"));
         assertTrue(content.contains("<defendantResponse"));
