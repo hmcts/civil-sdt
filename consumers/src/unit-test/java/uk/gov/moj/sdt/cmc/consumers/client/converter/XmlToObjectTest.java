@@ -165,8 +165,8 @@ class XmlToObjectTest extends BaseXmlTest {
 
     private Date formattedDate() throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
-        String date = formatter.format(Calendar.getInstance().getTime());
-        return formatter.parse(date);
+        String dateString = "13-MAR-2023";
+        return formatter.parse(dateString);
     }
 
     @Test
