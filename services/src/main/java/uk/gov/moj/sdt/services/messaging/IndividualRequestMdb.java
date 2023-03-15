@@ -82,12 +82,14 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
         if (message instanceof ObjectMessage) {
             final ObjectMessage objectMessage = (ObjectMessage) message;
             String sdtReference = null;
+            Boolean caseOffLine = null;
 
             ISdtMessage sdtMessage = null;
 
             try {
                 sdtMessage = (ISdtMessage) objectMessage.getObject();
                 sdtReference = sdtMessage.getSdtRequestReference();
+                caseOffLine = sdtMessage.isCaseOffLine();
 
                 // Update statistics.
                 SdtMetricsMBean.getMetrics().addRequestQueueTime(sdtMessage.getMessageSentTimestamp());
@@ -119,7 +121,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
             }
 
             try {
-                this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference);
+                this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference, caseOffLine);
             }
             // CHECKSTYLE:OFF
             catch (final RuntimeException e) {

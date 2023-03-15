@@ -8,7 +8,9 @@ import uk.gov.moj.sdt.cmc.consumers.config.CMCConfig;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 
 
 @FeignClient(name = "civil-api",
@@ -22,8 +24,15 @@ public interface CMCApi {
     String SDT_REQUEST_ID = "SDTREQUESTID";
 
     @PostMapping("/breathingSpace")
-    BreathingSpaceResponse breathingSpace(
-        @RequestBody BreathingSpaceRequest breathingSpaceRequest
+    BreathingSpaceResponse breathingSpace(@RequestHeader(IDAM_ID_HEADER)  String idamId,
+                                          @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
+                                          @RequestBody BreathingSpaceRequest breathingSpaceRequest);
+
+    @PostMapping("/breathingSpace")
+    JudgementResponse requestJudgment(
+        @RequestHeader(IDAM_ID_HEADER) String idamId,
+        @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
+        @RequestBody JudgementRequest breathingSpaceRequest
     );
 
     @PostMapping("/claimStatusUpdate")

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class XmlToObjectConverter {
+public class XmlConverter {
 
     private XmlMapper xmlMapper = new XmlMapper();
 
@@ -19,5 +19,9 @@ public class XmlToObjectConverter {
     public String convertXmlToJson(String xml) throws IOException {
         ObjectMapper jsonMapper = new ObjectMapper();
         return jsonMapper.writeValueAsString(xmlMapper.readTree(xml.getBytes()));
+    }
+
+    public <T> String convertObjectToXml(T object) throws IOException {
+        return xmlMapper.writeValueAsString(object);
     }
 }
