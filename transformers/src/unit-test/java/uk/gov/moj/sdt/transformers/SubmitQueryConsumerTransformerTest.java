@@ -62,12 +62,8 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests() throws Exception {
-        // Make the constructor visible so we can get a new instance of it.
-        Constructor<SubmitQueryConsumerTransformer> c
-            = SubmitQueryConsumerTransformer.class.getDeclaredConstructor();
-        c.setAccessible(true);
-        transformer = c.newInstance();
+    public void setUpLocalTests() {
+        transformer = new SubmitQueryConsumerTransformer();
     }
 
     /**

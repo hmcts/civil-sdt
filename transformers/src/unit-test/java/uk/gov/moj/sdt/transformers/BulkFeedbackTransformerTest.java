@@ -69,11 +69,8 @@ class BulkFeedbackTransformerTest extends AbstractSdtUnitTestBase {
     /**
      * Set up variables for the test.
      */
-    public void setUpLocalTests() throws Exception {
-        // Make the constructor visible so we can get a new instance of it.
-        Constructor<BulkFeedbackTransformer> c = BulkFeedbackTransformer.class.getDeclaredConstructor();
-        c.setAccessible(true);
-        transformer = c.newInstance();
+    public void setUpLocalTests() {
+        transformer = new BulkFeedbackTransformer();
     }
 
     /**

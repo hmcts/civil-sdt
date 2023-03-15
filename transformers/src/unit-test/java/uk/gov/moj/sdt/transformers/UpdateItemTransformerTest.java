@@ -74,11 +74,8 @@ class UpdateItemTransformerTest extends AbstractSdtUnitTestBase {
      * Set up variables for the test.
      */
     @Override
-    public void setUpLocalTests() throws Exception {
-        // Make the constructor visible so we can get a new instance of it.
-        Constructor<UpdateItemTransformer> c = UpdateItemTransformer.class.getDeclaredConstructor();
-        c.setAccessible(true);
-        updateItemTransformer = c.newInstance();
+    public void setUpLocalTests() {
+        updateItemTransformer = new UpdateItemTransformer();
     }
 
     /**
