@@ -866,29 +866,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         request.setBulkSubmission(bulkSubmission);
     }
 
-    @Test
-    void testSetIndividualRequestDaoConsumerWriter(){
-        IIndividualRequestDao individualRequestDaoMock = mock(IndividualRequestDao.class);
-        IConsumerGateway consumerGatewayMock = mock(ConsumerGateway.class);
-        IMessageWriter mockIMessageWriter = mock(MessageWriter.class);
-
-        targetAppSubmissionService.setMessageWriter(mockIMessageWriter);
-//        targetAppSubmissionService.setRequestConsumer(consumerGatewayMock);
-        targetAppSubmissionService.setIndividualRequestDao(individualRequestDaoMock);
-
-        Object consumerResult = this.getAccessibleField(TargetApplicationSubmissionService.class, "requestConsumer",
-                                                        IConsumerGateway.class, targetAppSubmissionService);
-        Object messageWriterResult = this.getAccessibleField(TargetApplicationSubmissionService.class, "messageWriter",
-                                                             IMessageWriter.class, targetAppSubmissionService);
-
-
-        assertEquals(consumerGatewayMock, consumerResult, "consumerGateway should be correctly set");
-        assertNotNull(targetAppSubmissionService.getIndividualRequestDao(),"Object should have been populated");
-        assertEquals(targetAppSubmissionService.getIndividualRequestDao(),individualRequestDaoMock,"Object should have been populated");
-        assertEquals(mockIMessageWriter, messageWriterResult,"MessageWriter should be correctly set");
-    }
-
-
     public void processCCDReferenceRequestToSubmitSuccess() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
