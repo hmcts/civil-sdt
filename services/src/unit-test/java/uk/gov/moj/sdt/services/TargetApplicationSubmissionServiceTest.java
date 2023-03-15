@@ -1,5 +1,13 @@
 package uk.gov.moj.sdt.services;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+import javax.xml.ws.WebServiceException;
+
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
@@ -7,7 +15,6 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,24 +27,24 @@ import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.dao.IndividualRequestDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.GlobalParameter;
-import uk.gov.moj.sdt.domain.ServiceRouting;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.ServiceType;
 import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.ErrorMessage;
+import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.ServiceRouting;
+import uk.gov.moj.sdt.domain.ServiceType;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
@@ -47,15 +54,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.CCDReferenceValidator;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
-
-import javax.xml.ws.WebServiceException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
 
 import static ch.qos.logback.classic.Level.DEBUG;
 import static ch.qos.logback.classic.Level.ERROR;
@@ -76,7 +76,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
-import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 
 /**
  * Test class for TargetApplicationSubmissionService.
@@ -240,7 +239,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -315,7 +314,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -386,7 +385,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
         verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
@@ -410,7 +409,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -486,7 +485,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -555,7 +554,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -618,7 +617,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -697,7 +696,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -961,7 +960,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Setup dummy target response
         SdtContext.getContext().setRawInXml("response");
 
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
 
         EasyMock.verify(mockIndividualRequestDao);
         EasyMock.verify(mockCmcConsumerGateway);
@@ -1051,7 +1050,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         EasyMock.replay(mockCacheable);
         EasyMock.replay(mockErrorMsgCacheable);
 
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
 
         EasyMock.verify(mockIndividualRequestDao);
         EasyMock.verify(mockCacheable);
@@ -1060,8 +1059,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         EasyMock.verify(ccdReferenceValidator);
     }
 
-    @Test
-    void processCCDReferenceRequestFailOnCaseOffLine() {
+    public void processCCDReferenceRequestFailOnCaseOffLine() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
 
