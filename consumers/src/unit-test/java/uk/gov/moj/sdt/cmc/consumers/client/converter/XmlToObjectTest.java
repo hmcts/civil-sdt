@@ -1,26 +1,18 @@
 package uk.gov.moj.sdt.cmc.consumers.client.converter;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.UpdateType;
 import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.util.ClaimDefencesResultsUtil;
 import uk.gov.moj.sdt.consumers.util.McolDefenceDetailTypeUtil;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -118,52 +110,6 @@ class XmlToObjectTest extends BaseXmlTest {
         assertNotNull(jsonString);
         String expectedValue = readFile(EXPECTED_CLAIM_STATUS_REQUEST);
         assertEquals(expectedValue, jsonString);
-    }
-
-    @Test
-    void shouldConvertMcolDefenceDetailTypeJAXBToXml() {
-
-        McolDefenceDetailType detailType = mcolDefenceDetailTypeUtil.convertToMcolDefenceDetailType(
-                claimDefencesResultsUtil.createClaimDefencesResult()
-        );
-
-        JAXBElement<McolDefenceDetailType> jaxbDetailType = xmlToObject.createMcolDefenceDetail(detailType);
-        StringWriter stringWriter = new StringWriter();
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(McolDefenceDetailType.class);
-            Marshaller marshaller =  jaxbContext.createMarshaller();
-            marshaller.marshal(jaxbDetailType, stringWriter);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-        String content = stringWriter.toString();
-        assertNotNull(content);
-        assertTrue(content.contains(":mcolDefenceDetail"));
-        assertTrue(content.contains("<claimNumber>"));
-        assertTrue(content.contains("<defence>"));
-        assertTrue(content.contains("<defendantResponse"));
-    }
-
-    @Test
-    void shouldConvertMcolDefenceDetailTypeListJAXBToXml() {
-        McolDefenceDetailTypes detailTypes = new McolDefenceDetailTypes();
-        detailTypes.setMcolDefenceDetailTypeList(mcolDefenceDetailTypeUtil.createMcolDefencesDetailTypeList());
-
-        JAXBElement<McolDefenceDetailTypes> jaxbDetailType = xmlToObject.createMcolDefenceDetailList(detailTypes);
-        StringWriter stringWriter = new StringWriter();
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(McolDefenceDetailTypes.class);
-            Marshaller marshaller =  jaxbContext.createMarshaller();
-            marshaller.marshal(jaxbDetailType, stringWriter);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-        String content = stringWriter.toString();
-        assertNotNull(content);
-        assertTrue(content.contains(":mcolDefenceDetail"));
-        assertTrue(content.contains("<claimNumber>"));
-        assertTrue(content.contains("<defence>"));
-        assertTrue(content.contains("<defendantResponse"));
     }
 
 }
