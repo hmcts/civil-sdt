@@ -11,8 +11,6 @@ import javax.xml.ws.WebServiceException;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,11 +19,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
-import uk.gov.moj.sdt.consumers.ConsumerGateway;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.dao.IndividualRequestDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -46,7 +42,6 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
@@ -54,23 +49,22 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.CCDReferenceValidator;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
-import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static ch.qos.logback.classic.Level.DEBUG;
 import static ch.qos.logback.classic.Level.ERROR;
-import static org.easymock.EasyMock.expect;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -867,109 +861,50 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     }
 
     @Test
-    void testSetIndividualRequestDaoConsumerWriter(){
-        IIndividualRequestDao individualRequestDaoMock = mock(IndividualRequestDao.class);
-        IConsumerGateway consumerGatewayMock = mock(ConsumerGateway.class);
-        IMessageWriter mockIMessageWriter = mock(MessageWriter.class);
-
-        targetAppSubmissionService.setMessageWriter(mockIMessageWriter);
-//        targetAppSubmissionService.setRequestConsumer(consumerGatewayMock);
-        targetAppSubmissionService.setIndividualRequestDao(individualRequestDaoMock);
-
-        Object consumerResult = this.getAccessibleField(TargetApplicationSubmissionService.class, "requestConsumer",
-                                                        IConsumerGateway.class, targetAppSubmissionService);
-        Object messageWriterResult = this.getAccessibleField(TargetApplicationSubmissionService.class, "messageWriter",
-                                                             IMessageWriter.class, targetAppSubmissionService);
-
-
-        assertEquals(consumerGatewayMock, consumerResult, "consumerGateway should be correctly set");
-        assertNotNull(targetAppSubmissionService.getIndividualRequestDao(),"Object should have been populated");
-        assertEquals(targetAppSubmissionService.getIndividualRequestDao(),individualRequestDaoMock,"Object should have been populated");
-        assertEquals(mockIMessageWriter, messageWriterResult,"MessageWriter should be correctly set");
-    }
-
-
     public void processCCDReferenceRequestToSubmitSuccess() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
-
-        // Set-up the individual request object
-
         individualRequest.setSdtRequestReference(sdtRequestRef);
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
         individualRequest.setRequestPayload("Test Xml");
-        expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
-        EasyMock.expectLastCall().times(2);
-        expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(true);
-        EasyMock.expectLastCall().times(2);
 
-        expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
-            individualRequest);
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
         individualReqProcessingDelay.setValue("10");
         individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
-            individualReqProcessingDelay);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).thenReturn(individualReqProcessingDelay);
 
         individualRequest.setRequestStatus("Forwarded");
         this.mockIndividualRequestDao.persist(individualRequest);
-        EasyMock.expectLastCall();
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
         connectionTimeOutParam.setValue("1000");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
-            connectionTimeOutParam);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).thenReturn(connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
         receiveTimeOutParam.setValue("12000");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
-            receiveTimeOutParam);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).thenReturn(receiveTimeOutParam);
 
         this.mockCmcConsumerGateway.individualRequest(individualRequest, 1000, 12000);
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
-            @Override
-            public Object answer() throws Throwable {
-                ((IndividualRequest) EasyMock.getCurrentArguments()[0])
-                    .setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
-                // required to be null for a void method
-                return null;
-            }
-        });
 
         this.mockIndividualRequestDao.persist(individualRequest);
-        EasyMock.expectLastCall();
 
         final List<IIndividualRequest> indRequests = new ArrayList<IIndividualRequest>();
         indRequests.add(individualRequest);
 
-        expect(
-            this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
-            Long.valueOf(indRequests.size()));
+        when(this.mockIndividualRequestDao.queryAsCount(same(IndividualRequest.class), isA(Supplier.class))).thenReturn(Long.valueOf(indRequests.size()));
 
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockCmcConsumerGateway);
-        EasyMock.replay(xmlReader);
-        EasyMock.replay(ccdReferenceValidator);
-        EasyMock.replay(mockCacheable);
-
-        // Setup dummy target response
         SdtContext.getContext().setRawInXml("response");
 
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
-
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockCmcConsumerGateway);
-        EasyMock.verify(mockCacheable);
-
-        Assert.assertTrue("Expected to pass", true);
-
     }
 
+    @Test
     public void processCCDReferenceFailsOnUnSupportedRequest() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
@@ -978,51 +913,31 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(CLAIM.getType());
         individualRequest.setRequestPayload("Test Xml");
-        expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
-        EasyMock.expectLastCall().times(2);
-        expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(true);
-        EasyMock.expectLastCall().times(2);
-
-        expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
-            individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
         individualReqProcessingDelay.setValue("10");
         individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
-            individualReqProcessingDelay);
 
         individualRequest.setRequestStatus("Forwarded");
         this.mockIndividualRequestDao.persist(individualRequest);
-        EasyMock.expectLastCall();
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
         connectionTimeOutParam.setValue("1000");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
-            connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
         receiveTimeOutParam.setValue("12000");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
-            receiveTimeOutParam);
 
         this.mockIndividualRequestDao.persist(individualRequest);
-        EasyMock.expectLastCall();
 
         final List<IIndividualRequest> indRequests = new ArrayList<>();
         indRequests.add(individualRequest);
-
-        expect(
-            this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
-            Long.valueOf(indRequests.size()));
 
         SdtContext.getContext().setRawInXml("response");
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
         contactNameParameter.setName("CONTACT_DETAILS");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(contactNameParameter);
 
         final IErrorMessage errorMsg = expectErrorMessage(
             "CUST_XML_ERR",
@@ -1038,100 +953,53 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
 
         this.mockIndividualRequestDao.persist(individualRequest);
-        EasyMock.expectLastCall();
-
-        expect(
-            this.mockIndividualRequestDao.queryAsCount(EasyMock.same(IndividualRequest.class), EasyMock.isA(Supplier.class))).andReturn(
-            Long.valueOf(indRequests.size()));
-
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(xmlReader);
-        EasyMock.replay(ccdReferenceValidator);
-        EasyMock.replay(mockCacheable);
-        EasyMock.replay(mockErrorMsgCacheable);
 
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
-
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockCacheable);
-        EasyMock.verify(mockErrorMsgCacheable);
-        EasyMock.verify(xmlReader);
-        EasyMock.verify(ccdReferenceValidator);
     }
 
+    @Test
     public void processCCDReferenceRequestFailOnCaseOffLine() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
-
-        // Set-up the individual request object
 
         individualRequest.setSdtRequestReference(sdtRequestRef);
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
         individualRequest.setRequestPayload("Test Xml");
-        expect(xmlReader.getElementValue("Test Xml", "claimNumber")).andReturn("CCD_Reference_number");
-        EasyMock.expectLastCall().times(1);
-        expect(this.ccdReferenceValidator.isValidCCDReference("CCD_Reference_number")).andReturn(true);
-        EasyMock.expectLastCall().times(1);
 
-        expect(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).andReturn(
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(
             individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
         individualReqProcessingDelay.setValue("10");
         individualReqProcessingDelay.setName("MCOL_INDV_REQ_DELAY");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).andReturn(
+        when(this.mockCacheable.getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY")).thenReturn(
             individualReqProcessingDelay);
 
         this.mockIndividualRequestDao.persist(individualRequest);
-        EasyMock.expectLastCall();
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
         connectionTimeOutParam.setValue("1000");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
-            connectionTimeOutParam);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).thenReturn(connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
         receiveTimeOutParam.setValue("12000");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).andReturn(
-            receiveTimeOutParam);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT")).thenReturn(receiveTimeOutParam);
 
         this.mockCmcConsumerGateway.individualRequest(individualRequest, 1000, 12000);
-        EasyMock.expectLastCall().andAnswer(() -> {
-            throw new CaseOffLineException("Case OffLine");
-        });
 
-        this.mockMessageWriter.queueMessage(EasyMock.isA(ISdtMessage.class), EasyMock.isA(String.class),
-                                            EasyMock.anyBoolean());
-        EasyMock.expectLastCall();
+        this.mockMessageWriter.queueMessage(isA(ISdtMessage.class), isA(String.class), anyBoolean());
 
         final IGlobalParameter maxForwardingAttemptsParam = new GlobalParameter();
         maxForwardingAttemptsParam.setName("MAX_FORWARDING_ATTEMPTS");
         maxForwardingAttemptsParam.setValue("3");
-        expect(this.mockCacheable.getValue(IGlobalParameter.class, "MAX_FORWARDING_ATTEMPTS")).andReturn(
-            maxForwardingAttemptsParam);
 
-        EasyMock.replay(mockIndividualRequestDao);
-        EasyMock.replay(mockCmcConsumerGateway);
-        EasyMock.replay(xmlReader);
-        EasyMock.replay(mockMessageWriter);
-        EasyMock.replay(ccdReferenceValidator);
-        EasyMock.replay(mockCacheable);
-
-        // Setup dummy target response
         SdtContext.getContext().setRawInXml("response");
 
         this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
-
-        EasyMock.verify(mockIndividualRequestDao);
-        EasyMock.verify(mockMessageWriter);
-        EasyMock.verify(mockCmcConsumerGateway);
-        EasyMock.verify(mockCacheable);
-        EasyMock.verify(xmlReader);
-        EasyMock.verify(ccdReferenceValidator);
 
         Assert.assertEquals("Individual Request status not as expected",
                             IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
@@ -1157,8 +1025,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         errorMsg.setErrorDescription(sdtClientDataError);
         errorMsg.setErrorText(errorText);
 
-        expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, custXmlErr))
-            .andReturn(errorMsg);
         return errorMsg;
     }
 

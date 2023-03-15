@@ -18,8 +18,10 @@ import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.claim.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
@@ -140,6 +142,35 @@ class CMCConsumerGatewayTest {
         verify(judgementService).requestJudgment(anyString(), any(), any(JudgementRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(xmlToObject).convertObjectToXml(any(JudgementResponse.class));
+        verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getSdtRequestReference();
+        verify(individualRequest).getRequestType();
+        verify(individualRequest).setTargetApplicationResponse(XML);
+    }
+
+
+    @Test
+    void shouldInvokeClaimRequest() throws Exception {
+        ClaimResponse response = new ClaimResponse();
+        Date date = formattedDate();
+        response.setIssueDate(date);
+        response.setServiceDate(date);
+        response.setClaimNumber("MCOL-0000001");
+        when(claimRequestService.claimRequest(anyString(), any(), any())).thenReturn(response);
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        ClaimRequest claimRequest = mock(ClaimRequest.class);
+        when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimRequest);
+        when(xmlToObject.convertObjectToXml(response)).thenReturn(XML);
+        when(individualRequest.getRequestType()).thenReturn(RequestType.CLAIM.getType());
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        verify(claimRequestService).claimRequest(anyString(), any(), any(ClaimRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(xmlToObject).convertObjectToXml(any(ClaimResponse.class));
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).getSdtRequestReference();
         verify(individualRequest).getRequestType();

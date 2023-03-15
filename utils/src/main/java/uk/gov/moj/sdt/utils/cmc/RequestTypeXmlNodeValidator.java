@@ -27,7 +27,7 @@ public class RequestTypeXmlNodeValidator {
     }
 
     public boolean isCMCClaimRequest(String requestType, Boolean readyForAlternateSubmission) {
-        return true || (requestType != null && CLAIM.getType().equalsIgnoreCase(requestType)
+        return (requestType != null && CLAIM.getType().equalsIgnoreCase(requestType)
             && (readyForAlternateSubmission != null && readyForAlternateSubmission));
     }
 
