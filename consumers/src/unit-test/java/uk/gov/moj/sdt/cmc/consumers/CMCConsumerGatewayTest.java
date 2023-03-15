@@ -1,19 +1,28 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpace;
+import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimRequestService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
+import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
+import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
+import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 
@@ -44,13 +53,13 @@ class CMCConsumerGatewayTest {
     private CMCConsumerGateway cmcConsumerGateway;
 
     @Mock
-    private XmlToObjectConverter xmlToObject;
+    private XmlConverter xmlToObject;
 
     @Mock
-    private IBreathingSpace breathingSpace;
+    private IBreathingSpaceService breathingSpace;
 
     @Mock
-    private IIndividualRequest individualRequest;
+    private IJudgementService judgementService;
 
     @Mock
     private IClaimStatusUpdateService claimStatusUpdate;
@@ -62,6 +71,7 @@ class CMCConsumerGatewayTest {
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
+                                                    judgementService,
                                                     claimStatusUpdate,
                                                     claimRequestService,
                                                     xmlToObject);
@@ -69,21 +79,32 @@ class CMCConsumerGatewayTest {
 
     @Test
     void shouldInvokeBreathingSpace() throws Exception {
-
-        setupMockBehaviour(BREATHING_SPACE);
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(BREATHING_SPACE, individualRequest);
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
-        when(breathingSpace.breathingSpace(any())).thenReturn(response);
+        when(breathingSpace.breathingSpace(anyString(), anyString(), any())).thenReturn(response);
+
+        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
+        when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
+        when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getType());
+
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        verify(breathingSpace).breathingSpace(any(BreathingSpaceRequest.class));
+
+        verify(breathingSpace).breathingSpace(anyString(), anyString(), any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
+        verify(individualRequest).getSdtRequestReference();
+        verify(individualRequest).getRequestType();
     }
 
     @Test
     void shouldInvokeClaimStatusUpdate() throws Exception {
-        setupMockBehaviour(CLAIM_STATUS_UPDATE);
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(CLAIM_STATUS_UPDATE, individualRequest);
         ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(claimStatusUpdate.claimStatusUpdate(anyString(), anyString(), any())).thenReturn(response);
@@ -98,7 +119,40 @@ class CMCConsumerGatewayTest {
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
     }
 
-    private void setupMockBehaviour(RequestType requestType) throws Exception {
+    @Test
+    void shouldInvokeJudgementRequest() throws Exception {
+        JudgementResponse response = new JudgementResponse();
+        Date date = formattedDate();
+        response.setJudgmentEnteredDate(date);
+        response.setFirstPaymentDate(date);
+        when(judgementService.requestJudgment(anyString(), any(), any())).thenReturn(response);
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        JudgementRequest judgementRequest = mock(JudgementRequest.class);
+        when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
+        when(xmlToObject.convertObjectToXml(response)).thenReturn(XML);
+        when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        verify(judgementService).requestJudgment(anyString(), any(), any(JudgementRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(xmlToObject).convertObjectToXml(any(JudgementResponse.class));
+        verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getSdtRequestReference();
+        verify(individualRequest).getRequestType();
+        verify(individualRequest).setTargetApplicationResponse(XML);
+    }
+
+    private Date formattedDate() throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        String date = formatter.format(Calendar.getInstance().getTime());
+        return formatter.parse(date);
+    }
+
+    private void setupMockBehaviour(RequestType requestType, IIndividualRequest individualRequest) throws Exception {
         when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getRequestType()).thenReturn(requestType.getType());

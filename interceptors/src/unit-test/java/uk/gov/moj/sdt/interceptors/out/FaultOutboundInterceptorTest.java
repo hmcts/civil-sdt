@@ -40,15 +40,17 @@ import org.apache.cxf.message.MessageImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -88,6 +90,31 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         faultOutboundInterceptor.handleMessage(soapMessage);
         assertNotNull(serviceRequest.getResponseDateTime());
         assertTrue(serviceRequest.getResponsePayload().contains(ERROR_MESSAGE));
+    }
+
+    @Test
+    void testHandleMessageLogOutput() {
+        SdtContext.getContext().setServiceRequestId(1L);
+        final SoapMessage soapMessage = getDummySoapMessageWithFault();
+        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockServiceRequestDao);
+        final ServiceRequest serviceRequest = new ServiceRequest();
+        when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
+        mockServiceRequestDao.persist(serviceRequest);
+        faultOutboundInterceptor.setServiceRequestDao(mockServiceRequestDao);
+
+        try (MockedStatic<PerformanceLogger> mockedStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
+            mockedStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong())).thenReturn(true);
+
+            faultOutboundInterceptor.handleMessage(soapMessage);
+
+            assertTrue(PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_11));
+            mockedStaticPerformanceLogger.verify(() -> PerformanceLogger.log(
+                any(),
+                anyLong(),
+                anyString(),
+                anyString()
+            ));
+        }
     }
 
     /**

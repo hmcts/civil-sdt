@@ -10,12 +10,15 @@ import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
+
+    String IDAM_ID_HEADER = "IDAMID";
+
+    String SDT_REQUEST_ID = "SDTREQUESTID";
 
     @Mock
     private CMCApi cmcApi;
@@ -31,8 +34,8 @@ class BreathingSpaceServiceTest extends AbstractSdtUnitTestBase {
     @Test
     void getClient() {
         BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
-        breathingSpaceService.breathingSpace(breathingSpaceRequest);
-        verify(cmcApi).breathingSpace(breathingSpaceRequest);
+        breathingSpaceService.breathingSpace(IDAM_ID_HEADER, SDT_REQUEST_ID, breathingSpaceRequest);
+        verify(cmcApi).breathingSpace(IDAM_ID_HEADER, SDT_REQUEST_ID, breathingSpaceRequest);
     }
 
 }
