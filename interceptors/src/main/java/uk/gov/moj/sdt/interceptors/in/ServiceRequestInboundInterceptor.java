@@ -30,22 +30,16 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.in;
 
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-
-import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
@@ -66,7 +60,6 @@ import uk.gov.moj.sdt.utils.ServerHostName;
  *
  * @author d195274
  */
-@Component("ServiceRequestInboundInterceptor")
 public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
 
     /**
@@ -77,7 +70,6 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
     /**
      * Create instance of {@link PerformanceLoggerInboundInterceptor}.
      */
-    @Autowired
     public ServiceRequestInboundInterceptor(ServiceRequestDao serviceRequestDao) {
         super(Phase.RECEIVE);
         setServiceRequestDao(serviceRequestDao);

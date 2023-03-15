@@ -31,15 +31,12 @@
 package uk.gov.moj.sdt.interceptors.out;
 
 import java.io.OutputStream;
-
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.AttachmentOutInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.interceptor.StaxOutInterceptor;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.phase.Phase;
-
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.SdtContext;
 
@@ -54,7 +51,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
  *
  * @author Robin Compston
  */
-@Component("CacheSetupOutboundInterceptor")
 public class CacheSetupOutboundInterceptor extends AbstractSdtInterceptor {
 
     /**

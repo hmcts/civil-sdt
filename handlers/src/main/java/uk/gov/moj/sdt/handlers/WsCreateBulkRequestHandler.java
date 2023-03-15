@@ -32,7 +32,6 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -42,7 +41,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.services.api.IBulkSubmissionService;
@@ -92,11 +90,13 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
                                       @Qualifier("BulkSubmissionValidator")
                                           IBulkSubmissionValidator bulkSubmissionValidator,
                                       @Qualifier("BulkRequestTransformer")
-                                              ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer) {
+                                              ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer,
+                                      @Qualifier("concurrentMap")
+                                              Map<String, IInFlightMessage> concurrentMap) {
         this.bulkSubmissionService = bulkSubmissionService;
         this.bulkSubmissionValidator = bulkSubmissionValidator;
         this.transformer = transformer;
-        this.concurrencyMap = new HashMap<>();
+        this.concurrencyMap = concurrentMap;
     }
 
     /**

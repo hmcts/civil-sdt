@@ -1,5 +1,11 @@
 package uk.gov.moj.sdt.config;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.xml.ws.Endpoint;
+
 import com.google.common.collect.Lists;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
@@ -14,6 +20,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import uk.gov.moj.sdt.dao.ServiceRequestDao;
+import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
@@ -27,12 +38,6 @@ import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
 import uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.SdtInternalEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.config.ProducersConfig;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.xml.ws.Endpoint;
 
 @Configuration
 @EnableAutoConfiguration
@@ -62,22 +67,40 @@ public class CxfConfig {
 
     @Bean
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
-                                SdtEndpointPortType sdtEndpointPortType,
-                                ServiceRequestInboundInterceptor serviceRequestInboundInterceptor,
-                                PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
-                                XmlInboundInterceptor xmlInboundInterceptor,
-                                SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
-                                PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
-                                CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
-                                XmlOutboundInterceptor xmlOutboundInterceptor,
-                                ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor,
-                                CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
-                                FaultOutboundInterceptor faultOutboundInterceptor) {
+                                    SdtEndpointPortType sdtEndpointPortType,
+                                ServiceRequestDao serviceRequestDao,
+                                @Qualifier("SubmitQueryEnricher")
+                                    SubmitQueryEnricher submitQueryEnricher,
+                                @Qualifier("BulkFeedbackEnricher")
+                                    BulkFeedbackEnricher bulkFeedbackEnricher,
+                                @Qualifier("SubmitQueryRequestEnricher")
+                                    GenericEnricher submitQueryRequestEnricher,
+                                @Qualifier("IndividualRequestEnricher")
+                                    GenericEnricher individualRequestEnricher) {
+
+        ServiceRequestInboundInterceptor serviceRequestInboundInterceptor = new ServiceRequestInboundInterceptor(serviceRequestDao);
+        PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
+        XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
+        SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
+        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor = new PerformanceLoggerOutboundInterceptor(serviceRequestDao);
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
         endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
                                                 xmlInboundInterceptor,
                                                 sdtUnmarshallInterceptor,
                                                 serviceRequestInboundInterceptor));
+        CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
+
+        XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
+        List<AbstractSdtEnricher> enricherList = new ArrayList<>();
+        enricherList.add(submitQueryEnricher);
+        enricherList.add(bulkFeedbackEnricher);
+        enricherList.add(submitQueryRequestEnricher);
+        enricherList.add(individualRequestEnricher);
+        xmlOutboundInterceptor.setEnricherList(enricherList);
+
+        ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor = new ServiceRequestOutboundInterceptor(serviceRequestDao);
+        CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
+        FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(serviceRequestDao);
 
         endpoint.setOutInterceptors(Lists.newArrayList(cacheSetupOutboundInterceptor,
                                                        xmlOutboundInterceptor,
@@ -106,19 +129,20 @@ public class CxfConfig {
 
     @Bean
     public Endpoint sdtInternalEndpoint(@Qualifier("ISdtInternalEndpointPortType")
-                                            SdtInternalEndpointPortType sdtInternalEndpointPortType,
-                                        PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
-                                        XmlInboundInterceptor xmlInboundInterceptor,
-                                        SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
-                                        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
-                                        FaultOutboundInterceptor faultOutboundInterceptor) {
+                                            SdtInternalEndpointPortType sdtInternalEndpointPortType, ServiceRequestDao serviceRequestDao) {
+
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
+        PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
+        XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
+        SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
         endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
                                                       xmlInboundInterceptor,
                                                       sdtUnmarshallInterceptor));
 
+        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor = new PerformanceLoggerOutboundInterceptor(serviceRequestDao);
         endpoint.setOutInterceptors(Lists.newArrayList(performanceLoggerOutboundInterceptor));
 
+        FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(serviceRequestDao);
         endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
         List<LoggingFeature> features = new ArrayList<>();
         features.add(new LoggingFeature());

@@ -31,6 +31,10 @@
 
 package uk.gov.moj.sdt.validators;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -50,14 +54,10 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -110,6 +110,9 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
      */
     @Mock
     private IBulkSubmissionDao mockIBulkSubmissionDao;
+
+    @Mock
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
     /**
      * Subject for test.
@@ -171,8 +174,9 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
         validator = new BulkSubmissionValidator(mockIBulkCustomerDao,
                                                 globalParameterCache,
                                                 errorMessagesCache,
-                                                mockIBulkSubmissionDao);
-        validator.setConcurrencyMap(new HashMap<>());
+                                                mockIBulkSubmissionDao,
+                                                requestTypeXmlNodeValidator,
+                                                new HashMap<>());
     }
 
     /**

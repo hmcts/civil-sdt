@@ -17,6 +17,7 @@ plugins {
   id "com.jfrog.bintray" version "1.8.5" apply false
   id "info.solidsoft.pitest" version '1.5.1' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
+  id 'jacoco-report-aggregation'
 }
 
 group = 'uk.gov.hmcts.civil.sdt'
@@ -144,7 +145,7 @@ ext {
   postgresqlVersion = '42.5.1'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
-  springCloudVersion = '2022.0.0'
+  springCloudVersion = '2021.0.5'
   tomcatVersion = '9.0.68'
   cxfVersion = '3.5.4'
   jaxwsVersion = "2.3.1"
@@ -216,6 +217,7 @@ allprojects {
     }
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.4.7'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
 
@@ -260,6 +262,7 @@ allprojects {
     implementation group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http-jetty', version: cxfVersion
     implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: cxfVersion
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
@@ -357,6 +360,17 @@ subprojects { subproject ->
     endToEndTestImplementation.extendsFrom runtimeOnly
   }
 
+  dependencyManagement {
+    imports {
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+  }
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+
   dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
       rules.all { ComponentSelection selection ->
@@ -370,6 +384,7 @@ subprojects { subproject ->
     }
   }
 
+  // subprojects
   dependencies {
     // Add azure service bus
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
@@ -413,13 +428,15 @@ subprojects { subproject ->
     }
 
     implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
+
     /*
     Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
     a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  This dependency can be removed
     when the bug is fixed.
     */
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
-
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
