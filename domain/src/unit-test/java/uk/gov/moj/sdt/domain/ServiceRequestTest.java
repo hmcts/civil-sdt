@@ -44,8 +44,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Service Request Test")
 class ServiceRequestTest extends AbstractSdtUnitTestBase {
@@ -53,47 +52,42 @@ class ServiceRequestTest extends AbstractSdtUnitTestBase {
     /**
      * Set up test data.
      */
-
     private IServiceRequest serviceRequest;
+
+    LocalDateTime requestDateTime = LocalDateTime.now();
+
+    LocalDateTime responseDateTime = LocalDateTime.now();
 
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-
         serviceRequest = new ServiceRequest();
         serviceRequest.setBulkCustomerId("1234");
         serviceRequest.setBulkReference("BulkRef01");
         serviceRequest.setRequestType("ReqType");
         serviceRequest.setRequestPayload("Request Payload");
-        serviceRequest.setRequestDateTime(LocalDateTime.now());
-        serviceRequest.setResponseDateTime(LocalDateTime.now());
+        serviceRequest.setRequestDateTime(requestDateTime);
+        serviceRequest.setResponseDateTime(responseDateTime);
         serviceRequest.setResponsePayload("Response Payload");
         serviceRequest.setServerHostName("SDT_MOCK_HOSTNAME");
         serviceRequest.setId(1L);
     }
 
-
     @DisplayName("Test Service Request")
     @Test
     void testServiceRequest() {
-
         String expected = "BulkRef01";
         String actual = serviceRequest.toString();
         assertTrue(actual.contains(expected), "Should contain something");
-
         assertNotNull(serviceRequest, "ServiceRequest Object should be populated");
-        assertNotNull(serviceRequest.getBulkCustomerId(), "BulkCustomerId should be populated");
-        assertNotNull(serviceRequest.getBulkReference(), "Bulk Reference should be populated");
-        assertNotNull(serviceRequest.getRequestType(), "Request Type should be populated");
-        assertNotNull(serviceRequest.getRequestPayload(), "Request Payload should be populated");
-        assertNotNull(serviceRequest.getRequestDateTime(), "Request Date Time should be populated");
-        assertNotNull(serviceRequest.getResponseDateTime(), "Response Date Time should be populated");
-        assertNotNull(serviceRequest.getResponsePayload(), "Response Payload should be populated");
-        assertNotNull(serviceRequest.getServerHostName(), "Server Host Name should be populated");
-        assertNotNull(serviceRequest.getId());
+        assertEquals("1234", serviceRequest.getBulkCustomerId(), "BulkCustomerId is not equal");
+        assertEquals("BulkRef01", serviceRequest.getBulkReference(), "Bulk Reference is not equal");
+        assertEquals("ReqType", serviceRequest.getRequestType(), "Request Type is not equal");
+        assertEquals("Request Payload", serviceRequest.getRequestPayload(), "Request Payload is not equal");
+        assertEquals(requestDateTime, serviceRequest.getRequestDateTime(), "Request Date Time is not equal");
+        assertEquals(responseDateTime, serviceRequest.getResponseDateTime(), "Response Date Time is not equal");
+        assertEquals("Response Payload", serviceRequest.getResponsePayload(), "Response Payload is not equal");
+        assertEquals("SDT_MOCK_HOSTNAME", serviceRequest.getServerHostName(), "Server Host Name is not equal");
+        assertEquals(1L, serviceRequest.getId(), "Id is not equal");
     }
-
 }
-
-
-

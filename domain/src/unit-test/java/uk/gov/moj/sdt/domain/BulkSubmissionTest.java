@@ -35,19 +35,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class BulkSubmissionTest extends AbstractSdtUnitTestBase {
@@ -62,10 +61,11 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
 
     private  final String PAYLOAD = "Payload";
 
+    private final LocalDateTime createdDate = LocalDateTime.now();
+
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        MockitoAnnotations.openMocks(this);
         mockServiceRequest = Mockito.mock(ServiceRequest.class);
         mockBulkCustomer = Mockito.mock(IBulkCustomer.class);
         mockTargetApplication = Mockito.mock(ITargetApplication.class);
@@ -75,7 +75,7 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setBulkCustomer(mockBulkCustomer);
         bulkSubmission.setTargetApplication(mockTargetApplication);
         bulkSubmission.setCustomerReference("1");
-        bulkSubmission.setCreatedDate(LocalDateTime.now());
+        bulkSubmission.setCreatedDate(createdDate);
         bulkSubmission.setNumberOfRequest(1L);
         bulkSubmission.setId(1L);
         bulkSubmission.setPayload(PAYLOAD);
@@ -92,13 +92,18 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.markAsValidated();
         //then
 
-        assertNotNull(bulkSubmission.getServiceRequest(), "Should return a ServiceRequest object");
-        assertNotNull(bulkSubmission.getErrorCode(), "Error code should be set");
         assertNotEquals(
             bulkSubmission.getSubmissionStatus(),
             IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus()
         );
 
+        assertEquals("ERROR", bulkSubmission.getErrorCode(), "Error code should be set");
+        assertEquals(mockServiceRequest, bulkSubmission.getServiceRequest());
+        assertEquals(mockTargetApplication, bulkSubmission.getTargetApplication());
+        assertEquals(mockBulkCustomer, bulkSubmission.getBulkCustomer());
+        assertEquals("1", bulkSubmission.getCustomerReference());
+        assertEquals(createdDate, bulkSubmission.getCreatedDate());
+        assertEquals(1L, bulkSubmission.getNumberOfRequest());
         assertEquals(bulkSubmission.getSubmissionStatus(), "Validated");
         assertNotNull(bulkSubmission.getErrorText());
         assertTrue(bulkSubmission.hasError());
@@ -113,16 +118,15 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         //when
         bulkSubmission.markAsValidated();
         //then
-        assertNotEquals(bulkSubmission.getSubmissionStatus(),"Validated");
-        assertEquals(bulkSubmission.getPayload(),PAYLOAD);
+        assertNotEquals("Validated", bulkSubmission.getSubmissionStatus());
+        assertEquals(PAYLOAD, bulkSubmission.getPayload());
 
     }
 
     @DisplayName("Test Bulk Submission toString")
     @Test
     void testBulkSubmissionToString(){
-        assertNotNull(bulkSubmission.toString(), "Should contain something");
-        assertEquals(bulkSubmission.getPayload(),PAYLOAD);
+        assertTrue(bulkSubmission.toString().contains("ERROR"), "Should contain something");
     }
 
     @DisplayName("Test Bulk Submission getId")

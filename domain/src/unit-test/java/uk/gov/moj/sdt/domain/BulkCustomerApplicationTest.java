@@ -42,7 +42,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit tests for {@link BulkCustomerApplication}.
@@ -90,11 +91,10 @@ class BulkCustomerApplicationTest extends AbstractSdtUnitTestBase {
     @Test
     @DisplayName("Test Bulk Customer Application")
     void testBulkCustomerApplication() {
-        assertTrue(bulkCustomerApplication.getBulkCustomer().hasAccess("1"),
-                   "BulkCustomer Object should be populated");
-        assertNotNull(bulkCustomerApplication.toString(),"Object toString should be populated");
+        assertNotNull(bulkCustomerApplication.toString(), "Object toString should be populated");
         assertEquals(1L, bulkCustomerApplication.getId());
         assertEquals("1", bulkCustomerApplication.getCustomerApplicationId());
+        assertEquals(targetApplication, bulkCustomerApplication.getTargetApplication());
     }
 
 }

@@ -41,7 +41,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import uk.gov.moj.sdt.domain.api.*;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
+import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.time.LocalDateTime;
@@ -54,7 +58,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Submit Query Request Test")
 class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
 
-
     @Mock
     private IErrorLog mockErrorLog;
 
@@ -65,7 +68,7 @@ class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
     private IBulkCustomer mockBulkCustomer;
 
     private ISubmitQueryRequest submitQueryRequest;
-    @BeforeEach
+
     @Override
     public void setUpLocalTests() {
         MockitoAnnotations.openMocks(this);
@@ -74,11 +77,9 @@ class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
         submitQueryRequest.setTargetApplication(mockTargetApplication);
         submitQueryRequest.setBulkCustomer(mockBulkCustomer);
         submitQueryRequest.setTargetApplicationResponse("mcol");
-        submitQueryRequest.setErrorLog(mockErrorLog);
         submitQueryRequest.setCriteriaType("AType");
         submitQueryRequest.setStatus("Uploaded");
         submitQueryRequest.setResultCount(1);
-
         IServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setBulkCustomerId("1234");
         serviceRequest.setBulkReference("BulkRef01");
@@ -87,28 +88,26 @@ class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
         serviceRequest.setRequestDateTime(LocalDateTime.now());
     }
 
-
     @DisplayName("Test Submit Query Request")
     @Test
-    void testSubmitQueryRequest(){submitQueryRequest.setErrorLog(mockErrorLog);
-        assertNotNull(submitQueryRequest,"BulkCustomer Object should be populated");
-        assertNotNull(submitQueryRequest.toString(),"Object toString should be populated");
-        assertEquals(submitQueryRequest.getTargetApplicationResponse(),"mcol","TargetResponse is not equal");
-        assertEquals(submitQueryRequest.getQueryReference(),"Ref","Query Reference is not equal");
-        assertEquals(submitQueryRequest.getResultCount(), 1, "Result Count is not equal");
+    void testSubmitQueryRequest(){
+        assertNotNull(submitQueryRequest, "SubmitQueryRequest object should be populated");
+        assertTrue(submitQueryRequest.toString().contains("Ref"), "Object toString is not equal");
+        assertFalse(submitQueryRequest.hasError(), "error log does not exist");
+        assertEquals("mcol", submitQueryRequest.getTargetApplicationResponse(), "TargetResponse is not equal");
+        assertEquals("Ref", submitQueryRequest.getQueryReference(), "Query Reference is not equal");
+        assertEquals(1, submitQueryRequest.getResultCount(), "Result Count is not equal");
         assertEquals(mockTargetApplication, submitQueryRequest.getTargetApplication(), "TargetApplication is not equal");
         assertEquals(mockBulkCustomer, submitQueryRequest.getBulkCustomer(), "BulkCustomer is not equal");
-        assertTrue(submitQueryRequest.hasError(),"error log does not exist");
-        assertEquals(ISubmitQueryRequest.Status.ERROR.getStatus(), submitQueryRequest.getStatus());
-        assertEquals("AType", submitQueryRequest.getCriteriaType());
-
+        assertEquals("Uploaded", submitQueryRequest.getStatus(), "Status is not equal");
+        assertEquals("AType", submitQueryRequest.getCriteriaType(), "CriteriaType is not equal");
     }
 
     @DisplayName("Test Submit Query Request Error Log is null")
     @Test
     public void testSubmitQueryRequestNoErrorLog(){
         submitQueryRequest.setErrorLog(null);
-        assertFalse(submitQueryRequest.hasError(),"error log should not exist");
+        assertFalse(submitQueryRequest.hasError(), "error log should not exist");
     }
 
     @DisplayName("Test Submit Query Request Error Reject")
@@ -116,8 +115,6 @@ class SubmitQueryRequestTest extends AbstractSdtUnitTestBase {
     void testSubmitQueryRequestErrorReject(){
 
         submitQueryRequest.reject(mockErrorLog);
-        assertTrue(submitQueryRequest.hasError(),"error log should exist");
+        assertTrue(submitQueryRequest.hasError(), "error log should exist");
     }
-
-
 }

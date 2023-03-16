@@ -102,13 +102,12 @@ class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
 
     @Test
     void testErrorLogConstructorWithData() {
-        ErrorLog errorLog2 = new ErrorLog(
-            IErrorMessage.ErrorCode.SDT_INT_ERR.name(),
-            "SDT Internal Error"
-        );
+        String errorCode = IErrorMessage.ErrorCode.SDT_INT_ERR.name();
+        String errorText =  "SDT Internal Error";
+        ErrorLog errorLog2 = new ErrorLog(errorCode, errorText);
 
-        assertNotNull(errorLog2.getErrorCode());
-        assertNotNull(errorLog2.getErrorText());
+        assertEquals(errorCode, errorLog2.getErrorCode());
+        assertEquals(errorText, errorLog2.getErrorText());
     }
 
 }
