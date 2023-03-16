@@ -132,12 +132,19 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
 
         // Get the system specific response from thread local to inject into the outbound message
         String outXml = newXml;
-        String resultsXmlNew = SdtContext.getContext().getClaimDefencesSummaryResultsXml();
 
-        // TODO: store pattern where can be changed external from code
-        Pattern MY_PATTERN = Pattern.compile("<(qresp|ns2)\\:results\\/>|<(qresp|ns2)\\:results.*\\>.*<\\/(qresp|ns2)\\:results\\>");
-        if (null != outXml && !outXml.isEmpty() && MY_PATTERN.matcher(outXml).matches()) {
-            outXml = MY_PATTERN.matcher(outXml).replaceAll(resultsXmlNew);
+        Pattern RESULTS_PATTERN = Pattern.compile("<(qresp|ns2)\\:results\\/>|<(qresp|ns2)\\:results.*\\>.*<\\/(qresp|ns2)\\:results\\>");
+        String replacementXml = SdtContext.getContext().getClaimDefencesSummaryResultsXml();
+
+        if (null != outXml && !outXml.isEmpty() && null != replacementXml && !replacementXml.isEmpty()
+                && RESULTS_PATTERN.matcher(outXml).find()) {
+
+            // remove xml header from replacement xml
+            Pattern XML_HEADER_PATTERN = Pattern.compile("<.xml.*?>");
+            replacementXml = XML_HEADER_PATTERN.matcher(replacementXml).replaceAll("");
+
+            // now replace results node with new summary results
+            outXml = RESULTS_PATTERN.matcher(outXml).replaceAll(replacementXml);
             SdtContext.getContext().setRawOutXml(outXml);
         }
 

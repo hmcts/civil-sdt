@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -93,19 +94,38 @@ class McolDefenceDetailTypeUtilTest {
     }
 
     @Test
-    void shouldReplaceXmlForEmptyResults() {
-//        Pattern MY_PATTERN = Pattern.compile("<.*\\:results\\/>|<.*\\:results.*\\>.*<\\/.*\\:results\\>(.*?)(.*?)");
-        Pattern MY_PATTERN = Pattern.compile("<(qresp|ns2)\\:results\\/>|<(qresp|ns2)\\:results.*\\>.*<\\/(qresp|ns2)\\:results\\>");
-        String xml = "<ns2:results/>";
-        String replaceString = "<ns3:results><result><node/></result></ns3:resultw>";
-        assertTrue(MY_PATTERN.matcher(xml).matches());
+    void shouldRemoveXmlHeader() {
+        Pattern MY_PATTERN = Pattern.compile("<.xml.*?>");
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                "<ns2:results xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">" +
+                "<mcolDefenceDetail><claimNumber>case11</claimNumber><defendantResponse defendantId=\"resp11\"><filedDate>2021-10-20T00:00:00+01:00</filedDate><eventCreatedDateOnMcol>2021-10-21T11:20:11+01:00</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>DE</responseType><defence>defence11</defence></defendantResponse></mcolDefenceDetail>" +
+                "<mcolDefenceDetail><claimNumber>case12</claimNumber><defendantResponse defendantId=\"resp12\"><filedDate>2021-10-27T00:00:00+01:00</filedDate><eventCreatedDateOnMcol>2021-10-28T06:08:10+01:00</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>AS</responseType><defence>defence12</defence></defendantResponse></mcolDefenceDetail>" +
+                "<mcolDefenceDetail><claimNumber>case13</claimNumber><defendantResponse defendantId=\"resp13\"><filedDate>2021-10-29T00:00:00+01:00</filedDate><eventCreatedDateOnMcol>2021-10-30T03:10:23+01:00</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>PA</responseType><defence>defence12</defence></defendantResponse></mcolDefenceDetail>" +
+                "<mcolDefenceDetail><claimNumber>case14</claimNumber><defendantResponse defendantId=\"resp14\"><filedDate>2021-11-02T00:00:00Z</filedDate><eventCreatedDateOnMcol>2021-11-02T07:15:49Z</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>DC</responseType><defence>defence14</defence></defendantResponse></mcolDefenceDetail>" +
+                "<mcolDefenceDetail><claimNumber>case15</claimNumber><defendantResponse defendantId=\"resp15\"><filedDate>2021-11-09T00:00:00Z</filedDate><eventCreatedDateOnMcol>2021-11-10T13:19:24Z</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>DE</responseType><defence>It wasn't me!</defence></defendantResponse></mcolDefenceDetail>" +
+                "<mcolDefenceDetail><claimNumber>case15</claimNumber><defendantResponse defendantId=\"resp15\"><filedDate>2021-11-09T00:00:00Z</filedDate><eventCreatedDateOnMcol>2021-11-10T14:19:24Z</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>DE</responseType><defence>My name is Shaggy</defence></defendantResponse></mcolDefenceDetail>" +
+                "<mcolDefenceDetail><claimNumber>case15</claimNumber><defendantResponse defendantId=\"resp15\"><filedDate>2021-11-09T00:00:00Z</filedDate><eventCreatedDateOnMcol>2021-11-10T15:19:24Z</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>DE</responseType><defence>And I am Chaka Demus - innocent</defence></defendantResponse></mcolDefenceDetail>" +
+                "</ns2:results>";
+        String replaceString = "";
+        assertTrue(MY_PATTERN.matcher(xml).find());
         xml = MY_PATTERN.matcher(xml).replaceAll(replaceString);
+        LOGGER.info("xml: {}", xml);
+        assertFalse(xml.contains("<?xml"));
+    }
+
+    @Test
+    void shouldReplaceXmlForEmptyResults() {
+        Pattern MY_PATTERN = Pattern.compile("<(qresp|ns2)\\:results(.*?)\\/>|<(qresp|ns2)\\:results(.*?)\\>.*<\\/(qresp|ns2)\\:results\\>");
+        String xml = "<blah><ns2:results/></blah>";
+        String replaceString = "<ns3:results><result><node/></result></ns3:resultw>";
+        assertTrue(MY_PATTERN.matcher(xml).find());
+        xml = MY_PATTERN.matcher(xml).replaceAll(replaceString);
+        LOGGER.info("xml: {}", xml);
         assertTrue(xml.contains(replaceString));
     }
 
     @Test
     void shouldReplaceXmlForSomeResults() {
-//        Pattern MY_PATTERN = Pattern.compile("<.*\\:results\\/>|<.*\\:results.*\\>.*<\\/.*\\:results\\>(.*?)(.*?)");
         Pattern MY_PATTERN = Pattern.compile("<(qresp|ns2)\\:results\\/>|<(qresp|ns2)\\:results.*\\>.*<\\/(qresp|ns2)\\:results\\>");
         String xml = "<ns2:results xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\">" +
                 "<mcolDefenceDetail><claimNumber>case11</claimNumber><defendantResponse defendantId=\"resp11\"><filedDate>2021-10-20T00:00:00+01:00</filedDate><eventCreatedDateOnMcol>2021-10-21T11:20:11+01:00</eventCreatedDateOnMcol><raisedOnMcol>false</raisedOnMcol><responseType>DE</responseType><defence>defence11</defence></defendantResponse></mcolDefenceDetail>" +
