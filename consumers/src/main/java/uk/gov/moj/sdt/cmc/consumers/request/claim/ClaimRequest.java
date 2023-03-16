@@ -14,6 +14,8 @@ import lombok.ToString;
     "claimantReference",
     "claimant",
     "defendant1",
+    "defendant2",
+    "correspondenceDetailType",
     "sendParticularsSeparately",
     "reserveRightToClaimInterest",
     "interest",
@@ -29,6 +31,10 @@ public class ClaimRequest {
     private Claimant claimant;
 
     private Defendant defendant1;
+
+    private Defendant defendant2;
+
+    private CorrespondenceDetailType correspondenceDetailType;
 
     private Boolean sendParticularsSeparately;
 

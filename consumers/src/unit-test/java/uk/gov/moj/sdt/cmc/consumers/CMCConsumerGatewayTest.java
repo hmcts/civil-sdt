@@ -69,7 +69,6 @@ class CMCConsumerGatewayTest {
     @Mock
     private IClaimRequestService claimRequestService;
 
-
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,

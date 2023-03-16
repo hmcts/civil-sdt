@@ -17,7 +17,6 @@ public class ClaimRequestService implements IClaimRequestService {
         this.cmcApi = cmcApi;
     }
 
-
     @Override
     public ClaimResponse claimRequest(String idamId,
                                       String sdtRequestRef,
