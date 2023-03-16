@@ -1,15 +1,15 @@
 package uk.gov.moj.sdt.cmc.consumers.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.DefendantResponseType;
 import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
+import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
 import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
 import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
+import uk.gov.moj.sdt.consumers.util.McolDefenceDetailTypeUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,10 +24,10 @@ public class ResponsesSummaryUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResponsesSummaryUtil.class);
 
-    private XmlToObjectConverter xmlToObjectConverter;
+    private McolDefenceDetailTypeUtil mcolDefenceDetailTypeUtil;
 
-    public ResponsesSummaryUtil(XmlToObjectConverter xmlToObjectConverter) {
-        this.xmlToObjectConverter =  xmlToObjectConverter;
+    public ResponsesSummaryUtil(McolDefenceDetailTypeUtil mcolDefenceDetailTypeUtil) {
+        this.mcolDefenceDetailTypeUtil =  mcolDefenceDetailTypeUtil;
     }
 
     public String getSummaryResults(SubmitQueryResponse mcolSubmitQueryResponse,
@@ -49,31 +49,15 @@ public class ResponsesSummaryUtil {
 
         // Convert cmc results and add to summary results
         List<McolDefenceDetailType> cmcConvertedResults = convertToMcolResults(cmcResults);
+        McolDefenceDetailTypes mcolDefenceDetailTypes = new McolDefenceDetailTypes();
         mcolSummaryResults.addAll(cmcConvertedResults);
+        mcolDefenceDetailTypes.setMcolDefenceDetailTypeList(mcolSummaryResults);
 
         // convert summary results to xml
-        String summaryResultsXml = getMcolResultsXml(mcolSummaryResults);
+        String summaryResultsXml = mcolDefenceDetailTypeUtil.convertMcolDefenceDetailListToXml(mcolDefenceDetailTypes);
         LOGGER.debug("summary XML: {}", summaryResultsXml);
 
         return summaryResultsXml;
-    }
-
-    /**
-     * get mcol Results XML from List of mcolResultObjects
-     *
-     * @param mcolResultObjects mcol Result list of objects
-     * @return String xml
-     */
-    public String getMcolResultsXml(List<McolDefenceDetailType> mcolResultObjects) {
-        StringBuilder mcolClaimDefencesObjectXML = new StringBuilder();
-        mcolResultObjects.forEach(result -> {
-            try {
-                mcolClaimDefencesObjectXML.append(xmlToObjectConverter.convertObjectToXml(result));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("Error creating Mcol Results XML", e);
-            }
-        });
-        return mcolClaimDefencesObjectXML.toString();
     }
 
     public List<McolDefenceDetailType> convertToMcolResults(List<ClaimDefencesResult> cmcResults) {

@@ -67,7 +67,6 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
         // Assume no change to input.
         String newXml = message;
 
-        // TODO: confirm this is the best place to do this.
         newXml = loadSummaryResults(newXml);
 
         // Check to ensure the parent tag can be found in the message.
@@ -124,22 +123,25 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
 
     }
 
+    /**
+     * load new summary results stored in sdt context
+     * @param newXml raw xml
+     * @return outXml xml with replaced results
+     */
     private String loadSummaryResults(String newXml) {
 
         // Get the system specific response from thread local to inject into the outbound message
         String outXml = newXml;
-
-        // TODO: regular expression replace the existing results node
-        String resultsXml = "<qresp:results/>";
-
         String resultsXmlNew = SdtContext.getContext().getClaimDefencesSummaryResultsXml();
 
-        if (null != outXml && !outXml.isEmpty() && outXml.contains(resultsXml)) {
-            outXml = outXml.replace(resultsXml, resultsXmlNew);
+        // TODO: store pattern where can be changed external from code
+        Pattern MY_PATTERN = Pattern.compile("<(qresp|ns2)\\:results\\/>|<(qresp|ns2)\\:results.*\\>.*<\\/(qresp|ns2)\\:results\\>");
+        if (null != outXml && !outXml.isEmpty() && MY_PATTERN.matcher(outXml).matches()) {
+            outXml = MY_PATTERN.matcher(outXml).replaceAll(resultsXmlNew);
             SdtContext.getContext().setRawOutXml(outXml);
         }
-        return outXml;
 
+        return outXml;
     }
 
 }

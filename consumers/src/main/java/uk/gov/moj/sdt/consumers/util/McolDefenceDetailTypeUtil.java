@@ -6,33 +6,28 @@ import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
 import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
 import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
-import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
+import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Component
 public class McolDefenceDetailTypeUtil {
-    private ResponsesSummaryUtil responsesSummaryUtil;
-    private ClaimDefencesResultsUtil claimDefencesResultsUtil;
 
-    public McolDefenceDetailTypeUtil(ClaimDefencesResultsUtil claimDefencesResultsUtil,
-                                     ResponsesSummaryUtil responsesSummaryUtil) {
-        this.claimDefencesResultsUtil = claimDefencesResultsUtil;
-        this.responsesSummaryUtil = responsesSummaryUtil;
-    }
-
-    public List<McolDefenceDetailType> createMcolDefencesDetailTypeList() {
-        List<McolDefenceDetailType> detailTypes = new ArrayList<>();
-        List<ClaimDefencesResult> results = claimDefencesResultsUtil.createClaimDefencesList();
-        results.forEach(cmcResult ->
-            detailTypes.add(convertToMcolDefenceDetailType(cmcResult))
-        );
-
-        return detailTypes;
+    public McolDefenceDetailTypes createMcolDefencesDetailTypes(List<McolDefenceDetailType> detailTypes) {
+        McolDefenceDetailTypes mcolDefenceDetailTypes = new McolDefenceDetailTypes();
+        mcolDefenceDetailTypes.setMcolDefenceDetailTypeList(detailTypes);
+        return mcolDefenceDetailTypes;
     }
 
     public McolDefenceDetailType convertToMcolDefenceDetailType(ClaimDefencesResult cmcResult) {
@@ -43,9 +38,9 @@ public class McolDefenceDetailTypeUtil {
         defendantResponseType.setDefence(cmcResult.getDefence());
         defendantResponseType.setRaisedOnMcol(false);
         defendantResponseType.setFiledDate(
-                responsesSummaryUtil.convertLocalDateToCalendar(cmcResult.getDefendantResponseFiledDate()));
+                convertLocalDateToCalendar(cmcResult.getDefendantResponseFiledDate()));
         defendantResponseType.setEventCreatedDateOnMcol(
-                responsesSummaryUtil.convertLocalDateTimeToCalendar(cmcResult.getDefendantResponseCreatedDate()));
+                convertLocalDateTimeToCalendar(cmcResult.getDefendantResponseCreatedDate()));
 
         detailType.setClaimNumber(cmcResult.getCaseManRef());
         detailType.setDefendantResponse(defendantResponseType);
@@ -65,6 +60,41 @@ public class McolDefenceDetailTypeUtil {
         final QName qnameMcolDefenceDetail = new QName("http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema",
                 "results");
         return new JAXBElement<>(qnameMcolDefenceDetail, McolDefenceDetailTypes.class, null, value);
+    }
+
+    public String convertMcolDefenceDetailListToXml(List<McolDefenceDetailType> listDetailTypes) {
+        McolDefenceDetailTypes mcolDefenceDetailTypes = createMcolDefencesDetailTypes(listDetailTypes);
+        return convertMcolDefenceDetailListToXml(mcolDefenceDetailTypes);
+    }
+
+    public String convertMcolDefenceDetailListToXml(McolDefenceDetailTypes detailTypes) {
+
+        JAXBElement<McolDefenceDetailTypes> jaxbDetailType = createMcolDefenceDetailList(detailTypes);
+        StringWriter stringWriter = new StringWriter();
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(McolDefenceDetailTypes.class);
+            Marshaller marshaller =  jaxbContext.createMarshaller();
+            marshaller.marshal(jaxbDetailType, stringWriter);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+        return stringWriter.toString();
+    }
+
+    public Calendar convertLocalDateTimeToCalendar(LocalDateTime localDateTime) {
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    public Calendar convertLocalDateToCalendar(LocalDate localDate) {
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 
 }

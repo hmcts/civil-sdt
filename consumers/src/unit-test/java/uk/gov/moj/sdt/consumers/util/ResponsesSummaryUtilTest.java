@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ResponseSummaryUtilTest {
 
     private ResponsesSummaryUtil responsesSummaryUtil;
-    private XmlToObjectConverter xmlToObjectConverter;
+    private McolDefenceDetailTypeUtil mcolDefenceDetailTypeUtil;
     private ClaimDefencesResultsUtil claimDefencesResultsUtil;
 
     /**
@@ -31,16 +30,16 @@ class ResponseSummaryUtilTest {
      */
     @BeforeEach
     public void setUpLocalTests() {
-        xmlToObjectConverter = new XmlToObjectConverter();
-        responsesSummaryUtil  = new ResponsesSummaryUtil(xmlToObjectConverter);
         claimDefencesResultsUtil = new ClaimDefencesResultsUtil();
+        mcolDefenceDetailTypeUtil = new McolDefenceDetailTypeUtil();
+        responsesSummaryUtil  = new ResponsesSummaryUtil(mcolDefenceDetailTypeUtil);
     }
 
    @Test
    void convertToMcolResultObjectsIsSuccessful() {
         List<ClaimDefencesResult> listObjects = claimDefencesResultsUtil.createClaimDefencesList();
         List<McolDefenceDetailType> listMcolTypes = responsesSummaryUtil.convertToMcolResults(listObjects);
-        String xml = responsesSummaryUtil.getMcolResultsXml(listMcolTypes);
+        String xml = mcolDefenceDetailTypeUtil.convertMcolDefenceDetailListToXml(listMcolTypes);
         assertFalse(xml.isEmpty());
         assertTrue(xml.toLowerCase().contains("mcoldefencedetail"));
         // TODO: Fix broken test

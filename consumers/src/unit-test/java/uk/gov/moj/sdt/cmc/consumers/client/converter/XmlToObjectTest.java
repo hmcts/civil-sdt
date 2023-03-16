@@ -10,8 +10,6 @@ import uk.gov.moj.sdt.cmc.consumers.converter.XmlToObjectConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.UpdateType;
-import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
-import uk.gov.moj.sdt.consumers.util.ClaimDefencesResultsUtil;
 import uk.gov.moj.sdt.consumers.util.McolDefenceDetailTypeUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,20 +35,12 @@ class XmlToObjectTest extends BaseXmlTest {
 
     private XmlToObjectConverter xmlToObject = new XmlToObjectConverter();
 
-    private ClaimDefencesResultsUtil claimDefencesResultsUtil;
-
     private McolDefenceDetailTypeUtil mcolDefenceDetailTypeUtil;
-
-    private ResponsesSummaryUtil responsesSummaryUtil;
 
     @BeforeEach
     public void setup() {
-        claimDefencesResultsUtil = new ClaimDefencesResultsUtil();
-        responsesSummaryUtil = new ResponsesSummaryUtil(xmlToObject);
-        mcolDefenceDetailTypeUtil = new McolDefenceDetailTypeUtil(claimDefencesResultsUtil,
-                responsesSummaryUtil);
+        mcolDefenceDetailTypeUtil = new McolDefenceDetailTypeUtil();
     }
-
 
     @Test
     void shouldConvertBreathingSpaceRequestToString() throws IOException {
