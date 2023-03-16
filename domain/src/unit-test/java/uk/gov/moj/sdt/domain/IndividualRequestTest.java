@@ -257,6 +257,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     @Test
     @DisplayName("Test Request toString")
     void testIndividualRequestToString() {
+        individualRequest.setRequestType("Request Type");
         assertTrue(individualRequest.toString().contains("Request Type"), "Object to string should be populated");
     }
 
