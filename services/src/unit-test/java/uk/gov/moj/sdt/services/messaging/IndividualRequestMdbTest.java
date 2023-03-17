@@ -63,6 +63,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      * Pre-testing initialization.
      */
     @Before
+    @Override
     public void setUp() {
         mockTargetSubmissionService = EasyMock.createMock(TargetApplicationSubmissionService.class);
     }
@@ -88,7 +89,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
         EasyMock.expect(objMessage.getObject()).andReturn((Serializable) sdtMessage);
         EasyMock.replay(objMessage);
 
-        mockTargetSubmissionService.processRequestToSubmit(sdtMessage.getSdtRequestReference());
+        mockTargetSubmissionService.processRequestToSubmit(sdtMessage.getSdtRequestReference(), false);
 
         EasyMock.expectLastCall();
 
@@ -124,7 +125,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
         EasyMock.expect(objMessage.getObject()).andReturn((Serializable) sdtMessage);
         EasyMock.replay(objMessage);
 
-        mockTargetSubmissionService.processRequestToSubmit(sdtMessage.getSdtRequestReference());
+        mockTargetSubmissionService.processRequestToSubmit(sdtMessage.getSdtRequestReference(), false);
 
         EasyMock.expectLastCall().andThrow(new RuntimeException("Data error occurred"));
 

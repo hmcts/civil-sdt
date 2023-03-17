@@ -2,13 +2,12 @@ package uk.gov.moj.sdt.cmc.consumers.converter;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class XmlToObjectConverter {
+public class XmlConverter {
 
     private XmlMapper xmlMapper = new XmlMapper();
 
@@ -22,8 +21,7 @@ public class XmlToObjectConverter {
         return jsonMapper.writeValueAsString(xmlMapper.readTree(xml.getBytes()));
     }
 
-    public <T> String convertObjectToXml(T object) throws JsonProcessingException {
+    public <T> String convertObjectToXml(T object) throws IOException {
         return xmlMapper.writeValueAsString(object);
     }
-
 }

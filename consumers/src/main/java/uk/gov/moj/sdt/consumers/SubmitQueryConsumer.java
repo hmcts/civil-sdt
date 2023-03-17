@@ -94,7 +94,6 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
         SubmitQueryResponseType responseType = this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
                         receiveTimeOut);
 
-        // Should we move this?
         this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
 
         SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();

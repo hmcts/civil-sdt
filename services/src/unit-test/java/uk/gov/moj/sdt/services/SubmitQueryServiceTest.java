@@ -1,41 +1,15 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id$
- * $LastChangedRevision$
- * $LastChangedDate$
- * $LastChangedBy$ */
 
 package uk.gov.moj.sdt.services;
 
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -63,15 +37,27 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.xml.ws.WebServiceException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static ch.qos.logback.classic.Level.DEBUG;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for SubmitQueryService.
  *
  * @author 274994
  */
+@ExtendWith(MockitoExtension.class)
 public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Submit Query Service object.
@@ -81,42 +67,59 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     /**
      * Mocked consumer gateway object.
      */
+    @Mock
     private IConsumerGateway mockConsumerGateway;
 
+    @Mock
     private IConsumerGateway mockCmcConsumerGateway;
 
     /**
      * The mocked ICacheable reference for global parameters cache.
      */
+    @Mock
     private ICacheable mockGlobalParamCache;
 
     /**
      * The mocked ICacheable reference to the error message cache.
      */
+    @Mock
     private ICacheable mockErrorMsgCacheable;
 
     /**
      * The mocked bulk customer dao reference.
      */
+    @Mock
     private IBulkCustomerDao mockBulkCustomerDao;
 
+    @Mock
     private ResponsesSummaryUtil responsesSummaryUtil;
 
+    private static final String TARGET_APP_TIMEOUT = "TARGET_APP_TIMEOUT";
+
+    private static final String TARGET_APP_RESP_TIMEOUT = "TARGET_APP_RESP_TIMEOUT";
+
+    private static final String TWELVE_THOUSAND = "12000";
+
+    private static final String MCOL_MAX_CONCURRENT_QUERY_REQ = "MCOL_MAX_CONCURRENT_QUERY_REQ";
+
+    private static final String CONTACT_DETAILS = "CONTACT_DETAILS";
+
+    private static final String TAR_APP_ERROR = "TAR_APP_ERROR";
+    private static final String TAR_APP_BUSY = "TAR_APP_BUSY";
+
+    private static final String CRITERIA = "criteria";
+
+    private static final String RAW_OUTPUT_XML_SHOULD_BE_NULL = "Raw output xml should be null";
+
+    private static final String SDT_INT_ERR = "SDT_INT_ERR";
     /**
      * Method to do any pre-test set-up.
      */
+    @BeforeEach
     @Override
-    @Before
     public void setUp() {
 
         // Instantiate all the mocked objects and set them in the target
-
-        mockConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
-        mockCmcConsumerGateway = EasyMock.createMock(IConsumerGateway.class);
-        mockGlobalParamCache = EasyMock.createMock(ICacheable.class);
-        mockErrorMsgCacheable = EasyMock.createMock(ICacheable.class);
-        mockBulkCustomerDao = EasyMock.createMock(IBulkCustomerDao.class);
-        responsesSummaryUtil = EasyMock.createMock(ResponsesSummaryUtil.class);
 
         final GenericXmlParser genericParser = new GenericXmlParser();
         genericParser.setEnclosingTag("targetAppDetail");
@@ -129,8 +132,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
                                                     genericParser,
                                                     mockBulkCustomerDao,
                                                     responsesSummaryUtil);
-        submitQueryService.setBulkCustomerDao(mockBulkCustomerDao);
-
     }
 
     /**
@@ -143,62 +144,52 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         setUpSubmitQueryRequest(submitQueryRequest);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
         connectionTimeOutParam.setValue("1000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
                 connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue("12000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
-                .andReturn(receiveTimeOutParam);
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
+                .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
-                .andReturn(maxQueryReq);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+                .thenReturn(maxQueryReq);
 
         final IGlobalParameter contactDetails = new GlobalParameter();
-        contactDetails.setName("CONTACT_DETAILS");
+        contactDetails.setName(CONTACT_DETAILS);
         contactDetails.setValue("SDT Team");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactDetails);
 
         final TimeoutException timeoutEx = new TimeoutException("TIMEOUT_ERROR", "Timeout occurred");
-        this.mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
-        EasyMock.expectLastCall().andThrow(timeoutEx);
 
-        this.mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
-        EasyMock.expectLastCall().andThrow(timeoutEx);
+        doThrow(timeoutEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("TAR_APP_ERROR");
+        errorMsg.setErrorCode(TAR_APP_ERROR);
         errorMsg.setErrorDescription("Request timed out");
         errorMsg.setErrorText("The system encountered a problem.");
 
-        EasyMock.expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "TAR_APP_ERROR")).andReturn(
+        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, TAR_APP_ERROR)).thenReturn(
                 errorMsg);
 
-        EasyMock.replay(mockConsumerGateway);
-        EasyMock.replay(mockCmcConsumerGateway);
-        EasyMock.replay(mockGlobalParamCache);
-        EasyMock.replay(mockErrorMsgCacheable);
-        EasyMock.replay(mockBulkCustomerDao);
-
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        EasyMock.verify(mockConsumerGateway);
-        EasyMock.verify(mockCmcConsumerGateway);
-        EasyMock.verify(mockGlobalParamCache);
-        EasyMock.verify(mockErrorMsgCacheable);
-        EasyMock.verify(mockBulkCustomerDao);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_ERROR);
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
-        Assert.assertEquals("Raw output xml should be null", null, SdtContext.getContext().getRawOutXml());
-
-        Assert.assertTrue("Expected to pass", true);
     }
 
     /**
@@ -211,62 +202,52 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         setUpSubmitQueryRequest(submitQueryRequest);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
         connectionTimeOutParam.setValue("1000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
                 connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue("12000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
-                .andReturn(receiveTimeOutParam);
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
+                .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
-                .andReturn(maxQueryReq);
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+                .thenReturn(maxQueryReq);
 
         final IGlobalParameter contactDetails = new GlobalParameter();
-        contactDetails.setName("CONTACT_DETAILS");
+        contactDetails.setName(CONTACT_DETAILS);
         contactDetails.setValue("SDT Team");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactDetails);
 
         final OutageException outageEx = new OutageException("OUTAGE_ERROR", "Server unavailable.");
-        this.mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
-        EasyMock.expectLastCall().andThrow(outageEx);
 
-        this.mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
-        EasyMock.expectLastCall().andThrow(outageEx);
+        doThrow(outageEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("TAR_APP_ERROR");
+        errorMsg.setErrorCode(TAR_APP_ERROR);
         errorMsg.setErrorDescription("Server unavailable.");
         errorMsg.setErrorText("The system encountered a problem.");
 
-        EasyMock.expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "TAR_APP_ERROR")).andReturn(
+        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, TAR_APP_ERROR)).thenReturn(
                 errorMsg);
 
-        EasyMock.replay(mockConsumerGateway);
-        EasyMock.replay(mockCmcConsumerGateway);
-        EasyMock.replay(mockGlobalParamCache);
-        EasyMock.replay(mockErrorMsgCacheable);
-        EasyMock.replay(mockBulkCustomerDao);
-
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        EasyMock.verify(mockConsumerGateway);
-        EasyMock.verify(mockCmcConsumerGateway);
-        EasyMock.verify(mockGlobalParamCache);
-        EasyMock.verify(mockErrorMsgCacheable);
-        EasyMock.verify(mockBulkCustomerDao);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_ERROR);
 
-        Assert.assertEquals("Raw output xml should be null", null, SdtContext.getContext().getRawOutXml());
-
-        Assert.assertTrue("Expected to pass", true);
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
     }
 
     /**
@@ -279,58 +260,55 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         setUpSubmitQueryRequest(submitQueryRequest);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
         connectionTimeOutParam.setValue("1000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
                 connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue("12000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
-                .andReturn(receiveTimeOutParam);
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
+            .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
-                .andReturn(maxQueryReq);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+                .thenReturn(maxQueryReq);
 
         final SoapFaultException soapFaultEx = new SoapFaultException("SOAPFAULT_ERROR", "Soap fault occurred");
-        this.mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
-        EasyMock.expectLastCall().andThrow(soapFaultEx);
+
+        doThrow(soapFaultEx).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("SDT_INT_ERR");
+        errorMsg.setErrorCode(SDT_INT_ERR);
         errorMsg.setErrorDescription("SDT Internal Error.");
         errorMsg.setErrorText("SDT Internal Error, please report to {0}");
-        EasyMock.expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "SDT_INT_ERR")).andReturn(errorMsg);
+        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, SDT_INT_ERR)).thenReturn(errorMsg);
 
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
-        contactNameParameter.setName("CONTACT_DETAILS");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(
+        contactNameParameter.setName(CONTACT_DETAILS);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactNameParameter);
 
-        EasyMock.replay(mockConsumerGateway);
-        EasyMock.replay(mockGlobalParamCache);
-        EasyMock.replay(mockErrorMsgCacheable);
-        EasyMock.replay(mockBulkCustomerDao);
-
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        EasyMock.verify(mockConsumerGateway);
-        EasyMock.verify(mockGlobalParamCache);
-        EasyMock.verify(mockErrorMsgCacheable);
-        EasyMock.verify(mockBulkCustomerDao);
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
-        Assert.assertEquals("Raw output xml should be null", null, SdtContext.getContext().getRawOutXml());
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, SDT_INT_ERR);
 
-        Assert.assertTrue("Expected to pass", true);
-
-        Assert.assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
+        assertNull(SdtContext.getContext().getRawOutXml(), RAW_OUTPUT_XML_SHOULD_BE_NULL);
+        assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
                 .getErrorText());
+
     }
 
     /**
@@ -343,57 +321,51 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         setUpSubmitQueryRequest(submitQueryRequest);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
         connectionTimeOutParam.setValue("1000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
                 connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue("12000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
-                .andReturn(receiveTimeOutParam);
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
+                .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
-                .andReturn(maxQueryReq);
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+                .thenReturn(maxQueryReq);
 
         final WebServiceException wsException = new WebServiceException("WS_ERROR");
-        this.mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
-        EasyMock.expectLastCall().andThrow(wsException);
+
+        doThrow(wsException).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("SDT_INT_ERR");
+        errorMsg.setErrorCode(SDT_INT_ERR);
         errorMsg.setErrorDescription("SDT Internal Error.");
         errorMsg.setErrorText("SDT Internal Error, please report to {0}");
-        EasyMock.expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "SDT_INT_ERR")).andReturn(errorMsg);
+        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, SDT_INT_ERR)).thenReturn(errorMsg);
 
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
-        contactNameParameter.setName("CONTACT_DETAILS");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).andReturn(
+        contactNameParameter.setName(CONTACT_DETAILS);
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
                 contactNameParameter);
 
-        EasyMock.replay(mockConsumerGateway);
-        EasyMock.replay(mockGlobalParamCache);
-        EasyMock.replay(mockErrorMsgCacheable);
-        EasyMock.replay(mockBulkCustomerDao);
-
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        EasyMock.verify(mockConsumerGateway);
-        EasyMock.verify(mockGlobalParamCache);
-        EasyMock.verify(mockErrorMsgCacheable);
-        EasyMock.verify(mockBulkCustomerDao);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, CONTACT_DETAILS);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, SDT_INT_ERR);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
-        Assert.assertEquals("Raw output xml should be null", null, SdtContext.getContext().getRawOutXml());
-
-        Assert.assertTrue("Expected to pass", true);
-
-        Assert.assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
+        assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
                 .getErrorText());
     }
 
@@ -407,34 +379,26 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         setUpSubmitQueryRequest(submitQueryRequest);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("0");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
-                .andReturn(maxQueryReq);
+        when(this.mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+                .thenReturn(maxQueryReq);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("TAR_APP_BUSY");
+        errorMsg.setErrorCode(TAR_APP_BUSY);
         errorMsg.setErrorDescription("Target Application Busy.");
         errorMsg.setErrorText("Target Application Busy.");
-        EasyMock.expect(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "TAR_APP_BUSY"))
-                .andReturn(errorMsg);
+        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, TAR_APP_BUSY))
+                .thenReturn(errorMsg);
 
-        EasyMock.replay(mockConsumerGateway);
-        EasyMock.replay(mockGlobalParamCache);
-        EasyMock.replay(mockErrorMsgCacheable);
-        EasyMock.replay(mockBulkCustomerDao);
-
-        SdtContext.getContext().setRawInXml("criteria");
+        SdtContext.getContext().setRawInXml(CRITERIA);
         this.submitQueryService.submitQuery(submitQueryRequest);
 
-        EasyMock.verify(mockConsumerGateway);
-        EasyMock.verify(mockGlobalParamCache);
-        EasyMock.verify(mockErrorMsgCacheable);
-        EasyMock.verify(mockBulkCustomerDao);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_BUSY);
 
-        Assert.assertEquals("Raw output xml should be null", null, SdtContext.getContext().getRawOutXml());
+        assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
 
-        Assert.assertTrue("Expected to pass", true);
     }
 
     /**
@@ -443,52 +407,58 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     @Test
     public void testSubmitQueryServiceSuccess() {
         final ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
-
+        Logger logger = (Logger) LoggerFactory.getLogger(SubmitQueryService.class);
         setUpSubmitQueryRequest(submitQueryRequest);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName("TARGET_APP_TIMEOUT");
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
         connectionTimeOutParam.setValue("1000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT")).andReturn(
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
                 connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName("TARGET_APP_RESP_TIMEOUT");
-        receiveTimeOutParam.setValue("12000");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT"))
-                .andReturn(receiveTimeOutParam);
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
+                .thenReturn(receiveTimeOutParam);
 
         final IGlobalParameter maxQueryReq = new GlobalParameter();
-        maxQueryReq.setName("MCOL_MAX_CONCURRENT_QUERY_REQ");
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
         maxQueryReq.setValue("5");
-        EasyMock.expect(this.mockGlobalParamCache.getValue(IGlobalParameter.class, "MCOL_MAX_CONCURRENT_QUERY_REQ"))
-                .andReturn(maxQueryReq);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+                .thenReturn(maxQueryReq);
 
-        this.mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000);
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
-            @Override
-            public Object answer() throws Throwable {
-                ((SubmitQueryRequest) EasyMock.getCurrentArguments()[0]).setStatus(ISubmitQueryRequest.Status.OK
-                        .getStatus());
-                // required to be null for a void method
-                return null;
-            }
-        });
+        doAnswer(invocation -> {
+            SubmitQueryRequest request = (SubmitQueryRequest) invocation.getArguments()[0];
+            request.setStatus(ISubmitQueryRequest.Status.OK.getStatus());
+            return null;
+        }).when(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
-        EasyMock.replay(mockConsumerGateway);
-        EasyMock.replay(mockGlobalParamCache);
-        EasyMock.replay(mockErrorMsgCacheable);
-        EasyMock.replay(mockBulkCustomerDao);
+        // Set logging level to debug so that afterCompletion logging is captured
+        logger.setLevel(DEBUG);
 
-        SdtContext.getContext().setRawInXml("criteria");
-        this.submitQueryService.submitQuery(submitQueryRequest);
+        // Create appender and add to logger
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        logger.addAppender(listAppender);
 
-        EasyMock.verify(mockConsumerGateway);
-        EasyMock.verify(mockGlobalParamCache);
-        EasyMock.verify(mockErrorMsgCacheable);
-        EasyMock.verify(mockBulkCustomerDao);
+        SdtContext.getContext().setRawInXml(CRITERIA);
+        submitQueryService.submitQuery(submitQueryRequest);
 
-        Assert.assertTrue("Expected to pass", true);
+        List<ILoggingEvent> logList = listAppender.list;
+
+        assertTrue(verifyLog(logList,"Increment concurrent requests. Current requests in progress"));
+
+        logger.detachAndStopAllAppenders();
+
+
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+
     }
 
     /**
@@ -531,7 +501,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
 
-        EasyMock.expect(this.mockBulkCustomerDao.getBulkCustomerBySdtId(sdtCustomerId)).andReturn(bulkCustomer);
+        when(this.mockBulkCustomerDao.getBulkCustomerBySdtId(sdtCustomerId)).thenReturn(bulkCustomer);
 
         final IBulkCustomer inBulkCustomer = new BulkCustomer();
         inBulkCustomer.setSdtCustomerId(10L);
@@ -542,6 +512,95 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         submitQueryRequest.setTargetApplication(inTargetApp);
         submitQueryRequest.setBulkCustomer(inBulkCustomer);
 
+    }
+
+    @Test
+    public void setBulkCustomerDaoTest(){
+
+        IBulkCustomerDao bulkCustomerDaoMock = mock(IBulkCustomerDao.class);
+        submitQueryService.setBulkCustomerDao(bulkCustomerDaoMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "bulkCustomerDao",
+                                                IBulkCustomerDao.class, submitQueryService);
+
+        assertEquals(bulkCustomerDaoMock, result, "bulkCustomerDao should be correctly set");
+    }
+
+    @Test
+    public void setErrorMessageCacheableTest(){
+
+        ICacheable errorMsgCacheableMock = mock(ICacheable.class);
+        submitQueryService.setErrorMessagesCache(errorMsgCacheableMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "errorMessagesCache",
+                                                ICacheable.class, submitQueryService);
+
+        assertEquals(errorMsgCacheableMock, result, "ErrorMsgCacheable should be correctly set");
+    }
+
+    @Test
+    public void setGlobalParametersCacheTest(){
+
+        ICacheable globalParametersCacheMock = mock(ICacheable.class);
+        submitQueryService.setGlobalParametersCache(globalParametersCacheMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "globalParametersCache",
+                                                ICacheable.class, submitQueryService);
+
+        assertEquals(globalParametersCacheMock, result, "GlobalParameters should be correctly set");
+    }
+
+    @Test
+    public void setQueryResponseXmlParserTest(){
+
+        GenericXmlParser genericResponseXmlParserMock = mock(GenericXmlParser.class);
+        submitQueryService.setQueryResponseXmlParser(genericResponseXmlParserMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "queryResponseXmlParser",
+                                                GenericXmlParser.class, submitQueryService);
+
+        assertEquals(genericResponseXmlParserMock, result, "genericXmlParser should be correctly set");
+    }
+
+    @Test
+    public void setQueryRequestXmlParserTest(){
+
+        GenericXmlParser genericRequestXmlParserMock = mock(GenericXmlParser.class);
+        submitQueryService.setQueryRequestXmlParser(genericRequestXmlParserMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "queryRequestXmlParser",
+                                                GenericXmlParser.class, submitQueryService);
+
+        assertEquals(genericRequestXmlParserMock, result, "genericXmlParser should be correctly set");
+    }
+
+    @Test
+    public void setRequestConsumerTest(){
+
+        IConsumerGateway consumerGatewayMock = mock(IConsumerGateway.class);
+        submitQueryService.setRequestConsumer(consumerGatewayMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "requestConsumer",
+                                                IConsumerGateway.class, submitQueryService);
+
+        assertEquals(consumerGatewayMock, result, "consumerGateway should be correctly set");
+    }
+
+    /**
+     * Method to search for message within the Log list
+     * @param logList
+     * @param message
+     * @return Boolean
+     */
+    private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
+        boolean verifyLog = false;
+        for (ILoggingEvent log : logList) {
+            if (log.getFormattedMessage().contains(message)) {
+                verifyLog = true;
+                break;
+            }
+        }
+        return verifyLog;
     }
 
 }
