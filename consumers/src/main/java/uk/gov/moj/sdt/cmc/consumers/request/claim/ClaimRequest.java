@@ -34,7 +34,7 @@ public class ClaimRequest {
 
     private Defendant defendant2;
 
-    private CorrespondenceDetailType correspondenceDetailType;
+    private CorrespondenceDetailType claimantCorrespondence;
 
     private Boolean sendParticularsSeparately;
 

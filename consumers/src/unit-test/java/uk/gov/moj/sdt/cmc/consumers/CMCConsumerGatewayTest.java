@@ -147,7 +147,6 @@ class CMCConsumerGatewayTest {
         verify(individualRequest).setTargetApplicationResponse(XML);
     }
 
-
     @Test
     void shouldInvokeClaimRequest() throws Exception {
         ClaimResponse response = new ClaimResponse();
