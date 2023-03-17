@@ -15,7 +15,7 @@ import lombok.ToString;
     "claimant",
     "defendant1",
     "defendant2",
-    "correspondenceDetailType",
+    "claimantCorrespondence",
     "sendParticularsSeparately",
     "reserveRightToClaimInterest",
     "interest",
