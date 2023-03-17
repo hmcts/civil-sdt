@@ -49,7 +49,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ServiceRoutingTest extends AbstractSdtUnitTestBase{

@@ -46,7 +46,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class BulkSubmissionTest extends AbstractSdtUnitTestBase {
@@ -104,8 +108,8 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         assertEquals("1", bulkSubmission.getCustomerReference());
         assertEquals(createdDate, bulkSubmission.getCreatedDate());
         assertEquals(1L, bulkSubmission.getNumberOfRequest());
-        assertEquals(bulkSubmission.getSubmissionStatus(), "Validated");
-        assertNotNull(bulkSubmission.getErrorText());
+        assertEquals("Validated", bulkSubmission.getSubmissionStatus());
+        assertEquals("This is an Error", bulkSubmission.getErrorText());
         assertTrue(bulkSubmission.hasError());
 
         }

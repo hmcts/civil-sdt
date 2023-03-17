@@ -47,6 +47,8 @@ import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class BulkFeedbackRequestTest {
 
@@ -69,12 +71,11 @@ class BulkFeedbackRequestTest {
     @DisplayName("Test Bulk Feedback Request")
     void testBulkFeedbackRequest() {
         String expectedSdtBulkRef = "BULRef:1234";
-        String actual = bulkFeedbackRequest.toString();
-
         assertNotNull(bulkFeedbackRequest,"BulkFeedbackRequest should be populated");
         assertEquals(expectedSdtBulkRef, bulkFeedbackRequest.getSdtBulkReference());
         assertEquals(mockBulkCustomer, bulkFeedbackRequest.getBulkCustomer());
         assertEquals(1L, bulkFeedbackRequest.getId());
+        String actual = bulkFeedbackRequest.toString();
         assertTrue(actual.contains(expectedSdtBulkRef),"Should contain something");
     }
 }

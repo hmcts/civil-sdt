@@ -44,6 +44,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link BulkCustomerApplication}.
@@ -85,13 +86,12 @@ class BulkCustomerApplicationTest extends AbstractSdtUnitTestBase {
 
     }
 
-    /**
-     * Tests that hasAccess() method works correctly.
-     */
     @Test
     @DisplayName("Test Bulk Customer Application")
     void testBulkCustomerApplication() {
-        assertNotNull(bulkCustomerApplication.toString(), "Object toString should be populated");
+        String actualToString = bulkCustomerApplication.toString();
+        assertNotNull(actualToString, "Object toString should be populated");
+        assertTrue(actualToString.contains(bulkCustomer.toString()));
         assertEquals(1L, bulkCustomerApplication.getId());
         assertEquals("1", bulkCustomerApplication.getCustomerApplicationId());
         assertEquals(targetApplication, bulkCustomerApplication.getTargetApplication());
