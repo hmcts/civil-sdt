@@ -37,7 +37,7 @@ public class RequestTypeXmlNodeValidator {
                                     boolean throwException) {
         if (isCCDReference(requestPayload, xmlNodeName)) {
             if (!isValidRequestType(requestType) && throwException) {
-                throw new CMCException(String.format("R equest Type: %s not supported", requestType));
+                throw new CMCException(String.format("Request Type: %s not supported", requestType));
             }
             return true;
         }
