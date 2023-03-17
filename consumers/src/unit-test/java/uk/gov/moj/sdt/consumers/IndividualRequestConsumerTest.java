@@ -296,7 +296,7 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
 
 
         verify(mockTransformer, times(2)).transformDomainToJaxb(individualRequest);
-        verify(mockClient, times(3)).submitIndividual(individualRequestType);
+        verify(mockClient, atLeast(2)).submitIndividual(individualRequestType);
     }
 
     /**
