@@ -1,5 +1,5 @@
 data "azurerm_key_vault" "civil_vault" {
-  name                = "civil-${var.env}"
+  name                = "civil-shared-${var.env}"
   resource_group_name = local.civil_shared_resource_group
 }
 
