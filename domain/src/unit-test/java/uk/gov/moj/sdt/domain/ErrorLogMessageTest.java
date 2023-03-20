@@ -40,6 +40,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -84,21 +85,31 @@ class ErrorLogMessageTest extends AbstractSdtUnitTestBase {
     @DisplayName("Test Error Log")
     void testErrorLog() {
         String expectedErrorLog = "The Bulk Customer does not have an SDT ID set";
-        String actualErrorLog = errorLog.toString();
-        assertTrue(actualErrorLog.contains(expectedErrorLog),"Should contain something");
         assertNotNull(errorLog,"ErrorLog should be populated");
         assertNotNull(errorLog.toString(),"ErrorLog toString should be populated");
+        String actualErrorLog = errorLog.toString();
+        assertTrue(actualErrorLog.contains(expectedErrorLog),"Should contain something");
     }
 
     @Test
     @DisplayName("Test Error Message")
     void testErrorMessage() {
         String expectedErrorMessage = "Error occurred due to no SDT Customer ID set";
-        String actualErrorMessage = errorMessage.toString();
-        assertTrue(actualErrorMessage.contains(expectedErrorMessage),"Should contain something");
         assertNotNull(errorMessage,"ErrorMessage should be populated");
         assertNotNull(errorMessage.toString(),"ErrorMessage toString should be populated");
-        assertNotNull(errorMessage.getId());
+        String actualErrorMessage = errorMessage.toString();
+        assertTrue(actualErrorMessage.contains(expectedErrorMessage),"Should contain something");
+        assertEquals(1L, errorMessage.getId());
+    }
+
+    @Test
+    void testErrorLogConstructorWithData() {
+        String errorCode = IErrorMessage.ErrorCode.SDT_INT_ERR.name();
+        String errorText =  "SDT Internal Error";
+        ErrorLog errorLog2 = new ErrorLog(errorCode, errorText);
+
+        assertEquals(errorCode, errorLog2.getErrorCode());
+        assertEquals(errorText, errorLog2.getErrorText());
     }
 
 }

@@ -39,29 +39,60 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class ServiceRoutingTest extends AbstractSdtUnitTestBase{
 
-
     private IServiceRouting serviceRouting;
+
+    @Mock
+    ITargetApplication mockTargetApplication;
+
+    @Mock
+    IServiceType mockServiceType;
 
     @BeforeEach
     @Override
     public void setUp() {
         serviceRouting = new ServiceRouting();
         serviceRouting.setId(1L);
+        serviceRouting.setServiceType(mockServiceType);
+        serviceRouting.setTargetApplication(mockTargetApplication);
         serviceRouting.setWebServiceEndpoint("mcol");
+        when(mockServiceType.toString()).thenReturn("MOCK_SERVICE_TYPE");
+        when(mockTargetApplication.toString()).thenReturn("MOCK_TARGET_APP");
     }
 
     @Test
     @DisplayName("Test Service Routing toString")
     void testServiceRoutingToString() {
-        String expected = "mcol";
-        String actual = serviceRouting.toString();
-        assertTrue(actual.contains(expected),"Should contain something");
+        String expectedWebServiceEndpoint = "mcol";
+        Long expectedId = 1L;
+        String expectedServiceTypeToString = "MOCK_SERVICE_TYPE";
+        String expectedTargetApplicationToString = "MOCK_TARGET_APP";
+        String actualToString = serviceRouting.toString();
+        assertEquals(expectedWebServiceEndpoint, serviceRouting.getWebServiceEndpoint(),
+                     "ServiceRouting WebServiceEndpoint is not equal");
+        assertEquals(expectedId, serviceRouting.getId(),
+                     "ServiceRouting Id is not equal");
+        assertEquals(mockServiceType, serviceRouting.getServiceType(),
+                     "ServiceRouting ServiceType is not equal");
+        assertEquals(mockTargetApplication, serviceRouting.getTargetApplication(),
+                     "ServiceRouting TargetApplication is not equal");
+        assertTrue(actualToString.contains(expectedWebServiceEndpoint),"Should contain webServiceEndpoint");
+        assertTrue(actualToString.contains(Long.toString(expectedId)),"Should contain Id");
+        assertTrue(actualToString.contains(expectedServiceTypeToString),"Should contain serviceType");
+        assertTrue(actualToString.contains(expectedTargetApplicationToString),"Should contain targetApplication");
     }
 }

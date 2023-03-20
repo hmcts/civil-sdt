@@ -40,6 +40,8 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,6 +65,8 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     private static final String FORWARDING_ATTEMPT_COUNT_MESSAGE = "Forwarding attempt count is incorrect";
     private static final String STATUS_IS_INCORRECT_MESSAGE = "Status is incorrect";
 
+    private static final LocalDateTime createdDate = LocalDateTime.now();
+
     /**
      * Set up test data.
      */
@@ -70,6 +74,25 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUp() {
         individualRequest = new IndividualRequest();
+    }
+
+    @Test
+    void testIndividualRequestSetters() {
+        individualRequest.setId(1L);
+        individualRequest.setDeadLetter(true);
+        individualRequest.setCreatedDate(createdDate);
+        individualRequest.setRequestType("Request Type");
+        individualRequest.setRequestPayload("Request Payload");
+        individualRequest.setSdtRequestReference("1");
+        individualRequest.setTargetApplicationResponse("Target Application Response");
+
+        assertTrue(individualRequest.isDeadLetter());
+        assertEquals(1L, individualRequest.getId());
+        assertEquals(createdDate, individualRequest.getCreatedDate());
+        assertEquals("Request Type", individualRequest.getRequestType());
+        assertEquals("Request Payload", individualRequest.getRequestPayload());
+        assertEquals("1", individualRequest.getSdtRequestReference());
+        assertEquals("Target Application Response", individualRequest.getTargetApplicationResponse());
     }
 
     /**
@@ -165,7 +188,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    @DisplayName("Test Mark Request As Rejected")
+    @DisplayName("Test Mark Request As Rejected with a null error log")
     void testMarkRequestAsRejectedErrorLog() {
 
         individualRequest.markRequestAsRejected(null);
@@ -178,7 +201,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     void testIndividualRequestReference() {
 
         individualRequest.setSdtBulkReference("REF0202");
-        assertEquals(individualRequest.getSdtBulkReference(), "REF0202", "reference should be set");
+        assertEquals("REF0202", individualRequest.getSdtBulkReference(), "reference should be set");
         assertNull(individualRequest.getErrorLog(), "Error log should be null");
 
     }
@@ -189,15 +212,15 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     @Test
     @DisplayName("Test Reset Forwarding Attempts")
     void testResetForwardingAttempts() {
+        individualRequest.setForwardingAttempts(5);
+        assertEquals(5, individualRequest.getForwardingAttempts(), FORWARDING_ATTEMPT_COUNT_MESSAGE);
         individualRequest.resetForwardingAttempts();
-
+        assertEquals(0, individualRequest.getForwardingAttempts(), FORWARDING_ATTEMPT_COUNT_MESSAGE);
         assertEquals(IndividualRequestStatus.RECEIVED.getStatus(),
                      individualRequest.getRequestStatus(),
                      STATUS_IS_INCORRECT_MESSAGE
         );
-        assertEquals(0, individualRequest.getForwardingAttempts(), FORWARDING_ATTEMPT_COUNT_MESSAGE);
         assertNotNull(individualRequest.getUpdatedDate(), "IndividualRequest Updated date should be populated");
-
     }
 
     /**
@@ -234,15 +257,15 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
     @Test
     @DisplayName("Test Request toString")
     void testIndividualRequestToString() {
-
-        assertNotNull(individualRequest.toString(), "Object to string should be populated");
+        individualRequest.setRequestType("Request Type");
+        assertTrue(individualRequest.toString().contains("Request Type"), "Object to string should be populated");
     }
 
     @Test
     @DisplayName("Test Request Interneral System Error")
     void testIndividualRequestSystemError(){
-    individualRequest.setInternalSystemError("Internal System Error");
-        assertNotNull(individualRequest.getInternalSystemError(),"Internal System error should be populated");
+        individualRequest.setInternalSystemError("Internal System Error");
+        assertEquals("Internal System Error", individualRequest.getInternalSystemError(),"Internal System error should be populated");
     }
 
 }

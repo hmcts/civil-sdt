@@ -39,29 +39,43 @@ package uk.gov.moj.sdt.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkFeedbackRequest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class BulkFeedbackRequestTest {
 
     IBulkFeedbackRequest bulkFeedbackRequest;
 
+    @Mock
+    IBulkCustomer mockBulkCustomer;
+
     @BeforeEach
     public void setUp() {
-    bulkFeedbackRequest = new BulkFeedbackRequest();
+        bulkFeedbackRequest = new BulkFeedbackRequest();
+        mockBulkCustomer = Mockito.mock(IBulkCustomer.class);
         bulkFeedbackRequest.setSdtBulkReference("BULRef:1234");
+        bulkFeedbackRequest.setBulkCustomer(mockBulkCustomer);
+        bulkFeedbackRequest.setId(1L);
     }
 
 
     @Test
-    @DisplayName("Test Bulk Feedback Request toString")
+    @DisplayName("Test Bulk Feedback Request")
     void testBulkFeedbackRequest() {
-        String expected = "BULRef:1234";
+        String expectedSdtBulkRef = "BULRef:1234";
+        assertNotNull(bulkFeedbackRequest,"BulkFeedbackRequest should be populated");
+        assertEquals(expectedSdtBulkRef, bulkFeedbackRequest.getSdtBulkReference());
+        assertEquals(mockBulkCustomer, bulkFeedbackRequest.getBulkCustomer());
+        assertEquals(1L, bulkFeedbackRequest.getId());
         String actual = bulkFeedbackRequest.toString();
-
-        assertNotNull(bulkFeedbackRequest,"ErrorLog should be populated");
-        assertTrue(actual.contains(expected),"Should contain something");
+        assertTrue(actual.contains(expectedSdtBulkRef),"Should contain something");
     }
 }

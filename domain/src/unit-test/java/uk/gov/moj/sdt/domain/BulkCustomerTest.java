@@ -78,6 +78,7 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
         bulkCustomerApplications.add(bulkCustomerApplication);
 
         bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
+        bulkCustomer.setId(1L);
     }
 
     /**
@@ -94,14 +95,17 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
     @DisplayName("Test Bulk Customer")
     void testIBulkCustomer(){
         assertNotNull(bulkCustomer,"BulkCustomer Object should be populated");
-        assertNotNull(bulkCustomer.toString(),"Object toString should be populated");
+        assertEquals(1L, bulkCustomer.getId(), "Id should be populated");
+        final String hashcode = Integer.toHexString(bulkCustomer.hashCode());
+        assertTrue(bulkCustomer.toString().contains(hashcode),"Object toString should be populated");
     }
 
     @Test
     @DisplayName("Test Get Bulk Customer Applications")
     void testBulkCustomerApplications(){
         assertNotNull(bulkCustomer.getBulkCustomerApplications(),"Bulk Customer Applications should be populated");
-        assertNull(bulkCustomer.getBulkCustomerApplication("Test"));
+        assertEquals(1, bulkCustomer.getBulkCustomerApplications().size(),
+                     "Bulk Customer Applications should be populated");
     }
 
     @Test
@@ -116,6 +120,20 @@ class BulkCustomerTest extends AbstractSdtUnitTestBase {
     void testGetHashIdForHibernateProxy() {
         HibernateProxy mockHibernateProxy = Mockito.mock(HibernateProxy.class);
         assertEquals("HibernateProxy", new BulkCustomer().getHashId(mockHibernateProxy));
+    }
+
+    @Test
+    @DisplayName("Test Abstract Domain Object for other object type")
+    void testGetHashIdForOtherObject() {
+        Object obj = new Object();
+        String expected = obj.getClass().getSimpleName() + "@" + Integer.toHexString(obj.hashCode());
+        assertEquals(expected, new BulkCustomer().getHashId(obj));
+    }
+
+    @Test
+    @DisplayName("Test Abstract Domain Object for a null object")
+    void testGetHashIdForNull() {
+        assertNull(new BulkCustomer().getHashId(null));
     }
 
     @Test
