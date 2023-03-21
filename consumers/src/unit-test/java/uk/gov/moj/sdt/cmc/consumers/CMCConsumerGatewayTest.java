@@ -29,6 +29,7 @@ import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
@@ -62,9 +63,6 @@ class CMCConsumerGatewayTest {
     private IJudgementService judgementService;
 
     @Mock
-    private IIndividualRequest individualRequest;
-
-    @Mock
     private BreathingSpaceRequest breathingSpaceRequest;
 
     @Mock
@@ -72,9 +70,6 @@ class CMCConsumerGatewayTest {
 
     @Mock
     private IClaimDefencesService claimDefences;
-
-    @Mock
-    private JudgementRequest judgementRequest;
 
     @Mock
     private XmlElementValueReader xmlElementValueReader;
@@ -94,6 +89,7 @@ class CMCConsumerGatewayTest {
 
     @Test
     void shouldInvokeBreathingSpace() throws Exception {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(BREATHING_SPACE, individualRequest);
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
@@ -116,6 +112,7 @@ class CMCConsumerGatewayTest {
 
     @Test
     void shouldInvokeClaimStatusUpdate() throws Exception {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(CLAIM_STATUS_UPDATE, individualRequest);
         ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
@@ -139,6 +136,8 @@ class CMCConsumerGatewayTest {
         response.setFirstPaymentDate(date);
         when(judgementService.requestJudgment(anyString(), any(), any())).thenReturn(response);
 
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        JudgementRequest judgementRequest = mock(JudgementRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
@@ -167,6 +166,7 @@ class CMCConsumerGatewayTest {
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getRequestType()).thenReturn(requestType.getType());
         if (requestType.equals(BREATHING_SPACE)) {
+            BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
