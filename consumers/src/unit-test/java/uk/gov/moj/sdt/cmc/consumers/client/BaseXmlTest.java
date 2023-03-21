@@ -27,7 +27,6 @@ public abstract class BaseXmlTest {
 
     protected String readFile(String fileName) {
         StringBuilder sb = new StringBuilder();
-        String lineSeparator = System.getProperty("line.separator");
         try {
             URL breathingSpaceURL = getClass().getClassLoader().getResource(fileName);
             Reader fileReader = new FileReader(breathingSpaceURL.getPath());

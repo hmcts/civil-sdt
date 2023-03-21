@@ -62,7 +62,7 @@ class CMCConsumerGatewayTest {
     private IJudgementService judgementService;
 
     @Mock
-    private IIndividualRequest individualRequest;
+    private IJudgementService judgementService;
 
     @Mock
     private BreathingSpaceRequest breathingSpaceRequest;
