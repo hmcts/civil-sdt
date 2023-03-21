@@ -18,9 +18,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.consumers.ConsumerGateway;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.dao.IndividualRequestDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -41,6 +43,7 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
@@ -48,6 +51,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.CCDReferenceValidator;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static ch.qos.logback.classic.Level.DEBUG;
@@ -989,6 +993,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         boolean verifyLog = false;
         for (ILoggingEvent log : logList) {
             if (log.getFormattedMessage().contains(message)) {
+
                 verifyLog = true;
                 break;
             }

@@ -69,7 +69,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
         LOGGER.debug("Invoke cmc target application service for individual request");
         String sdtRequestReference = individualRequest.getSdtRequestReference();
         String requestType = individualRequest.getRequestType();
-        String idamId = "";
+        String idamId = ""; // Todo get it from SDTContext
         String requestPayload = individualRequest.getRequestPayload();
         try {
             if (RequestType.JUDGMENT.getType().equals(requestType)) {

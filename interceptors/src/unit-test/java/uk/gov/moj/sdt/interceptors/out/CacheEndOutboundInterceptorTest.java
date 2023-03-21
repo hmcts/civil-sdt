@@ -43,7 +43,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedOutputStream;
