@@ -160,7 +160,8 @@ ext {
   ]
 }
 
-ext['jackson.version'] = '2.14.0-rc1'
+//ext['jackson.version'] = '2.14.0-rc1'
+ext['jackson.version'] = '2.14.0'
 
 ext.libraries = [
         junit5: [
@@ -212,6 +213,7 @@ allprojects {
     testImplementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
     testImplementation ("org.springframework.boot:spring-boot-starter-test"){
+      exclude group: 'junit', module: 'junit'
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
@@ -249,7 +251,13 @@ allprojects {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
-    implementation group: 'io.rest-assured', name: 'rest-assured'
+    implementation (group: 'io.rest-assured', name: 'rest-assured') {
+        exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
+        exclude group: 'commons-beanutils', module: 'commons-beanutils'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
     /*
     Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
     a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice. This dependency can be removed
@@ -264,11 +272,20 @@ allprojects {
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
 
-    testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
-    testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
-    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
-    testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-    testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
+    testImplementation ("io.rest-assured:xml-path:${restAssuredVersion}") {
+      exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
+      exclude group: 'commons-beanutils', module: 'commons-beanutils'
+      exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+      exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+      exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
+    testImplementation ("io.rest-assured:json-path:${restAssuredVersion}") {
+      exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
+      exclude group: 'commons-beanutils', module: 'commons-beanutils'
+      exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+      exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+      exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
     testImplementation "com.github.hmcts:fortify-client:1.2.2:all"
     testImplementation libraries.junit5
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
@@ -285,6 +302,62 @@ allprojects {
     tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
     */
     testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
+
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
+
+    implementation group: 'com.sun.xml.ws', name: 'jaxws-ri', version: '3.0.2'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
+
+    implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+    implementation (group: 'com.microsoft.azure', name: 'azure-servicebus-jms-spring-boot-starter', version: '2.3.5'){
+      exclude group: 'org.simpleframework', module: 'simple-xml'
+      exclude group: 'org.nanohttpd', module: 'nanohttpd'
+    }
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
+    implementation group: 'org.apache.activemq', name: 'activemq-client', version: activeMQVersion
+    implementation group: 'org.apache.activemq', name: 'activemq-broker', version: activeMQVersion
+
+    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
+    implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
+
+    implementation group: 'org.springframework.security', name: 'spring-security-web'
+    implementation group: 'org.springframework.security', name: 'spring-security-config'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
+
+    implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
+//    testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
+//    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE') {
+      exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
+      exclude group: 'commons-beanutils', module: 'commons-beanutils'
+      exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+      exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+      exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.25.1'
+    testImplementation ('org.springframework.cloud:spring-cloud-contract-wiremock:2.2.1.RELEASE') {
+      exclude group: 'commons-beanutils', module: 'commons-beanutils'
+    }
+    testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
+    testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
+    testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
+    testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+    testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.4'
+    testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
+    testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
+    testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
+    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
+
   }
 
   configurations.all {
@@ -355,114 +428,6 @@ subprojects { subproject ->
 
     endToEndTestImplementation.extendsFrom testImplementation
     endToEndTestImplementation.extendsFrom runtimeOnly
-  }
-
-  dependencyUpdates.resolutionStrategy = {
-    componentSelection { rules ->
-      rules.all { ComponentSelection selection ->
-        boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-          selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-        }
-        if (rejected) {
-          selection.reject('Release candidate')
-        }
-      }
-    }
-  }
-
-  dependencies {
-    // Add azure service bus
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
-    implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
-
-    implementation group: 'com.sun.xml.ws', name: 'jaxws-ri', version: '3.0.2'
-    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.16.3'
-    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
-
-    implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
-    implementation (group: 'com.microsoft.azure', name: 'azure-servicebus-jms-spring-boot-starter', version: '2.3.5'){
-      exclude group: 'org.simpleframework', module: 'simple-xml'
-      exclude group: 'org.nanohttpd', module: 'nanohttpd'
-    }
-
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
-    implementation group: 'org.apache.activemq', name: 'activemq-client', version: activeMQVersion
-    implementation group: 'org.apache.activemq', name: 'activemq-broker', version: activeMQVersion
-
-    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
-    implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
-
-    implementation group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version: cxfVersion
-    implementation group: 'org.apache.cxf', name: 'cxf-rt-transports-http-jetty', version: cxfVersion
-    implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: cxfVersion
-
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
-
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
-
-    implementation group: 'org.springframework.security', name: 'spring-security-web'
-    implementation group: 'org.springframework.security', name: 'spring-security-config'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
-    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
-      exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
-    }
-
-    implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
-    /*
-    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
-    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  This dependency can be removed
-    when the bug is fixed.
-    */
-    implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
-
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
-    testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
-    testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
-    testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
-    testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE') {
-      exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
-      exclude group: 'commons-beanutils', module: 'commons-beanutils'
-      exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
-      exclude group: 'org.codehaus.groovy', module: 'groovy-json'
-      exclude group: 'org.codehaus.groovy', module: 'groovy'
-    }
-    testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.25.1'
-    testImplementation ('org.springframework.cloud:spring-cloud-contract-wiremock:2.2.1.RELEASE') {
-      exclude group: 'commons-beanutils', module: 'commons-beanutils'
-    }
-    testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
-    testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-    testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
-    testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
-    testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
-    testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.4'
-    testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
-    testImplementation(platform('org.junit:junit-bom:5.8.2'))
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-      exclude group: 'junit', module: 'junit'
-      exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
-    testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
-    testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
-    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
-
-    /*
-    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
-    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
-    tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
-    */
-    testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
     sonarqube {
