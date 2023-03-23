@@ -7,7 +7,7 @@ import uk.gov.moj.sdt.cmc.consumers.model.DefendantResponseType;
 import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
 import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
 import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
-import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.consumers.util.McolDefenceDetailTypeUtil;
 

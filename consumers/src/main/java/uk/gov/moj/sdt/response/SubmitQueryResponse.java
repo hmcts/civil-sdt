@@ -1,4 +1,4 @@
-package uk.gov.moj.sdt.cmc.consumers.model;
+package uk.gov.moj.sdt.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers.api;
 
-import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 
 public interface IClaimDefencesService {
 

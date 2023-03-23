@@ -30,7 +30,7 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.consumers.api;
 
-import uk.gov.moj.sdt.cmc.consumers.model.SubmitQueryResponse;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
