@@ -160,7 +160,6 @@ ext {
   ]
 }
 
-//ext['jackson.version'] = '2.14.0-rc1'
 ext['jackson.version'] = '2.14.0'
 
 ext.libraries = [
@@ -327,13 +326,11 @@ allprojects {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
 
     implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
-//    testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
-//    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE') {
       exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
       exclude group: 'commons-beanutils', module: 'commons-beanutils'
