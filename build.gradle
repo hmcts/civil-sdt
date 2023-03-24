@@ -610,8 +610,7 @@ dependencies {
 }
 
 
-tasks.register('codeCoverageReport', JacocoReport) {
-  dependsOn[allprojects*.test, allprojects*.jacocoTestReport]
+task codeCoverageReport(type: JacocoReport, dependsOn: [allprojects*.test, allprojects*.jacocoTestReport]) {
 
   // Gather execution data from all subprojects
   // (change this if you e.g. want to calculate unit test/integration test coverage separately)
