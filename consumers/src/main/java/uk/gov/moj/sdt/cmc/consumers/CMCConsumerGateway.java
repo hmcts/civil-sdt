@@ -10,6 +10,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
@@ -112,9 +113,13 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String xmlContent = SdtContext.getContext().getRawOutXml();
         String fromDate = xmlElementValueReader.getElementValue(xmlContent, "fromDate");
         String toDate = xmlElementValueReader.getElementValue(xmlContent, "toDate");
+        ClaimDefencesResponse response = claimDefences.claimDefences("", "", "", fromDate, toDate);
 
-        return claimDefences.claimDefences("", "", "",
-                fromDate, toDate);
+        SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
+        submitQueryResponse.setClaimDefencesResults(response.getResults());
+        submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
+
+        return submitQueryResponse;
     }
 
 }

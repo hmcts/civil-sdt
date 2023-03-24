@@ -1,18 +1,18 @@
 package uk.gov.moj.sdt.cmc.consumers.client.impl;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.CMCApi;
-import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.consumers.util.ClaimDefencesResultsUtil;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,17 +35,15 @@ public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void shouldReturnClaimDefencesResponse() {
-        final ClaimDefencesResponse CLAIM_DEFENCES_RESPONSE = createClaimDefencesResponse();
-        final SubmitQueryResponse SUBMIT_QUERY_RESPONSE = createSubmitQueryResponse(CLAIM_DEFENCES_RESPONSE);
-        when(cmcApi.claimDefences(anyString(), anyString(), anyString(), anyString(), anyString()))
-                .thenReturn(CLAIM_DEFENCES_RESPONSE);
+        final ClaimDefencesResponse claimDefencesResponse = createClaimDefencesResponse();
+        when(cmcApi.claimDefences(anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(claimDefencesResponse);
         String fromDateTime = "2020-01-22T11:12:13";
         String toDateTime = "2020-12-01T13:14:15";
-        SubmitQueryResponse returnValue = claimDefencesService.claimDefences("", "", "",
+        ClaimDefencesResponse returnValue = claimDefencesService.claimDefences("", "", "",
                 fromDateTime, toDateTime);
         assertNotNull(returnValue);
-        assertEquals(SUBMIT_QUERY_RESPONSE.getClaimDefencesResults(), returnValue.getClaimDefencesResults());
-        assertEquals(SUBMIT_QUERY_RESPONSE.getClaimDefencesResultsCount(), returnValue.getClaimDefencesResultsCount());
+        assertEquals(claimDefencesResponse.getResults(), returnValue.getResults());
+        assertEquals(claimDefencesResponse.getResultCount(), returnValue.getResultCount());
     }
 
     private SubmitQueryResponse createSubmitQueryResponse(ClaimDefencesResponse claimDefencesResponse) {

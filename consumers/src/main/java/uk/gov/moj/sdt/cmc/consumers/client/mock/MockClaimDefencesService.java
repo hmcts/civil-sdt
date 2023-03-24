@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
-import uk.gov.moj.sdt.response.SubmitQueryResponse;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.consumers.util.ClaimDefencesResultsUtil;
 
@@ -12,19 +12,18 @@ import uk.gov.moj.sdt.consumers.util.ClaimDefencesResultsUtil;
 public class MockClaimDefencesService implements IClaimDefencesService {
 
     @Override
-    public SubmitQueryResponse claimDefences(String authorization, String serviceAuthorization, String idamId,
-                                             String fromDate, String toDate) {
+    public ClaimDefencesResponse claimDefences(String authorization, String serviceAuthorization, String idamId,
+                                               String fromDate, String toDate) {
         return createClaimDefencesResponse();
     }
 
-    private SubmitQueryResponse createClaimDefencesResponse() {
+    private ClaimDefencesResponse createClaimDefencesResponse() {
         ClaimDefencesResultsUtil resultsUtil = new ClaimDefencesResultsUtil();
         List<ClaimDefencesResult> results = resultsUtil.createClaimDefencesList();
-        SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
-        submitQueryResponse.setClaimDefencesResults(results);
-        submitQueryResponse.setClaimDefencesResultsCount(results.size());
-
-        return submitQueryResponse;
+        ClaimDefencesResponse response = new ClaimDefencesResponse();
+        response.setResults(results);
+        response.setResultCount(results.size());
+        return response;
     }
 
 }
