@@ -1,7 +1,6 @@
-
 data "azurerm_key_vault" "civil_vault" {
-  name                = "civil-${var.env}"
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "civil-shared-${var.env}"
+  resource_group_name = local.civil_shared_resource_group
 }
 
 data "azurerm_key_vault" "s2s_vault" {
@@ -29,12 +28,4 @@ resource "azurerm_key_vault_secret" "api_gw_s2s_secret" {
   name         = "api-gateway-s2s-secret"
   value        = data.azurerm_key_vault_secret.api_gw_s2s_key.value
   key_vault_id = data.azurerm_key_vault.civil_vault.id
-}
-
-output "vaultName" {
-  value = data.azurerm_key_vault.civil_vault.name
-}
-
-output "vaultUri" {
-  value = data.azurerm_key_vault.civil_vault.vault_uri
 }

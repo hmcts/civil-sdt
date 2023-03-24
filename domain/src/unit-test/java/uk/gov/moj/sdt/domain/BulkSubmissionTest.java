@@ -35,10 +35,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -53,16 +59,28 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
 
     private IServiceRequest mockServiceRequest;
 
+    private IBulkCustomer mockBulkCustomer;
+
+    private ITargetApplication mockTargetApplication;
+
     private  final String PAYLOAD = "Payload";
+
+    private final LocalDateTime createdDate = LocalDateTime.now();
 
     @BeforeEach
     @Override
     public void setUpLocalTests() {
-        MockitoAnnotations.openMocks(this);
         mockServiceRequest = Mockito.mock(ServiceRequest.class);
+        mockBulkCustomer = Mockito.mock(IBulkCustomer.class);
+        mockTargetApplication = Mockito.mock(ITargetApplication.class);
         bulkSubmission = new BulkSubmission();
         bulkSubmission.setErrorCode("ERROR");
         bulkSubmission.setServiceRequest(mockServiceRequest);
+        bulkSubmission.setBulkCustomer(mockBulkCustomer);
+        bulkSubmission.setTargetApplication(mockTargetApplication);
+        bulkSubmission.setCustomerReference("1");
+        bulkSubmission.setCreatedDate(createdDate);
+        bulkSubmission.setNumberOfRequest(1L);
         bulkSubmission.setId(1L);
         bulkSubmission.setPayload(PAYLOAD);
         bulkSubmission.setErrorText("This is an Error");
@@ -78,15 +96,20 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.markAsValidated();
         //then
 
-        assertNotNull(bulkSubmission.getServiceRequest(), "Should return a ServiceRequest object");
-        assertNotNull(bulkSubmission.getErrorCode(), "Error code should be set");
         assertNotEquals(
             bulkSubmission.getSubmissionStatus(),
             IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus()
         );
 
-        assertEquals(bulkSubmission.getSubmissionStatus(), "Validated");
-        assertNotNull(bulkSubmission.getErrorText());
+        assertEquals("ERROR", bulkSubmission.getErrorCode(), "Error code should be set");
+        assertEquals(mockServiceRequest, bulkSubmission.getServiceRequest());
+        assertEquals(mockTargetApplication, bulkSubmission.getTargetApplication());
+        assertEquals(mockBulkCustomer, bulkSubmission.getBulkCustomer());
+        assertEquals("1", bulkSubmission.getCustomerReference());
+        assertEquals(createdDate, bulkSubmission.getCreatedDate());
+        assertEquals(1L, bulkSubmission.getNumberOfRequest());
+        assertEquals("Validated", bulkSubmission.getSubmissionStatus());
+        assertEquals("This is an Error", bulkSubmission.getErrorText());
         assertTrue(bulkSubmission.hasError());
 
         }
@@ -99,16 +122,15 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         //when
         bulkSubmission.markAsValidated();
         //then
-        assertNotEquals(bulkSubmission.getSubmissionStatus(),"Validated");
-        assertEquals(bulkSubmission.getPayload(),PAYLOAD);
+        assertNotEquals("Validated", bulkSubmission.getSubmissionStatus());
+        assertEquals(PAYLOAD, bulkSubmission.getPayload());
 
     }
 
     @DisplayName("Test Bulk Submission toString")
     @Test
     void testBulkSubmissionToString(){
-        assertNotNull(bulkSubmission.toString(), "Should contain something");
-        assertEquals(bulkSubmission.getPayload(),PAYLOAD);
+        assertTrue(bulkSubmission.toString().contains("ERROR"), "Should contain something");
     }
 
     @DisplayName("Test Bulk Submission getId")
@@ -122,6 +144,24 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
     void testBulkSubmissionHasError(){
         bulkSubmission.setErrorCode(null);
         assertFalse(bulkSubmission.hasError());
+    }
+
+    @Test
+    void testBulkSubmissionIndividualRequests() {
+        List<IIndividualRequest> individualRequestList = new ArrayList<>();
+        IIndividualRequest mockIndividualRequest = new IndividualRequest();
+        bulkSubmission.setIndividualRequests(individualRequestList);
+        bulkSubmission.addIndividualRequest(mockIndividualRequest);
+        assertNotNull(bulkSubmission.getIndividualRequests());
+        assertEquals(1, bulkSubmission.getIndividualRequests().size());
+    }
+
+    @Test
+    void testBulkSubmissionMarkedAsComplete() {
+        bulkSubmission.markAsCompleted();
+        assertEquals(IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus(), bulkSubmission.getSubmissionStatus());
+        assertNotNull(bulkSubmission.getUpdatedDate());
+        assertNotNull(bulkSubmission.getCompletedDate());
     }
 
 }

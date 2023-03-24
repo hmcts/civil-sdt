@@ -36,9 +36,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link BulkCustomerApplication}.
@@ -54,6 +60,10 @@ class BulkCustomerApplicationTest extends AbstractSdtUnitTestBase {
 
     private IBulkCustomer bulkCustomer;
 
+    private ITargetApplication targetApplication;
+
+    private Set<IBulkCustomerApplication> bulkCustomerApplicationSet;
+
     /**
      * Set up test data.
      */
@@ -61,21 +71,30 @@ class BulkCustomerApplicationTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     public void setUp() {
         bulkCustomerApplication = new BulkCustomerApplication();
+        bulkCustomerApplicationSet = new HashSet<>();
+        bulkCustomerApplicationSet.add(bulkCustomerApplication);
         bulkCustomer = new BulkCustomer();
+        bulkCustomer.setBulkCustomerApplications(bulkCustomerApplicationSet);
+        targetApplication = new TargetApplication();
+        targetApplication.setTargetApplicationCode("1");
+
+        bulkCustomerApplication.setTargetApplication(targetApplication);
+
         bulkCustomerApplication.setBulkCustomer(bulkCustomer);
-         bulkCustomerApplication.setId(1L);
+        bulkCustomerApplication.setId(1L);
+        bulkCustomerApplication.setCustomerApplicationId("1");
 
     }
 
-    /**
-     * Tests that hasAccess() method works correctly.
-     */
     @Test
     @DisplayName("Test Bulk Customer Application")
     void testBulkCustomerApplication() {
-        assertNotNull(bulkCustomerApplication.getBulkCustomer(),"BulkCustomer Object should be populated");
-        assertNotNull(bulkCustomerApplication.toString(),"Object toString should be populated");
-        assertNotNull(bulkCustomerApplication.getId());
+        String actualToString = bulkCustomerApplication.toString();
+        assertNotNull(actualToString, "Object toString should be populated");
+        assertTrue(actualToString.contains(bulkCustomer.toString()));
+        assertEquals(1L, bulkCustomerApplication.getId());
+        assertEquals("1", bulkCustomerApplication.getCustomerApplicationId());
+        assertEquals(targetApplication, bulkCustomerApplication.getTargetApplication());
     }
 
 }

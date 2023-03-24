@@ -49,6 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Service Type Test")
 class ServiceTypeTest extends AbstractSdtUnitTestBase {
 
+    private static final String SERVICE_NAME = "TestType";
 
     private IServiceType serviceType;
 
@@ -59,25 +60,20 @@ class ServiceTypeTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUpLocalTests() {
         serviceType = new ServiceType();
-        String TEST_TYPE = "TestType";
-        serviceType.setName(TEST_TYPE);
+        serviceType.setName(SERVICE_NAME);
+        serviceType.setId(1L);
         serviceType.setStatus("YES");
         serviceType.setDescription("Description");
-
     }
-
 
     @DisplayName("Test Service Type")
     @Test
     void testServiceType(){
-
-        String EXPECTED = "TestType";
-        String actual = serviceType.toString();
-        assertNotNull(serviceType,"BulkCustomer Object should be populated");
-        assertTrue(actual.contains(EXPECTED),"Should contain something");
-        assertEquals(serviceType.getDescription(),"Description","TargetResponse is not equal");
-        assertEquals(serviceType.getStatus(),"YES","Query Reference is not equal");
-        assertEquals(serviceType.getName(),EXPECTED,"Query Reference is not equal");
+        assertNotNull(serviceType, "ServiceType Object should be populated");
+        assertTrue(serviceType.toString().contains(SERVICE_NAME), "Should contain something");
+        assertEquals(serviceType.getId(), 1L, "Service id is not equal");
+        assertEquals("Description", serviceType.getDescription(), "Service description is not equal");
+        assertEquals("YES", serviceType.getStatus(), "Service status is not equal");
+        assertEquals(SERVICE_NAME, serviceType.getName(), "Service name is not equal");
     }
-
 }
