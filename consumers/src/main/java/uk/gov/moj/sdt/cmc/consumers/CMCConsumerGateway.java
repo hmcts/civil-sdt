@@ -35,6 +35,8 @@ import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_L
 public class CMCConsumerGateway implements IConsumerGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
+    public static final String FROM_DATE = "fromDate";
+    public static final String TO_DATE = "toDate";
 
     private IBreathingSpaceService breathingSpace;
 
@@ -111,8 +113,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
                      submitQueryRequest.getBulkCustomer().getSdtCustomerId());
 
         String xmlContent = SdtContext.getContext().getRawOutXml();
-        String fromDate = xmlElementValueReader.getElementValue(xmlContent, "fromDate");
-        String toDate = xmlElementValueReader.getElementValue(xmlContent, "toDate");
+        String fromDate = xmlElementValueReader.getElementValue(xmlContent, FROM_DATE);
+        String toDate = xmlElementValueReader.getElementValue(xmlContent, TO_DATE);
         ClaimDefencesResponse response = claimDefences.claimDefences("", "", "", fromDate, toDate);
 
         SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
