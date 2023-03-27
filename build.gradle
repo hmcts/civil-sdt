@@ -247,7 +247,7 @@ allprojects {
     }
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.16.1'
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     implementation group: 'io.rest-assured', name: 'rest-assured'
     /*
@@ -401,8 +401,8 @@ subprojects { subproject ->
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
 
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.16.1'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.16.1'
 
     implementation group: 'org.springframework.security', name: 'spring-security-web'
     implementation group: 'org.springframework.security', name: 'spring-security-config'
