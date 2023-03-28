@@ -2,15 +2,18 @@ package uk.gov.moj.sdt.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.PurgeNativeCallFunction;
 
-@Transactional
 @Service
 public class PurgeService {
 
-    private static Logger logger = LoggerFactory.getLogger(PurgeService.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(PurgeService.class);
+
+    @Value("${sdt.purge.commitInterval}")
+    private String commitIntervalString;
 
     private PurgeNativeCallFunction purgeNativeCallFunction;
 
@@ -18,13 +21,27 @@ public class PurgeService {
         this.purgeNativeCallFunction = purgeNativeCallFunction;
     }
 
+    @Scheduled(cron = "${sdt.purge.cron}")
     public void transactPurgeProc() {
-        Integer commitInterval = 1000;
-        logger.debug("STARTING: the Purge procedure ({}) under transaction", commitInterval);
+        LOGGER.debug("EXECUTING: the Scheduled Purge Job");
 
-        purgeNativeCallFunction.executePurgeStoredProc(commitInterval);
+        purgeNativeCallFunction.executePurgeStoredProc(getCommitInterval());
 
-        logger.debug("COMPLETING: the Purge procedure under transaction");
+        LOGGER.debug("COMPLETED: the Scheduled Purge Job");
+    }
+
+    public Integer getCommitInterval() {
+        LOGGER.debug("getCommitInterval");
+        Integer commitInterval = 500;
+        LOGGER.info("default commitInterval to {}", commitInterval);
+        if (null != commitIntervalString && !commitIntervalString.isEmpty()) {
+            Integer parmCommitInterval = Integer.parseInt(commitIntervalString);
+            if (parmCommitInterval > 0) {
+                commitInterval = parmCommitInterval;
+                LOGGER.info("commitInterval obtained = {}", commitInterval);
+            }
+        }
+        return commitInterval;
     }
 
 }
