@@ -14,7 +14,7 @@ import javax.servlet.ServletContextEvent;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomListenerTest {
+class CustomListenerTest {
 
     CustomListener customListener;
 

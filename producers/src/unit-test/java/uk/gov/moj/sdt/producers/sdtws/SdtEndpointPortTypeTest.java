@@ -152,10 +152,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
             response = portType.submitBulk(dummyRequest);
 
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.isPerformanceEnabled(anyLong());
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .isPerformanceEnabled(anyLong()), times(2));
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .log(any(), anyLong(), anyString(), anyString()), times(2) );
         }
 
         verify(mockCreateBulkRequestHandler).submitBulk(dummyRequest);
@@ -194,10 +194,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
             response = portType.getBulkFeedback(createBulkFeedbackRequestType());
 
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.isPerformanceEnabled(anyLong());
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .isPerformanceEnabled(anyLong()), times(2));
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .log(any(), anyLong(), anyString(), anyString()), times(2) );
         }
 
         assertNotNull(response, RESPONSE_EXPECTED);
@@ -237,10 +237,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
             response = portType.submitQuery(createsubmitQueryRequestType());
 
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.isPerformanceEnabled(anyLong());
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .isPerformanceEnabled(anyLong()), times(2));
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .log(any(), anyLong(), anyString(), anyString()), times(2) );
         }
 
         assertNotNull(response, RESPONSE_EXPECTED);

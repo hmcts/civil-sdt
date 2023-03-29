@@ -121,10 +121,10 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
             response = portType.updateItem(createUpdateRequest());
 
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.isPerformanceEnabled(anyLong());
-            verify(PerformanceLogger.class, times(2));
-            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .isPerformanceEnabled(anyLong()), times(2));
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .log(any(), anyLong(), anyString(), anyString()), times(2) );
         }
 
         verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));

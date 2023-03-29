@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ConsumersConfigTest {
+class ConsumersConfigTest {
 
     @Spy
     ConsumersConfig consumersConfig = new ConsumersConfig();
