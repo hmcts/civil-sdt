@@ -31,7 +31,7 @@ public class PurgeNativeCallFunction {
         /* Test Stored Procedure */
         LOGGER.debug("Creating Store Procedure...");
         entityManager.joinTransaction();
-        entityManager.createNativeQuery("call sdt_owner.purge(?1)")
+        entityManager.createNativeQuery("call purge(?1)")
                 .setParameter(1, commitInterval)
                 .executeUpdate();
 
