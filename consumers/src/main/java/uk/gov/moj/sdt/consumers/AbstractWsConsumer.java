@@ -88,6 +88,9 @@ public abstract class AbstractWsConsumer {
                     targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
         }
 
+        String out = targetApplicationCode+ serviceType+ webServiceEndPoint+ connectionTimeOut+ receiveTimeOut;
+        System.out.println(out);
+
         final String clientCacheKey = targetApplicationCode + serviceType;
         ITargetAppInternalEndpointPortType client = null;
 

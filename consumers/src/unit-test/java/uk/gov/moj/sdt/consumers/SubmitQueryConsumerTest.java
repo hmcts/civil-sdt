@@ -31,6 +31,10 @@
 
 package uk.gov.moj.sdt.consumers;
 
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,6 +59,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.math.BigInteger;
@@ -118,6 +123,53 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         ITargetAppInternalEndpointPortType portType = submitQueryConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
         assertNotNull(portType);
+    }
+
+    @Test
+    void testGetClientImpl() {
+        final String targetApplicationCode = "APP_CODE";
+        final String serviceType = "SERVICE_TYPE";
+        final String webServiceEndPoint = "WEB_SERVICE_ENDPOINT";
+        final long connectionTimeOut = 30L;
+        final long receiveTimeOut = 20L;
+        ITargetAppInternalEndpointPortType portType;
+
+        try(MockedStatic<ClientProxy> mockClientProxy = Mockito.mockStatic(ClientProxy.class)) {
+            Client mockClient = mock(Client.class);
+            ITargetAppInternalEndpointPortType mockEndpointPortType
+                = mock(ITargetAppInternalEndpointPortType.class,
+                       withSettings().extraInterfaces(BindingProvider.class));
+            HTTPConduit mockHTTPConduit = mock(HTTPConduit.class);
+
+            mockClientProxy.when(() -> ClientProxy.getClient(any()))
+                .thenReturn(mockClient);
+            when(submitQueryConsumer.createTargetAppEndPoint())
+                .thenReturn(mockEndpointPortType);
+            when(mockClient.getConduit())
+                .thenReturn(mockHTTPConduit);
+
+            portType = submitQueryConsumer
+                .getClient(
+                    "targetApplicationCode",
+                    "serviceType",
+                    "webServiceEndPoint",
+                    30L,
+                    20L);
+
+            verifyStatic(ClientProxy.class);
+            ClientProxy.getClient(any());
+            verify(submitQueryConsumer).createTargetAppEndPoint();
+            verify((BindingProvider) mockEndpointPortType, times(2)).getRequestContext();
+            verify(mockClient).getConduit();
+            verify(mockHTTPConduit).setClient(any(HTTPClientPolicy.class));
+
+            // coverage for this.clientCache.containsKey()
+            submitQueryConsumer
+                .getClient(targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+        }
+
+        assertNotNull(portType);
+
     }
 
     /**
