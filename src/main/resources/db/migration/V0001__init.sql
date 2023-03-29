@@ -1,12 +1,7 @@
--------------------------------------------------------------
--- Create the schemas used by SDT and all their contents
---------------------------------------------------------------
-CREATE SCHEMA sdt_owner;
-
-SET search_path TO sdt_owner;
+SET search_path TO public;
 
 ------------------------------------------------
--- Create tables for SDT_OWNER
+-- Create tables
 ------------------------------------------------
 CREATE TABLE bulk_customers
 (bulk_customer_id NUMERIC NOT NULL,
@@ -123,7 +118,7 @@ target_application_name VARCHAR(255),
 version_number NUMERIC DEFAULT 0);
 
 ------------------------------------------------
--- Create indices for SDT_OWNER
+-- Create indices
 ------------------------------------------------
 CREATE INDEX bca_bulk_customer_id ON bulk_customer_applications (bulk_customer_id);
 CREATE INDEX bca_target_application_i ON bulk_customer_applications (target_application_id);
@@ -153,7 +148,7 @@ CREATE UNIQUE INDEX target_applications_pk ON target_applications (target_applic
 CREATE INDEX ta_target_application_name ON target_applications (target_application_name);
 
 ------------------------------------------------
--- Create Primary Keys for SDT_OWNER
+-- Create Primary Keys
 ------------------------------------------------
 ALTER TABLE bulk_customers ADD CONSTRAINT bulk_customers_pk PRIMARY KEY USING INDEX bulk_customers_pk;
 ALTER TABLE bulk_customer_applications ADD CONSTRAINT bulk_customer_applications_pk PRIMARY KEY USING INDEX bulk_customer_applications_pk;
@@ -168,7 +163,7 @@ ALTER TABLE service_types ADD CONSTRAINT service_types_pk PRIMARY KEY USING INDE
 ALTER TABLE target_applications ADD CONSTRAINT target_applications_pk PRIMARY KEY USING INDEX target_applications_pk;
 
 ------------------------------------------------
--- Create Check Constraints for SDT_OWNER
+-- Create Check Constraints
 ------------------------------------------------
 ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_cai_nn CHECK (customer_application_id IS NOT NULL);
 ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_vn_nn CHECK (version_number IS NOT NULL);
@@ -212,7 +207,7 @@ ALTER TABLE target_applications ADD CONSTRAINT ta_tac_nn CHECK (target_applicati
 ALTER TABLE target_applications ADD CONSTRAINT ta_vn_nn CHECK (version_number IS NOT NULL);
 
 ------------------------------------------------
--- Create Referential constraints for SDT_OWNER
+-- Create Referential constraints
 ------------------------------------------------
 ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_bulk_customer_fk FOREIGN KEY (bulk_customer_id)
   REFERENCES bulk_customers (bulk_customer_id);
@@ -244,18 +239,18 @@ ALTER TABLE target_applications ADD CONSTRAINT ta_tan_uni UNIQUE (target_applica
 -- Create Sequences for SDT_OWNER
 ------------------------------------------------
 -- BIGINT/NUMERIC = 18 digits, but seq was formerly 27 digits! Consider type change
-CREATE SEQUENCE bulk_cust_app_seq MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE bulk_cust_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE bulk_sub_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE err_log_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE err_mesg_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE glb_par_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE ind_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 2000 NO CYCLE;
-CREATE SEQUENCE sdt_ref_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE ser_rou_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE ser_typ_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
-CREATE SEQUENCE srv_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 1 START WITH 1 NO CYCLE;
-CREATE SEQUENCE tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 1 START WITH 1 CYCLE;
+CREATE SEQUENCE bulk_cust_app_seq MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE bulk_cust_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE bulk_sub_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE err_log_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE err_mesg_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE glb_par_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE ind_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 2000 NO CYCLE;
+CREATE SEQUENCE sdt_ref_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE ser_rou_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE ser_typ_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE srv_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
 
 
 ------------------------------------------------

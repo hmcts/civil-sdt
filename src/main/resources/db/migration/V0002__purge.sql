@@ -1,5 +1,3 @@
-SET search_path TO sdt_owner;
-
 DROP SEQUENCE IF EXISTS purge_job_audit_seq;
 DROP SEQUENCE IF EXISTS purge_job_audit_messages_seq;
 DROP TABLE IF EXISTS purge_job_audit CASCADE;
@@ -18,7 +16,7 @@ success NUMERIC);
 
 CREATE TABLE purge_job_audit_messages
 (purge_job_message_id NUMERIC UNIQUE NOT NULL,
-purge_job_id NUMERIC REFERENCES sdt_owner.purge_job_audit (purge_job_id),
+purge_job_id NUMERIC REFERENCES purge_job_audit (purge_job_id),
 message_date TIMESTAMP(6),
 log_message VARCHAR(256));
 
@@ -87,7 +85,6 @@ c4 CURSOR
 n_iteration   INT;
 
 BEGIN
-	SET search_path TO sdt_owner;
 
     -- retention period
 	SELECT parameter_value
