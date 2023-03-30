@@ -19,7 +19,8 @@ import uk.gov.moj.sdt.test.utils.TestConfig;
  */
 @ActiveProfiles("integ")
 @SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
-@Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/PurgeDaoTest.sql"})
+@Sql(scripts = {"classpath:db/migration/V0002__purge.sql",
+        "classpath:uk/gov/moj/sdt/dao/sql/PurgeDaoTest.sql"})
 @Transactional
 class PurgeNativeCallFunctionTest extends AbstractIntegrationTest {
     /**
