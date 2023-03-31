@@ -10,6 +10,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class PurgeServiceTest extends AbstractSdtUnitTestBase {
@@ -28,6 +30,7 @@ public class PurgeServiceTest extends AbstractSdtUnitTestBase {
     void shouldPerformTransactionalPurge() {
         purgeService.transactPurgeProc();
         assertTrue(true, "Expected to pass");
+        verify(purgeNativeCallFunction).executePurgeStoredProc(anyInt());
     }
 
     @Test
