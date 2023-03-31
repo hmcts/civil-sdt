@@ -34,33 +34,31 @@ package uk.gov.moj.sdt.producers;
 import javax.xml.bind.JAXBElement;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Test class for end to end web service tests..
  *
  * @author Robin Compston
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+@ExtendWith(SpringExtension.class)
 public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType> {
 
     /**
      * Method to call remote submit query endpoint to be tested.
      */
     @Test
-    @Ignore
+    @Disabled
     public void testValid() {
         this.callWebService(SubmitQueryRequestType.class);
     }
@@ -73,8 +71,8 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
         try {
             this.callWebService(SubmitQueryRequestType.class);
         } catch (SOAPFaultException e) {
-            Assert.assertTrue("Unexpected exception message in SOAPFaultException [" + e.getMessage() + "]", e
-                    .getMessage().contains("The content of element 'criterion' is not complete"));
+            assertTrue(e.getMessage().contains("The content of element 'criterion' is not complete"),
+                    "Unexpected exception message in SOAPFaultException [" + e.getMessage() + "]");
         }
     }
 
@@ -110,4 +108,5 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
         ObjectFactory objectFactory = new ObjectFactory();
         return objectFactory.createSubmitQueryResponse(response);
     }
+
 }

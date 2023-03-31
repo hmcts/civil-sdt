@@ -36,12 +36,9 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.junit.Assert;
-import org.junit.ComparisonFailure;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
@@ -49,14 +46,14 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /**
  * Test class for end to end web service tests..
  *
  * @author Robin Compston
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+@ExtendWith(SpringExtension.class)
 public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType> {
     /**
      * Thirty seconds in milliseconds.
@@ -157,7 +154,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         ConcurrentMessage concurrentMessage;
 
         // Create all necessary threads and store in list.
-        List<ConcurrentMessage> concurrentMessages = new ArrayList<ConcurrentMessage>(concurrencyLevel);
+        List<ConcurrentMessage> concurrentMessages = new ArrayList<>(concurrencyLevel);
         for (int i = 0; i < concurrencyLevel; i++) {
             concurrentMessage = new ConcurrentMessage(attempts);
             concurrentMessages.add(concurrentMessage);
@@ -171,7 +168,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
             try {
                 concurrentMessages.get(i).join(THIRTY_SECONDS);
             } catch (final InterruptedException e) {
-                Assert.fail("Unexpected interruption of concurrent message thread.");
+                fail("Unexpected interruption of concurrent message thread.");
             }
         }
 
@@ -184,12 +181,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         }
 
         // All should have been duplicates except for one which worked.
-        if (duplicateCount == concurrencyLevel - 1) {
-            return true;
-        }
-
-        // Test did not get expected result - try again - it may be a timing issue.
-        return false;
+        return (duplicateCount == concurrencyLevel - 1);
     }
 
     /**
@@ -230,15 +222,15 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
          * @return true - duplicate message detected by server, false - no duplicate detected.
          */
         public void testConcurrentDuplicate() {
-            try {
+//            try {
                 this.callWebService();
-            } catch (final ComparisonFailure e) {
-                if (e.getActual().matches(
-                        ".*?Duplicate User File Reference .*? supplied. This was previously used to submit "
-                                + "a Bulk Request on .*? and the SDT Bulk Reference " + "MCOL-.*? was allocated..*?")) {
-                    setDuplicate(true);
-                }
-            }
+//            } catch (final ComparisonFailure e) {
+//                if (e.getActual().matches(
+//                        ".*?Duplicate User File Reference .*? supplied. This was previously used to submit "
+//                                + "a Bulk Request on .*? and the SDT Bulk Reference " + "MCOL-.*? was allocated..*?")) {
+//                    setDuplicate(true);
+//                }
+//            }
         }
 
         /**
@@ -265,8 +257,6 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
             // Check the response returned by the web service.
             checkXmlFromJaxb(response);
-
-            return;
         }
 
         /**

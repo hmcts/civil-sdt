@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.producers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,8 +48,7 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,23 +58,27 @@ import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 /**
  * Test class for end to end web service tests..
  *
  * @param <JaxbRequestType>  the type of the JAXB top level object to create.
- * @param <EndpointPortType> the type of the endpoint to be called.
+ * @param <JaxbResponseType> the type of the JAXB response.
  * @author Robin Compston
  */
 public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(XmlNamespaceUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWebServiceTest.class);
 
     /**
      * Setup the test.
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() {
         DBUnitUtility.loadDatabase(this.getClass(), true);
     }
@@ -133,7 +137,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             request = (JaxbRequestType) jaxbElement.getValue();
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Failure to unmarshall request from web service [" + requestClass.toString() + "]");
+            fail("Failure to unmarshall request from web service [" + requestClass.toString() + "]");
         }
 
         return request;
@@ -157,7 +161,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Output stream to write result to.
-            OutputStream out = new OutputStream() {
+            String actualXml;
+            try (OutputStream out = new OutputStream() {
                 private StringBuilder string = new StringBuilder();
 
                 @Override
@@ -169,15 +174,16 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
                 public String toString() {
                     return this.string.toString();
                 }
-            };
+            }) {
 
-            JAXBElement<JaxbResponseType> jaxbResponse = this.wrapJaxbObject(response);
+                JAXBElement<JaxbResponseType> jaxbResponse = this.wrapJaxbObject(response);
 
-            // Convert the JAXB object tree into XML.
-            jaxbMarshaller.marshal(jaxbResponse, out);
+                // Convert the JAXB object tree into XML.
+                jaxbMarshaller.marshal(jaxbResponse, out);
 
-            // Get the XML out of the output stream.
-            String actualXml = out.toString();
+                // Get the XML out of the output stream.
+                actualXml = out.toString();
+            }
 
             // Find out method that called us.
             StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
@@ -193,7 +199,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             // Add the method name and suffix.
             resourceName = resourceName + "." + methodName + ".response.xml";
             InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
-            String expectedXml = IOUtils.toString(inputStream, "UTF-8");
+            String expectedXml = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
             // Blank out the sdt bulk reference and submitted date since these
             // will not match otherwise.
@@ -208,14 +214,14 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             actualXml = removeLineFeeds(actualXml);
 
             if (!actualXml.equals(expectedXml)) {
-                LOGGER.error("expected [" + expectedXml + "], actual [" + actualXml + "]");
+                LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
             }
 
             // Check xml.
-            Assert.assertEquals("Expected XML [" + resourceName + "] does not match, ", expectedXml, actualXml);
+            assertEquals(expectedXml, actualXml, "Expected XML [" + resourceName + "] does not match, ");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Failure to marshall response from web service [" + response.toString() + "]");
+            fail("Failure to marshall response from web service [" + response.toString() + "]");
         }
     }
 

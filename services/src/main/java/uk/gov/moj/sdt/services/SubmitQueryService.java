@@ -133,7 +133,7 @@ public class SubmitQueryService implements ISubmitQueryService {
     /**
      * threshold for incoming requests for each target application.
      */
-    private Map<String, Integer> concurrentRequestsInProgress = new HashMap<String, Integer>();
+    private Map<String, Integer> concurrentRequestsInProgress = new HashMap<>();
 
     @Override
     public void submitQuery(final ISubmitQueryRequest submitQueryRequest) {
@@ -150,7 +150,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         try {
             this.sendRequestToTargetApp(submitQueryRequest);
 
-            this.updateCompletedRequest(submitQueryRequest);
+            this.updateCompletedRequest();
         } catch (final TimeoutException e) {
             LOGGER.error("Timeout exception for SDT Bulk Customer [" +
                     submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "] ", e.getMessage());
@@ -226,7 +226,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                 this.getErrorMessagesCache().getValue(IErrorMessage.class,
                         IErrorMessage.ErrorCode.TAR_APP_ERROR.name());
 
-        final List<String> replacements = new ArrayList<String>();
+        final List<String> replacements = new ArrayList<>();
         replacements.add(getContactDetails());
         final String errorText = MessageFormat.format(errorMessageParam.getErrorText(), replacements.toArray());
 
@@ -243,10 +243,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         final IGlobalParameter globalParameter =
                 globalParametersCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
-        final String contactDetails = globalParameter.getValue();
-
-        return contactDetails;
-
+        return globalParameter.getValue();
     }
 
     /**
@@ -259,7 +256,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                 this.getErrorMessagesCache().getValue(IErrorMessage.class,
                         IErrorMessage.ErrorCode.SDT_INT_ERR.name());
 
-        final List<String> replacements = new ArrayList<String>();
+        final List<String> replacements = new ArrayList<>();
         replacements.add(getContactDetails());
         final String errorText = MessageFormat.format(errorMessageParam.getErrorText(), replacements.toArray());
 
@@ -272,10 +269,8 @@ public class SubmitQueryService implements ISubmitQueryService {
 
     /**
      * Update request when it is processed successfully.
-     *
-     * @param submitQueryRequest submit query request.
      */
-    private void updateCompletedRequest(final ISubmitQueryRequest submitQueryRequest) {
+    private void updateCompletedRequest() {
         final String targetAppResponse = queryResponseXmlParser.parse();
 
         // Setup raw XML from target application for addition to raw out stream
@@ -319,15 +314,15 @@ public class SubmitQueryService implements ISubmitQueryService {
             this.concurrentRequestsInProgress.put(targetAppCode, requestsInProgress + 1);
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Increment concurrent requests. Current requests in progress [" +
-                        concurrentRequestsInProgress.size() + "]");
+                LOGGER.debug("Increment concurrent requests. Current requests in progress [{}]",
+                        concurrentRequestsInProgress.size());
             }
         } else
         // reject request
         {
             maxReached = true;
-            LOGGER.warn("Threshold reached for target app [" + targetAppCode + "] - in progress [" +
-                    requestsInProgress + "] max allowed [" + maxConcurrentQueryRequests + "]");
+            LOGGER.warn("Threshold reached for target app [{}] - in progress [{}] max allowed [{}]",
+                    targetAppCode, requestsInProgress, maxConcurrentQueryRequests);
         }
 
         return maxReached;
@@ -352,8 +347,8 @@ public class SubmitQueryService implements ISubmitQueryService {
         // Clear out xml to prevent enrichment
         SdtContext.getContext().setRawOutXml(null);
 
-        LOGGER.error("Request rejected for customer[" + submitQueryRequest.getBulkCustomer().getSdtCustomerId() +
-                "] with error [" + errorLog + "]");
+        LOGGER.error("Request rejected for customer[{}] with error [{}]",
+                submitQueryRequest.getBulkCustomer().getSdtCustomerId(), errorLog);
     }
 
     /**

@@ -32,6 +32,7 @@
 package uk.gov.moj.sdt.producers;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
@@ -39,13 +40,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StopWatch;
 
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
@@ -56,14 +55,14 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /**
  * Performance tests for bulk submission requests.
  *
  * @author Saurabh Agarwal
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+@ExtendWith(SpringExtension.class)
 public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType> {
 
     /**
@@ -125,7 +124,7 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
         }
         stopWatch.stop();
 
-        LOGGER.info("Total execution time(ms) - " + stopWatch.getTotalTimeMillis());
+        LOGGER.info("Total execution time(ms) - {}", stopWatch.getTotalTimeMillis());
     }
 
     /**
@@ -135,7 +134,7 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
         Thread thread = new Thread(new BulkRequestProcessor(Thread.currentThread(), requestType));
         thread.start();
 
-        if (!(SubmitBulkForSystemTest.threadCount < MAX_WORKER_THREADS)) {
+        if (SubmitBulkForSystemTest.threadCount >= MAX_WORKER_THREADS) {
             try {
                 // Sleep indefinitely as thread should be interrupted to resume processing.
                 Thread.sleep(Long.MAX_VALUE);
@@ -199,6 +198,7 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
      *
      * @return the JAXB object loaded with XML associated with this test class.
      */
+    @Override
     protected BulkRequestType getJaxbFromXml(Class<BulkRequestType> requestClass) {
         BulkRequestType request = null;
 
@@ -226,7 +226,7 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
             request = (BulkRequestType) jaxbElement.getValue();
         } catch (Exception e) {
             LOGGER.error("Failure to unmarshall request from web service [" + requestClass.toString() + "]", e);
-            Assert.fail("Failure to unmarshall request from web service [" + requestClass.toString() + "]");
+            fail("Failure to unmarshall request from web service [" + requestClass.toString() + "]");
         }
 
         return request;
@@ -252,18 +252,18 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
     /**
      * Increment the number of current worker threads.
      */
-    public synchronized static void incrementThreadCount() {
+    public static synchronized void incrementThreadCount() {
         SubmitBulkForSystemTest.threadCount++;
     }
 
     /**
      * Decrement the number of current worker threads.
      */
-    public synchronized static void decrementThreadCount() {
+    public static synchronized void decrementThreadCount() {
         SubmitBulkForSystemTest.threadCount--;
     }
 
-    public synchronized static void incrementCompletedRequests() {
+    public static synchronized void incrementCompletedRequests() {
         SubmitBulkForSystemTest.REQUESTS_COMPLETED++;
     }
 
@@ -294,11 +294,13 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
         @Override
         public void run() {
             try {
-                LOGGER.info("Start test for thread [" + Thread.currentThread().getName() + "] for request [" +
-                        requestType.getHeader().getCustomerReference() + "]at [" + new Date().toString() + "]");
-                BulkResponseType responseType = callTestWebService(requestType);
-                LOGGER.info("End test for thread [" + Thread.currentThread().getName() + "] for request [" +
-                        requestType.getHeader().getCustomerReference() + "]at [" + new Date().toString() + "]");
+                LOGGER.info("Start test for thread [{}] for request [{}] at [{}]",
+                        Thread.currentThread().getName(), requestType.getHeader().getCustomerReference(),
+                        LocalDateTime.now());
+                callTestWebService(requestType);
+                LOGGER.info("End test for thread [{}] for request [{}] at [{}]",
+                        Thread.currentThread().getName(), requestType.getHeader().getCustomerReference(),
+                        LocalDateTime.now());
             } catch (Exception e) {
                 LOGGER.error("Error executing request: " + requestType.getHeader().getCustomerReference(), e);
             } finally {
