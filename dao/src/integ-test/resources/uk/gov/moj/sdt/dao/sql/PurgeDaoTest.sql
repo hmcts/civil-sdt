@@ -1,3 +1,7 @@
+INSERT INTO global_parameters (
+  global_parameter_id,parameter_name,parameter_value,parameter_description, version_number)
+  VALUES ( 1,'DATA_RETENTION_PERIOD',90,'Duration in days, to retain data in the tables subject to a prescribed purge', 0);
+
 INSERT INTO target_applications(
   target_application_id, target_application_code, target_application_name, version_number)
   VALUES (4,'MCOL','mcol live service', 1);
@@ -8,7 +12,7 @@ INSERT INTO bulk_customers(
 
 INSERT INTO service_requests(
   service_request_id, request_payload, request_timestamp, response_payload, response_timestamp, request_type, sdt_customer_id, sdt_bulk_reference, server_host_name, version_number)
-  VALUES (3, 'Req_PL102', (now() - INTERVAL '100 day'), 'Res_PL102', now(), 'OFFER', 1, 'BR103','localhost', 1);
+  VALUES (3, 'Req_PL102', (now() - INTERVAL '200 day'), 'Res_PL102', now(), 'OFFER', 1, 'BR103','localhost', 1);
 
 INSERT INTO bulk_submissions(
   bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
