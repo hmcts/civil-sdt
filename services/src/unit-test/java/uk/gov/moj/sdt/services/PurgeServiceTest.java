@@ -63,7 +63,7 @@ public class PurgeServiceTest extends AbstractSdtUnitTestBase {
         Integer expectedValue = 2000;
         purgeService.setCommitIntervalString(expectedValue.toString());
         Integer commitInterval =  purgeService.getCommitIntervalInteger();
-        assertEquals(expectedValue, commitInterval, "commitInterval parameter is not expected value");
+        assertEquals(expectedValue, commitInterval, COMMIT_INTERVAL_NOT_EXPECTED_VALUE);
     }
 
 }
