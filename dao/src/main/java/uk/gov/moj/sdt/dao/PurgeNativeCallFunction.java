@@ -27,8 +27,7 @@ public class PurgeNativeCallFunction {
 
         LOGGER.debug("STARTING: the Purge stored procedure with commit interval [{}]", commitInterval);
 
-        /* Test Stored Procedure */
-        LOGGER.debug("Creating Store Procedure...");
+        LOGGER.debug("Call the Purge stored procedure...");
         entityManager.joinTransaction();
         entityManager.createNativeQuery("call purge(?1)")
                 .setParameter(1, commitInterval)
