@@ -20,6 +20,8 @@ public class PurgeServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     PurgeNativeCallFunction purgeNativeCallFunction;
 
+    private static final String COMMIT_INTERVAL_NOT_EXPECTED_VALUE = "commitInterval parameter is not expected value";
+
     @BeforeEach
     @Override
     public void setUp() {
@@ -36,7 +38,32 @@ public class PurgeServiceTest extends AbstractSdtUnitTestBase {
     @Test
     void shouldRetrieveDefaultCommitInterval() {
         Integer expectedValue = 500;
-        Integer commitInterval =  purgeService.getCommitInterval();
+        Integer commitInterval =  purgeService.getCommitIntervalInteger();
+        assertEquals(expectedValue, commitInterval, COMMIT_INTERVAL_NOT_EXPECTED_VALUE);
+    }
+
+    @Test
+    void shouldRetrieveDefaultCommitIntervalWhenNull() {
+        Integer expectedValue = 500;
+        purgeService.setCommitIntervalString(null);
+        Integer commitInterval =  purgeService.getCommitIntervalInteger();
+        assertEquals(expectedValue, commitInterval, COMMIT_INTERVAL_NOT_EXPECTED_VALUE);
+    }
+
+    @Test
+    void shouldRetrieveDefaultCommitIntervalWhenEmpty() {
+        Integer expectedValue = 500;
+        purgeService.setCommitIntervalString("");
+        Integer commitInterval =  purgeService.getCommitIntervalInteger();
+        assertEquals(expectedValue, commitInterval, COMMIT_INTERVAL_NOT_EXPECTED_VALUE);
+    }
+
+    @Test
+    void shouldRetrieveCommitIntervalWhenGoodParamValue() {
+        Integer expectedValue = 2000;
+        purgeService.setCommitIntervalString(expectedValue.toString());
+        Integer commitInterval =  purgeService.getCommitIntervalInteger();
         assertEquals(expectedValue, commitInterval, "commitInterval parameter is not expected value");
     }
+
 }

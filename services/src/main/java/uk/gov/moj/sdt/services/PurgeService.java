@@ -25,12 +25,16 @@ public class PurgeService {
     public void transactPurgeProc() {
         LOGGER.debug("EXECUTING: the Scheduled Purge Job");
 
-        purgeNativeCallFunction.executePurgeStoredProc(getCommitInterval());
+        purgeNativeCallFunction.executePurgeStoredProc(getCommitIntervalInteger());
 
         LOGGER.debug("COMPLETED: the Scheduled Purge Job");
     }
 
-    public Integer getCommitInterval() {
+    public void setCommitIntervalString(String commitIntervalString) {
+        this.commitIntervalString = commitIntervalString;
+    }
+
+    public Integer getCommitIntervalInteger() {
         LOGGER.debug("getCommitInterval");
         Integer commitInterval = 500;
         LOGGER.info("default commitInterval to {}", commitInterval);
