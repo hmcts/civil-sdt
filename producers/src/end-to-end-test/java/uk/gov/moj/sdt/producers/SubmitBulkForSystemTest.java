@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.producers;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
