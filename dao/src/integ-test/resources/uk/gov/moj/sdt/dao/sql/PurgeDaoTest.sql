@@ -28,7 +28,6 @@ INSERT INTO bulk_submissions(
   bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
   VALUES (13, 1, 4, 3, 'BR105', 'CR106', (now() - INTERVAL '30 day'), 1, 'BSSTATUS3', now(), now(), 'EC106', 'This is error 3', 1, 'BLK PAYLOAD 3');
 
-
 INSERT INTO bulk_submissions(
   bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
   VALUES (16, 1, 4, 9, 'BR106', 'CR107', (now() - INTERVAL '23 day'), 1, 'BSSTATUS1', now(), now(), 'EC107', 'This is error 7', 1, 'BLK PAYLOAD 4');
