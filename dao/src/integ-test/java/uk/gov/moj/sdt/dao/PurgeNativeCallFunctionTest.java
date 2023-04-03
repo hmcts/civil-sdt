@@ -79,7 +79,7 @@ class PurgeNativeCallFunctionTest extends AbstractIntegrationTest {
         LOGGER.info("TEST COMPLETED: the Purge has been run");
     }
 
-    private void  checkTestDataBeforeRunningPurge() {
+    private void checkTestDataBeforeRunningPurge() {
 
         // check the retention date global parameter is present
         assertTrue(globalParameterIsPresentForId(1L));
@@ -98,7 +98,7 @@ class PurgeNativeCallFunctionTest extends AbstractIntegrationTest {
 
     }
 
-    private void  checkTestDataAfterRunningPurge() {
+    private void checkTestDataAfterRunningPurge() {
 
         // check audit records are now present
         assertTrue(purgeJobAuditIsPresentForId(1L));
