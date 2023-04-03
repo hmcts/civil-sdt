@@ -70,27 +70,68 @@ class PurgeNativeCallFunctionTest extends AbstractIntegrationTest {
     void runPurge() {
         LOGGER.info("TEST STARTING: run the Purge");
 
-// TODO: Finish this test - it's the weekend!
-
-        assertTrue(globalParameterIsPresentForId(1L));
-
-        assertFalse(purgeJobAuditIsPresentForId(1L));
-        assertFalse(purgeJobAuditMessageIsPresentForId(1L));
-        assertTrue(serviceRequestIsPresentForId(3L));
-        assertTrue(bulkSubmissionIsPresentForId(13L));
-        assertTrue(individualRequestIsPresentForId(109L));
-        assertTrue(errorLogIsPresentForId(1001L));
+        checkTestDataBeforeRunningPurge();
 
         purgeNativeCallFunction.executePurgeStoredProc(1000);
 
-        assertTrue(purgeJobAuditIsPresentForId(1L));
-        assertTrue(purgeJobAuditMessageIsPresentForId(1L));
-//        assertFalse(serviceRequestIsPresentForId(3L));
-//        assertFalse(bulkSubmissionIsPresentForId(13L));
-//        assertFalse(individualRequestIsPresentForId(109L));
-//        assertFalse(errorLogIsPresentForId(1001L));
+        checkTestDataAfterRunningPurge();
 
         LOGGER.info("TEST COMPLETED: the Purge has been run");
+    }
+
+    private void  checkTestDataBeforeRunningPurge() {
+
+        // check the retention date global parameter is present
+        assertTrue(globalParameterIsPresentForId(1L));
+
+        // check no audit records are present
+        assertFalse(purgeJobAuditIsPresentForId(1L));
+        assertFalse(purgeJobAuditMessageIsPresentForId(1L));
+
+        // check test data is present
+        assertTrue(serviceRequestIsPresentForId(3L));
+        assertTrue(serviceRequestIsPresentForId(9L));
+        assertTrue(bulkSubmissionIsPresentForId(13L));
+        assertTrue(individualRequestIsPresentForId(109L));
+        assertTrue(errorLogIsPresentForId(1001L));
+        assertTrue(errorLogIsPresentForId(1006L));
+
+    }
+
+    private void  checkTestDataAfterRunningPurge() {
+
+        // check audit records are now present
+        assertTrue(purgeJobAuditIsPresentForId(1L));
+        assertTrue(purgeJobAuditMessageIsPresentForId(1L));
+
+        // check service request that shpuld not be deleted is still present
+        assertTrue(serviceRequestIsPresentForId(9L));
+        // check service request that shpuld be deleted is no longer present
+        assertFalse(serviceRequestIsPresentForId(3L));
+
+        // check bulk submission that shpuld be deleted is no longer present
+        assertFalse(bulkSubmissionIsPresentForId(11L));
+        assertFalse(bulkSubmissionIsPresentForId(12L));
+        assertFalse(bulkSubmissionIsPresentForId(13L));
+
+        // check bulk submission that shpuld NOT be deleted is still present
+        assertTrue(bulkSubmissionIsPresentForId(16L));
+        assertTrue(bulkSubmissionIsPresentForId(17L));
+
+        // check individual request that shpuld be deleted is no longer present
+        assertFalse(individualRequestIsPresentForId(109L));
+
+        // check individual request that should NOT be deleted is stil longer present
+        assertTrue(individualRequestIsPresentForId(110L));
+        assertTrue(individualRequestIsPresentForId(111L));
+
+        // check error log that shpuld be deleted is no longer present
+        assertFalse(errorLogIsPresentForId(1001L));
+        assertFalse(errorLogIsPresentForId(1006L));
+
+        // check error log that shpuld NOT be deleted is still present
+        assertTrue(errorLogIsPresentForId(1007L));
+        assertTrue(errorLogIsPresentForId(1008L));
     }
 
     private Boolean globalParameterIsPresentForId(Long id) {
@@ -99,31 +140,37 @@ class PurgeNativeCallFunctionTest extends AbstractIntegrationTest {
     }
 
     private Boolean serviceRequestIsPresentForId(Long id) {
+        serviceRequestDao.getEntityManager().clear();
         ServiceRequest serviceRequest = serviceRequestDao.fetch(ServiceRequest.class, id);
         return (null != serviceRequest);
     }
 
     private Boolean bulkSubmissionIsPresentForId(Long id) {
+        bulkSubmissionDao.getEntityManager().clear();
         BulkSubmission bulkSubmission = bulkSubmissionDao.fetch(BulkSubmission.class, id);
         return (null != bulkSubmission);
     }
 
     private Boolean individualRequestIsPresentForId(Long id) {
+        individualRequestDao.getEntityManager().clear();
         IndividualRequest individualRequest = individualRequestDao.fetch(IndividualRequest.class, id);
         return (null != individualRequest);
     }
 
     private Boolean errorLogIsPresentForId(Long id) {
+        errorLogDao.getEntityManager().clear();
         ErrorLog errorLog = errorLogDao.fetch(ErrorLog.class, id);
         return (null != errorLog);
     }
 
     private Boolean purgeJobAuditIsPresentForId(Long id) {
+        purgeJobAuditDao.getEntityManager().clear();
         PurgeJobAudit purgeJobAudit = purgeJobAuditDao.fetch(PurgeJobAudit.class, id);
         return (null != purgeJobAudit);
     }
 
     private Boolean purgeJobAuditMessageIsPresentForId(Long id) {
+        purgeJobAuditMessageDao.getEntityManager().clear();
         PurgeJobAuditMessage purgeJobAuditMessage = purgeJobAuditMessageDao.fetch(PurgeJobAuditMessage.class, id);
         return (null != purgeJobAuditMessage);
     }

@@ -12,6 +12,10 @@ INSERT INTO bulk_customers(
 
 INSERT INTO service_requests(
   service_request_id, request_payload, request_timestamp, response_payload, response_timestamp, request_type, sdt_customer_id, sdt_bulk_reference, server_host_name, version_number)
+  VALUES (9, 'Req_PL09', (now() - INTERVAL '2 day'), 'Res_PL111', now(), 'OFFER', 1, 'BR109','localhost', 1);
+
+INSERT INTO service_requests(
+  service_request_id, request_payload, request_timestamp, response_payload, response_timestamp, request_type, sdt_customer_id, sdt_bulk_reference, server_host_name, version_number)
   VALUES (3, 'Req_PL102', (now() - INTERVAL '200 day'), 'Res_PL102', now(), 'OFFER', 1, 'BR103','localhost', 1);
 
 INSERT INTO bulk_submissions(
@@ -23,6 +27,15 @@ INSERT INTO bulk_submissions(
 INSERT INTO bulk_submissions(
   bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
   VALUES (13, 1, 4, 3, 'BR105', 'CR106', (now() - INTERVAL '30 day'), 1, 'BSSTATUS3', now(), now(), 'EC106', 'This is error 3', 1, 'BLK PAYLOAD 3');
+
+
+INSERT INTO bulk_submissions(
+  bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
+  VALUES (16, 1, 4, 9, 'BR106', 'CR107', (now() - INTERVAL '23 day'), 1, 'BSSTATUS1', now(), now(), 'EC107', 'This is error 7', 1, 'BLK PAYLOAD 4');
+INSERT INTO bulk_submissions(
+  bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
+  VALUES (17, 1, 4, 9, 'BR107', 'CR108', (now() - INTERVAL '23 day'), 1, 'BSSTATUS1', now(), now(), 'EC107', 'This is error 7', 1, 'BLK PAYLOAD 4');
+
 
 INSERT INTO individual_requests(
   individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
@@ -43,6 +56,13 @@ INSERT INTO individual_requests(
   individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
   VALUES (109, 13, 'CR104', 'COLD', 'BR105', 1, 'RR204', now(), now(), now(), 3, 'N', 'Error this is indeed', 'ReqType1', 1, 'IndPL_1', 'TAppResp6');
 
+INSERT INTO individual_requests(
+  individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
+  VALUES (110, 16, 'CR104', 'COLD', 'BR105', 1, 'RR204', now(), now(), now(), 3, 'N', 'Error this is indeed', 'ReqType1', 1, 'IndPL_1', 'TAppResp6');
+INSERT INTO individual_requests(
+  individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
+  VALUES (111, 17, 'CR104', 'COLD', 'BR105', 1, 'RR204', now(), now(), now(), 3, 'N', 'Error this is indeed', 'ReqType1', 1, 'IndPL_1', 'TAppResp6');
+
 INSERT INTO error_logs(
   error_log_id, individual_request_id, error_code, created_date, updated_date, version_number, error_text)
   VALUES (1001, 104, 'CODE2', (now() - INTERVAL '100 day'), now(), 1, 'Error number 1');
@@ -62,3 +82,9 @@ INSERT INTO error_logs(
   error_log_id, individual_request_id, error_code, created_date, updated_date, version_number, error_text)
   VALUES (1006, 109, 'CODE4', (now() - INTERVAL '20 day'), now(), 1, 'Error number 3');
 
+INSERT INTO error_logs(
+  error_log_id, individual_request_id, error_code, created_date, updated_date, version_number, error_text)
+  VALUES (1007, 110, 'CODE4', (now() - INTERVAL '20 day'), now(), 1, 'Error number 3');
+INSERT INTO error_logs(
+  error_log_id, individual_request_id, error_code, created_date, updated_date, version_number, error_text)
+  VALUES (1008, 111, 'CODE4', (now() - INTERVAL '20 day'), now(), 1, 'Error number 3');
