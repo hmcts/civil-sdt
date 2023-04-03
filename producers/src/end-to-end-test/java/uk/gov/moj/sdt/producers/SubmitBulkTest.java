@@ -222,15 +222,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
          * @return true - duplicate message detected by server, false - no duplicate detected.
          */
         public void testConcurrentDuplicate() {
-//            try {
                 this.callWebService();
-//            } catch (final ComparisonFailure e) {
-//                if (e.getActual().matches(
-//                        ".*?Duplicate User File Reference .*? supplied. This was previously used to submit "
-//                                + "a Bulk Request on .*? and the SDT Bulk Reference " + "MCOL-.*? was allocated..*?")) {
-//                    setDuplicate(true);
-//                }
-//            }
         }
 
         /**
@@ -268,13 +260,5 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
             return duplicate;
         }
 
-        /**
-         * Set the value of the duplicate flag.
-         *
-         * @param duplicate value of the duplicate flag.
-         */
-        private void setDuplicate(final boolean duplicate) {
-            this.duplicate = duplicate;
-        }
-    }
+  }
 }
