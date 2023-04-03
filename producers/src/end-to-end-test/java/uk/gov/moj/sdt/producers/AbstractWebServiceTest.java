@@ -55,7 +55,6 @@ import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.test.utils.DBUnitUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
-import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
