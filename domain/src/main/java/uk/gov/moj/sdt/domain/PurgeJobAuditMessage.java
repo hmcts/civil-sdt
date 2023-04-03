@@ -1,9 +1,5 @@
 package uk.gov.moj.sdt.domain;
 
-import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.utils.visitor.api.ITree;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Table(name = "PURGE_JOB_AUDIT_MESSAGES")
 @Entity
-public class PurgeJobAuditMessage implements IDomainObject {
+public class PurgeJobAuditMessage extends AbstractDomainObject {
 
     @Id
     @Column(name = "PURGE_JOB_MESSAGE_ID")
@@ -32,13 +28,14 @@ public class PurgeJobAuditMessage implements IDomainObject {
     @Column(name = "LOG_MESSAGE")
     private String logMessage;
 
-
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
-
+        this.id = id;
     }
 
     @Override
@@ -68,10 +65,5 @@ public class PurgeJobAuditMessage implements IDomainObject {
 
     public void setLogMessage(String logMessage) {
         this.logMessage = logMessage;
-    }
-
-    @Override
-    public void accept(IVisitor visitor, ITree tree) {
-
     }
 }

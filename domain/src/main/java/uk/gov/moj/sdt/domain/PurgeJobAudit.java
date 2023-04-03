@@ -1,9 +1,5 @@
 package uk.gov.moj.sdt.domain;
 
-import uk.gov.moj.sdt.domain.api.IDomainObject;
-import uk.gov.moj.sdt.utils.visitor.api.ITree;
-import uk.gov.moj.sdt.utils.visitor.api.IVisitor;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Table(name = "PURGE_JOB_AUDIT")
 @Entity
-public class PurgeJobAudit implements IDomainObject {
+public class PurgeJobAudit extends AbstractDomainObject {
 
     @Id
     @Column(name = "PURGE_JOB_ID")
@@ -47,12 +43,14 @@ public class PurgeJobAudit implements IDomainObject {
     @Column(name = "SUCCESS")
     private Boolean success;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
-
+        this.id = id;
     }
 
     @Override
@@ -124,8 +122,4 @@ public class PurgeJobAudit implements IDomainObject {
         this.success = success;
     }
 
-    @Override
-    public void accept(IVisitor visitor, ITree tree) {
-
-    }
 }
