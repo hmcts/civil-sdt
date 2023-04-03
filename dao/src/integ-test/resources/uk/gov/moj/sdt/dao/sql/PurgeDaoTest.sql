@@ -35,7 +35,6 @@ INSERT INTO bulk_submissions(
   bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
   VALUES (17, 1, 4, 9, 'BR107', 'CR108', (now() - INTERVAL '23 day'), 1, 'BSSTATUS1', now(), now(), 'EC107', 'This is error 7', 1, 'BLK PAYLOAD 4');
 
-
 INSERT INTO individual_requests(
   individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
   VALUES (104, 11, 'CR104', 'COLD', 'BR103', 1, 'RR202', (now() - INTERVAL '100 day'), now(), now(), 3, 'N', 'Error this is indeed', 'ReqType1', 1, 'IndPL_1', 'TAppResp1');
