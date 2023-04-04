@@ -65,5 +65,5 @@ sdt:
           idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
   purge:
     cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
-    commitInterval: 1000
+    commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
 
