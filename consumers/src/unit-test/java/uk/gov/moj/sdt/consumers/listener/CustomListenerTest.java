@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContextEvent;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CustomListenerTest {
@@ -26,7 +28,7 @@ class CustomListenerTest {
 
     @Test
     void testContextMethods() {
-        try (MockedStatic<LoggerFactory> mockLoggerFactory = Mockito.mockStatic(LoggerFactory.class)) {
+        try (MockedStatic<LoggerFactory> mockLoggerFactory = mockStatic(LoggerFactory.class)) {
             mockLoggerFactory.when(() -> LoggerFactory.getLogger(any(Class.class)))
                     .thenReturn(mockLogger);
 
@@ -34,8 +36,8 @@ class CustomListenerTest {
             customListener.contextInitialized(mockServletContextEvent);
             customListener.contextDestroyed(mockServletContextEvent);
 
-            Mockito.verify(mockLogger).info("CustomListener is initialized");
-            Mockito.verify(mockLogger).info("CustomListener is destroyed");
+            verify(mockLogger).info("CustomListener is initialized");
+            verify(mockLogger).info("CustomListener is destroyed");
         }
 
     }

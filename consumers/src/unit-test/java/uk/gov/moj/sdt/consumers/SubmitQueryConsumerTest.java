@@ -66,10 +66,22 @@ import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
@@ -106,7 +118,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
     public void setUpLocalTests() {
         SubmitQueryConsumer consumer = new SubmitQueryConsumer(mockTransformer);
         consumer.setTransformer(mockTransformer);
-        submitQueryConsumer =  Mockito.spy(consumer);
+        submitQueryConsumer = spy(consumer);
 
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
@@ -134,7 +146,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         final long receiveTimeOut = 20L;
         ITargetAppInternalEndpointPortType portType;
 
-        try(MockedStatic<ClientProxy> mockClientProxy = Mockito.mockStatic(ClientProxy.class)) {
+        try(MockedStatic<ClientProxy> mockClientProxy = mockStatic(ClientProxy.class)) {
             Client mockClient = mock(Client.class);
             ITargetAppInternalEndpointPortType mockEndpointPortType
                 = mock(ITargetAppInternalEndpointPortType.class,
@@ -156,8 +168,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
                     30L,
                     20L);
 
-            verifyStatic(ClientProxy.class);
-            ClientProxy.getClient(any());
+            mockClientProxy.verify(() -> ClientProxy.getClient(any()));
             verify(submitQueryConsumer).createTargetAppEndPoint();
             verify((BindingProvider) mockEndpointPortType, times(2)).getRequestContext();
             verify(mockClient).getConduit();
@@ -166,6 +177,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
             // coverage for this.clientCache.containsKey()
             submitQueryConsumer
                 .getClient(targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+            verify(submitQueryConsumer, times(2)).createTargetAppEndPoint();
         }
 
         assertNotNull(portType);
@@ -347,7 +359,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         when(mockServiceRouting.getWebServiceEndpoint()).thenReturn("TEST_ENDPOINT");
         when(mockServiceRouting.getTargetApplication()).thenReturn(mockTargetApplication);
 
-        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
+        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = mockStatic(PerformanceLogger.class)) {
             mockStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
                 .thenReturn(true);
             this.submitQueryConsumer.processSubmitQuery(mockSubmitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);

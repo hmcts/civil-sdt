@@ -13,10 +13,13 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class ProducersConfigTest extends AbstractSdtUnitTestBase {
@@ -61,7 +64,17 @@ class ProducersConfigTest extends AbstractSdtUnitTestBase {
             result);
 
         assertEquals(1, resultBeans.size());
+        assertTrue(resultBeans.containsKey("bean:name=sdtProducersManagement"), "beans map does not contain entry with expected key");
+        assertEquals(mockSdtManagementMBean, resultBeans.get("bean:name=sdtProducersManagement"), "beans map does not contain expected bean");
         assertEquals(4, resultManagedMethods.size());
+        HashSet<String> expectedMethods = new HashSet<>();
+        expectedMethods.addAll(List.of(
+            "uncache",
+            "setMdbPoolSize",
+            "requeueOldIndividualRequests",
+            "processDLQRequest"
+        ));
+        assertTrue(resultManagedMethods.containsAll(expectedMethods), "Managed methods do not contain all expected methods");
         assertEquals(RegistrationPolicy.REPLACE_EXISTING, resultRegistrationPolicy);
     }
 
@@ -91,7 +104,33 @@ class ProducersConfigTest extends AbstractSdtUnitTestBase {
             result);
 
         assertEquals(1, resultBeans.size());
+        assertTrue(resultBeans.containsKey("bean:name=sdtProducersMetrics"), "beans map does not contain entry with expected key");
+        assertEquals(mockSdtMetricsMBean, resultBeans.get("bean:name=sdtProducersMetrics"), "beans map does not contain expected bean");
         assertEquals(20, resultManagedMethods.size());
+        HashSet<String> expectedMethods = new HashSet<>();
+        expectedMethods.addAll(List.of(
+            "getTime",
+            "getOsStats",
+            "getBulkSubmitStats",
+            "getBulkFeedbackStats",
+            "getSubmitQueryStats",
+            "getStatusUpdateStats",
+            "getDomainObjectsStats",
+            "getDatabaseCallsStats",
+            "getDatabaseReadsStats",
+            "getDatabaseWritesStats",
+            "getActiveCustomersStats",
+            "getRequestQueueStats",
+            "getTargetAppStats",
+            "getErrorStats",
+            "getLastRefStats",
+            "getPerformanceLoggingString",
+            "uncache",
+            "setPerformanceLoggingFlags",
+            "reset",
+            "dumpMetrics"
+        ));
+        assertTrue(resultManagedMethods.containsAll(expectedMethods), "Managed methods do not contain all expected methods");
         assertEquals(RegistrationPolicy.REPLACE_EXISTING, resultRegistrationPolicy);
     }
 }
