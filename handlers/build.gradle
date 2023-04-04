@@ -1,5 +1,3 @@
-apply plugin: 'info.solidsoft.pitest'
-
 jar {
   enabled = true
   archiveBaseName = 'civil-sdt-handlers'
@@ -17,21 +15,10 @@ dependencies {
     implementation project(':services-api')
     implementation project(':transformers')
     implementation project(':validators')
-    testImplementation project(":domain").sourceSets.unitTest.output
-    testImplementation project(":handlers-api").sourceSets.unitTest.output
-    testImplementation project(":producers-api").sourceSets.unitTest.output
-    testImplementation project(":utils").sourceSets.unitTest.output
-    testImplementation project(':services-api').sourceSets.unitTest.output
-    testImplementation project(':transformers').sourceSets.unitTest.output
-    testImplementation project(':validators').sourceSets.unitTest.output
 
-    testImplementation project(":domain").sourceSets.integTest.output
-    testImplementation project(":handlers-api").sourceSets.integTest.output
-    testImplementation project(":producers-api").sourceSets.integTest.output
+    testImplementation project(":utils").sourceSets.unitTest.output
+
     testImplementation project(":utils").sourceSets.integTest.output
-    testImplementation project(':services-api').sourceSets.integTest.output
-    testImplementation project(':transformers').sourceSets.integTest.output
-    testImplementation project(':validators').sourceSets.integTest.output
 }
 
 bootJar {
@@ -40,4 +27,9 @@ bootJar {
 
 test {
     useJUnitPlatform()
+}
+
+pitest {
+    targetClasses = ['uk.gov.moj.sdt.handlers.*']
+    targetTests = ['uk.gov.moj.sdt.handlers.*']
 }

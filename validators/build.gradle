@@ -1,5 +1,3 @@
-apply plugin: 'info.solidsoft.pitest'
-
 jar {
   enabled = true
   archiveBaseName = 'civil-sdt-validators'
@@ -14,14 +12,9 @@ dependencies {
     implementation project(':dao-api')
     implementation project(':domain')
     implementation project(':utils')
-    testImplementation project(":dao").sourceSets.unitTest.output
-    testImplementation project(":dao-api").sourceSets.unitTest.output
-    testImplementation project(":domain").sourceSets.unitTest.output
+
     testImplementation project(":utils").sourceSets.unitTest.output
 
-    testImplementation project(":dao").sourceSets.integTest.output
-    testImplementation project(":dao-api").sourceSets.integTest.output
-    testImplementation project(":domain").sourceSets.integTest.output
     testImplementation project(":utils").sourceSets.integTest.output
 }
 
@@ -31,4 +24,9 @@ bootJar {
 
 test {
     useJUnitPlatform()
+}
+
+pitest {
+    targetClasses = ['uk.gov.moj.sdt.validators.*']
+    targetTests = ['uk.gov.moj.sdt.validators.*']
 }

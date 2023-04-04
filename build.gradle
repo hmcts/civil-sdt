@@ -15,8 +15,8 @@ plugins {
   id 'org.sonarqube' version '3.4.0.2513'
   id 'uk.gov.hmcts.java' version '0.12.27'
   id "com.jfrog.bintray" version "1.8.5" apply false
-  id "info.solidsoft.pitest" version '1.5.1' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
+  id "info.solidsoft.pitest" version '1.5.1' apply false
 }
 
 group = 'uk.gov.hmcts.civil.sdt'
@@ -210,6 +210,8 @@ allprojects {
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     testImplementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'io.rest-assured:rest-assured:4.3.0'
 
     testImplementation ("org.springframework.boot:spring-boot-starter-test"){
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -313,6 +315,7 @@ subprojects { subproject ->
   apply plugin: 'io.spring.dependency-management'
   apply plugin: 'jacoco'
   apply plugin: 'uk.gov.hmcts.java'
+  apply plugin: 'info.solidsoft.pitest'
 
   sourceSets {
     unitTest {
@@ -452,7 +455,6 @@ subprojects { subproject ->
       exclude group: 'junit', module: 'junit'
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
     testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
     testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
     testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
@@ -463,14 +465,18 @@ subprojects { subproject ->
     tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
     */
     testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
+
+    testImplementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', version: '0.5'
   }
 
-    sonarqube {
-        properties {
+     sonarqube {
+         properties {
             property "sonar.sources", "src"
             property "sonar.tests", "src"
             property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
             property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
+            property "sonar.pitest.mode", "reuseReport"
+            property "sonar.pitest.reportsDirectory", "build/reports/pitest"
         }
     }
 
@@ -583,6 +589,25 @@ subprojects { subproject ->
 
   test.finalizedBy jacocoTestReport
   check.dependsOn jacocoTestReport
+
+  pitest {
+    // Note: targetClasses and targetTests are defined in each module's build.gradle file
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = 'build/reports/pitest/fastermutationtesting'
+    historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
+    threads = 15
+    testSourceSets = [sourceSets.unitTest]
+    fileExtensionsToFilter.addAll('xml', 'json')
+    outputFormats = ['XML', 'HTML', 'CSV']
+    mutationThreshold = 0
+    coverageThreshold = 0
+    maxMutationsPerClass = 15
+    jvmArgs = ['-Xms1G', '-Xmx3G']
+    timestampedReports = false
+    failWhenNoMutations = false
+    detectInlinedCode = true
+    junit5PluginVersion = '0.14'
+  }
 }
 // end::subprojects[]
 

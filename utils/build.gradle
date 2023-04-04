@@ -1,5 +1,3 @@
-apply plugin: 'info.solidsoft.pitest'
-
 jar {
   enabled = true
   archiveBaseName = 'civil-sdt-utils'
@@ -15,4 +13,9 @@ bootJar {
 
 test {
     useJUnitPlatform()
+}
+
+pitest {
+    targetClasses = ['uk.gov.moj.sdt.utils.*']
+    targetTests = ['uk.gov.moj.sdt.utils.*']
 }
