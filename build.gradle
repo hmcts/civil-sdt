@@ -55,6 +55,16 @@ sourceSets {
     }
     resources.srcDir file('src/smokeTest/resources')
   }
+
+  endTest {
+    java {
+      compileClasspath += main.output
+      runtimeClasspath += main.output
+      srcDir file('src/endToEndTest/java')
+    }
+    resources.srcDir file('src/endToEndTest/resources')
+  }
+
 }
 
 configurations {
@@ -66,6 +76,9 @@ configurations {
 
   smokeTestImplementation.extendsFrom testImplementation
   smokeTestRuntimeOnly.extendsFrom runtimeOnly
+
+  endTestImplementation.extendsFrom testImplementation
+  endTestRuntimeOnly.extendsFrom runtimeOnly
 }
 
 tasks.withType(JavaCompile) {
@@ -78,7 +91,7 @@ tasks.withType(JavaExec).configureEach {
 }
 
 tasks.withType(Test) {
-  useJUnit()
+  useJUnitPlatform()
 
   testLogging {
     exceptionFormat = 'full'
@@ -108,6 +121,12 @@ task smoke(type: Test) {
   description = "Runs Smoke Tests"
   testClassesDirs = sourceSets.smokeTest.output.classesDirs
   classpath = sourceSets.smokeTest.runtimeClasspath
+}
+
+task endToEnd(type: Test) {
+  description = "Runs End To End Tests"
+  testClassesDirs = sourceSets.endTest.output.classesDirs
+  classpath = sourceSets.endTest.runtimeClasspath
 }
 
 apply plugin: 'java'
@@ -279,12 +298,6 @@ allprojects {
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.1'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.9'
-    /*
-    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
-    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
-    tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
-    */
-    testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
   configurations.all {
@@ -333,7 +346,7 @@ subprojects { subproject ->
       resources.srcDir file('src/integ-test/resources')
     }
 
-    endToEndTest {
+    endtoendTest {
       java {
         compileClasspath += main.output
         runtimeClasspath += main.output
@@ -353,8 +366,8 @@ subprojects { subproject ->
     integTestImplementation.extendsFrom testImplementation
     integTestImplementation.extendsFrom runtimeOnly
 
-    endToEndTestImplementation.extendsFrom testImplementation
-    endToEndTestImplementation.extendsFrom runtimeOnly
+    endtoendTestImplementation.extendsFrom testImplementation
+    endtoendTestImplementation.extendsFrom runtimeOnly
   }
 
   dependencyUpdates.resolutionStrategy = {
@@ -413,12 +426,6 @@ subprojects { subproject ->
     }
 
     implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.23'
-    /*
-    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
-    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  This dependency can be removed
-    when the bug is fixed.
-    */
-    implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
 
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
@@ -457,12 +464,6 @@ subprojects { subproject ->
     testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
     testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
 
-    /*
-    Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
-    a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
-    tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
-    */
-    testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
   }
 
     sonarqube {
@@ -509,7 +510,6 @@ subprojects { subproject ->
                 'class'      : percentage(counters.find { it.'@type'.equals('CLASS') })
         ]
 
-
         def failures = []
         metrics.each {
           def limit = limits[it.key]
@@ -535,7 +535,7 @@ subprojects { subproject ->
   test {
     environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     generateCucumberReports.enabled = false
-    useJUnit()
+    useJUnitPlatform()
 
     testLogging {
       events "passed", "skipped", "failed"
@@ -562,8 +562,8 @@ subprojects { subproject ->
   task endToEnd(type: Test) {
     description = "Runs end to end tests"
     group = "Verification"
-    testClassesDirs = sourceSets.endToEndTest.output.classesDirs
-    classpath = sourceSets.endToEndTest.runtimeClasspath
+    testClassesDirs = sourceSets.endtoendTest.output.classesDirs
+    classpath = sourceSets.endtoendTest.runtimeClasspath
     failFast = true
   }
 
@@ -574,7 +574,7 @@ subprojects { subproject ->
   }
 
   tasks.withType(Test) {
-    useJUnit()
+    useJUnitPlatform()
 
     testLogging {
       exceptionFormat = 'full'
@@ -694,6 +694,7 @@ configurations { codacy }
 dependencies {
   codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
+
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
   main = "com.codacy.CodacyCoverageReporter"
   classpath = configurations.codacy

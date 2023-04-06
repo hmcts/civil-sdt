@@ -15,6 +15,7 @@ dependencies {
     implementation project(':utils')
     implementation project(':producers-api')
     implementation project(':handlers-api')
+
     testImplementation project(":handlers").sourceSets.unitTest.output
     testImplementation project(":domain").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.unitTest.output
@@ -26,6 +27,12 @@ dependencies {
     testImplementation project(":utils").sourceSets.integTest.output
     testImplementation project(':producers-api').sourceSets.integTest.output
     testImplementation project(":handlers-api").sourceSets.integTest.output
+
+    testImplementation project(":handlers").sourceSets.endtoendTest.output
+    testImplementation project(":domain").sourceSets.endtoendTest.output
+    testImplementation project(":utils").sourceSets.endtoendTest.output
+    testImplementation project(':producers-api').sourceSets.endtoendTest.output
+    testImplementation project(":handlers-api").sourceSets.endtoendTest.output
 }
 
 bootJar {
@@ -33,5 +40,5 @@ bootJar {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnit()
 }
