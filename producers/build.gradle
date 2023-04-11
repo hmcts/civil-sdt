@@ -28,11 +28,11 @@ dependencies {
     testImplementation project(':producers-api').sourceSets.integTest.output
     testImplementation project(":handlers-api").sourceSets.integTest.output
 
-    testImplementation project(":handlers").sourceSets.endtoendTest.output
-    testImplementation project(":domain").sourceSets.endtoendTest.output
-    testImplementation project(":utils").sourceSets.endtoendTest.output
-    testImplementation project(':producers-api').sourceSets.endtoendTest.output
-    testImplementation project(":handlers-api").sourceSets.endtoendTest.output
+    testImplementation project(":handlers").sourceSets.endTest.output
+    testImplementation project(":domain").sourceSets.endTest.output
+    testImplementation project(":utils").sourceSets.endTest.output
+    testImplementation project(':producers-api').sourceSets.endTest.output
+    testImplementation project(":handlers-api").sourceSets.endTest.output
 }
 
 bootJar {
