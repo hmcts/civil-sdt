@@ -15,6 +15,7 @@ dependencies {
     implementation project(':producers-api')
     implementation project(':utils')
     implementation project(':services-api')
+    implementation project(':services')
     implementation project(':transformers')
     implementation project(':validators')
     testImplementation project(":domain").sourceSets.unitTest.output
@@ -22,14 +23,13 @@ dependencies {
     testImplementation project(":producers-api").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.unitTest.output
     testImplementation project(':services-api').sourceSets.unitTest.output
+    testImplementation project(':services').sourceSets.unitTest.output
     testImplementation project(':transformers').sourceSets.unitTest.output
     testImplementation project(':validators').sourceSets.unitTest.output
 
-    testImplementation project(":domain").sourceSets.integTest.output
-    testImplementation project(":handlers-api").sourceSets.integTest.output
-    testImplementation project(":producers-api").sourceSets.integTest.output
     testImplementation project(":utils").sourceSets.integTest.output
     testImplementation project(':services-api').sourceSets.integTest.output
+    testImplementation project(':services').sourceSets.integTest.output
     testImplementation project(':transformers').sourceSets.integTest.output
     testImplementation project(':validators').sourceSets.integTest.output
 }
