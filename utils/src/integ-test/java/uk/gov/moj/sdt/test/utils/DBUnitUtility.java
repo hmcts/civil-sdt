@@ -193,7 +193,7 @@ public final class DBUnitUtility {
         final String fileXml = "/" + classToLoadFor.getName().replaceAll("\\.", "/") + ".xml";
         if (DBUnitUtility.class.getResource(fileXml) != null) {
             LOGGER.info("Loading DB with: " + fileXml);
-            DBUnitUtility.loadDatabase("SDT_OWNER", fileXml, reloadRefdata);
+            DBUnitUtility.loadDatabase("PUBLIC", fileXml, reloadRefdata);
             LOGGER.info("Loaded database");
         }
     }
@@ -357,7 +357,7 @@ public final class DBUnitUtility {
             LOGGER.info("Running " + fileName);
 
             // Get the connection already setup for DBUNIT.
-            final IDatabaseConnection dbConnection = getConnectionInstance("SDT_OWNER");
+            final IDatabaseConnection dbConnection = getConnectionInstance("PUBLIC");
             final Connection connection = dbConnection.getConnection();
             connection.prepareStatement("SET CONSTRAINTS ALL DEFERRED").execute();
 
@@ -407,7 +407,7 @@ public final class DBUnitUtility {
 
             // Call the reset stored procedure which should have been loaded into
             // the database by ANT script.
-            final CallableStatement cs = connection.prepareCall("{call SDT_OWNER.Prepare_For_Dbunit_Load(?)}");
+            final CallableStatement cs = connection.prepareCall("{call PUBLIC.Prepare_For_Dbunit_Load(?)}");
             cs.setString("p_SchemaName", schemaName);
             //
             // Close result set and calleable statement.
@@ -438,7 +438,7 @@ public final class DBUnitUtility {
             final Connection connection = dbConnection.getConnection();
 
             // Call the reset stored procedure which should have been loaded into the database by ANT script.
-            final CallableStatement cs = connection.prepareCall("{call SDT_OWNER.Finish_Dbunit_Load(?)}");
+            final CallableStatement cs = connection.prepareCall("{call PUBLIC.Finish_Dbunit_Load(?)}");
             cs.setString("p_SchemaName", schemaName);
 
             // Close result set and calleable statement.
