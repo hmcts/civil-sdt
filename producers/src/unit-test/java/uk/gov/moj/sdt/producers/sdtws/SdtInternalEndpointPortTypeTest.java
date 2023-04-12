@@ -58,7 +58,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -83,7 +85,6 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @Mock
     private IWsUpdateItemHandler mockUpdateItemHandler;
 
-    @Mock
     private Logger mockLogger;
 
 
@@ -93,6 +94,7 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
+        mockLogger = mock(Logger.class);
         try (MockedStatic<LoggerFactory> mockLoggerFactory = Mockito.mockStatic(LoggerFactory.class)) {
             mockLoggerFactory.when(() -> LoggerFactory.getLogger(any(Class.class)))
                 .thenReturn(mockLogger);
@@ -129,6 +131,7 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
         assertNotNull(response, "Response expected");
+        verify(mockLogger).isDebugEnabled();
     }
 
     /**
@@ -148,6 +151,7 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
+        verify(mockLogger, never()).isDebugEnabled();
     }
 
     /**

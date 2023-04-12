@@ -40,7 +40,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -160,13 +159,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
             when(mockClient.getConduit())
                 .thenReturn(mockHTTPConduit);
 
-            portType = submitQueryConsumer
-                .getClient(
-                    "targetApplicationCode",
-                    "serviceType",
-                    "webServiceEndPoint",
-                    30L,
-                    20L);
+            portType = submitQueryConsumer.getClient(targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
 
             mockClientProxy.verify(() -> ClientProxy.getClient(any()));
             verify(submitQueryConsumer).createTargetAppEndPoint();
@@ -177,7 +170,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
             // coverage for this.clientCache.containsKey()
             submitQueryConsumer
                 .getClient(targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
-            verify(submitQueryConsumer, times(2)).createTargetAppEndPoint();
+            verify(submitQueryConsumer).createTargetAppEndPoint();
         }
 
         assertNotNull(portType);
@@ -364,10 +357,8 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
                 .thenReturn(true);
             this.submitQueryConsumer.processSubmitQuery(mockSubmitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-            verifyStatic(PerformanceLogger.class, times(2));
-            PerformanceLogger.isPerformanceEnabled(anyLong());
-            verifyStatic(PerformanceLogger.class, times(2));
-            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
+            mockStaticPerformanceLogger.verify(() -> PerformanceLogger.isPerformanceEnabled(any()), times(2));
+            mockStaticPerformanceLogger.verify(() -> PerformanceLogger.log(any(), anyLong(), anyString(), anyString()), times(2));
         }
     }
 }
