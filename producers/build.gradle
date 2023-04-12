@@ -25,9 +25,9 @@ dependencies {
     testImplementation project(":utils").sourceSets.integTest.output
     testImplementation project(':producers-api').sourceSets.integTest.output
 
-    testImplementation project(":domain").sourceSets.endTest.output
-    testImplementation project(":utils").sourceSets.endTest.output
-    testImplementation project(':producers-api').sourceSets.endTest.output
+    testImplementation project(":domain").sourceSets.e2eTest.output
+    testImplementation project(":utils").sourceSets.e2eTest.output
+    testImplementation project(':producers-api').sourceSets.e2eTest.output
 }
 
 bootJar {
