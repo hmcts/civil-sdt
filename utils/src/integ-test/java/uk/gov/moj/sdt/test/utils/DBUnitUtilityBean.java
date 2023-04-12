@@ -48,29 +48,28 @@ import java.util.Map;
  */
 @Component
 public class DBUnitUtilityBean {
-    @Inject
-    protected DataSource datasource;
 
     /**
      * The logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(DBUnitUtilityBean.class);
 
-    DBUnitUtilityBean() {
-        LOGGER.debug("DBUnitUtilityBean - Instantiated");
-    }
+    @Inject
+    protected DataSource datasource;
 
     /**
      * Map of database connections for all schemas (one each).
      */
     private static Map<String, IDatabaseConnection> allConnections = new HashMap<>();
 
-
+    DBUnitUtilityBean() {
+        LOGGER.debug("DBUnitUtilityBean - Instantiated");
+    }
 
     /**
      * Generates a DBUnit DTD for the given schema.
      *
-     * @param targetSchema Schema required
+     * @param targetSchema Schema required.
      */
     public void generateDTD(final String targetSchema) {
 
@@ -108,7 +107,7 @@ public class DBUnitUtilityBean {
             ITableFilter filter = new ExcludeTableFilter();
             // If there's reference data exclude those tables
             final InputStream refDataStream =
-                    DBUnitUtilityBean.class.getResourceAsStream("/refdata/" + targetSchema + "_refdata.xml");
+                   this.getClass().getResourceAsStream("/refdata/" + targetSchema + "_refdata.xml");
             if (!includeRefdata && refDataStream != null) {
                 // Create a DBUnit Dataset builder using the target schemas DTD
                 final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
@@ -119,7 +118,7 @@ public class DBUnitUtilityBean {
                 final IDataSet referenceDataset = builder.build(refDataStream);
                 filter = new ExcludeTableFilter(referenceDataset.getTableNames());
             }
-            final IDataSet dataSet = new FilteredDataSet(filter, dbConnection.createDataSet());
+            final IDataSet dataSet = new FilteredDataSet(filter,  dbConnection.createDataSet());
             FlatXmlDataSet.write(dataSet, new FileOutputStream(file));
             LOGGER.debug("Exported data for schema {}", targetSchema);
         } catch (final DatabaseUnitException|IOException|SQLException e) {
@@ -136,10 +135,10 @@ public class DBUnitUtilityBean {
      */
     public void loadDatabase(final Class<?> classToLoadFor, final boolean reloadRefdata) {
         // Can have individual XML for a method, or just one for a class
-        final String fileXml = "/" + classToLoadFor.getName().replaceAll("\\.", "/") + ".xml";
+        final String fileXml = "/" + classToLoadFor.getName().replace("\\.", "/") + ".xml";
         if (this.getClass().getResource(fileXml) != null) {
             LOGGER.info("Loading DB with: {}", fileXml);
-            this.loadDatabase("public", fileXml, reloadRefdata);
+            loadDatabase("public", fileXml, reloadRefdata);
             LOGGER.info("Loaded database");
         }
     }
@@ -170,23 +169,22 @@ public class DBUnitUtilityBean {
             // database connection
             LOGGER.info("Starting load for schema[{}], filePath[{}], reloadRefdata[{}]",
                     targetSchema, filePath, reloadRefdata);
-
             final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
 
             // Create a DBUnit Dataset builder using the target schemas DTD
             final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
             builder.setDtdMetadata(true);
-            builder.setMetaDataSetFromDtd(DBUnitUtilityBean.class.getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
+            builder.setMetaDataSetFromDtd(this.getClass().getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
             builder.setColumnSensing(true);
 
             // Generate the clean dataset, if loadRefData is true use
             // clean_all.xml otherwise use clean.xml
             final String cleanDataPath = "/clean/" + targetSchema + "_clean_minus_refdata" + ".xml";
             LOGGER.info("Reading clean dataset for data path={}", cleanDataPath);
-            final IDataSet cleanDataset = builder.build(DBUnitUtilityBean.class.getResourceAsStream(cleanDataPath));
+            final IDataSet cleanDataset = builder.build(this.getClass().getResourceAsStream(cleanDataPath));
 
             final IDataSet dtdDataSet =
-                    new FlatDtdDataSet(DBUnitUtilityBean.class.getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
+                    new FlatDtdDataSet(this.getClass().getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
             final CompositeDataSet compositeDataSet = new CompositeDataSet(dtdDataSet, cleanDataset);
 
             // Disable triggers & constraints
@@ -202,7 +200,7 @@ public class DBUnitUtilityBean {
 
             // If there's reference data insert it
             final String refDataPath = "/refdata/" + targetSchema + "_refdata.xml";
-            final InputStream refDataStream = DBUnitUtilityBean.class.getResourceAsStream(refDataPath);
+            final InputStream refDataStream = this.getClass().getResourceAsStream(refDataPath);
             if (refDataStream != null && reloadRefdata) {
                 LOGGER.info("Inserting reference data from {}", refDataPath);
                 final IDataSet referenceDataset = builder.build(refDataStream);
@@ -237,7 +235,7 @@ public class DBUnitUtilityBean {
     private IDataSet buildTargetDataset(final FlatXmlDataSetBuilder builder, final String filePath)
             throws DataSetException {
 
-        final IDataSet targetDataset = builder.build(DBUnitUtilityBean.class.getResourceAsStream(filePath));
+        final IDataSet targetDataset = builder.build(this.getClass().getResourceAsStream(filePath));
         final ReplacementDataSet replacementDataSet = new ReplacementDataSet(targetDataset);
         replacementDataSet.addReplacementObject("[yesterday_date]", DateUtils.addDays(new Date(), -1));
 
@@ -260,7 +258,8 @@ public class DBUnitUtilityBean {
                 try {
                     dbConnection.close();
                 } catch (final SQLException e) {
-                    LOGGER.error("Error closing connection for Schema '{}': {}", dbConnection.getSchema(), e);
+                    LOGGER.error("Error closing connection for Schema '{}': {}",
+                            dbConnection.getSchema(), e);
                 }
 
                 // Remove it from the map.
@@ -283,6 +282,7 @@ public class DBUnitUtilityBean {
     public void enablePrimaryKeys() {
         LOGGER.info("Enabling primary keys");
         runSQLFile("./../utils/src/integ-test/resources/init/create_primary_keys.sql");
+
     }
 
     /**
@@ -295,7 +295,7 @@ public class DBUnitUtilityBean {
             LOGGER.info("Running {}", fileName);
 
             // Get the connection already setup for DBUNIT.
-            final IDatabaseConnection dbConnection = getConnectionInstance("public");
+            final IDatabaseConnection dbConnection = getConnectionInstance("PUBLIC");
             final Connection connection = dbConnection.getConnection();
             connection.prepareStatement("SET CONSTRAINTS ALL DEFERRED").execute();
 
@@ -345,10 +345,10 @@ public class DBUnitUtilityBean {
 
             // Call the reset stored procedure which should have been loaded into
             // the database by ANT script.
-            final CallableStatement cs = connection.prepareCall("{call Prepare_For_Dbunit_Load(?)}");
-            cs.setString("p_SchemaName", schemaName);
+            final CallableStatement cs = connection.prepareCall("{call PREPARE_FOR_DBUNIT_LOAD(?)}");
+            cs.setString(1, schemaName);
             //
-            // Close result set and calleable statement.
+            // Close result set and callable statement.
             final ResultSet rs = cs.executeQuery();
             if (rs != null) {
                 rs.close();
@@ -376,8 +376,8 @@ public class DBUnitUtilityBean {
             final Connection connection = dbConnection.getConnection();
 
             // Call the reset stored procedure which should have been loaded into the database by ANT script.
-            final CallableStatement cs = connection.prepareCall("{call Finish_Dbunit_Load(?)}");
-            cs.setString("p_SchemaName", schemaName);
+            final CallableStatement cs =  connection.prepareCall("{call Finish_Dbunit_Load(?)}");
+            cs.setString(1, schemaName);
 
             // Close result set and calleable statement.
             final ResultSet rs = cs.executeQuery();
@@ -405,13 +405,13 @@ public class DBUnitUtilityBean {
             // Create a DBUnit Dataset builder using the target schemas DTD
             final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
             builder.setDtdMetadata(true);
-            builder.setMetaDataSetFromDtd(DBUnitUtilityBean.class.getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
+            builder.setMetaDataSetFromDtd(this.getClass().getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
             builder.setColumnSensing(true);
 
             // Generate the clean dataset, if loadRefData is true use
             // clean_all.xml otherwise use clean.xml
             final String cleanDataPath = "/clean/" + targetSchema + "_clean" + (reloadRefdata ? "_all" : "") + ".xml";
-            final IDataSet cleanDataset = builder.build(DBUnitUtilityBean.class.getResourceAsStream(cleanDataPath));
+            final IDataSet cleanDataset = builder.build(this.getClass().getResourceAsStream(cleanDataPath));
 
             // Disable triggers & constraints
             prepareForDbunitLoad(targetSchema);
@@ -440,42 +440,6 @@ public class DBUnitUtilityBean {
             LOGGER.error("Error loading data for Schema '{}': {}", targetSchema, e);
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Internal method to create a DBUnit connection to the DB defined in
-     * dbunit.properties.
-     *
-     * @param schema Target Schema
-     * @return DBUnit connection to database
-     */
-    private IDatabaseConnection getConnectionInstance(final String schema) {
-        IDatabaseConnection dbConnection;
-
-        synchronized (allConnections) {
-            // Find the connection for this schema.
-            dbConnection = allConnections.get(schema);
-
-            // If no connection found for this schema, create one.
-            if (null == dbConnection) {
-                try {
-
-                    final Connection connection = datasource.getConnection();
-                    dbConnection = new DatabaseConnection(connection, schema);
-                    dbConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
-                            new PostgresqlDataTypeFactory());
-
-                    dbConnection.getConnection().setAutoCommit(false);
-
-                    // Cache the connection for this schema.
-                    allConnections.put(schema, dbConnection);
-                } catch (final DatabaseUnitException|SQLException e) {
-                    LOGGER.error("Unable to initialise DBUnit Connection: " + e);
-                }
-            }
-        }
-
-        return dbConnection;
     }
 
     /**
@@ -528,6 +492,44 @@ public class DBUnitUtilityBean {
                 s.close();
             }
         }
+    }
+
+    /**
+     * Internal method to create a DBUnit connection to the DB defined in
+     * dbunit.properties.
+     *
+     * @param schema Target Schema
+     * @return DBUnit connection to database
+     */
+    private IDatabaseConnection getConnectionInstance(final String schema) {
+        IDatabaseConnection dbConnection;
+
+        synchronized (allConnections) {
+            // Find the connection for this schema.
+            dbConnection = allConnections.get(schema);
+
+            // If no connection found for this schema, create one.
+            if (null == dbConnection) {
+                try {
+
+                    final Connection connection = datasource.getConnection();
+                    dbConnection = new DatabaseConnection(connection, schema);
+                    dbConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
+                            new PostgresqlDataTypeFactory());
+
+                    dbConnection.getConnection().setAutoCommit(false);
+
+                    LOGGER.info("connection: {}", dbConnection.getConfig());
+
+                    // Cache the connection for this schema.
+                    allConnections.put(schema, dbConnection);
+                } catch (final DatabaseUnitException|SQLException e) {
+                    LOGGER.error("Unable to initialise DBUnit Connection: " + e);
+                }
+            }
+        }
+
+        return dbConnection;
     }
 
     /**
