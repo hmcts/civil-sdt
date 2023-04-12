@@ -357,8 +357,10 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
                 .thenReturn(true);
             this.submitQueryConsumer.processSubmitQuery(mockSubmitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-            mockStaticPerformanceLogger.verify(() -> PerformanceLogger.isPerformanceEnabled(any()), times(2));
-            mockStaticPerformanceLogger.verify(() -> PerformanceLogger.log(any(), anyLong(), anyString(), anyString()), times(2));
+            verifyStatic(PerformanceLogger.class, times(2));
+            PerformanceLogger.isPerformanceEnabled(anyLong());
+            verifyStatic(PerformanceLogger.class, times(2));
+            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
         }
     }
 }
