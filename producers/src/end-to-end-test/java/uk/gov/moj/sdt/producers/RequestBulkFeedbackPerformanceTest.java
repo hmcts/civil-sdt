@@ -18,7 +18,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  * @author Saurabh Agarwal
  */
 
-@ActiveProfiles("integ")
+@ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { EndToEndTestConfig.class, DaoEndToEndTestConfig.class})
 public class RequestBulkFeedbackPerformanceTest extends
