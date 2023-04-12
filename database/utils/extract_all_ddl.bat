@@ -13,12 +13,12 @@ REM object type in a given schema, and then for each constraint type.
 REM ------------------------------------------------------------------------
 
 
-echo EXTRACTING DDL FOR SCHEMA SDT_OWNER
+echo EXTRACTING DDL FOR SCHEMA PUBLIC
 rmdir /s /q ..\generated
-mkdir ..\generated\SDT_OWNER
-sqlplus system/elephant @extract_objects_ddl.sql SDT_OWNER
-sqlplus system/elephant @extract_constraints_ddl.sql SDT_OWNER
-sqlplus system/elephant @extract_grants_ddl.sql SDT_OWNER
+mkdir ..\generated\PUBLIC
+sqlplus system/elephant @extract_objects_ddl.sql PUBLIC
+sqlplus system/elephant @extract_constraints_ddl.sql PUBLIC
+sqlplus system/elephant @extract_grants_ddl.sql PUBLIC
 
 
 echo.

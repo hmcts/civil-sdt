@@ -90,7 +90,7 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('--- System Grants');
   DBMS_OUTPUT.PUT_LINE('-----------------');
 
-  FOR r_grants IN system_grants(p_grantee => 'SDT_OWNER') LOOP
+  FOR r_grants IN system_grants(p_grantee => 'PUBLIC') LOOP
       print_clob(r_grants.grant_statement);
   END LOOP;
   

@@ -229,14 +229,14 @@ ALTER TABLE service_routings ADD CONSTRAINT sr_target_application_fk FOREIGN KEY
   REFERENCES target_applications (target_application_id);
 
 ------------------------------------------------
--- Create Unique constraints for SDT_OWNER
+-- Create Unique constraints for PUBLIC
 ------------------------------------------------
 ALTER TABLE bulk_submissions ADD CONSTRAINT bs_sbr_uni UNIQUE (sdt_bulk_reference);
 ALTER TABLE service_types ADD CONSTRAINT rt_rtn_uni UNIQUE (service_type_name);
 ALTER TABLE target_applications ADD CONSTRAINT ta_tan_uni UNIQUE (target_application_name);
 
 ------------------------------------------------
--- Create Sequences for SDT_OWNER
+-- Create Sequences for PUBLIC
 ------------------------------------------------
 -- BIGINT/NUMERIC = 18 digits, but seq was formerly 27 digits! Consider type change
 CREATE SEQUENCE bulk_cust_app_seq MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
@@ -253,9 +253,9 @@ CREATE SEQUENCE srv_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 
 CREATE SEQUENCE tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
 
 ------------------------------------------------
--- Create Grants for SDT_OWNER
+-- Create Grants for PUBLIC
 ------------------------------------------------
---ALTER ROLE sdt_owner SET search_path TO sdt_owner;
+--ALTER ROLE public SET search_path TO public;
 --ALTER ROLE sdt_user SET search_path TO sdt_user, sdt_owner;
 --ALTER ROLE sdt_batch_user SET search_path TO sdt_batch_user, sdt_owner;
 

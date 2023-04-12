@@ -30,7 +30,7 @@
 -- $LastChangedBy: $
 -- =====================================================================================================================
 
-ALTER SESSION SET CURRENT_SCHEMA=sdt_owner;
+ALTER SESSION SET CURRENT_SCHEMA=public;
 
 ALTER TABLE target_applications
 MODIFY version_number INTEGER DEFAULT 0;

@@ -141,20 +141,20 @@
         </antcall>
 
         <antcall target="-run-sql">
-            <param name="script-name" value="create_sdt_owner_ddl" />
+            <param name="script-name" value="create_public_ddl" />
             <param name="script-type" value="production" />
             <param name="script" value="utils/install_all_ddl.sql" />
             <param name="param1" value="baseline" />
-            <param name="param2" value="SDT_OWNER" />
+            <param name="param2" value="PUBLIC" />
             <param name="param3" value="" />
         </antcall>
 
         <antcall target="-run-sql">
-            <param name="script-name" value="create_sdt_owner_grants" />
+            <param name="script-name" value="create_public_grants" />
             <param name="script-type" value="production" />
             <param name="script" value="utils/install_all_grants.sql" />
             <param name="param1" value="baseline" />
-            <param name="param2" value="SDT_OWNER" />
+            <param name="param2" value="PUBLIC" />
             <param name="param3" value="" />
         </antcall>
 
@@ -218,20 +218,20 @@
         </antcall>
 
         <antcall target="-run-sql">
-            <param name="script-name" value="create_sdt_owner_ddl" />
+            <param name="script-name" value="create_public_ddl" />
             <param name="script-type" value="production" />
             <param name="script" value="utils/install_all_ddl.sql" />
             <param name="param1" value="current" />
-            <param name="param2" value="SDT_OWNER" />
+            <param name="param2" value="PUBLIC" />
             <param name="param3" value="" />
         </antcall>
 
         <antcall target="-run-sql">
-            <param name="script-name" value="create_sdt_owner_grants" />
+            <param name="script-name" value="create_public_grants" />
             <param name="script-type" value="production" />
             <param name="script" value="utils/install_all_grants.sql" />
             <param name="param1" value="current" />
-            <param name="param2" value="SDT_OWNER" />
+            <param name="param2" value="PUBLIC" />
             <param name="param3" value="" />
         </antcall>
 
