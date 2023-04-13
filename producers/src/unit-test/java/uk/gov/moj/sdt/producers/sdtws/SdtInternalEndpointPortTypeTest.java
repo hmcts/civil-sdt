@@ -131,6 +131,8 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
         assertNotNull(response, "Response expected");
+        assertEquals("MOCK_ERROR", response.getStatus().getError().getDescription());
+        assertEquals("MOCK_CODE", response.getStatus().getError().getCode());
         verify(mockLogger).isDebugEnabled();
     }
 
