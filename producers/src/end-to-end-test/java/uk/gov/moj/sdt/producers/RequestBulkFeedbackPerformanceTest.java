@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
@@ -20,7 +21,11 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class, DaoEndToEndTestConfig.class})
+@SpringBootTest(classes = { EndToEndTestConfig.class})
+@Sql(scripts = {"classpath:database/baseline/V0001__init.sql",
+        "classpath:database/baseline/create_purge_proc.sql",
+        "classpath:database/baseline/create_finish_dbunit_load_proc.sql",
+        "classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"})
 public class RequestBulkFeedbackPerformanceTest extends
         AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType> {
     /**

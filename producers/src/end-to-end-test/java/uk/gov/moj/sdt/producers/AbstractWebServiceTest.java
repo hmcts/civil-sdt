@@ -49,11 +49,9 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.test.utils.DBUnitUtilityBean;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
@@ -69,7 +67,6 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @param <JaxbResponseType> the type of the JAXB response.
  * @author Robin Compston
  */
-@ExtendWith(SpringExtension.class)
 public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends AbstractSdtUnitTestBase {
     /**
      * Logger object.

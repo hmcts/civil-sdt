@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Class DBUnitUtility.
+ * The Class DBUnitUtilityBean.
  *
  * @author Peter Bonnett.
  */
@@ -113,7 +113,7 @@ public class DBUnitUtilityBean {
                 final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
                 builder.setDtdMetadata(true);
                 builder.setMetaDataSetFromDtd(
-                        DBUnitUtilityBean.class.getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
+                        this.getClass().getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
                 builder.setColumnSensing(true);
                 final IDataSet referenceDataset = builder.build(refDataStream);
                 filter = new ExcludeTableFilter(referenceDataset.getTableNames());
@@ -135,7 +135,7 @@ public class DBUnitUtilityBean {
      */
     public void loadDatabase(final Class<?> classToLoadFor, final boolean reloadRefdata) {
         // Can have individual XML for a method, or just one for a class
-        final String fileXml = "/" + classToLoadFor.getName().replace("\\.", "/") + ".xml";
+        final String fileXml = "/" + classToLoadFor.getName().replace(".", "/") + ".xml";
         if (this.getClass().getResource(fileXml) != null) {
             LOGGER.info("Loading DB with: {}", fileXml);
             loadDatabase("public", fileXml, reloadRefdata);
@@ -187,13 +187,12 @@ public class DBUnitUtilityBean {
                     new FlatDtdDataSet(this.getClass().getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
             final CompositeDataSet compositeDataSet = new CompositeDataSet(dtdDataSet, cleanDataset);
 
-            // Disable triggers & constraints
+            // prepare for DBUnit load - Disable triggers & constraints
             prepareForDbunitLoad(targetSchema);
 
             if (cleanseDatabase) {
                 // Clean the DB
                 LOGGER.info("Cleaning database");
-                // DatabaseOperation.TRUNCATE_TABLE.execute (dbConnection, cleanDataset);
                 DatabaseOperation.TRUNCATE_TABLE.execute(dbConnection, compositeDataSet);
                 dbConnection.getConnection().commit();
             }
@@ -345,16 +344,16 @@ public class DBUnitUtilityBean {
 
             // Call the reset stored procedure which should have been loaded into
             // the database by ANT script.
-            final CallableStatement cs = connection.prepareCall("{call PREPARE_FOR_DBUNIT_LOAD(?)}");
+            final CallableStatement cs = connection.prepareCall("CALL PREPARE_FOR_DBUNIT_LOAD(?)");
             cs.setString(1, schemaName);
-            //
             // Close result set and callable statement.
             final ResultSet rs = cs.executeQuery();
             if (rs != null) {
                 rs.close();
             }
             cs.close();
-        } catch (final SQLException e) {
+
+        } catch (final Exception e) {
             LOGGER.error(e.toString());
         }
     }
@@ -376,7 +375,7 @@ public class DBUnitUtilityBean {
             final Connection connection = dbConnection.getConnection();
 
             // Call the reset stored procedure which should have been loaded into the database by ANT script.
-            final CallableStatement cs =  connection.prepareCall("{call Finish_Dbunit_Load(?)}");
+            final CallableStatement cs =  connection.prepareCall("CALL FINISH_DBUNIT_LOAD(?)");
             cs.setString(1, schemaName);
 
             // Close result set and calleable statement.
@@ -423,7 +422,7 @@ public class DBUnitUtilityBean {
 
             // If there's reference data insert it
             // InputStream refDataStream =
-            // DBUnitUtility.class.getResourceAsStream("/refdata/" +
+            // this.getClass().getResourceAsStream("/refdata/" +
             // targetSchema +
             // "_refdata.xml");
             // if (refDataStream != null && reloadRefdata)
