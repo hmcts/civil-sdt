@@ -46,9 +46,22 @@
   </logger>
 
   <!-- LOG "uk.gov.moj.sdt*" at DEBUG level -->
-  <logger name="uk.gov.moj.sdt.services" level="trace" additivity="false">
+  <logger name="uk.gov.moj.sdt.services" level="debug" additivity="false">
     <appender-ref ref="RollingFile" />
     <appender-ref ref="Console" />
   </logger>
+
+  <!-- LOG "org.dbunit*" at DEBUG level -->
+  <logger name="org.dbunit" level="debug" additivity="false">
+    <appender-ref ref="RollingFile" />
+    <appender-ref ref="Console" />
+  </logger>
+
+  <!-- LOG "org.postgresql*" at DEBUG level -->
+  <logger name="org.postgresql" level="debug" additivity="false">
+    <appender-ref ref="RollingFile" />
+    <appender-ref ref="Console" />
+  </logger>
+
 
 </configuration>
