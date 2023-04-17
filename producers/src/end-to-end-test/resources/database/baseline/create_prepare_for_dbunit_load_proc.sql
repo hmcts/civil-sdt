@@ -13,10 +13,10 @@ BEGIN
                        ON rel.oid = con.conrelid
             INNER JOIN pg_catalog.pg_namespace nsp
                        ON nsp.oid = connamespace
-       WHERE nsp.nspname = p_SchemaName AND con.contype = ''R'')
+       WHERE nsp.nspname = p_SchemaName AND con.contype = ''f'')
     LOOP
         -- Disable foreign key constraints only, not the primary key, unique key, check constraints so we still get some checking.
-        EXECUTE IMMEDIATE ''ALTER TABLE '' || p_SchemaName || ''.'' || i.table_name || '' DISABLE CONSTRAINT '' || i.constraint_name;
+        EXECUTE ''ALTER TABLE '' || p_SchemaName || ''.'' || i.table_name || '' ALTER CONSTRAINT '' || i.constraint_name || '' DEFERRABLE INITIALLY DEFERRED'';
     END LOOP;
 
     FOR j IN (SELECT  event_object_table AS table_name ,trigger_name
@@ -24,7 +24,7 @@ BEGIN
 				GROUP BY table_name , trigger_name
 				ORDER BY table_name ,trigger_name)
     LOOP
-        EXECUTE IMMEDIATE ''ALTER TRIGGER '' || p_SchemaName || ''.'' || j.trigger_name || '' DISABLE'';
+        EXECUTE ''ALTER TRIGGER '' || p_SchemaName || ''.'' || j.trigger_name || '' DISABLE'';
     END LOOP;
 END
 '

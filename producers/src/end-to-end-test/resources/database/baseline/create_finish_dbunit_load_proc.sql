@@ -8,11 +8,11 @@ BEGIN
                        ON rel.oid = con.conrelid
                     INNER JOIN pg_catalog.pg_namespace nsp
                        ON nsp.oid = connamespace
-                WHERE con.contype = ''R''
+                WHERE con.contype = ''f''
     )
     LOOP
         -- Enable the disabled constraints
-        EXECUTE IMMEDIATE ''ALTER TABLE '' || i.table_name || '' ENABLE NOVALIDATE CONSTRAINT '' || i.constraint_name;
+        EXECUTE''ALTER TABLE '' || i.table_name || '' ALTER CONSTRAINT '' || i.constraint_name || '' NOT DEFERRABLE'';
     END LOOP;
 
     FOR j IN (SELECT event_object_table AS table_name, trigger_name
@@ -21,7 +21,7 @@ BEGIN
 				ORDER BY table_name ,trigger_name
     )
     LOOP
-        EXECUTE IMMEDIATE ''ALTER TRIGGER '' || j.trigger_name || '' ENABLE'';
+        EXECUTE ''ALTER TRIGGER '' || j.trigger_name || '' ENABLE'';
     END LOOP;
 END;
 '
