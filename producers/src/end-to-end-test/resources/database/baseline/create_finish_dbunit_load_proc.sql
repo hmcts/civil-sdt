@@ -1,27 +1,25 @@
 CREATE OR REPLACE PROCEDURE FINISH_DBUNIT_LOAD(p_SchemaName varchar) language plpgsql AS '
-DECLARE i record;
-DECLARE j record;
 BEGIN
-    FOR i IN (SELECT  rel.relname as table_name, con.conname as constraint_name
-                FROM pg_catalog.pg_constraint con
-                    INNER JOIN pg_catalog.pg_class rel
-                       ON rel.oid = con.conrelid
-                    INNER JOIN pg_catalog.pg_namespace nsp
-                       ON nsp.oid = connamespace
-                WHERE con.contype in (''f'')
-    )
-    LOOP
-        -- Enable the disabled constraints
-        EXECUTE ''ALTER TABLE '' || i.table_name || '' ALTER CONSTRAINT '' || i.constraint_name || '' NOT DEFERRABLE'';
-    END LOOP;
-
-    FOR j IN (SELECT event_object_table AS table_name, trigger_name
-				FROM information_schema.triggers
-				GROUP BY table_name , trigger_name
-				ORDER BY table_name ,trigger_name
-    )
-    LOOP
-        EXECUTE ''ALTER TRIGGER '' || j.trigger_name || '' ENABLE'';
-    END LOOP;
+------------------------------------------------
+-- Create Referential constraints
+------------------------------------------------
+ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_bulk_customer_fk FOREIGN KEY (bulk_customer_id)
+  REFERENCES bulk_customers (bulk_customer_id);
+ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_target_application_fk FOREIGN KEY (target_application_id)
+  REFERENCES target_applications (target_application_id);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_customer_id_fk FOREIGN KEY (bulk_customer_id)
+  REFERENCES bulk_customers (bulk_customer_id);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_service_request_id_fk FOREIGN KEY (service_request_id)
+  REFERENCES service_requests (service_request_id);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_target_application_fk FOREIGN KEY (target_application_id)
+  REFERENCES target_applications (target_application_id);
+ALTER TABLE error_logs ADD CONSTRAINT el_individual_request_fk FOREIGN KEY (individual_request_id)
+  REFERENCES individual_requests (individual_request_id);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_bulk_submission_fk FOREIGN KEY (bulk_submission_id)
+  REFERENCES bulk_submissions (bulk_submission_id);
+ALTER TABLE service_routings ADD CONSTRAINT sr_service_type_fk FOREIGN KEY (service_type_id)
+  REFERENCES service_types (service_type_id);
+ALTER TABLE service_routings ADD CONSTRAINT sr_target_application_fk FOREIGN KEY (target_application_id)
+  REFERENCES target_applications (target_application_id);
 END;
 '

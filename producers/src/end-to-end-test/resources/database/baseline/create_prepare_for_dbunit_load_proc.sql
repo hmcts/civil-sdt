@@ -16,7 +16,7 @@ BEGIN
        WHERE nsp.nspname = p_SchemaName AND con.contype in (''f''))
     LOOP
         -- Disable foreign key constraints only, not the primary key, unique key, check constraints so we still get some checking.
-        EXECUTE ''ALTER TABLE '' || p_SchemaName || ''.'' || i.table_name || '' ALTER CONSTRAINT '' || i.constraint_name || '' DEFERRABLE INITIALLY DEFERRED'';
+        EXECUTE ''ALTER TABLE '' || p_SchemaName || ''.'' || i.table_name || '' DROP CONSTRAINT '' || i.constraint_name;
     END LOOP;
 
     FOR j IN (SELECT  event_object_table AS table_name ,trigger_name
@@ -26,6 +26,7 @@ BEGIN
     LOOP
         EXECUTE ''ALTER TRIGGER '' || p_SchemaName || ''.'' || j.trigger_name || '' DISABLE'';
     END LOOP;
+
 END
 '
 LANGUAGE plpgsql;
