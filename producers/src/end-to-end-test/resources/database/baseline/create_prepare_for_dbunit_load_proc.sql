@@ -19,14 +19,6 @@ BEGIN
         EXECUTE ''ALTER TABLE '' || p_SchemaName || ''.'' || i.table_name || '' DROP CONSTRAINT '' || i.constraint_name;
     END LOOP;
 
-    FOR j IN (SELECT  event_object_table AS table_name ,trigger_name
-				FROM information_schema.triggers
-				GROUP BY table_name , trigger_name
-				ORDER BY table_name ,trigger_name)
-    LOOP
-        EXECUTE ''ALTER TRIGGER '' || p_SchemaName || ''.'' || j.trigger_name || '' DISABLE'';
-    END LOOP;
-
 END
 '
 LANGUAGE plpgsql;
