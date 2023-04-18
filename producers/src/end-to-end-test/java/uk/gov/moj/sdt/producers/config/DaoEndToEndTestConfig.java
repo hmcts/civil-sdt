@@ -1,4 +1,4 @@
-package uk.gov.moj.sdt.producers;
+package uk.gov.moj.sdt.producers.config;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
