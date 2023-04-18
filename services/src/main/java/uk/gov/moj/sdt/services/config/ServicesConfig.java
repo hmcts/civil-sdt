@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.adapter.MessageListenerAdapter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.moj.sdt.services.messaging.QueueConfig;
@@ -23,6 +24,7 @@ import javax.jms.ConnectionFactory;
 @Configuration
 @EnableConfigurationProperties
 @EnableTransactionManagement
+@EnableScheduling
 public class ServicesConfig {
 
     private static final String TARGET_APP_SUBMIT_QUERY_RESPONSE_SCHEMA = "http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/SubmitQueryResponseSchema";
