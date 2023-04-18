@@ -30,15 +30,24 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.producers.sdtws;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.UpdateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
@@ -47,6 +56,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,13 +85,28 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @Mock
     private IWsUpdateItemHandler mockUpdateItemHandler;
 
+    private Logger mockLogger;
+
+
     /**
      * Set up common for all tests.
      */
     @BeforeEach
     @Override
     public void setUp() {
-        portType = new SdtInternalEndpointPortType(mockUpdateItemHandler);
+        mockLogger = mock(Logger.class);
+        try (MockedStatic<LoggerFactory> mockLoggerFactory = Mockito.mockStatic(LoggerFactory.class)) {
+            mockLoggerFactory.when(() -> LoggerFactory.getLogger(any(Class.class)))
+                .thenReturn(mockLogger);
+            when(mockLogger.isDebugEnabled())
+                .thenReturn(true);
+            portType = new SdtInternalEndpointPortType(mockUpdateItemHandler);
+        }
+    }
+
+    @AfterEach
+    public void resetLogger() {
+        reset(mockLogger);
     }
 
     /**
@@ -83,11 +114,26 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testUpdateItemSuccess() {
+        final UpdateResponseType response;
         when(mockUpdateItemHandler.updateItem(any(UpdateRequestType.class))).thenReturn(createUpdateResponse());
 
-        final UpdateResponseType response = portType.updateItem(createUpdateRequest());
+        try (MockedStatic<PerformanceLogger> mockPerformanceLogger = mockStatic(PerformanceLogger.class)){
+            mockPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
+                .thenReturn(true);
+
+            response = portType.updateItem(createUpdateRequest());
+
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .isPerformanceEnabled(anyLong()), times(2));
+            mockPerformanceLogger.verify(() -> PerformanceLogger
+                .log(any(), anyLong(), anyString(), anyString()), times(2) );
+        }
+
         verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
         assertNotNull(response, "Response expected");
+        assertEquals("MOCK_ERROR", response.getStatus().getError().getDescription());
+        assertEquals("MOCK_CODE", response.getStatus().getError().getCode());
+        verify(mockLogger).isDebugEnabled();
     }
 
     /**
@@ -107,6 +153,7 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
+        verify(mockLogger, never()).isDebugEnabled();
     }
 
     /**
@@ -119,6 +166,13 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         final HeaderType header = new HeaderType();
         header.setSdtRequestId("12345678");
+        final UpdateStatusType statusType = new UpdateStatusType();
+        statusType.setCode(UpdateStatusCodeType.ACCEPTED);
+        final ErrorType errorType = new ErrorType();
+        errorType.setDescription("MOCK_ERROR");
+        errorType.setCode("MOCK_CODE");
+        statusType.setError(errorType);
+        request.setStatus(statusType);
 
         request.setHeader(header);
         return request;
@@ -134,6 +188,10 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         final StatusType statusType = new StatusType();
         statusType.setCode(StatusCodeType.OK);
+        final ErrorType errorType = new ErrorType();
+        errorType.setDescription("MOCK_ERROR");
+        errorType.setCode("MOCK_CODE");
+        statusType.setError(errorType);
         response.setStatus(statusType);
         return response;
     }
