@@ -34,28 +34,22 @@
 package uk.gov.moj.sdt.interceptors.out;
 
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.io.CachedOutputStream;
-import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.Phase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -92,7 +86,7 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    void testHandleMessagePhaseConstructor() throws IOException {
+    void testHandleMessagePhaseConstructor() {
         final ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor =
             new ServiceRequestOutboundInterceptor(Phase.SETUP);
 
@@ -108,9 +102,10 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
      */
     private SoapMessage getDummySoapMessageWithCachedOutputStream(String data) throws IOException {
         SoapMessage soapMessage = new SoapMessage(new MessageImpl());
-        CachedOutputStream cachedOutputStream = new CachedOutputStream();
-        cachedOutputStream.write(data.getBytes());
-        soapMessage.setContent(OutputStream.class, cachedOutputStream);
+        try (CachedOutputStream cachedOutputStream = new CachedOutputStream()) {
+            cachedOutputStream.write(data.getBytes());
+            soapMessage.setContent(OutputStream.class, cachedOutputStream);
+        }
         return soapMessage;
     }
 

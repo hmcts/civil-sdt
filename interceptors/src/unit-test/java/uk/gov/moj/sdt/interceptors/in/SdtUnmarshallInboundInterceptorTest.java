@@ -45,9 +45,9 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import java.lang.reflect.Field;
 import java.util.TreeSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test class.
@@ -65,7 +65,8 @@ class SdtUnmarshallInboundInterceptorTest extends AbstractSdtUnitTestBase {
     SoapMessage mockSoapMessage;
 
     @BeforeEach
-    void setup() {
+    @Override
+    public void setUp() {
         sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
         phaseInterceptorChain = new PhaseInterceptorChain(new TreeSet<>());
         when(mockSoapMessage.getInterceptorChain()).thenReturn(phaseInterceptorChain);

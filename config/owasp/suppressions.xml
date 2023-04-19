@@ -8,7 +8,6 @@
     </notes>
     <cve>CVE-2022-40705</cve>
   </suppress>
-
   <!--End of false positives section -->
 
   <!--Please add all the temporary suppression under the below section-->

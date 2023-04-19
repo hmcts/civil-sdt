@@ -61,17 +61,21 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
     @Override
     public String enrichXml(final String message) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Message before enrichment [" + message + "]");
+            LOGGER.debug("Message before enrichment [{}]", message);
         }
 
         // Assume no change to input.
         String newXml = message;
 
+        newXml = loadSummaryResults(newXml);
+
         // Check to ensure the parent tag can be found in the message.
         if (super.findParentTag(message)) {
             // Remove linefeeds as they stop the regular expression working.
-            newXml = newXml.replace('\n', ' ');
-            newXml = newXml.replace('\r', ' ');
+            if (null != newXml) {
+                newXml = newXml.replace('\n', ' ');
+                newXml = newXml.replace('\r', ' ');
+            }
 
             // Get the system specific response from thread local to inject into the outbound message
             String replacementXml = SdtContext.getContext().getRawOutXml();
@@ -85,7 +89,7 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
             final Matcher matcher = pattern.matcher(newXml);
 
             if (StringUtils.isNotBlank(replacementXml) && matcher.find()) {
-                LOGGER.debug("Found matching group[" + matcher.group() + "]");
+                if (LOGGER.isDebugEnabled()) LOGGER.debug("Found matching group[{}]", matcher.group());
 
                 // Get the string matching the regular expression.
                 final String singleLineTag = matcher.group();
@@ -93,7 +97,7 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
                 // Add the start and end tag to the replacement xml.
                 replacementXml = changeToStartTag(singleLineTag) + replacementXml + changeToEndTag(singleLineTag);
 
-                LOGGER.debug("Replacement string[" + replacementXml + "]");
+                LOGGER.debug("Replacement string[{}]", replacementXml);
 
                 // Escape any $ in the string, otherwise matcher may crash depending on what comes after $. N.B. Do not
                 // use replaceAll or anything making use of java.util.regex.Matcher because this will produce the
@@ -105,18 +109,46 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
             }
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Message after enrichment [" + newXml + "]");
+                LOGGER.debug("Message after enrichment [{}]", newXml);
             }
 
         } else {
             // Failure to find matching request in outgoing XML.
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Parent tag [" + this.getParentTag() + "] not found...skipping enrichment.");
+                LOGGER.debug("Parent tag [{}] not found...skipping enrichment.", this.getParentTag());
             }
         }
 
         return newXml;
 
+    }
+
+    /**
+     * load new summary results stored in sdt context
+     * @param newXml raw xml
+     * @return outXml xml with replaced results
+     */
+    private String loadSummaryResults(String newXml) {
+
+        // Get the system specific response from thread local to inject into the outbound message
+        String outXml = newXml;
+
+        Pattern RESULTS_PATTERN = Pattern.compile("<(qresp|ns2)\\:results\\/>|<(qresp|ns2)\\:results.*\\>.*<\\/(qresp|ns2)\\:results\\>");
+        String replacementXml = SdtContext.getContext().getClaimDefencesSummaryResultsXml();
+
+        if (null != outXml && !outXml.isEmpty() && null != replacementXml && !replacementXml.isEmpty()
+                && RESULTS_PATTERN.matcher(outXml).find()) {
+
+            // remove xml header from replacement xml
+            Pattern XML_HEADER_PATTERN = Pattern.compile("<.xml.*?>");
+            replacementXml = XML_HEADER_PATTERN.matcher(replacementXml).replaceAll("");
+
+            // now replace results node with new summary results
+            outXml = RESULTS_PATTERN.matcher(outXml).replaceAll(replacementXml);
+            SdtContext.getContext().setRawOutXml(outXml);
+        }
+
+        return outXml;
     }
 
 }

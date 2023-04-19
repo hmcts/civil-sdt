@@ -73,7 +73,8 @@ class XmlOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
 
     @BeforeEach
-    void setup() {
+    @Override
+    public void setUp() {
         SdtContext.getContext().setServiceRequestId(1L);
         SdtContext.getContext().setRawOutXml("<record></record>");
         xmlOutboundInterceptor = new XmlOutboundInterceptor();
@@ -125,10 +126,10 @@ class XmlOutboundInterceptorTest extends AbstractSdtUnitTestBase {
      */
     private SoapMessage getDummySoapMessage(String data) throws IOException {
         final SoapMessage soapMessage = new SoapMessage(new MessageImpl());
-        final OutputStream outputStream = new CachedOutputStream();
-        outputStream.write(data.getBytes(StandardCharsets.UTF_8));
-
-        soapMessage.setContent(OutputStream.class, outputStream);
+        try (final OutputStream outputStream = new CachedOutputStream()) {
+            outputStream.write(data.getBytes(StandardCharsets.UTF_8));
+            soapMessage.setContent(OutputStream.class, outputStream);
+        }
         return soapMessage;
     }
 

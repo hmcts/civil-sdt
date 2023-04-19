@@ -109,9 +109,10 @@ class PerformanceLoggerOutboundInterceptorTest extends AbstractSdtUnitTestBase {
      */
     private SoapMessage getDummySoapMessageWithCachedOutputStream(String data) throws IOException {
         SoapMessage soapMessage = new SoapMessage(new MessageImpl());
-        CachedOutputStream cachedOutputStream = new CachedOutputStream();
-        cachedOutputStream.write(data.getBytes());
-        soapMessage.setContent(OutputStream.class, cachedOutputStream);
+        try (CachedOutputStream cachedOutputStream = new CachedOutputStream()) {
+            cachedOutputStream.write(data.getBytes());
+            soapMessage.setContent(OutputStream.class, cachedOutputStream);
+        }
         return soapMessage;
     }
 

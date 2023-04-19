@@ -3,12 +3,10 @@ package uk.gov.moj.sdt.cmc.consumers.client.converter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
@@ -49,10 +47,6 @@ class XmlToObjectTest extends BaseXmlTest {
     private static final String EXPECTED_JUDGEMENT_RESPONSE = "Expected_JudgementResponse.xml";
 
     private XmlConverter xmlToObject = new XmlConverter();
-
-    @BeforeEach
-    public void setup() {
-    }
 
     @Test
     void shouldConvertBreathingSpaceRequestToString() throws IOException {
@@ -200,4 +194,5 @@ class XmlToObjectTest extends BaseXmlTest {
         String expectedValue = readFile(EXPECTED_CLAIM_STATUS_REQUEST);
         assertEquals(expectedValue, jsonString);
     }
+
 }

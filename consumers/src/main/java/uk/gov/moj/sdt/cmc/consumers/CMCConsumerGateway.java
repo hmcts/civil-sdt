@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
@@ -20,9 +23,11 @@ import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
 
@@ -30,24 +35,34 @@ import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_L
 public class CMCConsumerGateway implements IConsumerGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
+    public static final String FROM_DATE = "fromDate";
+    public static final String TO_DATE = "toDate";
 
     private IBreathingSpaceService breathingSpace;
 
     private IClaimStatusUpdateService claimStatusUpdate;
 
+    private IClaimDefencesService claimDefences;
+
     private IJudgementService judgementService;
 
     private XmlConverter xmlToObject;
+
+    private XmlElementValueReader xmlElementValueReader;
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
                               @Qualifier("JudgementRequestService") IJudgementService judgementService,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
-                              XmlConverter xmlToObject) {
+                              @Qualifier("ClaimDefencesService") IClaimDefencesService claimDefences,
+                              XmlConverter xmlToObject,
+                              XmlElementValueReader xmlElementValueReader) {
         this.breathingSpace = breathingSpace;
         this.judgementService = judgementService;
         this.claimStatusUpdate = claimStatusUpdate;
+        this.claimDefences = claimDefences;
         this.xmlToObject = xmlToObject;
+        this.xmlElementValueReader = xmlElementValueReader;
     }
 
     @Override
@@ -90,12 +105,23 @@ public class CMCConsumerGateway implements IConsumerGateway {
     }
 
     @Override
-    public void submitQuery(ISubmitQueryRequest submitQueryRequest,
+    public SubmitQueryResponse submitQuery(ISubmitQueryRequest submitQueryRequest,
                             long connectionTimeOut,
                             long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Submitting query to target application[{}], for customer[{}]",
                      submitQueryRequest.getTargetApplication().getTargetApplicationCode(),
                      submitQueryRequest.getBulkCustomer().getSdtCustomerId());
+
+        String xmlContent = SdtContext.getContext().getRawOutXml();
+        String fromDate = xmlElementValueReader.getElementValue(xmlContent, FROM_DATE);
+        String toDate = xmlElementValueReader.getElementValue(xmlContent, TO_DATE);
+        ClaimDefencesResponse response = claimDefences.claimDefences("", "", "", fromDate, toDate);
+
+        SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
+        submitQueryResponse.setClaimDefencesResults(response.getResults());
+        submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
+
+        return submitQueryResponse;
     }
 
 }

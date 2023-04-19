@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
@@ -24,6 +25,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
@@ -61,15 +63,28 @@ class CMCConsumerGatewayTest {
     private IJudgementService judgementService;
 
     @Mock
-    private IClaimStatusUpdateService claimStatusUpdate;
+    private BreathingSpaceRequest breathingSpaceRequest;
 
+    @Mock
+    private ClaimStatusUpdateRequest claimStatusUpdateRequest;
+
+    @Mock
+    private IClaimDefencesService claimDefences;
+
+    @Mock
+    private XmlElementValueReader xmlElementValueReader;
+
+    @Mock
+    private IClaimStatusUpdateService claimStatusUpdate;
 
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
                                                     judgementService,
                                                     claimStatusUpdate,
-                                                    xmlToObject);
+                                                    claimDefences,
+                                                    xmlToObject,
+                                                    xmlElementValueReader);
     }
 
     @Test
@@ -80,9 +95,8 @@ class CMCConsumerGatewayTest {
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(breathingSpace.breathingSpace(anyString(), anyString(), any())).thenReturn(response);
 
-        BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
-        when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
+        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getType());
 
@@ -125,7 +139,7 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         JudgementRequest judgementRequest = mock(JudgementRequest.class);
         when(individualRequest.getRequestPayload()).thenReturn(XML);
-        when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
+        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
         when(xmlToObject.convertObjectToXml(response)).thenReturn(XML);
         when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
@@ -155,7 +169,6 @@ class CMCConsumerGatewayTest {
             BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
-            ClaimStatusUpdateRequest claimStatusUpdateRequest = mock(ClaimStatusUpdateRequest.class);
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
         }
     }

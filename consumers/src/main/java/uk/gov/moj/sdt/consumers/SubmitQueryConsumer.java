@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -81,18 +82,24 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
      * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
      * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest) */
     @Override
-    public void processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
-                                   final long receiveTimeOut) throws OutageException, TimeoutException {
+    public SubmitQueryResponse processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
+                                                  final long receiveTimeOut) throws OutageException, TimeoutException {
         // Transform domain object to web service object
         final SubmitQueryRequestType submitQueryRequestType =
                 this.transformer.transformDomainToJaxb(submitQueryRequest);
 
         // Process and call the end point web service
-        final SubmitQueryResponseType responseType =
-                this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
+        LOGGER.debug("processSubmitQuery for {}:{}:{}", submitQueryRequest.getBulkCustomer(),
+                submitQueryRequest.getTargetApplication(), submitQueryRequest.getQueryReference());
+        SubmitQueryResponseType responseType = this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
                         receiveTimeOut);
 
         this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
+
+        SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
+        submitQueryResponse.setResponseType(responseType);
+
+        return submitQueryResponse;
     }
 
     /**

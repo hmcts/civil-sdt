@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.producers.sdtws;
 
 import javax.jws.WebService;
 
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +59,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  */
 
 // CHECKSTYLE:OFF
+@NoArgsConstructor
 @Service("ISdtEndpointPortType")
 @WebService(serviceName = "SdtEndpoint", portName = "SdtEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", wsdlLocation = "wsdl/SdtEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
 // CHECKSTYLE:ON
@@ -94,12 +96,12 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for submit bulk by customer [" +
-                    bulkRequest.getHeader().getSdtCustomerId() + "]");
+            LOGGER.debug("Endpoint called for submit bulk by customer [{}]",
+                    bulkRequest.getHeader().getSdtCustomerId());
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_2)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tsdt customer id=" + bulkRequest.getHeader().getSdtCustomerId() +
                     "\n\ttarget application=" + bulkRequest.getHeader().getTargetApplicationId() +
                     "\n\tcustomer reference=" + bulkRequest.getHeader().getCustomerReference() +
@@ -113,14 +115,12 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         BulkResponseType response = null;
         try {
             response = wsCreateBulkRequestHandler.submitBulk(bulkRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tsdt service=" + response.getSdtService() + "\n\tsdt bulk reference=" +
                     response.getSdtBulkReference() + "\n\tcustomer reference=" + response.getCustomerReference() +
                     "\n\trequest count=" + response.getRequestCount() + "\n\tstatus code=" +
@@ -141,12 +141,12 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
     @Override
     public BulkFeedbackResponseType getBulkFeedback(final BulkFeedbackRequestType bulkFeedbackRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for bulk feedback by customer [" +
-                    bulkFeedbackRequest.getHeader().getSdtCustomerId() + "]");
+            LOGGER.debug("Endpoint called for bulk feedback by customer [{}]",
+                    bulkFeedbackRequest.getHeader().getSdtCustomerId());
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_2)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tsdt customer id=" + bulkFeedbackRequest.getHeader().getSdtCustomerId() +
                     "\n\tsdt bulk reference=" + bulkFeedbackRequest.getHeader().getSdtBulkReference() + "\n");
 
@@ -158,14 +158,12 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         BulkFeedbackResponseType response = null;
         try {
             response = wsReadBulkRequestHandler.getBulkFeedback(bulkFeedbackRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tsdt service=" + response.getBulkRequestStatus().getSdtService() +
                     "\n\tsdt bulk reference=" + response.getBulkRequestStatus().getSdtBulkReference() +
                     "\n\tcustomer reference=" + response.getBulkRequestStatus().getCustomerReference() +
@@ -192,12 +190,12 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
     @Override
     public SubmitQueryResponseType submitQuery(final SubmitQueryRequestType submitQueryRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for submit query by customer [" +
-                    submitQueryRequest.getHeader().getSdtCustomerId() + "]");
+            LOGGER.debug("Endpoint called for submit query by customer [{}]",
+                    submitQueryRequest.getHeader().getSdtCustomerId());
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_2)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tcustomer=" + submitQueryRequest.getHeader().getSdtCustomerId() +
                     "\n\ttarget application=" + submitQueryRequest.getHeader().getTargetApplicationId() + "\n");
 
@@ -210,14 +208,12 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
 
         try {
             response = wsReadSubmitQueryHandler.submitQuery(submitQueryRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
-            final StringBuffer detail = new StringBuffer();
+            final StringBuilder detail = new StringBuilder();
             detail.append("\n\n\tbulk request status=" + response.getSdtService() + "\n\tsdt customer id=" +
                     response.getSdtCustomerId() + "\n");
             if (response.getStatus().getError() != null) {
@@ -241,7 +237,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      */
     private void handleException(final Throwable throwable) {
         LOGGER.error("Unexpected error - ", throwable);
-
         throw new RuntimeException(
                 "A SDT system component error has occurred. Please contact the SDT support team for assistance");
     }

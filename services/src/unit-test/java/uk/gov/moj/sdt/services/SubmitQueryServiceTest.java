@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -51,7 +52,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 /**
  * Test class for SubmitQueryService.
  *
@@ -70,6 +70,9 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     private IConsumerGateway mockConsumerGateway;
 
+    @Mock
+    private IConsumerGateway mockCmcConsumerGateway;
+
     /**
      * The mocked ICacheable reference for global parameters cache.
      */
@@ -87,6 +90,9 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
      */
     @Mock
     private IBulkCustomerDao mockBulkCustomerDao;
+
+    @Mock
+    private ResponsesSummaryUtil responsesSummaryUtil;
 
     private static final String TARGET_APP_TIMEOUT = "TARGET_APP_TIMEOUT";
 
@@ -119,11 +125,13 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         genericParser.setEnclosingTag("targetAppDetail");
 
         submitQueryService = new SubmitQueryService(mockConsumerGateway,
+                                                    mockCmcConsumerGateway,
                                                     mockGlobalParamCache,
                                                     mockErrorMsgCacheable,
                                                     genericParser,
                                                     genericParser,
-                                                    mockBulkCustomerDao);
+                                                    mockBulkCustomerDao,
+                                                    responsesSummaryUtil);
     }
 
     /**
@@ -297,8 +305,10 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
         verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, SDT_INT_ERR);
 
+        assertNull(SdtContext.getContext().getRawOutXml(), RAW_OUTPUT_XML_SHOULD_BE_NULL);
         assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
                 .getErrorText());
+
     }
 
     /**
@@ -467,7 +477,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         targetApp.setId(1L);
         targetApp.setTargetApplicationCode("MCOL");
         targetApp.setTargetApplicationName("TEST_TargetApp");
-        final Set<IServiceRouting> serviceRoutings = new HashSet<IServiceRouting>();
+        final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
         final ServiceRouting serviceRouting = new ServiceRouting();
         serviceRouting.setId(1L);
@@ -483,7 +493,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         serviceRoutings.add(serviceRouting);
         targetApp.setServiceRoutings(serviceRoutings);
 
-        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<IBulkCustomerApplication>();
+        final Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
         final BulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication();
         bulkCustomerApplication.setBulkCustomer(bulkCustomer);
         bulkCustomerApplication.setTargetApplication(targetApp);
@@ -585,7 +595,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;
         for (ILoggingEvent log : logList) {
-            if (log.getMessage().contains(message.toString())) {
+            if (log.getFormattedMessage().contains(message)) {
                 verifyLog = true;
                 break;
             }

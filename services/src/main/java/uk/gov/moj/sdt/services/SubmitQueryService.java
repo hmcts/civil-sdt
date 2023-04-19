@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
+import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -79,6 +81,8 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private IConsumerGateway requestConsumer;
 
+    private IConsumerGateway cmcRequestConsumer;
+
     /**
      * The ICacheable reference to the global parameters cache.
      */
@@ -104,9 +108,18 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private IBulkCustomerDao bulkCustomerDao;
 
+    private ResponsesSummaryUtil responsesSummaryUtil;
+
+    /**
+     * Place holder object to sync processing.
+     */
+    private Object lock = new Object();
+
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
+                              @Qualifier("CMCConsumerGateway")
+                              IConsumerGateway cmcRequestConsumer,
                               @Qualifier("GlobalParametersCache")
                                   ICacheable globalParametersCache,
                               @Qualifier("ErrorMessagesCache")
@@ -116,24 +129,22 @@ public class SubmitQueryService implements ISubmitQueryService {
                               @Qualifier("SubmitQueryResponseXmlParser")
                                   GenericXmlParser queryResponseXmlParser,
                               @Qualifier("BulkCustomerDao")
-                                  IBulkCustomerDao bulkCustomerDao) {
+                                  IBulkCustomerDao bulkCustomerDao,
+                              ResponsesSummaryUtil responsesSummaryUtil) {
         this.requestConsumer = requestConsumer;
+        this.cmcRequestConsumer = cmcRequestConsumer;
         this.globalParametersCache = globalParametersCache;
         this.errorMessagesCache = errorMessagesCache;
         this.queryRequestXmlParser = queryRequestXmlParser;
         this.queryResponseXmlParser = queryResponseXmlParser;
         this.bulkCustomerDao = bulkCustomerDao;
+        this.responsesSummaryUtil = responsesSummaryUtil;
     }
-
-    /**
-     * Place holder object to sync processing.
-     */
-    private Object lock = new Object();
 
     /**
      * threshold for incoming requests for each target application.
      */
-    private Map<String, Integer> concurrentRequestsInProgress = new HashMap<String, Integer>();
+    private Map<String, Integer> concurrentRequestsInProgress = new HashMap<>();
 
     @Override
     public void submitQuery(final ISubmitQueryRequest submitQueryRequest) {
@@ -150,7 +161,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         try {
             this.sendRequestToTargetApp(submitQueryRequest);
 
-            this.updateCompletedRequest(submitQueryRequest);
+            this.updateCompletedRequest();
         } catch (final TimeoutException e) {
             LOGGER.error("Timeout exception for SDT Bulk Customer [" +
                     submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "] ", e.getMessage());
@@ -226,7 +237,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                 this.getErrorMessagesCache().getValue(IErrorMessage.class,
                         IErrorMessage.ErrorCode.TAR_APP_ERROR.name());
 
-        final List<String> replacements = new ArrayList<String>();
+        final List<String> replacements = new ArrayList<>();
         replacements.add(getContactDetails());
         final String errorText = MessageFormat.format(errorMessageParam.getErrorText(), replacements.toArray());
 
@@ -243,10 +254,7 @@ public class SubmitQueryService implements ISubmitQueryService {
         final IGlobalParameter globalParameter =
                 globalParametersCache.getValue(IGlobalParameter.class,
                         IGlobalParameter.ParameterKey.CONTACT_DETAILS.name());
-        final String contactDetails = globalParameter.getValue();
-
-        return contactDetails;
-
+        return globalParameter.getValue();
     }
 
     /**
@@ -259,7 +267,7 @@ public class SubmitQueryService implements ISubmitQueryService {
                 this.getErrorMessagesCache().getValue(IErrorMessage.class,
                         IErrorMessage.ErrorCode.SDT_INT_ERR.name());
 
-        final List<String> replacements = new ArrayList<String>();
+        final List<String> replacements = new ArrayList<>();
         replacements.add(getContactDetails());
         final String errorText = MessageFormat.format(errorMessageParam.getErrorText(), replacements.toArray());
 
@@ -272,15 +280,15 @@ public class SubmitQueryService implements ISubmitQueryService {
 
     /**
      * Update request when it is processed successfully.
-     *
-     * @param submitQueryRequest submit query request.
      */
-    private void updateCompletedRequest(final ISubmitQueryRequest submitQueryRequest) {
+    private void updateCompletedRequest() {
         final String targetAppResponse = queryResponseXmlParser.parse();
 
         // Setup raw XML from target application for addition to raw out stream
         // in interceptor.
         SdtContext.getContext().setRawOutXml(targetAppResponse);
+
+        LOGGER.debug("rawOutXml {}", SdtContext.getContext().getRawOutXml());
     }
 
     /**
@@ -319,15 +327,15 @@ public class SubmitQueryService implements ISubmitQueryService {
             this.concurrentRequestsInProgress.put(targetAppCode, requestsInProgress + 1);
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Increment concurrent requests. Current requests in progress [" +
-                        concurrentRequestsInProgress.size() + "]");
+                LOGGER.debug("Increment concurrent requests. Current requests in progress [{}]",
+                        concurrentRequestsInProgress.size());
             }
         } else
         // reject request
         {
             maxReached = true;
-            LOGGER.warn("Threshold reached for target app [" + targetAppCode + "] - in progress [" +
-                    requestsInProgress + "] max allowed [" + maxConcurrentQueryRequests + "]");
+            LOGGER.warn("Threshold reached for target app [{}] - in progress [{}] max allowed [{}]",
+                    targetAppCode, requestsInProgress, maxConcurrentQueryRequests);
         }
 
         return maxReached;
@@ -352,8 +360,8 @@ public class SubmitQueryService implements ISubmitQueryService {
         // Clear out xml to prevent enrichment
         SdtContext.getContext().setRawOutXml(null);
 
-        LOGGER.error("Request rejected for customer[" + submitQueryRequest.getBulkCustomer().getSdtCustomerId() +
-                "] with error [" + errorLog + "]");
+        LOGGER.error("Request rejected for customer[{}] with error [{}]",
+                submitQueryRequest.getBulkCustomer().getSdtCustomerId(), errorLog);
     }
 
     /**
@@ -414,16 +422,31 @@ public class SubmitQueryService implements ISubmitQueryService {
         long connectionTimeOut = 0;
 
         if (requestTimeOutParam != null) {
-            requestTimeOut = Long.valueOf(requestTimeOutParam.getValue());
+            requestTimeOut = Long.parseLong(requestTimeOutParam.getValue());
         }
 
         if (connectionTimeOutParam != null) {
-            connectionTimeOut = Long.valueOf(connectionTimeOutParam.getValue());
+            connectionTimeOut = Long.parseLong(connectionTimeOutParam.getValue());
         }
 
         LOGGER.debug("Send submit query request to target application");
 
-        this.requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        SubmitQueryResponse mcolSubmitQueryResponse = requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        SubmitQueryResponse cmcSubmitQueryResponse = cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+
+        // adjust results count
+        String summaryResultsXML = "";
+        if (null != cmcSubmitQueryResponse && null != cmcSubmitQueryResponse.getClaimDefencesResults()
+                && !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
+            submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
+                    + cmcSubmitQueryResponse.getClaimDefencesResults().size());
+
+            summaryResultsXML = responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
+                    cmcSubmitQueryResponse.getClaimDefencesResults());
+        }
+
+        // Set summary results XML to be picked up later
+        SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
     }
 
     /**

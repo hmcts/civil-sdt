@@ -100,7 +100,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
                 throw new RuntimeException(e);
             }
 
-            LOGGER.debug("Received message, SDT reference [" + sdtReference + "]");
+            LOGGER.debug("Received message, SDT reference [{}]",  sdtReference);
 
             // Setup logging flags from current value in SdtMetric MBean.
             SdtContext.getContext().getLoggingContext()
@@ -112,7 +112,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
             SdtContext.getContext().getLoggingContext().setMinorLoggingId(LoggingContext.getNextLoggingId());
 
             if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_6)) {
-                final StringBuffer detail = new StringBuffer();
+                final StringBuilder detail = new StringBuilder();
                 detail.append("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference() + "\n");
 
                 // Write message to 'performance.log' for this logging point.
@@ -125,7 +125,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
             }
             // CHECKSTYLE:OFF
             catch (final RuntimeException e) {
-                LOGGER.error("Fatal exception encountered in " +
+                LOGGER.error("Fatal exception encountered in {}",
                         this.getTargetAppSubmissionService().getClass().getSimpleName());
 
                 // We are about to abort the transaction; treat this message as never read and therefore reverse
@@ -137,7 +137,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
                 throw e;
             }
         } else {
-            LOGGER.error("Invalid message type [" + message.getClass().getCanonicalName() + "] read by MDB.");
+            LOGGER.error("Invalid message type [{}] read by MDB.", message.getClass().getCanonicalName());
         }
     }
 

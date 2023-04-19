@@ -63,6 +63,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
      * Pre-testing initialization.
      */
     @Before
+    @Override
     public void setUp() {
         mockTargetSubmissionService = EasyMock.createMock(TargetApplicationSubmissionService.class);
     }

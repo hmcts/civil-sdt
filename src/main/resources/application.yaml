@@ -18,10 +18,10 @@ springdoc:
 spring:
   jms:
     servicebus:
-      connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://hmc-servicebus-demo.servicebus.windows.net/;SharedAccessKeyName=Root;SharedAccessKey=xSKPYY74WsGHXIhSyj3Bk91fCp8TBLyAjAkn/GvGpOE=;EntityPath=civil_sdt_inbound}
+      connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       internal:
         targetAppQueue:
-          MCOL: civil_sdt_inbound
+          MCOL: ${CIVIL_SDT_QUEUE}
   aop:
     proxy-target-class: false
   main:
@@ -33,8 +33,8 @@ spring:
     name: Civil SDT
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5050}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
-    username: ${SDT_DB_USERNAME:civil_sdt}
+    url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5055}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
+    username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:postgres}
     hikari:
       minimumIdle: ${SDT_DB_MIN_IDLE:2}
@@ -56,7 +56,7 @@ spring:
   flyway:
     ignore-missing-migrations: 'true'
     baseline-version: '0001'
-    out-of-order: 'false'
+    out-of-order: 'true'
     baseline-on-migrate: 'true'
 
 azure:

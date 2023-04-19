@@ -1,16 +1,20 @@
 package uk.gov.moj.sdt.cmc.consumers.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.moj.sdt.cmc.consumers.config.CMCConfig;
-import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
-import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
-import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
+
+import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 
 
 @FeignClient(name = "civil-api",
@@ -40,5 +44,14 @@ public interface CMCApi {
         @RequestHeader(IDAM_ID_HEADER)  String idamId,
         @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
         @RequestBody ClaimStatusUpdateRequest claimStatusUpdateRequest
+    );
+
+    @GetMapping("/claimDefences")
+    ClaimDefencesResponse claimDefences(
+        @RequestHeader(AUTHORIZATION) String authorization,
+        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+        @RequestHeader("idAmId") String idAmId,
+        @RequestHeader("fromDateTime") String fromDateTime,
+        @RequestHeader("toDate") String toDate
     );
 }
