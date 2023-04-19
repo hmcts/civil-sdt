@@ -144,9 +144,11 @@ ext {
   postgresqlVersion = '42.5.1'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
+  springBootVersion = '2.7.10'
   springCloudVersion = '2022.0.0'
-  tomcatVersion = '9.0.68'
-  cxfVersion = '3.5.4'
+  springCoreVersion = '5.3.27'
+  tomcatVersion = '9.0.73'
+  cxfVersion = '3.5.5'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
   testcontainers = '1.17.5'
@@ -347,6 +349,15 @@ allprojects {
       eachDependency { details ->
         if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
           details.useVersion '2.8.5'
+        }
+        if(details.requested.group == 'org.springframework') {
+          details.useVersion springCoreVersion // CVE-2023-20861
+        }
+        if(details.requested.group == 'org.springframework.boot') {
+          details.useVersion springBootVersion // CVE-2023-20861
+        }
+        if (details.requested.group == 'com.fasterxml.woodstox' && details.requested.name == 'woodstox-core') {
+          details.useVersion '6.4.0' // CVE-2022-40152
         }
       }
     }
