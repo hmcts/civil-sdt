@@ -69,21 +69,24 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
         setUpdateItemHandler(updateItemHandler);
     }
 
+    public SdtInternalEndpointPortType() {}
+
     @Override
     public UpdateResponseType updateItem(final UpdateRequestType updateRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for update item for request reference [" +
-                    updateRequest.getHeader().getSdtRequestId() + "]");
+            LOGGER.debug("Endpoint called for update item for request reference [{}]",
+                    updateRequest.getHeader().getSdtRequestId());
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_2)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tsdt sdt request id=" + updateRequest.getHeader().getSdtRequestId() +
-                    "\n\tstatus code=" + updateRequest.getStatus().getCode() + "\n");
+            final StringBuilder detail = new StringBuilder();
+            detail.append("\n\n\tsdt sdt request id=").append(updateRequest.getHeader().getSdtRequestId())
+                    .append("\n\tstatus code=").append(updateRequest.getStatus().getCode()).append("\n");
 
             if (updateRequest.getStatus().getError() != null) {
-                detail.append("\n\terror code=" + updateRequest.getStatus().getError().getCode() +
-                        "\n\terror description=" + updateRequest.getStatus().getError().getDescription() + "\n");
+                detail.append("\n\terror code=").append(updateRequest.getStatus().getError().getCode())
+                        .append("\n\terror description=").append(updateRequest.getStatus().getError().getDescription())
+                        .append("\n");
             }
 
             // Write message to 'performance.log' for this logging point.
@@ -102,12 +105,14 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
         }
 
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tstatus code=" + response.getStatus().getCode() + "\n");
+            final StringBuilder detail = new StringBuilder();
+            detail.append("\n\n\tstatus code=").append(null!=response.getStatus()?response.getStatus().getCode():"")
+                    .append("\n");
 
             if (response.getStatus().getError() != null) {
-                detail.append("\n\terror code=" + response.getStatus().getError().getCode() +
-                        "\n\terror description=" + response.getStatus().getError().getDescription() + "\n");
+                detail.append("\n\terror code=").append(response.getStatus().getError().getCode())
+                        .append("\n\terror description=").append(response.getStatus().getError().getDescription())
+                        .append("\n");
             }
 
             // Write message to 'performance.log' for this logging point.
