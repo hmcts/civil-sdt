@@ -4,7 +4,7 @@ module "servicebus-namespace" {
   }
   source              = "git@github.com:hmcts/terraform-module-servicebus-namespace?ref=master"
   name                = "${var.product}-servicebus-${var.env}"
-  resource_group_name = local.civil_shared_resource_group
+  resource_group_name = local.civil_service_resource_group
   location            = var.location
   env                 = var.env
   common_tags         = local.tags
@@ -16,7 +16,7 @@ module "servicebus-sdt-queue" {
   source              = "git@github.com:hmcts/terraform-module-servicebus-queue?ref=master"
   name                = "${var.product}-${var.component}-in-out-${var.env}"
   namespace_name      = module.servicebus-namespace.name
-  resource_group_name = local.civil_shared_resource_group
+  resource_group_name = local.civil_service_resource_group
 
   depends_on = [module.servicebus-namespace]
 }
