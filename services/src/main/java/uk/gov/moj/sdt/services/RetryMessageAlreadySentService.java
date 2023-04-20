@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,6 +96,7 @@ public class RetryMessageAlreadySentService implements IRetryMessageSendService 
     }
 
     @Override
+    @Scheduled(cron = "${sdt.retry-send.cron}")
     public void queueMessages() {
         final String maxForwardingAttemptsStr =
                 this.getSystemParameter(IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name());

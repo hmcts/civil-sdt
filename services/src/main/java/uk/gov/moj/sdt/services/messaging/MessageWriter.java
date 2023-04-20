@@ -120,7 +120,7 @@ public class MessageWriter implements IMessageWriter {
             // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
             // periodically check the database and requeue any messages that are stuck on a state indicating that they
             // have not been sent to the case management system.
-            LOGGER.error("Failed to connect to the ActiveMQ queue [" + queueName +
+            LOGGER.error("Failed to connect to the ServiceBus queue [" + queueName +
                     "] while queueing message request reference [" + sdtMessage.getSdtRequestReference() + "]", e);
 
         }
