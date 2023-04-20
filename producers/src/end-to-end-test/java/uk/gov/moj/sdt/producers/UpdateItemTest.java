@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import uk.gov.moj.sdt.test.utils.DBUnitUtilityBean;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.ObjectFactory;
@@ -29,7 +29,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
  */
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class})
+@SpringBootTest(classes = { EndToEndTestConfig.class })
 @Sql(scripts = {"classpath:database/baseline/V0001__init.sql",
         "classpath:database/baseline/create_purge_proc.sql",
         "classpath:database/baseline/create_finish_dbunit_load_proc.sql",
@@ -39,7 +39,8 @@ public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, Up
     @Override
     @BeforeEach
     public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
+        DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
+        dbUnitUtilityBean.loadDatabase(this.getClass(), true);
     }
 
     /**

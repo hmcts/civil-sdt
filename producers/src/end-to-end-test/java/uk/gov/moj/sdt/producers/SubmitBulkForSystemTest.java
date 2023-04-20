@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class})
+@SpringBootTest(classes = { EndToEndTestConfig.class })
 @Sql(scripts = {"classpath:database/baseline/V0001__init.sql",
         "classpath:database/baseline/create_purge_proc.sql",
         "classpath:database/baseline/create_finish_dbunit_load_proc.sql",
@@ -118,7 +118,7 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
                 Thread.sleep(Long.MAX_VALUE);
             } catch (InterruptedException e) {
                 // Do nothing.
-                LOGGER.debug("interrupted {}", e);
+                LOGGER.debug("interrupted" + e);
             }
         }
     }
