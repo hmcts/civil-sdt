@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import uk.gov.moj.sdt.interceptors.in.IdamIdInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
@@ -62,11 +63,12 @@ public class CxfConfig {
 
     @Bean
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
-                                SdtEndpointPortType sdtEndpointPortType,
+                                    SdtEndpointPortType sdtEndpointPortType,
                                 ServiceRequestInboundInterceptor serviceRequestInboundInterceptor,
                                 PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
                                 XmlInboundInterceptor xmlInboundInterceptor,
                                 SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
+                                IdamIdInboundInterceptor idamIdInboundInterceptor,
                                 PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
                                 CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
                                 XmlOutboundInterceptor xmlOutboundInterceptor,
@@ -75,9 +77,10 @@ public class CxfConfig {
                                 FaultOutboundInterceptor faultOutboundInterceptor) {
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
         endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
-                                                xmlInboundInterceptor,
-                                                sdtUnmarshallInterceptor,
-                                                serviceRequestInboundInterceptor));
+                                                      xmlInboundInterceptor,
+                                                      sdtUnmarshallInterceptor,
+                                                      serviceRequestInboundInterceptor,
+                                                      idamIdInboundInterceptor));
 
         endpoint.setOutInterceptors(Lists.newArrayList(cacheSetupOutboundInterceptor,
                                                        xmlOutboundInterceptor,
