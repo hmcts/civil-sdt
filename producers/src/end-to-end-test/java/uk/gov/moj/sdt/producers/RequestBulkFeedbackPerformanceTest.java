@@ -20,7 +20,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
  * @author Saurabh Agarwal
  */
 
-@ActiveProfiles("end-to-end")
+@ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { EndToEndTestConfig.class })
 @Sql(scripts = {"classpath:database/baseline/drop_and_recreate_empty_public_schema.sql",

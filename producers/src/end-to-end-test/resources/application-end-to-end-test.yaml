@@ -34,7 +34,11 @@ sdt:
       receiveTimeout: ${RECEIVE_TIMEOUT:30000}
       idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
       idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
-
+  retry-send:
+    cron: ${RETRY_SEND_CRON:0 0 * * * ?}
+  purge:
+    cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
+    commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
 #-------------------------------
 
 # port number of the tc server
