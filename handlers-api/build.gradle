@@ -14,11 +14,9 @@ dependencies {
     implementation project(":utils")
     implementation project(":producers-api")
     implementation project(":validators")
-    testImplementation project(":domain").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.unitTest.output
     testImplementation project(":producers-api").sourceSets.unitTest.output
     testImplementation project(":validators").sourceSets.unitTest.output
-
     testImplementation project(":utils").sourceSets.integTest.output
 }
 

@@ -4,37 +4,25 @@
   <!--Please add all the false positives under the below section-->
   <suppress>
     <notes>False Positives
+      CVE-2016-3094 - affected class is PlainSaslServer.java, which qpid-jms-client does not have
+      CVE-2022-1471 - SnakeYaml's Constructor() class does not restrict types which can be instantiated during deserialization, spring uses SafeConstructor which is the recommended workaround
       CVE-2022-40705 - see https://github.com/jeremylong/DependencyCheck/issues/5543
+      CVE-2022-45688 - A stack overflow in the XML.toJSONObject component of hutool-json, hutool is not in the dependencies list when ./gradlew dependencies is run
     </notes>
+    <cve>CVE-2016-3094</cve>
+    <cve>CVE-2022-1471</cve>
     <cve>CVE-2022-40705</cve>
+    <cve>CVE-2022-45688</cve>
   </suppress>
   <!--End of false positives section -->
 
   <!--Please add all the temporary suppression under the below section-->
+  <!--
   <suppress>
-    <notes>Temporary Suppression
-      CVE-2016-3094
-      CVE-2022-1471
-      CVE-2022-40152
-      CVE-2022-45143
-      CVE-2022-46363
-      CVE-2022-46364
-      CVE-2022-45688
-      CVE-2023-20860
-      CVE-2023-20861
-      CVE-2023-28708
+    <notes>Temporary Suppressions
     </notes>
-    <cve>CVE-2016-3094</cve>
-    <cve>CVE-2022-1471</cve>
-    <cve>CVE-2022-40152</cve>
-    <cve>CVE-2022-45143</cve>
-    <cve>CVE-2022-46363</cve>
-    <cve>CVE-2022-46364</cve>
-    <cve>CVE-2022-45688</cve>
-    <cve>CVE-2023-20860</cve>
-    <cve>CVE-2023-20861</cve>
-    <cve>CVE-2023-28708</cve>
   </suppress>
+  -->
   <!--End of temporary suppression section -->
 
 </suppressions>

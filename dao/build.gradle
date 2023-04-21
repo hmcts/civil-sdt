@@ -15,7 +15,6 @@ dependencies {
     implementation project(':utils')
     testImplementation project(":domain").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.unitTest.output
-
     testImplementation project(":utils").sourceSets.integTest.output
 }
 

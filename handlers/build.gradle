@@ -18,9 +18,6 @@ dependencies {
     implementation project(':services')
     implementation project(':transformers')
     implementation project(':validators')
-    testImplementation project(":domain").sourceSets.unitTest.output
-    testImplementation project(":handlers-api").sourceSets.unitTest.output
-    testImplementation project(":producers-api").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.unitTest.output
     testImplementation project(':services-api').sourceSets.unitTest.output
     testImplementation project(':services').sourceSets.unitTest.output

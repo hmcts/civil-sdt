@@ -24,8 +24,6 @@ dependencies {
     testImplementation project(":interceptors").sourceSets.unitTest.output
     testImplementation project(":services-api").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.unitTest.output
-    testImplementation project(":validators").sourceSets.unitTest.output
-
     testImplementation project(":consumers").sourceSets.integTest.output
     testImplementation project(":dao").sourceSets.integTest.output
     testImplementation project(":utils").sourceSets.integTest.output
