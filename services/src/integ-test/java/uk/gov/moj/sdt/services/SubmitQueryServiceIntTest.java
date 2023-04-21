@@ -30,16 +30,15 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.consumers.config.ConsumersTestConfig;
 import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -65,6 +64,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
@@ -72,7 +72,7 @@ import static org.junit.Assert.assertTrue;
  * @author Manoj kulkarni
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConsumersTestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/SubmitQueryServiceIntTest.sql"})
 public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
@@ -90,7 +90,7 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
     /**
      * Setup the test.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         submitQueryService = (SubmitQueryService) this.applicationContext.getBean("SubmitQueryService");
     }
@@ -129,7 +129,7 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
         }
         // submitQueryService.updateRequestSoapError(submitQuery);
 
-        Assert.assertEquals(submitQuery.getErrorLog().getErrorText(),
+        assertEquals(submitQuery.getErrorLog().getErrorText(),
                 "A system error has occurred. Please contact tbc for assistance.");
     }
 

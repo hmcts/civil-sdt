@@ -49,8 +49,10 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     @Override
     @BeforeEach
     public void setUp() {
+        LOGGER.info("Running DBUnitUtility loadDatabase...");
         DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
         dbUnitUtilityBean.loadDatabase(this.getClass(), true);
+        LOGGER.info("Completed DBUnitUtility loadDatabase");
     }
 
     /**
