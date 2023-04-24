@@ -1546,7 +1546,11 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
 
     @Override
     public void updateBulkCustomerCount(final String customer) {
-        getCustomerCounter().updateBulkCustomerCount(customer);
+        if (null != getCustomerCounter()) {
+            getCustomerCounter().updateBulkCustomerCount(customer);
+        } else {
+            LOGGER.error("getCustomerCounter() == null!");
+        }
     }
 
     /**

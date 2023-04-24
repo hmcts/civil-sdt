@@ -301,6 +301,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         Client clientProxy = ClientProxy.getClient(client);
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit();
+
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
         // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
         // it times out
@@ -309,7 +310,9 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         httpClientPolicy.setReceiveTimeout(responseTimeout);
         httpConduit.setClient(httpClientPolicy);
 
-        return client;
+//        httpConduit.getAuthorization().setUserName("user");
+//        httpConduit.getAuthorization().setPassword("*password*");
 
+        return client;
     }
 }
