@@ -10,15 +10,8 @@ dependencyCheck {
 }
 
 dependencies {
-    implementation project(':domain')
-    implementation project(':handlers-api')
-    implementation project(':producers-api')
-    implementation project(':utils')
-    implementation project(':services-api')
     implementation project(':transformers')
     implementation project(':validators')
-    testImplementation project(":utils").sourceSets.unitTest.output
-    testImplementation project(":utils").sourceSets.integTest.output
 }
 
 bootJar {

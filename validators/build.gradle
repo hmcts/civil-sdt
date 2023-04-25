@@ -11,11 +11,6 @@ dependencyCheck {
 
 dependencies {
     implementation project(':dao')
-    implementation project(':dao-api')
-    implementation project(':domain')
-    implementation project(':utils')
-    testImplementation project(":utils").sourceSets.unitTest.output
-    testImplementation project(":utils").sourceSets.integTest.output
 }
 
 bootJar {

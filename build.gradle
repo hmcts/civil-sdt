@@ -150,6 +150,7 @@ ext {
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
   testcontainers = '1.17.5'
+  sdtCommonVersion = '1.0.0-SDT-105.1.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -266,6 +267,9 @@ allprojects {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
     implementation group: 'org.springframework.security', name: 'spring-security-config'
     implementation group: 'org.springframework.security', name: 'spring-security-web'
+
+
+    implementation group: 'com.github.hmcts', name: 'civil-sdt-common', version: sdtCommonVersion
     /*
       Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
       a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
@@ -337,6 +341,10 @@ allprojects {
     */
     testImplementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion, classifier: 'test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion, classifier: 'integ-test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'domain', version: sdtCommonVersion, classifier: 'test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'producers-api', version: sdtCommonVersion, classifier: 'test'
   }
 
   configurations.configureEach {
@@ -523,6 +531,18 @@ subprojects { subproject ->
     archiveClassifier.set("")
   }
 
+  tasks.withType(Jar).all {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
+
+  distTar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
+
+  distZip {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
+
   tasks.withType(Test).configureEach {
     useJUnit()
 
@@ -601,17 +621,11 @@ bootJar {
 dependencies {
   implementation project(':consumers')
   implementation project(':dao')
-  implementation project(':dao-api')
-  implementation project(':domain')
   implementation project(':handlers')
-  implementation project(':handlers-api')
   implementation project(':interceptors')
   implementation project(':producers')
-  implementation project(':producers-api')
   implementation project(':services')
-  implementation project(':services-api')
   implementation project(':transformers')
-  implementation project(':utils')
   implementation project(':validators')
 }
 
