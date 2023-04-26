@@ -81,9 +81,8 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
     public IBulkSubmission getBulkSubmission(final IBulkCustomer bulkCustomer, final String customerReference,
                                              final int dataRetention) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
-                             "customer reference[" + customerReference + "] and the data retention period[" + dataRetention +
-                             "]");
+            LOGGER.debug("Get bulk submission matching the bulk customer[{}], customer reference[{}] and the data retention period[{}]",
+                    bulkCustomer, customerReference, dataRetention);
         }
 
         Predicate sdtCustomerPredicate = criteriaBuilder.equal(
@@ -109,9 +108,8 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
     public IBulkSubmission getBulkSubmissionBySdtRef(final IBulkCustomer bulkCustomer, final String sdtBulkReference,
                                                      final int dataRetention) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Get bulk submission matching the bulk customer[" + bulkCustomer + "], " +
-                             "SDT bulk reference[" + sdtBulkReference + "] and the data retention period [" + dataRetention +
-                             "]");
+            LOGGER.debug("Get bulk submission matching the bulk customer[{}], SDT bulk reference[{}] and the data retention period [{}]",
+                    bulkCustomer, sdtBulkReference, dataRetention");
         }
 
         Predicate sdtCustomerPredicate = criteriaBuilder.equal(
@@ -124,11 +122,12 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
         );
 
         TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
-                                                                                   .where(
-                                                                                       sdtCustomerPredicate,
-                                                                                       sdtBulkRefPredicate,
-                                                                                       createDatePredicate(criteriaBuilder, root, dataRetention)
-                                                                                   ));
+                .where(
+                        sdtCustomerPredicate,
+                        sdtBulkRefPredicate,
+                        createDatePredicate(criteriaBuilder, root, dataRetention)
+                ));
+        LOGGER.debug("typedQuery.getResultList().size() == {}", typedQuery.getResultList().size());
         return typedQuery.getSingleResult();
     }
 }

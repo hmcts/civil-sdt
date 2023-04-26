@@ -103,7 +103,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("fetch(): domainType={}, id=", domainType, id);
+        LOGGER.debug("fetch(): domainType={}, id={}", domainType, id);
 
         // Domain object of type asked for by caller.
         D domainObject = null;
@@ -178,7 +178,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("Persist domain object " + domainObject.toString());
+        LOGGER.debug("Persist domain object {}", domainObject.toString());
 
         crudRepository.save((T) domainObject);
 
@@ -194,7 +194,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("Persist domain object list {}", domainObjectList.toString());
+        LOGGER.debug("Persist domain object list {}", domainObjectList);
 
         int i = 1;
         final int maxBatchSize = 20;
@@ -217,7 +217,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("Sequence generation for " + sequenceName);
+        LOGGER.debug("Sequence generation for {}", sequenceName);
 
         if (sequenceName == null || sequenceName.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid sequence name");
@@ -282,16 +282,23 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
 
     protected Predicate createDatePredicate(CriteriaBuilder criteriaBuilder, Root<T> root, int dataRetention) {
         Path<LocalDateTime> createdDatePath = root.get("createdDate");
+        LOGGER.debug("createDatePredicate:{}", criteriaBuilder.and(
+                criteriaBuilder.greaterThanOrEqualTo((createdDatePath), atStartOfDay(dataRetention)),
+                criteriaBuilder.lessThan((createdDatePath), atBeginningOfNextDay())));
         return criteriaBuilder.and(
-            criteriaBuilder.greaterThanOrEqualTo((createdDatePath), atStartOfDay(dataRetention)),
-            criteriaBuilder.lessThan((createdDatePath), atBeginningOfNextDay()));
+                criteriaBuilder.greaterThanOrEqualTo((createdDatePath), atStartOfDay(dataRetention)),
+                criteriaBuilder.lessThan((createdDatePath), atBeginningOfNextDay()));
     }
 
     private LocalDateTime atBeginningOfNextDay() {
-        return LocalDate.now().plusDays(1).atStartOfDay();
+        LocalDateTime beginningOfNextDay = LocalDate.now().plusDays(1).atStartOfDay();
+        LOGGER.debug("beginningOfNextDay: {}", beginningOfNextDay);
+        return beginningOfNextDay;
     }
 
     private LocalDateTime atStartOfDay(int dataRetention) {
-        return LocalDate.now().plusDays(dataRetention * -1L).atStartOfDay();
+        LocalDateTime startOfDay = LocalDate.now().plusDays(dataRetention * -1L).atStartOfDay();
+        LOGGER.debug("startOfDay: {}", startOfDay);
+        return  startOfDay;
     }
 }

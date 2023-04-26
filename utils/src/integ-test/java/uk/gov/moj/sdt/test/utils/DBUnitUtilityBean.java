@@ -37,6 +37,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,6 +141,9 @@ public class DBUnitUtilityBean {
             LOGGER.info("Loading DB with: {}", fileXml);
             loadDatabase("public", fileXml, reloadRefdata);
             LOGGER.info("Loaded database");
+        } else {
+            LOGGER.error("Cannot see file {} to load DB with ", fileXml);
+
         }
     }
 
@@ -236,7 +240,8 @@ public class DBUnitUtilityBean {
 
         final IDataSet targetDataset = builder.build(this.getClass().getResourceAsStream(filePath));
         final ReplacementDataSet replacementDataSet = new ReplacementDataSet(targetDataset);
-        replacementDataSet.addReplacementObject("[yesterday_date]", DateUtils.addDays(new Date(), -1));
+ //       replacementDataSet.addReplacementObject("[yesterday_date]", DateUtils.addDays(new Date(), -1));
+        replacementDataSet.addReplacementObject("[yesterday_date]", LocalDate.now().minusDays(1));
 
         return replacementDataSet;
     }
