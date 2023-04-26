@@ -109,7 +109,7 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
                                                      final int dataRetention) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Get bulk submission matching the bulk customer[{}], SDT bulk reference[{}] and the data retention period [{}]",
-                    bulkCustomer, sdtBulkReference, dataRetention");
+                    bulkCustomer, sdtBulkReference, dataRetention);
         }
 
         Predicate sdtCustomerPredicate = criteriaBuilder.equal(
