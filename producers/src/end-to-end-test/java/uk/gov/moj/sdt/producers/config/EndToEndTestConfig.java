@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +32,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
 @Configuration
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-//@EnableCaching(proxyTargetClass = true)
 @Import(ProducersConfig.class)
 public class EndToEndTestConfig {
     /**
@@ -76,8 +74,6 @@ public class EndToEndTestConfig {
         jaxWsProxyFactoryBean.setAddress(address);
         jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
         Map<String, Object> properties = new HashMap<>();
-//        properties.put("serviceClass", "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType");
-//        properties.put("address", address);
         properties.put("disable.outputstream.optimization", true);
         Map<String, String> soapEnvNsMap = new HashMap<>();
         properties.put("soap.env.ns.map", soapEnvNsMap);
@@ -93,8 +89,6 @@ public class EndToEndTestConfig {
         jaxWsInternalProxyFactoryBean.setAddress(address);
         jaxWsInternalProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
         Map<String, Object> properties = new HashMap<>();
-//        properties.put("serviceClass", "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtInternalEndpointPortType");
-//        properties.put("address", address);
         properties.put("disable.outputstream.optimization", true);
         Map<String, String> soapEnvNsMap = new HashMap<>();
         properties.put("soap.env.ns.map", soapEnvNsMap);
