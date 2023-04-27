@@ -6,16 +6,14 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
-import uk.gov.moj.sdt.test.utils.DBUnitUtilityBean;
+import uk.gov.moj.sdt.producers.config.SecurityConfig;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.ObjectFactory;
@@ -29,7 +27,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
  */
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class })
+@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Sql(scripts = {"classpath:database/baseline/drop_and_recreate_empty_public_schema.sql",
         "classpath:database/baseline/V0001__init.sql",
         "classpath:database/baseline/V0003__alter_bulk_customer.sql",
@@ -38,13 +36,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
         "classpath:database/baseline/create_finish_dbunit_load_proc.sql",
         "classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"})
 public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, UpdateResponseType> {
-
-    @Override
-    @BeforeEach
-    public void setUp() {
-        DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
-        dbUnitUtilityBean.loadDatabase(this.getClass(), true);
-    }
 
     /**
      * Method to test the update item service.

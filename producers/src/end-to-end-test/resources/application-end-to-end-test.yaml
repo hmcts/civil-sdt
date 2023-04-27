@@ -44,8 +44,8 @@ sdt:
 # port number of the tc server
 # host name of the server
 server:
-  portnumber: 4550
-  hostname: localhost
+  portnumber: ${SDT_PORT:8080}
+  hostname: ${SERVER_HOST:localhost}
 
 systemPropertiesModeName: SYSTEM_PROPERTIES_MODE_OVERRIDE
 ignoreResourceNotFound: true

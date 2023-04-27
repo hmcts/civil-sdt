@@ -1,5 +1,12 @@
 package uk.gov.moj.sdt.producers.config;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.xml.ws.Endpoint;
+
+import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.jaxws.EndpointImpl;
@@ -21,12 +28,6 @@ import org.springframework.context.annotation.Scope;
 import uk.gov.moj.sdt.producers.sdtws.config.ProducersConfig;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType;
-
-import javax.xml.ws.Endpoint;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
@@ -53,64 +54,52 @@ public class EndToEndTestConfig {
         return new ServletRegistrationBean<>(new CXFServlet(), "/producers/service/*");
     }
 
-    @Bean("JaxWsProxyFactoryBean")
-    public JaxWsProxyFactoryBean jaxWsProxyFactoryBean() {
+    @Bean(name = Bus.DEFAULT_BUS_ID)
+    public SpringBus springBus(LoggingFeature loggingFeature) {
+        SpringBus cxfBus = new SpringBus();
+        cxfBus.getFeatures().add(loggingFeature);
+        return cxfBus;
+    }
+
+    @Bean
+    public LoggingFeature loggingFeature() {
+        LoggingFeature loggingFeature = new LoggingFeature();
+        loggingFeature.setPrettyLogging(true);
+        return loggingFeature;
+    }
+
+    @Bean("ISdtEndpointPortType")
+    @Scope("prototype")
+    public ISdtEndpointPortType createSdtEndpointPortType() {
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
-        String address =  "http://"+serverHostName+":"+serverPortNumber+"/producers/service/sdtapi";
-//        jaxWsProxyFactoryBean.setAddress(OVERRIDDEN_DYNAMICALLY);
+        String address =  "http://"+ serverHostName + ":" + serverPortNumber + "/producers/service/sdtapi";
         jaxWsProxyFactoryBean.setAddress(address);
         jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
         Map<String, Object> properties = new HashMap<>();
 //        properties.put("serviceClass", "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType");
 //        properties.put("address", address);
-        jaxWsProxyFactoryBean.setProperties(properties);
-        return jaxWsProxyFactoryBean;
-    }
-
-    @Bean("JaxWsInternalProxyFactoryBean")
-    public JaxWsProxyFactoryBean jaxWsInternalProxyFactoryBean() {
-        JaxWsProxyFactoryBean jaxWsInternalProxyFactoryBean = new JaxWsProxyFactoryBean();
-        String address =  "http://"+serverHostName+":"+serverPortNumber+"/producers/service/sdtinternalapi";
-//        jaxWsInternalProxyFactoryBean.setAddress(OVERRIDDEN_DYNAMICALLY);
-        jaxWsInternalProxyFactoryBean.setAddress(address);
-        jaxWsInternalProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
-        Map<String, Object> properties = new HashMap<>();
-//        properties.put("serviceClass", "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtInternalEndpointPortType");
-//        properties.put("address", address);
-        jaxWsInternalProxyFactoryBean.setProperties(properties);
-        return jaxWsInternalProxyFactoryBean;
-    }
-
-    @Bean("ISdtEndpointPortType")
-    @Scope("prototype")
-    public ISdtEndpointPortType createSdtEndpointPortType(@Qualifier("JaxWsProxyFactoryBean")
-                                                              JaxWsProxyFactoryBean jaxWsProxyFactoryBean) {
-        LOGGER.debug("createSdtEndpointPortType - starting");
-
-        Map<String, Object> properties = new HashMap<>();
         properties.put("disable.outputstream.optimization", true);
         Map<String, String> soapEnvNsMap = new HashMap<>();
         properties.put("soap.env.ns.map", soapEnvNsMap);
         jaxWsProxyFactoryBean.setProperties(properties);
-
-        LOGGER.debug("createSdtEndpointPortType - return bean");
         return jaxWsProxyFactoryBean.create(ISdtEndpointPortType.class);
     }
 
     @Bean("ISdtInternalEndpointPortType")
     @Scope("prototype")
-    public ISdtInternalEndpointPortType createSdtInternalEndpointPortType(@Qualifier("JaxWsInternalProxyFactoryBean")
-                                                                            JaxWsProxyFactoryBean jaxWsInternalProxyFactoryBean) {
-        LOGGER.debug("createSdtInternalEndpointPortType - starting");
-
+    public ISdtInternalEndpointPortType createSdtInternalEndpointPortType() {
+        JaxWsProxyFactoryBean jaxWsInternalProxyFactoryBean = new JaxWsProxyFactoryBean();
+        String address =  "http://"+ serverHostName + ":" + serverPortNumber + "/producers/service/sdtinternalapi";
+        jaxWsInternalProxyFactoryBean.setAddress(address);
+        jaxWsInternalProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
         Map<String, Object> properties = new HashMap<>();
+//        properties.put("serviceClass", "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtInternalEndpointPortType");
+//        properties.put("address", address);
         properties.put("disable.outputstream.optimization", true);
         Map<String, String> soapEnvNsMap = new HashMap<>();
         properties.put("soap.env.ns.map", soapEnvNsMap);
 
         jaxWsInternalProxyFactoryBean.setProperties(properties);
-
-        LOGGER.debug("createSdtInternalEndpointPortType - return bean");
         return jaxWsInternalProxyFactoryBean.create(ISdtInternalEndpointPortType.class);
     }
 
@@ -118,7 +107,8 @@ public class EndToEndTestConfig {
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
                                 ISdtEndpointPortType sdtEndpointPortType) {
         LOGGER.debug("sdtEndpoint - starting");
-        EndpointImpl endpoint = new EndpointImpl(new SpringBus(), sdtEndpointPortType);
+
+        EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
 
         Map<String, Object> properties = new HashMap<>();
 
@@ -149,7 +139,7 @@ public class EndToEndTestConfig {
     public Endpoint sdtInternalEndpoint(@Qualifier("ISdtInternalEndpointPortType")
                                         ISdtInternalEndpointPortType sdtInternalEndpointPortType) {
         LOGGER.debug("sdtInternalEndpoint - starting");
-        EndpointImpl endpoint = new EndpointImpl(new SpringBus(), sdtInternalEndpointPortType);
+        EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
         List<LoggingFeature> features = new ArrayList<>();
         features.add(new LoggingFeature());
         endpoint.setFeatures(features);
