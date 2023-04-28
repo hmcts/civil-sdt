@@ -7,13 +7,9 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
-import org.dbunit.dataset.filter.ExcludeTableFilter;
-import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
@@ -23,21 +19,12 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,67 +52,6 @@ public class DBUnitUtilityBean {
 
     DBUnitUtilityBean() {
         LOGGER.debug("DBUnitUtilityBean - Instantiated");
-    }
-
-    /**
-     * Generates a DBUnit DTD for the given schema.
-     *
-     * @param targetSchema Schema required.
-     */
-    public void generateDTD(final String targetSchema) {
-
-        try {
-            LOGGER.debug("Generating DTD for schema {}", targetSchema);
-            // database connection
-            final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
-            final File theFile = new File("src/integ-test/resources/DTD/" + targetSchema + ".dtd");
-            theFile.createNewFile();
-            // write DTD file
-            FlatDtdDataSet.write(dbConnection.createDataSet(), new FileOutputStream(theFile));
-            LOGGER.debug("Generated DTD for schema {} at {}", targetSchema, theFile.getAbsolutePath());
-        } catch (final NullPointerException e) {
-            LOGGER.error("Error with db connection for schema: {} : {}", targetSchema, e);
-        } catch (final DatabaseUnitException|IOException|SQLException e) {
-            LOGGER.error("Error generating DTD for Schema '{}': {}", targetSchema, e);
-        }
-    }
-
-    /**
-     * Exports the database for the target schema.
-     *
-     * @param targetSchema   schema to use
-     * @param file           File to save to
-     * @param includeRefdata Should we export the refdata?
-     */
-    public void exportDatabase(final String targetSchema, final String file, final boolean includeRefdata) {
-
-        try {
-            // database connection
-            LOGGER.debug("Exporting data for schema {}", targetSchema);
-            final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
-
-            // full database export
-            ITableFilter filter = new ExcludeTableFilter();
-            // If there's reference data exclude those tables
-            final InputStream refDataStream =
-                   this.getClass().getResourceAsStream("/refdata/" + targetSchema + "_refdata.xml");
-            if (!includeRefdata && refDataStream != null) {
-                // Create a DBUnit Dataset builder using the target schemas DTD
-                final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-                builder.setDtdMetadata(true);
-                builder.setMetaDataSetFromDtd(
-                        this.getClass().getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
-                builder.setColumnSensing(true);
-                final IDataSet referenceDataset = builder.build(refDataStream);
-                filter = new ExcludeTableFilter(referenceDataset.getTableNames());
-            }
-            final IDataSet dataSet = new FilteredDataSet(filter,  dbConnection.createDataSet());
-            FlatXmlDataSet.write(dataSet, new FileOutputStream(file));
-            LOGGER.debug("Exported data for schema {}", targetSchema);
-        } catch (final DatabaseUnitException|IOException|SQLException e) {
-            LOGGER.error("Error exporting data for Schema '{}': {}", targetSchema, e);
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -240,96 +166,9 @@ public class DBUnitUtilityBean {
 
         final IDataSet targetDataset = builder.build(this.getClass().getResourceAsStream(filePath));
         final ReplacementDataSet replacementDataSet = new ReplacementDataSet(targetDataset);
- //       replacementDataSet.addReplacementObject("[yesterday_date]", DateUtils.addDays(new Date(), -1));
-        replacementDataSet.addReplacementObject("[yesterday_date]", LocalDate.now().minusDays(1));
+        replacementDataSet.addReplacementObject("[yesterday_date]", DateUtils.addDays(new Date(), -1));
 
         return replacementDataSet;
-    }
-
-    /**
-     * Close connection statement for specific schema.
-     *
-     * @param schema the schema for which the connection is to be closed.
-     */
-    @SuppressWarnings("unused")
-    private synchronized void closeConnection(final String schema) {
-        synchronized (allConnections) {
-            // Get the connection to be closed.
-            final IDatabaseConnection dbConnection = allConnections.get(schema);
-
-            // If it was found, close it.
-            if (dbConnection != null) {
-                try {
-                    dbConnection.close();
-                } catch (final SQLException e) {
-                    LOGGER.error("Error closing connection for Schema '{}': {}",
-                            dbConnection.getSchema(), e);
-                }
-
-                // Remove it from the map.
-                allConnections.remove(schema);
-            }
-        }
-    }
-
-    /**
-     * Drop primary keys.
-     */
-    public void dropPrimaryKeys() {
-        LOGGER.info("Dropping primary keys");
-        runSQLFile("./../utils/src/integ-test/resources/init/drop_primary_keys.sql");
-    }
-
-    /**
-     * Re-enable primary keys.
-     */
-    public void enablePrimaryKeys() {
-        LOGGER.info("Enabling primary keys");
-        runSQLFile("./../utils/src/integ-test/resources/init/create_primary_keys.sql");
-
-    }
-
-    /**
-     * Run sql files.
-     *
-     * @param fileName the name of the file to run.
-     */
-    private void runSQLFile(final String fileName) {
-        try {
-            LOGGER.info("Running {}", fileName);
-
-            // Get the connection already setup for DBUNIT.
-            final IDatabaseConnection dbConnection = getConnectionInstance("PUBLIC");
-            final Connection connection = dbConnection.getConnection();
-            connection.prepareStatement("SET CONSTRAINTS ALL DEFERRED").execute();
-
-            final FileInputStream inputStream = new FileInputStream(fileName);
-
-            final StringBuilder stringBuilder = new StringBuilder();
-            final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            final BufferedReader reader = new BufferedReader(inputStreamReader);
-            String line = reader.readLine();
-            while (null != line) {
-                stringBuilder.append(' ');
-                stringBuilder.append(line);
-                line = reader.readLine();
-            }
-            final String sqlString = stringBuilder.toString();
-            final Statement stmt = connection.createStatement();
-
-            // Execute the query
-            stmt.executeUpdate(sqlString);
-
-            // Close the result set, statement and the connection
-            stmt.close();
-
-        } catch (final SQLException e) {
-            LOGGER.error("Failure to drop constraints", e);
-        } catch (final FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -342,15 +181,15 @@ public class DBUnitUtilityBean {
     public void prepareForDbunitLoad(final String schemaName) {
         try {
             LOGGER.info("Disabling triggers and constraints for schema = {}", schemaName);
-            // dropPrimaryKeys();
+
             // Get the connection already setup for DBUNIT.
             final Connection connection = getConnectionInstance(schemaName).getConnection();
-            // connection.prepareStatement ("SET CONSTRAINTS ALL DEFERRED").execute ();
 
             // Call the reset stored procedure which should have been loaded into
             // the database by ANT script.
             final CallableStatement cs = connection.prepareCall("CALL PREPARE_FOR_DBUNIT_LOAD(?)");
             cs.setString(1, schemaName);
+
             // Close result set and callable statement.
             final ResultSet rs = cs.executeQuery();
             if (rs != null) {
@@ -371,7 +210,6 @@ public class DBUnitUtilityBean {
      *                   enabled
      */
     public void finishDbunitLoad(final String schemaName) {
-        // enablePrimaryKeys ();
         try {
             LOGGER.info("Enabling triggers and constraints for schema = {}", schemaName);
 
@@ -391,110 +229,6 @@ public class DBUnitUtilityBean {
             cs.close();
         } catch (final SQLException e) {
             LOGGER.error(e.toString());
-        }
-    }
-
-    /**
-     * Clean database.
-     *
-     * @param targetSchema  the target schema
-     * @param reloadRefdata the reload refdata
-     */
-    public void cleanDatabase(final String targetSchema, final boolean reloadRefdata) {
-        try {
-            // database connection
-            LOGGER.debug("Loading data for schema {}", targetSchema);
-            final IDatabaseConnection dbConnection = getConnectionInstance(targetSchema);
-
-            // Create a DBUnit Dataset builder using the target schemas DTD
-            final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-            builder.setDtdMetadata(true);
-            builder.setMetaDataSetFromDtd(this.getClass().getResourceAsStream("/DTD/" + targetSchema + ".dtd"));
-            builder.setColumnSensing(true);
-
-            // Generate the clean dataset, if loadRefData is true use
-            // clean_all.xml otherwise use clean.xml
-            final String cleanDataPath = "/clean/" + targetSchema + "_clean" + (reloadRefdata ? "_all" : "") + ".xml";
-            final IDataSet cleanDataset = builder.build(this.getClass().getResourceAsStream(cleanDataPath));
-
-            // Disable triggers & constraints
-            prepareForDbunitLoad(targetSchema);
-
-            // Clean the DB
-            LOGGER.debug("Cleaning database");
-            DatabaseOperation.TRUNCATE_TABLE.execute(dbConnection, cleanDataset);
-            dbConnection.getConnection().commit();
-
-            // If there's reference data insert it
-            // InputStream refDataStream =
-            // this.getClass().getResourceAsStream("/refdata/" +
-            // targetSchema +
-            // "_refdata.xml");
-            // if (refDataStream != null && reloadRefdata)
-            // {
-            // LOGGER.debug("Inserting reference data");
-            // IDataSet referenceDataset = builder.build(refDataStream);
-            // DatabaseOperation.INSERT.execute(connection, referenceDataset);
-            // connection.getConnection().commit();
-            // }
-
-            // Enable triggers & constraints
-            finishDbunitLoad(targetSchema);
-        } catch (final DatabaseUnitException|IOException|SQLException e) {
-            LOGGER.error("Error loading data for Schema '{}': {}", targetSchema, e);
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Disables/enables all triggers.
-     *
-     * @param schema  DB Schema
-     * @param enabled are the triggers to be enabled or disabled?
-     * @throws SQLException the sQL exception
-     */
-    public void updateTriggers(final String schema, final boolean enabled) throws SQLException {
-        updateTriggers(getConnectionInstance(schema).getConnection(), schema, enabled);
-    }
-
-    /**
-     * Disables/enables all triggers.
-     *
-     * @param dbConn  DB Connection
-     * @param schema  DB Schema
-     * @param enabled are the triggers to be enabled or disabled?
-     * @throws SQLException the sQL exception
-     */
-    private void updateTriggers(final Connection dbConn, final String schema, final boolean enabled)
-            throws SQLException {
-        LOGGER.debug("Editing Audit triggers, enabled: {}", enabled);
-        PreparedStatement s = null;
-        ResultSet rs = null;
-        final String modifier = enabled ? "ENABLE" : "DISABLE";
-        String queryToExecute = "SELECT 'ALTER TRIGGER ' || owner || '.' || trigger_name || ' " + modifier +
-                "' FROM all_triggers WHERE owner = ?";
-        try {
-            s = dbConn.prepareStatement(queryToExecute);
-            s.setString(1, schema);
-            rs = s.executeQuery();
-            while (rs.next()) {
-                queryToExecute = rs.getString(1);
-                final Statement s2 = dbConn.createStatement();
-                LOGGER.debug("Executing: {}", queryToExecute);
-                s2.execute(queryToExecute);
-                s2.close();
-            }
-        } catch (final SQLException e) {
-            LOGGER.error("Error updating database triggers for Schema '{}', Query: {}, Error: {}",
-                    schema,  queryToExecute, e);
-            e.printStackTrace();
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (s != null) {
-                s.close();
-            }
         }
     }
 
@@ -534,21 +268,6 @@ public class DBUnitUtilityBean {
         }
 
         return dbConnection;
-    }
-
-    /**
-     * Get a standard connection instance.
-     *
-     * @param schemaName the name of schema
-     * @return a standard connection instance.
-     */
-    public Connection getStandardConnection(final String schemaName) {
-        try {
-            return getConnectionInstance(schemaName).getConnection();
-        } catch (final SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }
