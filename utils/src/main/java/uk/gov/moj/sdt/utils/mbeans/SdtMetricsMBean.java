@@ -404,7 +404,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
     /**
      * Date formatter for all dates.
      */
-    private DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss.SSS");
+    private static final DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss.SSS");
 
     /**
      * Utility class for counting unique customers.
@@ -1549,7 +1549,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
         if (null != getCustomerCounter()) {
             getCustomerCounter().updateBulkCustomerCount(customer);
         } else {
-            LOGGER.error("getCustomerCounter() == null!");
+            LOGGER.warn("customerCounter is null - unable to update bulkCustomerCount.");
         }
     }
 
@@ -1580,26 +1580,26 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
             String filename = "sdt.metrics." + this.formatter.format(date) + ".txt";
             filename = filename.replace(':', '.');
             final File file = new File(filename);
-            final BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            try (BufferedWriter output = new BufferedWriter(new FileWriter(file))) {
 
-            // Dump the various metrics to the file.
-            output.write(getTime() + "\n");
-            output.write(getOsStats() + "\n");
-            output.write(getActiveCustomersStats() + "\n");
-            output.write(getBulkSubmitStats() + "\n");
-            output.write(getRequestQueueStats() + "\n");
-            output.write(getLastRefStats() + "\n");
-            output.write(getTargetAppStats() + "\n");
-            output.write(getBulkFeedbackStats() + "\n");
-            output.write(getSubmitQueryStats() + "\n");
-            output.write(getStatusUpdateStats() + "\n");
-            output.write(getDomainObjectsStats() + "\n");
-            output.write(getDatabaseCallsStats() + "\n");
-            output.write(getDatabaseReadsStats() + "\n");
-            output.write(getDatabaseWritesStats() + "\n");
-            output.write(getErrorStats() + "\n");
-            output.write(getPerformanceLoggingString() + "\n");
-            output.close();
+                // Dump the various metrics to the file.
+                output.write(getTime() + "\n");
+                output.write(getOsStats() + "\n");
+                output.write(getActiveCustomersStats() + "\n");
+                output.write(getBulkSubmitStats() + "\n");
+                output.write(getRequestQueueStats() + "\n");
+                output.write(getLastRefStats() + "\n");
+                output.write(getTargetAppStats() + "\n");
+                output.write(getBulkFeedbackStats() + "\n");
+                output.write(getSubmitQueryStats() + "\n");
+                output.write(getStatusUpdateStats() + "\n");
+                output.write(getDomainObjectsStats() + "\n");
+                output.write(getDatabaseCallsStats() + "\n");
+                output.write(getDatabaseReadsStats() + "\n");
+                output.write(getDatabaseWritesStats() + "\n");
+                output.write(getErrorStats() + "\n");
+                output.write(getPerformanceLoggingString() + "\n");
+            }
         } catch (final IOException e) {
             e.printStackTrace();
         }
