@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.moj.sdt.test.utils.DBUnitUtilityBean;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
@@ -48,12 +47,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      */
     @Override
     @BeforeEach
-    public void setUp() {
-        LOGGER.info("Running DBUnitUtility loadDatabase...");
-        DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
-        dbUnitUtilityBean.loadDatabase(this.getClass(), true);
-        LOGGER.info("Completed DBUnitUtility loadDatabase");
-    }
+    public void setUp() {}
 
     /**
      * Method to call remote endpoint to be tested.
@@ -309,9 +303,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         // Specifies the amount of time, in milliseconds, that the client will wait for a response before it times out.
         httpClientPolicy.setReceiveTimeout(responseTimeout);
         httpConduit.setClient(httpClientPolicy);
-
-//        httpConduit.getAuthorization().setUserName("user");
-//        httpConduit.getAuthorization().setPassword("*password*");
 
         return client;
     }
