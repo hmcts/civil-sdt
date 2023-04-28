@@ -100,6 +100,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * For warrant requests this will be the date of issue.
      * If the request was not successfully processed this field will be blank. Formatted as DDMMYYYY.
      */
+    @Column(name = "ISSUED_DATE")
     private LocalDateTime issuedDate;
 
     /**
