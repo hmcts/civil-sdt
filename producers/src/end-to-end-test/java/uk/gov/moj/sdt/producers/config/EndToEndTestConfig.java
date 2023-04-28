@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.ws.Endpoint;
+import javax.xml.ws.soap.SOAPBinding;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
@@ -38,14 +39,15 @@ public class EndToEndTestConfig {
      * Logger object.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(EndToEndTestConfig.class);
-    public static final String OVERRIDDEN_DYNAMICALLY = "http://dummhost/overridden/dynamically";
-    public static final String SOAP_BINDINGS_HTTP = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
 
     @Value("${server.portnumber}")
     private int serverPortNumber = 8080;
 
     @Value("${server.hostname}")
     private String serverHostName = "localhost";
+
+    private static final String DISABLE_OUTPUTSTREAM_OPTIMIZATION = "disable.outputstream.optimization";
+    private static final String SOAP_ENV_NS_MAP = "soap.env.ns.map";
 
     @Bean
     public ServletRegistrationBean<CXFServlet> cxfServlet() {
@@ -72,11 +74,11 @@ public class EndToEndTestConfig {
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         String address =  "http://"+ serverHostName + ":" + serverPortNumber + "/producers/service/sdtapi";
         jaxWsProxyFactoryBean.setAddress(address);
-        jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
+        jaxWsProxyFactoryBean.setBindingId(SOAPBinding.SOAP11HTTP_BINDING);
         Map<String, Object> properties = new HashMap<>();
-        properties.put("disable.outputstream.optimization", true);
+        properties.put(DISABLE_OUTPUTSTREAM_OPTIMIZATION, true);
         Map<String, String> soapEnvNsMap = new HashMap<>();
-        properties.put("soap.env.ns.map", soapEnvNsMap);
+        properties.put(SOAP_ENV_NS_MAP, soapEnvNsMap);
         jaxWsProxyFactoryBean.setProperties(properties);
         return jaxWsProxyFactoryBean.create(ISdtEndpointPortType.class);
     }
@@ -87,11 +89,11 @@ public class EndToEndTestConfig {
         JaxWsProxyFactoryBean jaxWsInternalProxyFactoryBean = new JaxWsProxyFactoryBean();
         String address =  "http://"+ serverHostName + ":" + serverPortNumber + "/producers/service/sdtinternalapi";
         jaxWsInternalProxyFactoryBean.setAddress(address);
-        jaxWsInternalProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
+        jaxWsInternalProxyFactoryBean.setBindingId(SOAPBinding.SOAP11HTTP_BINDING);
         Map<String, Object> properties = new HashMap<>();
-        properties.put("disable.outputstream.optimization", true);
+        properties.put(DISABLE_OUTPUTSTREAM_OPTIMIZATION, true);
         Map<String, String> soapEnvNsMap = new HashMap<>();
-        properties.put("soap.env.ns.map", soapEnvNsMap);
+        properties.put(SOAP_ENV_NS_MAP, soapEnvNsMap);
 
         jaxWsInternalProxyFactoryBean.setProperties(properties);
         return jaxWsInternalProxyFactoryBean.create(ISdtInternalEndpointPortType.class);
@@ -101,7 +103,6 @@ public class EndToEndTestConfig {
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
                                 ISdtEndpointPortType sdtEndpointPortType) {
         LOGGER.debug("sdtEndpoint - starting");
-
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
 
         Map<String, Object> properties = new HashMap<>();
@@ -113,9 +114,9 @@ public class EndToEndTestConfig {
         properties.put("locations", mapLocations);
 
         properties.put("schema-validation-enabled", true);
-        properties.put("disable.outputstream.optimization", true);
+        properties.put(DISABLE_OUTPUTSTREAM_OPTIMIZATION, true);
         Map<String, Object> nsMap = new HashMap<>();
-        properties.put("soap.env.ns.map", nsMap);
+        properties.put(SOAP_ENV_NS_MAP, nsMap);
         nsMap.put("base", "http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema");
         nsMap.put("breq", "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema");
         nsMap.put("bresp", "http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema");
