@@ -46,7 +46,6 @@ import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -147,21 +146,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     void testSubmitBulkSuccess() {
         final BulkResponseType dummyResponse = createBulkResponse();
         final BulkRequestType dummyRequest = createBulkRequest();
-        final BulkResponseType response;
 
         when(mockCreateBulkRequestHandler.submitBulk(dummyRequest)).thenReturn(dummyResponse);
 
-        try (MockedStatic<PerformanceLogger> mockPerformanceLogger = mockStatic(PerformanceLogger.class)){
-            mockPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
-                .thenReturn(true);
-
-            response = portType.submitBulk(dummyRequest);
-
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .isPerformanceEnabled(anyLong()), times(2));
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .log(any(), anyLong(), anyString(), anyString()), times(2) );
-        }
+        final BulkResponseType response = portType.submitBulk(dummyRequest);
 
         verify(mockCreateBulkRequestHandler).submitBulk(dummyRequest);
         assertNotNull(response, RESPONSE_EXPECTED);
@@ -198,18 +186,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         when(mockBulkRequestHandler.getBulkFeedback(any(BulkFeedbackRequestType.class)))
                 .thenReturn(createBulkFeedbackResponse());
 
-        final BulkFeedbackResponseType response;
-        try (MockedStatic<PerformanceLogger> mockPerformanceLogger = mockStatic(PerformanceLogger.class)){
-            mockPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
-                .thenReturn(true);
-
-            response = portType.getBulkFeedback(createBulkFeedbackRequestType());
-
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .isPerformanceEnabled(anyLong()), times(2));
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .log(any(), anyLong(), anyString(), anyString()), times(2) );
-        }
+        final BulkFeedbackResponseType response = portType.getBulkFeedback(createBulkFeedbackRequestType());
 
         assertNotNull(response, RESPONSE_EXPECTED);
         assertEquals("MOCK_ERROR", response.getBulkRequestStatus().getBulkStatus().getError().getDescription());
@@ -245,18 +222,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         when(mockSubmitQueryHandler.submitQuery(any(SubmitQueryRequestType.class)))
                 .thenReturn(createSubmitQueryResponse());
 
-        final SubmitQueryResponseType response;
-        try (MockedStatic<PerformanceLogger> mockPerformanceLogger = mockStatic(PerformanceLogger.class)){
-            mockPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
-                .thenReturn(true);
-
-            response = portType.submitQuery(createsubmitQueryRequestType());
-
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .isPerformanceEnabled(anyLong()), times(2));
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .log(any(), anyLong(), anyString(), anyString()), times(2) );
-        }
+        final SubmitQueryResponseType response = portType.submitQuery(createsubmitQueryRequestType());
 
         assertNotNull(response, RESPONSE_EXPECTED);
         verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));

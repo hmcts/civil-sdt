@@ -27,13 +27,7 @@ class ConsumersConfigTest {
     CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor;
 
     @Mock
-    CacheEndOutboundInterceptor performanceLoggerOutboundInterceptor;
-
-    @Mock
     CacheEndOutboundInterceptor cacheEndOutboundInterceptor;
-
-    @Mock
-    PhaseInterceptor<SoapMessage> performanceLoggerInboundInterceptor;
 
     @Mock
     XmlInboundInterceptor xmlInboundInterceptor;
@@ -47,9 +41,7 @@ class ConsumersConfigTest {
             consumersConfig.createTargetAppInternalEndpointPortType(
                 xmlOutboundInterceptor,
                 cacheSetupOutboundInterceptor,
-                performanceLoggerOutboundInterceptor,
                 cacheEndOutboundInterceptor,
-                performanceLoggerInboundInterceptor,
                 xmlInboundInterceptor,
                 sdtUnmarshallInterceptor
             );

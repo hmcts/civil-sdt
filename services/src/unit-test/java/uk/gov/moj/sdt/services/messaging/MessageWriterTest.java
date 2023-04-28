@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -140,34 +139,5 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             } catch (final IllegalArgumentException e) {
                 fail(NOT_EXPECTED_TO_FAIL);
             }
-    }
-    @Test
-    void testQueueMessageForDeadLetterPerformanceLogging() {
-
-        try (
-            MockedStatic<PerformanceLogger> mockStaticPerformanceLogger
-                = Mockito.mockStatic(PerformanceLogger.class)
-        ) {
-            when(PerformanceLogger.isPerformanceEnabled(anyLong())).thenReturn(true);
-            // Setup finished, now tell the mock what to expect.
-            final ISdtMessage sdtMessage = new SdtMessage();
-            sdtMessage.setSdtRequestReference("Test");
-
-            // Send the message.
-            try {
-                final Map<String, String> queueNameMap = new HashMap<>();
-                queueNameMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
-
-                messageWriter.setQueueNameMap(queueNameMap);
-
-                messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
-                assertTrue(true, SUCCESS);
-            } catch (final IllegalArgumentException e) {
-                fail(NOT_EXPECTED_TO_FAIL);
-            }
-            mockStaticPerformanceLogger.verify(
-                () -> PerformanceLogger.log(any(),eq(PerformanceLogger.LOGGING_POINT_5),
-                                            eq("Enqueue message"), eq("\n\n\tsdt request reference=Test\n")));
-        }
     }
 }

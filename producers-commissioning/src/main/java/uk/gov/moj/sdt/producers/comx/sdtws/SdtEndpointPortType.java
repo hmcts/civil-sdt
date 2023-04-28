@@ -1,5 +1,5 @@
 /* Copyrights and Licenses
- * 
+ *
  * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -23,7 +23,7 @@
  * or business interruption). However caused any on any theory of liability, whether in contract,
  * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage.
- * 
+ *
  * $Id$
  * $LastChangedRevision$
  * $LastChangedDate$
@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackresponseschema.BulkFeedbackResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
@@ -50,7 +49,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
 
 /**
  * Implementation of {@link ISdtEndpointPortType}.
- * 
+ *
  * @author Saurabh Agarwal
  */
 // CHECKSTYLE:OFF
@@ -92,19 +91,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
                     bulkRequest.getHeader ().getSdtCustomerId () + "]");
         }
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
-        {
-            final String detail =
-                    "\n\n\tsdt customer id=" + bulkRequest.getHeader ().getSdtCustomerId () +
-                            "\n\ttarget application=" + bulkRequest.getHeader ().getTargetApplicationId () +
-                            "\n\tcustomer reference=" + bulkRequest.getHeader ().getCustomerReference () +
-                            "\n\trequest count=" + bulkRequest.getHeader ().getRequestCount () + "\n";
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2, "Submit bulk request received",
-                    detail);
-        }
-
         BulkResponseType response = null;
         try
         {
@@ -118,24 +104,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
             handleThrowable (throwable);
         }
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_9))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tsdt service=" + response.getSdtService () + "\n\tsdt bulk reference=" +
-                    response.getSdtBulkReference () + "\n\tcustomer reference=" + response.getCustomerReference () +
-                    "\n\trequest count=" + response.getRequestCount () + "\n\tstatus code=" +
-                    response.getStatus ().getCode ().name () + "\n");
-            if (response.getStatus ().getError () != null)
-            {
-                detail.append ("\n\terror code=" + response.getStatus ().getError ().getCode () +
-                        "\n\terror description=" + response.getStatus ().getError ().getDescription () + "\n");
-            }
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_9,
-                    "Submit bulk response returned", detail.toString ());
-        }
-
         return response;
     }
 
@@ -146,17 +114,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         {
             LOGGER.debug ("Endpoint called for bulk feedback by customer [" +
                     bulkFeedbackRequest.getHeader ().getSdtCustomerId () + "]");
-        }
-
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
-        {
-            final String detail =
-                    "\n\n\tsdt customer id=" + bulkFeedbackRequest.getHeader ().getSdtCustomerId () +
-                            "\n\tsdt bulk reference=" + bulkFeedbackRequest.getHeader ().getSdtBulkReference () + "\n";
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2,
-                    "Bulk feedback request received", detail);
         }
 
         BulkFeedbackResponseType response = null;
@@ -172,27 +129,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
             handleThrowable (throwable);
         }
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_9))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tsdt service=" + response.getBulkRequestStatus ().getSdtService () +
-                    "\n\tsdt bulk reference=" + response.getBulkRequestStatus ().getSdtBulkReference () +
-                    "\n\tcustomer reference=" + response.getBulkRequestStatus ().getCustomerReference () +
-                    "\n\trequest count=" + response.getBulkRequestStatus ().getRequestCount () + "\n\tbulk status=" +
-                    response.getBulkRequestStatus ().getBulkStatus ().getCode ().name () + "\n");
-            if (response.getBulkRequestStatus ().getBulkStatus ().getError () != null)
-            {
-                detail.append ("\n\terror code=" +
-                        response.getBulkRequestStatus ().getBulkStatus ().getError ().getCode () +
-                        "\n\terror description=" +
-                        response.getBulkRequestStatus ().getBulkStatus ().getError ().getDescription () + "\n");
-            }
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_9,
-                    "Bulk feedback response received returned", detail.toString ());
-        }
-
         return response;
     }
 
@@ -203,18 +139,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
         {
             LOGGER.debug ("Endpoint called for submit query by customer [" +
                     submitQueryRequest.getHeader ().getSdtCustomerId () + "]");
-        }
-
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_2))
-        {
-            final String detail =
-                    "\n\n\tcustomer=" + submitQueryRequest.getHeader ().getSdtCustomerId () +
-                            "\n\ttarget application=" + submitQueryRequest.getHeader ().getTargetApplicationId () +
-                            "\n";
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_2,
-                    "Submit query request received", detail);
         }
 
         SubmitQueryResponseType response = null;
@@ -230,28 +154,12 @@ public class SdtEndpointPortType implements ISdtEndpointPortType
             handleThrowable (throwable);
         }
 
-        if (PerformanceLogger.isPerformanceEnabled (PerformanceLogger.LOGGING_POINT_9))
-        {
-            final StringBuffer detail = new StringBuffer ();
-            detail.append ("\n\n\tbulk request status=" + response.getSdtService () + "\n\tsdt customer id=" +
-                    response.getSdtCustomerId () + "\n");
-            if (response.getStatus ().getError () != null)
-            {
-                detail.append ("\n\terror code=" + response.getStatus ().getError ().getCode () +
-                        "\n\terror description=" + response.getStatus ().getError ().getDescription () + "\n");
-            }
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log (this.getClass (), PerformanceLogger.LOGGING_POINT_9,
-                    "Submit query response received returned", detail.toString ());
-        }
-
         return response;
     }
 
     /**
      * Handles throwable and re-throws runtime exception.
-     * 
+     *
      * @param throwable exception to be handled
      */
     private void handleThrowable (final Throwable throwable)

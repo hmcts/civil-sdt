@@ -45,7 +45,6 @@ import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.CreateStatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
@@ -171,12 +170,7 @@ class IndividualRequestConsumerTest extends ConsumerTestBase {
         doReturn(mockClient).when(individualRequestConsumer)
             .getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
 
-        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
-            mockStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
-                .thenReturn(true);
-            individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT,
-                                                               RECEIVE_TIME_OUT);
-        }
+        individualRequestConsumer.processIndividualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
         verify(mockTransformer, atLeastOnce()).transformJaxbToDomain(individualResponseType, individualRequest);
         verify(mockTransformer).transformDomainToJaxb(individualRequest);
