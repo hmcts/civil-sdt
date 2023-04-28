@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
+import uk.gov.moj.sdt.producers.config.SecurityConfig;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ObjectFactory;
@@ -26,14 +27,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class})
-@Sql(scripts = {"classpath:database/baseline/drop_and_recreate_empty_public_schema.sql",
-        "classpath:database/baseline/V0001__init.sql",
-        "classpath:database/baseline/V0003__alter_bulk_customer.sql",
-        "classpath:database/baseline/V0004__alter_individual_request.sql",
-        "classpath:database/baseline/create_purge_proc.sql",
-        "classpath:database/baseline/create_finish_dbunit_load_proc.sql",
-        "classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"})
+@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Sql(scripts = {"classpath:database/baseline/drop_and_recreate_empty_public_schema.sql"
+        ,"classpath:database/baseline/V0001__init.sql"
+        ,"classpath:database/baseline/V0003__alter_bulk_customer.sql"
+        ,"classpath:database/baseline/V0004__alter_individual_request.sql"
+        ,"classpath:database/baseline/V0005__alter_individual_request.sql"
+        ,"classpath:database/baseline/create_purge_proc.sql"
+        ,"classpath:database/baseline/create_finish_dbunit_load_proc.sql"
+        ,"classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"
+        ,"classpath:database/baseline/SubmitQueryTest.sql"
+})
 public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestType, SubmitQueryResponseType> {
 
     /**
@@ -53,7 +57,8 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
         try {
             this.callWebService(SubmitQueryRequestType.class);
         } catch (SOAPFaultException e) {
-            assertTrue(e.getMessage().contains("The content of element 'criterion' is not complete"),
+            assertTrue(e.getMessage().contains("The content of element")
+                    && e.getMessage().contains("criterion' is not complete"),
                     "Unexpected exception message in SOAPFaultException [" + e.getMessage() + "]");
         }
     }
