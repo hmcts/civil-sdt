@@ -404,7 +404,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
     /**
      * Date formatter for all dates.
      */
-    private static final DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss.SSS");
+    private final DateFormat formatter = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss.SSS");
 
     /**
      * Utility class for counting unique customers.
