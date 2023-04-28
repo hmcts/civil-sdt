@@ -20,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StopWatch;
 
 import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
+import uk.gov.moj.sdt.producers.config.SecurityConfig;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
@@ -37,14 +38,17 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class})
-@Sql(scripts = {"classpath:database/baseline/drop_and_recreate_empty_public_schema.sql",
-        "classpath:database/baseline/V0001__init.sql",
-        "classpath:database/baseline/V0003__alter_bulk_customer.sql",
-        "classpath:database/baseline/V0004__alter_individual_request.sql",
-        "classpath:database/baseline/create_purge_proc.sql",
-        "classpath:database/baseline/create_finish_dbunit_load_proc.sql",
-        "classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"})
+@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Sql(scripts = {"classpath:database/baseline/drop_and_recreate_empty_public_schema.sql"
+        ,"classpath:database/baseline/V0001__init.sql"
+        ,"classpath:database/baseline/V0003__alter_bulk_customer.sql"
+        ,"classpath:database/baseline/V0004__alter_individual_request.sql"
+        ,"classpath:database/baseline/V0005__alter_individual_request.sql"
+        ,"classpath:database/baseline/create_purge_proc.sql"
+        ,"classpath:database/baseline/create_finish_dbunit_load_proc.sql"
+        ,"classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"
+        ,"classpath:database/baseline/SubmitBulkPerformanceTest.sql"
+})
 public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType> {
 
     /**
