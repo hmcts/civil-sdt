@@ -70,6 +70,7 @@ public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor {
     public void handleMessage(final SoapMessage message) throws Fault {
         // Call the following interceptors in the chain.
         final PhaseInterceptorChain interceptorChain = (PhaseInterceptorChain) message.getInterceptorChain();
+        LOGGER.debug("SoapMessage: {}", message);
         interceptorChain.doIntercept(message);
 
         try {
