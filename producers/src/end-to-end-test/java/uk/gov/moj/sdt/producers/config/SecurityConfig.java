@@ -14,11 +14,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 // spring security compliance
-        http.csrf()
-            .disable()
-            .authorizeRequests()
-            .anyRequest()
-            .permitAll();
+//        http.csrf()
+//            .disable()
+//            .authorizeRequests()
+//            .anyRequest()
+//            .permitAll();
 
         return http.build();
     }
