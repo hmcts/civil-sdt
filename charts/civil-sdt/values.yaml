@@ -24,3 +24,5 @@ java:
           alias: SDT_DB_PASSWORD
         - name: civil-sdt-servicebus-connection-string
           alias: CIVIL_SDT_SERVICEBUS_CONNECTION_STRING
+servicebus:
+  enabled: false
