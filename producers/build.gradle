@@ -15,19 +15,21 @@ dependencies {
     implementation project(':utils')
     implementation project(':producers-api')
     implementation project(':handlers-api')
+    implementation project(':interceptors')
 
     testImplementation project(":handlers").sourceSets.unitTest.output
     testImplementation project(":domain").sourceSets.unitTest.output
     testImplementation project(':producers-api').sourceSets.unitTest.output
     testImplementation project(":handlers-api").sourceSets.unitTest.output
+    testImplementation project(":utils").sourceSets.unitTest.output
 
     testImplementation project(':producers-api').sourceSets.integTest.output
 
+    testImplementation project(":interceptors").sourceSets.e2eTest.output
     testImplementation project(":domain").sourceSets.e2eTest.output
     testImplementation project(":utils").sourceSets.e2eTest.output
     testImplementation project(':producers-api').sourceSets.e2eTest.output
 
-    testImplementation project(":utils").sourceSets.unitTest.output
     testImplementation project(":utils").sourceSets.integTest.output
 }
 

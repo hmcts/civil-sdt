@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.soap.SOAPBinding;
 
+import com.google.common.collect.Lists;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +31,23 @@ import uk.gov.moj.sdt.producers.sdtws.config.ProducersConfig;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType;
 
+import uk.gov.moj.sdt.interceptors.in.IdamIdInboundInterceptor;
+import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
+import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
+import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
+import uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor;
+import uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor;
+import uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor;
+import uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor;
+import uk.gov.moj.sdt.interceptors.out.PerformanceLoggerOutboundInterceptor;
+import uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor;
+import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
+
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
 @EnableAutoConfiguration
 @EnableConfigurationProperties
+@EnableCaching(proxyTargetClass = true)
 @Import(ProducersConfig.class)
 public class EndToEndTestConfig {
     /**
@@ -101,9 +116,39 @@ public class EndToEndTestConfig {
 
     @Bean
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
-                                ISdtEndpointPortType sdtEndpointPortType) {
+                                ISdtEndpointPortType sdtEndpointPortType,
+                                ServiceRequestInboundInterceptor serviceRequestInboundInterceptor,
+                                PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
+                                XmlInboundInterceptor xmlInboundInterceptor,
+                                SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
+                                IdamIdInboundInterceptor idamIdInboundInterceptor,
+                                PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
+                                CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
+                                XmlOutboundInterceptor xmlOutboundInterceptor,
+                                ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor,
+                                CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
+                                FaultOutboundInterceptor faultOutboundInterceptor
+    ) {
         LOGGER.debug("sdtEndpoint - starting");
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
+
+        endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
+                xmlInboundInterceptor,
+                sdtUnmarshallInterceptor,
+                serviceRequestInboundInterceptor,
+                idamIdInboundInterceptor));
+
+        endpoint.setOutInterceptors(Lists.newArrayList(cacheSetupOutboundInterceptor,
+                xmlOutboundInterceptor,
+                serviceRequestOutboundInterceptor,
+                performanceLoggerOutboundInterceptor,
+                cacheEndOutboundInterceptor));
+
+        endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
+
+        List<LoggingFeature> features = new ArrayList<>();
+        features.add(new LoggingFeature());
+        endpoint.setFeatures(features);
 
         Map<String, Object> properties = new HashMap<>();
 
@@ -132,9 +177,23 @@ public class EndToEndTestConfig {
 
     @Bean
     public Endpoint sdtInternalEndpoint(@Qualifier("ISdtInternalEndpointPortType")
-                                        ISdtInternalEndpointPortType sdtInternalEndpointPortType) {
+                                        ISdtInternalEndpointPortType sdtInternalEndpointPortType,
+                                        PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
+                                        XmlInboundInterceptor xmlInboundInterceptor,
+                                        SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
+                                        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
+                                        FaultOutboundInterceptor faultOutboundInterceptor) {
         LOGGER.debug("sdtInternalEndpoint - starting");
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
+
+        endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
+                xmlInboundInterceptor,
+                sdtUnmarshallInterceptor));
+
+        endpoint.setOutInterceptors(Lists.newArrayList(performanceLoggerOutboundInterceptor));
+
+        endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
+
         List<LoggingFeature> features = new ArrayList<>();
         features.add(new LoggingFeature());
         endpoint.setFeatures(features);
