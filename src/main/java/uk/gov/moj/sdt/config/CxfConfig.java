@@ -25,6 +25,7 @@ import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
 import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
 import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
 import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
+import uk.gov.moj.sdt.interceptors.in.IdamIdInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
@@ -82,12 +83,13 @@ public class CxfConfig {
         PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
         XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
         SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
-        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor = new PerformanceLoggerOutboundInterceptor(serviceRequestDao);
+        IdamIdInboundInterceptor idamIdInboundInterceptor,PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor = new PerformanceLoggerOutboundInterceptor(serviceRequestDao);
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
         endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
-                                                xmlInboundInterceptor,
-                                                sdtUnmarshallInterceptor,
-                                                serviceRequestInboundInterceptor));
+                                                      xmlInboundInterceptor,
+                                                      sdtUnmarshallInterceptor,
+                                                      serviceRequestInboundInterceptor,
+                                                      idamIdInboundInterceptor));
         CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
 
         XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
