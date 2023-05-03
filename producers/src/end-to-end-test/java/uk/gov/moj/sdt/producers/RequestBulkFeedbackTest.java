@@ -32,7 +32,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
         ,"classpath:database/baseline/create_purge_proc.sql"
         ,"classpath:database/baseline/create_finish_dbunit_load_proc.sql"
         ,"classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"
-        ,"classpath:database/baseline/RequestBulkFeedbackPerformanceTest.sql"
+        ,"classpath:database/baseline/RequestBulkFeedbackTest.sql"
 })
 public class RequestBulkFeedbackTest extends AbstractWebServiceTest<BulkFeedbackRequestType, BulkFeedbackResponseType> {
     /**
