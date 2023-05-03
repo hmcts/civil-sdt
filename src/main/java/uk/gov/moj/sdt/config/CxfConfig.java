@@ -83,7 +83,8 @@ public class CxfConfig {
         PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
         XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
         SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
-        IdamIdInboundInterceptor idamIdInboundInterceptor,PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor = new PerformanceLoggerOutboundInterceptor(serviceRequestDao);
+        IdamIdInboundInterceptor idamIdInboundInterceptor = new IdamIdInboundInterceptor();
+        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor = new PerformanceLoggerOutboundInterceptor(serviceRequestDao);
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
         endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
                                                       xmlInboundInterceptor,
