@@ -28,14 +28,15 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortT
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Sql(scripts = {"classpath:database/baseline/drop_and_recreate_empty_public_schema.sql"
-        ,"classpath:database/baseline/V0001__init.sql"
+@Sql(scripts = {
+//        "classpath:database/baseline/drop_and_recreate_empty_public_schema.sql"
+        "classpath:database/baseline/V0001__init.sql"
         ,"classpath:database/baseline/V0003__alter_bulk_customer.sql"
         ,"classpath:database/baseline/V0004__alter_individual_request.sql"
         ,"classpath:database/baseline/V0005__alter_individual_request.sql"
-        ,"classpath:database/baseline/create_purge_proc.sql"
-        ,"classpath:database/baseline/create_finish_dbunit_load_proc.sql"
-        ,"classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"
+//        ,"classpath:database/baseline/create_purge_proc.sql"
+//        ,"classpath:database/baseline/create_finish_dbunit_load_proc.sql"
+//        ,"classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"
         ,"classpath:database/baseline/UpdateItemTest.sql"
 })
 public class UpdateItemTest extends AbstractWebServiceTest<UpdateRequestType, UpdateResponseType> {

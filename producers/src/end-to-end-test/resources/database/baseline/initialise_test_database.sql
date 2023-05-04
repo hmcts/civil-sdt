@@ -3,30 +3,31 @@ SET search_path TO public;
 ------------------------------------------------
 -- Create tables
 ------------------------------------------------
-CREATE TABLE bulk_customers
+CREATE TABLE IF NOT EXISTS bulk_customers
 (bulk_customer_id NUMERIC NOT NULL,
 sdt_customer_id NUMERIC(8),
-version_number NUMERIC DEFAULT 0);
+version_number NUMERIC DEFAULT 0,
+ready_for_alternate_service BOOLEAN NOT NULL DEFAULT FALSE);
 
-CREATE TABLE bulk_customer_applications
+CREATE TABLE IF NOT EXISTS bulk_customer_applications
 (bulk_customer_applications_id NUMERIC NOT NULL,
 bulk_customer_id NUMERIC,
 target_application_id NUMERIC,
 customer_application_id VARCHAR(32),
 version_number NUMERIC DEFAULT 0);
 
-CREATE TABLE purge_job_audit
+CREATE TABLE IF NOT EXISTS purge_job_audit
 (audit_id SERIAL PRIMARY KEY,
 created_date TIMESTAMP(6),
 success NUMERIC);
 
-CREATE TABLE purge_job_audit_messages
+CREATE TABLE IF NOT EXISTS purge_job_audit_messages
 (audit_message_id SERIAL PRIMARY KEY,
 audit_id NUMERIC,
 created_date TIMESTAMP(6),
 error_message VARCHAR(32));
 
-CREATE TABLE bulk_submissions
+CREATE TABLE IF NOT EXISTS bulk_submissions
 (bulk_submission_id NUMERIC NOT NULL,
 bulk_customer_id NUMERIC,
 target_application_id NUMERIC,
@@ -43,7 +44,7 @@ error_text VARCHAR(1000),
 version_number NUMERIC DEFAULT 0,
 bulk_payload BYTEA);
 
-CREATE TABLE error_logs
+CREATE TABLE IF NOT EXISTS error_logs
 (error_log_id NUMERIC NOT NULL,
 individual_request_id NUMERIC,
 error_code VARCHAR(32),
@@ -52,21 +53,21 @@ updated_date TIMESTAMP(6),
 version_number NUMERIC DEFAULT 0,
 error_text VARCHAR(1000));
 
-CREATE TABLE error_messages
+CREATE TABLE IF NOT EXISTS error_messages
 (error_message_id NUMERIC,
 error_code VARCHAR(32),
 error_text VARCHAR(1000),
 error_description VARCHAR(2000),
 version_number NUMERIC DEFAULT 0);
 
-CREATE TABLE global_parameters
+CREATE TABLE IF NOT EXISTS global_parameters
 (global_parameter_id NUMERIC,
 parameter_name VARCHAR(32),
 parameter_value VARCHAR(32),
 parameter_description VARCHAR(2000),
 version_number NUMERIC DEFAULT 0);
 
-CREATE TABLE individual_requests
+CREATE TABLE IF NOT EXISTS individual_requests
 (individual_request_id NUMERIC NOT NULL,
 bulk_submission_id NUMERIC,
 customer_request_ref VARCHAR(32),
@@ -83,9 +84,11 @@ internal_system_error VARCHAR(4000),
 request_type VARCHAR(50),
 version_number NUMERIC DEFAULT 0,
 individual_payload BYTEA,
-target_application_response BYTEA);
+target_application_response BYTEA,
+error_log_id NUMERIC,
+issued_date TIMESTAMP(6));
 
-CREATE TABLE service_requests
+CREATE TABLE IF NOT EXISTS service_requests
 (service_request_id NUMERIC NOT NULL,
 request_payload BYTEA,
 request_timestamp TIMESTAMP(6),
@@ -97,61 +100,202 @@ sdt_bulk_reference VARCHAR(29),
 server_host_name VARCHAR(255),
 version_number NUMERIC DEFAULT 0);
 
-CREATE TABLE service_routings
+CREATE TABLE IF NOT EXISTS service_routings
 (service_routings_id NUMERIC NOT NULL,
 service_type_id NUMERIC,
 target_application_id NUMERIC,
 web_service_endpoint VARCHAR(255),
 version_number NUMERIC DEFAULT 0);
 
-CREATE TABLE service_types
+CREATE TABLE IF NOT EXISTS service_types
 (service_type_id NUMERIC NOT NULL,
 service_type_name VARCHAR(50),
 service_type_status VARCHAR(1),
 service_type_description VARCHAR(2000),
 version_number NUMERIC DEFAULT 0);
 
-CREATE TABLE target_applications
+CREATE TABLE IF NOT EXISTS target_applications
 (target_application_id NUMERIC NOT NULL,
 target_application_code VARCHAR(4),
 target_application_name VARCHAR(255),
 version_number NUMERIC DEFAULT 0);
 
 ------------------------------------------------
+-- Truncate tables
+------------------------------------------------
+TRUNCATE TABLE bulk_customers CASCADE;
+TRUNCATE TABLE bulk_customer_applications CASCADE;
+TRUNCATE TABLE purge_job_audit CASCADE;
+TRUNCATE TABLE purge_job_audit_messages CASCADE;
+TRUNCATE TABLE bulk_submissions CASCADE;
+TRUNCATE TABLE error_logs CASCADE;
+TRUNCATE TABLE error_messages CASCADE;
+TRUNCATE TABLE global_parameters CASCADE;
+TRUNCATE TABLE individual_requests CASCADE;
+TRUNCATE TABLE service_requests CASCADE;
+TRUNCATE TABLE service_routings CASCADE;
+TRUNCATE TABLE service_types CASCADE;
+TRUNCATE TABLE target_applications CASCADE;
+
+------------------------------------------------
+-- Drop Constraints
+------------------------------------------------
+
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_sbr_uni;
+ALTER TABLE service_types DROP CONSTRAINT IF EXISTS rt_rtn_uni;
+ALTER TABLE target_applications DROP CONSTRAINT IF EXISTS ta_tan_uni;
+
+ALTER TABLE bulk_customer_applications DROP CONSTRAINT IF EXISTS bca_bulk_customer_fk;
+ALTER TABLE bulk_customer_applications DROP CONSTRAINT IF EXISTS bca_target_application_fk;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_customer_id_fk;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_service_request_id_fk;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_target_application_fk;
+ALTER TABLE error_logs DROP CONSTRAINT IF EXISTS el_individual_request_fk;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_bulk_submission_fk;
+ALTER TABLE service_routings DROP CONSTRAINT IF EXISTS sr_service_type_fk;
+ALTER TABLE service_routings DROP CONSTRAINT IF EXISTS sr_target_application_fk;
+
+ALTER TABLE bulk_customer_applications DROP CONSTRAINT IF EXISTS bca_cai_nn;
+ALTER TABLE bulk_customer_applications DROP CONSTRAINT IF EXISTS bca_vn_nn;
+ALTER TABLE bulk_customers DROP CONSTRAINT IF EXISTS bc_sci_nn;
+ALTER TABLE bulk_customers DROP CONSTRAINT IF EXISTS bc_vn_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_bci_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_bp_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_bss_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_cd_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_nor_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_sbr_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_tai_nn;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bs_vn_nn;
+ALTER TABLE error_logs DROP CONSTRAINT IF EXISTS el_cd_nn;
+ALTER TABLE error_logs DROP CONSTRAINT IF EXISTS el_ec_nn;
+ALTER TABLE error_logs DROP CONSTRAINT IF EXISTS el_et_nn;
+ALTER TABLE error_logs DROP CONSTRAINT IF EXISTS el_iri_nn;
+ALTER TABLE error_logs DROP CONSTRAINT IF EXISTS el_vn_nn;
+ALTER TABLE error_messages DROP CONSTRAINT IF EXISTS em_ec_nn;
+ALTER TABLE error_messages DROP CONSTRAINT IF EXISTS em_ed_nn;
+ALTER TABLE error_messages DROP CONSTRAINT IF EXISTS em_et_nn;
+ALTER TABLE error_messages DROP CONSTRAINT IF EXISTS em_vn_nn;
+ALTER TABLE global_parameters DROP CONSTRAINT IF EXISTS gp_pn_nn;
+ALTER TABLE global_parameters DROP CONSTRAINT IF EXISTS gp_pv_nn;
+ALTER TABLE global_parameters DROP CONSTRAINT IF EXISTS gp_vn_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_bsi_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_cd_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_dl_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_ln_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_rs_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_sbr_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_srr_nn;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS ir_vn_nn;
+ALTER TABLE service_requests DROP CONSTRAINT IF EXISTS sre_rt_nn;
+ALTER TABLE service_routings DROP CONSTRAINT IF EXISTS sr_vn_nn;
+ALTER TABLE service_routings DROP CONSTRAINT IF EXISTS sr_wse_nn;
+ALTER TABLE service_types DROP CONSTRAINT IF EXISTS st_stn_nn;
+ALTER TABLE service_types DROP CONSTRAINT IF EXISTS st_sts_nn;
+ALTER TABLE service_types DROP CONSTRAINT IF EXISTS st_vn_nn;
+ALTER TABLE target_applications DROP CONSTRAINT IF EXISTS ta_tac_nn;
+ALTER TABLE target_applications DROP CONSTRAINT IF EXISTS ta_vn_nn;
+
+ALTER TABLE bulk_customers DROP CONSTRAINT IF EXISTS bulk_customers_pk;
+ALTER TABLE bulk_customer_applications DROP CONSTRAINT IF EXISTS bulk_customer_applications_pk;
+ALTER TABLE bulk_submissions DROP CONSTRAINT IF EXISTS bulk_submissions_pk;
+ALTER TABLE error_logs DROP CONSTRAINT IF EXISTS error_logs_pk;
+ALTER TABLE error_messages DROP CONSTRAINT IF EXISTS error_messages_pk;
+ALTER TABLE global_parameters DROP CONSTRAINT IF EXISTS global_parameters_pk;
+ALTER TABLE individual_requests DROP CONSTRAINT IF EXISTS individual_requests_pk;
+ALTER TABLE service_requests DROP CONSTRAINT IF EXISTS service_requests_pk;
+ALTER TABLE service_routings DROP CONSTRAINT IF EXISTS service_routings_pk;
+ALTER TABLE service_types DROP CONSTRAINT IF EXISTS service_types_pk;
+ALTER TABLE target_applications DROP CONSTRAINT IF EXISTS target_applications_pk;
+------------------------------------------------
 -- Create indices
 ------------------------------------------------
-CREATE INDEX bca_bulk_customer_id ON bulk_customer_applications (bulk_customer_id);
-CREATE INDEX bca_target_application_i ON bulk_customer_applications (target_application_id);
-CREATE INDEX bs_bulk_customer_id_i ON bulk_submissions (bulk_customer_id);
-CREATE INDEX bs_sdt_bulk_reference_i ON bulk_submissions (sdt_bulk_reference);
-CREATE INDEX bs_service_request_id_i ON bulk_submissions (service_request_id);
-CREATE INDEX bs_target_application_id_i ON bulk_submissions (target_application_id);
-CREATE UNIQUE INDEX bulk_customers_pk ON bulk_customers (bulk_customer_id);
-CREATE UNIQUE INDEX bulk_customer_applications_pk ON bulk_customer_applications (bulk_customer_applications_id);
-CREATE UNIQUE INDEX bulk_submissions_pk ON bulk_submissions (bulk_submission_id);
-CREATE INDEX el_individual_request_id ON error_logs (individual_request_id);
-CREATE UNIQUE INDEX error_logs_pk ON error_logs (error_log_id);
-CREATE UNIQUE INDEX error_messages_pk ON error_messages (error_message_id);
-CREATE UNIQUE INDEX global_parameters_pk ON global_parameters (global_parameter_id);
-CREATE UNIQUE INDEX individual_requests_pk ON individual_requests (individual_request_id);
-CREATE INDEX ir_bulk_reference_i ON individual_requests (sdt_bulk_reference);
-CREATE INDEX ir_bulk_submission_id_i ON individual_requests (bulk_submission_id);
-CREATE INDEX ir_lwr_customer_req_ref_cd_i ON individual_requests (LOWER(customer_request_ref), created_date);
-CREATE INDEX ir_sdt_request_reference_i ON individual_requests (sdt_request_reference);
-CREATE UNIQUE INDEX service_requests_pk ON service_requests (service_request_id);
-CREATE UNIQUE INDEX service_routings_pk ON service_routings (service_routings_id);
-CREATE UNIQUE INDEX service_types_pk ON service_types (service_type_id);
-CREATE INDEX sr_service_type_i ON service_routings (service_type_id);
-CREATE INDEX sr_target_application_i ON service_routings (target_application_id);
-CREATE INDEX st_service_type_name ON service_types (service_type_name);
-CREATE UNIQUE INDEX target_applications_pk ON target_applications (target_application_id);
-CREATE INDEX ta_target_application_name ON target_applications (target_application_name);
+CREATE INDEX IF NOT EXISTS bca_bulk_customer_id ON bulk_customer_applications (bulk_customer_id);
+CREATE INDEX IF NOT EXISTS bca_target_application_i ON bulk_customer_applications (target_application_id);
+CREATE INDEX IF NOT EXISTS bs_bulk_customer_id_i ON bulk_submissions (bulk_customer_id);
+CREATE INDEX IF NOT EXISTS bs_sdt_bulk_reference_i ON bulk_submissions (sdt_bulk_reference);
+CREATE INDEX IF NOT EXISTS bs_service_request_id_i ON bulk_submissions (service_request_id);
+CREATE INDEX IF NOT EXISTS bs_target_application_id_i ON bulk_submissions (target_application_id);
+CREATE UNIQUE INDEX IF NOT EXISTS bulk_customers_pk ON bulk_customers (bulk_customer_id);
+CREATE UNIQUE INDEX IF NOT EXISTS bulk_customer_applications_pk ON bulk_customer_applications (bulk_customer_applications_id);
+CREATE UNIQUE INDEX IF NOT EXISTS bulk_submissions_pk ON bulk_submissions (bulk_submission_id);
+CREATE INDEX IF NOT EXISTS el_individual_request_id ON error_logs (individual_request_id);
+CREATE UNIQUE INDEX IF NOT EXISTS error_logs_pk ON error_logs (error_log_id);
+CREATE UNIQUE INDEX IF NOT EXISTS error_messages_pk ON error_messages (error_message_id);
+CREATE UNIQUE INDEX IF NOT EXISTS global_parameters_pk ON global_parameters (global_parameter_id);
+CREATE UNIQUE INDEX IF NOT EXISTS individual_requests_pk ON individual_requests (individual_request_id);
+CREATE INDEX IF NOT EXISTS ir_bulk_reference_i ON individual_requests (sdt_bulk_reference);
+CREATE INDEX IF NOT EXISTS ir_bulk_submission_id_i ON individual_requests (bulk_submission_id);
+CREATE INDEX IF NOT EXISTS ir_lwr_customer_req_ref_cd_i ON individual_requests (LOWER(customer_request_ref), created_date);
+CREATE INDEX IF NOT EXISTS ir_sdt_request_reference_i ON individual_requests (sdt_request_reference);
+CREATE UNIQUE INDEX IF NOT EXISTS service_requests_pk ON service_requests (service_request_id);
+CREATE UNIQUE INDEX IF NOT EXISTS service_routings_pk ON service_routings (service_routings_id);
+CREATE UNIQUE INDEX IF NOT EXISTS service_types_pk ON service_types (service_type_id);
+CREATE INDEX IF NOT EXISTS sr_service_type_i ON service_routings (service_type_id);
+CREATE INDEX IF NOT EXISTS sr_target_application_i ON service_routings (target_application_id);
+CREATE INDEX IF NOT EXISTS st_service_type_name ON service_types (service_type_name);
+CREATE UNIQUE INDEX IF NOT EXISTS target_applications_pk ON target_applications (target_application_id);
+CREATE INDEX IF NOT EXISTS ta_target_application_name ON target_applications (target_application_name);
+
+
+------------------------------------------------
+-- Create Check Constraints
+------------------------------------------------
+ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_cai_nn CHECK (customer_application_id IS NOT NULL);
+ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_vn_nn CHECK (version_number IS NOT NULL);
+ALTER TABLE bulk_customers ADD CONSTRAINT bc_sci_nn CHECK (sdt_customer_id IS NOT NULL);
+ALTER TABLE bulk_customers ADD CONSTRAINT bc_vn_nn CHECK (version_number IS NOT NULL);
+
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_bci_nn CHECK (bulk_customer_id IS NOT NULL);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_bp_nn CHECK (bulk_payload IS NOT NULL);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_bss_nn CHECK (bulk_submission_status IS NOT NULL);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_cd_nn CHECK (created_date IS NOT NULL);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_nor_nn CHECK (number_of_requests IS NOT NULL);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_sbr_nn CHECK (sdt_bulk_reference IS NOT NULL);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_tai_nn CHECK (target_application_id IS NOT NULL);
+ALTER TABLE bulk_submissions ADD CONSTRAINT bs_vn_nn CHECK (version_number IS NOT NULL);
+
+ALTER TABLE error_logs ADD CONSTRAINT el_cd_nn CHECK (created_date IS NOT NULL);
+ALTER TABLE error_logs ADD CONSTRAINT el_ec_nn CHECK (error_code IS NOT NULL);
+ALTER TABLE error_logs ADD CONSTRAINT el_et_nn CHECK (error_text IS NOT NULL);
+ALTER TABLE error_logs ADD CONSTRAINT el_iri_nn CHECK (individual_request_id IS NOT NULL);
+ALTER TABLE error_logs ADD CONSTRAINT el_vn_nn CHECK (version_number IS NOT NULL);
+
+ALTER TABLE error_messages ADD CONSTRAINT em_ec_nn CHECK (error_code IS NOT NULL);
+ALTER TABLE error_messages ADD CONSTRAINT em_ed_nn CHECK (error_description IS NOT NULL);
+ALTER TABLE error_messages ADD CONSTRAINT em_et_nn CHECK (error_text IS NOT NULL);
+ALTER TABLE error_messages ADD CONSTRAINT em_vn_nn CHECK (version_number IS NOT NULL);
+
+ALTER TABLE global_parameters ADD CONSTRAINT gp_pn_nn CHECK (parameter_name  IS NOT NULL);
+ALTER TABLE global_parameters ADD CONSTRAINT gp_pv_nn CHECK (parameter_value IS NOT NULL);
+ALTER TABLE global_parameters ADD CONSTRAINT gp_vn_nn CHECK (version_number IS NOT NULL);
+
+ALTER TABLE individual_requests ADD CONSTRAINT ir_bsi_nn CHECK (bulk_submission_id IS NOT NULL);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_cd_nn CHECK (created_date IS NOT NULL);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_dl_nn CHECK (dead_letter IS NOT NULL);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_ln_nn CHECK (line_number IS NOT NULL);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_rs_nn CHECK (request_status IS NOT NULL);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_sbr_nn CHECK (sdt_bulk_reference IS NOT NULL);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_srr_nn CHECK (sdt_request_reference IS NOT NULL);
+ALTER TABLE individual_requests ADD CONSTRAINT ir_vn_nn CHECK (version_number IS NOT NULL);
+
+ALTER TABLE service_requests ADD CONSTRAINT sre_rt_nn CHECK (request_timestamp IS NOT NULL);
+
+ALTER TABLE service_routings ADD CONSTRAINT sr_vn_nn CHECK (version_number IS NOT NULL);
+ALTER TABLE service_routings ADD CONSTRAINT sr_wse_nn CHECK (web_service_endpoint IS NOT NULL);
+
+ALTER TABLE service_types ADD CONSTRAINT st_stn_nn CHECK (service_type_name IS NOT NULL);
+ALTER TABLE service_types ADD CONSTRAINT st_sts_nn CHECK (service_type_status IS NOT NULL);
+ALTER TABLE service_types ADD CONSTRAINT st_vn_nn CHECK (version_number IS NOT NULL);
+
+ALTER TABLE target_applications ADD CONSTRAINT ta_tac_nn CHECK (target_application_code IS NOT NULL);
+ALTER TABLE target_applications ADD CONSTRAINT ta_vn_nn CHECK (version_number IS NOT NULL);
 
 ------------------------------------------------
 -- Create Primary Keys
 ------------------------------------------------
-ALTER TABLE bulk_customers ADD CONSTRAINT bulk_customers_pk PRIMARY KEY USING INDEX bulk_customers_pk;
 ALTER TABLE bulk_customer_applications ADD CONSTRAINT bulk_customer_applications_pk PRIMARY KEY USING INDEX bulk_customer_applications_pk;
+ALTER TABLE bulk_customers ADD CONSTRAINT bulk_customers_pk PRIMARY KEY USING INDEX bulk_customers_pk;
 ALTER TABLE bulk_submissions ADD CONSTRAINT bulk_submissions_pk PRIMARY KEY USING INDEX bulk_submissions_pk;
 ALTER TABLE error_logs ADD CONSTRAINT error_logs_pk PRIMARY KEY USING INDEX error_logs_pk;
 ALTER TABLE error_messages ADD CONSTRAINT error_messages_pk PRIMARY KEY USING INDEX error_messages_pk;
@@ -161,50 +305,6 @@ ALTER TABLE service_requests ADD CONSTRAINT service_requests_pk PRIMARY KEY USIN
 ALTER TABLE service_routings ADD CONSTRAINT service_routings_pk PRIMARY KEY USING INDEX service_routings_pk;
 ALTER TABLE service_types ADD CONSTRAINT service_types_pk PRIMARY KEY USING INDEX service_types_pk;
 ALTER TABLE target_applications ADD CONSTRAINT target_applications_pk PRIMARY KEY USING INDEX target_applications_pk;
-
-------------------------------------------------
--- Create Check Constraints
-------------------------------------------------
-ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_cai_nn CHECK (customer_application_id IS NOT NULL);
-ALTER TABLE bulk_customer_applications ADD CONSTRAINT bca_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE bulk_customers ADD CONSTRAINT bc_sci_nn CHECK (sdt_customer_id IS NOT NULL);
-ALTER TABLE bulk_customers ADD CONSTRAINT bc_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_bci_nn CHECK (bulk_customer_id IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_bp_nn CHECK (bulk_payload IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_bss_nn CHECK (bulk_submission_status IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_cd_nn CHECK (created_date IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_nor_nn CHECK (number_of_requests IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_sbr_nn CHECK (sdt_bulk_reference IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_tai_nn CHECK (target_application_id IS NOT NULL);
-ALTER TABLE bulk_submissions ADD CONSTRAINT bs_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE error_logs ADD CONSTRAINT el_cd_nn CHECK (created_date IS NOT NULL);
-ALTER TABLE error_logs ADD CONSTRAINT el_ec_nn CHECK (error_code IS NOT NULL);
-ALTER TABLE error_logs ADD CONSTRAINT el_et_nn CHECK (error_text IS NOT NULL);
-ALTER TABLE error_logs ADD CONSTRAINT el_iri_nn CHECK (individual_request_id IS NOT NULL);
-ALTER TABLE error_logs ADD CONSTRAINT el_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE error_messages ADD CONSTRAINT em_ec_nn CHECK (error_code IS NOT NULL);
-ALTER TABLE error_messages ADD CONSTRAINT em_ed_nn CHECK (error_description IS NOT NULL);
-ALTER TABLE error_messages ADD CONSTRAINT em_et_nn CHECK (error_text IS NOT NULL);
-ALTER TABLE error_messages ADD CONSTRAINT em_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE global_parameters ADD CONSTRAINT gp_pn_nn CHECK (parameter_name  IS NOT NULL);
-ALTER TABLE global_parameters ADD CONSTRAINT gp_pv_nn CHECK (parameter_value IS NOT NULL);
-ALTER TABLE global_parameters ADD CONSTRAINT gp_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_bsi_nn CHECK (bulk_submission_id IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_cd_nn CHECK (created_date IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_dl_nn CHECK (dead_letter IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_ln_nn CHECK (line_number IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_rs_nn CHECK (request_status IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_sbr_nn CHECK (sdt_bulk_reference IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_srr_nn CHECK (sdt_request_reference IS NOT NULL);
-ALTER TABLE individual_requests ADD CONSTRAINT ir_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE service_requests ADD CONSTRAINT sre_rt_nn CHECK (request_timestamp IS NOT NULL);
-ALTER TABLE service_routings ADD CONSTRAINT sr_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE service_routings ADD CONSTRAINT sr_wse_nn CHECK (web_service_endpoint IS NOT NULL);
-ALTER TABLE service_types ADD CONSTRAINT st_stn_nn CHECK (service_type_name IS NOT NULL);
-ALTER TABLE service_types ADD CONSTRAINT st_sts_nn CHECK (service_type_status IS NOT NULL);
-ALTER TABLE service_types ADD CONSTRAINT st_vn_nn CHECK (version_number IS NOT NULL);
-ALTER TABLE target_applications ADD CONSTRAINT ta_tac_nn CHECK (target_application_code IS NOT NULL);
-ALTER TABLE target_applications ADD CONSTRAINT ta_vn_nn CHECK (version_number IS NOT NULL);
 
 ------------------------------------------------
 -- Create Referential constraints
@@ -239,104 +339,18 @@ ALTER TABLE target_applications ADD CONSTRAINT ta_tan_uni UNIQUE (target_applica
 -- Create Sequences for PUBLIC
 ------------------------------------------------
 -- BIGINT/NUMERIC = 18 digits, but seq was formerly 27 digits! Consider type change
-CREATE SEQUENCE bulk_cust_app_seq MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
-CREATE SEQUENCE bulk_cust_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
-CREATE SEQUENCE bulk_sub_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
-CREATE SEQUENCE err_log_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
-CREATE SEQUENCE err_mesg_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
-CREATE SEQUENCE glb_par_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
-CREATE SEQUENCE ind_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 2000 NO CYCLE;
-CREATE SEQUENCE sdt_ref_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
-CREATE SEQUENCE ser_rou_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
-CREATE SEQUENCE ser_typ_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
-CREATE SEQUENCE srv_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
-CREATE SEQUENCE tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
-
-------------------------------------------------
--- Create Grants for PUBLIC
-------------------------------------------------
---ALTER ROLE public SET search_path TO public;
---ALTER ROLE sdt_user SET search_path TO sdt_user, sdt_owner;
---ALTER ROLE sdt_batch_user SET search_path TO sdt_batch_user, sdt_owner;
-
---GRANT USAGE ON SCHEMA sdt_owner TO sdt_user;
---GRANT USAGE ON SCHEMA sdt_owner TO sdt_batch_user;
-
---GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA sdt_owner TO sdt_user;
-
------------------
---- Object Grants
------------------
---GRANT DELETE ON sdt_owner.bulk_submissions TO sdt_batch_user;
---GRANT SELECT ON sdt_owner.bulk_submissions TO sdt_batch_user;
---GRANT DELETE ON sdt_owner.error_logs TO sdt_batch_user;
---GRANT SELECT ON sdt_owner.error_logs TO sdt_batch_user;
---GRANT SELECT ON sdt_owner.global_parameters TO sdt_batch_user;
---GRANT DELETE ON sdt_owner.individual_requests TO sdt_batch_user;
---GRANT SELECT ON sdt_owner.individual_requests TO sdt_batch_user;
---GRANT DELETE ON sdt_owner.service_requests TO sdt_batch_user;
---GRANT SELECT ON sdt_owner.service_requests TO sdt_batch_user;
-----GRANT EXECUTE ON sdt_owner.purge TO sdt_batch_user;
---GRANT DELETE ON sdt_owner.bulk_customers TO sdt_user;
---GRANT INSERT ON sdt_owner.bulk_customers TO sdt_user;
---GRANT SELECT ON sdt_owner.bulk_customers TO sdt_user;
---GRANT UPDATE ON sdt_owner.bulk_customers TO sdt_user;
---GRANT DELETE ON sdt_owner.bulk_customer_applications TO sdt_user;
---GRANT INSERT ON sdt_owner.bulk_customer_applications TO sdt_user;
---GRANT SELECT ON sdt_owner.bulk_customer_applications TO sdt_user;
---GRANT UPDATE ON sdt_owner.bulk_customer_applications TO sdt_user;
---GRANT DELETE ON sdt_owner.bulk_submissions TO sdt_user;
---GRANT INSERT ON sdt_owner.bulk_submissions TO sdt_user;
---GRANT SELECT ON sdt_owner.bulk_submissions TO sdt_user;
---GRANT UPDATE ON sdt_owner.bulk_submissions TO sdt_user;
---GRANT DELETE ON sdt_owner.error_logs TO sdt_user;
---GRANT INSERT ON sdt_owner.error_logs TO sdt_user;
---GRANT SELECT ON sdt_owner.error_logs TO sdt_user;
---GRANT UPDATE ON sdt_owner.error_logs TO sdt_user;
---GRANT DELETE ON sdt_owner.error_messages TO sdt_user;
---GRANT INSERT ON sdt_owner.error_messages TO sdt_user;
---GRANT SELECT ON sdt_owner.error_messages TO sdt_user;
---GRANT UPDATE ON sdt_owner.error_messages TO sdt_user;
---GRANT DELETE ON sdt_owner.global_parameters TO sdt_user;
---GRANT INSERT ON sdt_owner.global_parameters TO sdt_user;
---GRANT SELECT ON sdt_owner.global_parameters TO sdt_user;
---GRANT UPDATE ON sdt_owner.global_parameters TO sdt_user;
---GRANT DELETE ON sdt_owner.individual_requests TO sdt_user;
---GRANT INSERT ON sdt_owner.individual_requests TO sdt_user;
---GRANT SELECT ON sdt_owner.individual_requests TO sdt_user;
---GRANT UPDATE ON sdt_owner.individual_requests TO sdt_user;
---GRANT DELETE ON sdt_owner.service_routings TO sdt_user;
---GRANT INSERT ON sdt_owner.service_routings TO sdt_user;
---GRANT SELECT ON sdt_owner.service_routings TO sdt_user;
---GRANT UPDATE ON sdt_owner.service_routings TO sdt_user;
---GRANT DELETE ON sdt_owner.service_types TO sdt_user;
---GRANT INSERT ON sdt_owner.service_types TO sdt_user;
---GRANT SELECT ON sdt_owner.service_types TO sdt_user;
---GRANT UPDATE ON sdt_owner.service_types TO sdt_user;
---GRANT DELETE ON sdt_owner.service_requests TO sdt_user;
---GRANT INSERT ON sdt_owner.service_requests TO sdt_user;
---GRANT SELECT ON sdt_owner.service_requests TO sdt_user;
---GRANT UPDATE ON sdt_owner.service_requests TO sdt_user;
---GRANT DELETE ON sdt_owner.target_applications TO sdt_user;
---GRANT INSERT ON sdt_owner.target_applications TO sdt_user;
---GRANT SELECT ON sdt_owner.target_applications TO sdt_user;
---GRANT UPDATE ON sdt_owner.target_applications TO sdt_user;
---GRANT USAGE, SELECT ON sdt_owner.bulk_cust_seq TO sdt_user;
---GRANT USAGE, SELECT ON sdt_owner.bulk_cust_app_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.bulk_sub_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.err_log_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.err_mesg_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.glb_par_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.ind_req_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.ser_rou_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.ser_typ_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.tar_app_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.sdt_ref_seq TO sdt_user;
---GRANT SELECT ON sdt_owner.srv_req_seq TO sdt_user;
------------------
---- Sys Grants
------------------
---GRANT EXECUTE ON "SYS"."UTL_FILE" TO sdt_owner;
+CREATE SEQUENCE IF NOT EXISTS bulk_cust_app_seq MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE IF NOT EXISTS bulk_cust_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE IF NOT EXISTS bulk_sub_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE IF NOT EXISTS err_log_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE IF NOT EXISTS err_mesg_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE IF NOT EXISTS glb_par_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE IF NOT EXISTS ind_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 2000 NO CYCLE;
+CREATE SEQUENCE IF NOT EXISTS sdt_ref_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE IF NOT EXISTS ser_rou_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE IF NOT EXISTS ser_typ_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
+CREATE SEQUENCE IF NOT EXISTS srv_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
+CREATE SEQUENCE IF NOT EXISTS tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
 
 ------------------------------------------------
 -- Create Reference Data
