@@ -3,10 +3,8 @@ package uk.gov.moj.sdt.services.messaging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
@@ -16,11 +14,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -35,6 +29,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     private static final String UNIT_TEST = "UNITTEST";
 
+    private static final String DLQ_SUFFIX = "/$deadletterqueue";
     /**
      * MessageWriter for mocking.
      */
@@ -44,13 +39,16 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     private static final String NOT_EXPECTED_TO_FAIL = "Not Expected to fail";
 
+    @Mock
+    JmsTemplate mockJmsTemplate;
+
     /**
      * Set up the variables.
      */
     @BeforeEach
     @Override
     public void setUp() {
-        JmsTemplate jmsTemplate = mock(JmsTemplate.class);
+        JmsTemplate jmsTemplate = mockJmsTemplate;
         QueueConfig queueConfig = new QueueConfig();
         Map<String, String> mockedMap = new HashMap<>();
         queueConfig.setTargetAppQueue(mockedMap);
@@ -69,6 +67,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         // Send the message.
         try {
             messageWriter.queueMessage(sdtMessage, null, false);
+            verify(mockJmsTemplate).convertAndSend("", sdtMessage);
             fail("Should have thrown an Illegal Argument Exception as the target app code is null.");
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Illegal Argument specified for the target application");
@@ -88,6 +87,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         // Send the message.
         try {
             messageWriter.queueMessage(sdtMessage, "UnitTest", false);
+            verify(mockJmsTemplate).convertAndSend("UnitTest", sdtMessage);
             fail("Should have thrown an Illegal Argument exception here as the target app code is invalid");
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Target application code does not have a mapped queue name");
@@ -112,6 +112,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
             messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
             assertTrue(true, SUCCESS);
+            verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
         } catch (final IllegalArgumentException e) {
             fail(NOT_EXPECTED_TO_FAIL);
         }
@@ -136,6 +137,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
                 messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
                 assertTrue(true, SUCCESS);
+                verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE + DLQ_SUFFIX, sdtMessage);
             } catch (final IllegalArgumentException e) {
                 fail(NOT_EXPECTED_TO_FAIL);
             }

@@ -34,30 +34,19 @@
 package uk.gov.moj.sdt.interceptors.out;
 
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.dao.ServiceRequestDao;
-import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedOutputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Test class.

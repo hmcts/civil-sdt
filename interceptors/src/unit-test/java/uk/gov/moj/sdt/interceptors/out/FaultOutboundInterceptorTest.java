@@ -40,16 +40,15 @@ import org.apache.cxf.message.MessageImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -101,8 +100,7 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     private SoapMessage getDummySoapMessageWithFault() {
         final SoapMessage soapMessage = new SoapMessage(new MessageImpl());
         soapMessage.setExchange(new ExchangeImpl());
-        final Fault fault = new Fault(new RuntimeException(ERROR_MESSAGE
-        ));
+        final Fault fault = new Fault(new RuntimeException(ERROR_MESSAGE));
         soapMessage.setContent(Exception.class, fault);
         return soapMessage;
     }
