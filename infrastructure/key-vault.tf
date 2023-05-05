@@ -1,6 +1,6 @@
 data "azurerm_key_vault" "civil_vault" {
   name                = "civil-${var.env}"
-  resource_group_name = local.civil_resource_group
+  resource_group_name = local.civil_service_resource_group
 }
 
 data "azurerm_key_vault" "s2s_vault" {

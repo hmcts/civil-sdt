@@ -6,6 +6,6 @@ locals {
       "Destroy Me"   = var.destroy_me
     })
   ))
-  civil_resource_group = "${var.product}-${var.env}"
+  civil_service_resource_group = "${var.product}-service-${var.env}"
   civil_shared_resource_group = "${var.product}-shared-${var.env}"
 }

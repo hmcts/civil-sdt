@@ -1,4 +1,5 @@
-# Create the database
+# Create the database server
+# Name and resource group name will be defaults (<product>-<component>-<env> and <product>-<component>-data-<env> respectively)
 module "postgresql" {
   source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
 
@@ -18,7 +19,6 @@ module "postgresql" {
   ]
   pgsql_version        = "11"
   product              = var.product
-  resource_group_name  = local.civil_resource_group
 }
 
 # Create secret for database user
