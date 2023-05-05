@@ -42,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -114,20 +113,9 @@ class SdtInternalEndpointPortTypeTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testUpdateItemSuccess() {
-        final UpdateResponseType response;
         when(mockUpdateItemHandler.updateItem(any(UpdateRequestType.class))).thenReturn(createUpdateResponse());
 
-        try (MockedStatic<PerformanceLogger> mockPerformanceLogger = mockStatic(PerformanceLogger.class)){
-            mockPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
-                .thenReturn(true);
-
-            response = portType.updateItem(createUpdateRequest());
-
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .isPerformanceEnabled(anyLong()), times(2));
-            mockPerformanceLogger.verify(() -> PerformanceLogger
-                .log(any(), anyLong(), anyString(), anyString()), times(2) );
-        }
+        final UpdateResponseType response = portType.updateItem(createUpdateRequest());
 
         verify(mockUpdateItemHandler).updateItem(any(UpdateRequestType.class));
         assertNotNull(response, "Response expected");

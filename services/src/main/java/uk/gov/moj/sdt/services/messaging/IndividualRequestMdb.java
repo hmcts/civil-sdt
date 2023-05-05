@@ -42,7 +42,6 @@ import uk.gov.moj.sdt.services.messaging.api.IMessageDrivenBean;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.LoggingContext;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import javax.jms.JMSException;
@@ -110,15 +109,6 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
             // the major portion to tie things together.
             SdtContext.getContext().getLoggingContext().setMajorLoggingId(sdtMessage.getEnqueueLoggingId());
             SdtContext.getContext().getLoggingContext().setMinorLoggingId(LoggingContext.getNextLoggingId());
-
-            if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_6)) {
-                final StringBuilder detail = new StringBuilder();
-                detail.append("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference() + "\n");
-
-                // Write message to 'performance.log' for this logging point.
-                PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_6, "Dequeue message",
-                        detail.toString());
-            }
 
             try {
                 this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference, caseOffLine);

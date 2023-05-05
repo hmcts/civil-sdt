@@ -41,7 +41,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 /**
  * Interceptor class which handles faults.
@@ -84,14 +83,6 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest {
                 ", sending this message in SOAP fault: " + msg;
         LOGGER.error(errorMsg);
         persistEnvelope(errorMsg);
-
-        // Write message to 'performance.log' for this logging point.
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_11)) {
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_11,
-                    "FaultOutboundInterceptor handling message",
-                    "\n\n\tmessage=" + "Error encounted: " + fault.getFaultCode() + ": " + fault.getMessage() +
-                            ", sending this message in SOAP fault: " + msg + "\n");
-        }
 
         fault.setMessage(msg);
     }
