@@ -101,10 +101,6 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
 
             LOGGER.debug("Received message, SDT reference [{}]",  sdtReference);
 
-            // Setup logging flags from current value in SdtMetric MBean.
-            SdtContext.getContext().getLoggingContext()
-                    .setLoggingFlags(SdtMetricsMBean.getMetrics().getPerformanceLoggingFlags());
-
             // Assemble logging id - for dequeued messages we take the logging id of the original submit bulk thread as
             // the major portion to tie things together.
             SdtContext.getContext().getLoggingContext().setMajorLoggingId(sdtMessage.getEnqueueLoggingId());
