@@ -11,7 +11,7 @@
             <ns2:bulkStatus code="Validated"/>
          </ns2:bulkRequestStatus>
          <ns2:responses>
-             <ns2:response requestId="USER_REQUEST_ID_BF2" requestType="mcolClaim">
+             <ns2:response requestType="mcolClaim" requestId="USER_REQUEST_ID_BF2">
                  <ns2:responseDetail/>
                  <ns2:status code="Rejected">
                      <error>
@@ -20,7 +20,7 @@
                      </error>
                  </ns2:status>
              </ns2:response>
-            <ns2:response requestId="USER_REQUEST_ID_BF1" requestType="mcolClaim">
+            <ns2:response requestType="mcolClaim" requestId="USER_REQUEST_ID_BF1">
                <ns2:responseDetail>
                    <ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema">
                         <mresp:claimNumber>21346546</mresp:claimNumber>
