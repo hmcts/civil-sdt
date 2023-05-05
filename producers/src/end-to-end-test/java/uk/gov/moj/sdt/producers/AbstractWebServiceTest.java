@@ -93,6 +93,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             resourceName = resourceName.replace('.', '/');
             // Add the method name and suffix.
             resourceName = resourceName + "." + methodName + ".request.xml";
+            LOGGER.debug("XML resourceName = {}", resourceName);
             InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
 
             // Create JAXB object of required type from the XML input stream.
