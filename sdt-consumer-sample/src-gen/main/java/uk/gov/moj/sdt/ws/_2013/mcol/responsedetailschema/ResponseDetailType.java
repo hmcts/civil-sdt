@@ -107,7 +107,7 @@ public class ResponseDetailType {
      * @return possible object is
      * {@link String }
      */
-    public Calendar getIssueDate() {
+    public Calendar getIssueDate() {§
         return issueDate;
     }
 

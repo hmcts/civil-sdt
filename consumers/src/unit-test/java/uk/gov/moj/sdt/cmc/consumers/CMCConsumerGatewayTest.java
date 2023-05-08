@@ -15,14 +15,17 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
+import uk.gov.moj.sdt.cmc.consumers.api.IJudgementWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
@@ -37,6 +40,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT_WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
 
 /**
@@ -79,6 +83,9 @@ class CMCConsumerGatewayTest {
     private IWarrantService warrantService;
 
     @Mock
+    private IJudgementWarrantService judgementWarrantService;
+
+    @Mock
     private XmlElementValueReader xmlElementValueReader;
 
     @Mock
@@ -87,6 +94,9 @@ class CMCConsumerGatewayTest {
     @Mock
     private WarrantRequest warrantRequest;
 
+    @Mock
+    private JudgementWarrantRequest judgementWarrantRequest;
+
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
@@ -94,6 +104,7 @@ class CMCConsumerGatewayTest {
                                                     claimStatusUpdate,
                                                     claimDefences,
                                                     warrantService,
+                                                    judgementWarrantService,
                                                     xmlToObject,
                                                     xmlElementValueReader);
     }
@@ -182,6 +193,22 @@ class CMCConsumerGatewayTest {
         verify(individualRequest).getSdtRequestReference();
     }
 
+    @Test
+    void shouldInvokeJudgementWarrantRequest() throws Exception {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(JUDGMENT_WARRANT, individualRequest);
+        JudgementWarrantResponse response = new JudgementWarrantResponse();
+        when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), anyString(), anyString(), any())).thenReturn(response);
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        verify(judgementWarrantService).judgementWarrantRequest(anyString(), anyString(), anyString(), anyString(), any(JudgementWarrantRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getRequestType();
+        verify(individualRequest).getSdtRequestReference();
+    }
+
     private Date formattedDate() throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         String date = formatter.format(Calendar.getInstance().getTime());
@@ -199,6 +226,8 @@ class CMCConsumerGatewayTest {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
         } else if (requestType.equals(WARRANT)) {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(warrantRequest);
+        } else if (requestType.equals(JUDGMENT_WARRANT)) {
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementWarrantRequest);
         }
     }
 
