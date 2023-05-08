@@ -28,11 +28,13 @@ public class CMCApiFallback implements CMCApi {
     public CMCApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpaceService breathingSpace,
                           @Qualifier("MockClaimDefencesService") IClaimDefencesService claimDefences,
                           @Qualifier("MockJudgementRequestService") IJudgementService judgementService,
-                          @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate) {
+                          @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
+                          @Qualifier("MockWarrantService") IWarrantService warrantService) {
         this.breathingSpace = breathingSpace;
         this.claimDefences = claimDefences;
         this.judgementService = judgementService;
         this.claimStatusUpdate = claimStatusUpdate;
+        this.warrantService = warrantService;
     }
 
     @Override
