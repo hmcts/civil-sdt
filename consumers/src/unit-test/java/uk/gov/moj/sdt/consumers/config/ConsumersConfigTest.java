@@ -1,7 +1,5 @@
 package uk.gov.moj.sdt.consumers.config;
 
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.phase.PhaseInterceptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

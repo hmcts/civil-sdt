@@ -5,9 +5,11 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 
 @Component
@@ -20,6 +22,8 @@ public class CMCApiFallback implements CMCApi {
     private IClaimDefencesService claimDefences;
 
     private IClaimStatusUpdateService claimStatusUpdate;
+
+    private IWarrantService warrantService;
 
     public CMCApiFallback(@Qualifier("MockBreathingSpaceService") IBreathingSpaceService breathingSpace,
                           @Qualifier("MockClaimDefencesService") IClaimDefencesService claimDefences,
@@ -54,6 +58,15 @@ public class CMCApiFallback implements CMCApi {
     public ClaimDefencesResponse claimDefences(String authorization, String serviceAuthorization,
                                              String idamId, String fromDate, String toDate) {
         return claimDefences.claimDefences(authorization, serviceAuthorization, idamId, fromDate, toDate);
+    }
+
+    @Override
+    public WarrantResponse warrantRequest(String authorization,
+                                          String serviceAuthorization,
+                                          String idamId,
+                                          String sdtRequestId,
+                                          WarrantRequest warrantRequest) {
+        return warrantService.warrantRequest(authorization, serviceAuthorization, idamId, sdtRequestId, warrantRequest);
     }
 
 }

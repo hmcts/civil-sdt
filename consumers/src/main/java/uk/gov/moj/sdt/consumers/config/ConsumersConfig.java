@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -14,16 +15,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
-import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor;
-import uk.gov.moj.sdt.interceptors.out.PerformanceLoggerOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
@@ -42,32 +37,17 @@ public class ConsumersConfig {
 
     @Bean
     @Scope("prototype")
-    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType(@Qualifier("SubmitQueryEnricher")
-                                                                                              SubmitQueryEnricher submitQueryEnricher,
-                                                                                      @Qualifier("BulkFeedbackEnricher")
-                                                                                              BulkFeedbackEnricher bulkFeedbackEnricher,
-                                                                                      @Qualifier("SubmitQueryRequestEnricher")
-                                                                                              GenericEnricher submitQueryRequestEnricher,
-                                                                                      @Qualifier("IndividualRequestEnricher")
-                                                                                              GenericEnricher individualRequestEnricher) {
-
-
-        XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
-        List<AbstractSdtEnricher> enricherList = new ArrayList<>();
-        enricherList.add(submitQueryEnricher);
-        enricherList.add(bulkFeedbackEnricher);
-        enricherList.add(submitQueryRequestEnricher);
-        enricherList.add(individualRequestEnricher);
-        xmlOutboundInterceptor.setEnricherList(enricherList);
-
-
-        CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
-        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor = new PerformanceLoggerOutboundInterceptor();
-        CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
-        PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor = new PerformanceLoggerInboundInterceptor();
-        XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
-        SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
-
+    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType(@Qualifier("XmlOutboundInterceptor")
+                                                                                          XmlOutboundInterceptor xmlOutboundInterceptor,
+                                                                                      @Qualifier("CacheSetupOutboundInterceptor")
+                                                                                      CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
+                                                                                      @Qualifier("CacheEndOutboundInterceptor")
+                                                                                          CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
+                                                                                      @Qualifier("XmlInboundInterceptor")
+                                                                                          XmlInboundInterceptor xmlInboundInterceptor,
+                                                                                      @Qualifier("SdtUnmarshallInterceptor")
+                                                                                          SdtUnmarshallInterceptor sdtUnmarshallInterceptor
+                                                                                      ) {
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setAddress(OVERRIDDEN_DYNAMICALLY);
         jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);

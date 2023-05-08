@@ -9,20 +9,23 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
+import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
-import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
@@ -46,6 +49,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private IJudgementService judgementService;
 
+    private IWarrantService warrantService;
+
     private XmlConverter xmlToObject;
 
     private XmlElementValueReader xmlElementValueReader;
@@ -55,12 +60,14 @@ public class CMCConsumerGateway implements IConsumerGateway {
                               @Qualifier("JudgementRequestService") IJudgementService judgementService,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
                               @Qualifier("ClaimDefencesService") IClaimDefencesService claimDefences,
+                              @Qualifier("WarrantService") IWarrantService warrantService,
                               XmlConverter xmlToObject,
                               XmlElementValueReader xmlElementValueReader) {
         this.breathingSpace = breathingSpace;
         this.judgementService = judgementService;
         this.claimStatusUpdate = claimStatusUpdate;
         this.claimDefences = claimDefences;
+        this.warrantService = warrantService;
         this.xmlToObject = xmlToObject;
         this.xmlElementValueReader = xmlElementValueReader;
     }
@@ -94,6 +101,12 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                                   ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            } else if (RequestType.WARRANT.getType().equals(requestType)) {
+                WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload,
+                                                                                  WarrantRequest.class);
+                WarrantResponse response = warrantService.warrantRequest("", "",
+                                                                         idamId, sdtRequestReference, request);
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response));
             }
         } catch (Exception e) {
             String message = e.getMessage();

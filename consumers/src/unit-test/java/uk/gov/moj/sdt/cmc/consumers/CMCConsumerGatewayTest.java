@@ -15,13 +15,16 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
+import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
+import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
@@ -34,6 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
 
 /**
  * Test class for the consumer gateway.
@@ -72,10 +76,16 @@ class CMCConsumerGatewayTest {
     private IClaimDefencesService claimDefences;
 
     @Mock
+    private IWarrantService warrantService;
+
+    @Mock
     private XmlElementValueReader xmlElementValueReader;
 
     @Mock
     private IClaimStatusUpdateService claimStatusUpdate;
+
+    @Mock
+    private WarrantRequest warrantRequest;
 
     @BeforeEach
     public void setUpLocalTests() {
@@ -83,6 +93,7 @@ class CMCConsumerGatewayTest {
                                                     judgementService,
                                                     claimStatusUpdate,
                                                     claimDefences,
+                                                    warrantService,
                                                     xmlToObject,
                                                     xmlElementValueReader);
     }
@@ -155,6 +166,22 @@ class CMCConsumerGatewayTest {
         verify(individualRequest).setTargetApplicationResponse(XML);
     }
 
+    @Test
+    void shouldInvokeWarrantRequest() throws Exception {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(WARRANT, individualRequest);
+        WarrantResponse response = new WarrantResponse();
+        when(warrantService.warrantRequest(anyString(), anyString(), anyString(), anyString(), any())).thenReturn(response);
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        verify(warrantService).warrantRequest(anyString(), anyString(), anyString(), anyString(), any(WarrantRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getRequestType();
+        verify(individualRequest).getSdtRequestReference();
+    }
+
     private Date formattedDate() throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         String date = formatter.format(Calendar.getInstance().getTime());
@@ -170,6 +197,8 @@ class CMCConsumerGatewayTest {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
+        } else if (requestType.equals(WARRANT)) {
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(warrantRequest);
         }
     }
 
