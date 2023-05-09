@@ -16,7 +16,7 @@ java:
     CIVIL_SDT_QUEUE: civil-sdt-in-out-{{ .Values.global.environment }}
   keyVaults:
     civil:
-      resourceGroup: civil
+      resourceGroup: civil-service
       secrets:
         - name: civil-sdt-POSTGRES-USER
           alias: SDT_DB_USERNAME

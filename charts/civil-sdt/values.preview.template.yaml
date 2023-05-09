@@ -13,7 +13,7 @@ java:
     enabled: true
   keyVaults:
     civil:
-      resourceGroup: civil
+      resourceGroup: civil-service
       secrets:
         - name: AppInsightsInstrumentationKey
   secrets:
