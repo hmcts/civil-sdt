@@ -13,18 +13,8 @@ VALUES(14, 10711, 10713, 'MCOL-10012013010101-100099999', 'REF1', (current_date 
 INSERT INTO INDIVIDUAL_REQUESTS (INDIVIDUAL_REQUEST_ID, BULK_SUBMISSION_ID, CUSTOMER_REQUEST_REF, REQUEST_STATUS, SDT_BULK_REFERENCE, LINE_NUMBER, SDT_REQUEST_REFERENCE, CREATED_DATE, UPDATED_DATE, FORWARDING_ATTEMPTS,
       TARGET_APPLICATION_RESPONSE, REQUEST_TYPE, VERSION_NUMBER, DEAD_LETTER)
 VALUES (1, 14, 'USER_REQUEST_ID_BF1', 'Accepted', 'MCOL-10012013010101-100099999', 1, 'MCOL-10012013010101-100099999-0001', (current_date - INTERVAL '1 day'), (current_date - INTERVAL '1 day'), 1,
-'PGluZDptY29sUmVzcG9uc2VEZXRhaWwgeG1sbnM6aW5kPSJodHRwOi8vd3Muc2R0Lm1vai5nb3Yu
-dWsvMjAxMy9zZHQvQnVsa0ZlZWRiYWNrUmVzcG9uc2VTY2hlbWEiIHhtbG5zOm1yZXNwPSJodHRw
-Oi8vd3Muc2R0Lm1vai5nb3YudWsvMjAxMy9tY29sL1Jlc3BvbnNlRGV0YWlsU2NoZW1hIj4NCiAg
-ICA8bXJlc3A6Y2xhaW1OdW1iZXI+MjEzNDY1NDY8L21yZXNwOmNsYWltTnVtYmVyPg0KICAgIDxt
-cmVzcDppc3N1ZURhdGU+MjAwMS0wMS0wMTwvbXJlc3A6aXNzdWVEYXRlPg0KICAgIDxtcmVzcDpz
-ZXJ2aWNlRGF0ZT4yMDAxLTAxLTAxPC9tcmVzcDpzZXJ2aWNlRGF0ZT4NCiAgICA8bXJlc3A6d2Fy
-cmFudE51bWJlcj4xMjM0NTY3ODwvbXJlc3A6d2FycmFudE51bWJlcj4NCiAgICA8bXJlc3A6ZW5m
-b3JjaW5nQ291cnRDb2RlPjEyMzwvbXJlc3A6ZW5mb3JjaW5nQ291cnRDb2RlPg0KICAgIDxtcmVz
-cDplbmZvcmNpbmdDb3VydE5hbWU+Q291cnQgQ29kZTwvbXJlc3A6ZW5mb3JjaW5nQ291cnROYW1l
-Pg0KICAgIDxtcmVzcDpmZWU+MDwvbXJlc3A6ZmVlPg0KICAgIDxtcmVzcDpqdWRnbWVudFdhcnJh
-bnRTdGF0dXM+dG5zOmFkZGl0aW9uYWxTdGF0dXM8L21yZXNwOmp1ZGdtZW50V2FycmFudFN0YXR1
-cz4NCjwvaW5kOm1jb2xSZXNwb25zZURldGFpbD4NCg==', 'mcolClaim', 0, 'N');
+'<ns2:responseDetail><ind:mcolResponseDetail xmlns:ind="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema" xmlns:mresp="http://ws.sdt.moj.gov.uk/2013/mcol/ResponseDetailSchema"><mresp:claimNumber>21346546</mresp:claimNumber><mresp:issueDate>2001-01-01</mresp:issueDate><mresp:serviceDate>2001-01-01</mresp:serviceDate><mresp:warrantNumber>12345678</mresp:warrantNumber><mresp:enforcingCourtCode>123</mresp:enforcingCourtCode>
+<mresp:enforcingCourtName>Court Code</mresp:enforcingCourtName><mresp:fee>0</mresp:fee><mresp:judgmentWarrantStatus>tns additionalStatus</mresp:judgmentWarrantStatus></ind:mcolResponseDetail></ns2:responseDetail>', 'mcolClaim', 0, 'N');
 
 INSERT INTO INDIVIDUAL_REQUESTS (INDIVIDUAL_REQUEST_ID, BULK_SUBMISSION_ID, CUSTOMER_REQUEST_REF, REQUEST_STATUS, SDT_BULK_REFERENCE, LINE_NUMBER, SDT_REQUEST_REFERENCE, CREATED_DATE, UPDATED_DATE, FORWARDING_ATTEMPTS,
       REQUEST_TYPE, VERSION_NUMBER, DEAD_LETTER, ERROR_LOG_ID)
