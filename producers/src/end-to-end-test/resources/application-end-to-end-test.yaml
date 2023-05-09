@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:11:///civil_sdt_integ?stringtype=unspecified
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5432}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
     javax.persistence.schema-generation.database.action: drop-and-create
@@ -44,7 +44,7 @@ sdt:
 # port number of the tc server
 # host name of the server
 server:
-  portnumber: ${SDT_PORT:8080}
+  portnumber: ${SDT_PORT:4550}
   hostname: ${SERVER_HOST:localhost}
 
 systemPropertiesModeName: SYSTEM_PROPERTIES_MODE_OVERRIDE

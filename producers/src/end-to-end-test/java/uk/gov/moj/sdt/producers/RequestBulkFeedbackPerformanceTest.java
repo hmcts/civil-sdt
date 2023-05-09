@@ -23,7 +23,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class})
 @Sql(scripts = {
         "classpath:database/baseline/initialise_test_database.sql"
         ,"classpath:database/baseline/RequestBulkFeedbackPerformanceTest.sql"
