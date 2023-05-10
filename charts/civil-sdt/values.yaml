@@ -15,8 +15,7 @@ java:
     SDT_DB_HOST: civil-sdt-postgres-db-v11-{{ .Values.global.environment }}.postgres.database.azure.com
     CIVIL_SDT_QUEUE: civil-sdt-in-out-{{ .Values.global.environment }}
   keyVaults:
-    civil:
-      resourceGroup: civil-service
+    civil-sdt:
       secrets:
         - name: civil-sdt-POSTGRES-USER
           alias: SDT_DB_USERNAME

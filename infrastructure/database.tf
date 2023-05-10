@@ -25,12 +25,12 @@ module "postgresql" {
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name         = "civil-sdt-POSTGRES-USER"
   value        = module.postgresql.username
-  key_vault_id = data.azurerm_key_vault.civil_vault.id
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }
 
 # Create secret for database password
 resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
   name         = "civil-sdt-POSTGRES-PASS"
   value        = module.postgresql.password
-  key_vault_id = data.azurerm_key_vault.civil_vault.id
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }
