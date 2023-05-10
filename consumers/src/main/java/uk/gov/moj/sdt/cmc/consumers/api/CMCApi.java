@@ -66,7 +66,7 @@ public interface CMCApi {
                                    @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
                                    @RequestBody WarrantRequest warrantRequest);
 
-    @PostMapping("/requestWarrant")
+    @PostMapping("/requestJudgmentAndWarrant")
     JudgementWarrantResponse judgementWarrantRequest(@RequestHeader(AUTHORIZATION) String authorization,
                                                      @RequestHeader("ServiceAuthorization") String serviceAuthorization,
                                                      @RequestHeader(IDAM_ID_HEADER)  String idamId,

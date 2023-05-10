@@ -11,6 +11,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static uk.gov.moj.sdt.cmc.consumers.response.JudgmentWarrantStatus.JUDGMENT_ACCEPTED_WARRANT_ACCEPTED_BY_CCBC;
 
 @ExtendWith(MockitoExtension.class)
 public class MockJudgementWarrantServiceTest extends AbstractSdtUnitTestBase {
@@ -41,5 +42,10 @@ public class MockJudgementWarrantServiceTest extends AbstractSdtUnitTestBase {
         assertNotNull(response);
         assertEquals(45678L, response.getFee());
         assertEquals("123456", response.getWarrantNumber());
+        assertNotNull(response.getFirstPaymentDate());
+        assertNotNull(response.getJudgmentEnteredDate());
+        assertEquals(JUDGMENT_ACCEPTED_WARRANT_ACCEPTED_BY_CCBC.getMessage(), response.getJudgmentWarrantStatus());
+        assertEquals("123", response.getEnforcingCourtCode());
+        assertEquals("Court Code", response.getEnforcingCourtName());
     }
 }
