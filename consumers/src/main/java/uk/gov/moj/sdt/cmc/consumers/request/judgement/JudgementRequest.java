@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import uk.gov.moj.sdt.cmc.consumers.request.common.Address;
+import uk.gov.moj.sdt.cmc.consumers.request.common.SotSignature;
 
 @ToString
 @Setter

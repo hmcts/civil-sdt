@@ -1,4 +1,4 @@
-package uk.gov.moj.sdt.cmc.consumers.request.judgement;
+package uk.gov.moj.sdt.cmc.consumers.request.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
