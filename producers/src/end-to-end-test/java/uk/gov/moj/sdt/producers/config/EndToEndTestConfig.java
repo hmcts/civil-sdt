@@ -95,6 +95,7 @@ public class EndToEndTestConfig {
         Map<String, String> soapEnvNsMap = new HashMap<>();
         properties.put(SOAP_ENV_NS_MAP, soapEnvNsMap);
         jaxWsProxyFactoryBean.setProperties(properties);
+        LOGGER.info("createSdtEndpointPortType ... done");
         return jaxWsProxyFactoryBean.create(ISdtEndpointPortType.class);
     }
 
@@ -107,10 +108,9 @@ public class EndToEndTestConfig {
         jaxWsInternalProxyFactoryBean.setBindingId(SOAPBinding.SOAP11HTTP_BINDING);
         Map<String, Object> properties = new HashMap<>();
         properties.put(DISABLE_OUTPUTSTREAM_OPTIMIZATION, true);
-        Map<String, String> soapEnvNsMap = new HashMap<>();
-        properties.put(SOAP_ENV_NS_MAP, soapEnvNsMap);
 
         jaxWsInternalProxyFactoryBean.setProperties(properties);
+        LOGGER.info("createSdtInternalEndpointPortType ... done");
         return jaxWsInternalProxyFactoryBean.create(ISdtInternalEndpointPortType.class);
     }
 
@@ -151,7 +151,6 @@ public class EndToEndTestConfig {
         endpoint.setFeatures(features);
 
         Map<String, Object> properties = new HashMap<>();
-
         properties.put("systemPropertiesModeName", "SYSTEM_PROPERTIES_MODE_OVERRIDE");
         properties.put("ignoreResourceNotFound", "true");
         properties.put("ignoreUnresolvablePlaceholders", "true");
@@ -161,17 +160,19 @@ public class EndToEndTestConfig {
         properties.put("schema-validation-enabled", true);
         properties.put(DISABLE_OUTPUTSTREAM_OPTIMIZATION, true);
         Map<String, Object> nsMap = new HashMap<>();
-        properties.put(SOAP_ENV_NS_MAP, nsMap);
         nsMap.put("base", "http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema");
         nsMap.put("breq", "http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema");
         nsMap.put("bresp", "http://ws.sdt.moj.gov.uk/2013/sdt/BulkResponseSchema");
+        nsMap.put("mresp", "http://ws.sdt.moj.gov.uk/2013/sdt/ResponseDetailSchema");
         nsMap.put("bfreq", "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema");
         nsMap.put("bfresp", "http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackResponseSchema");
         nsMap.put("qreq", "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryRequestSchema");
         nsMap.put("qresp", "http://ws.sdt.moj.gov.uk/2013/sdt/SubmitQueryResponseSchema");
+        nsMap.put("mqry", "http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema");
+        properties.put(SOAP_ENV_NS_MAP, nsMap);
         endpoint.setProperties(properties);
         endpoint.publish("/sdtapi");
-        LOGGER.debug("sdtEndpoint - return endpoint");
+        LOGGER.info("sdtEndpoint - return endpoint");
         return endpoint;
     }
 
@@ -202,7 +203,7 @@ public class EndToEndTestConfig {
         properties.put("schema-validation-enabled", false);
         endpoint.setProperties(properties);
         endpoint.publish("/sdtinternalapi");
-        LOGGER.debug("sdtInternalEndpoint - return endpoint");
+        LOGGER.info("sdtInternalEndpoint - return endpoint");
         return endpoint;
     }
 }

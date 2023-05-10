@@ -76,6 +76,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
             if (!duplicateDetected) {
+// TODO: Replace with stored proc?
                 DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
                 dbUnitUtilityBean.loadDatabase(this.getClass(), true);
             }
@@ -101,6 +102,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
             if (!duplicateDetected) {
+// TODO: Replace with stored proc?
                 DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
                 dbUnitUtilityBean.loadDatabase(this.getClass(), true);
             }

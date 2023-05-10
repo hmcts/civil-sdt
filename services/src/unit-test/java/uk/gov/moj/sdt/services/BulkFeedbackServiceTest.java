@@ -222,7 +222,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
                         "Duplicate Unique Request Identifier submitted {0}");
             individualRequest.setErrorLog(errorLog);
         }
-        individualRequest.setTargetApplicationResponse("<response></response>");
+        individualRequest.setTargetApplicationResponse("<response></response>".getBytes());
 
         bulkSubmission.addIndividualRequest(individualRequest);
     }

@@ -37,6 +37,7 @@ import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -151,7 +152,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * Target Application Response for Individual Request processing.
      */
     @Column(name = "TARGET_APPLICATION_RESPONSE")
-    private String targetApplicationResponse;
+    private byte[] targetApplicationResponse;
 
     /**
      * Error log.
@@ -296,12 +297,12 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
-    public String getTargetApplicationResponse() {
+    public byte[] getTargetApplicationResponse() {
         return targetApplicationResponse;
     }
 
     @Override
-    public void setTargetApplicationResponse(final String targetApplicationResponse) {
+    public void setTargetApplicationResponse(final byte[] targetApplicationResponse) {
         this.targetApplicationResponse = targetApplicationResponse;
     }
 
@@ -478,7 +479,9 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
         sb.append(", updatedDate=").append(this.getUpdatedDate());
         sb.append(", completedDate=").append(this.getCompletedDate());
         sb.append(", forwardingAttempts=").append(this.getForwardingAttempts());
-        sb.append(", targetApplicationResponse=").append(this.getTargetApplicationResponse());
+        sb.append(", targetApplicationResponse=").append(
+                null == this.getTargetApplicationResponse() ? "" :
+                new String(this.getTargetApplicationResponse(), StandardCharsets.UTF_8));
         sb.append(", errorLog=").append(this.getErrorLog());
         sb.append(", requestPayload=").append(this.getRequestPayload());
         sb.append(", internalSystemError=").append(this.getInternalSystemError());

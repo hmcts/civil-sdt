@@ -199,14 +199,14 @@ public interface IIndividualRequest extends IDomainObject {
      *
      * @return target application response
      */
-    String getTargetApplicationResponse();
+    byte[] getTargetApplicationResponse();
 
     /**
      * Set target application response.
      *
      * @param targetApplicationResponse target application response
      */
-    void setTargetApplicationResponse(final String targetApplicationResponse);
+    void setTargetApplicationResponse(final byte[] targetApplicationResponse);
 
     /**
      * Get internal system error.

@@ -100,7 +100,7 @@ public abstract class AbstractSdtService {
         if (populateTargetAppResponse) {
             final String targetAppResponse = individualResponseXmlParser.parse();
             if (StringUtils.isNotBlank(targetAppResponse)) {
-                individualRequest.setTargetApplicationResponse(targetAppResponse);
+                individualRequest.setTargetApplicationResponse(targetAppResponse.getBytes());
             }
         }
 
