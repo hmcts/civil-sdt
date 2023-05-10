@@ -165,7 +165,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
      * XML request payload.
      */
     @Column(name = "INDIVIDUAL_PAYLOAD")
-    private String requestPayload;
+    private byte[] requestPayload;
 
     /**
      * Internal system error.
@@ -277,12 +277,12 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     }
 
     @Override
-    public String getRequestPayload() {
+    public byte[] getRequestPayload() {
         return requestPayload;
     }
 
     @Override
-    public void setRequestPayload(final String requestPayload) {
+    public void setRequestPayload(final byte[] requestPayload) {
         this.requestPayload = requestPayload;
     }
 

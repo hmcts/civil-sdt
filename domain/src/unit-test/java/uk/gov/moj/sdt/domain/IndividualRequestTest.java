@@ -82,7 +82,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
         individualRequest.setDeadLetter(true);
         individualRequest.setCreatedDate(createdDate);
         individualRequest.setRequestType(REQUEST_TYPE_MESSAGE);
-        individualRequest.setRequestPayload("Request Payload");
+        individualRequest.setRequestPayload("Request Payload".getBytes());
         individualRequest.setSdtRequestReference("1");
         individualRequest.setTargetApplicationResponse("Target Application Response".getBytes());
 
@@ -90,7 +90,7 @@ class IndividualRequestTest extends AbstractSdtUnitTestBase {
         assertEquals(1L, individualRequest.getId());
         assertEquals(createdDate, individualRequest.getCreatedDate());
         assertEquals(REQUEST_TYPE_MESSAGE, individualRequest.getRequestType());
-        assertEquals("Request Payload", individualRequest.getRequestPayload());
+        assertEquals("Request Payload", new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8));
         assertEquals("1", individualRequest.getSdtRequestReference());
         assertEquals("Target Application Response",
                 new String(individualRequest.getTargetApplicationResponse(), StandardCharsets.UTF_8));
