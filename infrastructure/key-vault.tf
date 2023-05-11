@@ -1,13 +1,13 @@
 module "civil_sdt_key_vault" {
   source = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
 
-  name                = "${var.component}-${var.component}-${var.env}"
-  product             = var.product
-  env                 = var.env
-  object_id           = var.jenkins_AAD_objectId
-  resource_group_name = azurerm_resource_group.civil_sdt_rg.name
-  product_group_name  = "DTS Civil"
-  common_tags         = local.tags
+  name                    = "${var.product}-${var.component}-${var.env}"
+  product                 = var.product
+  env                     = var.env
+  object_id               = var.jenkins_AAD_objectId
+  resource_group_name     = azurerm_resource_group.civil_sdt_rg.name
+  product_group_name      = "DTS Civil"
+  common_tags             = local.tags
 }
 
 data "azurerm_key_vault" "s2s_vault" {
