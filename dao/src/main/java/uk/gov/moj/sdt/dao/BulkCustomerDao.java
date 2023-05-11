@@ -41,6 +41,7 @@ import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -81,9 +82,13 @@ public class BulkCustomerDao extends GenericDao<BulkCustomer> implements IBulkCu
         LOGGER.debug("Get bulk customer matching sdt customer id [{}]", sdtCustomerId);
 
         // Call the generic dao to perform this query.
-        return this.uniqueResult(BulkCustomer.class, () -> {
-            Predicate sdtCustomerPredicate = criteriaBuilder.equal(root.get("sdtCustomerId"), sdtCustomerId);
-            return criteriaQuery.select(root).where(sdtCustomerPredicate);
-        });
+        try {
+            return this.uniqueResult(BulkCustomer.class, () -> {
+                Predicate sdtCustomerPredicate = criteriaBuilder.equal(root.get("sdtCustomerId"), sdtCustomerId);
+                return criteriaQuery.select(root).where(sdtCustomerPredicate);
+            });
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }
