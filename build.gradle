@@ -176,7 +176,7 @@ ext.libraries = [
 ext['guava.version'] = '30.0-jre'
 ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
-ext['spring-security.version'] = '5.7.5'
+ext['spring-security.version'] = '5.7.8'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 
 dependencyManagement {
@@ -359,6 +359,9 @@ allprojects {
         if(details.requested.group == 'org.springframework') {
           details.useVersion '5.3.27' // CVE-2023-20861
         }
+        if (details.requested.group == 'org.springframework.boot') {
+          details.useVersion '2.7.11' // CVE-2023-20873
+        }
         if (details.requested.group == 'com.fasterxml.woodstox' && details.requested.name == 'woodstox-core') {
           details.useVersion '6.4.0' // CVE-2022-40152
         }
@@ -407,6 +410,23 @@ subprojects { subproject ->
       }
       resources.srcDir file('src/end-to-end-test/resources')
     }
+  }
+
+  configurations.configureEach {
+    collect { configuration ->
+      configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    }
+    resolutionStrategy {
+      eachDependency { details ->
+        if(details.requested.group == 'org.springframework') {
+          details.useVersion '5.3.27' // CVE-2023-20861
+        }
+        if (details.requested.group == 'org.springframework.boot') {
+          details.useVersion '2.7.11' // CVE-2023-20873
+        }
+      }
+    }
+    exclude group: 'org.springframework.security', module: 'spring-security-rsa'
   }
 
   configurations {
