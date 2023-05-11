@@ -585,7 +585,7 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;
         for (ILoggingEvent log : logList) {
-            if (log.getMessage().contains(message.toString())) {
+            if (log.getFormattedMessage().contains(message)) {
                 verifyLog = true;
                 break;
             }
