@@ -444,7 +444,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setCustomerReference("TEST_CUST_REF");
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(2);
-        bulkSubmission.setPayload("TEST_XML");
+        bulkSubmission.setPayload("TEST_XML".getBytes());
         bulkSubmission.setSubmissionStatus("SUBMITTED");
 
         final IndividualRequest individualRequest = new IndividualRequest();

@@ -123,7 +123,7 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         bulkSubmission.setCustomerReference("REF1");
         bulkSubmission.setNumberOfRequest(1);
         final String xmlToLoad = "<Payload>2</Payload>";
-        bulkSubmission.setPayload(xmlToLoad);
+        bulkSubmission.setPayload(xmlToLoad.getBytes());
         bulkSubmission.setSdtBulkReference(sdtBulkReference);
         bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus());
 
@@ -231,7 +231,7 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         bulkSubmission.setCustomerReference(customerReference);
         bulkSubmission.setNumberOfRequest(1);
         final String xmlToLoad = "<Payload>2</Payload>";
-        bulkSubmission.setPayload(xmlToLoad);
+        bulkSubmission.setPayload(xmlToLoad.getBytes());
         bulkSubmission.setSdtBulkReference(sbr);
         bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus());
 
