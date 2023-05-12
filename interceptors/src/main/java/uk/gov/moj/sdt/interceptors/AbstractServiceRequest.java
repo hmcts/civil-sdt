@@ -107,7 +107,7 @@ public abstract class AbstractServiceRequest extends AbstractSdtInterceptor {
                     this.getServiceRequestDao().fetch(ServiceRequest.class, serviceRequestId);
 
             // Add the response and timestamp to the service request record.
-            serviceRequest.setResponsePayload(envelope);
+            serviceRequest.setResponsePayload(envelope.getBytes());
             serviceRequest.setResponseDateTime(LocalDateTime.now());
 
             // Note that bulk reference will be null if this is not a bulk submission.
