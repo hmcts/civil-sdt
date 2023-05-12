@@ -58,7 +58,6 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     @Column(name = "VERSION_NUMBER")
     private int version;
 
-
     /**
      * The time the request is received.
      */
@@ -137,7 +136,6 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     @Override
     public void setBulkCustomerId(final String bulkCustomerId) {
         this.bulkCustomerId = bulkCustomerId;
-
     }
 
     /**
@@ -183,7 +181,6 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
     public void setBulkReference(final String bulkReference) {
         this.bulkReference = bulkReference;
     }
-
 
     /**
      * get request date time.
