@@ -49,6 +49,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -89,7 +91,7 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         assertNull(serviceRequest.getResponsePayload());
         faultOutboundInterceptor.handleMessage(soapMessage);
         assertNotNull(serviceRequest.getResponseDateTime());
-        assertTrue(serviceRequest.getResponsePayload().contains(ERROR_MESSAGE));
+        assertTrue(new String(serviceRequest.getResponsePayload(), StandardCharsets.UTF_8).contains(ERROR_MESSAGE));
     }
 
     @Test
