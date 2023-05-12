@@ -30,22 +30,15 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.in;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-
-import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
@@ -53,6 +46,10 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.ServerHostName;
+
+import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class to intercept incoming messages and log them to the database.
@@ -117,7 +114,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
         // Prepare log message for Hibernate.
         final IServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setBulkCustomerId(extractBulkCustomerId(rawXml));
-        serviceRequest.setRequestPayload(rawXml);
+        serviceRequest.setRequestPayload(rawXml.getBytes());
         serviceRequest.setRequestDateTime(LocalDateTime.now());
         serviceRequest.setRequestType(extractRequestType(rawXml));
 
@@ -189,7 +186,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
 
         if (matcher.find()) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Found matching group[" + matcher.group() + "]");
+                LOGGER.debug("Found matching group[{}]", matcher.group());
             }
 
             // Copy the match.
@@ -232,7 +229,7 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
 
         if (matcher.find()) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Found matching group[" + matcher.group() + "]");
+                LOGGER.debug("Found matching group[{}]", matcher.group());
             }
 
             // Copy the match.

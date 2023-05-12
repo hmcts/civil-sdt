@@ -33,13 +33,13 @@ package uk.gov.moj.sdt.domain;
 
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 /**
  * Audit log for incoming and outgoing request.
@@ -87,13 +87,13 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
      * The incoming message.
      */
     @Column(name = "REQUEST_PAYLOAD")
-    private String requestPayload;
+    private byte[] requestPayload;
 
     /**
      * The outgoing message.
      */
     @Column(name = "RESPONSE_PAYLOAD")
-    private String responsePayload;
+    private byte[] responsePayload;
 
     /**
      * The SDT generated bulk reference.
@@ -158,7 +158,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
      * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setRequestPayload(String)
      */
     @Override
-    public void setRequestPayload(final String requestPayload) {
+    public void setRequestPayload(final byte[] requestPayload) {
         this.requestPayload = requestPayload;
     }
 
@@ -169,7 +169,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
      * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setResponsePayload(String)
      */
     @Override
-    public void setResponsePayload(final String responsePayload) {
+    public void setResponsePayload(final byte[] responsePayload) {
         this.responsePayload = responsePayload;
     }
 
@@ -231,7 +231,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
      * @return request payload
      */
     @Override
-    public String getRequestPayload() {
+    public byte[] getRequestPayload() {
         return this.requestPayload;
     }
 
@@ -241,7 +241,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
      * @return response payload
      */
     @Override
-    public String getResponsePayload() {
+    public byte[] getResponsePayload() {
         return this.responsePayload;
     }
 
