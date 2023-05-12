@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import java.util.GregorianCalendar;
@@ -103,15 +102,6 @@ public class MessageWriter implements IMessageWriter {
 
         SdtMetricsMBean.getMetrics().upRequestQueueCount();
         SdtMetricsMBean.getMetrics().upRequestQueueLength();
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_5)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_5, "Enqueue message",
-                    detail.toString());
-        }
 
         try {
 

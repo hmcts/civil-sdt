@@ -47,7 +47,6 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvrequestschema.IndividualRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.indvresponseschema.IndividualResponseType;
@@ -141,46 +140,12 @@ public class IndividualRequestConsumer extends AbstractWsConsumer implements IIn
                 LOGGER.debug("Submitting individual request[{}] to target application[{}], attempt[{}]",
                         iRequest.getSdtRequestReference(), targetAppCode, attemptCount);
 
-                if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_7)) {
-                    final StringBuilder detail = new StringBuilder();
-                    detail.append("\n\n\tsdt request reference=" + iRequest.getSdtRequestReference() +
-                            "\n\tcustomer request reference=" + iRequest.getCustomerRequestReference() +
-                            "\n\tline number=" + iRequest.getLineNumber() + "\n\trequest type=" +
-                            iRequest.getRequestType() + "\n\tforwarding attempts=" +
-                            iRequest.getForwardingAttempts() + "\n\tpayload=" + iRequest.getRequestPayload() +
-                            "\n\n\ttarget application=" +
-                            serviceRouting.getTargetApplication().getTargetApplicationName() + "\n\tendpoint=" +
-                            serviceRouting.getWebServiceEndpoint() + "\n");
-
-                    // Write message to 'performance.log' for this logging point.
-                    PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_7,
-                            "Send individual request to target application", detail.toString());
-                }
-
                 // Measure response time.
                 startTime = new GregorianCalendar().getTimeInMillis();
 
                 // Call the specific business method for this text - note that a single test can only use one web
                 // service business method.
                 final IndividualResponseType individualResponseType = client.submitIndividual(request);
-
-                if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_8)) {
-                    final StringBuilder detail = new StringBuilder();
-                    detail.append("\n\n\tsdt request reference=")
-                            .append(individualResponseType.getHeader().getSdtRequestId())
-                            .append("\n\tstatus code=")
-                            .append(individualResponseType.getStatus().getCode().name());
-                    if (individualResponseType.getStatus().getError() != null) {
-                        detail.append("\n\terror code=" + individualResponseType.getStatus().getError().getCode() +
-                                "\n\terror description=" +
-                                individualResponseType.getStatus().getError().getDescription());
-                    }
-                    detail.append("\n");
-
-                    // Write message to 'performance.log' for this logging point.
-                    PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_8,
-                            "receive individual request response from target application", detail.toString());
-                }
 
                 return individualResponseType;
             } catch (final WebServiceException f) {

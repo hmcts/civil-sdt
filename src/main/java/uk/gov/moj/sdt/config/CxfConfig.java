@@ -15,14 +15,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import uk.gov.moj.sdt.interceptors.in.IdamIdInboundInterceptor;
-import uk.gov.moj.sdt.interceptors.in.PerformanceLoggerInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.FaultOutboundInterceptor;
-import uk.gov.moj.sdt.interceptors.out.PerformanceLoggerOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.ServiceRequestOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
 import uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType;
@@ -65,19 +63,16 @@ public class CxfConfig {
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
                                     SdtEndpointPortType sdtEndpointPortType,
                                 ServiceRequestInboundInterceptor serviceRequestInboundInterceptor,
-                                PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
                                 XmlInboundInterceptor xmlInboundInterceptor,
                                 SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
                                 IdamIdInboundInterceptor idamIdInboundInterceptor,
-                                PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
                                 CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
                                 XmlOutboundInterceptor xmlOutboundInterceptor,
                                 ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor,
                                 CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
                                 FaultOutboundInterceptor faultOutboundInterceptor) {
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtEndpointPortType);
-        endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
-                                                      xmlInboundInterceptor,
+        endpoint.setInInterceptors(Lists.newArrayList(xmlInboundInterceptor,
                                                       sdtUnmarshallInterceptor,
                                                       serviceRequestInboundInterceptor,
                                                       idamIdInboundInterceptor));
@@ -85,7 +80,6 @@ public class CxfConfig {
         endpoint.setOutInterceptors(Lists.newArrayList(cacheSetupOutboundInterceptor,
                                                        xmlOutboundInterceptor,
                                                        serviceRequestOutboundInterceptor,
-                                                       performanceLoggerOutboundInterceptor,
                                                        cacheEndOutboundInterceptor));
 
         endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
@@ -110,17 +104,12 @@ public class CxfConfig {
     @Bean
     public Endpoint sdtInternalEndpoint(@Qualifier("ISdtInternalEndpointPortType")
                                             SdtInternalEndpointPortType sdtInternalEndpointPortType,
-                                        PerformanceLoggerInboundInterceptor performanceLoggerInboundInterceptor,
                                         XmlInboundInterceptor xmlInboundInterceptor,
                                         SdtUnmarshallInterceptor sdtUnmarshallInterceptor,
-                                        PerformanceLoggerOutboundInterceptor performanceLoggerOutboundInterceptor,
                                         FaultOutboundInterceptor faultOutboundInterceptor) {
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
-        endpoint.setInInterceptors(Lists.newArrayList(performanceLoggerInboundInterceptor,
-                                                      xmlInboundInterceptor,
+        endpoint.setInInterceptors(Lists.newArrayList(xmlInboundInterceptor,
                                                       sdtUnmarshallInterceptor));
-
-        endpoint.setOutInterceptors(Lists.newArrayList(performanceLoggerOutboundInterceptor));
 
         endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
         List<LoggingFeature> features = new ArrayList<>();
