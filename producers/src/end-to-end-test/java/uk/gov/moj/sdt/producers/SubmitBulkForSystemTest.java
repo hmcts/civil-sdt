@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 @ActiveProfiles("end-to-end-test")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class})
 @Sql(scripts = {
         "classpath:database/baseline/initialise_test_database.sql"
         ,"classpath:database/baseline/create_prepare_for_dbunit_load_proc.sql"

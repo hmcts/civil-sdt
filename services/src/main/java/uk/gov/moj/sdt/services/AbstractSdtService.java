@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,7 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -185,7 +188,8 @@ public abstract class AbstractSdtService {
         Root<IndividualRequest> root = criteriaQuery.from(IndividualRequest.class);
         Predicate[] predicates = new Predicate[2];
         predicates[0] = criteriaBuilder.equal(root.get("sdtBulkReference"), sdtBulkReference);
-        predicates[1] = criteriaBuilder.not(criteriaBuilder.in(root.get("requestStatus")).value(completeRequestStatus));
+        Expression<String> requestStatusExpression = root.get("requestStatus");
+        predicates[1] = requestStatusExpression.in(Arrays.stream(completeRequestStatus).toList());
         return criteriaQuery.select(root).where(predicates);
     }
 }
