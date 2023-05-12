@@ -30,8 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +42,11 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -182,14 +182,21 @@ public abstract class AbstractSdtService {
     }
 
     private CriteriaQuery<IndividualRequest> createCriteria(IIndividualRequestDao individualRequestDao, String sdtBulkReference,
-                                       String[] completeRequestStatus) {
+                                       String[] completeRequestStatusArray) {
         CriteriaBuilder criteriaBuilder = individualRequestDao.getEntityManager().getCriteriaBuilder();
         CriteriaQuery<IndividualRequest> criteriaQuery = criteriaBuilder.createQuery(IndividualRequest.class);
         Root<IndividualRequest> root = criteriaQuery.from(IndividualRequest.class);
-        Predicate[] predicates = new Predicate[2];
-        predicates[0] = criteriaBuilder.equal(root.get("sdtBulkReference"), sdtBulkReference);
-        Expression<String> requestStatusExpression = root.get("requestStatus");
-        predicates[1] = requestStatusExpression.in(Arrays.stream(completeRequestStatus).toList());
+        List<Predicate> predicateList = new ArrayList<>();
+        predicateList.add(criteriaBuilder.equal(root.get("sdtBulkReference"), sdtBulkReference));
+
+        for (String completeRequestStatus : completeRequestStatusArray) {
+            predicateList.add(criteriaBuilder.not(criteriaBuilder.in(root.get("requestStatus")).value(completeRequestStatus)));
+        }
+        Predicate[] predicates = new Predicate[predicateList.size()];
+        int x = 0;
+        for (Predicate predicate : predicateList) {
+            predicates[x++] = predicate;
+        }
         return criteriaQuery.select(root).where(predicates);
     }
 }
