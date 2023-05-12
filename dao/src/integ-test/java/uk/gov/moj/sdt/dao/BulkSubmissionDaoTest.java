@@ -136,7 +136,7 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
 
         LOGGER.debug("payload for bulk submission is {}", submission.getPayload());
 
-        assertEquals(submission.getPayload(), xmlToLoad);
+        assertEquals(String.valueOf(submission.getPayload()), xmlToLoad);
         assertEquals("REF1", submission.getCustomerReference());
     }
 

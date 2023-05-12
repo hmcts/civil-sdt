@@ -142,8 +142,8 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
                                                           individualRequestsXmlParser,
                                                           mockMessagingUtility,
                                                           mockSdtBulkReferenceGenerator,
-                                                          mockErrorMessagesCache);
-        bulkSubmissionService.setConcurrencyMap(mockConcurrencyMap);
+                                                          mockErrorMessagesCache,
+                                                          mockConcurrencyMap);
     }
 
     /**

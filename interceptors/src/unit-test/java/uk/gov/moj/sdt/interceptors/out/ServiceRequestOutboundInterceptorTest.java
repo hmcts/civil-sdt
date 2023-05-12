@@ -33,6 +33,9 @@
  */
 package uk.gov.moj.sdt.interceptors.out;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.message.MessageImpl;
@@ -44,12 +47,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
+import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 import static org.mockito.Mockito.when;
 
@@ -64,6 +64,9 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Mock
     ServiceRequestDao mockServiceRequestDao;
 
+    @Mock
+    RequestDaoService mockRequestDaoService;
+
     /**
      * Test method for
      * {@link ServiceRequestOutboundInterceptor
@@ -74,7 +77,7 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         SdtContext.getContext().setServiceRequestId(1L);
         String data = "<xml>content</xml>";
         final SoapMessage soapMessage = getDummySoapMessageWithCachedOutputStream(data);
-        final ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor = new ServiceRequestOutboundInterceptor(mockServiceRequestDao);
+        final ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor = new ServiceRequestOutboundInterceptor(mockRequestDaoService);
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
         mockServiceRequestDao.persist(serviceRequest);
@@ -83,11 +86,11 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         Assertions.assertNull(serviceRequest.getResponsePayload());
         serviceRequestOutboundInterceptor.handleMessage(soapMessage);
         Assertions.assertNotNull(serviceRequest.getResponseDateTime());
-        Assertions.assertTrue(new String(serviceRequest.getResponsePayload(), StandardCharsets.UTF_8).contains(data));
+        Assertions.assertTrue(String.valueOf(serviceRequest.getResponsePayload()).contains(data));
     }
 
     @Test
-    void testHandleMessagePhaseConstructor() {
+    void testHandleMessagePhaseConstructor() throws IOException {
         final ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor =
             new ServiceRequestOutboundInterceptor(Phase.SETUP);
 
@@ -103,10 +106,9 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
      */
     private SoapMessage getDummySoapMessageWithCachedOutputStream(String data) throws IOException {
         SoapMessage soapMessage = new SoapMessage(new MessageImpl());
-        try (CachedOutputStream cachedOutputStream = new CachedOutputStream()) {
-            cachedOutputStream.write(data.getBytes());
-            soapMessage.setContent(OutputStream.class, cachedOutputStream);
-        }
+        CachedOutputStream cachedOutputStream = new CachedOutputStream();
+        cachedOutputStream.write(data.getBytes());
+        soapMessage.setContent(OutputStream.class, cachedOutputStream);
         return soapMessage;
     }
 

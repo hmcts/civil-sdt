@@ -30,6 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +60,6 @@ import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -118,7 +117,9 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                                  @Qualifier("SdtBulkReferenceGenerator")
                                      ISdtBulkReferenceGenerator sdtBulkReferenceGenerator,
                                  @Qualifier("ErrorMessagesCache")
-                                     ICacheable errorMessagesCache) {
+                                     ICacheable errorMessagesCache,
+                                 @Qualifier("concurrencyMap")
+                                     Map concurrencyMap) {
         this.genericDao = genericDao;
         this.bulkCustomerDao = bulkCustomerDao;
         this.targetApplicationDao = targetApplicationDao;
@@ -126,7 +127,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         this.messagingUtility = messagingUtility;
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
         this.errorMessagesCache = errorMessagesCache;
-        this.concurrencyMap = new ConcurrentHashMap<>();
+        this.concurrencyMap = concurrencyMap;
     }
 
     /**
@@ -194,7 +195,8 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         LOGGER.debug("Enrich bulk submission instance to prepare for persistence");
 
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
-        bulkSubmission.setPayload(SdtContext.getContext().getRawInXml().getBytes());
+        String rawInXml = SdtContext.getContext().getRawInXml();
+        bulkSubmission.setPayload(rawInXml == null ? "".getBytes() : rawInXml.getBytes());
 
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =
@@ -231,12 +233,9 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         bulkSubmission.markAsValidated();
 
         // Associate with the service request created by the ServiceRequestInboundInterceptor
-        // TODO: check if this is mandatory or optional - meanwhile handle null serviceRequestId
-        if (null != SdtContext.getContext().getServiceRequestId()) {
-            final IServiceRequest serviceRequest =
-                    genericDao.fetch(IServiceRequest.class, SdtContext.getContext().getServiceRequestId());
-            bulkSubmission.setServiceRequest(serviceRequest);
-        }
+        final IServiceRequest serviceRequest =
+                genericDao.fetch(IServiceRequest.class, SdtContext.getContext().getServiceRequestId());
+        bulkSubmission.setServiceRequest(serviceRequest);
     }
 
     /**
@@ -362,13 +361,11 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                 final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString();
                 final IErrorMessage errorMessage = errorMessagesCache.getValue(IErrorMessage.class, errorCodeStr);
 
-                LOGGER.error("Concurrent message detected for customer [{}], customer reference [{}], " +
-                                "with SDT bulk reference [{}]. Returning original SDT bulk reference [{}].",
-                        bulkSubmission.getBulkCustomer().getSdtCustomerId(),
-                        bulkSubmission.getCustomerReference(),
-                        bulkSubmission.getSdtBulkReference(),
-                        winningSdtBulkReference);
-
+                LOGGER.error("Concurrent message detected for customer [" +
+                        bulkSubmission.getBulkCustomer().getSdtCustomerId() + "], customer reference [" +
+                        bulkSubmission.getCustomerReference() + "], with SDT bulk reference [" +
+                        bulkSubmission.getSdtBulkReference() + "]. Returning original SDT bulk reference [" +
+                        winningSdtBulkReference + "].");
                 throw new CustomerReferenceNotUniqueException(errorCodeStr, errorMessage.getErrorText(), replacements);
             }
         }

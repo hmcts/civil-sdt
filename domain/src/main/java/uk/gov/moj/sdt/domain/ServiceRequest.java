@@ -155,7 +155,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
      * set request payload.
      *
      * @param requestPayload the incoming message.
-     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setRequestPayload(String)
+     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setRequestPayload(byte[])
      */
     @Override
     public void setRequestPayload(final byte[] requestPayload) {
@@ -166,7 +166,7 @@ public class ServiceRequest extends AbstractDomainObject implements IServiceRequ
      * set response payload.
      *
      * @param responsePayload the outgoing message.
-     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setResponsePayload(String)
+     * @see uk.gov.moj.sdt.domain.api.IServiceRequest#setResponsePayload(byte[])
      */
     @Override
     public void setResponsePayload(final byte[] responsePayload) {

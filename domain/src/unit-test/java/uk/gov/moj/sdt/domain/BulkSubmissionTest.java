@@ -42,7 +42,6 @@ import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
 
     private ITargetApplication mockTargetApplication;
 
-    private static final String PAYLOAD = "Payload";
+    private  final String PAYLOAD = "Payload";
 
     private final LocalDateTime createdDate = LocalDateTime.now();
 
@@ -124,7 +123,8 @@ class BulkSubmissionTest extends AbstractSdtUnitTestBase {
         bulkSubmission.markAsValidated();
         //then
         assertNotEquals("Validated", bulkSubmission.getSubmissionStatus());
-        assertEquals(PAYLOAD, new String(bulkSubmission.getPayload(), StandardCharsets.UTF_8));
+        assertEquals(PAYLOAD, String.valueOf(bulkSubmission.getPayload()));
+
     }
 
     @DisplayName("Test Bulk Submission toString")

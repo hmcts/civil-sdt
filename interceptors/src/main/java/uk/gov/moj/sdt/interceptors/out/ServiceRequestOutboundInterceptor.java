@@ -35,10 +35,8 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
+import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 
 /**
  * Class to intercept outgoing messages to audit them.
@@ -51,9 +49,9 @@ public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest {
      * Default constructor.
      */
     @Autowired
-    public ServiceRequestOutboundInterceptor(ServiceRequestDao serviceRequestDao) {
+    public ServiceRequestOutboundInterceptor(RequestDaoService requestDaoService) {
         super(Phase.PREPARE_SEND_ENDING);
-        setServiceRequestDao(serviceRequestDao);
+        setRequestDaoService(requestDaoService);
         addAfter(XmlOutboundInterceptor.class.getName());
     }
 
@@ -67,8 +65,7 @@ public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handleMessage(final SoapMessage message) throws Fault {
-        this.persistEnvelope(this.readOutputMessage(message));
+        this.getRequestDaoService().persistEnvelope(this.readOutputMessage(message));
     }
 }

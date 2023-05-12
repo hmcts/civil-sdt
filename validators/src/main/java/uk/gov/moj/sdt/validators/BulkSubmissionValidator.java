@@ -36,7 +36,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -80,16 +79,18 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
 
     @Autowired
     public BulkSubmissionValidator(@Qualifier("BulkCustomerDao")
-                                            IBulkCustomerDao bulkCustomerDao,
-                                        @Qualifier("GlobalParametersCache")
-                                            ICacheable globalParameterCache,
-                                        @Qualifier("ErrorMessagesCache")
-                                            ICacheable errorMessagesCache,
-                                        @Qualifier("BulkSubmissionDao")
-                                           IBulkSubmissionDao bulkSubmissionDao) {
+                                       IBulkCustomerDao bulkCustomerDao,
+                                   @Qualifier("GlobalParametersCache")
+                                       ICacheable globalParameterCache,
+                                   @Qualifier("ErrorMessagesCache")
+                                       ICacheable errorMessagesCache,
+                                   @Qualifier("BulkSubmissionDao")
+                                       IBulkSubmissionDao bulkSubmissionDao,
+                                   @Qualifier("concurrencyMap")
+                                       Map concurrencyMap) {
         super(bulkCustomerDao, globalParameterCache, errorMessagesCache);
         this.bulkSubmissionDao = bulkSubmissionDao;
-        this.concurrencyMap = new ConcurrentHashMap<>();
+        this.concurrencyMap = concurrencyMap;
     }
 
     @Override
@@ -184,15 +185,6 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
             bulkSubmission.setErrorText(getErrorMessage(replacements, IErrorMessage.ErrorCode.NO_VALID_REQS));
             bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus());
         }
-    }
-
-    /**
-     * Set concurrency map.
-     *
-     * @param concurrencyMap map holding in flight bulk requests.
-     */
-    public void setConcurrencyMap(final Map<String, IInFlightMessage> concurrencyMap) {
-        this.concurrencyMap = concurrencyMap;
     }
 
     /**

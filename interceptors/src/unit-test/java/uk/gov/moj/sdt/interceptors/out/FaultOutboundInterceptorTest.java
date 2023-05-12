@@ -45,14 +45,17 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
+import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -65,6 +68,9 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     @Mock
     ServiceRequestDao mockServiceRequestDao;
+
+    @Mock
+    RequestDaoService mockRequestDaoService;
 
     /**
      * Error message returned when a fault occurs.
@@ -81,28 +87,26 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     void testHandleMessage() {
         SdtContext.getContext().setServiceRequestId(1L);
         final SoapMessage soapMessage = getDummySoapMessageWithFault();
-        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockServiceRequestDao);
+        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockRequestDaoService);
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
         mockServiceRequestDao.persist(serviceRequest);
-        faultOutboundInterceptor.setServiceRequestDao(mockServiceRequestDao);
 
         assertNull(serviceRequest.getResponseDateTime());
         assertNull(serviceRequest.getResponsePayload());
         faultOutboundInterceptor.handleMessage(soapMessage);
         assertNotNull(serviceRequest.getResponseDateTime());
-        assertTrue(new String(serviceRequest.getResponsePayload(), StandardCharsets.UTF_8).contains(ERROR_MESSAGE));
+        assertTrue(String.valueOf(serviceRequest.getResponsePayload()).contains(ERROR_MESSAGE));
     }
 
     @Test
     void testHandleMessageLogOutput() {
         SdtContext.getContext().setServiceRequestId(1L);
         final SoapMessage soapMessage = getDummySoapMessageWithFault();
-        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockServiceRequestDao);
+        final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(mockRequestDaoService);
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
         mockServiceRequestDao.persist(serviceRequest);
-        faultOutboundInterceptor.setServiceRequestDao(mockServiceRequestDao);
 
         try (MockedStatic<PerformanceLogger> mockedStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
             mockedStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong())).thenReturn(true);

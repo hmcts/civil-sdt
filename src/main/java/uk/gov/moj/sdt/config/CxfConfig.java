@@ -1,5 +1,12 @@
 package uk.gov.moj.sdt.config;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.xml.ws.Endpoint;
+
 import com.google.common.collect.Lists;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
@@ -28,12 +35,7 @@ import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
 import uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.SdtInternalEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.config.ProducersConfig;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.xml.ws.Endpoint;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 
 @Configuration
 @EnableAutoConfiguration
@@ -59,6 +61,11 @@ public class CxfConfig {
         LoggingFeature loggingFeature = new LoggingFeature();
         loggingFeature.setPrettyLogging(true);
         return loggingFeature;
+    }
+
+    @Bean("concurrencyMap")
+    public Map<String, IInFlightMessage>  concurrencyMap() {
+       return new ConcurrentHashMap<>();
     }
 
     @Bean

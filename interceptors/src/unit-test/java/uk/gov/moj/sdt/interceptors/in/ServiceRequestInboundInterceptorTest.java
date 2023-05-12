@@ -30,6 +30,12 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.in;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.MessageImpl;
 import org.junit.jupiter.api.Test;
@@ -38,17 +44,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.moj.sdt.dao.GenericDao;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
+import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -67,6 +67,9 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Mock
     ServiceRequestDao mockServiceRequestDao;
 
+    @Mock
+    RequestDaoService requestDaoService;
+
     /**
      * Test that the process correctly works via mocked out extensions.
      */
@@ -74,10 +77,10 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     void testHandleMessage() {
         try {
             // Create the service request inbound interceptor.
-            final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor(mockServiceRequestDao);
+            final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor(requestDaoService);
 
             // Inject dummy service request into interceptor.
-            sRII.setServiceRequestDao(getMockedGenericDao(new ServiceRequest ()));
+            sRII.setRequestDaoService(getMockedGenericDao(new ServiceRequest ()));
 
             // Setup the raw XML as if the XmlInboundInterceptor had run.
             final String xml =
@@ -139,9 +142,9 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
      * @param serviceRequest possible superfluous object.
      * @return the mocked dao.
      */
-    private GenericDao getMockedGenericDao(final ServiceRequest serviceRequest) {
+    private RequestDaoService getMockedGenericDao(final ServiceRequest serviceRequest) {
         mockServiceRequestDao.persist(serviceRequest);
-        return mockServiceRequestDao;
+        return requestDaoService;
     }
 
     /**
