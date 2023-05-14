@@ -43,6 +43,7 @@
       CVE-2021-4235
       CVE-2022-3064
       CVE-2022-45143
+      CVE-2023-20862
     </notes>
     <cve>CVE-2015-3208</cve>
     <cve>CVE-2017-10355</cve>
@@ -68,6 +69,7 @@
     <cve>CVE-2021-4235</cve>
     <cve>CVE-2022-3064</cve>
     <cve>CVE-2022-45143</cve>
+    <cve>CVE-2023-20862</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
