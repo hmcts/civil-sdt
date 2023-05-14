@@ -1,5 +1,8 @@
 package uk.gov.moj.sdt.handlers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,13 +25,12 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class WsCreateBulkRequestHandlerTest {
@@ -62,11 +64,10 @@ class WsCreateBulkRequestHandlerTest {
     @BeforeEach
     public void setUp() {
         wsCreateBulkRequestHandler = Mockito.spy(new WsCreateBulkRequestHandler(
-            mockBulkSubmissionService, mockBulkSubmissionValidator, mockTransformer));
+            mockBulkSubmissionService, mockBulkSubmissionValidator, mockTransformer, mockConcurrencyMap));
         wsCreateBulkRequestHandler.setBulkSubmissionService(mockBulkSubmissionService);
         wsCreateBulkRequestHandler.setBulkSubmissionValidator(mockBulkSubmissionValidator);
         wsCreateBulkRequestHandler.setTransformer(mockTransformer);
-        wsCreateBulkRequestHandler.setConcurrencyMap(mockConcurrencyMap);
 
         SdtMetricsMBean.getMetrics().reset();
 
