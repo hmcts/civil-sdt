@@ -1,18 +1,5 @@
 package uk.gov.moj.sdt.producers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -21,10 +8,21 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -177,10 +175,14 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             // Following only needed for concurrent duplicate test since customer reference keeps changing.
             expectedXml = removeVariantText(expectedXml, "customerReference");
             expectedXml = removeLineFeeds(expectedXml);
+            expectedXml = removeBetweenNodeSpaces(expectedXml);
             actualXml = removeVariantText(actualXml, "sdtBulkReference");
             actualXml = removeVariantText(actualXml, "submittedDate");
             actualXml = removeVariantText(actualXml, "customerReference");
             actualXml = removeLineFeeds(actualXml);
+            actualXml = removeBetweenNodeSpaces(actualXml);
+
+            checkXmlChunks(expectedXml, actualXml);
 
             if (!actualXml.equals(expectedXml)) {
                 LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
@@ -193,6 +195,69 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             fail("Failure to marshall response from web service [" + response.toString() + "]");
         }
     }
+
+    /**
+     * Utility to show xml chunk differences. Helps to debugging large xml
+     *
+     * @param expectedXml the expected XML.
+     * @param actualXml the actual XML.
+     */    private void checkXmlChunks(String expectedXml, String actualXml) {
+        if (actualXml.length() == 0 || expectedXml.length() == 0) {
+            return;
+        }
+
+        StringBuilder actualXmlStrip = new StringBuilder();
+        StringBuilder expectedXmlStrip = new StringBuilder();
+        int incrementX = 200;
+        int startX = 0;
+        int endX = 0;
+        while (startX < actualXml.length()) {
+            endX = startX + incrementX;
+            if (endX >= actualXml.length()) {
+                endX = actualXml.length();
+            }
+            actualXmlStrip = new StringBuilder();
+            expectedXmlStrip = new StringBuilder();
+            if (startX < actualXml.length()-1) {
+                if (endX <= actualXml.length()) {
+                    actualXmlStrip = new StringBuilder(actualXml.substring(startX, endX));
+                } else {
+                    actualXmlStrip = new StringBuilder(actualXml.substring(startX, actualXml.length()));
+                }
+            }
+            if (startX < expectedXml.length()-1) {
+                if (endX <= expectedXml.length()) {
+                    expectedXmlStrip = new StringBuilder(expectedXml.substring(startX, endX));
+                } else {
+                    expectedXmlStrip = new StringBuilder(expectedXml.substring(startX, expectedXml.length()));
+                }
+            }
+
+            if (!actualXmlStrip.toString().equals(expectedXmlStrip.toString())) {
+                LOGGER.info("startX:{}; endX:{}", startX, endX);
+                LOGGER.info(" actualXmlStrip  : {}",  actualXmlStrip);
+                LOGGER.info(" expectedXmlStrip: {}",  expectedXmlStrip);
+                LOGGER.error("expected [{}], actual [{}]", expectedXmlStrip, actualXmlStrip);
+            }
+            assertEquals(expectedXmlStrip.toString(), actualXmlStrip.toString());
+
+            startX +=incrementX;
+        }
+
+    }
+
+
+    /**
+     * Utility to remove spacing between nodes.
+     *
+     * @param xml the XML to remove text from.
+     * @return the modified XML.
+     */
+    private String removeBetweenNodeSpaces(final String xml) {
+        return xml.replace("> <", "><");
+
+    }
+
 
     /**
      * Utility to remove carriage return (\r), linefeeds (\n) and tabs (\t) otherwise the
