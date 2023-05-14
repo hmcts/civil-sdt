@@ -81,7 +81,7 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest {
             msg = t.getMessage();
         }
 
-        final String errorMsg = "Error encounted: " + fault.getFaultCode() + ": " + fault.getMessage() +
+        final String errorMsg = "Error encountered: " + fault.getFaultCode() + ": " + fault.getMessage() +
                 ", sending this message in SOAP fault: " + msg;
         LOGGER.error(errorMsg);
         this.getRequestDaoService().persistEnvelope(errorMsg);
@@ -90,7 +90,7 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest {
         if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_11)) {
             PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_11,
                     "FaultOutboundInterceptor handling message",
-                    "\n\n\tmessage=" + "Error encounted: " + fault.getFaultCode() + ": " + fault.getMessage() +
+                    "\n\n\tmessage=" + "Error encountered: " + fault.getFaultCode() + ": " + fault.getMessage() +
                             ", sending this message in SOAP fault: " + msg + "\n");
         }
 
