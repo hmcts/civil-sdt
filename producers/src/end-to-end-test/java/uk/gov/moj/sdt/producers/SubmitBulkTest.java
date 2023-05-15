@@ -1,25 +1,29 @@
 package uk.gov.moj.sdt.producers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.JAXBElement;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
 import uk.gov.moj.sdt.producers.config.SecurityConfig;
-import uk.gov.moj.sdt.test.utils.DBUnitUtilityBean;
+import uk.gov.moj.sdt.test.utils.IExecuteScriptService;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+
+import javax.xml.bind.JAXBElement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -36,10 +40,21 @@ import static org.junit.jupiter.api.Assertions.fail;
         ,"classpath:database/baseline/SubmitBulkTest.sql"
 })
 public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitBulkTest.class);
+
+    private IExecuteScriptService executeScriptService;
+
     /**
      * Thirty seconds in milliseconds.
      */
     static final int THIRTY_SECONDS = 30000;
+    @BeforeEach
+    @Override
+    public void setUp() {
+        super.setUp();
+        executeScriptService = SpringApplicationContext.getBean(IExecuteScriptService.class);
+    }
 
     /**
      * Method to call remote submit bulk endpoint to be tested.
@@ -76,9 +91,8 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
             if (!duplicateDetected) {
-// TODO: Replace with stored proc?
-                DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
-                dbUnitUtilityBean.loadDatabase(this.getClass(), true);
+
+                initialiseDatabase();
             }
         }
     }
@@ -102,9 +116,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
             if (!duplicateDetected) {
-// TODO: Replace with stored proc?
-                DBUnitUtilityBean dbUnitUtilityBean = (DBUnitUtilityBean) SpringApplicationContext.getBean("DBUnitUtilityBean");
-                dbUnitUtilityBean.loadDatabase(this.getClass(), true);
+                initialiseDatabase();
             }
         }
     }
@@ -154,6 +166,8 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
                 concurrentMessages.get(i).join(THIRTY_SECONDS);
             } catch (final InterruptedException e) {
                 fail("Unexpected interruption of concurrent message thread.");
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
             }
         }
 
@@ -227,7 +241,8 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
             try {
                 response = callTestWebService(request);
             } catch (RuntimeException e) {
-                throw e;
+                LOGGER.error("Error: {}", e.getMessage());
+                return;
             }
 
             // Check the response returned by the web service.
@@ -243,4 +258,17 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
             return duplicate;
         }
   }
+
+  public void initialiseDatabase() {
+      LOGGER.info(" running sql scripts");
+      try {
+          Resource[] resources = new Resource[2];
+          resources[0] = new ClassPathResource("database/baseline/initialise_test_database.sql");
+          resources[1] = new ClassPathResource("database/baseline/SubmitBulkTest.sql");
+          Arrays.stream(resources).forEach(e -> executeScriptService.runScript(e));
+      } catch (Exception e) {
+          throw new SdtRunTimeException("RUNTIME_ERROR", "Failed to initialise database. Check scripts");
+     }
+  }
+
 }

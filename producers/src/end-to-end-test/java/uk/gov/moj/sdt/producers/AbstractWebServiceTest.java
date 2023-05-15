@@ -59,7 +59,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         try {
             response = this.callTestWebService(request);
         } catch (RuntimeException e) {
-            throw e;
+            throw new SdtRunTimeException("RUNTIME_ERROR", e.getMessage());
         }
 
         // Check the response returned by the web service.
@@ -197,7 +197,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
     }
 
     /**
-     * Utility to show xml chunk differences. Helps to debugging large xml
+     * Utility to show xml chunk differences. Helps with debugging large xml strings
      *
      * @param expectedXml the expected XML.
      * @param actualXml the actual XML.
@@ -206,9 +206,9 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             return;
         }
 
-        StringBuilder actualXmlStrip = new StringBuilder();
-        StringBuilder expectedXmlStrip = new StringBuilder();
-        int incrementX = 200;
+        String actualXmlStrip;
+        String expectedXmlStrip;
+        final int incrementX = 200;
         int startX = 0;
         int endX = 0;
         while (startX < actualXml.length()) {
@@ -216,36 +216,38 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             if (endX >= actualXml.length()) {
                 endX = actualXml.length();
             }
-            actualXmlStrip = new StringBuilder();
-            expectedXmlStrip = new StringBuilder();
-            if (startX < actualXml.length()-1) {
-                if (endX <= actualXml.length()) {
-                    actualXmlStrip = new StringBuilder(actualXml.substring(startX, endX));
-                } else {
-                    actualXmlStrip = new StringBuilder(actualXml.substring(startX, actualXml.length()));
-                }
-            }
-            if (startX < expectedXml.length()-1) {
-                if (endX <= expectedXml.length()) {
-                    expectedXmlStrip = new StringBuilder(expectedXml.substring(startX, endX));
-                } else {
-                    expectedXmlStrip = new StringBuilder(expectedXml.substring(startX, expectedXml.length()));
-                }
-            }
 
-            if (!actualXmlStrip.toString().equals(expectedXmlStrip.toString())) {
-                LOGGER.info("startX:{}; endX:{}", startX, endX);
-                LOGGER.info(" actualXmlStrip  : {}",  actualXmlStrip);
-                LOGGER.info(" expectedXmlStrip: {}",  expectedXmlStrip);
-                LOGGER.error("expected [{}], actual [{}]", expectedXmlStrip, actualXmlStrip);
-            }
-            assertEquals(expectedXmlStrip.toString(), actualXmlStrip.toString());
+            actualXmlStrip =  getXmlStrip(actualXml, startX, endX);
+            expectedXmlStrip =  getXmlStrip(expectedXml, startX, endX);
+            checkXmlStrip(actualXmlStrip, expectedXmlStrip, startX, endX);
 
+            // increment starting position
             startX +=incrementX;
         }
 
     }
 
+    private String getXmlStrip(String xml, int startX, int endX) {
+        if (startX < xml.length()-1) {
+            if (endX <= xml.length()) {
+                return xml.substring(startX, endX);
+            } else {
+                return xml.substring(startX, xml.length());
+            }
+        }
+        return "";
+    }
+
+    private void checkXmlStrip(String actualXmlStrip, String expectedXmlStrip, int startX, int endX) {
+
+        if (!actualXmlStrip.equals(expectedXmlStrip)) {
+            LOGGER.info("startX:{}; endX:{}", startX, endX);
+            LOGGER.info(" actualXmlStrip  : {}",  actualXmlStrip);
+            LOGGER.info(" expectedXmlStrip: {}",  expectedXmlStrip);
+            LOGGER.error("expected [{}], actual [{}]", expectedXmlStrip, actualXmlStrip);
+        }
+        assertEquals(expectedXmlStrip, actualXmlStrip);
+    }
 
     /**
      * Utility to remove spacing between nodes.
