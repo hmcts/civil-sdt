@@ -33,10 +33,13 @@
  */
 package uk.gov.moj.sdt.interceptors.out;
 
+import java.nio.charset.StandardCharsets;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.MessageImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -69,7 +72,6 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Mock
     ServiceRequestDao mockServiceRequestDao;
 
-    @Mock
     RequestDaoService mockRequestDaoService;
 
     /**
@@ -77,6 +79,11 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
      */
     private static final String ERROR_MESSAGE = "A SDT system component error " +
             "has occurred. Please contact the SDT support team for assistance";
+
+    @BeforeEach
+    void setup() {
+        mockRequestDaoService = new RequestDaoService(mockServiceRequestDao);
+    }
 
     /**
      * Test method for
@@ -96,7 +103,8 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         assertNull(serviceRequest.getResponsePayload());
         faultOutboundInterceptor.handleMessage(soapMessage);
         assertNotNull(serviceRequest.getResponseDateTime());
-        assertTrue(String.valueOf(serviceRequest.getResponsePayload()).contains(ERROR_MESSAGE));
+        String response = new String(serviceRequest.getResponsePayload(), StandardCharsets.UTF_8);
+        assertTrue(response.contains(ERROR_MESSAGE));
     }
 
     @Test

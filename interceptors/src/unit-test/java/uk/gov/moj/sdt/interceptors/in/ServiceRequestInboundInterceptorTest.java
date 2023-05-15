@@ -67,7 +67,6 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Mock
     ServiceRequestDao mockServiceRequestDao;
 
-    @Mock
     RequestDaoService requestDaoService;
 
     /**
@@ -76,6 +75,7 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Test
     void testHandleMessage() {
         try {
+            requestDaoService = new RequestDaoService(mockServiceRequestDao);
             // Create the service request inbound interceptor.
             final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor(requestDaoService);
 

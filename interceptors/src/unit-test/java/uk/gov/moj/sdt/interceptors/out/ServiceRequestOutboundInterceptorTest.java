@@ -35,12 +35,14 @@ package uk.gov.moj.sdt.interceptors.out;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.Phase;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -51,6 +53,7 @@ import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -64,8 +67,12 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
     @Mock
     ServiceRequestDao mockServiceRequestDao;
 
-    @Mock
     RequestDaoService mockRequestDaoService;
+
+    @BeforeEach
+    void setup() {
+        mockRequestDaoService = new RequestDaoService(mockServiceRequestDao);
+    }
 
     /**
      * Test method for
@@ -86,7 +93,8 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         Assertions.assertNull(serviceRequest.getResponsePayload());
         serviceRequestOutboundInterceptor.handleMessage(soapMessage);
         Assertions.assertNotNull(serviceRequest.getResponseDateTime());
-        Assertions.assertTrue(String.valueOf(serviceRequest.getResponsePayload()).contains(data));
+        String response = new String(serviceRequest.getResponsePayload(), StandardCharsets.UTF_8);
+        assertTrue(response.contains(data));
     }
 
     @Test

@@ -49,6 +49,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import javax.persistence.NoResultException;
 
@@ -136,7 +137,8 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
 
         LOGGER.debug("payload for bulk submission is {}", submission.getPayload());
 
-        assertEquals(String.valueOf(submission.getPayload()), xmlToLoad);
+        String response = new String(submission.getPayload(), StandardCharsets.UTF_8);
+        assertEquals(response, xmlToLoad);
         assertEquals("REF1", submission.getCustomerReference());
     }
 
