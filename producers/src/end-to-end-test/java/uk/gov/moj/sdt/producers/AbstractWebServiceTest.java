@@ -183,13 +183,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             actualXml = removeBetweenNodeSpaces(actualXml);
 
             checkXmlChunks(expectedXml, actualXml);
-
-            if (!actualXml.equals(expectedXml)) {
-                LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
-            }
-
-            // Check xml.
-            assertEquals(expectedXml, actualXml, "Expected XML [" + resourceName + "] does not match, ");
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failure to marshall response from web service [" + response.toString() + "]");
@@ -206,47 +199,17 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             return;
         }
 
-        String actualXmlStrip;
-        String expectedXmlStrip;
-        final int incrementX = 200;
-        int startX = 0;
-        int endX = 0;
-        while (startX < actualXml.length()) {
-            endX = startX + incrementX;
-            if (endX >= actualXml.length()) {
-                endX = actualXml.length();
-            }
-
-            actualXmlStrip =  getXmlStrip(actualXml, startX, endX);
-            expectedXmlStrip =  getXmlStrip(expectedXml, startX, endX);
-            checkXmlStrip(actualXmlStrip, expectedXmlStrip, startX, endX);
-
-            // increment starting position
-            startX +=incrementX;
+        Diff diff = DiffBuilder.compare(expectedXml)
+            .withTest(actualXml)
+            .ignoreComments()
+            .ignoreWhitespace()
+            .checkForSimilar()
+            .build();
+        boolean hasDiff = diff.hasDifferences();
+        if (hasDiff) {
+            LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
         }
-
-    }
-
-    private String getXmlStrip(String xml, int startX, int endX) {
-        if (startX < xml.length()-1) {
-            if (endX <= xml.length()) {
-                return xml.substring(startX, endX);
-            } else {
-                return xml.substring(startX, xml.length());
-            }
-        }
-        return "";
-    }
-
-    private void checkXmlStrip(String actualXmlStrip, String expectedXmlStrip, int startX, int endX) {
-
-        if (!actualXmlStrip.equals(expectedXmlStrip)) {
-            LOGGER.info("startX:{}; endX:{}", startX, endX);
-            LOGGER.info(" actualXmlStrip  : {}",  actualXmlStrip);
-            LOGGER.info(" expectedXmlStrip: {}",  expectedXmlStrip);
-            LOGGER.error("expected [{}], actual [{}]", expectedXmlStrip, actualXmlStrip);
-        }
-        assertEquals(expectedXmlStrip, actualXmlStrip);
+        assertFalse(hasDiff);
     }
 
     /**
