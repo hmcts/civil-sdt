@@ -196,7 +196,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      *
      * @param expectedXml the expected XML.
      * @param actualXml the actual XML.
-     */    private void checkXmlChunks(String expectedXml, String actualXml) {
+     */
+    protected void checkXmlChunks(String expectedXml, String actualXml) {
         if (actualXml.length() == 0 || expectedXml.length() == 0) {
             return;
         }
