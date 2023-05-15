@@ -8,6 +8,8 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
@@ -24,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -183,13 +186,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             actualXml = removeBetweenNodeSpaces(actualXml);
 
             checkXmlChunks(expectedXml, actualXml);
-
-            if (!actualXml.equals(expectedXml)) {
-                LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
-            }
-
-            // Check xml.
-            assertEquals(expectedXml, actualXml, "Expected XML [" + resourceName + "] does not match, ");
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failure to marshall response from web service [" + response.toString() + "]");
@@ -206,44 +202,17 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             return;
         }
 
-        StringBuilder actualXmlStrip = new StringBuilder();
-        StringBuilder expectedXmlStrip = new StringBuilder();
-        int incrementX = 200;
-        int startX = 0;
-        int endX = 0;
-        while (startX < actualXml.length()) {
-            endX = startX + incrementX;
-            if (endX >= actualXml.length()) {
-                endX = actualXml.length();
-            }
-            actualXmlStrip = new StringBuilder();
-            expectedXmlStrip = new StringBuilder();
-            if (startX < actualXml.length()-1) {
-                if (endX <= actualXml.length()) {
-                    actualXmlStrip = new StringBuilder(actualXml.substring(startX, endX));
-                } else {
-                    actualXmlStrip = new StringBuilder(actualXml.substring(startX, actualXml.length()));
-                }
-            }
-            if (startX < expectedXml.length()-1) {
-                if (endX <= expectedXml.length()) {
-                    expectedXmlStrip = new StringBuilder(expectedXml.substring(startX, endX));
-                } else {
-                    expectedXmlStrip = new StringBuilder(expectedXml.substring(startX, expectedXml.length()));
-                }
-            }
-
-            if (!actualXmlStrip.toString().equals(expectedXmlStrip.toString())) {
-                LOGGER.info("startX:{}; endX:{}", startX, endX);
-                LOGGER.info(" actualXmlStrip  : {}",  actualXmlStrip);
-                LOGGER.info(" expectedXmlStrip: {}",  expectedXmlStrip);
-                LOGGER.error("expected [{}], actual [{}]", expectedXmlStrip, actualXmlStrip);
-            }
-            assertEquals(expectedXmlStrip.toString(), actualXmlStrip.toString());
-
-            startX +=incrementX;
+        Diff diff = DiffBuilder.compare(expectedXml)
+            .withTest(actualXml)
+            .ignoreComments()
+            .ignoreWhitespace()
+            .checkForSimilar()
+            .build();
+        boolean hasDiff = diff.hasDifferences();
+        if (hasDiff) {
+            LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
         }
-
+        assertFalse(hasDiff);
     }
 
 
