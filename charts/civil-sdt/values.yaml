@@ -3,12 +3,6 @@ java:
   image: 'hmctspublic.azurecr.io/civil/sdt:latest'
   ingressHost: civil-sdt-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   aadIdentityName: civil
-#  Uncomment once the vault containing the app insights key has been set up
-#  keyVaults:
-#    sdt:
-#      secrets:
-#        - name: AppInsightsInstrumentationKey
-#          alias: azure.application-insights.instrumentation-key
   environment:
     SDT_DB_PORT: 5432
     SDT_DB_NAME: civil_sdt
@@ -17,6 +11,9 @@ java:
   keyVaults:
     civil-sdt:
       secrets:
+#        Uncomment once the vault containing the app insights key has been set up
+#        - name: AppInsightsInstrumentationKey
+#          alias: azure.application-insights.instrumentation-key
         - name: civil-sdt-POSTGRES-USER
           alias: SDT_DB_USERNAME
         - name: civil-sdt-POSTGRES-PASS
