@@ -31,15 +31,6 @@
 
 package uk.gov.moj.sdt.utils.mbeans;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
-import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
-import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -51,6 +42,14 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
+import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
 
 /**
  * A class to gather online metrics for SDT. This POJO is configured by Spring to be available as an MBean visible via
@@ -413,18 +412,14 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
      */
     private ICustomerCounter customerCounter;
 
-    @Autowired
-    public SdtMetricsMBean(@Qualifier("CustomerCounter")
-                               ICustomerCounter customerCounter) {
-        this.customerCounter = customerCounter;
-    }
-
     /**
      * Constructor for {@link SdtMetricsMBean}. This called by Spring and should become the bean that all subsequent
      * calls to metrics use, hence is stores in thisBean, which is obtained by getMetrics ().
      */
-    public SdtMetricsMBean() {
+    @Autowired
+    public SdtMetricsMBean(ICustomerCounter counter) {
         SdtMetricsMBean.thisBean = this;
+        setCustomerCounter(counter);
 
         // Set start time.
         this.resetTime = new GregorianCalendar().getTimeInMillis();
@@ -1570,7 +1565,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
             // Keep caller happy with throw away metrics - these stats will be lost - Spring not yet inititalised.
             final SdtMetricsMBean sdtMetricsMBean = new SdtMetricsMBean(true);
             sdtMetricsMBean.setCustomerCounter(new CustomerCounter());
-            SdtMetricsMBean.thisBean = sdtMetricsMBean;
+            return sdtMetricsMBean;
         }
 
         return SdtMetricsMBean.thisBean;
