@@ -85,7 +85,6 @@ request_type VARCHAR(50),
 version_number NUMERIC DEFAULT 0,
 individual_payload BYTEA,
 target_application_response BYTEA,
-error_log_id NUMERIC,
 issued_date TIMESTAMP(6));
 
 CREATE TABLE IF NOT EXISTS service_requests
