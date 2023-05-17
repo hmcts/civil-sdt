@@ -75,7 +75,8 @@ class SdtMetricsMBeansTest{
     @Test
     void testReset() {
         //Given
-        sdtMetricsMBean = Mockito.spy(SdtMetricsMBean.class);
+        SdtMetricsMBean testBean = new SdtMetricsMBean(new CustomerCounter());
+        sdtMetricsMBean = Mockito.spy(testBean);
         sdtMetricsMBean.upRequestQueueLength();
         sdtMetricsMBean.upDomainObjectsCount();
         //When
