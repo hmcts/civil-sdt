@@ -126,8 +126,7 @@ public class IndividualRequest extends AbstractDomainObject implements IIndividu
     /**
      * Error log.
      */
-    @OneToOne(cascade = CascadeType.ALL, targetEntity= ErrorLog.class)
-    @JoinColumn(name="ERROR_LOG_ID")
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = ErrorLog.class, mappedBy = "individualRequest")
     private IErrorLog errorLog;
 
     /**
