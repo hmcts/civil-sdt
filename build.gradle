@@ -535,6 +535,7 @@ subprojects { subproject ->
             property "sonar.sources", "src"
             property "sonar.tests", "src"
             property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
+            property 'sonar.exclusions', "${rootDir}/producers/src/end-to-end-test/resources/database/baseline/*.sql"
             property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
         }
     }
