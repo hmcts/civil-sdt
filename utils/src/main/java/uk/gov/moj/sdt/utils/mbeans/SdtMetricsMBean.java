@@ -425,10 +425,6 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
         this.resetTime = new GregorianCalendar().getTimeInMillis();
     }
 
-    public SdtMetricsMBean() {
-        this(new CustomerCounter());
-    }
-
     /**
      * Constructor for {@link SdtMetricsMBean} with discriminator parameter.
      *
@@ -1569,7 +1565,7 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
             // Keep caller happy with throw away metrics - these stats will be lost - Spring not yet inititalised.
             final SdtMetricsMBean sdtMetricsMBean = new SdtMetricsMBean(true);
             sdtMetricsMBean.setCustomerCounter(new CustomerCounter());
-            return sdtMetricsMBean;
+            SdtMetricsMBean.thisBean = sdtMetricsMBean;
         }
 
         return SdtMetricsMBean.thisBean;
