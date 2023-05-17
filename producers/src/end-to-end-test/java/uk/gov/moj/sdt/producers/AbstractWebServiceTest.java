@@ -9,7 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.DefaultNodeMatcher;
 import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
@@ -176,13 +178,9 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             expectedXml = removeVariantText(expectedXml, "submittedDate");
             // Following only needed for concurrent duplicate test since customer reference keeps changing.
             expectedXml = removeVariantText(expectedXml, "customerReference");
-            expectedXml = removeLineFeeds(expectedXml);
-            expectedXml = removeBetweenNodeSpaces(expectedXml);
             actualXml = removeVariantText(actualXml, "sdtBulkReference");
             actualXml = removeVariantText(actualXml, "submittedDate");
             actualXml = removeVariantText(actualXml, "customerReference");
-            actualXml = removeLineFeeds(actualXml);
-            actualXml = removeBetweenNodeSpaces(actualXml);
 
             checkXmlChunks(expectedXml, actualXml);
         } catch (Exception e) {
@@ -202,65 +200,30 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             return;
         }
 
-        Diff diff = DiffBuilder.compare(expectedXml)
-            .withTest(actualXml)
-            .ignoreComments()
+        // attribute requestId order is important!
+        DefaultNodeMatcher nodeMatcher = new DefaultNodeMatcher(ElementSelectors.conditionalBuilder()
+                .whenElementIsNamed("response")
+                .thenUse(ElementSelectors.byNameAndAttributes("requestId"))
+                .elseUse(ElementSelectors.byNameAndText)
+                .build());
+
+        Diff diff = DiffBuilder.compare(expectedXml).withTest(actualXml)
+            .normalizeWhitespace()
             .ignoreWhitespace()
+            .ignoreComments()
             .checkForSimilar()
+            .withNodeMatcher(nodeMatcher)
             .build();
+
         boolean hasDiff = diff.hasDifferences();
         if (hasDiff) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("expected [{}]", expectedXml);
+                LOGGER.debug("actual   [{}]", actualXml);
+            }
             LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
         }
         assertFalse(hasDiff);
-    }
-
-    /**
-     * Utility to remove spacing between nodes.
-     *
-     * @param xml the XML to remove text from.
-     * @return the modified XML.
-     */
-    private String removeBetweenNodeSpaces(final String xml) {
-        return xml.replace("> <", "><");
-
-    }
-
-
-    /**
-     * Utility to remove carriage return (\r), linefeeds (\n) and tabs (\t) otherwise the
-     * test for equality does not work.
-     *
-     * @param xml the XML to remove text from.
-     * @return the modified XML.
-     */
-    private String removeLineFeeds(final String xml) {
-        // Get characters from String.
-        char[] inChars = xml.toCharArray();
-
-        // Make array big enough for all given String.
-        char[] outChars = new char[inChars.length];
-
-        int i1 = 0;
-        int i2 = 0;
-        boolean skipSpace = false;
-
-        // Exclude line feeds and carriage returns.
-        // Allow no consecutive spaces (ie only one space).
-        while (i1 < inChars.length) {
-            if (i1 != 0 && inChars[i1 - 1] == ' ' && inChars[i1] == ' ') {
-                skipSpace = true;
-            }
-            if (inChars[i1] != '\n' && inChars[i1] != '\r' && inChars[i1] != '\t' && !skipSpace) {
-                outChars[i2++] = inChars[i1];
-            }
-            if (skipSpace)
-                skipSpace = false;
-            i1++;
-        }
-
-        // Convert back to String.
-        return new String(outChars, 0, i2);
     }
 
     /**
