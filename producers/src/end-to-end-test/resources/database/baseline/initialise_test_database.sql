@@ -85,6 +85,7 @@ request_type VARCHAR(50),
 version_number NUMERIC DEFAULT 0,
 individual_payload BYTEA,
 target_application_response BYTEA,
+error_log_id NUMERIC,
 issued_date TIMESTAMP(6));
 
 CREATE TABLE IF NOT EXISTS service_requests
@@ -222,6 +223,7 @@ CREATE INDEX IF NOT EXISTS el_individual_request_id ON error_logs (individual_re
 CREATE UNIQUE INDEX IF NOT EXISTS error_logs_pk ON error_logs (error_log_id);
 CREATE UNIQUE INDEX IF NOT EXISTS error_messages_pk ON error_messages (error_message_id);
 CREATE UNIQUE INDEX IF NOT EXISTS global_parameters_pk ON global_parameters (global_parameter_id);
+CREATE INDEX IF NOT EXISTS ir_error_logs_id ON individual_requests (error_log_id);
 CREATE UNIQUE INDEX IF NOT EXISTS individual_requests_pk ON individual_requests (individual_request_id);
 CREATE INDEX IF NOT EXISTS ir_bulk_reference_i ON individual_requests (sdt_bulk_reference);
 CREATE INDEX IF NOT EXISTS ir_bulk_submission_id_i ON individual_requests (bulk_submission_id);

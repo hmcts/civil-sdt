@@ -31,6 +31,14 @@
 
 package uk.gov.moj.sdt.utils.mbeans;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
+import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -42,14 +50,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
-import uk.gov.moj.sdt.utils.mbeans.api.ICustomerCounter;
-import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
 
 /**
  * A class to gather online metrics for SDT. This POJO is configured by Spring to be available as an MBean visible via
@@ -423,6 +423,10 @@ public final class SdtMetricsMBean implements ISdtMetricsMBean {
 
         // Set start time.
         this.resetTime = new GregorianCalendar().getTimeInMillis();
+    }
+
+    public SdtMetricsMBean() {
+        this(new CustomerCounter());
     }
 
     /**
