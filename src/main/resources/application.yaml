@@ -28,7 +28,7 @@ spring:
     allow-bean-definition-overriding: true
     allow-circular-references: true
   config:
-    import: "optional:configtree:/mnt/secrets/"
+    import: "optional:configtree:/mnt/secrets/civil-sdt/"
   application:
     name: Civil SDT
   datasource:
