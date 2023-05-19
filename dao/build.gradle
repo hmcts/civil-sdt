@@ -9,14 +9,6 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
-dependencies {
-    implementation project(':dao-api')
-    implementation project(':domain')
-    implementation project(':utils')
-    testImplementation project(":domain").sourceSets.unitTest.output
-    testImplementation project(":utils").sourceSets.unitTest.output
-    testImplementation project(":utils").sourceSets.integTest.output
-}
 
 bootJar {
     enabled = false

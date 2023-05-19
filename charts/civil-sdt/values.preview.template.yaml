@@ -12,8 +12,8 @@ java:
   postgresql:
     enabled: true
   keyVaults:
-    civil:
-      resourceGroup: civil
+    civil-sdt:
+      disabled: true
       secrets:
         - name: AppInsightsInstrumentationKey
   secrets:
