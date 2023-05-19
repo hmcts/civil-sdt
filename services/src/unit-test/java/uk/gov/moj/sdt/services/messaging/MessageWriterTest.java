@@ -3,25 +3,23 @@ package uk.gov.moj.sdt.services.messaging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -36,14 +34,16 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     private static final String UNIT_TEST = "UNITTEST";
 
-    /**
-     * MessageWriter for mocking.
-     */
+    private static final String DLQ_SUFFIX = "/$deadletterqueue";
+
     private MessageWriter messageWriter;
 
     private static final String SUCCESS = "Success";
 
     private static final String NOT_EXPECTED_TO_FAIL = "Not Expected to fail";
+
+    @Mock
+    JmsTemplate mockJmsTemplate;
 
     /**
      * Set up the variables.
@@ -51,11 +51,10 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        JmsTemplate jmsTemplate = mock(JmsTemplate.class);
         QueueConfig queueConfig = new QueueConfig();
         Map<String, String> mockedMap = new HashMap<>();
         queueConfig.setTargetAppQueue(mockedMap);
-        messageWriter = new MessageWriter(jmsTemplate, queueConfig);
+        messageWriter = new MessageWriter(mockJmsTemplate, queueConfig);
     }
 
     /**
@@ -74,6 +73,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Illegal Argument specified for the target application");
         }
+        verify(mockJmsTemplate, never()).convertAndSend(anyString(), any(ISdtMessage.class));
     }
 
     /**
@@ -93,6 +93,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         } catch (final IllegalArgumentException e) {
             assertTrue(true, "Target application code does not have a mapped queue name");
         }
+        verify(mockJmsTemplate, never()).convertAndSend(anyString(), any(ISdtMessage.class));
     }
 
     /**
@@ -112,7 +113,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             messageWriter.setQueueNameMap(queueNameMap);
 
             messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
-            assertTrue(true, SUCCESS);
+            assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
+            verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
         } catch (final IllegalArgumentException e) {
             fail(NOT_EXPECTED_TO_FAIL);
         }
@@ -136,38 +138,10 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
                 messageWriter.setQueueNameMap(queueNameMap);
 
                 messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
-                assertTrue(true, SUCCESS);
+                assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
+                verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE + DLQ_SUFFIX, sdtMessage);
             } catch (final IllegalArgumentException e) {
                 fail(NOT_EXPECTED_TO_FAIL);
             }
-    }
-    @Test
-    void testQueueMessageForDeadLetterPerformanceLogging() {
-
-        try (
-            MockedStatic<PerformanceLogger> mockStaticPerformanceLogger
-                = Mockito.mockStatic(PerformanceLogger.class)
-        ) {
-            when(PerformanceLogger.isPerformanceEnabled(anyLong())).thenReturn(true);
-            // Setup finished, now tell the mock what to expect.
-            final ISdtMessage sdtMessage = new SdtMessage();
-            sdtMessage.setSdtRequestReference("Test");
-
-            // Send the message.
-            try {
-                final Map<String, String> queueNameMap = new HashMap<>();
-                queueNameMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
-
-                messageWriter.setQueueNameMap(queueNameMap);
-
-                messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
-                assertTrue(true, SUCCESS);
-            } catch (final IllegalArgumentException e) {
-                fail(NOT_EXPECTED_TO_FAIL);
-            }
-            mockStaticPerformanceLogger.verify(
-                () -> PerformanceLogger.log(any(),eq(PerformanceLogger.LOGGING_POINT_5),
-                                            eq("Enqueue message"), eq("\n\n\tsdt request reference=Test\n")));
-        }
     }
 }

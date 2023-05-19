@@ -44,11 +44,7 @@ public class ConsumersConfig {
                                                                                       @Qualifier("CacheSetupOutboundInterceptor")
                                                                                       CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
                                                                                       @Qualifier("CacheEndOutboundInterceptor")
-                                                                                          CacheEndOutboundInterceptor performanceLoggerOutboundInterceptor,
-                                                                                      @Qualifier("CacheEndOutboundInterceptor")
                                                                                           CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
-                                                                                      @Qualifier("PerformanceLoggerInboundInterceptor")
-                                                                                          PhaseInterceptor<SoapMessage> performanceLoggerInboundInterceptor,
                                                                                       @Qualifier("XmlInboundInterceptor")
                                                                                           XmlInboundInterceptor xmlInboundInterceptor,
                                                                                       @Qualifier("SdtUnmarshallInterceptor")
@@ -60,12 +56,10 @@ public class ConsumersConfig {
         List<Interceptor<? extends Message>> outInterceptors = new ArrayList<>();
         outInterceptors.add(cacheSetupOutboundInterceptor);
         outInterceptors.add(xmlOutboundInterceptor);
-        outInterceptors.add(performanceLoggerOutboundInterceptor);
         outInterceptors.add(cacheEndOutboundInterceptor);
         jaxWsProxyFactoryBean.setOutInterceptors(outInterceptors);
 
         List<Interceptor<? extends Message>> inInterceptors = new ArrayList<>();
-        inInterceptors.add(performanceLoggerInboundInterceptor);
         inInterceptors.add(xmlInboundInterceptor);
         inInterceptors.add(sdtUnmarshallInterceptor);
         jaxWsProxyFactoryBean.setInInterceptors(inInterceptors);

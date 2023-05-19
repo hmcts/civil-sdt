@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.gov.moj.sdt.handlers.api.IWsUpdateItemHandler;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdaterequestschema.UpdateRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.individualupdateresponseschema.UpdateResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtinternalendpoint.ISdtInternalEndpointPortType;
@@ -78,22 +77,6 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
                     updateRequest.getHeader().getSdtRequestId());
         }
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_2)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tsdt sdt request id=").append(updateRequest.getHeader().getSdtRequestId())
-                    .append("\n\tstatus code=").append(updateRequest.getStatus().getCode()).append("\n");
-
-            if (updateRequest.getStatus().getError() != null) {
-                detail.append("\n\terror code=").append(updateRequest.getStatus().getError().getCode())
-                        .append("\n\terror description=").append(updateRequest.getStatus().getError().getDescription())
-                        .append("\n");
-            }
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_2, "Status update received",
-                    detail.toString());
-        }
-
         UpdateResponseType response = null;
 
         try {
@@ -102,22 +85,6 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
         catch (Exception throwable)
         {
             handleException(throwable);
-        }
-
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_9)) {
-            final StringBuilder detail = new StringBuilder();
-            detail.append("\n\n\tstatus code=").append(null!=response.getStatus()?response.getStatus().getCode():"")
-                    .append("\n");
-
-            if (response.getStatus().getError() != null) {
-                detail.append("\n\terror code=").append(response.getStatus().getError().getCode())
-                        .append("\n\terror description=").append(response.getStatus().getError().getDescription())
-                        .append("\n");
-            }
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_9,
-                    "Status update response returned", detail.toString());
         }
 
         return response;

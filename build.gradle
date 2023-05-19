@@ -169,7 +169,6 @@ ext {
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
   testcontainers = '1.17.5'
-  sdtCommonVersion = '1.0.0-SDT-85.1.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -195,7 +194,7 @@ ext.libraries = [
 ext['guava.version'] = '30.0-jre'
 ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
-ext['spring-security.version'] = '5.7.5'
+ext['spring-security.version'] = '5.7.8'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 
 dependencyManagement {

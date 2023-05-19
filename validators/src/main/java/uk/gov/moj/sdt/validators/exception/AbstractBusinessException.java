@@ -33,8 +33,8 @@ package uk.gov.moj.sdt.validators.exception;
 import java.text.MessageFormat;
 import java.util.List;
 
+import uk.gov.moj.sdt.utils.exception.IBusinessException;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-import uk.gov.moj.sdt.validators.exception.api.IBusinessException;
 
 /**
  * Base class for business exceptions.

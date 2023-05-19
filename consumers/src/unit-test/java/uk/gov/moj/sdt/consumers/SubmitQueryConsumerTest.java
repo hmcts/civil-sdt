@@ -49,7 +49,6 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
@@ -316,51 +315,5 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
 
         assertEquals("The following exception occured [MISC_OUTAGE] message[Misc outage exception]", webServiceException.getCause().getMessage());
         assertNotNull(webServiceException.getCause());
-    }
-
-    /**
-     * Verify PerformanceLogger works as intended when enabled
-     */
-    @Test
-    void testSubmitQueryRequestSuccessLogsDetails() {
-        final ISubmitQueryRequest mockSubmitQueryRequest = mock(ISubmitQueryRequest.class);
-        final IServiceRouting mockServiceRouting = mock(IServiceRouting.class);
-        final ITargetApplication mockTargetApplication = mock(ITargetApplication.class);
-        final SubmitQueryResponseType submitQueryResponseType = createSubmitQueryResponseType();
-
-        when(mockTransformer.transformDomainToJaxb(mockSubmitQueryRequest)).thenReturn(submitQueryRequestType);
-        when(mockClient.submitQuery(submitQueryRequestType)).thenReturn(submitQueryResponseType);
-        mockTransformer.transformJaxbToDomain(submitQueryResponseType, mockSubmitQueryRequest);
-
-        doAnswer ((Answer<Void>) invocation -> {
-            ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount (BigInteger.valueOf(1));
-            final StatusType statusType = new StatusType ();
-            statusType.setCode (StatusCodeType.OK);
-            ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus (statusType);
-            // required to be null for a void method
-            return null;
-        }).when(mockTransformer).transformJaxbToDomain(submitQueryResponseType, mockSubmitQueryRequest);
-
-        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
-
-        when(mockSubmitQueryRequest.getTargetApplication()).thenReturn(mockTargetApplication);
-
-        when(mockTargetApplication.getServiceRouting(any())).thenReturn(mockServiceRouting);
-        when(mockTargetApplication.getTargetApplicationName()).thenReturn("TEST_APP_NAME");
-        when(mockTargetApplication.getTargetApplicationCode()).thenReturn("1");
-
-        when(mockServiceRouting.getWebServiceEndpoint()).thenReturn("TEST_ENDPOINT");
-        when(mockServiceRouting.getTargetApplication()).thenReturn(mockTargetApplication);
-
-        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = mockStatic(PerformanceLogger.class)) {
-            mockStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
-                .thenReturn(true);
-            this.submitQueryConsumer.processSubmitQuery(mockSubmitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-
-            verifyStatic(PerformanceLogger.class, times(2));
-            PerformanceLogger.isPerformanceEnabled(anyLong());
-            verifyStatic(PerformanceLogger.class, times(2));
-            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
-        }
     }
 }
