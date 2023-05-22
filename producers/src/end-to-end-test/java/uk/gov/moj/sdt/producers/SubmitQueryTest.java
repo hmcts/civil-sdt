@@ -1,8 +1,5 @@
 package uk.gov.moj.sdt.producers;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.ws.soap.SOAPFaultException;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,13 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
 import uk.gov.moj.sdt.producers.config.SecurityConfig;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
+
+import javax.xml.bind.JAXBElement;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -50,7 +48,7 @@ public class SubmitQueryTest extends AbstractWebServiceTest<SubmitQueryRequestTy
     public void testErrorResult() {
         try {
             this.callWebService(SubmitQueryRequestType.class);
-        } catch (SOAPFaultException e) {
+        } catch (SdtRunTimeException e) {
             assertTrue(e.getMessage().contains("The content of element")
                     && e.getMessage().contains("criterion' is not complete"),
                     "Unexpected exception message in SOAPFaultException [" + e.getMessage() + "]");
