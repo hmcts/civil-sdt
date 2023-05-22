@@ -10,9 +10,8 @@ java:
   keyVaults:
     civil-sdt:
       secrets:
-#        Uncomment once the vault containing the app insights key has been set up
-#        - name: AppInsightsInstrumentationKey
-#          alias: azure.application-insights.instrumentation-key
+        - name: appinsights-connection-string
+          alias: appinsights-connection-string
         - name: civil-sdt-POSTGRES-USER
           alias: SDT_DB_USERNAME
         - name: civil-sdt-POSTGRES-PASS

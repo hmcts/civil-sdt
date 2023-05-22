@@ -1,5 +1,6 @@
 {
+  "connectionString" : "${file:/mnt/secrets/civil-sdt/appinsights-connection-string}",
   "role": {
-    "name": "civil-sdt"
+    "name": "Civil SDT"
   }
 }
