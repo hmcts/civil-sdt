@@ -14,8 +14,6 @@ java:
   keyVaults:
     civil-sdt:
       disabled: true
-      secrets:
-        - name: AppInsightsInstrumentationKey
   secrets:
     CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:
       secretRef: servicebus-secret-queue-{{ .Release.Name }}-servicebus-civil-sdt-in-out

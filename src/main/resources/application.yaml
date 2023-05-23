@@ -14,7 +14,6 @@ management:
 springdoc:
   packagesToScan: uk.gov.moj.sdt.controllers
 
-#If you use a database then uncomment below lines and update db properties accordingly
 spring:
   jms:
     servicebus:
@@ -50,9 +49,6 @@ spring:
     out-of-order: 'true'
     baseline-on-migrate: 'true'
 
-azure:
-  application-insights:
-    instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:00000000-0000-0000-0000-000000000000}
 sdt:
   tx-timeout:
     default:  1000
