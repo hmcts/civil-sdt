@@ -11,9 +11,9 @@ java:
     CIVIL_SDT_QUEUE: civil-sdt-in-out
   postgresql:
     enabled: true
-#  keyVaults:
-#    civil-sdt:
-#      disabled: true
+  keyVaults:
+    civil-sdt:
+      disabled: true
   secrets:
     CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:
       secretRef: servicebus-secret-queue-{{ .Release.Name }}-servicebus-civil-sdt-in-out
