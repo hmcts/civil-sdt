@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -60,7 +61,7 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(requestDaoService);
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
-        mockServiceRequestDao.persist(serviceRequest);
+        verify(mockServiceRequestDao).persist(serviceRequest);
 
         assertNull(serviceRequest.getResponseDateTime());
         assertNull(serviceRequest.getResponsePayload());
