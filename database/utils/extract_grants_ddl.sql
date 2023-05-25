@@ -93,15 +93,7 @@ BEGIN
   FOR r_grants IN system_grants(p_grantee => 'PUBLIC') LOOP
       print_clob(r_grants.grant_statement);
   END LOOP;
-  
-  FOR r_grants IN system_grants(p_grantee => 'SDT_USER') LOOP
-      print_clob(r_grants.grant_statement);
-  END LOOP;
-  
-  FOR r_grants IN system_grants(p_grantee => 'SDT_BATCH_USER') LOOP
-      print_clob(r_grants.grant_statement);
-  END LOOP;
-  
+
   DBMS_OUTPUT.PUT_LINE('-----------------');
   DBMS_OUTPUT.PUT_LINE('--- Sys Grants');
   DBMS_OUTPUT.PUT_LINE('-----------------');

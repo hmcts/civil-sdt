@@ -20,29 +20,6 @@ sqlplus system/elephant @extract_objects_ddl.sql PUBLIC
 sqlplus system/elephant @extract_constraints_ddl.sql PUBLIC
 sqlplus system/elephant @extract_grants_ddl.sql PUBLIC
 
-
-echo.
-echo.
-echo.
-echo.
-echo EXTRACTING DDL FOR SCHEMA SDT_USER
-mkdir ..\generated\SDT_USER
-sqlplus system/elephant @extract_objects_ddl.sql SDT_USER
-sqlplus system/elephant @extract_constraints_ddl.sql SDT_USER
-sqlplus system/elephant @extract_grants_ddl.sql SDT_USER
-
-
-echo.
-echo.
-echo.
-echo.
-echo EXTRACTING DDL FOR SCHEMA SDT_BATCH_USER
-mkdir ..\generated\SDT_BATCH_USER
-sqlplus system/elephant @extract_objects_ddl.sql SDT_BATCH_USER
-sqlplus system/elephant @extract_constraints_ddl.sql SDT_BATCH_USER
-sqlplus system/elephant @extract_grants_ddl.sql SDT_BATCH_USER
-
-
 echo.
 echo.
 echo.
