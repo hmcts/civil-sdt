@@ -1,13 +1,5 @@
 package uk.gov.moj.sdt.producers;
 
-import java.io.InputStream;
-import java.time.LocalDateTime;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -17,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StopWatch;
-
 import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
 import uk.gov.moj.sdt.producers.config.SecurityConfig;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
@@ -27,6 +18,13 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestsType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.InputStream;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -259,9 +257,10 @@ public class SubmitBulkForSystemTest extends AbstractWebServiceTest<BulkRequestT
         private Thread starter = null;
 
         /**
-         * Constructor.`
+         * Constructor for {@link BulkRequestProcessor}.
          *
-         * @param requestType
+         * @param starter starter thread
+         * @param requestType bulk request type
          */
         BulkRequestProcessor(final Thread starter, final BulkRequestType requestType) {
             this.starter = starter;

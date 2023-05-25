@@ -68,9 +68,9 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        bulkSubmissionDao =  this.applicationContext.getBean(IBulkSubmissionDao.class);
-        individualRequestDao =  this.applicationContext.getBean(IIndividualRequestDao.class);
-        executeScriptService =  this.applicationContext.getBean(ExecuteScriptService.class);
+        bulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
+        individualRequestDao = this.applicationContext.getBean(IIndividualRequestDao.class);
+        executeScriptService = this.applicationContext.getBean(ExecuteScriptService.class);
         IBulkCustomerDao bulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
         bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, 10711L);
         dataRetentionPeriod = 90;
@@ -99,7 +99,7 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
 
     @Test
     void testRunScript() {
-        // check the records dfo not exist yet
+        // check the records do not exist yet
         IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference,
                 dataRetentionPeriod);
         assertNull(bulkSubmission);

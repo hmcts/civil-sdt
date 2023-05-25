@@ -1,6 +1,7 @@
 package uk.gov.moj.sdt.producers;
 
 public class SdtRunTimeException extends RuntimeException {
+
     /**
      * The Constant serialVersionUID.
      */
@@ -9,16 +10,12 @@ public class SdtRunTimeException extends RuntimeException {
     /**
      * Error code.
      */
-    // CHECKSTYLE:OFF
-
     private String errorCode;
 
     /**
      * Error description.
      */
     private String errorDescription;
-
-    // CHECKSTYLE:ON
 
     /**
      * Constructor for non tokenised description.
