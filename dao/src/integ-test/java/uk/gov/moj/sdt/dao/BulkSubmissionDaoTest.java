@@ -49,9 +49,9 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
+import javax.persistence.NoResultException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import javax.persistence.NoResultException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -135,9 +135,8 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
 
         assertNotNull(submission);
 
-        LOGGER.debug("payload for bulk submission is {}", submission.getPayload());
-
         String response = new String(submission.getPayload(), StandardCharsets.UTF_8);
+        LOGGER.debug("payload for bulk submission is {}", response);
         assertEquals(response, xmlToLoad);
         assertEquals("REF1", submission.getCustomerReference());
     }
