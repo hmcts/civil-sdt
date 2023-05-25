@@ -63,8 +63,8 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
@@ -119,13 +119,13 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
             accessibleSubmitQueryService.invoke(submitQueryService, submitQuery);
         } catch (final IllegalAccessException e) {
             LOGGER.debug(e.getMessage());
-            assertTrue("IllegalAccessException please debug test", false);
+            assertTrue(false, "IllegalAccessException please debug test");
         } catch (final IllegalArgumentException e) {
             LOGGER.debug(e.getMessage());
-            assertTrue("IllegalArgumentException please debug test", false);
+            assertTrue(false, "IllegalArgumentException please debug test");
         } catch (final InvocationTargetException e) {
             LOGGER.debug(e.getMessage());
-            assertTrue("InvocationTargetException please debug test", false);
+            assertTrue(false, "InvocationTargetException please debug test");
         }
         // submitQueryService.updateRequestSoapError(submitQuery);
 
