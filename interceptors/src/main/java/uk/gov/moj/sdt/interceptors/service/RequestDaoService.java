@@ -1,9 +1,5 @@
 package uk.gov.moj.sdt.interceptors.service;
 
-import java.time.LocalDateTime;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
-import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.ServiceRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.ServerHostName;
+
+import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("RequestDaoService")
 public class RequestDaoService {
@@ -31,7 +30,6 @@ public class RequestDaoService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void persistRequest() {
-        final IGenericDao serviceRequestDao = this.serviceRequestDao;
 
         // Get the raw XML.
         final String rawXml = SdtContext.getContext().getRawInXml();
@@ -92,7 +90,6 @@ public class RequestDaoService {
         }
     }
 
-
     /**
      * Retrieve the Request Type from the inbound xmlMessage. Assumes inbound message has already been setup by the
      * XmlInboundInterceptor.
@@ -150,7 +147,7 @@ public class RequestDaoService {
 
         if (matcher.find()) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Found matching group[" + matcher.group() + "]");
+                LOGGER.debug("Found matching group[{}]",  matcher.group());
             }
 
             // Copy the match.
@@ -193,7 +190,7 @@ public class RequestDaoService {
 
         if (matcher.find()) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Found matching group[" + matcher.group() + "]");
+                LOGGER.debug("Found matching group[{}]", matcher.group());
             }
 
             // Copy the match.
@@ -202,4 +199,5 @@ public class RequestDaoService {
 
         return attributeValue;
     }
+
 }
