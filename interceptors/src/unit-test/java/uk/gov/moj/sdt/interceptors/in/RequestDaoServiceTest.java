@@ -1,14 +1,9 @@
 package uk.gov.moj.sdt.interceptors.in;
 
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.message.MessageImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
@@ -22,26 +17,16 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-/**
- * Test class.
- *
- * @author d195274
- */
 @ExtendWith(MockitoExtension.class)
-class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
-    /**
-     * Logger object.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptorTest.class);
+class RequestDaoServiceTest extends AbstractSdtUnitTestBase {
 
     @Mock
     ServiceRequestDao mockServiceRequestDao;
 
     RequestDaoService requestDaoService;
 
-    @BeforeEach
     @Override
-    public void setUp() {
+    protected void setUpLocalTests() {
         requestDaoService = new RequestDaoService(mockServiceRequestDao);
     }
 
@@ -50,21 +35,14 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testHandleMessage() {
-        try {
-            // Create the service request inbound interceptor.
-            final ServiceRequestInboundInterceptor sRII = new ServiceRequestInboundInterceptor(requestDaoService);
 
-            // Setup the raw XML as if the XmlInboundInterceptor had run.
-            final String xml =
-                    this.convertStreamToString(ServiceRequestInboundInterceptorTest.class
-                            .getResourceAsStream("inRequest.xml"));
-            SdtContext.getContext().setRawInXml(xml);
+        // Setup the raw XML as if the XmlInboundInterceptor had run.
+        final String xml =
+                this.convertStreamToString(ServiceRequestInboundInterceptorTest.class
+                        .getResourceAsStream("inRequest.xml"));
+        SdtContext.getContext().setRawInXml(xml);
 
-            sRII.handleMessage(new SoapMessage(new MessageImpl()));
-
-        } catch (final SecurityException e) {
-            LOGGER.error("testHandleMessage()", e);
-        }
+        requestDaoService.persistRequest();
     }
 
     /**

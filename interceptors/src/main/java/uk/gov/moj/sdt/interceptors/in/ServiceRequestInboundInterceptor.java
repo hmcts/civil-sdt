@@ -60,9 +60,6 @@ public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestInboundInterceptor.class);
 
-    /**
-     * Create instance of {@link PerformanceLoggerInboundInterceptor}.
-     */
     @Autowired
     public ServiceRequestInboundInterceptor(RequestDaoService requestDaoService) {
         super(Phase.RECEIVE);

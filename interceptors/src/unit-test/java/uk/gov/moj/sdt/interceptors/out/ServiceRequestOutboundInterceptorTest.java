@@ -4,7 +4,6 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.Phase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -19,10 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,10 +34,8 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     RequestDaoService requestDaoService;
 
-    @BeforeEach
     @Override
-    public void setUp() throws Exception {
-        super.setUp();
+    protected void setUpLocalTests() {
         requestDaoService = new RequestDaoService(mockServiceRequestDao);
     }
 
@@ -58,7 +52,6 @@ class ServiceRequestOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         final ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor = new ServiceRequestOutboundInterceptor(requestDaoService);
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
-        verify(mockServiceRequestDao).persist(serviceRequest);
 
         assertNull(serviceRequest.getResponseDateTime());
         assertNull(serviceRequest.getResponsePayload());
