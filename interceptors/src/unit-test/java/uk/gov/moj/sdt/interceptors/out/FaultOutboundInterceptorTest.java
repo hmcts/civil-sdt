@@ -61,7 +61,6 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         final FaultOutboundInterceptor faultOutboundInterceptor = new FaultOutboundInterceptor(requestDaoService);
         final ServiceRequest serviceRequest = new ServiceRequest();
         when(mockServiceRequestDao.fetch(ServiceRequest.class, 1L)).thenReturn(serviceRequest);
-        verify(mockServiceRequestDao).persist(serviceRequest);
 
         assertNull(serviceRequest.getResponseDateTime());
         assertNull(serviceRequest.getResponsePayload());
@@ -69,6 +68,7 @@ class FaultOutboundInterceptorTest extends AbstractSdtUnitTestBase {
         assertNotNull(serviceRequest.getResponseDateTime());
         String response = new String(serviceRequest.getResponsePayload(), StandardCharsets.UTF_8);
         assertTrue(response.contains(ERROR_MESSAGE));
+        verify(mockServiceRequestDao).persist(serviceRequest);
     }
 
     /**
