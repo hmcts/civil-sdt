@@ -39,14 +39,8 @@
     <appender-ref ref="Console" />
   </root>
 
-  <!-- LOG "uk.gov.moj.sdt*" at INFO level -->
+  <!-- LOG "uk.gov.moj.sdt.services" at INFO level -->
   <logger name="uk.gov.moj.sdt.services" level="info" additivity="false">
-    <appender-ref ref="RollingFile" />
-    <appender-ref ref="Console" />
-  </logger>
-
-  <!-- LOG "org.dbunit.dataset" at INFO level -->
-  <logger name="org.dbunit.dataset" level="info" additivity="false">
     <appender-ref ref="RollingFile" />
     <appender-ref ref="Console" />
   </logger>
