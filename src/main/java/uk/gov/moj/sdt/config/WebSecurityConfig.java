@@ -16,10 +16,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // Disabling csrf breaks Spring Security compliance and is marked as a security hotspot
-        // in the pipeline build
-        // BUT this is needed to allow access to SDT hence commented for now!
-        //        http.csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
+        http.csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
         return http.build();
     }
 }
