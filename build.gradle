@@ -530,7 +530,6 @@ subprojects { subproject ->
   }
 
   test {
-    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     generateCucumberReports.enabled = false
     useJUnitPlatform()
 
