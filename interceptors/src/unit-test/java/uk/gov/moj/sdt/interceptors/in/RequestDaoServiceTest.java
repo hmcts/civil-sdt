@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -16,6 +17,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class RequestDaoServiceTest extends AbstractSdtUnitTestBase {
@@ -43,6 +46,7 @@ class RequestDaoServiceTest extends AbstractSdtUnitTestBase {
         SdtContext.getContext().setRawInXml(xml);
 
         requestDaoService.persistRequest();
+        verify(mockServiceRequestDao).persist(any(IServiceRequest.class));
     }
 
     /**

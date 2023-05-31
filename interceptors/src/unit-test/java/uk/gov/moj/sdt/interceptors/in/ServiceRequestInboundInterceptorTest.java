@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
+import uk.gov.moj.sdt.domain.api.IServiceRequest;
 import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -21,6 +22,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test class.
@@ -61,6 +64,7 @@ class ServiceRequestInboundInterceptorTest extends AbstractSdtUnitTestBase {
             SdtContext.getContext().setRawInXml(xml);
 
             sRII.handleMessage(new SoapMessage(new MessageImpl()));
+            verify(mockServiceRequestDao).persist(any(IServiceRequest.class));
 
         } catch (final SecurityException e) {
             LOGGER.error("testHandleMessage()", e);

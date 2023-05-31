@@ -67,7 +67,7 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
         Predicate sdtDatePredicate = createDatePredicate(criteriaBuilder, root, dataRetention);
 
         TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
-                .where(sdtCustomerPredicate,customerReferencePredicate, sdtDatePredicate));
+                .where(sdtCustomerPredicate, customerReferencePredicate, sdtDatePredicate));
 
         try {
             return typedQuery.getSingleResult();
@@ -93,13 +93,8 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
             sdtBulkReference.toLowerCase()
         );
         Predicate sdtDatePredicate = createDatePredicate(criteriaBuilder, root, dataRetention);
-
         TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
-                .where(
-                        sdtCustomerPredicate
-                        ,sdtBulkRefPredicate
-                        ,sdtDatePredicate
-                ));
+                .where(sdtCustomerPredicate, sdtBulkRefPredicate, sdtDatePredicate));
 
         try {
             return typedQuery.getSingleResult();
