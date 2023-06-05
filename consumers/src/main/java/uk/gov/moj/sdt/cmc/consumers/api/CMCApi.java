@@ -31,6 +31,12 @@ public interface CMCApi {
 
     String SDT_REQUEST_ID = "SDTREQUESTID";
 
+    String SERVICE_AUTHORIZATION = "ServiceAuthorization";
+
+    String FROM_DATE_TIME = "fromDateTime";
+
+    String TO_DATE = "toDate";
+
     @PostMapping("/breathingSpace")
     BreathingSpaceResponse breathingSpace(@RequestHeader(IDAM_ID_HEADER)  String idamId,
                                           @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
@@ -53,22 +59,22 @@ public interface CMCApi {
     @GetMapping("/claimDefences")
     ClaimDefencesResponse claimDefences(
         @RequestHeader(AUTHORIZATION) String authorization,
-        @RequestHeader("ServiceAuthorization") String serviceAuthorization,
-        @RequestHeader("idAmId") String idAmId,
-        @RequestHeader("fromDateTime") String fromDateTime,
-        @RequestHeader("toDate") String toDate
+        @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorization,
+        @RequestHeader(IDAM_ID_HEADER) String idAmId,
+        @RequestHeader(FROM_DATE_TIME) String fromDateTime,
+        @RequestHeader(TO_DATE) String toDate
     );
 
     @PostMapping("/requestWarrant")
     WarrantResponse warrantRequest(@RequestHeader(AUTHORIZATION) String authorization,
-                                   @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+                                   @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorization,
                                    @RequestHeader(IDAM_ID_HEADER)  String idamId,
                                    @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
                                    @RequestBody WarrantRequest warrantRequest);
 
     @PostMapping("/requestJudgmentAndWarrant")
     JudgementWarrantResponse judgementWarrantRequest(@RequestHeader(AUTHORIZATION) String authorization,
-                                                     @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+                                                     @RequestHeader(SERVICE_AUTHORIZATION) String serviceAuthorization,
                                                      @RequestHeader(IDAM_ID_HEADER)  String idamId,
                                                      @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
                                                      @RequestBody JudgementWarrantRequest judgmentWarrantRequest);

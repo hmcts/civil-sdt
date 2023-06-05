@@ -30,6 +30,8 @@ import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.idam.IdamRepository;
+import uk.gov.moj.sdt.idam.S2SRepository;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
@@ -58,6 +60,10 @@ class CMCConsumerGatewayTest {
     private static final String XML = "";
 
     private static final String SDT_REFERENCE = "MCOL-0000001";
+
+    private static final String SDT_USER_AUTH_TOKEN = "sdt user token";
+
+    private static final String S2S_TOKEN = "sds token";
 
     private CMCConsumerGateway cmcConsumerGateway;
 
@@ -97,6 +103,12 @@ class CMCConsumerGatewayTest {
     @Mock
     private JudgementWarrantRequest judgementWarrantRequest;
 
+    @Mock
+    private IdamRepository idamRepository;
+
+    @Mock
+    private S2SRepository s2SRepository;
+
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
@@ -106,7 +118,11 @@ class CMCConsumerGatewayTest {
                                                     warrantService,
                                                     judgementWarrantService,
                                                     xmlToObject,
-                                                    xmlElementValueReader);
+                                                    xmlElementValueReader,
+                                                    idamRepository,
+                                                    s2SRepository);
+        when(idamRepository.getSdtSystemUserAccessToken()).thenReturn(SDT_USER_AUTH_TOKEN);
+        when(s2SRepository.getS2SToken()).thenReturn(S2S_TOKEN);
     }
 
     @Test
