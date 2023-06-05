@@ -209,7 +209,7 @@ allprojects {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
-    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.15.2'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
     implementation 'com.google.guava:guava:30.0-jre'
     implementation(group: 'com.microsoft.azure', name: 'azure-servicebus-jms-spring-boot-starter', version: '2.3.5') {
@@ -277,7 +277,7 @@ allprojects {
     */
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
     testImplementation libraries.junit5
-    testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+    testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.15.2'
     testImplementation "com.github.hmcts:fortify-client:1.2.2:all"
     testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.25.1'
