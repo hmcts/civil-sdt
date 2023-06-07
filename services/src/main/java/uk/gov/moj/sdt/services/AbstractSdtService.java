@@ -33,17 +33,19 @@ package uk.gov.moj.sdt.services;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Arrays;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
@@ -100,7 +102,7 @@ public abstract class AbstractSdtService {
         if (populateTargetAppResponse) {
             final String targetAppResponse = individualResponseXmlParser.parse();
             if (StringUtils.isNotBlank(targetAppResponse)) {
-                individualRequest.setTargetApplicationResponse(targetAppResponse);
+                individualRequest.setTargetApplicationResponse(targetAppResponse.getBytes());
             }
         }
 
@@ -185,7 +187,8 @@ public abstract class AbstractSdtService {
         Root<IndividualRequest> root = criteriaQuery.from(IndividualRequest.class);
         Predicate[] predicates = new Predicate[2];
         predicates[0] = criteriaBuilder.equal(root.get("sdtBulkReference"), sdtBulkReference);
-        predicates[1] = criteriaBuilder.not(criteriaBuilder.in(root.get("requestStatus")).value(completeRequestStatus));
+        Expression<String> requestStatusExpression = root.get("requestStatus");
+        predicates[1] = requestStatusExpression.in(Arrays.stream(completeRequestStatus).toList());
         return criteriaQuery.select(root).where(predicates);
     }
 }

@@ -90,11 +90,13 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
     }
 
+    public SdtEndpointPortType() {}
+
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for submit bulk by customer [" +
-                    bulkRequest.getHeader().getSdtCustomerId() + "]");
+            LOGGER.debug("Endpoint called for submit bulk by customer [{}]",
+                    bulkRequest.getHeader().getSdtCustomerId());
         }
 
         BulkResponseType response = null;
@@ -112,8 +114,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
     @Override
     public BulkFeedbackResponseType getBulkFeedback(final BulkFeedbackRequestType bulkFeedbackRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for bulk feedback by customer [" +
-                    bulkFeedbackRequest.getHeader().getSdtCustomerId() + "]");
+            LOGGER.debug("Endpoint called for bulk feedback by customer [{}]",
+                    bulkFeedbackRequest.getHeader().getSdtCustomerId());
         }
 
         BulkFeedbackResponseType response = null;
@@ -131,8 +133,8 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
     @Override
     public SubmitQueryResponseType submitQuery(final SubmitQueryRequestType submitQueryRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for submit query by customer [" +
-                    submitQueryRequest.getHeader().getSdtCustomerId() + "]");
+            LOGGER.debug("Endpoint called for submit query by customer [{}]",
+                    submitQueryRequest.getHeader().getSdtCustomerId());
         }
 
         SubmitQueryResponseType response = null;

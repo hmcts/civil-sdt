@@ -1,33 +1,3 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2012-2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id: $
- * $LastChangedRevision: $
- * $LastChangedDate: $
- * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
 import org.slf4j.Logger;
@@ -56,6 +26,7 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import javax.xml.ws.WebServiceException;
@@ -136,7 +107,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         // Proceed ahead if the Individual Request is found.
         if (individualRequest != null) {
-            LOGGER.debug("Process individual request [" + individualRequest.getSdtBulkReference() + "].");
+            LOGGER.debug("Process individual request [{}].", individualRequest.getSdtBulkReference());
 
             // Check the configurable delay from system parameter and delay the consumer call for that time.
             this.delayRequestProcessing(individualRequest);
@@ -150,8 +121,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
                 this.updateCompletedRequest(individualRequest);
             } catch (final TimeoutException e) {
-                LOGGER.error("Timeout exception for SDT reference [" + individualRequest.getSdtRequestReference() +
-                        "]");
+                LOGGER.error("Timeout exception for SDT reference [{}]", individualRequest.getSdtRequestReference());
 
                 // Update the individual request with the reason code for error REQ_NOT_ACK
                 this.updateRequestTimeOut(individualRequest);
@@ -163,18 +133,16 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
             } catch (final WebServiceException e) {
 
-                LOGGER.error("Exception calling target application for SDT reference [" +
-                        individualRequest.getSdtRequestReference() + "] - " + e.getMessage());
+                LOGGER.error("Exception calling target application for SDT reference [{}] - {}",
+                        individualRequest.getSdtRequestReference(), e.getMessage());
 
                 this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
 
             }
         } else {
-            LOGGER.error("SDT Reference " + sdtRequestReference +
-                    " read from message queue not found in database for individual request.");
+            LOGGER.error("SDT Reference {} read from message queue not found in database for individual request.",
+                    sdtRequestReference);
         }
-
-        return;
     }
 
     @Override
@@ -212,8 +180,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void updateRequestRejected(final IIndividualRequest individualRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Update individual request [" + individualRequest.getSdtBulkReference() +
-                    "] as status REJECTED following Service team's investigation of DLQ Request.");
+            LOGGER.debug("Update individual request [{}] as status REJECTED following Service team's investigation of DLQ Request.",
+                    individualRequest.getSdtBulkReference());
         }
 
         final IErrorMessage errorMessage =
@@ -253,8 +221,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void updateForwardingRequest(final IIndividualRequest individualRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Update individual request [" + individualRequest.getSdtBulkReference() +
-                    "] with status FORWARDED.");
+            LOGGER.debug("Update individual request [{}] with status FORWARDED.",
+                    individualRequest.getSdtBulkReference());
         }
 
         individualRequest.incrementForwardingAttempts();
@@ -262,7 +230,9 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         // Setup raw XML associated with a single request so that it can be picked up by the outbound
         // interceptor and injected into the outbound XML.
-        SdtContext.getContext().setRawOutXml(individualRequest.getRequestPayload());
+        SdtContext.getContext().setRawOutXml(
+                null == individualRequest.getRequestPayload() ? "" :
+                        new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8));
     }
 
     /**
@@ -273,7 +243,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void updateRequestTimeOut(final IIndividualRequest individualRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Update individual request [" + individualRequest.getSdtBulkReference() + "] as timed out.");
+            LOGGER.debug("Update individual request [{}] as timed out.", individualRequest.getSdtBulkReference());
         }
 
         // Set the updated date.
@@ -302,8 +272,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void sendRequestToTargetApp(final IIndividualRequest individualRequest)
             throws OutageException, TimeoutException {
-        LOGGER.debug("Send individual request [" + individualRequest.getSdtBulkReference() +
-                "] to target application.");
+        LOGGER.debug("Send individual request [{}] to target application.", individualRequest.getSdtBulkReference());
 
         final IGlobalParameter connectionTimeOutParam =
                 this.globalParametersCache.getValue(IGlobalParameter.class,
@@ -339,8 +308,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     // CHECKSTYLE:ON
     {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Update individual request [" + individualRequest.getSdtBulkReference() +
-                    "] with internal error and send to dead letter queue.");
+            LOGGER.debug("Update individual request [{}] with internal error and send to dead letter queue.",
+                    individualRequest.getSdtBulkReference());
         }
 
         // Truncate the error message to fit database column length
@@ -368,6 +337,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * @return individual request dao
      */
+    @Override
     public IIndividualRequestDao getIndividualRequestDao() {
         return individualRequestDao;
     }
@@ -375,6 +345,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * @param individualRequestDao individual request dao
      */
+    @Override
     public void setIndividualRequestDao(final IIndividualRequestDao individualRequestDao) {
         this.individualRequestDao = individualRequestDao;
     }
@@ -432,18 +403,15 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         if (individualReqProcessingDelay != null) {
             // If the global parameter is available, proceed with delaying the request processing
-            final long delay = Long.valueOf(individualReqProcessingDelay);
+            final long delay = Long.parseLong(individualReqProcessingDelay);
             try {
-                LOGGER.debug("Delay request processing for " + delay + " milliseconds.");
+                LOGGER.debug("Delay request processing for {} milliseconds.", delay);
 
                 Thread.sleep(delay);
             } catch (final InterruptedException ie) {
-                LOGGER.warn("Delay operation interrupted by interrupt exception " + ie.getMessage());
+                LOGGER.warn("Delay operation interrupted by interrupt exception {}", ie.getMessage());
             }
         }
-
-        return;
-
     }
 
     /**
@@ -470,7 +438,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     private void reQueueRequest(final IIndividualRequest individualRequest) {
         // Check the forwarding attempts has not exceeded the max forwarding attempts count.
         if (this.canRequestBeRequeued(individualRequest)) {
-            LOGGER.debug("Re-queuing request for SDT reference [" + individualRequest.getSdtRequestReference() + "]");
+            LOGGER.debug("Re-queuing request for SDT reference [{}]", individualRequest.getSdtRequestReference());
 
             // Create a new message to enqueue.
             final ISdtMessage messageObj = new SdtMessage();
@@ -483,7 +451,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
             this.getMessageWriter().queueMessage(messageObj, targetAppCode, false);
         } else {
-            LOGGER.error("Maximum forwarding attempts exceeded for request " +
+            LOGGER.error("Maximum forwarding attempts exceeded for request {}",
                     individualRequest.getSdtRequestReference());
         }
     }
@@ -497,11 +465,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         final String maxForwardingAttemptStr =
                 this.getSystemParameter(IGlobalParameter.ParameterKey.MAX_FORWARDING_ATTEMPTS.name());
 
-        if (individualRequest.getForwardingAttempts() <= Integer.valueOf(maxForwardingAttemptStr)) {
-            return true;
-        }
-
-        return false;
+        return (individualRequest.getForwardingAttempts() <= Integer.valueOf(maxForwardingAttemptStr));
     }
 
     /**

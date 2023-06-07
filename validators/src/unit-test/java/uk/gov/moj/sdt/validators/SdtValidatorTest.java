@@ -52,6 +52,7 @@ import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -119,7 +120,8 @@ class SdtValidatorTest extends AbstractSdtUnitTestBase {
         validator = new BulkSubmissionValidator(bulkCustomerDao,
                                                 mockGlobalParameterCache,
                                                 mockErrorMessagesCache,
-                                                bulkSubmissionDao);
+                                                bulkSubmissionDao,
+                                                new ConcurrentHashMap());
         validator.setErrorMessagesCache(mockErrorMessagesCache);
         validator.setGlobalParameterCache(mockGlobalParameterCache);
 

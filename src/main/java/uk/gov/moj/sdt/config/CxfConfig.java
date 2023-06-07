@@ -26,12 +26,14 @@ import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
 import uk.gov.moj.sdt.producers.sdtws.SdtEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.SdtInternalEndpointPortType;
 import uk.gov.moj.sdt.producers.sdtws.config.ProducersConfig;
+import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 
+import javax.xml.ws.Endpoint;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.ws.Endpoint;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 @EnableAutoConfiguration
@@ -57,6 +59,11 @@ public class CxfConfig {
         LoggingFeature loggingFeature = new LoggingFeature();
         loggingFeature.setPrettyLogging(true);
         return loggingFeature;
+    }
+
+    @Bean("concurrencyMap")
+    public Map<String, IInFlightMessage>  concurrencyMap() {
+       return new ConcurrentHashMap<>();
     }
 
     @Bean
@@ -110,6 +117,8 @@ public class CxfConfig {
         EndpointImpl endpoint = new EndpointImpl(springBus(loggingFeature()), sdtInternalEndpointPortType);
         endpoint.setInInterceptors(Lists.newArrayList(xmlInboundInterceptor,
                                                       sdtUnmarshallInterceptor));
+
+        endpoint.setOutInterceptors(Lists.newArrayList());
 
         endpoint.setOutFaultInterceptors(Lists.newArrayList(faultOutboundInterceptor));
         List<LoggingFeature> features = new ArrayList<>();

@@ -123,7 +123,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
     private static final String TWELVE_THOUSAND = "12000";
 
-    private static String DELAY_REQUEST_PROCESSING = "Delay request processing for 10 milliseconds";
+    protected static String DELAY_REQUEST_PROCESSING = "Delay request processing for 10 milliseconds";
 
     private static String RESPONSE = "response";
 
@@ -350,7 +350,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
             return null;
         }).when(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
 
-        final List<IIndividualRequest> indRequests = new ArrayList<IIndividualRequest>();
+        final List<IIndividualRequest> indRequests = new ArrayList<>();
         indRequests.add(individualRequest);
 
         when(this.mockIndividualRequestDao.queryAsCount(eq(IndividualRequest.class),
@@ -866,7 +866,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;
         for (ILoggingEvent log : logList) {
-            if (log.getMessage().contains(message.toString())) {
+            if (log.getFormattedMessage().contains(message)) {
                 verifyLog = true;
                 break;
             }

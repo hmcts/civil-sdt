@@ -62,7 +62,7 @@ public class IndividualRequestsXmlParser {
     /**
      * Contains mapping of namespaces to be replaced.
      */
-    private Map<String, String> replacementNamespaces = new HashMap<String, String>();
+    private Map<String, String> replacementNamespaces = new HashMap<>();
 
     /**
      * Populate individual requests with the raw xml request.
@@ -71,7 +71,8 @@ public class IndividualRequestsXmlParser {
      */
     public void populateRawRequest(final List<IIndividualRequest> individualRequests) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Started parsing raw xml to extract payload for " + individualRequests.size() + " requests");
+            LOGGER.debug("Started parsing raw xml to extract payload for {} requests",
+                    individualRequests.size());
         }
 
         // Get iterator so we can traverse the list of requests and the payload (raw XML) to each one.
@@ -87,7 +88,7 @@ public class IndividualRequestsXmlParser {
         final Map<String, String> allNamespaces =
                 XmlNamespaceUtils.extractAllNamespaces(rawXml, replacementNamespaces);
 
-        final Map<String, String> allRawIndividualRequests = new HashMap<String, String>();
+        final Map<String, String> allRawIndividualRequests = new HashMap<>();
 
         // Build a search pattern with this request id. Allow for any order of requestId
         // attributes.
@@ -113,8 +114,8 @@ public class IndividualRequestsXmlParser {
             String individualRequestRawXml = matcher.group(2).trim();
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Found match: requestId [" + requestId + "], individualRequestRawXml [" +
-                        individualRequestRawXml + "]");
+                LOGGER.debug("Found match: requestId [{}], individualRequestRawXml [{}]",
+                        requestId, individualRequestRawXml);
             }
 
             // Find namespaces applicable for fragment
@@ -133,7 +134,7 @@ public class IndividualRequestsXmlParser {
             individualRequestRawXml = XmlNamespaceUtils.addNamespaces(individualRequestRawXml, matchingNamespaces);
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Raw XML enhanced with namespaces [" + individualRequestRawXml + "]");
+                LOGGER.debug("Raw XML enhanced with namespaces [{}]", individualRequestRawXml);
             }
 
             allRawIndividualRequests.put(requestId, individualRequestRawXml);
@@ -151,8 +152,11 @@ public class IndividualRequestsXmlParser {
                 continue;
             }
 
-            individualRequest.setRequestPayload(allRawIndividualRequests.get(individualRequest
-                    .getCustomerRequestReference()));
+            if (null != allRawIndividualRequests.get(
+                    individualRequest.getCustomerRequestReference())) {
+                individualRequest.setRequestPayload(allRawIndividualRequests.get(
+                        individualRequest.getCustomerRequestReference()).getBytes());
+            }
         }
     }
 
