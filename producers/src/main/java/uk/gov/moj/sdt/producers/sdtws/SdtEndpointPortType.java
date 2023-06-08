@@ -92,8 +92,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
     }
 
-    public SdtEndpointPortType() {}
-
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequest) {
         if (LOGGER.isDebugEnabled()) {

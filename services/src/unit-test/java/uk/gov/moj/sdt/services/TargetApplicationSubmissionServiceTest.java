@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.services;
 
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -861,6 +862,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         bulkSubmission.setIndividualRequests(requests);
 
         request.setBulkSubmission(bulkSubmission);
+        request.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
@@ -871,7 +873,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload("Test Xml");
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
@@ -914,7 +915,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(CLAIM.getType());
-        individualRequest.setRequestPayload("Test Xml");
 
         SdtContext.getContext().setRawInXml(RESPONSE);
 
@@ -946,7 +946,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload("Test Xml");
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 

@@ -1,5 +1,7 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.nio.charset.Charset;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
-import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
@@ -23,6 +24,7 @@ import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
@@ -50,6 +52,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private XmlElementValueReader xmlElementValueReader;
 
+    private final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+
+
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
                               @Qualifier("JudgementRequestService") IJudgementService judgementService,
@@ -73,7 +78,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String sdtRequestReference = individualRequest.getSdtRequestReference();
         String requestType = individualRequest.getRequestType();
         String idamId = ""; // Todo get it from SDTContext
-        String requestPayload = individualRequest.getRequestPayload();
+        String requestPayload = new String(individualRequest.getRequestPayload(), UTF8_CHARSET);
         try {
             if (RequestType.JUDGMENT.getType().equals(requestType)) {
                 JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(requestPayload,
@@ -82,7 +87,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 JudgementResponse judgementResponse = judgementService.requestJudgment(idamId,
                                                                                        sdtRequestReference,
                                                                                        judgementRequest);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse).getBytes(UTF8_CHARSET));
             } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload,
                                                                                BreathingSpaceRequest.class);

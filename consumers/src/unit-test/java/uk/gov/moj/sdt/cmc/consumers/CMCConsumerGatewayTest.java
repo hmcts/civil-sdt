@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,7 +48,7 @@ class CMCConsumerGatewayTest {
 
     private static final long  RECEIVE_TIME_OUT = 10;
 
-    private static final String XML = "";
+    private static final byte[] XML = "".getBytes(StandardCharsets.UTF_8);
 
     private static final String SDT_REFERENCE = "MCOL-0000001";
 
@@ -141,7 +142,7 @@ class CMCConsumerGatewayTest {
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
-        when(xmlToObject.convertObjectToXml(response)).thenReturn(XML);
+        when(xmlToObject.convertObjectToXml(response)).thenReturn(new String(XML));
         when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);

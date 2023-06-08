@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,6 +77,8 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
     private IBulkSubmissionDao bulkSubmissionDao;
 
     private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
+
+    private final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
     /**
      * The concurrencyMap to hold in flight message data keyed on sdtCustId + custRef. This is used to prevent the
@@ -189,7 +192,7 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
     public void validateCMCRequests(final IBulkSubmission bulkSubmission) {
         int rejectedRequests = 0;
         for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests()) {
-            if (requestTypeXmlNodeValidator.isCCDReference(individualRequest.getRequestPayload(), CLAIM_NUMBER)
+            if (requestTypeXmlNodeValidator.isCCDReference(new String(individualRequest.getRequestPayload(), UTF8_CHARSET), CLAIM_NUMBER)
                 && !requestTypeXmlNodeValidator.isValidRequestType(individualRequest.getRequestType())) {
                 final IErrorLog errorLog =
                     new ErrorLog(

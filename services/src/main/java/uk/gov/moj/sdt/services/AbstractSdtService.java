@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -77,6 +78,8 @@ public abstract class AbstractSdtService {
 
     private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
+    private final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+
     protected AbstractSdtService(@Qualifier("IndividualRequestDao")
                                       IIndividualRequestDao individualRequestDao,
                               @Qualifier("IndividualResponseXmlParser")
@@ -111,7 +114,7 @@ public abstract class AbstractSdtService {
         if (populateTargetAppResponse) {
             final String targetAppResponse = individualResponseXmlParser.parse();
             if (StringUtils.isNotBlank(targetAppResponse)) {
-                individualRequest.setTargetApplicationResponse(targetAppResponse);
+                individualRequest.setTargetApplicationResponse(targetAppResponse.getBytes(UTF8_CHARSET));
             }
         }
 
@@ -194,7 +197,7 @@ public abstract class AbstractSdtService {
     protected boolean isCMCRequestType(IIndividualRequest individualRequest, boolean throwException) {
         return requestTypeXmlNodeValidator.isCMCRequestType(
             individualRequest.getRequestType(),
-            individualRequest.getRequestPayload(),
+            new String(individualRequest.getRequestPayload(), UTF8_CHARSET),
             CLAIM_NUMBER,
             throwException
         );

@@ -1,16 +1,12 @@
 package uk.gov.moj.sdt.consumers.config;
 
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.phase.PhaseInterceptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
-import uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor;
-import uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor;
-import uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor;
-import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
+import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,30 +16,27 @@ class ConsumersConfigTest {
 
     ConsumersConfig consumersConfig = new ConsumersConfig();
 
-    @Mock
-    XmlOutboundInterceptor xmlOutboundInterceptor;
 
     @Mock
-    CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor;
+    private SubmitQueryEnricher submitQueryEnricher;
 
     @Mock
-    CacheEndOutboundInterceptor cacheEndOutboundInterceptor;
+    private BulkFeedbackEnricher bulkFeedbackEnricher;
 
     @Mock
-    XmlInboundInterceptor xmlInboundInterceptor;
+    private GenericEnricher submitQueryRequestEnricher;
 
     @Mock
-    SdtUnmarshallInterceptor sdtUnmarshallInterceptor;
+    private GenericEnricher individualRequestEnricher;
 
     @Test
     void testCreateTargetAppInternalEndpointPortType() {
         ITargetAppInternalEndpointPortType result =
             consumersConfig.createTargetAppInternalEndpointPortType(
-                xmlOutboundInterceptor,
-                cacheSetupOutboundInterceptor,
-                cacheEndOutboundInterceptor,
-                xmlInboundInterceptor,
-                sdtUnmarshallInterceptor
+                submitQueryEnricher,
+                bulkFeedbackEnricher,
+                submitQueryRequestEnricher,
+                submitQueryRequestEnricher
             );
 
         assertNotNull(result);
