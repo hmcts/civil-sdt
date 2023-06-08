@@ -17,16 +17,12 @@
   <!--End of false positives section -->
 
   <!--Please add all the temporary suppression under the below section-->
+  <!--
   <suppress>
     <notes>Temporary Suppressions
-      CVE-2023-20862
-      CVE-2023-20863
-      CVE-2023-20873
     </notes>
-    <cve>CVE-2023-20862</cve>
-    <cve>CVE-2023-20863</cve>
-    <cve>CVE-2023-20873</cve>
   </suppress>
+  -->
   <!--End of temporary suppression section -->
 
 </suppressions>

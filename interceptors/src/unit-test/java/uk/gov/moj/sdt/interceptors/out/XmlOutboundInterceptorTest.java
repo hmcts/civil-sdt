@@ -33,6 +33,11 @@
  */
 package uk.gov.moj.sdt.interceptors.out;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.io.CachedOutputStream;
@@ -42,20 +47,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.interceptors.config.InterceptorsConfig;
-import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Test that faults are correctly intercepted.
@@ -67,26 +60,12 @@ class XmlOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
     XmlOutboundInterceptor xmlOutboundInterceptor;
 
-    InterceptorsConfig interceptorsConfig;
-
-    List<AbstractSdtEnricher> mockEnricherList;
-
-
     @BeforeEach
     @Override
     public void setUp() {
         SdtContext.getContext().setServiceRequestId(1L);
         SdtContext.getContext().setRawOutXml("<record></record>");
         xmlOutboundInterceptor = new XmlOutboundInterceptor();
-        interceptorsConfig = new InterceptorsConfig();
-        mockEnricherList = new ArrayList<>(Arrays.asList(
-            new SubmitQueryEnricher(),
-            new BulkFeedbackEnricher(),
-            interceptorsConfig.submitQueryRequestEnricher(),
-            interceptorsConfig.individualRequestEnricher()
-        ));
-
-        xmlOutboundInterceptor.setEnricherList(mockEnricherList);
     }
 
     /**

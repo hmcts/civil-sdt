@@ -8,7 +8,7 @@ plugins {
   id "io.freefair.lombok" version "6.5.1"
   id 'io.spring.dependency-management' version '1.1.0'
   id 'com.github.ben-manes.versions' version '0.44.0'
-  id 'org.springframework.boot' version '2.7.10'
+  id 'org.springframework.boot' version '2.7.11'
   id 'org.owasp.dependencycheck' version '8.0.2'
   id 'com.github.kt3k.coveralls' version '2.8.2'
   id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
@@ -55,6 +55,16 @@ sourceSets {
     }
     resources.srcDir file('src/smokeTest/resources')
   }
+
+  endToEndTest {
+    java {
+      compileClasspath += main.output
+      runtimeClasspath += main.output
+      srcDir file('src/endToEndTest/java')
+    }
+    resources.srcDir file('src/endToEndTest/resources')
+  }
+
 }
 
 configurations {
@@ -66,6 +76,9 @@ configurations {
 
   smokeTestImplementation.extendsFrom testImplementation
   smokeTestRuntimeOnly.extendsFrom runtimeOnly
+
+  endToEndTestImplementation.extendsFrom testImplementation
+  endToEndTestRuntimeOnly.extendsFrom runtimeOnly
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -78,7 +91,7 @@ tasks.withType(JavaExec).configureEach {
 }
 
 tasks.withType(Test).configureEach {
-  useJUnit()
+  useJUnitPlatform()
 
   testLogging {
     exceptionFormat = 'full'
@@ -108,6 +121,12 @@ tasks.register('smoke', Test) {
   description = "Runs Smoke Tests"
   testClassesDirs = sourceSets.smokeTest.output.classesDirs
   classpath = sourceSets.smokeTest.runtimeClasspath
+}
+
+task endToEnd(type: Test) {
+  description = "Runs End To End Tests"
+  testClassesDirs = sourceSets.endToEndTest.output.classesDirs
+  classpath = sourceSets.endToEndTest.runtimeClasspath
 }
 
 apply plugin: 'java'
@@ -145,12 +164,12 @@ ext {
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
   springCloudVersion = '2022.0.0'
-  tomcatVersion = '9.0.73'
+  tomcatVersion = '9.0.74'
   cxfVersion = '3.5.5'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
   testcontainers = '1.17.5'
-  sdtCommonVersion = '1.0.0-SDT-35.1.0'
+  sdtCommonVersion = '1.0.0-SDT-130.1.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -176,7 +195,7 @@ ext.libraries = [
 ext['guava.version'] = '30.0-jre'
 ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
-ext['spring-security.version'] = '5.7.5'
+ext['spring-security.version'] = '5.7.8'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 
 dependencyManagement {
@@ -359,6 +378,9 @@ allprojects {
         if(details.requested.group == 'org.springframework') {
           details.useVersion '5.3.27' // CVE-2023-20861
         }
+        if (details.requested.group == 'org.springframework.boot') {
+          details.useVersion '2.7.11' // CVE-2023-20873
+        }
         if (details.requested.group == 'com.fasterxml.woodstox' && details.requested.name == 'woodstox-core') {
           details.useVersion '6.4.0' // CVE-2022-40152
         }
@@ -399,7 +421,7 @@ subprojects { subproject ->
       resources.srcDir file('src/integ-test/resources')
     }
 
-    endToEndTest {
+    e2eTest {
       java {
         compileClasspath += main.output
         runtimeClasspath += main.output
@@ -407,6 +429,23 @@ subprojects { subproject ->
       }
       resources.srcDir file('src/end-to-end-test/resources')
     }
+  }
+
+  configurations.configureEach {
+    collect { configuration ->
+      configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    }
+    resolutionStrategy {
+      eachDependency { details ->
+        if(details.requested.group == 'org.springframework') {
+          details.useVersion '5.3.27' // CVE-2023-20861
+        }
+        if (details.requested.group == 'org.springframework.boot') {
+          details.useVersion '2.7.11' // CVE-2023-20873
+        }
+      }
+    }
+    exclude group: 'org.springframework.security', module: 'spring-security-rsa'
   }
 
   configurations {
@@ -419,8 +458,8 @@ subprojects { subproject ->
     integTestImplementation.extendsFrom testImplementation
     integTestImplementation.extendsFrom runtimeOnly
 
-    endToEndTestImplementation.extendsFrom testImplementation
-    endToEndTestImplementation.extendsFrom runtimeOnly
+    e2eTestImplementation.extendsFrom testImplementation
+    e2eTestImplementation.extendsFrom runtimeOnly
   }
 
     sonarqube {
@@ -428,6 +467,7 @@ subprojects { subproject ->
             property "sonar.sources", "src"
             property "sonar.tests", "src"
             property "sonar.test.inclusions", "**/unit-test/**,**/integ-test/**"
+            property 'sonar.exclusions', "**/**.sql"
             property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
         }
     }
@@ -467,7 +507,6 @@ subprojects { subproject ->
                 'class'      : percentage(counters.find { it.'@type'.equals('CLASS') })
         ]
 
-
         def failures = []
         metrics.each {
           def limit = limits[it.key]
@@ -491,9 +530,8 @@ subprojects { subproject ->
   }
 
   test {
-    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     generateCucumberReports.enabled = false
-    useJUnit()
+    useJUnitPlatform()
 
     testLogging {
       events "passed", "skipped", "failed"
@@ -520,8 +558,8 @@ subprojects { subproject ->
   tasks.register('endToEnd', Test) {
     description = "Runs end to end tests"
     group = "Verification"
-    testClassesDirs = sourceSets.endToEndTest.output.classesDirs
-    classpath = sourceSets.endToEndTest.runtimeClasspath
+    testClassesDirs = sourceSets.e2eTest.output.classesDirs
+    classpath = sourceSets.e2eTest.runtimeClasspath
     failFast = true
   }
 
@@ -544,7 +582,7 @@ subprojects { subproject ->
   }
 
   tasks.withType(Test).configureEach {
-    useJUnit()
+    useJUnitPlatform()
 
     testLogging {
       exceptionFormat = 'full'
@@ -561,6 +599,7 @@ sonarqube {
     property "sonar.projectName", "Reform :: civil-sdt"
     property "sonar.projectKey", "uk.gov.hmcts.reform:civil-sdt"
     property 'sonar.coverage.exclusions', "**/**"
+    property 'sonar.exclusions', "**/**.sql"
     property "sonar.coverage.jacoco.xmlReportPaths", "${rootDir}/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml"
   }
 }
@@ -658,6 +697,7 @@ configurations { codacy }
 dependencies {
   codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
+
 tasks.register('sendCoverageToCodacy', JavaExec) {
   dependsOn jacocoTestReport
   main = "com.codacy.CodacyCoverageReporter"

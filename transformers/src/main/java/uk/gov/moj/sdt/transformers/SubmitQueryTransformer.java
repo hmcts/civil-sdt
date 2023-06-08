@@ -119,6 +119,7 @@ public final class SubmitQueryTransformer extends AbstractTransformer implements
         final BulkCustomer bulkCustomer = new BulkCustomer();
 
         bulkCustomer.setSdtCustomerId(headerType.getSdtCustomerId());
+        bulkCustomer.setReadyForAlternateService(false);
         return bulkCustomer;
 
     }

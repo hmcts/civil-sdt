@@ -993,7 +993,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         boolean verifyLog = false;
         for (ILoggingEvent log : logList) {
             if (log.getFormattedMessage().contains(message)) {
-
                 verifyLog = true;
                 break;
             }
