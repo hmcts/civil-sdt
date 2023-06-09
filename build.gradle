@@ -208,17 +208,6 @@ allprojects {
   group 'uk.gov.hmcts.civil.sdt'
   version '0.0.1-SNAPSHOT'
 
-  repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-      url  "https://jitpack.io"
-    }
-    flatDir {
-      dirs "$rootProject.projectDir/libs"
-    }
-  }
-
   apply plugin: 'java'
 
   dependencies {
@@ -286,7 +275,7 @@ allprojects {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
     implementation group: 'org.springframework.security', name: 'spring-security-config'
     implementation group: 'org.springframework.security', name: 'spring-security-web'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.0'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
 
 
     implementation group: 'com.github.hmcts', name: 'civil-sdt-common', version: sdtCommonVersion
@@ -402,6 +391,16 @@ subprojects { subproject ->
   apply plugin: 'io.spring.dependency-management'
   apply plugin: 'jacoco'
   apply plugin: 'uk.gov.hmcts.java'
+
+  dependencyManagement {
+    imports {
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+  }
+
+  dependencies {
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+  }
 
   sourceSets {
     unitTest {
