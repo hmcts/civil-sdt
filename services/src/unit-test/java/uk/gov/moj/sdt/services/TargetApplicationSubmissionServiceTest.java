@@ -938,7 +938,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    public void processCCDReferenceRequestFailOnCaseOffLine() {
+    void processCCDReferenceRequestFailOnCaseOffLine() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
 

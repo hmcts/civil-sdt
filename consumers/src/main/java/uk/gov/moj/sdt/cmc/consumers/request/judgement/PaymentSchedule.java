@@ -26,13 +26,13 @@ public class PaymentSchedule {
 
     protected ImmediatePaymentType immediatePayment;
 
-    public PaymentScheduleType getPaymentScheduleType() {
+    public String getPaymentScheduleType() {
         if (inFullByPayment != null) {
-            return PaymentScheduleType.inFull;
+            return PaymentScheduleType.IN_FULL.getScheduleType();
         } else if (instalment != null) {
-            return PaymentScheduleType.installment;
+            return PaymentScheduleType.INSTALLMENT.getScheduleType();
         }
-        return PaymentScheduleType.immediate;
+        return PaymentScheduleType.IMMEDIATE.getScheduleType();
     }
 
     public Date getPaymentInFullBy() {

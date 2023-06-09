@@ -128,6 +128,7 @@ public class SubmitQueryEnricher extends AbstractSdtEnricher {
      * @param newXml raw xml
      * @return outXml xml with replaced results
      */
+    @SuppressWarnings("java:S5852")
     private String loadSummaryResults(String newXml) {
 
         // Get the system specific response from thread local to inject into the outbound message
