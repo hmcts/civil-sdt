@@ -89,6 +89,46 @@ class XmlToObjectTest extends BaseXmlTest {
     void shouldConvertJudgementRequest() throws IOException {
         String xmlContent = readXmlAsString(JUDGEMENT);
         JudgementRequest request = xmlToObject.convertXmlToObject(xmlContent, JudgementRequest.class);
+        assertValuesAndRespondentAddress(request);
+        assertAddressAndPayee(request);
+        assertEquals("payee slip code line1", request.getPayee().getSlipCodeline1());
+        assertEquals("payee slip code line2", request.getPayee().getSlipCodeline2());
+        assertEquals("12345678", request.getPayee().getGiroAccountNumber());
+        assertEquals("123456789", request.getPayee().getGiroTransCode1());
+        assertEquals("12", request.getPayee().getGiroTransCode2());
+        assertEquals("sotSignature", request.getSotName());
+    }
+
+    private void assertAddressAndPayee(JudgementRequest request) {
+        assertNull(request.getLegalCosts());
+        assertNotNull(request.getPayee());
+
+        assertNotNull(request.getPayee().getAddress());
+        assertEquals("payee line1", request.getPayee().getAddress().getAddressLine1());
+        assertEquals("payee line2", request.getPayee().getAddress().getAddressLine2());
+        assertEquals("payee line3", request.getPayee().getAddress().getAddressLine3());
+        assertEquals("payee line4", request.getPayee().getAddress().getAddressLine4());
+        assertNull(request.getPayee().getAddress().getPostTown());
+        assertEquals("RG42 2DL", request.getPayee().getAddress().getPostCode());
+
+
+        assertEquals("payee name", request.getPayee().getName());
+        assertEquals("12345678901234", request.getPayee().getTelephoneNumber());
+        assertEquals("payee dx number", request.getPayee().getDxNumber());
+        assertEquals("payee fx number", request.getPayee().getFaxNumber());
+        assertEquals("payee fx number", request.getPayee().getFaxNumber());
+        assertEquals("payee email", request.getPayee().getEmail());
+        assertEquals("12", request.getPayee().getPcm());
+        assertEquals("payee reference", request.getPayee().getReference());
+        assertEquals("123456789012345678", request.getPayee().getBankAccountNumber());
+        assertEquals("payee bank account holder", request.getPayee().getBankAccountHolder());
+        assertEquals("12345678", request.getPayee().getBankSortCode());
+        assertEquals("payee bank name", request.getPayee().getBankName());
+        assertEquals("payee bank info1", request.getPayee().getBankInfo1());
+        assertEquals("payee bank info2", request.getPayee().getBankInfo2());
+    }
+
+    private void assertValuesAndRespondentAddress(JudgementRequest request) {
         assertNotNull(request);
         assertEquals("9QZ00005", request.getCaseManRef());
         assertEquals(JudgmentType.A, request.getJudgmentType());
@@ -114,35 +154,6 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals(10000000, request.getDeductedAmount());
         assertNull(request.getClaimAmountAdmitted());
         assertNull(request.getCourtFee());
-        assertNull(request.getLegalCosts());
-        assertNotNull(request.getPayee());
-        assertEquals("payee name", request.getPayee().getName());
-        assertNotNull(request.getPayee().getAddress());
-        assertEquals("payee line1", request.getPayee().getAddress().getAddressLine1());
-        assertEquals("payee line2", request.getPayee().getAddress().getAddressLine2());
-        assertEquals("payee line3", request.getPayee().getAddress().getAddressLine3());
-        assertEquals("payee line4", request.getPayee().getAddress().getAddressLine4());
-        assertNull(request.getPayee().getAddress().getPostTown());
-        assertEquals("RG42 2DL", request.getPayee().getAddress().getPostCode());
-        assertEquals("12345678901234", request.getPayee().getTelephoneNumber());
-        assertEquals("payee dx number", request.getPayee().getDxNumber());
-        assertEquals("payee fx number", request.getPayee().getFaxNumber());
-        assertEquals("payee fx number", request.getPayee().getFaxNumber());
-        assertEquals("payee email", request.getPayee().getEmail());
-        assertEquals("12", request.getPayee().getPcm());
-        assertEquals("payee reference", request.getPayee().getReference());
-        assertEquals("123456789012345678", request.getPayee().getBankAccountNumber());
-        assertEquals("payee bank account holder", request.getPayee().getBankAccountHolder());
-        assertEquals("12345678", request.getPayee().getBankSortCode());
-        assertEquals("payee bank name", request.getPayee().getBankName());
-        assertEquals("payee bank info1", request.getPayee().getBankInfo1());
-        assertEquals("payee bank info2", request.getPayee().getBankInfo2());
-        assertEquals("payee slip code line1", request.getPayee().getSlipCodeline1());
-        assertEquals("payee slip code line2", request.getPayee().getSlipCodeline2());
-        assertEquals("12345678", request.getPayee().getGiroAccountNumber());
-        assertEquals("123456789", request.getPayee().getGiroTransCode1());
-        assertEquals("12", request.getPayee().getGiroTransCode2());
-        assertEquals("sotSignature", request.getSotName());
     }
 
     @Test

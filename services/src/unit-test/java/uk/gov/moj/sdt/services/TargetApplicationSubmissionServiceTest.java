@@ -82,7 +82,7 @@ import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
  * @author Manoj Kulkarni
  */
 @ExtendWith(MockitoExtension.class)
-public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
+class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     private static final String TEST_1 = "TEST_1";
 

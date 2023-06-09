@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
+class ClaimDefenceServiceTest extends AbstractSdtUnitTestBase {
 
     @Mock
     private CMCApi cmcApi;

@@ -8,7 +8,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class MockJudgementRequestServiceTest {
+class MockJudgementRequestServiceTest {
 
     private static final String IDAM_ID = "Test_IDAM_ID";
 

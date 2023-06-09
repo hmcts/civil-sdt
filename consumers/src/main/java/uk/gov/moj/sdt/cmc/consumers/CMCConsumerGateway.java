@@ -1,6 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +52,6 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private XmlElementValueReader xmlElementValueReader;
 
-    private final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
@@ -77,8 +75,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         LOGGER.debug("Invoke cmc target application service for individual request");
         String sdtRequestReference = individualRequest.getSdtRequestReference();
         String requestType = individualRequest.getRequestType();
-        String idamId = ""; // Todo get it from SDTContext
-        String requestPayload = new String(individualRequest.getRequestPayload(), UTF8_CHARSET);
+        String idamId = SdtContext.getContext().getCustomerIdamId();
+        String requestPayload = new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8);
         try {
             if (RequestType.JUDGMENT.getType().equals(requestType)) {
                 JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(requestPayload,
@@ -87,7 +85,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 JudgementResponse judgementResponse = judgementService.requestJudgment(idamId,
                                                                                        sdtRequestReference,
                                                                                        judgementRequest);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse).getBytes(UTF8_CHARSET));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload,
                                                                                BreathingSpaceRequest.class);

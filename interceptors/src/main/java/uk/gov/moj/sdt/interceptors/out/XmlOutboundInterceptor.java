@@ -36,9 +36,7 @@ import java.util.List;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
-
 import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
 import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
 import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
