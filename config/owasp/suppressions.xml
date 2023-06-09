@@ -9,12 +9,14 @@
       CVE-2022-40705 - see https://github.com/jeremylong/DependencyCheck/issues/5543
       CVE-2022-45688 - A stack overflow in the XML.toJSONObject component of hutool-json, hutool is not in the dependencies list when ./gradlew dependencies is run
       CVE-2023-24998
+      CVE-2023-20883
     </notes>
     <cve>CVE-2016-3094</cve>
     <cve>CVE-2022-1471</cve>
     <cve>CVE-2022-40705</cve>
     <cve>CVE-2022-45688</cve>
     <cve>CVE-2023-24998</cve>
+    <cve>CVE-2023-20883</cve>
   </suppress>
   <!--End of false positives section -->
 
