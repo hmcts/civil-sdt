@@ -94,7 +94,7 @@ class CMCConsumerGatewayTest {
         setupMockBehaviour(BREATHING_SPACE, individualRequest);
         BreathingSpaceResponse response = new BreathingSpaceResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
-        when(breathingSpace.breathingSpace(anyString(), anyString(), any())).thenReturn(response);
+        when(breathingSpace.breathingSpace(any(), anyString(), any())).thenReturn(response);
 
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
@@ -103,7 +103,7 @@ class CMCConsumerGatewayTest {
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(breathingSpace).breathingSpace(anyString(), anyString(), any(BreathingSpaceRequest.class));
+        verify(breathingSpace).breathingSpace(any(), anyString(), any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
@@ -117,11 +117,11 @@ class CMCConsumerGatewayTest {
         setupMockBehaviour(CLAIM_STATUS_UPDATE, individualRequest);
         ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
-        when(claimStatusUpdate.claimStatusUpdate(anyString(), anyString(), any())).thenReturn(response);
+        when(claimStatusUpdate.claimStatusUpdate(any(), anyString(), any())).thenReturn(response);
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(claimStatusUpdate).claimStatusUpdate(anyString(), anyString(), any(ClaimStatusUpdateRequest.class));
+        verify(claimStatusUpdate).claimStatusUpdate(any(), anyString(), any(ClaimStatusUpdateRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).getRequestType();
@@ -135,7 +135,7 @@ class CMCConsumerGatewayTest {
         Date date = formattedDate();
         response.setJudgmentEnteredDate(date);
         response.setFirstPaymentDate(date);
-        when(judgementService.requestJudgment(anyString(), any(), any())).thenReturn(response);
+        when(judgementService.requestJudgment(any(), any(), any())).thenReturn(response);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         JudgementRequest judgementRequest = mock(JudgementRequest.class);
@@ -147,7 +147,7 @@ class CMCConsumerGatewayTest {
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(judgementService).requestJudgment(anyString(), any(), any(JudgementRequest.class));
+        verify(judgementService).requestJudgment(any(), any(), any(JudgementRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(xmlToObject).convertObjectToXml(any(JudgementResponse.class));
         verify(individualRequest).getRequestPayload();
