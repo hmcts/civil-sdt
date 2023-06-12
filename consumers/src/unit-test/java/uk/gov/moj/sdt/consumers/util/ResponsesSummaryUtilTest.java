@@ -133,7 +133,7 @@ class ResponseSummaryUtilTest extends BaseXmlTest {
 
     @Test
     void shouldReturnEmptyResultsXMLWhenTargetAppDetailAnyCollectionHasClaimDefencesResults() {
-        List<ClaimDefencesResult> listObjects = claimDefencesResultsUtil.createClaimDefencesList();
+        List<ClaimDefencesResult> listObjects = Lists.newArrayList(claimDefencesResultsUtil.createClaimDefencesResult());
         SubmitQueryResponse queryResponse = mock(SubmitQueryResponse.class);
         SubmitQueryResponseType responseType = mock(SubmitQueryResponseType.class);
         when(queryResponse.getResponseType()).thenReturn(responseType);
