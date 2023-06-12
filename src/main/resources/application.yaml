@@ -32,7 +32,7 @@ spring:
     name: Civil SDT
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5055}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
+    url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5432}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:postgres}
     hikari:
