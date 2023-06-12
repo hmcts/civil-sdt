@@ -21,10 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 import uk.gov.moj.sdt.interceptors.in.IdamIdInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.ServiceRequestInboundInterceptor;
@@ -74,15 +70,7 @@ public class CxfConfig {
     @Bean
     public Endpoint sdtEndpoint(@Qualifier("ISdtEndpointPortType")
                                     SdtEndpointPortType sdtEndpointPortType,
-                                RequestDaoService requestDaoService,
-                                @Qualifier("SubmitQueryEnricher")
-                                    SubmitQueryEnricher submitQueryEnricher,
-                                @Qualifier("BulkFeedbackEnricher")
-                                    BulkFeedbackEnricher bulkFeedbackEnricher,
-                                @Qualifier("SubmitQueryRequestEnricher")
-                                    GenericEnricher submitQueryRequestEnricher,
-                                @Qualifier("IndividualRequestEnricher")
-                                    GenericEnricher individualRequestEnricher) {
+                                RequestDaoService requestDaoService) {
 
         ServiceRequestInboundInterceptor serviceRequestInboundInterceptor = new ServiceRequestInboundInterceptor(requestDaoService);
         XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
@@ -96,12 +84,6 @@ public class CxfConfig {
         CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
 
         XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
-        List<AbstractSdtEnricher> enricherList = new ArrayList<>();
-        enricherList.add(submitQueryEnricher);
-        enricherList.add(bulkFeedbackEnricher);
-        enricherList.add(submitQueryRequestEnricher);
-        enricherList.add(individualRequestEnricher);
-        xmlOutboundInterceptor.setEnricherList(enricherList);
 
         ServiceRequestOutboundInterceptor serviceRequestOutboundInterceptor = new ServiceRequestOutboundInterceptor(requestDaoService);
         CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
