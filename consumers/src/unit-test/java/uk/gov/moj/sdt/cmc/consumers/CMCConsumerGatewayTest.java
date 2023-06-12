@@ -26,6 +26,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
@@ -180,6 +181,30 @@ class CMCConsumerGatewayTest {
             cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
         } catch (CaseOffLineException coe) {
             assertEquals(CASE_OFF_LINE, coe.getMessage());
+        }
+
+    }
+
+    @Test
+    void shouldThrowTimeOutWhenInvokingJudgementRequest() throws Exception {
+        JudgementResponse response = new JudgementResponse();
+        Date date = formattedDate();
+        response.setJudgmentEnteredDate(date);
+        response.setFirstPaymentDate(date);
+        RuntimeException exception = new RuntimeException("Timeout");
+        doThrow(exception).when(judgementService).requestJudgment(any(), any(), any());
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        JudgementRequest judgementRequest = mock(JudgementRequest.class);
+        when(individualRequest.getRequestPayload()).thenReturn(XML);
+        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
+        when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
+
+        try {
+            cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        } catch (CMCException ce) {
+            assertEquals("Timeout", ce.getMessage());
         }
 
     }
