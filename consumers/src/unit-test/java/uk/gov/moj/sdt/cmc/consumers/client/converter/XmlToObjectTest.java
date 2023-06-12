@@ -108,8 +108,8 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("payee line2", request.getPayee().getAddress().getAddressLine2());
         assertEquals("payee line3", request.getPayee().getAddress().getAddressLine3());
         assertEquals("payee line4", request.getPayee().getAddress().getAddressLine4());
-        assertNull(request.getPayee().getAddress().getPostTown());
-        assertEquals("RG42 2DL", request.getPayee().getAddress().getPostCode());
+        assertNull(request.getPayee().getAddress().getPosttown());
+        assertEquals("RG42 2DL", request.getPayee().getAddress().getPostcode());
 
 
         assertEquals("payee name", request.getPayee().getName());
@@ -139,8 +139,8 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("defendant1Address line2", request.getRespondent1Address().getAddressLine2());
         assertEquals("defendant1Address line3", request.getRespondent1Address().getAddressLine3());
         assertEquals("defendant1Address line4", request.getRespondent1Address().getAddressLine4());
-        assertEquals("RG42 2DL", request.getRespondent1Address().getPostCode());
-        assertNull(request.getRespondent1Address().getPostTown());
+        assertEquals("RG42 2DL", request.getRespondent1Address().getPostcode());
+        assertNull(request.getRespondent1Address().getPosttown());
         assertNotNull(request.getRespondent1DOB());
         assertNull(request.getRespondent2Address());
         assertNull(request.getRespondent2DOB());

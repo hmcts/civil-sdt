@@ -42,8 +42,7 @@ class ResponseSummaryUtilTest {
         String xml = mcolDefenceDetailTypeUtil.convertMcolDefenceDetailListToXml(listMcolTypes);
         assertFalse(xml.isEmpty());
         assertTrue(xml.toLowerCase().contains("mcoldefencedetail"));
-        // TODO: Fix broken test
-        //        assertTrue(xml.contains("defendantId=\"2\""));
+        assertTrue(xml.contains("defendantId=\"resp11\""));
    }
 
 }

@@ -15,8 +15,6 @@
     <cve>CVE-2022-1471</cve>
     <cve>CVE-2022-40705</cve>
     <cve>CVE-2022-45688</cve>
-    <cve>CVE-2023-24998</cve>
-    <cve>CVE-2023-20883</cve>
   </suppress>
   <!--End of false positives section -->
 

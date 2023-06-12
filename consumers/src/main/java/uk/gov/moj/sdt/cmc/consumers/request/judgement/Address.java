@@ -39,11 +39,11 @@ public class Address {
         return line4;
     }
 
-    public String getPostCode() {
+    public String getPostcode() {
         return postcode;
     }
 
-    public String getPostTown() {
+    public String getPosttown() {
         return posttown;
     }
 }
