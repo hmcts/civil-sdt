@@ -369,7 +369,7 @@ allprojects {
           details.useVersion '5.3.27' // CVE-2023-20861
         }
         if (details.requested.group == 'org.springframework.boot') {
-          details.useVersion '2.7.11' // CVE-2023-20873
+          details.useVersion '2.7.12' // CVE-2023-20873
         }
         if (details.requested.group == 'com.fasterxml.woodstox' && details.requested.name == 'woodstox-core') {
           details.useVersion '6.4.0' // CVE-2022-40152
@@ -441,7 +441,7 @@ subprojects { subproject ->
           details.useVersion '5.3.27' // CVE-2023-20861
         }
         if (details.requested.group == 'org.springframework.boot') {
-          details.useVersion '2.7.11' // CVE-2023-20873
+          details.useVersion '2.7.12' // CVE-2023-20873
         }
       }
     }
