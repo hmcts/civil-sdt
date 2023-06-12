@@ -202,6 +202,10 @@ dependencyManagement {
   imports {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
   }
+  // CVE-2023-24998
+  dependencySet(group: 'commons-fileupload', version: '1.5') {
+    entry 'commons-fileupload'
+  }
 }
 
 allprojects {
@@ -395,6 +399,10 @@ subprojects { subproject ->
   dependencyManagement {
     imports {
       mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+    // CVE-2023-24998
+    dependencySet(group: 'commons-fileupload', version: '1.5') {
+      entry 'commons-fileupload'
     }
   }
 
