@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class MockWarrantServiceTest extends AbstractSdtUnitTestBase {
+class MockWarrantServiceTest extends AbstractSdtUnitTestBase {
 
     String AUTHORISATION = "";
 

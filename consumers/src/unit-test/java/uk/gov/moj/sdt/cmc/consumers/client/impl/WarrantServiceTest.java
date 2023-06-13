@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class WarrantServiceTest extends AbstractSdtUnitTestBase {
+class WarrantServiceTest extends AbstractSdtUnitTestBase {
 
     String AUTHORISATION = "";
 

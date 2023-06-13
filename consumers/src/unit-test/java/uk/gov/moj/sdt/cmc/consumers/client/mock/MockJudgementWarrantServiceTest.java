@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 import static uk.gov.moj.sdt.cmc.consumers.response.JudgmentWarrantStatus.JUDGMENT_ACCEPTED_WARRANT_ACCEPTED_BY_CCBC;
 
 @ExtendWith(MockitoExtension.class)
-public class MockJudgementWarrantServiceTest extends AbstractSdtUnitTestBase {
+class MockJudgementWarrantServiceTest extends AbstractSdtUnitTestBase {
 
     String AUTHORISATION = "";
 

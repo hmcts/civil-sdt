@@ -1,6 +1,5 @@
 package uk.gov.moj.sdt.params;
 
-import java.util.List;
 import javax.inject.Named;
 import javax.inject.Singleton;
 

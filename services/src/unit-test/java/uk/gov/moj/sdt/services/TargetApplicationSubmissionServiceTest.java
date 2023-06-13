@@ -846,7 +846,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    public void processCCDReferenceRequestWhenCaseNotOffLine() {
+    void processCCDReferenceRequestWhenCaseNotOffLine() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
 
@@ -941,7 +941,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
-    public void processClaimRequestWhenBulkCustomerReadyForAlternateService() {
+    void processClaimRequestWhenBulkCustomerReadyForAlternateService() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(sdtRequestRef);
