@@ -109,7 +109,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                                   WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest("", "",
                                                                          idamId, sdtRequestReference, request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
             String message = e.getMessage();
