@@ -24,11 +24,11 @@ module "servicebus-sdt-queue" {
 resource "azurerm_key_vault_secret" "servicebus_primary_connection_string" {
   name         = "civil-sdt-servicebus-connection-string"
   value        = module.servicebus-namespace.primary_send_and_listen_connection_string
-  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 resource "azurerm_key_vault_secret" "servicebus_primary_shared_access_key" {
   name         = "civil-sdt-servicebus-shared-access-key"
   value        = module.servicebus-namespace.primary_send_and_listen_shared_access_key
-  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
