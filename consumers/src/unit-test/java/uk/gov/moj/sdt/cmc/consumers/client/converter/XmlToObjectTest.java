@@ -12,7 +12,9 @@ import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.UpdateType;
+import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgmentType;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
@@ -45,6 +47,14 @@ class XmlToObjectTest extends BaseXmlTest {
     private static final String JUDGEMENT_JSON = "Expected_Judgement.json";
 
     private static final String EXPECTED_JUDGEMENT_RESPONSE = "Expected_JudgementResponse.xml";
+
+    private static final String WARRANT_REQUEST = "WarrantRequest.xml";
+
+    private static final String EXPECTED_WARRANT_REQUEST = "ExpectedCMC_WarrantRequest.json";
+
+    private static final String JUDGEMENT_WARRANT_REQUEST = "JudgementWarrantRequest.xml";
+
+    private static final String EXPECTED_JUDGEMENT_WARRANT_REQUEST = "ExpectedCMC_JudgementWarrantRequest.json";
 
     private XmlConverter xmlToObject = new XmlConverter();
 
@@ -206,4 +216,26 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals(expectedValue, jsonString);
     }
 
+
+    @Test
+    void shouldConvertWarrantRequestAndConvertToJson() throws IOException {
+        String xmlContent = readXmlAsString(WARRANT_REQUEST);
+        WarrantRequest request = xmlToObject.convertXmlToObject(xmlContent, WarrantRequest.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(request);
+        assertNotNull(jsonString);
+        String expectedValue = readFile(EXPECTED_WARRANT_REQUEST);
+        assertEquals(expectedValue, jsonString);
+    }
+
+    @Test
+    void shouldConvertJudgementWarrantRequestAndConvertToJson() throws IOException {
+        String xmlContent = readXmlAsString(JUDGEMENT_WARRANT_REQUEST);
+        JudgementWarrantRequest request = xmlToObject.convertXmlToObject(xmlContent, JudgementWarrantRequest.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(request);
+        assertNotNull(jsonString);
+        String expectedValue = readFile(EXPECTED_JUDGEMENT_WARRANT_REQUEST);
+        assertEquals(expectedValue, jsonString);
+    }
 }

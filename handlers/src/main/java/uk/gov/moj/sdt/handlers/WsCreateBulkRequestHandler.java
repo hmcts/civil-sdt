@@ -32,6 +32,7 @@ package uk.gov.moj.sdt.handlers;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -84,6 +85,13 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      */
     private ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer;
 
+    /**
+     * The concurrencyMap to hold sdtCustId+custRef and BulkRef. This is used to prevent the customer sending two
+     * requests close together which both get processed at the same time, causing duplicates. The normal check on a
+     * duplicate does not work until the first bulk request has been persisted.
+     */
+    private Map<String, IInFlightMessage> concurrencyMap;
+
     @Autowired
     public WsCreateBulkRequestHandler(@Qualifier("BulkSubmissionService")
                                               IBulkSubmissionService bulkSubmissionService,
@@ -98,13 +106,6 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
         this.transformer = transformer;
         this.concurrencyMap = concurrencyMap;
     }
-
-    /**
-     * The concurrencyMap to hold sdtCustId+custRef and BulkRef. This is used to prevent the customer sending two
-     * requests close together which both get processed at the same time, causing duplicates. The normal check on a
-     * duplicate does not work until the first bulk request has been persisted.
-     */
-    private Map<String, IInFlightMessage> concurrencyMap;
 
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequestType) {

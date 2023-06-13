@@ -9,10 +9,14 @@ import uk.gov.moj.sdt.cmc.consumers.config.CMCConfig;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
-import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 
@@ -54,4 +58,20 @@ public interface CMCApi {
         @RequestHeader("fromDateTime") String fromDateTime,
         @RequestHeader("toDate") String toDate
     );
+
+    @PostMapping("/requestWarrant")
+    WarrantResponse warrantRequest(@RequestHeader(AUTHORIZATION) String authorization,
+                                   @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+                                   @RequestHeader(IDAM_ID_HEADER)  String idamId,
+                                   @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
+                                   @RequestBody WarrantRequest warrantRequest);
+
+    @PostMapping("/requestJudgmentAndWarrant")
+    JudgementWarrantResponse judgementWarrantRequest(@RequestHeader(AUTHORIZATION) String authorization,
+                                                     @RequestHeader("ServiceAuthorization") String serviceAuthorization,
+                                                     @RequestHeader(IDAM_ID_HEADER)  String idamId,
+                                                     @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
+                                                     @RequestBody JudgementWarrantRequest judgmentWarrantRequest);
+
+
 }

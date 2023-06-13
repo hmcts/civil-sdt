@@ -16,13 +16,19 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
+import uk.gov.moj.sdt.cmc.consumers.api.IJudgementWarrantService;
+import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
+import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
@@ -39,6 +45,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT_WARRANT;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
 
 /**
@@ -78,10 +86,22 @@ class CMCConsumerGatewayTest {
     private IClaimDefencesService claimDefences;
 
     @Mock
+    private IWarrantService warrantService;
+
+    @Mock
+    private IJudgementWarrantService judgementWarrantService;
+
+    @Mock
     private XmlElementValueReader xmlElementValueReader;
 
     @Mock
     private IClaimStatusUpdateService claimStatusUpdate;
+
+    @Mock
+    private WarrantRequest warrantRequest;
+
+    @Mock
+    private JudgementWarrantRequest judgementWarrantRequest;
 
     @BeforeEach
     public void setUpLocalTests() {
@@ -89,6 +109,8 @@ class CMCConsumerGatewayTest {
                                                     judgementService,
                                                     claimStatusUpdate,
                                                     claimDefences,
+                                                    warrantService,
+                                                    judgementWarrantService,
                                                     xmlToObject,
                                                     xmlElementValueReader);
     }
@@ -162,6 +184,44 @@ class CMCConsumerGatewayTest {
     }
 
     @Test
+    void shouldInvokeWarrantRequest() throws Exception {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(WARRANT, individualRequest);
+        WarrantResponse response = new WarrantResponse();
+        WarrantRequest request = mock(WarrantRequest.class);
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
+        when(xmlToObject.convertObjectToXml(any())).thenReturn("");
+        when(warrantService.warrantRequest(anyString(), anyString(), any(), any(), any(WarrantRequest.class))).thenReturn(response);
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        verify(warrantService).warrantRequest(anyString(), anyString(),  any(), any(), any(WarrantRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getRequestType();
+        verify(individualRequest).getSdtRequestReference();
+    }
+
+    @Test
+    void shouldInvokeJudgementWarrantRequest() throws Exception {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(JUDGMENT_WARRANT, individualRequest);
+        JudgementWarrantResponse response = new JudgementWarrantResponse();
+        JudgementWarrantRequest request = new JudgementWarrantRequest();
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
+        when(xmlToObject.convertObjectToXml(any())).thenReturn("");
+        when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any())).thenReturn(response);
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        verify(judgementWarrantService).judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any(JudgementWarrantRequest.class));
+        verify(xmlToObject).convertXmlToObject(anyString(), any());
+        verify(individualRequest).getRequestPayload();
+        verify(individualRequest).getRequestType();
+        verify(individualRequest).getSdtRequestReference();
+    }
+
+    @Test
     void shouldThrowCaseOffLineWhenInvokingJudgementRequest() throws Exception {
         JudgementResponse response = new JudgementResponse();
         Date date = formattedDate();
@@ -224,6 +284,10 @@ class CMCConsumerGatewayTest {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
+        } else if (requestType.equals(WARRANT)) {
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(warrantRequest);
+        } else if (requestType.equals(JUDGMENT_WARRANT)) {
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementWarrantRequest);
         }
     }
 
