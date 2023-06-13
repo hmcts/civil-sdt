@@ -207,11 +207,14 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(JUDGMENT_WARRANT, individualRequest);
         JudgementWarrantResponse response = new JudgementWarrantResponse();
-        when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), anyString(), anyString(), any())).thenReturn(response);
+        JudgementWarrantRequest request = new JudgementWarrantRequest();
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
+        when(xmlToObject.convertObjectToXml(any())).thenReturn("");
+        when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any())).thenReturn(response);
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(judgementWarrantService).judgementWarrantRequest(anyString(), anyString(), anyString(), anyString(), any(JudgementWarrantRequest.class));
+        verify(judgementWarrantService).judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any(JudgementWarrantRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).getRequestType();
