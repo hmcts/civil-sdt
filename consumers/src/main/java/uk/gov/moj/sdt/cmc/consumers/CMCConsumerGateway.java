@@ -45,6 +45,7 @@ import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
 
 @Component("CMCConsumerGateway")
+@SuppressWarnings("java:S6539")
 public class CMCConsumerGateway implements IConsumerGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
