@@ -4,8 +4,8 @@ data "azurerm_user_assigned_identity" "civil-mi" {
 }
 
 data "azurerm_key_vault" "key_vault" {
-  name                = "${var.product}-${var.env}"
-  resource_group_name = "${var.product}-${var.env}"
+  name                = "${var.product}-${var.component}-${var.env}"
+  resource_group_name = "${var.product}-${var.component}-${var.env}"
 }
 
 data "azurerm_key_vault" "s2s_vault" {
