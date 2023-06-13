@@ -1,5 +1,7 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.nio.charset.StandardCharsets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private XmlElementValueReader xmlElementValueReader;
 
+
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
                               @Qualifier("JudgementRequestService") IJudgementService judgementService,
@@ -86,8 +89,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         LOGGER.debug("Invoke cmc target application service for individual request");
         String sdtRequestReference = individualRequest.getSdtRequestReference();
         String requestType = individualRequest.getRequestType();
-        String idamId = ""; // Todo get it from SDTContext
-        String requestPayload = individualRequest.getRequestPayload();
+        String idamId = SdtContext.getContext().getCustomerIdamId();
+        String requestPayload = new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8);
         try {
             if (RequestType.JUDGMENT.getType().equals(requestType)) {
                 JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(requestPayload,
@@ -96,23 +99,21 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 JudgementResponse judgementResponse = judgementService.requestJudgment(idamId,
                                                                                        sdtRequestReference,
                                                                                        judgementRequest);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
-                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload,
-                                                                               BreathingSpaceRequest.class);
+                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload, BreathingSpaceRequest.class);
 
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {
-                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload,
-                                                                                  ClaimStatusUpdateRequest.class);
+                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             } else if (RequestType.WARRANT.getType().equals(requestType)) {
                 WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest("", "",
                                                                          idamId, sdtRequestReference, request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.JUDGMENT_WARRANT.getType().equals(requestType)) {
                 JudgementWarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementWarrantRequest.class);
                 JudgementWarrantResponse response = judgementWarrantService.judgementWarrantRequest("",
@@ -120,7 +121,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                                                     idamId,
                                                                                                     sdtRequestReference,
                                                                                                     request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
             String message = e.getMessage();

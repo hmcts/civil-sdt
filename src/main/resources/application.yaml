@@ -14,7 +14,6 @@ management:
 springdoc:
   packagesToScan: uk.gov.moj.sdt.controllers
 
-#If you use a database then uncomment below lines and update db properties accordingly
 spring:
   jms:
     servicebus:
@@ -28,12 +27,12 @@ spring:
     allow-bean-definition-overriding: true
     allow-circular-references: true
   config:
-    import: "optional:configtree:/mnt/secrets/"
+    import: "optional:configtree:/mnt/secrets/civil-sdt/"
   application:
     name: Civil SDT
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5055}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
+    url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5432}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:postgres}
     hikari:
@@ -59,9 +58,6 @@ spring:
     out-of-order: 'true'
     baseline-on-migrate: 'true'
 
-azure:
-  application-insights:
-    instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:00000000-0000-0000-0000-000000000000}
 sdt:
   tx-timeout:
     default: 1000

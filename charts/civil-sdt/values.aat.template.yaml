@@ -2,5 +2,3 @@
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
-  environment:
-    SDT_DB_HOST: civil-sdt-postgres-db-v11-aat.postgres.database.azure.com

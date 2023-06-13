@@ -1,83 +1,55 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgement: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgement: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
 package uk.gov.moj.sdt.producers;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SpringApplicationContext;
-import uk.gov.moj.sdt.utils.parsing.XmlNamespaceUtils;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test class for end to end web service tests..
  *
  * @param <JaxbRequestType>  the type of the JAXB top level object to create.
- * @param <EndpointPortType> the type of the endpoint to be called.
+ * @param <JaxbResponseType> the type of the JAXB response.
  * @author Robin Compston
  */
 public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> extends AbstractSdtUnitTestBase {
     /**
      * Logger object.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(XmlNamespaceUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWebServiceTest.class);
 
     /**
      * Setup the test.
      */
-    @Before
-    public void setUp() {
-        DBUnitUtility.loadDatabase(this.getClass(), true);
-    }
+    @Override
+    @BeforeEach
+    public void setUp() {}
 
     /**
      * Method to call remote endpoint to be tested.
@@ -91,7 +63,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         try {
             response = this.callTestWebService(request);
         } catch (RuntimeException e) {
-            throw e;
+            throw new SdtRunTimeException("RUNTIME_ERROR", e.getMessage());
         }
 
         // Check the response returned by the web service.
@@ -123,6 +95,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             resourceName = resourceName.replace('.', '/');
             // Add the method name and suffix.
             resourceName = resourceName + "." + methodName + ".request.xml";
+            LOGGER.debug("XML resourceName = {}", resourceName);
             InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
 
             // Create JAXB object of required type from the XML input stream.
@@ -133,7 +106,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             request = (JaxbRequestType) jaxbElement.getValue();
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Failure to unmarshall request from web service [" + requestClass.toString() + "]");
+            fail("Failure to unmarshall request from web service [" + requestClass.toString() + "]");
         }
 
         return request;
@@ -145,7 +118,6 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
      * test with the name: <class name>.<method name>.response.xml.
      *
      * @param response the JAXB object returned by the web service.
-     * @return the XML corresponding to the given JAXB object tree.
      */
     protected void checkXmlFromJaxb(JaxbResponseType response) {
         try {
@@ -157,7 +129,8 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Output stream to write result to.
-            OutputStream out = new OutputStream() {
+            String actualXml;
+            try (OutputStream out = new OutputStream() {
                 private StringBuilder string = new StringBuilder();
 
                 @Override
@@ -169,15 +142,16 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
                 public String toString() {
                     return this.string.toString();
                 }
-            };
+            }) {
 
-            JAXBElement<JaxbResponseType> jaxbResponse = this.wrapJaxbObject(response);
+                JAXBElement<JaxbResponseType> jaxbResponse = this.wrapJaxbObject(response);
 
-            // Convert the JAXB object tree into XML.
-            jaxbMarshaller.marshal(jaxbResponse, out);
+                // Convert the JAXB object tree into XML.
+                jaxbMarshaller.marshal(jaxbResponse, out);
 
-            // Get the XML out of the output stream.
-            String actualXml = out.toString();
+                // Get the XML out of the output stream.
+                actualXml = out.toString();
+            }
 
             // Find out method that called us.
             StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
@@ -193,7 +167,10 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             // Add the method name and suffix.
             resourceName = resourceName + "." + methodName + ".response.xml";
             InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
-            String expectedXml = IOUtils.toString(inputStream, "UTF-8");
+            String expectedXml = "";
+            if (null != inputStream) {
+                expectedXml = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            }
 
             // Blank out the sdt bulk reference and submitted date since these
             // will not match otherwise.
@@ -201,58 +178,52 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
             expectedXml = removeVariantText(expectedXml, "submittedDate");
             // Following only needed for concurrent duplicate test since customer reference keeps changing.
             expectedXml = removeVariantText(expectedXml, "customerReference");
-            expectedXml = removeLineFeeds(expectedXml);
             actualXml = removeVariantText(actualXml, "sdtBulkReference");
             actualXml = removeVariantText(actualXml, "submittedDate");
             actualXml = removeVariantText(actualXml, "customerReference");
-            actualXml = removeLineFeeds(actualXml);
 
-            if (!actualXml.equals(expectedXml)) {
-                LOGGER.error("expected [" + expectedXml + "], actual [" + actualXml + "]");
-            }
-
-            // Check xml.
-            Assert.assertEquals("Expected XML [" + resourceName + "] does not match, ", expectedXml, actualXml);
+            checkXmlChunks(expectedXml, actualXml);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Failure to marshall response from web service [" + response.toString() + "]");
+            fail("Failure to marshall response from web service [" + response.toString() + "]");
         }
     }
 
     /**
-     * Utility to remove carriage return (\r), linefeeds (\n) and tabs (\t) otherwise the
-     * test for equality does not work.
+     * Utility to show xml chunk differences. Helps with debugging large xml strings
      *
-     * @param xml the XML to remove text from.
-     * @return the modified XML.
+     * @param expectedXml the expected XML.
+     * @param actualXml the actual XML.
      */
-    private String removeLineFeeds(final String xml) {
-        // Get characters from String.
-        char[] inChars = xml.toCharArray();
-
-        // Make array big enough for all given String.
-        char[] outChars = new char[inChars.length];
-
-        int i1 = 0;
-        int i2 = 0;
-        boolean skipSpace = false;
-
-        // Exclude line feeds and carriage returns.
-        // Allow no consecutive spaces (ie only one space).
-        while (i1 < inChars.length) {
-            if (i1 != 0 && inChars[i1 - 1] == ' ' && inChars[i1] == ' ') {
-                skipSpace = true;
-            }
-            if (inChars[i1] != '\n' && inChars[i1] != '\r' && inChars[i1] != '\t' && !skipSpace) {
-                outChars[i2++] = inChars[i1];
-            }
-            if (skipSpace)
-                skipSpace = false;
-            i1++;
+    protected void checkXmlChunks(String expectedXml, String actualXml) {
+        if (actualXml.length() == 0 || expectedXml.length() == 0) {
+            return;
         }
 
-        // Convert back to String.
-        return new String(outChars, 0, i2);
+        // attribute requestId order is important!
+        DefaultNodeMatcher nodeMatcher = new DefaultNodeMatcher(ElementSelectors.conditionalBuilder()
+                .whenElementIsNamed("response")
+                .thenUse(ElementSelectors.byNameAndAttributes("requestId"))
+                .elseUse(ElementSelectors.byNameAndText)
+                .build());
+
+        Diff diff = DiffBuilder.compare(expectedXml).withTest(actualXml)
+            .normalizeWhitespace()
+            .ignoreWhitespace()
+            .ignoreComments()
+            .checkForSimilar()
+            .withNodeMatcher(nodeMatcher)
+            .build();
+
+        boolean hasDiff = diff.hasDifferences();
+        if (hasDiff) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("expected [{}]", expectedXml);
+                LOGGER.debug("actual   [{}]", actualXml);
+            }
+            LOGGER.error("expected [{}], actual [{}]", expectedXml, actualXml);
+        }
+        assertFalse(hasDiff);
     }
 
     /**
@@ -321,6 +292,7 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         Client clientProxy = ClientProxy.getClient(client);
 
         HTTPConduit httpConduit = (HTTPConduit) clientProxy.getConduit();
+
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
         // Specifies the amount of time, in milliseconds, that the client will attempt to establish a connection before
         // it times out
@@ -330,6 +302,5 @@ public abstract class AbstractWebServiceTest<JaxbRequestType, JaxbResponseType> 
         httpConduit.setClient(httpClientPolicy);
 
         return client;
-
     }
 }

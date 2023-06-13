@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.in;
 
+import java.lang.reflect.Field;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
@@ -39,8 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-
-import java.lang.reflect.Field;
 
 /**
  * Interceptor class which handles bulk submission message received by SDT.
@@ -80,9 +80,7 @@ public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor {
                 SdtMetricsMBean.getMetrics().upXmlValidationFailureCount();
             }
         }
-        // CHECKSTYLE:OFF
         catch (final Exception e)
-        // CHECKSTYLE:ON
         {
             LOGGER.error("Error in unmarshalling interceptor", e);
         }

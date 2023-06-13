@@ -49,8 +49,9 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
-import java.time.LocalDateTime;
 import javax.persistence.NoResultException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -123,7 +124,7 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         bulkSubmission.setCustomerReference("REF1");
         bulkSubmission.setNumberOfRequest(1);
         final String xmlToLoad = "<Payload>2</Payload>";
-        bulkSubmission.setPayload(xmlToLoad);
+        bulkSubmission.setPayload(xmlToLoad.getBytes());
         bulkSubmission.setSdtBulkReference(sdtBulkReference);
         bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus());
 
@@ -134,9 +135,9 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
 
         assertNotNull(submission);
 
-        LOGGER.debug("payload for bulk submission is {}", submission.getPayload());
-
-        assertEquals(submission.getPayload(), xmlToLoad);
+        String response = new String(submission.getPayload(), StandardCharsets.UTF_8);
+        LOGGER.debug("payload for bulk submission is {}", response);
+        assertEquals(response, xmlToLoad);
         assertEquals("REF1", submission.getCustomerReference());
     }
 
@@ -231,7 +232,7 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         bulkSubmission.setCustomerReference(customerReference);
         bulkSubmission.setNumberOfRequest(1);
         final String xmlToLoad = "<Payload>2</Payload>";
-        bulkSubmission.setPayload(xmlToLoad);
+        bulkSubmission.setPayload(xmlToLoad.getBytes());
         bulkSubmission.setSdtBulkReference(sbr);
         bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus());
 

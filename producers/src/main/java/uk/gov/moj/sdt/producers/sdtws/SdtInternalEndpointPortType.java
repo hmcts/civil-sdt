@@ -68,11 +68,13 @@ public class SdtInternalEndpointPortType implements ISdtInternalEndpointPortType
         setUpdateItemHandler(updateItemHandler);
     }
 
+    public SdtInternalEndpointPortType() {}
+
     @Override
     public UpdateResponseType updateItem(final UpdateRequestType updateRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Endpoint called for update item for request reference [" +
-                    updateRequest.getHeader().getSdtRequestId() + "]");
+            LOGGER.debug("Endpoint called for update item for request reference [{}]",
+                    updateRequest.getHeader().getSdtRequestId());
         }
 
         UpdateResponseType response = null;

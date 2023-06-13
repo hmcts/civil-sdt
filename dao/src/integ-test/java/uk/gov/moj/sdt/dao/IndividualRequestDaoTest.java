@@ -226,8 +226,8 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
         individualRequest.setSdtBulkReference("sdtBulkReference");
         individualRequest.setSdtRequestReference("sdtRequestReference");
         individualRequest.setForwardingAttempts(1);
-        individualRequest.setTargetApplicationResponse("targetApplicationResponse");
-        individualRequest.setRequestPayload("requestPayload");
+        individualRequest.setTargetApplicationResponse("targetApplicationResponse".getBytes());
+        individualRequest.setRequestPayload("requestPayload".getBytes());
         individualRequest.setRequestType("mcolClaim");
 
         individualRequestDao.persist(individualRequest);

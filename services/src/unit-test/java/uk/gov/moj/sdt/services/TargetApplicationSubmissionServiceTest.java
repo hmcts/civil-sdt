@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.services;
 
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -81,7 +82,7 @@ import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
  * @author Manoj Kulkarni
  */
 @ExtendWith(MockitoExtension.class)
-public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
+class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     private static final String TEST_1 = "TEST_1";
 
@@ -861,6 +862,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         bulkSubmission.setIndividualRequests(requests);
 
         request.setBulkSubmission(bulkSubmission);
+        request.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
@@ -871,7 +873,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload("Test Xml");
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
@@ -914,7 +915,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(CLAIM.getType());
-        individualRequest.setRequestPayload("Test Xml");
 
         SdtContext.getContext().setRawInXml(RESPONSE);
 
@@ -938,7 +938,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     }
 
     @Test
-    public void processCCDReferenceRequestFailOnCaseOffLine() {
+    void processCCDReferenceRequestFailOnCaseOffLine() {
         final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
 
@@ -946,7 +946,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         individualRequest.setRequestStatus("Received");
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload("Test Xml");
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
@@ -993,7 +992,6 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         boolean verifyLog = false;
         for (ILoggingEvent log : logList) {
             if (log.getFormattedMessage().contains(message)) {
-
                 verifyLog = true;
                 break;
             }
