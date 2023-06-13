@@ -143,19 +143,6 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                                                     sdtRequestReference,
                                                                                                     request);
                 individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
-            } else if (RequestType.WARRANT.getType().equals(requestType)) {
-                WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
-                WarrantResponse response = warrantService.warrantRequest("", "",
-                                                                         idamId, sdtRequestReference, request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
-            } else if (RequestType.JUDGMENT_WARRANT.getType().equals(requestType)) {
-                JudgementWarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementWarrantRequest.class);
-                JudgementWarrantResponse response = judgementWarrantService.judgementWarrantRequest("",
-                                                                                                    "",
-                                                                                                    idamId,
-                                                                                                    sdtRequestReference,
-                                                                                                    request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
             String message = e.getMessage();
