@@ -800,8 +800,6 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         receiveTimeOutParam.setValue(TWELVE_THOUSAND);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(receiveTimeOutParam);
 
-        this.mockCmcConsumerGateway.individualRequest(individualRequest, 1000, 12000);
-
         final List<IIndividualRequest> indRequests = new ArrayList<>();
         indRequests.add(individualRequest);
 

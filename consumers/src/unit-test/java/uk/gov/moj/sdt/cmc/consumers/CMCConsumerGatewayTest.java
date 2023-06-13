@@ -215,7 +215,10 @@ class CMCConsumerGatewayTest {
         response.setIssueDate(date);
         response.setServiceDate(date);
         response.setClaimNumber("MCOL-0000001");
-        when(claimRequestService.claimRequest(anyString(), any(), any())).thenReturn(response);
+        ClaimRequest request = new ClaimRequest();
+        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
+        when(xmlToObject.convertObjectToXml(any())).thenReturn("");
+        when(claimRequestService.claimRequest(any(), any(), any())).thenReturn(response);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         ClaimRequest claimRequest = mock(ClaimRequest.class);
@@ -227,7 +230,7 @@ class CMCConsumerGatewayTest {
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(claimRequestService).claimRequest(anyString(), any(), any(ClaimRequest.class));
+        verify(claimRequestService).claimRequest(any(), any(), any(ClaimRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(xmlToObject).convertObjectToXml(any(ClaimResponse.class));
         verify(individualRequest).getRequestPayload();
