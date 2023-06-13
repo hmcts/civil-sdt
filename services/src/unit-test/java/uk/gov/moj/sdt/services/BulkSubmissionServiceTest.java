@@ -49,6 +49,7 @@ import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,7 +132,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     private static final String TEST_XML_VALID_3 = "testXMLValid3.xml";
 
-    private static final String TARGET_APPLICATION_FOUND = "Target Application found {}";
+    private static final String TARGET_APPLICATION_FOUND = "Target Application found";
 
     /**
      * Setup of the mock dao and injection of other objects.
@@ -450,7 +451,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setCustomerReference("TEST_CUST_REF");
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(2);
-        bulkSubmission.setPayload("TEST_XML");
+        bulkSubmission.setPayload("TEST_XML".getBytes(StandardCharsets.UTF_8));
         bulkSubmission.setSubmissionStatus("SUBMITTED");
 
         final IndividualRequest individualRequest = new IndividualRequest();
@@ -581,7 +582,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;
         for (ILoggingEvent log : logList)
-            if (log.getMessage().contains(message)) {
+            if (log.getFormattedMessage().contains(message)) {
                 verifyLog = true;
                 break;
             }

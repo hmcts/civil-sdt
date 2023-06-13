@@ -30,17 +30,23 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.producers.sdtws;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.handlers.api.IWsCreateBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadBulkRequestHandler;
 import uk.gov.moj.sdt.handlers.api.IWsReadSubmitQueryHandler;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.BulkStatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkfeedbackrequestschema.BulkFeedbackRequestType;
@@ -56,8 +62,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.reset;
 
 /**
  * Unit test for {@link SdtEndpointPortType}.
@@ -90,10 +101,15 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @Mock
     private IWsReadSubmitQueryHandler mockSubmitQueryHandler;
 
+    private Logger mockLogger;
+
     private static final String RESPONSE_EXPECTED = "Response expected";
     private static final String RUNTIME_EXCEPTION_SHOULD_HAVE_BEEN_THROWN = "Runtime exception should have been thrown";
     private static final String SDT_SYSTEM_COMPONENT_ERROR =
             "A SDT system component error has occurred. Please contact the SDT support team for assistance";
+
+    private static final String MOCK_CODE = "MOCK_CODE";
+    private static final String MOCK_ERROR = "MOCK_ERROR";
 
     /**
      * Set up common for all tests.
@@ -101,9 +117,24 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     @BeforeEach
     @Override
     public void setUp() {
-        portType = new SdtEndpointPortType(mockCreateBulkRequestHandler,
-                                           mockBulkRequestHandler,
-                                           mockSubmitQueryHandler);
+        mockLogger = mock(Logger.class);
+        try (MockedStatic<LoggerFactory> mockLoggerFactory = Mockito.mockStatic(LoggerFactory.class)) {
+            mockLoggerFactory.when(() -> LoggerFactory.getLogger(any(Class.class)))
+                .thenReturn(mockLogger);
+            when(mockLogger.isDebugEnabled())
+                .thenReturn(true);
+
+            portType = new SdtEndpointPortType(
+                mockCreateBulkRequestHandler,
+                mockBulkRequestHandler,
+                mockSubmitQueryHandler
+            );
+        }
+    }
+
+    @AfterEach
+    public void resetLogger() {
+        reset(mockLogger);
     }
 
     /**
@@ -120,6 +151,11 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         verify(mockCreateBulkRequestHandler).submitBulk(dummyRequest);
         assertNotNull(response, RESPONSE_EXPECTED);
+        assertEquals(StatusCodeType.OK, response.getStatus().getCode());
+        assertEquals(MOCK_ERROR, response.getStatus().getError().getDescription());
+        assertEquals(MOCK_CODE, response.getStatus().getError().getCode());
+        verify(mockLogger, never()).debug(any());
+        verify(mockLogger, never()).isDebugEnabled();
     }
 
     /**
@@ -137,6 +173,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockCreateBulkRequestHandler).submitBulk(any());
+        verify(mockLogger, never()).isDebugEnabled();
     }
 
     /**
@@ -150,7 +187,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         final BulkFeedbackResponseType response = portType.getBulkFeedback(createBulkFeedbackRequestType());
 
         assertNotNull(response, RESPONSE_EXPECTED);
+        assertEquals(MOCK_ERROR, response.getBulkRequestStatus().getBulkStatus().getError().getDescription());
+        assertEquals(MOCK_CODE, response.getBulkRequestStatus().getBulkStatus().getError().getCode());
         verify(mockBulkRequestHandler).getBulkFeedback(any(BulkFeedbackRequestType.class));
+        verify(mockLogger).debug(anyString(), anyLong());
     }
 
     /**
@@ -169,6 +209,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockBulkRequestHandler).getBulkFeedback(any(BulkFeedbackRequestType.class));
+        verify(mockLogger, never()).isDebugEnabled();
     }
 
     /**
@@ -183,6 +224,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         assertNotNull(response, RESPONSE_EXPECTED);
         verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));
+
+        assertEquals(MOCK_ERROR, response.getStatus().getError().getDescription());
+        assertEquals(MOCK_CODE, response.getStatus().getError().getCode());
+        verify(mockLogger, never()).debug(anyString(), anyLong());
     }
 
     /**
@@ -201,6 +246,7 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));
+        verify(mockLogger, never()).isDebugEnabled();
     }
 
     /**
@@ -231,6 +277,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         final StatusType statusType = new StatusType();
         statusType.setCode(StatusCodeType.OK);
+        final ErrorType errorType = new ErrorType();
+        errorType.setDescription(MOCK_ERROR);
+        errorType.setCode(MOCK_CODE);
+        statusType.setError(errorType);
         response.setStatus(statusType);
         return response;
     }
@@ -272,6 +322,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         final BulkStatusType bulkStatusType = new BulkStatusType();
         bulkStatusType.setCode(BulkStatusCodeType.COMPLETED);
+        final ErrorType errorType = new ErrorType();
+        errorType.setDescription(MOCK_ERROR);
+        errorType.setCode(MOCK_CODE);
+        bulkStatusType.setError(errorType);
         bulkRequestStatus.setBulkStatus(bulkStatusType);
 
         response.setBulkRequestStatus(bulkRequestStatus);
@@ -305,6 +359,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
 
         final StatusType statusType = new StatusType();
         statusType.setCode(StatusCodeType.OK);
+        final ErrorType errorType = new ErrorType();
+        errorType.setDescription(MOCK_ERROR);
+        errorType.setCode(MOCK_CODE);
+        statusType.setError(errorType);
 
         response.setSdtCustomerId(123);
         response.setStatus(statusType);

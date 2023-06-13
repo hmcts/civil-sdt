@@ -30,6 +30,10 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +46,7 @@ import uk.gov.moj.sdt.services.messaging.api.IMessageDrivenBean;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.logging.LoggingContext;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
 
 /**
  * Implementation of the IMessageReader interface.
@@ -100,32 +99,18 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
                 throw new RuntimeException(e);
             }
 
-            LOGGER.debug("Received message, SDT reference [" + sdtReference + "]");
-
-            // Setup logging flags from current value in SdtMetric MBean.
-            SdtContext.getContext().getLoggingContext()
-                    .setLoggingFlags(SdtMetricsMBean.getMetrics().getPerformanceLoggingFlags());
-
+            LOGGER.debug("Received message, SDT reference [{}]",  sdtReference);
             // Assemble logging id - for dequeued messages we take the logging id of the original submit bulk thread as
             // the major portion to tie things together.
             SdtContext.getContext().getLoggingContext().setMajorLoggingId(sdtMessage.getEnqueueLoggingId());
             SdtContext.getContext().getLoggingContext().setMinorLoggingId(LoggingContext.getNextLoggingId());
-
-            if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_6)) {
-                final StringBuffer detail = new StringBuffer();
-                detail.append("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference() + "\n");
-
-                // Write message to 'performance.log' for this logging point.
-                PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_6, "Dequeue message",
-                        detail.toString());
-            }
 
             try {
                 this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference, caseOffLine);
             }
             // CHECKSTYLE:OFF
             catch (final RuntimeException e) {
-                LOGGER.error("Fatal exception encountered in " +
+                LOGGER.error("Fatal exception encountered in {}",
                         this.getTargetAppSubmissionService().getClass().getSimpleName());
 
                 // We are about to abort the transaction; treat this message as never read and therefore reverse
@@ -137,7 +122,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
                 throw e;
             }
         } else {
-            LOGGER.error("Invalid message type [" + message.getClass().getCanonicalName() + "] read by MDB.");
+            LOGGER.error("Invalid message type [{}] read by MDB.", message.getClass().getCanonicalName());
         }
     }
 

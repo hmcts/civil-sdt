@@ -64,7 +64,6 @@ public class ProducersConfig {
             "getLastRefStats",
             "getPerformanceLoggingString",
             "uncache",
-            "setPerformanceLoggingFlags",
             "reset",
             "dumpMetrics"
         );

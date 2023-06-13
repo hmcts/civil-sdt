@@ -38,7 +38,7 @@ declare
     cursor c1 is
         select owner, object_name, object_type
         from dba_objects
-        where owner in ('SDT_OWNER','SDT_USER','SDT_BATCH_USER')
+        where owner in ('PUBLIC')
         and status='INVALID'
         and object_type in ('VIEW','SYNONYM','PACKAGE','PACKAGE BODY','PROCEDURE','FUNCTION','TRIGGER')
         order by 3;

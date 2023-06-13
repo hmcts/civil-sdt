@@ -91,11 +91,12 @@ public abstract class AbstractSdtInterceptor extends AbstractSoapInterceptor {
 
         for (ISdtEnricher enricher : enricherList) {
             // Set the out bound message
-            enrichedEnvelope = enricher.enrichXml(enrichedEnvelope);
+            if (null != enricher) {
+                enrichedEnvelope = enricher.enrichXml(enrichedEnvelope);
+            } else {
+                LOGGER.debug("enricher is NULL!");
+            }
         }
-
-        // // Replace raw out XML with entire message, ready for outbound service request logging.
-        // SdtContext.getContext ().setRawOutXml (enrichedEnvelope);
 
         LOGGER.debug("completed - running through list of enrichers");
 

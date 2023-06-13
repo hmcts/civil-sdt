@@ -33,17 +33,20 @@ package uk.gov.moj.sdt.transformers;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import uk.gov.moj.sdt.domain.SubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.domain.api.*;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.ErrorType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
+import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for SubmitQueryConsumerTransformer.
@@ -60,15 +63,7 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
      * Set up variables for the test.
      */
     public void setUpLocalTests() {
-        Constructor<SubmitQueryConsumerTransformer> c;
-        try {
-            // Make the constructor visible so we can get a new instance of it.
-            c = SubmitQueryConsumerTransformer.class.getDeclaredConstructor();
-            c.setAccessible(true);
-            transformer = c.newInstance();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+        transformer = new SubmitQueryConsumerTransformer();
     }
 
     /**
@@ -82,12 +77,12 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
         final StatusType statusType = new StatusType();
         statusType.setCode(StatusCodeType.OK);
         jaxb.setStatus(statusType);
-        jaxb.setResultCount(new BigInteger("0"));
+        jaxb.setResultCount(BigInteger.ZERO);
         final ISubmitQueryRequest domain = new SubmitQueryRequest();
 
         transformer.transformJaxbToDomain(jaxb, domain);
-        Assert.assertEquals("Request Status is incorrect", jaxb.getStatus().getCode().value(), domain.getStatus());
-        Assert.assertEquals("Incorrect result count", jaxb.getResultCount().intValue(), domain.getResultCount());
+        assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(), "Request Status is incorrect");
+        assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(), "Incorrect result count");
     }
 
     /**
@@ -114,9 +109,37 @@ public class SubmitQueryConsumerTransformerTest extends AbstractSdtUnitTestBase 
 
         final IErrorLog errorLog = domain.getErrorLog();
 
-        Assert.assertEquals("Request Status is incorrect", jaxb.getStatus().getCode().value(), domain.getStatus());
-        Assert.assertEquals("Error description is incorrect", "MCOL has found an error in processing the request",
-                errorLog.getErrorText());
-        Assert.assertEquals("Incorrect result count", jaxb.getResultCount().intValue(), domain.getResultCount());
+        assertEquals(jaxb.getStatus().getCode().value(), domain.getStatus(),
+                                "Request Status is incorrect");
+        assertEquals("MCOL has found an error in processing the request", errorLog.getErrorText(),
+                                "Error description is incorrect");
+        assertEquals(jaxb.getResultCount().intValue(), domain.getResultCount(),
+                                "Incorrect result count");
     }
+
+    @Test
+    public void testTransformDomainToJaxb() {
+        final ISubmitQueryRequest domain = new SubmitQueryRequest();
+        final ITargetApplication mockTargetApplication = Mockito.mock(ITargetApplication.class);
+        final IBulkCustomerApplication mockBulkCustomerApplication = Mockito.mock(IBulkCustomerApplication.class);
+        final IBulkCustomer mockBulkCustomer = Mockito.mock(IBulkCustomer.class);
+
+        domain.setTargetApplication(mockTargetApplication);
+        domain.setBulkCustomer(mockBulkCustomer);
+
+        String targetAppCode = "MOCK_APP_CODE";
+        String customerApplicationId = "MOCK_CUSTOMER_APP_ID";
+
+        when(mockTargetApplication.getTargetApplicationCode()).thenReturn(targetAppCode);
+
+        when(mockBulkCustomer.getBulkCustomerApplication(targetAppCode))
+            .thenReturn(mockBulkCustomerApplication);
+
+        when(mockBulkCustomerApplication.getCustomerApplicationId()).thenReturn(customerApplicationId);
+
+        final SubmitQueryRequestType jaxb = transformer.transformDomainToJaxb(domain);
+
+        assertEquals(customerApplicationId, jaxb.getHeader().getTargetAppCustomerId(), "targetAppCustomerId is incorrect");
+        assertNull(jaxb.getTargetAppDetail().getAny(), "Jaxb targetAppDetail should be empty");
+        }
 }

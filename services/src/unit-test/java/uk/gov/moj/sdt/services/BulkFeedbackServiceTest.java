@@ -185,7 +185,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setCustomerReference("TEST_CUST_REF");
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(2);
-        bulkSubmission.setPayload("TEST_XML");
+        bulkSubmission.setPayload("TEST_XML".getBytes());
         bulkSubmission.setSubmissionStatus("SUBMITTED");
 
         final IndividualRequest individualRequest = new IndividualRequest();
@@ -222,7 +222,7 @@ class BulkFeedbackServiceTest extends AbstractSdtUnitTestBase {
                         "Duplicate Unique Request Identifier submitted {0}");
             individualRequest.setErrorLog(errorLog);
         }
-        individualRequest.setTargetApplicationResponse("<response></response>");
+        individualRequest.setTargetApplicationResponse("<response></response>".getBytes());
 
         bulkSubmission.addIndividualRequest(individualRequest);
     }

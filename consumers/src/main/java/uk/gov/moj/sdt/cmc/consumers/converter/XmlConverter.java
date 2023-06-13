@@ -11,8 +11,7 @@ public class XmlConverter {
 
     private XmlMapper xmlMapper = new XmlMapper();
 
-    public <T> T convertXmlToObject(String xml,
-                                     Class<T> targetClass) throws IOException {
+    public <T> T convertXmlToObject(String xml, Class<T> targetClass) throws IOException {
         return xmlMapper.readValue(xml, targetClass);
     }
 

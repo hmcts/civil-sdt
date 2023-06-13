@@ -39,9 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
+import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 
 /**
  * Interceptor class which handles faults.
@@ -59,9 +58,9 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Test interceptor to prove concept.
      */
-    public FaultOutboundInterceptor(ServiceRequestDao serviceRequestDao) {
+    public FaultOutboundInterceptor(RequestDaoService requestDaoService) {
         super(Phase.MARSHAL);
-        setServiceRequestDao(serviceRequestDao);
+        setRequestDaoService(requestDaoService);
         // Assume that the interceptor will run after the default SOAP interceptor.
         getAfter().add(Soap11FaultOutInterceptor.class.getName());
         getAfter().add(Soap12FaultOutInterceptor.class.getName());
@@ -80,18 +79,10 @@ public class FaultOutboundInterceptor extends AbstractServiceRequest {
             msg = t.getMessage();
         }
 
-        final String errorMsg = "Error encounted: " + fault.getFaultCode() + ": " + fault.getMessage() +
+        final String errorMsg = "Error encountered: " + fault.getFaultCode() + ": " + fault.getMessage() +
                 ", sending this message in SOAP fault: " + msg;
         LOGGER.error(errorMsg);
-        persistEnvelope(errorMsg);
-
-        // Write message to 'performance.log' for this logging point.
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_11)) {
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_11,
-                    "FaultOutboundInterceptor handling message",
-                    "\n\n\tmessage=" + "Error encounted: " + fault.getFaultCode() + ": " + fault.getMessage() +
-                            ", sending this message in SOAP fault: " + msg + "\n");
-        }
+        this.getRequestDaoService().persistEnvelope(errorMsg);
 
         fault.setMessage(msg);
     }

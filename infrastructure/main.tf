@@ -8,10 +8,7 @@ locals {
   ))
 }
 
-// Shared Resource Group
-resource "azurerm_resource_group" "rg" {
-  name     = "${var.product}-shared-${var.env}"
+resource "azurerm_resource_group" "civil_sdt_rg" {
+  name     = "${var.product}-${var.component}-${var.env}"
   location = var.location
-
-  tags = local.tags
 }

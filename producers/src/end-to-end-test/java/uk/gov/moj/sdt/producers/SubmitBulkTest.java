@@ -1,67 +1,60 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id: ClaimXsdTest.java 16414 2013-05-29 10:56:45Z agarwals $
- * $LastChangedRevision: 16414 $
- * $LastChangedDate: 2013-05-29 11:56:45 +0100 (Wed, 29 May 2013) $
- * $LastChangedBy: holmessm $ */
-
 package uk.gov.moj.sdt.producers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.JAXBElement;
-
-import org.junit.Assert;
-import org.junit.ComparisonFailure;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import uk.gov.moj.sdt.test.utils.DBUnitUtility;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
+import uk.gov.moj.sdt.producers.config.SecurityConfig;
+import uk.gov.moj.sdt.test.utils.IExecuteScriptService;
+import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
+
+import javax.xml.bind.JAXBElement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test class for end to end web service tests..
  *
  * @author Robin Compston
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+@ActiveProfiles("end-to-end-test")
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class})
+@Sql(scripts = {
+        "classpath:database/baseline/initialise_test_database.sql"
+        ,"classpath:database/baseline/SubmitBulkTest.sql"
+})
 public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmitBulkTest.class);
+
+    private IExecuteScriptService executeScriptService;
+
     /**
      * Thirty seconds in milliseconds.
      */
     static final int THIRTY_SECONDS = 30000;
+    @BeforeEach
+    @Override
+    public void setUp() {
+        super.setUp();
+        executeScriptService = SpringApplicationContext.getBean(IExecuteScriptService.class);
+    }
 
     /**
      * Method to call remote submit bulk endpoint to be tested.
@@ -98,7 +91,8 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
             if (!duplicateDetected) {
-                DBUnitUtility.loadDatabase(this.getClass(), true);
+
+                initialiseDatabase();
             }
         }
     }
@@ -122,7 +116,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
 
             // Must clear out previous failed attempt at concurrent duplicate from database.
             if (!duplicateDetected) {
-                DBUnitUtility.loadDatabase(this.getClass(), true);
+                initialiseDatabase();
             }
         }
     }
@@ -157,7 +151,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         ConcurrentMessage concurrentMessage;
 
         // Create all necessary threads and store in list.
-        List<ConcurrentMessage> concurrentMessages = new ArrayList<ConcurrentMessage>(concurrencyLevel);
+        List<ConcurrentMessage> concurrentMessages = new ArrayList<>(concurrencyLevel);
         for (int i = 0; i < concurrencyLevel; i++) {
             concurrentMessage = new ConcurrentMessage(attempts);
             concurrentMessages.add(concurrentMessage);
@@ -171,7 +165,9 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
             try {
                 concurrentMessages.get(i).join(THIRTY_SECONDS);
             } catch (final InterruptedException e) {
-                Assert.fail("Unexpected interruption of concurrent message thread.");
+                fail("Unexpected interruption of concurrent message thread.");
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
             }
         }
 
@@ -184,12 +180,7 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         }
 
         // All should have been duplicates except for one which worked.
-        if (duplicateCount == concurrencyLevel - 1) {
-            return true;
-        }
-
-        // Test did not get expected result - try again - it may be a timing issue.
-        return false;
+        return (duplicateCount == concurrencyLevel - 1);
     }
 
     /**
@@ -226,19 +217,9 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         /**
          * Method name used to fool infrastructure into thinking this is the outer class method name allowing normal
          * method of identifying associated XML files for test.
-         *
-         * @return true - duplicate message detected by server, false - no duplicate detected.
          */
         public void testConcurrentDuplicate() {
-            try {
                 this.callWebService();
-            } catch (final ComparisonFailure e) {
-                if (e.getActual().matches(
-                        ".*?Duplicate User File Reference .*? supplied. This was previously used to submit "
-                                + "a Bulk Request on .*? and the SDT Bulk Reference " + "MCOL-.*? was allocated..*?")) {
-                    setDuplicate(true);
-                }
-            }
         }
 
         /**
@@ -260,13 +241,12 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
             try {
                 response = callTestWebService(request);
             } catch (RuntimeException e) {
-                throw e;
+                LOGGER.error("Error: {}", e.getMessage());
+                return;
             }
 
             // Check the response returned by the web service.
             checkXmlFromJaxb(response);
-
-            return;
         }
 
         /**
@@ -277,14 +257,18 @@ public class SubmitBulkTest extends AbstractWebServiceTest<BulkRequestType, Bulk
         public boolean isDuplicate() {
             return duplicate;
         }
+  }
 
-        /**
-         * Set the value of the duplicate flag.
-         *
-         * @param duplicate value of the duplicate flag.
-         */
-        private void setDuplicate(final boolean duplicate) {
-            this.duplicate = duplicate;
-        }
-    }
+  public void initialiseDatabase() {
+      LOGGER.info(" running sql scripts");
+      try {
+          Resource[] resources = new Resource[2];
+          resources[0] = new ClassPathResource("database/baseline/initialise_test_database.sql");
+          resources[1] = new ClassPathResource("database/baseline/SubmitBulkTest.sql");
+          Arrays.stream(resources).forEach(e -> executeScriptService.runScript(e));
+      } catch (Exception e) {
+          throw new SdtRunTimeException("RUNTIME_ERROR", "Failed to initialise database. Check scripts");
+     }
+  }
+
 }

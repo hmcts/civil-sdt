@@ -14,27 +14,26 @@ management:
 springdoc:
   packagesToScan: uk.gov.moj.sdt.controllers
 
-#If you use a database then uncomment below lines and update db properties accordingly
 spring:
   jms:
     servicebus:
       connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       internal:
         targetAppQueue:
-          MCOL: civil_sdt_inbound
+          MCOL: ${CIVIL_SDT_QUEUE}
   aop:
     proxy-target-class: false
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true
   config:
-    import: "optional:configtree:/mnt/secrets/"
+    import: "optional:configtree:/mnt/secrets/civil-sdt/"
   application:
     name: Civil SDT
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${SDT_DB_HOST:localhost}:${SDT_DB_PORT:5432}/${SDT_DB_NAME:civil_sdt}${SDT_DB_OPTIONS:}
-    username: ${SDT_DB_USERNAME:civil_sdt}
+    username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
     hikari:
       minimumIdle: ${SDT_DB_MIN_IDLE:2}
@@ -56,22 +55,24 @@ spring:
   flyway:
     ignore-missing-migrations: 'true'
     baseline-version: '0001'
-    out-of-order: 'false'
+    out-of-order: 'true'
     baseline-on-migrate: 'true'
 
-azure:
-  application-insights:
-    instrumentation-key: ${APPINSIGHTS_INSTRUMENTATIONKEY:00000000-0000-0000-0000-000000000000}
 sdt:
   tx-timeout:
     default: 1000
   service:
-    config:
-      concurrentConsumers: ${CONCURRENT_CONSUMERS:1}
-      maxConcurrentConsumers: ${MAX_CONCURRENT_CONSUMERS:5}
-      receiveTimeout: ${RECEIVE_TIMEOUT:30000}
-      idleTaskExecutionLimit: ${IDLE_TASK_EXECUTION_LIMIT:10}
-      idleConsumerLimit: ${IDLE_CONSUMER_LIMIT:5}
+      config:
+          concurrentConsumers: ${CONCURRENT_CONSUMERS:1}
+          maxConcurrentConsumers: ${MAX_CONCURRENT_CONSUMERS:5}
+          receiveTimeout: ${RECEIVE_TIMEOUT:30000}
+          idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
+          idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
+  retry-send:
+      cron: ${RETRY_SEND_CRON:0 0 * * * ?}
+  purge:
+    cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
+    commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
 feign:
   circuitbreaker:
     enabled: true
@@ -83,3 +84,17 @@ feign:
         loggerLevel: BASIC
       postFeignClient:
         loggerLevel: FULL
+idam:
+  s2s-authorised:
+    services: ${CIVIL_SDT_S2S_AUTHORISED_SERVICES:}
+  s2s-auth:
+    microservice: civil_sdt
+    totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
+  sdt:
+    username: ${IDAM_SDT_USERNAME:master.sdt@gmail.com}
+    password: ${IDAM_SDT_PASSWORD:Pa55word11}
+  api:
+    url: ${IDAM_API_URL:http://localhost:5000}
+civil:
+  api:
+    url: ${CIVIL_API_URL:http://localhost:5000}

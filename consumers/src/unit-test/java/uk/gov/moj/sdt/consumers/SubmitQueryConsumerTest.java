@@ -31,12 +31,15 @@
 
 package uk.gov.moj.sdt.consumers;
 
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -46,7 +49,6 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
@@ -55,16 +57,29 @@ import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalE
 
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
@@ -101,7 +116,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
     public void setUpLocalTests() {
         SubmitQueryConsumer consumer = new SubmitQueryConsumer(mockTransformer);
         consumer.setTransformer(mockTransformer);
-        submitQueryConsumer =  Mockito.spy(consumer);
+        submitQueryConsumer = spy(consumer);
 
         submitQueryRequest = this.createSubmitQueryRequest();
         submitQueryRequestType = this.createRequestType(submitQueryRequest);
@@ -118,6 +133,47 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         ITargetAppInternalEndpointPortType portType = submitQueryConsumer.getClient(targetApplicationCode,
                 serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
         assertNotNull(portType);
+    }
+
+    @Test
+    void testGetClientImpl() {
+        final String targetApplicationCode = "APP_CODE";
+        final String serviceType = "SERVICE_TYPE";
+        final String webServiceEndPoint = "WEB_SERVICE_ENDPOINT";
+        final long connectionTimeOut = 30L;
+        final long receiveTimeOut = 20L;
+        ITargetAppInternalEndpointPortType portType;
+
+        try(MockedStatic<ClientProxy> mockClientProxy = mockStatic(ClientProxy.class)) {
+            Client mockClient = mock(Client.class);
+            ITargetAppInternalEndpointPortType mockEndpointPortType
+                = mock(ITargetAppInternalEndpointPortType.class,
+                       withSettings().extraInterfaces(BindingProvider.class));
+            HTTPConduit mockHTTPConduit = mock(HTTPConduit.class);
+
+            mockClientProxy.when(() -> ClientProxy.getClient(any()))
+                .thenReturn(mockClient);
+            when(submitQueryConsumer.createTargetAppEndPoint())
+                .thenReturn(mockEndpointPortType);
+            when(mockClient.getConduit())
+                .thenReturn(mockHTTPConduit);
+
+            portType = submitQueryConsumer.getClient(targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+
+            mockClientProxy.verify(() -> ClientProxy.getClient(any()));
+            verify(submitQueryConsumer).createTargetAppEndPoint();
+            verify((BindingProvider) mockEndpointPortType, times(2)).getRequestContext();
+            verify(mockClient).getConduit();
+            verify(mockHTTPConduit).setClient(any(HTTPClientPolicy.class));
+
+            // coverage for this.clientCache.containsKey()
+            submitQueryConsumer
+                .getClient(targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
+            verify(submitQueryConsumer).createTargetAppEndPoint();
+        }
+
+        assertNotNull(portType);
+
     }
 
     /**
@@ -259,51 +315,5 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
 
         assertEquals("The following exception occured [MISC_OUTAGE] message[Misc outage exception]", webServiceException.getCause().getMessage());
         assertNotNull(webServiceException.getCause());
-    }
-
-    /**
-     * Verify PerformanceLogger works as intended when enabled
-     */
-    @Test
-    void testSubmitQueryRequestSuccessLogsDetails() {
-        final ISubmitQueryRequest mockSubmitQueryRequest = mock(ISubmitQueryRequest.class);
-        final IServiceRouting mockServiceRouting = mock(IServiceRouting.class);
-        final ITargetApplication mockTargetApplication = mock(ITargetApplication.class);
-        final SubmitQueryResponseType submitQueryResponseType = createSubmitQueryResponseType();
-
-        when(mockTransformer.transformDomainToJaxb(mockSubmitQueryRequest)).thenReturn(submitQueryRequestType);
-        when(mockClient.submitQuery(submitQueryRequestType)).thenReturn(submitQueryResponseType);
-        mockTransformer.transformJaxbToDomain(submitQueryResponseType, mockSubmitQueryRequest);
-
-        doAnswer ((Answer<Void>) invocation -> {
-            ((SubmitQueryResponseType) invocation.getArgument(0)).setResultCount (BigInteger.valueOf(1));
-            final StatusType statusType = new StatusType ();
-            statusType.setCode (StatusCodeType.OK);
-            ((SubmitQueryResponseType) invocation.getArgument(0)).setStatus (statusType);
-            // required to be null for a void method
-            return null;
-        }).when(mockTransformer).transformJaxbToDomain(submitQueryResponseType, mockSubmitQueryRequest);
-
-        doReturn(mockClient).when(submitQueryConsumer).getClient(anyString(), anyString(), anyString(), anyLong(), anyLong());
-
-        when(mockSubmitQueryRequest.getTargetApplication()).thenReturn(mockTargetApplication);
-
-        when(mockTargetApplication.getServiceRouting(any())).thenReturn(mockServiceRouting);
-        when(mockTargetApplication.getTargetApplicationName()).thenReturn("TEST_APP_NAME");
-        when(mockTargetApplication.getTargetApplicationCode()).thenReturn("1");
-
-        when(mockServiceRouting.getWebServiceEndpoint()).thenReturn("TEST_ENDPOINT");
-        when(mockServiceRouting.getTargetApplication()).thenReturn(mockTargetApplication);
-
-        try (MockedStatic<PerformanceLogger> mockStaticPerformanceLogger = Mockito.mockStatic(PerformanceLogger.class)) {
-            mockStaticPerformanceLogger.when(() -> PerformanceLogger.isPerformanceEnabled(anyLong()))
-                .thenReturn(true);
-            this.submitQueryConsumer.processSubmitQuery(mockSubmitQueryRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-
-            verifyStatic(PerformanceLogger.class, times(2));
-            PerformanceLogger.isPerformanceEnabled(anyLong());
-            verifyStatic(PerformanceLogger.class, times(2));
-            PerformanceLogger.log(any(), anyLong(), anyString(), anyString());
-        }
     }
 }

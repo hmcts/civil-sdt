@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import java.util.GregorianCalendar;
@@ -104,15 +103,6 @@ public class MessageWriter implements IMessageWriter {
         SdtMetricsMBean.getMetrics().upRequestQueueCount();
         SdtMetricsMBean.getMetrics().upRequestQueueLength();
 
-        if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_5)) {
-            final StringBuffer detail = new StringBuffer();
-            detail.append("\n\n\tsdt request reference=" + sdtMessage.getSdtRequestReference() + "\n");
-
-            // Write message to 'performance.log' for this logging point.
-            PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_5, "Enqueue message",
-                    detail.toString());
-        }
-
         try {
 
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
@@ -120,7 +110,7 @@ public class MessageWriter implements IMessageWriter {
             // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
             // periodically check the database and requeue any messages that are stuck on a state indicating that they
             // have not been sent to the case management system.
-            LOGGER.error("Failed to connect to the ActiveMQ queue [" + queueName +
+            LOGGER.error("Failed to connect to the ServiceBus queue [" + queueName +
                     "] while queueing message request reference [" + sdtMessage.getSdtRequestReference() + "]", e);
 
         }

@@ -44,6 +44,7 @@ import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.IndividualStatusCodeType;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
@@ -68,16 +69,7 @@ class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
      * Set up variables for the test.
      */
     public void setUpLocalTests() {
-        Constructor<BulkRequestTransformer> c;
-        try {
-            // Make the constructor visible so we can get a new instance of it.
-            c = BulkRequestTransformer.class.getDeclaredConstructor();
-            c.setAccessible(true);
-            transformer = c.newInstance();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-
+        transformer = new BulkRequestTransformer();
     }
 
     /**
@@ -159,6 +151,27 @@ class BulkRequestTransformerTest extends AbstractSdtUnitTestBase {
         assertEquals(row, actual.getLineNumber(),
                 "Line number for individual request " + row + " does not match");
         assertEquals(expected.getRequestType(), actual.getRequestType(), "Request type mismatch");
+    }
+
+    /**
+     * Test the error transformation from domain to jaxb
+     */
+    @Test
+    public void testTransformDomainToJaxbHasError() {
+        final IBulkSubmission domain = new BulkSubmission();
+        final LocalDateTime createdDate = LocalDateTime.now();
+        final String errorCode = "MOCK_ERROR_CODE";
+        final String errorText = "MOCK ERROR TEXT";
+
+        domain.setCreatedDate(createdDate);
+        domain.setErrorCode(errorCode);
+        domain.setErrorText(errorText);
+
+        final BulkResponseType jaxb = transformer.transformDomainToJaxb(domain);
+
+        assertEquals(errorCode, jaxb.getStatus().getError().getCode());
+        assertEquals(errorText, jaxb.getStatus().getError().getDescription());
+        assertEquals(StatusCodeType.ERROR, jaxb.getStatus().getCode());
     }
 
     /**

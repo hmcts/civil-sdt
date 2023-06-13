@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -48,7 +49,6 @@ import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
-import uk.gov.moj.sdt.utils.logging.PerformanceLogger;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.targetapp.submitqueryresponseschema.SubmitQueryResponseType;
@@ -81,18 +81,24 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
      * uk.gov.moj.sdt.consumers.api.ISubmitQueryConsumer#processSubmitQuery(
      * uk.gov.moj.sdt.domain.api.ISubmitQueryRequest) */
     @Override
-    public void processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
-                                   final long receiveTimeOut) throws OutageException, TimeoutException {
+    public SubmitQueryResponse processSubmitQuery(final ISubmitQueryRequest submitQueryRequest, final long connectionTimeOut,
+                                                  final long receiveTimeOut) throws OutageException, TimeoutException {
         // Transform domain object to web service object
         final SubmitQueryRequestType submitQueryRequestType =
                 this.transformer.transformDomainToJaxb(submitQueryRequest);
 
         // Process and call the end point web service
-        final SubmitQueryResponseType responseType =
-                this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
+        LOGGER.debug("processSubmitQuery for {}:{}:{}", submitQueryRequest.getBulkCustomer(),
+                submitQueryRequest.getTargetApplication(), submitQueryRequest.getQueryReference());
+        SubmitQueryResponseType responseType = this.invokeTargetAppService(submitQueryRequestType, submitQueryRequest, connectionTimeOut,
                         receiveTimeOut);
 
         this.transformer.transformJaxbToDomain(responseType, submitQueryRequest);
+
+        SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
+        submitQueryResponse.setResponseType(responseType);
+
+        return submitQueryResponse;
     }
 
     /**
@@ -129,42 +135,12 @@ public class SubmitQueryConsumer extends AbstractWsConsumer implements ISubmitQu
             LOGGER.debug("Submitting query to target application[{}], for customer[{}]",
                     targetAppCode, submitQueryRequestType.getHeader().getTargetAppCustomerId());
 
-            if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_7)) {
-                final StringBuilder detail = new StringBuilder();
-                detail.append("\n\n\ttarget application customer id=" +
-                        submitQueryRequestType.getHeader().getTargetAppCustomerId() + "\n\n\ttarget application=" +
-                        serviceRouting.getTargetApplication().getTargetApplicationName() + "\n\tendpoint=" +
-                        serviceRouting.getWebServiceEndpoint() + "\n");
-
-                // Write message to 'performance.log' for this logging point.
-                PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_7,
-                        "Send query to target application", detail.toString());
-            }
-
             // Measure response time.
             startTime = new GregorianCalendar().getTimeInMillis();
 
             // Call the specific business method for this text - note that a single test can only use one web service
             // business method.
             final SubmitQueryResponseType submitQueryResponseType = client.submitQuery(submitQueryRequestType);
-
-            if (PerformanceLogger.isPerformanceEnabled(PerformanceLogger.LOGGING_POINT_8)) {
-                final StringBuilder detail = new StringBuilder();
-                detail.append("\n\n\ttarget application customer id=" +
-                        submitQueryResponseType.getTargetAppCustomerId() + "\n\n\tresult count=" +
-                        submitQueryResponseType.getResultCount() + "\n\tstatus code=" +
-                        submitQueryResponseType.getStatus().getCode().name());
-                if (submitQueryResponseType.getStatus().getError() != null) {
-                    detail.append("\n\terror code=" + submitQueryResponseType.getStatus().getError().getCode() +
-                            "\n\terror description=" +
-                            submitQueryResponseType.getStatus().getError().getDescription());
-                }
-                detail.append("\n");
-
-                // Write message to 'performance.log' for this logging point.
-                PerformanceLogger.log(this.getClass(), PerformanceLogger.LOGGING_POINT_8,
-                        "receive query results from target application", detail.toString());
-            }
 
             return submitQueryResponseType;
         } catch (final WebServiceException f) {

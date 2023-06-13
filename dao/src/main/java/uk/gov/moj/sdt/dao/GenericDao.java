@@ -38,13 +38,6 @@ import uk.gov.moj.sdt.dao.api.IGenericDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
-import java.lang.reflect.Array;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -52,6 +45,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Implements generic DAO functionality based on {@link IGenericDao} allowing a single DAO class to provide access to
@@ -102,8 +102,6 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
             throws DataAccessException {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
-
-        LOGGER.debug("fetch(): domainType={}, id=", domainType, id);
 
         // Domain object of type asked for by caller.
         D domainObject = null;
@@ -178,7 +176,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("Persist domain object " + domainObject.toString());
+        LOGGER.debug("Persist domain object {}", domainObject);
 
         crudRepository.save((T) domainObject);
 
@@ -194,7 +192,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("Persist domain object list {}", domainObjectList.toString());
+        LOGGER.debug("Persist domain object list {}", domainObjectList);
 
         int i = 1;
         final int maxBatchSize = 20;
@@ -217,7 +215,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         // Record start time.
         final long startTime = new GregorianCalendar().getTimeInMillis();
 
-        LOGGER.debug("Sequence generation for " + sequenceName);
+        LOGGER.debug("Sequence generation for {}", sequenceName);
 
         if (sequenceName == null || sequenceName.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid sequence name");
@@ -283,8 +281,8 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
     protected Predicate createDatePredicate(CriteriaBuilder criteriaBuilder, Root<T> root, int dataRetention) {
         Path<LocalDateTime> createdDatePath = root.get("createdDate");
         return criteriaBuilder.and(
-            criteriaBuilder.greaterThanOrEqualTo((createdDatePath), atStartOfDay(dataRetention)),
-            criteriaBuilder.lessThan((createdDatePath), atBeginningOfNextDay()));
+                criteriaBuilder.greaterThanOrEqualTo((createdDatePath), atStartOfDay(dataRetention)),
+                criteriaBuilder.lessThan((createdDatePath), atBeginningOfNextDay()));
     }
 
     private LocalDateTime atBeginningOfNextDay() {

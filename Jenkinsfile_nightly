@@ -2,7 +2,7 @@
 
 properties([
   // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
-  pipelineTriggers([cron('H 05 * * *')])
+  pipelineTriggers([cron('H 8 * * 1-5')])
 ])
 
 @Library("Infrastructure")
@@ -17,7 +17,7 @@ withNightlyPipeline(type, product, component) {
   nonServiceApp()
   enableFortifyScan()
 
-  after('fortify-scan') {
+  afterAlways('fortify-scan') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
   }
 }

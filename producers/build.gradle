@@ -11,21 +11,7 @@ dependencyCheck {
 
 dependencies {
     implementation project(':handlers')
-    implementation project(':domain')
-    implementation project(':utils')
-    implementation project(':producers-api')
-    implementation project(':handlers-api')
-    testImplementation project(":handlers").sourceSets.unitTest.output
-    testImplementation project(":domain").sourceSets.unitTest.output
-    testImplementation project(":utils").sourceSets.unitTest.output
-    testImplementation project(':producers-api').sourceSets.unitTest.output
-    testImplementation project(":handlers-api").sourceSets.unitTest.output
-
-    testImplementation project(":handlers").sourceSets.integTest.output
-    testImplementation project(":domain").sourceSets.integTest.output
-    testImplementation project(":utils").sourceSets.integTest.output
-    testImplementation project(':producers-api').sourceSets.integTest.output
-    testImplementation project(":handlers-api").sourceSets.integTest.output
+    implementation project(':services')
 }
 
 bootJar {

@@ -4,9 +4,7 @@
     <status code="Error">
         <error>
             <code>REQ_COUNT_MISMATCH</code>
-            <description>Unexpected Total Number of Requests identified. 1 requested identified, 2 requests expected in
-                Bulk Request abc1223481.
-            </description>
+            <description>Unexpected Total Number of Requests identified. 1 requested identified, 2 requests expected in Bulk Request abc1223481.</description>
         </error>
     </status>
     <ns2:customerReference>abc1223481</ns2:customerReference>

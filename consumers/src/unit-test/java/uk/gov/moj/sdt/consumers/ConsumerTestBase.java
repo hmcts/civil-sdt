@@ -30,8 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 /**
  * Base Consumer Test class.
  *
@@ -182,7 +180,7 @@ class ConsumerTestBase extends AbstractSdtUnitTestBase {
 
         SubmitQueryResponseType submitQueryResponseType = new SubmitQueryResponseType();
         submitQueryResponseType.setTargetAppCustomerId("1");
-        submitQueryResponseType.setResultCount(new BigInteger("1"));
+        submitQueryResponseType.setResultCount(BigInteger.valueOf(1));
         submitQueryResponseType.setStatus(statusType);
 
         return submitQueryResponseType;

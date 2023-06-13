@@ -31,6 +31,7 @@
 
 package uk.gov.moj.sdt.services;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class BulkFeedbackService implements IBulkFeedbackService {
             if (null != individualRequest.getTargetApplicationResponse()) {
                 // As Individual Request is valid, place in Target Application Response Map
                 targetApplicationRespMap.put(individualRequest.getCustomerRequestReference(),
-                        individualRequest.getTargetApplicationResponse());
+                        new String(individualRequest.getTargetApplicationResponse(), StandardCharsets.UTF_8));
             }
         }
 

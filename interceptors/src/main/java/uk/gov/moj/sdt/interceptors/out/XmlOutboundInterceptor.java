@@ -30,10 +30,17 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.out;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
+import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 
 /**
  * Interceptor class which handles bulk submission message sent by SDT.
@@ -57,6 +64,26 @@ public class XmlOutboundInterceptor extends AbstractSdtInterceptor {
     public XmlOutboundInterceptor() {
         super(Phase.PREPARE_SEND_ENDING);
         addBefore(ServiceRequestOutboundInterceptor.class.getName());
+        List<AbstractSdtEnricher> enricherList = new ArrayList<>();
+        enricherList.add(new SubmitQueryEnricher());
+        enricherList.add(new BulkFeedbackEnricher());
+        enricherList.add(submitQueryRequestEnricher());
+        enricherList.add(individualRequestEnricher());
+        setEnricherList(enricherList);
+    }
+
+    private GenericEnricher submitQueryRequestEnricher() {
+        GenericEnricher genericEnricher = new GenericEnricher();
+        genericEnricher.setParentTag("submitQueryRequest");
+        genericEnricher.setInsertionTag("targetAppDetail");
+        return genericEnricher;
+    }
+
+    private GenericEnricher individualRequestEnricher() {
+        GenericEnricher genericEnricher = new GenericEnricher();
+        genericEnricher.setParentTag("individualRequest");
+        genericEnricher.setInsertionTag("targetAppDetail");
+        return genericEnricher;
     }
 
     @Override
