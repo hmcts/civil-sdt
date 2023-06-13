@@ -94,19 +94,16 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                                        judgementRequest);
                 individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
-                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload,
-                                                                               BreathingSpaceRequest.class);
+                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload, BreathingSpaceRequest.class);
 
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {
-                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload,
-                                                                                  ClaimStatusUpdateRequest.class);
+                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             } else if (RequestType.WARRANT.getType().equals(requestType)) {
-                WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload,
-                                                                                  WarrantRequest.class);
+                WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest("", "",
                                                                          idamId, sdtRequestReference, request);
                 individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
