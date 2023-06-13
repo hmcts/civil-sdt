@@ -10,8 +10,8 @@ services:
         - no_proxy
     image: hmcts/civil-sdt
     environment:
-        CIVIL_SDT_S2S_KEY: "AAAAAAAAAAAAAAAA" # use aat key from vault
       # these environment variables are used by java-logging library
+      - CIVIL_SDT_S2S_KEY=AAAAAAAAAAAAAAAA
       - ROOT_APPENDER
       - JSON_CONSOLE_PRETTY_PRINT
       - ROOT_LOGGING_LEVEL
