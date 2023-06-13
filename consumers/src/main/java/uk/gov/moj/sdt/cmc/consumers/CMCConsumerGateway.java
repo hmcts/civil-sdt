@@ -11,15 +11,18 @@ import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
+import uk.gov.moj.sdt.cmc.consumers.api.IJudgementWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
@@ -53,6 +56,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private IWarrantService warrantService;
 
+    private IJudgementWarrantService judgementWarrantService;
+
     private XmlConverter xmlToObject;
 
     private XmlElementValueReader xmlElementValueReader;
@@ -64,6 +69,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
                               @Qualifier("ClaimDefencesService") IClaimDefencesService claimDefences,
                               @Qualifier("WarrantService") IWarrantService warrantService,
+                              @Qualifier("JudgementWarrantService") IJudgementWarrantService judgementWarrantService,
                               XmlConverter xmlToObject,
                               XmlElementValueReader xmlElementValueReader) {
         this.breathingSpace = breathingSpace;
@@ -71,6 +77,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
         this.claimStatusUpdate = claimStatusUpdate;
         this.claimDefences = claimDefences;
         this.warrantService = warrantService;
+        this.judgementWarrantService = judgementWarrantService;
         this.xmlToObject = xmlToObject;
         this.xmlElementValueReader = xmlElementValueReader;
     }
@@ -106,6 +113,14 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest("", "",
                                                                          idamId, sdtRequestReference, request);
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
+            } else if (RequestType.JUDGMENT_WARRANT.getType().equals(requestType)) {
+                JudgementWarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementWarrantRequest.class);
+                JudgementWarrantResponse response = judgementWarrantService.judgementWarrantRequest("",
+                                                                                                    "",
+                                                                                                    idamId,
+                                                                                                    sdtRequestReference,
+                                                                                                    request);
                 individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
