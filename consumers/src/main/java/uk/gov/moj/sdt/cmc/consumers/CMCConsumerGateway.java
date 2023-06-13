@@ -30,6 +30,9 @@ import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
+import uk.gov.moj.sdt.idam.IdamRepository;
+import uk.gov.moj.sdt.idam.S2SRepository;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
@@ -62,6 +65,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
 
     private XmlElementValueReader xmlElementValueReader;
 
+    private IdamRepository idamRepository;
+    private S2SRepository s2SRepository;
 
     @Autowired
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
@@ -71,7 +76,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
                               @Qualifier("WarrantService") IWarrantService warrantService,
                               @Qualifier("JudgementWarrantService") IJudgementWarrantService judgementWarrantService,
                               XmlConverter xmlToObject,
-                              XmlElementValueReader xmlElementValueReader) {
+                              XmlElementValueReader xmlElementValueReader,
+                              IdamRepository idamRepository,
+                              S2SRepository s2SRepository) {
         this.breathingSpace = breathingSpace;
         this.judgementService = judgementService;
         this.claimStatusUpdate = claimStatusUpdate;
@@ -80,6 +87,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         this.judgementWarrantService = judgementWarrantService;
         this.xmlToObject = xmlToObject;
         this.xmlElementValueReader = xmlElementValueReader;
+        this.idamRepository = idamRepository;
+        this.s2SRepository = s2SRepository;
     }
 
     @Override
@@ -90,6 +99,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String sdtRequestReference = individualRequest.getSdtRequestReference();
         String requestType = individualRequest.getRequestType();
         String idamId = SdtContext.getContext().getCustomerIdamId();
+        String sdtSystemUserAuthToken = idamRepository.getSdtSystemUserAccessToken();
+        String serviceAuthToken = s2SRepository.getS2SToken();
         String requestPayload = new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8);
         try {
             if (RequestType.JUDGMENT.getType().equals(requestType)) {
@@ -109,6 +120,19 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            } else if (RequestType.WARRANT.getType().equals(requestType)) {
+                WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
+                WarrantResponse response = warrantService.warrantRequest(sdtSystemUserAuthToken, serviceAuthToken,
+                                                                         idamId, sdtRequestReference, request);
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
+            } else if (RequestType.JUDGMENT_WARRANT.getType().equals(requestType)) {
+                JudgementWarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementWarrantRequest.class);
+                JudgementWarrantResponse response = judgementWarrantService.judgementWarrantRequest(sdtSystemUserAuthToken,
+                                                                                                    serviceAuthToken,
+                                                                                                    idamId,
+                                                                                                    sdtRequestReference,
+                                                                                                    request);
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.WARRANT.getType().equals(requestType)) {
                 WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest("", "",
@@ -143,7 +167,11 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String xmlContent = SdtContext.getContext().getRawOutXml();
         String fromDate = xmlElementValueReader.getElementValue(xmlContent, FROM_DATE);
         String toDate = xmlElementValueReader.getElementValue(xmlContent, TO_DATE);
-        ClaimDefencesResponse response = claimDefences.claimDefences("", "", "", fromDate, toDate);
+        ClaimDefencesResponse response = claimDefences.claimDefences(idamRepository.getSdtSystemUserAccessToken(),
+                                                                     s2SRepository.getS2SToken(),
+                                                                     SdtContext.getContext().getCustomerIdamId(),
+                                                                     fromDate,
+                                                                     toDate);
 
         SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
         submitQueryResponse.setClaimDefencesResults(response.getResults());

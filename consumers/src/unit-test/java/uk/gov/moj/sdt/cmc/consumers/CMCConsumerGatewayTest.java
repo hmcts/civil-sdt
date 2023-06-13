@@ -31,6 +31,8 @@ import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.idam.IdamRepository;
+import uk.gov.moj.sdt.idam.S2SRepository;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
@@ -45,6 +47,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT_WARRANT;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT_WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
@@ -64,6 +68,10 @@ class CMCConsumerGatewayTest {
     private static final byte[] XML = "".getBytes(StandardCharsets.UTF_8);
 
     private static final String SDT_REFERENCE = "MCOL-0000001";
+
+    private static final String SDT_USER_AUTH_TOKEN = "sdt user token";
+
+    private static final String S2S_TOKEN = "sds token";
 
     private CMCConsumerGateway cmcConsumerGateway;
 
@@ -103,6 +111,12 @@ class CMCConsumerGatewayTest {
     @Mock
     private JudgementWarrantRequest judgementWarrantRequest;
 
+    @Mock
+    private IdamRepository idamRepository;
+
+    @Mock
+    private S2SRepository s2SRepository;
+
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
@@ -112,7 +126,11 @@ class CMCConsumerGatewayTest {
                                                     warrantService,
                                                     judgementWarrantService,
                                                     xmlToObject,
-                                                    xmlElementValueReader);
+                                                    xmlElementValueReader,
+                                                    idamRepository,
+                                                    s2SRepository);
+        when(idamRepository.getSdtSystemUserAccessToken()).thenReturn(SDT_USER_AUTH_TOKEN);
+        when(s2SRepository.getS2SToken()).thenReturn(S2S_TOKEN);
     }
 
     @Test
@@ -188,14 +206,14 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(WARRANT, individualRequest);
         WarrantResponse response = new WarrantResponse();
-        WarrantRequest request = mock(WarrantRequest.class);
+        WarrantRequest request = new WarrantRequest();
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
-        when(warrantService.warrantRequest(anyString(), anyString(), any(), any(), any(WarrantRequest.class))).thenReturn(response);
+        when(warrantService.warrantRequest(anyString(), anyString(), any(), anyString(), any())).thenReturn(response);
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(warrantService).warrantRequest(anyString(), anyString(),  any(), any(), any(WarrantRequest.class));
+        verify(warrantService).warrantRequest(anyString(), anyString(), any(), anyString(), any(WarrantRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).getRequestType();

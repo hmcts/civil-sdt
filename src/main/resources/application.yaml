@@ -84,3 +84,17 @@ feign:
         loggerLevel: BASIC
       postFeignClient:
         loggerLevel: FULL
+idam:
+  s2s-authorised:
+    services: ${CIVIL_SDT_S2S_AUTHORISED_SERVICES:}
+  s2s-auth:
+    microservice: civil_sdt
+    totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
+  sdt:
+    username: ${IDAM_SDT_USERNAME:master.sdt@gmail.com}
+    password: ${IDAM_SDT_PASSWORD:Pa55word11}
+  api:
+    url: ${IDAM_API_URL:http://localhost:5000}
+civil:
+  api:
+    url: ${CIVIL_API_URL:http://localhost:5000}

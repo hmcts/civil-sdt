@@ -163,7 +163,7 @@ ext {
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
   springCloudVersion = '2021.0.6'
-  tomcatVersion = '9.0.74'
+  tomcatVersion = '9.0.75'
   cxfVersion = '3.5.5'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
@@ -205,6 +205,11 @@ dependencyManagement {
     // CVE-2023-24998
     dependencySet(group: 'commons-fileupload', version: '1.5') {
       entry 'commons-fileupload'
+    }
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.75') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
     }
   }
 }
@@ -291,6 +296,9 @@ allprojects {
       tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
     */
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
+    implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.1'
+    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
+
     testImplementation libraries.junit5
     testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
     testImplementation "com.github.hmcts:fortify-client:1.2.2:all"
@@ -406,6 +414,11 @@ subprojects { subproject ->
       // CVE-2023-24998
       dependencySet(group: 'commons-fileupload', version: '1.5') {
         entry 'commons-fileupload'
+      }
+      dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.75') {
+        entry 'tomcat-embed-core'
+        entry 'tomcat-embed-el'
+        entry 'tomcat-embed-websocket'
       }
     }
   }
