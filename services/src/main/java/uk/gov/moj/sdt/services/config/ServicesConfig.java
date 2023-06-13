@@ -130,7 +130,6 @@ public class ServicesConfig {
         return genericXmlParser;
     }
 
-
     @Bean
     @Qualifier("concurrentMap")
     public Map<String, IInFlightMessage> concurrentMap() {

@@ -1,27 +1,26 @@
 package uk.gov.moj.sdt.consumers.util;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
-import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
+import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test class for the consumer gateway.
@@ -56,7 +55,7 @@ class McolDefenceDetailTypeUtilTest {
             Marshaller marshaller =  jaxbContext.createMarshaller();
             marshaller.marshal(jaxbDetailType, stringWriter);
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+           fail(e.getMessage());
         }
         String content = stringWriter.toString();
         assertNotNull(content);

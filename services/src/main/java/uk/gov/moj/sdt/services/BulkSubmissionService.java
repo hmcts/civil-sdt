@@ -204,7 +204,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
 
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
         String rawInXml = SdtContext.getContext().getRawInXml();
-        bulkSubmission.setPayload(rawInXml.getBytes(StandardCharsets.UTF_8));
+        bulkSubmission.setPayload(rawInXml == null ? "".getBytes() : rawInXml.getBytes(StandardCharsets.UTF_8));
 
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =

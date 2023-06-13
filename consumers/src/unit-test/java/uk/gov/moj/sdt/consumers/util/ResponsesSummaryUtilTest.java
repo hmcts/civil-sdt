@@ -59,7 +59,6 @@ class ResponseSummaryUtilTest extends BaseXmlTest {
         assertTrue(xml.contains("defendantId=\"resp11\""));
    }
 
-
     @Test
     void shouldReturnEmptyResultsXMLWhenSubmitQueryResponseIsNull() {
         List<ClaimDefencesResult> listObjects = new ArrayList<>();
@@ -78,7 +77,6 @@ class ResponseSummaryUtilTest extends BaseXmlTest {
         assertTrue(summaryResults.contains("<ns2:results xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"/>"));
     }
 
-
     @Test
     void shouldReturnEmptyResultsXMLWhenTargetAppDetailsNull() {
         List<ClaimDefencesResult> listObjects = new ArrayList<>();
@@ -90,7 +88,6 @@ class ResponseSummaryUtilTest extends BaseXmlTest {
         assertNotNull(summaryResults);
         assertTrue(summaryResults.contains("<ns2:results xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"/>"));
     }
-
 
     @Test
     void shouldReturnEmptyResultsXMLWhenTargetAppDetailAnyCollectionNull() {
@@ -105,8 +102,6 @@ class ResponseSummaryUtilTest extends BaseXmlTest {
         assertNotNull(summaryResults);
         assertTrue(summaryResults.contains("<ns2:results xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"/>"));
     }
-
-
 
     @Test
     void shouldReturnEmptyResultsXMLWhenTargetAppDetailAnyCollectionHasValues() {
@@ -152,5 +147,4 @@ class ResponseSummaryUtilTest extends BaseXmlTest {
         assertFalse(summaryResults.contains("<ns2:results xmlns:ns2=\"http://ws.sdt.moj.gov.uk/2013/mcol/QuerySchema\"/>"));
         assertTrue(summaryResults.contains("<mcolDefenceDetail>"));
     }
-
 }
