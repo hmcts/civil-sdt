@@ -1,18 +1,5 @@
 package uk.gov.moj.sdt.consumers.util;
 
-import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.cmc.consumers.model.DefendantResponseType;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
-import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
-import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
-import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlElementDecl;
-import javax.xml.namespace.QName;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,6 +7,20 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlElementDecl;
+import javax.xml.namespace.QName;
+
+import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.cmc.consumers.model.DefendantResponseType;
+import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailType;
+import uk.gov.moj.sdt.cmc.consumers.model.McolDefenceDetailTypes;
+import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
+import uk.gov.moj.sdt.consumers.exception.XmlConversionException;
 
 @Component
 public class McolDefenceDetailTypeUtil {
@@ -76,7 +77,7 @@ public class McolDefenceDetailTypeUtil {
             Marshaller marshaller =  jaxbContext.createMarshaller();
             marshaller.marshal(jaxbDetailType, stringWriter);
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            throw new XmlConversionException(e);
         }
         return stringWriter.toString();
     }

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
+class ClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
 
     String IDAM_ID_HEADER = "IDAMID";
 

@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.Address;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.SotSignature;
+import uk.gov.moj.sdt.cmc.consumers.request.common.Address;
+import uk.gov.moj.sdt.cmc.consumers.request.common.SotSignature;
 
 @ToString
 @Setter

@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -202,7 +203,8 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         LOGGER.debug("Enrich bulk submission instance to prepare for persistence");
 
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
-        bulkSubmission.setPayload(SdtContext.getContext().getRawInXml());
+        String rawInXml = SdtContext.getContext().getRawInXml();
+        bulkSubmission.setPayload(rawInXml == null ? "".getBytes() : rawInXml.getBytes(StandardCharsets.UTF_8));
 
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =

@@ -1,15 +1,13 @@
 package uk.gov.moj.sdt.consumers.util;
 
-import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
-import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
+
 public class ClaimDefencesResultsUtil {
 
     public List<ClaimDefencesResult> createClaimDefencesList() {
@@ -36,21 +34,23 @@ public class ClaimDefencesResultsUtil {
                 LocalDateTime.of(2021,11,2,7,15,49),
                 ResponseType.DC.name(),
                 "defence14"));
-        results.add(createClaimDefencesResult("case15", "resp15",
-                LocalDate.of(2021,11,9),
-                LocalDateTime.of(2021,11,10,13,19,24),
-                ResponseType.DE.name(),
-                "It wasn't me!"));
-        results.add(createClaimDefencesResult("case15", "resp15",
-                LocalDate.of(2021,11,9),
-                LocalDateTime.of(2021,11, 10,14,19,24),
-                ResponseType.DE.name(),
-                "My name is Shaggy"));
-        results.add(createClaimDefencesResult("case15", "resp15",
-                LocalDate.of(2021,11,9),
-                LocalDateTime.of(2021,11,10,15,19,24),
-                ResponseType.DE.name(),
-                "And I am Chaka Demus - innocent"));
+        String case15 = "case15";
+        String resp15 = "resp15";
+        results.add(createClaimDefencesResult(case15, resp15,
+                                              LocalDate.of(2021,11,9),
+                                              LocalDateTime.of(2021,11,10,13,19,24),
+                                              ResponseType.DE.name(),
+                                              "It wasn't me!"));
+        results.add(createClaimDefencesResult(case15, resp15,
+                                              LocalDate.of(2021,11,9),
+                                              LocalDateTime.of(2021,11, 10,14,19,24),
+                                              ResponseType.DE.name(),
+                                              "My name is Shaggy"));
+        results.add(createClaimDefencesResult(case15, resp15,
+                                              LocalDate.of(2021,11,9),
+                                              LocalDateTime.of(2021,11,10,15,19,24),
+                                              ResponseType.DE.name(),
+                                              "And I am Chaka Demus - innocent"));
 
         return results;
     }

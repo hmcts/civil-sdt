@@ -14,6 +14,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,15 +103,15 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
         // CHECKSTYLE:OFF
         assertEquals(
                 "<bul:mcolClaimStatusUpdatexmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"><cla1:claimNumberxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim123</cla1:claimNumber><cla1:defendantIdxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationTypexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDatexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-01-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
-                requests.get(0).getRequestPayload().replaceAll("\\s+", ""),
+                new String(requests.get(0).getRequestPayload(), StandardCharsets.UTF_8).replaceAll("\\s+", ""),
                 "Failed to find correct payload for request 1");
         assertEquals(
                 "<bul:mcolClaimStatusUpdatexmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"><cla1:claimNumberxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim124</cla1:claimNumber><cla1:defendantIdxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationTypexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDatexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-02-01</cla1:paidInFullDate></bul:mcolClaimStatusUpdate>",
-                requests.get(1).getRequestPayload().replaceAll("\\s+", ""),
+                new String(requests.get(1).getRequestPayload(), StandardCharsets.UTF_8).replaceAll("\\s+", ""),
                 "Failed to find correct payload for request 2");
         assertEquals(
                 "<bul:mcolClaimxmlns:bul=\"http://ws.sdt.moj.gov.uk/2013/sdt/targetApp/IndvRequestSchema\"><cla1:claimNumberxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">claim125</cla1:claimNumber><cla1:defendantIdxmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">1</cla1:defendantId><cla1:notificationTypexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">MP</cla1:notificationType><cla1:paidInFullDatexmlns:cla1=\"http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema\">2012-03-01</cla1:paidInFullDate></bul:mcolClaim>",
-                requests.get(2).getRequestPayload().replaceAll("\\s+", ""),
+                new String(requests.get(2).getRequestPayload(), StandardCharsets.UTF_8).replaceAll("\\s+", ""),
                 "Failed to find correct payload for request 3");
         // CHECKSTYLE:ON
 
@@ -177,7 +178,7 @@ class IndividualRequestsXmlParserTest extends AbstractSdtUnitTestBase {
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;
         for (ILoggingEvent log : logList) {
-            if (log.getMessage().contains(message)) {
+            if (log.getFormattedMessage().contains(message)) {
                 verifyLog = true;
                 break;
             }

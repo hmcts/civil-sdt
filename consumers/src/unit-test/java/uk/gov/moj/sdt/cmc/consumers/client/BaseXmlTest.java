@@ -6,7 +6,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class BaseXmlTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseXmlTest.class);
 
     protected String readXmlAsString(String fileName) {
         StringBuilder sb = new StringBuilder();
@@ -20,7 +25,7 @@ public abstract class BaseXmlTest {
                 line = bufReader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
         return sb.toString();
     }
@@ -37,7 +42,7 @@ public abstract class BaseXmlTest {
                 line = bufReader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
         return sb.toString();
     }

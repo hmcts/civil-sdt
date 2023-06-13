@@ -30,8 +30,6 @@
  * $LastChangedBy$ */
 package uk.gov.moj.sdt.producers.sdtws;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +58,6 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryrequestschema.SubmitQueryRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponseType;
 
-import static ch.qos.logback.classic.Level.DEBUG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -68,9 +65,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.reset;
@@ -113,6 +108,9 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
     private static final String SDT_SYSTEM_COMPONENT_ERROR =
             "A SDT system component error has occurred. Please contact the SDT support team for assistance";
 
+    private static final String MOCK_CODE = "MOCK_CODE";
+    private static final String MOCK_ERROR = "MOCK_ERROR";
+
     /**
      * Set up common for all tests.
      */
@@ -154,9 +152,9 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         verify(mockCreateBulkRequestHandler).submitBulk(dummyRequest);
         assertNotNull(response, RESPONSE_EXPECTED);
         assertEquals(StatusCodeType.OK, response.getStatus().getCode());
-        assertEquals("MOCK_ERROR", response.getStatus().getError().getDescription());
-        assertEquals("MOCK_CODE", response.getStatus().getError().getCode());
-        verify(mockLogger, never()).debug(anyString());
+        assertEquals(MOCK_ERROR, response.getStatus().getError().getDescription());
+        assertEquals(MOCK_CODE, response.getStatus().getError().getCode());
+        verify(mockLogger, never()).debug(any());
         verify(mockLogger, never()).isDebugEnabled();
     }
 
@@ -189,10 +187,10 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         final BulkFeedbackResponseType response = portType.getBulkFeedback(createBulkFeedbackRequestType());
 
         assertNotNull(response, RESPONSE_EXPECTED);
-        assertEquals("MOCK_ERROR", response.getBulkRequestStatus().getBulkStatus().getError().getDescription());
-        assertEquals("MOCK_CODE", response.getBulkRequestStatus().getBulkStatus().getError().getCode());
+        assertEquals(MOCK_ERROR, response.getBulkRequestStatus().getBulkStatus().getError().getDescription());
+        assertEquals(MOCK_CODE, response.getBulkRequestStatus().getBulkStatus().getError().getCode());
         verify(mockBulkRequestHandler).getBulkFeedback(any(BulkFeedbackRequestType.class));
-        verify(mockLogger).debug(anyString());
+        verify(mockLogger).debug(anyString(), anyLong());
     }
 
     /**
@@ -227,9 +225,9 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         assertNotNull(response, RESPONSE_EXPECTED);
         verify(mockSubmitQueryHandler).submitQuery(any(SubmitQueryRequestType.class));
 
-        assertEquals("MOCK_ERROR", response.getStatus().getError().getDescription());
-        assertEquals("MOCK_CODE", response.getStatus().getError().getCode());
-        verify(mockLogger, never()).debug(anyString());
+        assertEquals(MOCK_ERROR, response.getStatus().getError().getDescription());
+        assertEquals(MOCK_CODE, response.getStatus().getError().getCode());
+        verify(mockLogger, never()).debug(anyString(), anyLong());
     }
 
     /**
@@ -280,8 +278,8 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         final StatusType statusType = new StatusType();
         statusType.setCode(StatusCodeType.OK);
         final ErrorType errorType = new ErrorType();
-        errorType.setDescription("MOCK_ERROR");
-        errorType.setCode("MOCK_CODE");
+        errorType.setDescription(MOCK_ERROR);
+        errorType.setCode(MOCK_CODE);
         statusType.setError(errorType);
         response.setStatus(statusType);
         return response;
@@ -325,8 +323,8 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         final BulkStatusType bulkStatusType = new BulkStatusType();
         bulkStatusType.setCode(BulkStatusCodeType.COMPLETED);
         final ErrorType errorType = new ErrorType();
-        errorType.setDescription("MOCK_ERROR");
-        errorType.setCode("MOCK_CODE");
+        errorType.setDescription(MOCK_ERROR);
+        errorType.setCode(MOCK_CODE);
         bulkStatusType.setError(errorType);
         bulkRequestStatus.setBulkStatus(bulkStatusType);
 
@@ -362,8 +360,8 @@ class SdtEndpointPortTypeTest extends AbstractSdtUnitTestBase {
         final StatusType statusType = new StatusType();
         statusType.setCode(StatusCodeType.OK);
         final ErrorType errorType = new ErrorType();
-        errorType.setDescription("MOCK_ERROR");
-        errorType.setCode("MOCK_CODE");
+        errorType.setDescription(MOCK_ERROR);
+        errorType.setCode(MOCK_CODE);
         statusType.setError(errorType);
 
         response.setSdtCustomerId(123);

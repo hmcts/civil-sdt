@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
+class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
 
     String IDAM_ID_HEADER = "IDAMID";
 

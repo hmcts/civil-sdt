@@ -41,7 +41,7 @@ declare
     cursor c1 is
         select owner, table_name
         from all_tables
-        where owner in ('SDT_OWNER','SDT_USER','SDT_BATCH_USER');
+        where owner in ('PUBLIC');
 
     v_owner all_tables.owner%type;
     v_table all_tables.table_name%type;

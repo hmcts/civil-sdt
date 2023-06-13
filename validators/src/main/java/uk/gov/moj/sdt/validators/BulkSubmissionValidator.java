@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.validators;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,7 +190,9 @@ public class BulkSubmissionValidator extends AbstractSdtValidator implements IBu
     public void validateCMCRequests(final IBulkSubmission bulkSubmission) {
         int rejectedRequests = 0;
         for (IIndividualRequest individualRequest : bulkSubmission.getIndividualRequests()) {
-            if (requestTypeXmlNodeValidator.isCCDReference(individualRequest.getRequestPayload(), CLAIM_NUMBER)
+            if (requestTypeXmlNodeValidator.isCCDReference(
+                new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8),
+                CLAIM_NUMBER)
                 && !requestTypeXmlNodeValidator.isValidRequestType(individualRequest.getRequestType())) {
                 final IErrorLog errorLog =
                     new ErrorLog(

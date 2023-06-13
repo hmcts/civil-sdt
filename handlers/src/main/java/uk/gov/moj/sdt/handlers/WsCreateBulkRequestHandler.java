@@ -85,25 +85,27 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
      */
     private ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer;
 
-    @Autowired
-    public WsCreateBulkRequestHandler(@Qualifier("BulkSubmissionService")
-                                              IBulkSubmissionService bulkSubmissionService,
-                                      @Qualifier("BulkSubmissionValidator")
-                                          IBulkSubmissionValidator bulkSubmissionValidator,
-                                      @Qualifier("BulkRequestTransformer")
-                                              ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer) {
-        this.bulkSubmissionService = bulkSubmissionService;
-        this.bulkSubmissionValidator = bulkSubmissionValidator;
-        this.transformer = transformer;
-        this.concurrencyMap = new HashMap<>();
-    }
-
     /**
      * The concurrencyMap to hold sdtCustId+custRef and BulkRef. This is used to prevent the customer sending two
      * requests close together which both get processed at the same time, causing duplicates. The normal check on a
      * duplicate does not work until the first bulk request has been persisted.
      */
     private Map<String, IInFlightMessage> concurrencyMap;
+
+    @Autowired
+    public WsCreateBulkRequestHandler(@Qualifier("BulkSubmissionService")
+                                              IBulkSubmissionService bulkSubmissionService,
+                                      @Qualifier("BulkSubmissionValidator")
+                                          IBulkSubmissionValidator bulkSubmissionValidator,
+                                      @Qualifier("BulkRequestTransformer")
+                                              ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer,
+                                      @Qualifier("concurrencyMap")
+                                              Map concurrencyMap) {
+        this.bulkSubmissionService = bulkSubmissionService;
+        this.bulkSubmissionValidator = bulkSubmissionValidator;
+        this.transformer = transformer;
+        this.concurrencyMap = concurrencyMap;
+    }
 
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequestType) {

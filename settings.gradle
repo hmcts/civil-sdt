@@ -8,3 +8,13 @@ include 'producers'
 include 'services'
 include 'transformers'
 include 'validators'
+
+dependencyResolutionManagement {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+      url 'https://jitpack.io'
+    }
+  }
+}

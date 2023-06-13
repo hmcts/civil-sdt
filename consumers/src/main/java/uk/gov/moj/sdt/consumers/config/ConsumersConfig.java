@@ -9,7 +9,6 @@ import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -37,17 +36,15 @@ public class ConsumersConfig {
 
     @Bean
     @Scope("prototype")
-    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType(@Qualifier("XmlOutboundInterceptor")
-                                                                                          XmlOutboundInterceptor xmlOutboundInterceptor,
-                                                                                      @Qualifier("CacheSetupOutboundInterceptor")
-                                                                                      CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
-                                                                                      @Qualifier("CacheEndOutboundInterceptor")
-                                                                                          CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
-                                                                                      @Qualifier("XmlInboundInterceptor")
-                                                                                          XmlInboundInterceptor xmlInboundInterceptor,
-                                                                                      @Qualifier("SdtUnmarshallInterceptor")
-                                                                                          SdtUnmarshallInterceptor sdtUnmarshallInterceptor
-                                                                                      ) {
+    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType() {
+
+
+        XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
+        CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
+        CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
+        XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
+        SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
+
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setAddress(OVERRIDDEN_DYNAMICALLY);
         jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);
