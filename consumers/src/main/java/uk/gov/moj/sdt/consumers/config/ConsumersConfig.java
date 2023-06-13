@@ -9,16 +9,11 @@ import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
-import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor;
@@ -41,25 +36,10 @@ public class ConsumersConfig {
 
     @Bean
     @Scope("prototype")
-    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType(@Qualifier("SubmitQueryEnricher")
-                                                                                              SubmitQueryEnricher submitQueryEnricher,
-                                                                                      @Qualifier("BulkFeedbackEnricher")
-                                                                                              BulkFeedbackEnricher bulkFeedbackEnricher,
-                                                                                      @Qualifier("SubmitQueryRequestEnricher")
-                                                                                              GenericEnricher submitQueryRequestEnricher,
-                                                                                      @Qualifier("IndividualRequestEnricher")
-                                                                                              GenericEnricher individualRequestEnricher) {
+    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType() {
 
 
         XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
-        List<AbstractSdtEnricher> enricherList = new ArrayList<>();
-        enricherList.add(submitQueryEnricher);
-        enricherList.add(bulkFeedbackEnricher);
-        enricherList.add(submitQueryRequestEnricher);
-        enricherList.add(individualRequestEnricher);
-        xmlOutboundInterceptor.setEnricherList(enricherList);
-
-
         CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
         CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
         XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();

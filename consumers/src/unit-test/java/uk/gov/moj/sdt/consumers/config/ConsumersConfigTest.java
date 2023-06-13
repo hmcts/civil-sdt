@@ -16,28 +16,9 @@ class ConsumersConfigTest {
 
     ConsumersConfig consumersConfig = new ConsumersConfig();
 
-
-    @Mock
-    private SubmitQueryEnricher submitQueryEnricher;
-
-    @Mock
-    private BulkFeedbackEnricher bulkFeedbackEnricher;
-
-    @Mock
-    private GenericEnricher submitQueryRequestEnricher;
-
-    @Mock
-    private GenericEnricher individualRequestEnricher;
-
     @Test
     void testCreateTargetAppInternalEndpointPortType() {
-        ITargetAppInternalEndpointPortType result =
-            consumersConfig.createTargetAppInternalEndpointPortType(
-                submitQueryEnricher,
-                bulkFeedbackEnricher,
-                submitQueryRequestEnricher,
-                submitQueryRequestEnricher
-            );
+        ITargetAppInternalEndpointPortType result = consumersConfig.createTargetAppInternalEndpointPortType();
 
         assertNotNull(result);
     }
