@@ -13,7 +13,6 @@ data "azurerm_key_vault" "s2s_vault" {
   resource_group_name = "rpe-service-auth-provider-${var.env}"
 }
 
-
 data "azurerm_key_vault_secret" "key_from_vault" {
   name         = "microservicekey-civil-sdt"
   key_vault_id = data.azurerm_key_vault.s2s_vault.id
