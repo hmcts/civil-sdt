@@ -117,12 +117,6 @@ class CMCConsumerGatewayTest {
     @Mock
     private S2SRepository s2SRepository;
 
-    @Mock
-    private WarrantRequest warrantRequest;
-
-    @Mock
-    private JudgementWarrantRequest judgementWarrantRequest;
-
     @BeforeEach
     public void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
@@ -212,46 +206,14 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(WARRANT, individualRequest);
         WarrantResponse response = new WarrantResponse();
-        when(warrantService.warrantRequest(anyString(), anyString(), anyString(), anyString(), any())).thenReturn(response);
-
-        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-
-        verify(warrantService).warrantRequest(anyString(), anyString(), anyString(), anyString(), any(WarrantRequest.class));
-        verify(xmlToObject).convertXmlToObject(anyString(), any());
-        verify(individualRequest).getRequestPayload();
-        verify(individualRequest).getRequestType();
-        verify(individualRequest).getSdtRequestReference();
-    }
-
-    @Test
-    void shouldInvokeJudgementWarrantRequest() throws Exception {
-        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        setupMockBehaviour(JUDGMENT_WARRANT, individualRequest);
-        JudgementWarrantResponse response = new JudgementWarrantResponse();
-        when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), anyString(), anyString(), any())).thenReturn(response);
-
-        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-
-        verify(judgementWarrantService).judgementWarrantRequest(anyString(), anyString(), anyString(), anyString(), any(JudgementWarrantRequest.class));
-        verify(xmlToObject).convertXmlToObject(anyString(), any());
-        verify(individualRequest).getRequestPayload();
-        verify(individualRequest).getRequestType();
-        verify(individualRequest).getSdtRequestReference();
-    }
-
-    @Test
-    void shouldInvokeWarrantRequest() throws Exception {
-        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        setupMockBehaviour(WARRANT, individualRequest);
-        WarrantResponse response = new WarrantResponse();
-        WarrantRequest request = mock(WarrantRequest.class);
+        WarrantRequest request = new WarrantRequest();
         when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
-        when(warrantService.warrantRequest(anyString(), anyString(), any(), any(), any(WarrantRequest.class))).thenReturn(response);
+        when(warrantService.warrantRequest(anyString(), anyString(), any(), anyString(), any())).thenReturn(response);
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(warrantService).warrantRequest(anyString(), anyString(),  any(), any(), any(WarrantRequest.class));
+        verify(warrantService).warrantRequest(anyString(), anyString(), any(), anyString(), any(WarrantRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(individualRequest).getRequestPayload();
         verify(individualRequest).getRequestType();

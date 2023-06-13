@@ -124,7 +124,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest(sdtSystemUserAuthToken, serviceAuthToken,
                                                                          idamId, sdtRequestReference, request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.JUDGMENT_WARRANT.getType().equals(requestType)) {
                 JudgementWarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementWarrantRequest.class);
                 JudgementWarrantResponse response = judgementWarrantService.judgementWarrantRequest(sdtSystemUserAuthToken,
@@ -132,7 +132,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                                                     idamId,
                                                                                                     sdtRequestReference,
                                                                                                     request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response));
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.WARRANT.getType().equals(requestType)) {
                 WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest("", "",
