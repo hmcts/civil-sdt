@@ -1,53 +1,16 @@
-/* Copyrights and Licenses
- *
- * Copyright (c) 2013 by the Ministry of Justice. All rights reserved.
- * Redistribution and use in source and binary forms, with or without modification, are permitted
- * provided that the following conditions are met:
- * - Redistributions of source code must retain the above copyright notice, this list of conditions
- * and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other materials
- * provided with the distribution.
- * - All advertising materials mentioning features or use of this software must display the
- * following acknowledgment: "This product includes Money Claims OnLine."
- * - Products derived from this software may not be called "Money Claims OnLine" nor may
- * "Money Claims OnLine" appear in their names without prior written permission of the
- * Ministry of Justice.
- * - Redistributions of any form whatsoever must retain the following acknowledgment: "This
- * product includes Money Claims OnLine."
- * This software is provided "as is" and any expressed or implied warranties, including, but
- * not limited to, the implied warranties of merchantability and fitness for a particular purpose are
- * disclaimed. In no event shall the Ministry of Justice or its contributors be liable for any
- * direct, indirect, incidental, special, exemplary, or consequential damages (including, but
- * not limited to, procurement of substitute goods or services; loss of use, data, or profits;
- * or business interruption). However caused any on any theory of liability, whether in contract,
- * strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this
- * software, even if advised of the possibility of such damage.
- *
- * $Id$
- * $LastChangedRevision$
- * $LastChangedDate$
- * $LastChangedBy$ */
-
 package uk.gov.moj.sdt.producers;
 
-import java.io.InputStream;
-import java.util.Date;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StopWatch;
-
+import uk.gov.moj.sdt.producers.config.EndToEndTestConfig;
+import uk.gov.moj.sdt.producers.config.SecurityConfig;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.BulkRequestType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.HeaderType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkrequestschema.RequestItemType;
@@ -56,14 +19,28 @@ import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.BulkResponseType;
 import uk.gov.moj.sdt.ws._2013.sdt.bulkresponseschema.ObjectFactory;
 import uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.fail;
+
 /**
  * Performance tests for bulk submission requests.
  *
  * @author Saurabh Agarwal
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:/uk/gov/moj/sdt/producers/spring*e2e.test.xml",
-        "classpath*:/uk/gov/moj/sdt/utils/**/spring*.xml", "classpath*:/uk/gov/moj/sdt/transformers/**/spring*.xml"})
+@ActiveProfiles("end-to-end-test")
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = { EndToEndTestConfig.class, SecurityConfig.class})
+@Sql(scripts = {
+        "classpath:database/baseline/initialise_test_database.sql"
+        ,"classpath:database/baseline/SubmitBulkPerformanceTest.sql"
+})
 public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkRequestType, BulkResponseType> {
 
     /**
@@ -102,9 +79,9 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
      */
     @Test
     public void testConcurrentRequests() {
-        LOGGER.info("Test performance for maximum " + MAX_WORKER_THREADS +
-                " concurrent request(s). Each bulk request contains " + IND_REQ_PER_BULK +
-                " individual request(s). Total requests = " + MAX_REQUESTS);
+        LOGGER.info("Test performance for maximum {} concurrent request(s). Each bulk request contains " +
+                        "{} individual request(s). Total requests = {}", MAX_WORKER_THREADS,
+                IND_REQ_PER_BULK, MAX_REQUESTS);
 
         BulkRequestType templateRequestType = this.getJaxbFromXml(BulkRequestType.class);
 
@@ -114,7 +91,6 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
         stopWatch.start();
         for (int i = 0; i < MAX_REQUESTS; i++) {
             BulkRequestType requestType = createBulkRequest(templateRequestType, "Req" + i);
-
             scheduleRequestToProcess(requestType);
         }
 
@@ -124,7 +100,7 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
         }
         stopWatch.stop();
 
-        LOGGER.info("Total execution time(ms) - " + stopWatch.getTotalTimeMillis());
+        LOGGER.info("Total execution time(ms) - {}", stopWatch.getTotalTimeMillis());
     }
 
     /**
@@ -134,13 +110,13 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
         Thread thread = new Thread(new BulkRequestProcessor(Thread.currentThread(), requestType));
         thread.start();
 
-        if (!(SubmitBulkPerformanceTest.threadCount < MAX_WORKER_THREADS)) {
+        if (SubmitBulkPerformanceTest.threadCount >= MAX_WORKER_THREADS) {
             try {
                 // Sleep indefinitely as thread should be interrupted to resume processing.
                 Thread.sleep(Long.MAX_VALUE);
             } catch (InterruptedException e) {
                 // Do nothing.
-                LOGGER.debug("interrupted" + e);
+                LOGGER.debug("interrupted {}", e.toString());
             }
         }
     }
@@ -198,6 +174,7 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
      *
      * @return the JAXB object loaded with XML associated with this test class.
      */
+    @Override
     protected BulkRequestType getJaxbFromXml(Class<BulkRequestType> requestClass) {
         BulkRequestType request = null;
 
@@ -224,8 +201,8 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
                     jaxbUnmarshaller.unmarshal(new StreamSource(inputStream), requestClass);
             request = (BulkRequestType) jaxbElement.getValue();
         } catch (Exception e) {
-            LOGGER.error("Failure to unmarshall request from web service [" + requestClass.toString() + "]", e);
-            Assert.fail("Failure to unmarshall request from web service [" + requestClass.toString() + "]");
+            LOGGER.error("Failure to unmarshall request from web service [{}]", requestClass.toString(), e);
+            fail("Failure to unmarshall request from web service [" + requestClass + "]");
         }
 
         return request;
@@ -251,18 +228,18 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
     /**
      * Increment the number of current worker threads.
      */
-    public synchronized static void incrementThreadCount() {
+    public static synchronized void incrementThreadCount() {
         SubmitBulkPerformanceTest.threadCount++;
     }
 
     /**
      * Decrement the number of current worker threads.
      */
-    public synchronized static void decrementThreadCount() {
+    public static synchronized void decrementThreadCount() {
         SubmitBulkPerformanceTest.threadCount--;
     }
 
-    public synchronized static void incrementCompletedRequests() {
+    public static synchronized void incrementCompletedRequests() {
         SubmitBulkPerformanceTest.REQUESTS_COMPLETED++;
     }
 
@@ -279,9 +256,10 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
         private Thread starter = null;
 
         /**
-         * Constructor for {@link BulkRequestRunnable}.
+         * Constructor for {@link BulkRequestProcessor}.
          *
-         * @param requestType
+         * @param starter Starter
+         * @param requestType Request Type
          */
         BulkRequestProcessor(final Thread starter, final BulkRequestType requestType) {
             this.starter = starter;
@@ -293,11 +271,15 @@ public class SubmitBulkPerformanceTest extends AbstractWebServiceTest<BulkReques
         @Override
         public void run() {
             try {
-                LOGGER.info("Start test for thread [" + Thread.currentThread().getName() + "] for request [" +
-                        requestType.getHeader().getCustomerReference() + "]at [" + new Date().toString() + "]");
-                BulkResponseType responseType = callTestWebService(requestType);
-                LOGGER.info("End test for thread [" + Thread.currentThread().getName() + "] for request [" +
-                        requestType.getHeader().getCustomerReference() + "]at [" + new Date().toString() + "]");
+                LOGGER.info("Start test for thread [{}] for request [{}] at [{}]",
+                        Thread.currentThread().getName(),
+                        requestType.getHeader().getCustomerReference(),
+                        new Date());
+                callTestWebService(requestType);
+                LOGGER.info("End test for thread [{}] for request [{}] at [{}]",
+                        Thread.currentThread().getName(),
+                        requestType.getHeader().getCustomerReference(),
+                        LocalDateTime.now());
             } catch (Exception e) {
                 LOGGER.error("Error executing request: " + requestType.getHeader().getCustomerReference(), e);
             } finally {

@@ -12,19 +12,17 @@ java:
   postgresql:
     enabled: true
   keyVaults:
-    civil:
-      resourceGroup: civil
-      secrets:
-        - name: AppInsightsInstrumentationKey
+    civil-sdt:
+      disabled: true
   secrets:
     CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:
-      secretRef: servicebus-secret-queue-{{ .Release.Name }}-servicebus-civil-sdt-in-out
+      secretRef: civil-sb-preview
       key: connectionString
 servicebus:
   enabled: true
   teamName: CIVIL
-  resourceGroup: civil-sdt-aks
-  serviceplan: standard
+  resourceGroup: civil-aso-preview-rg
+  sbNamespace: civil-servicebus-preview
   setup:
     queues:
       - name: civil-sdt-in-out

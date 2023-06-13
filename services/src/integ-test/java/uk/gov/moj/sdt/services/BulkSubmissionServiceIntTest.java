@@ -30,14 +30,13 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -67,6 +66,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -75,7 +76,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author Manoj kulkarni
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/BulkSubmissionServiceIntTest.sql"})
 public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
@@ -96,7 +97,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
     /**
      * Setup the test.
      */
-    @Before
+    @BeforeEach
     @SuppressWarnings("unchecked")
     public void setUp() {
         bulkSubmissionService = this.applicationContext.getBean(BulkSubmissionService.class);
@@ -124,7 +125,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         // Setup concurrency map as if validator had done it.
         IInFlightMessage inFlightMessage = new InFlightMessage();
-        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        inFlightMessage.setCompetingThreads(new HashMap<>());
         String key = bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
         concurrencyMap.put(key, inFlightMessage);
 
@@ -133,22 +134,22 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         clearConcurrencyMap(bulkSubmission);
 
-        Assert.assertNotNull(bulkSubmission.getPayload());
+        assertNotNull(bulkSubmission.getPayload());
 
-        Assert.assertEquals(1L, bulkSubmission.getNumberOfRequest());
+        assertEquals(1L, bulkSubmission.getNumberOfRequest());
 
-        Assert.assertNotNull(bulkSubmission.getSdtBulkReference());
+        assertNotNull(bulkSubmission.getSdtBulkReference());
 
-        Assert.assertNotNull(bulkSubmission.getServiceRequest());
+        assertNotNull(bulkSubmission.getServiceRequest());
 
         final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
-        Assert.assertNotNull(individualRequests);
-        Assert.assertEquals(1, individualRequests.size());
+        assertNotNull(individualRequests);
+        assertEquals(1, individualRequests.size());
         for (IIndividualRequest request : individualRequests) {
 
-            Assert.assertNotNull(request.getSdtBulkReference());
-            Assert.assertNotNull(request.getSdtRequestReference());
-            Assert.assertNotNull(request.getRequestPayload());
+            assertNotNull(request.getSdtBulkReference());
+            assertNotNull(request.getSdtRequestReference());
+            assertNotNull(request.getRequestPayload());
         }
     }
 
@@ -171,7 +172,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         // Setup concurrency map as if validator had done it.
         IInFlightMessage inFlightMessage = new InFlightMessage();
-        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        inFlightMessage.setCompetingThreads(new HashMap<>());
         String key = bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
         concurrencyMap.put(key, inFlightMessage);
 
@@ -180,21 +181,21 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         clearConcurrencyMap(bulkSubmission);
 
-        Assert.assertNotNull(bulkSubmission.getPayload());
+        assertNotNull(bulkSubmission.getPayload());
 
-        Assert.assertEquals(62L, bulkSubmission.getNumberOfRequest());
+        assertEquals(62L, bulkSubmission.getNumberOfRequest());
 
-        Assert.assertNotNull(bulkSubmission.getSdtBulkReference());
+        assertNotNull(bulkSubmission.getSdtBulkReference());
 
         final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
-        Assert.assertNotNull(individualRequests);
-        Assert.assertEquals(62, individualRequests.size());
+        assertNotNull(individualRequests);
+        assertEquals(62, individualRequests.size());
 
         for (IIndividualRequest request : individualRequests) {
 
-            Assert.assertNotNull(request.getSdtBulkReference());
-            Assert.assertNotNull(request.getSdtRequestReference());
-            Assert.assertNotNull(request.getRequestPayload());
+            assertNotNull(request.getSdtBulkReference());
+            assertNotNull(request.getSdtRequestReference());
+            assertNotNull(request.getRequestPayload());
         }
     }
 
@@ -221,7 +222,7 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         // Setup concurrency map as if validator had done it.
         IInFlightMessage inFlightMessage = new InFlightMessage();
-        inFlightMessage.setCompetingThreads(new HashMap<Thread, Thread>());
+        inFlightMessage.setCompetingThreads(new HashMap<>());
         String key = bulkSubmission.getBulkCustomer().getSdtCustomerId() + bulkSubmission.getCustomerReference();
         concurrencyMap.put(key, inFlightMessage);
 
@@ -230,21 +231,21 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
         // DO NOT CLEAR concurrencyMap.
 
-        Assert.assertNotNull(bulkSubmission.getPayload());
+        assertNotNull(bulkSubmission.getPayload());
 
-        Assert.assertEquals(62L, bulkSubmission.getNumberOfRequest());
+        assertEquals(62L, bulkSubmission.getNumberOfRequest());
 
-        Assert.assertNotNull(bulkSubmission.getSdtBulkReference());
+        assertNotNull(bulkSubmission.getSdtBulkReference());
 
         final List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
-        Assert.assertNotNull(individualRequests);
-        Assert.assertEquals(62, individualRequests.size());
+        assertNotNull(individualRequests);
+        assertEquals(62, individualRequests.size());
 
         for (IIndividualRequest request : individualRequests) {
 
-            Assert.assertNotNull(request.getSdtBulkReference());
-            Assert.assertNotNull(request.getSdtRequestReference());
-            Assert.assertNotNull(request.getRequestPayload());
+            assertNotNull(request.getSdtBulkReference());
+            assertNotNull(request.getSdtRequestReference());
+            assertNotNull(request.getRequestPayload());
         }
 
         assertThrows(CustomerReferenceNotUniqueException.class, () -> bulkSubmissionService.saveBulkSubmission(bulkSubmission));

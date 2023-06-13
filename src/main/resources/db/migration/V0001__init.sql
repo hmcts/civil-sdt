@@ -78,7 +78,7 @@ created_date TIMESTAMP(6),
 updated_date TIMESTAMP(6),
 completed_date TIMESTAMP(6),
 forwarding_attempts NUMERIC,
-dead_letter CHAR(1),
+dead_letter VARCHAR(1),
 internal_system_error VARCHAR(4000),
 request_type VARCHAR(50),
 version_number NUMERIC DEFAULT 0,
@@ -229,14 +229,14 @@ ALTER TABLE service_routings ADD CONSTRAINT sr_target_application_fk FOREIGN KEY
   REFERENCES target_applications (target_application_id);
 
 ------------------------------------------------
--- Create Unique constraints for SDT_OWNER
+-- Create Unique constraints for PUBLIC
 ------------------------------------------------
 ALTER TABLE bulk_submissions ADD CONSTRAINT bs_sbr_uni UNIQUE (sdt_bulk_reference);
 ALTER TABLE service_types ADD CONSTRAINT rt_rtn_uni UNIQUE (service_type_name);
 ALTER TABLE target_applications ADD CONSTRAINT ta_tan_uni UNIQUE (target_application_name);
 
 ------------------------------------------------
--- Create Sequences for SDT_OWNER
+-- Create Sequences for PUBLIC
 ------------------------------------------------
 -- BIGINT/NUMERIC = 18 digits, but seq was formerly 27 digits! Consider type change
 CREATE SEQUENCE bulk_cust_app_seq MINVALUE 1 MAXVALUE  999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
@@ -251,7 +251,6 @@ CREATE SEQUENCE ser_rou_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START 
 CREATE SEQUENCE ser_typ_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
 CREATE SEQUENCE srv_req_seq MINVALUE 1 MAXVALUE 999999999999999999 INCREMENT BY 50 START WITH 1 NO CYCLE;
 CREATE SEQUENCE tar_app_seq MINVALUE 1 MAXVALUE 999999999 INCREMENT BY 50 START WITH 1 CYCLE;
-
 
 ------------------------------------------------
 -- Create Reference Data

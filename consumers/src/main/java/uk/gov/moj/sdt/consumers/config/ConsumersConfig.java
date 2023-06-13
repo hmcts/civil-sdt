@@ -15,6 +15,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import uk.gov.moj.sdt.interceptors.enricher.AbstractSdtEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.BulkFeedbackEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.GenericEnricher;
+import uk.gov.moj.sdt.interceptors.enricher.SubmitQueryEnricher;
 import uk.gov.moj.sdt.interceptors.in.SdtUnmarshallInterceptor;
 import uk.gov.moj.sdt.interceptors.in.XmlInboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor;
@@ -37,17 +41,15 @@ public class ConsumersConfig {
 
     @Bean
     @Scope("prototype")
-    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType(@Qualifier("XmlOutboundInterceptor")
-                                                                                          XmlOutboundInterceptor xmlOutboundInterceptor,
-                                                                                      @Qualifier("CacheSetupOutboundInterceptor")
-                                                                                      CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
-                                                                                      @Qualifier("CacheEndOutboundInterceptor")
-                                                                                          CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
-                                                                                      @Qualifier("XmlInboundInterceptor")
-                                                                                          XmlInboundInterceptor xmlInboundInterceptor,
-                                                                                      @Qualifier("SdtUnmarshallInterceptor")
-                                                                                          SdtUnmarshallInterceptor sdtUnmarshallInterceptor
-                                                                                      ) {
+    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType() {
+
+
+        XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
+        CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
+        CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
+        XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
+        SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
+
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setAddress(OVERRIDDEN_DYNAMICALLY);
         jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);

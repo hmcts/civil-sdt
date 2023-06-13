@@ -35,6 +35,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -176,7 +178,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
                                                 errorMessagesCache,
                                                 mockIBulkSubmissionDao,
                                                 requestTypeXmlNodeValidator,
-                                                new HashMap<>());
+                                                new ConcurrentHashMap());
     }
 
     /**

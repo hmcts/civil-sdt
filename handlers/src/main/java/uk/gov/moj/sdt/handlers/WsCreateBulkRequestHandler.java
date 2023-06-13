@@ -98,11 +98,13 @@ public class WsCreateBulkRequestHandler extends AbstractWsHandler implements IWs
                                       @Qualifier("BulkSubmissionValidator")
                                           IBulkSubmissionValidator bulkSubmissionValidator,
                                       @Qualifier("BulkRequestTransformer")
-                                              ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer) {
+                                              ITransformer<BulkRequestType, BulkResponseType, IBulkSubmission, IBulkSubmission> transformer,
+                                      @Qualifier("concurrencyMap")
+                                              Map concurrencyMap) {
         this.bulkSubmissionService = bulkSubmissionService;
         this.bulkSubmissionValidator = bulkSubmissionValidator;
         this.transformer = transformer;
-        this.concurrencyMap = new HashMap<>();
+        this.concurrencyMap = concurrencyMap;
     }
 
     @Override
